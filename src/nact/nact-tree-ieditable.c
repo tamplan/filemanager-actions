@@ -53,16 +53,16 @@ struct _NactTreeIEditableInterfacePrivate {
 /* data attached to the NactTreeView
  */
 typedef struct {
-	NAUpdater     *updater;
-	BaseWindow    *window;
-	GtkTreeView   *treeview;
-	NactTreeModel *model;
-	gulong         modified_handler_id;
-	gulong         valid_handler_id;
-	guint          count_modified;
-	gboolean       level_zero_changed;
-	GList         *deleted;
-	guint          count_deleted;
+	NAUpdater      *updater;
+	NactMainWindow *main_window;
+	GtkTreeView    *treeview;
+	NactTreeModel  *model;
+	gulong          modified_handler_id;
+	gulong          valid_handler_id;
+	guint           count_modified;
+	gboolean        level_zero_changed;
+	GList          *deleted;
+	guint           count_deleted;
 }
 	IEditableData;
 
@@ -73,14 +73,13 @@ static guint st_initializations = 0;	/* interface initialization count */
 static GType          register_type( void );
 static void           interface_base_init( NactTreeIEditableInterface *klass );
 static void           interface_base_finalize( NactTreeIEditableInterface *klass );
-
-static gboolean       on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window );
-static void           on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, BaseWindow *window );
-static void           on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
-static void           on_object_modified_status_changed( NactTreeIEditable *view, NAObject *object, gboolean new_status, BaseWindow *window );
-static void           on_object_valid_status_changed( NactTreeIEditable *view, NAObject *object, gboolean new_status, BaseWindow *window );
-static void           on_tree_view_level_zero_changed( BaseWindow *window, gboolean is_modified, gpointer user_data );
-static void           on_tree_view_modified_status_changed( BaseWindow *window, gboolean is_modified, gpointer user_data );
+static gboolean       on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactTreeIEditable *instance );
+static void           on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, NactTreeView *items_view );
+static void           on_tree_view_selection_changed( NactTreeIEditable *view, GList *selected_items, void *empty );
+static void           on_object_modified_status_changed( NactTreeIEditable *view, NAObject *object, gboolean new_status, void *empty );
+static void           on_object_valid_status_changed( NactTreeIEditable *view, NAObject *object, gboolean new_status, void *empty );
+static void           on_tree_view_level_zero_changed( NactTreeIEditable *view, gboolean is_modified, void *empty );
+static void           on_tree_view_modified_status_changed( NactTreeIEditable *view, gboolean is_modified, void *empty );
 static void           add_to_deleted_rec( IEditableData *ied, NAObject *object );
 static void           decrement_counters( NactTreeIEditable *view, IEditableData *ialid, GList *items );
 static GtkTreePath   *do_insert_before( IEditableData *ied, GList *items, GtkTreePath *insert_path );
@@ -91,7 +90,7 @@ static gchar         *get_items_id_list_str( GList *items_list );
 static GtkTreePath   *get_selection_first_path( GtkTreeView *treeview );
 static gboolean       get_modification_status( IEditableData *ied );
 static IEditableData *get_instance_data( NactTreeIEditable *view );
-static void           inline_edition( BaseWindow *window );
+static void           inline_edition( NactTreeIEditable *view );
 
 GType
 nact_tree_ieditable_get_type( void )
@@ -171,78 +170,63 @@ interface_base_finalize( NactTreeIEditableInterface *klass )
  * Initialize the interface, mainly connecting to signals of interest.
  */
 void
-nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treeview, BaseWindow *window )
+nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treeview, NactMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_tree_ieditable_initialize";
 	IEditableData *ied;
-	NactApplication *application;
+	GtkApplication *application;
 	GtkTreeViewColumn *column;
 	GList *renderers;
 
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
+	g_return_if_fail( instance && NACT_IS_TREE_IEDITABLE( instance ));
 
-	g_debug( "%s: instance=%p (%s), treeview=%p, window=%p",
+	g_debug( "%s: instance=%p (%s), treeview=%p, main_window=%p",
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) treeview, ( void * ) window );
+			( void * ) treeview, ( void * ) main_window );
 
 	ied = get_instance_data( instance );
-	ied->window = window;
+	ied->main_window = main_window;
 	ied->treeview = treeview;
 	ied->model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	ied->updater = nact_application_get_updater( application );
+	application = gtk_window_get_application( GTK_WINDOW( main_window ));
+	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
+	ied->updater = nact_application_get_updater( NACT_APPLICATION( application ));
 
 	/* inline label edition with F2 */
-	base_window_signal_connect(
-			window,
-			G_OBJECT( treeview ),
-			"key-press-event",
-			G_CALLBACK( on_key_pressed_event ));
+	g_signal_connect( treeview, "key-press-event", G_CALLBACK( on_key_pressed_event ), instance );
 
 	/* label edition: inform the corresponding tab */
 	column = gtk_tree_view_get_column( treeview, TREE_COLUMN_LABEL );
 	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-	base_window_signal_connect(
-			window,
-			G_OBJECT( renderers->data ),
-			"edited",
-			G_CALLBACK( on_label_edited ));
+	g_signal_connect( renderers->data, "edited", G_CALLBACK( on_label_edited ), instance );
 
 	/* monitors status changes to refresh the display */
 	na_iduplicable_register_consumer( G_OBJECT( instance ));
-	ied->modified_handler_id = base_window_signal_connect(
-			window,
-			G_OBJECT( instance ),
-			IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,
-			G_CALLBACK( on_object_modified_status_changed ));
-	ied->valid_handler_id = base_window_signal_connect(
-			window,
-			G_OBJECT( instance ),
-			IDUPLICABLE_SIGNAL_VALID_CHANGED,
-			G_CALLBACK( on_object_valid_status_changed ));
+	ied->modified_handler_id =
+			g_signal_connect(
+					instance, IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,
+					G_CALLBACK( on_object_modified_status_changed ), NULL );
+	ied->valid_handler_id =
+			g_signal_connect(
+					instance, IDUPLICABLE_SIGNAL_VALID_CHANGED,
+					G_CALLBACK( on_object_valid_status_changed ), NULL );
 
 	/* monitors the reloading of the tree */
-	base_window_signal_connect(
-			window,
-			G_OBJECT( window ),
-			TREE_SIGNAL_MODIFIED_STATUS_CHANGED,
-			G_CALLBACK( on_tree_view_modified_status_changed ));
+	g_signal_connect(
+			instance, TREE_SIGNAL_MODIFIED_STATUS_CHANGED,
+			G_CALLBACK( on_tree_view_modified_status_changed ), NULL );
 
 	/* monitors the level zero of the tree */
-	base_window_signal_connect(
-			window,
-			G_OBJECT( window ),
-			TREE_SIGNAL_LEVEL_ZERO_CHANGED,
-			G_CALLBACK( on_tree_view_level_zero_changed ));
+	g_signal_connect(
+			instance, TREE_SIGNAL_LEVEL_ZERO_CHANGED,
+			G_CALLBACK( on_tree_view_level_zero_changed ), NULL );
 
 	/* monitors the main selection */
-	base_window_signal_connect(
-			window,
-			G_OBJECT( window ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ));
+	g_signal_connect(
+			instance, TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tree_view_selection_changed ), NULL );
 }
 
 /**
@@ -265,20 +249,20 @@ nact_tree_ieditable_terminate( NactTreeIEditable *instance )
 
 	na_object_free_items( ied->deleted );
 
-	base_window_signal_disconnect( ied->window, ied->modified_handler_id );
-	base_window_signal_disconnect( ied->window, ied->valid_handler_id );
+	g_signal_handler_disconnect( instance, ied->modified_handler_id );
+	g_signal_handler_disconnect( instance, ied->valid_handler_id );
 
 	g_free( ied );
 	g_object_set_data( G_OBJECT( instance ), VIEW_DATA_IEDITABLE, NULL );
 }
 
 static gboolean
-on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window )
+on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactTreeIEditable *instance )
 {
 	gboolean stop = FALSE;
 
 	if( event->keyval == NACT_KEY_F2 ){
-		inline_edition( window );
+		inline_edition( instance );
 		stop = TRUE;
 	}
 
@@ -293,14 +277,11 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
  *   data = object_at_row + new_label
  */
 static void
-on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, BaseWindow *window )
+on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, NactTreeView *items_view )
 {
-	NactTreeView *items_view;
 	IEditableData *ied;
 	NAObject *object;
 	GtkTreePath *path;
-
-	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
 
 	if( nact_tree_view_are_notify_allowed( items_view )){
 		ied = ( IEditableData * ) g_object_get_data( G_OBJECT( items_view ), VIEW_DATA_IEDITABLE );
@@ -308,25 +289,23 @@ on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gch
 		object = nact_tree_model_object_at_path( ied->model, path );
 		na_object_set_label( object, text );
 
-		g_signal_emit_by_name( window, MAIN_SIGNAL_ITEM_UPDATED, object );
+		g_signal_emit_by_name( ied->main_window, MAIN_SIGNAL_ITEM_UPDATED, object );
 	}
 }
 
 static void
-on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
+on_tree_view_selection_changed( NactTreeIEditable *instance, GList *selected_items, void *empty )
 {
+	IEditableData *ied;
 	NAObject *object;
 	gboolean object_editable;
-	NactTreeView *items_view;
-	IEditableData *ied;
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	gboolean editable;
 
-	g_object_get( window, MAIN_PROP_ITEM, &object, MAIN_PROP_EDITABLE, &object_editable, NULL );
+	ied = ( IEditableData * ) g_object_get_data( G_OBJECT( instance ), VIEW_DATA_IEDITABLE );
+	g_object_get( ied->main_window, MAIN_PROP_ITEM, &object, MAIN_PROP_EDITABLE, &object_editable, NULL );
 	editable = NA_IS_OBJECT( object ) && object_editable;
-	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
-	ied = ( IEditableData * ) g_object_get_data( G_OBJECT( items_view ), VIEW_DATA_IEDITABLE );
 	column = gtk_tree_view_get_column( ied->treeview, TREE_COLUMN_LABEL );
 	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 	g_object_set( G_OBJECT( renderers->data ), "editable", editable, "editable-set", TRUE, NULL );
@@ -337,16 +316,16 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer u
  * - refresh the display
  */
 static void
-on_object_modified_status_changed( NactTreeIEditable *instance, NAObject *object, gboolean is_modified, BaseWindow *window )
+on_object_modified_status_changed( NactTreeIEditable *instance, NAObject *object, gboolean is_modified, void *empty )
 {
 	static const gchar *thisfn = "nact_tree_ieditable_on_object_modified_status_changed";
 	IEditableData *ied;
 	gboolean prev_status, status;
 
-	g_debug( "%s: instance=%p, object=%p (%s), is_modified=%s, window=%p",
+	g_debug( "%s: instance=%p, object=%p (%s), is_modified=%s, empty=%p",
 			thisfn, ( void * ) instance,
 			( void * ) object, G_OBJECT_TYPE_NAME( object ), is_modified ? "True":"False",
-			( void * ) window );
+			empty );
 
 	ied = ( IEditableData * ) g_object_get_data( G_OBJECT( instance ), VIEW_DATA_IEDITABLE );
 	prev_status = get_modification_status( ied );
@@ -363,7 +342,7 @@ on_object_modified_status_changed( NactTreeIEditable *instance, NAObject *object
 	if( nact_tree_view_are_notify_allowed( NACT_TREE_VIEW( instance ))){
 		status = get_modification_status( ied );
 		if( status != prev_status ){
-			g_signal_emit_by_name( window, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
+			g_signal_emit_by_name( instance, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
 		}
 	}
 }
@@ -373,13 +352,13 @@ on_object_modified_status_changed( NactTreeIEditable *instance, NAObject *object
  * - refresh the display
  */
 static void
-on_object_valid_status_changed( NactTreeIEditable *instance, NAObject *object, gboolean new_status, BaseWindow *window )
+on_object_valid_status_changed( NactTreeIEditable *instance, NAObject *object, gboolean new_status, void *empty )
 {
 	static const gchar *thisfn = "nact_tree_ieditable_on_object_valid_status_changed";
 	IEditableData *ied;
 
-	g_debug( "%s: instance=%p, new_status=%s, window=%p",
-			thisfn, ( void * ) instance, new_status ? "True":"False", ( void * ) window );
+	g_debug( "%s: instance=%p, new_status=%s, empty=%p",
+			thisfn, ( void * ) instance, new_status ? "True":"False", empty );
 
 	ied = ( IEditableData * ) g_object_get_data( G_OBJECT( instance ), VIEW_DATA_IEDITABLE );
 	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( ied->model ));
@@ -389,21 +368,19 @@ on_object_valid_status_changed( NactTreeIEditable *instance, NAObject *object, g
  * order or list of items at level zero of the tree has changed
  */
 static void
-on_tree_view_level_zero_changed( BaseWindow *window, gboolean is_modified, gpointer user_data )
+on_tree_view_level_zero_changed( NactTreeIEditable *view, gboolean is_modified, void *empty )
 {
-	NactTreeView *items_view;
 	IEditableData *ied;
 	gboolean prev_status, status;
 
-	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
-	ied = get_instance_data( NACT_TREE_IEDITABLE( items_view ));
+	ied = get_instance_data( view );
 	prev_status = get_modification_status( ied );
 	ied->level_zero_changed = is_modified;
 
-	if( nact_tree_view_are_notify_allowed( items_view )){
+	if( nact_tree_view_are_notify_allowed( NACT_TREE_VIEW( view ))){
 		status = get_modification_status( ied );
 		if( prev_status != status ){
-			g_signal_emit_by_name( window, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
+			g_signal_emit_by_name( view, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
 		}
 	}
 }
@@ -412,14 +389,12 @@ on_tree_view_level_zero_changed( BaseWindow *window, gboolean is_modified, gpoin
  * the tree has been reloaded
  */
 static void
-on_tree_view_modified_status_changed( BaseWindow *window, gboolean is_modified, gpointer user_data )
+on_tree_view_modified_status_changed( NactTreeIEditable *view, gboolean is_modified, void *empty )
 {
-	NactTreeView *items_view;
 	IEditableData *ied;
 
 	if( !is_modified ){
-		items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
-		ied = get_instance_data( NACT_TREE_IEDITABLE( items_view ));
+		ied = get_instance_data( view );
 		ied->count_modified = 0;
 		ied->deleted = na_object_free_items( ied->deleted );
 		ied->level_zero_changed = FALSE;
@@ -509,12 +484,12 @@ nact_tree_ieditable_delete( NactTreeIEditable *instance, GList *items, TreeIEdit
 
 	status = get_modification_status( ied );
 	if( status != prev_status ){
-		g_signal_emit_by_name( G_OBJECT( ied->window ), TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
+		g_signal_emit_by_name( instance, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
 
 	}
 }
 
-/**
+/*
  * add_to_deleted_rec:
  * @list: list of deleted objects.
  * @object: the object to be added from the list.
@@ -570,7 +545,7 @@ decrement_counters( NactTreeIEditable *view, IEditableData *ied, GList *items )
 	menus *= -1;
 	actions *= -1;
 	profiles *= -1;
-	g_signal_emit_by_name( G_OBJECT( ied->window ), TREE_SIGNAL_COUNT_CHANGED, FALSE, menus, actions, profiles );
+	g_signal_emit_by_name( view, TREE_SIGNAL_COUNT_CHANGED, FALSE, menus, actions, profiles );
 }
 
 /**
@@ -758,14 +733,14 @@ nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, G
 		for( it = items ; it ; it = it->next ){
 			na_object_check_status( it->data );
 		}
-		g_signal_emit_by_name( ied->window, TREE_SIGNAL_LEVEL_ZERO_CHANGED, TRUE );
+		g_signal_emit_by_name( instance, TREE_SIGNAL_LEVEL_ZERO_CHANGED, TRUE );
 	}
 
 	/* post insertion
 	 */
 	status = get_modification_status( ied );
 	if( prev_status != status ){
-		g_signal_emit_by_name( ied->window, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
+		g_signal_emit_by_name( instance, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
 	}
 	nact_tree_view_set_notify_allowed( NACT_TREE_VIEW( instance ), TRUE );
 
@@ -932,7 +907,7 @@ increment_counters( NactTreeIEditable *view, IEditableData *ied, GList *items )
 			thisfn, ( void * ) view, ( void * ) ied, ( void * ) items, items ? g_list_length( items ) : 0 );
 
 	na_object_count_items( items, &menus, &actions, &profiles );
-	g_signal_emit_by_name( G_OBJECT( ied->window ), TREE_SIGNAL_COUNT_CHANGED, FALSE, menus, actions, profiles );
+	g_signal_emit_by_name( view, TREE_SIGNAL_COUNT_CHANGED, FALSE, menus, actions, profiles );
 }
 
 /*
@@ -1075,7 +1050,7 @@ check_level_zero_status( NactTreeIEditable *instance )
 	g_free( pivot_str );
 	g_free( view_str );
 
-	g_signal_emit_by_name( ied->window, TREE_SIGNAL_LEVEL_ZERO_CHANGED, status );
+	g_signal_emit_by_name( instance, TREE_SIGNAL_LEVEL_ZERO_CHANGED, status );
 }
 
 static gchar *
@@ -1161,9 +1136,8 @@ get_instance_data( NactTreeIEditable *view )
  * let the label be edited
  */
 static void
-inline_edition( BaseWindow *window )
+inline_edition( NactTreeIEditable *view )
 {
-	NactTreeView *items_view;
 	IEditableData *ied;
 	GtkTreeSelection *selection;
 	GList *listrows;
@@ -1171,8 +1145,7 @@ inline_edition( BaseWindow *window )
 	GtkTreePath *path;
 	GtkTreeViewColumn *column;
 
-	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
-	ied = ( IEditableData * ) g_object_get_data( G_OBJECT( items_view ), VIEW_DATA_IEDITABLE );
+	ied = ( IEditableData * ) g_object_get_data( G_OBJECT( view ), VIEW_DATA_IEDITABLE );
 	selection = gtk_tree_view_get_selection( ied->treeview );
 	listrows = gtk_tree_selection_get_selected_rows( selection, &model );
 

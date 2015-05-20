@@ -42,11 +42,13 @@
  * to requires NactIMatchList, and for NactMainWindow to implement this same
  * NactIMatchList interface. This is not very practical as NactMainWindow is
  * already some big bunch of code...
+ * And, nonetheless, we need three/four instances of this interface, which
+ * is not possible while Schemes, etc. are already interfaces themselves.
  *
  * So we stay with just a piece of helper functions...
  */
 
-#include "base-window.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -60,25 +62,28 @@ enum {
 	MATCH_LIST_MUST_MATCH_ALL_OF,
 };
 
-void    nact_match_list_init_with_args( BaseWindow *window, const gchar *tab_name,
-						guint         tab_id,
-						GtkWidget    *listview,
-						GtkWidget    *addbutton,
-						GtkWidget    *removebutton,
-						pget_filters  pget,
-						pset_filters  pset,
-						pon_add_cb    pon_add,
-						pon_remove_cb pon_remove,
-						guint         match_header,
-						const gchar  *item_header,
-						gboolean      editable_filter );
+void    nact_match_list_init_with_args( NactMainWindow *window,
+												const gchar  *tab_name,
+												guint         tab_id,
+												GtkWidget    *listview,
+												GtkWidget    *addbutton,
+												GtkWidget    *removebutton,
+												pget_filters  pget,
+												pset_filters  pset,
+												pon_add_cb    pon_add,
+												pon_remove_cb pon_remove,
+												guint         match_header,
+												const gchar  *item_header,
+												gboolean      editable_filter );
 
-void    nact_match_list_insert_row    ( BaseWindow *window, const gchar *tab_name,
-						const gchar  *filter,
-						gboolean      match,
-						gboolean      not_match );
+void    nact_match_list_insert_row    ( NactMainWindow *window,
+												const gchar  *tab_name,
+												const gchar  *filter,
+												gboolean      match,
+												gboolean      not_match );
 
-GSList *nact_match_list_get_rows      ( BaseWindow *window, const gchar *tab_name );
+GSList *nact_match_list_get_rows      ( NactMainWindow *window,
+												const gchar  *tab_name );
 
 G_END_DECLS
 

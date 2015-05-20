@@ -48,6 +48,7 @@
 
 #include "nact-application.h"
 #include "base-gtk-utils.h"
+#include "nact-main-window.h"
 #include "nact-schemes-list.h"
 #include "nact-providers-list.h"
 #include "nact-preferences-editor.h"
@@ -117,7 +118,7 @@ enum {
  *       and prefers rely on the runtime detection */
 static const NADesktopEnv st_no_desktop     = { "None", N_( "Rely on runtime detection" ) };
 
-static const gchar       *st_xmlui_filename = PKGUIDIR "/nact-preferences.ui";
+#define                   st_xmlui_filename   PKGUIDIR "/nact-preferences.ui"
 static const gchar       *st_toplevel_name  = "PreferencesDialog";
 static const gchar       *st_wsp_name       = NA_IPREFS_PREFERENCES_WSP;
 
@@ -230,8 +231,6 @@ class_init( NactPreferencesEditorClass *klass )
 	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-
-	klass->private = g_new0( NactPreferencesEditorClassPrivate, 1 );
 
 	dialog_class = BASE_DIALOG_CLASS( klass );
 	dialog_class->ok = on_dialog_ok;
@@ -431,25 +430,24 @@ instance_finalize( GObject *dialog )
 
 /**
  * nact_preferences_editor_run:
- * @parent: the BaseWindow parent of this dialog
- * (usually the NactMainWindow).
+ * @parent: the NactMainWindow main window
  *
  * Initializes and runs the dialog.
  */
 void
-nact_preferences_editor_run( BaseWindow *parent )
+nact_preferences_editor_run( NactMainWindow *parent )
 {
 	static const gchar *thisfn = "nact_preferences_editor_run";
 	NactPreferencesEditor *editor;
 	gboolean are_locked, mandatory;
 	GtkNotebook *notebook;
 
-	g_return_if_fail( BASE_IS_WINDOW( parent ));
+	g_return_if_fail( parent && NACT_IS_MAIN_WINDOW( parent ));
 
 	g_debug( "%s: parent=%p (%s)", thisfn, ( void * ) parent, G_OBJECT_TYPE_NAME( parent ));
 
 	editor = g_object_new( NACT_TYPE_PREFERENCES_EDITOR,
-					BASE_PROP_PARENT,          parent,
+					BASE_PROP_MAIN_WINDOW,     parent,
 					BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
 					/*
 					 * having our own builder let us, e.g., set a weak reference on

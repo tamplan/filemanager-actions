@@ -31,14 +31,11 @@
 #include <config.h>
 #endif
 
-#include "nact-confirm-logout.h"
-#include "nact-menubar.h"
+#include "core/na-settings.h"
 
-/* private class data
- */
-struct _NactConfirmLogoutClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
+#include "nact-confirm-logout.h"
+#include "nact-main-window-def.h"
+#include "nact-menu-file.h"
 
 /* private instance data
  */
@@ -53,6 +50,7 @@ enum {
 	BTN_SAVE_AND_QUIT
 };
 
+static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-confirm-logout.ui";
 static const gchar     *st_toplevel_name  = "ConfirmLogoutDialog";
 static const gchar     *st_wsp_name       = NA_IPREFS_CONFIRM_LOGOUT_WSP;
 
@@ -122,8 +120,6 @@ class_init( NactConfirmLogoutClass *klass )
 	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-
-	klass->private = g_new0( NactConfirmLogoutClassPrivate, 1 );
 }
 
 static void
@@ -227,7 +223,8 @@ nact_confirm_logout_run( NactMainWindow *parent )
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 
 	dialog = g_object_new( NACT_TYPE_CONFIRM_LOGOUT,
-			BASE_PROP_PARENT,        parent,
+			BASE_PROP_MAIN_WINDOW,        parent,
+			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME, st_toplevel_name,
 			BASE_PROP_WSP_NAME,      st_wsp_name,
 			NULL );
@@ -300,8 +297,8 @@ on_save_and_quit_clicked( GtkButton *button, NactConfirmLogout *editor )
 
 	g_debug( "%s: button=%p, editor=%p", thisfn, ( void * ) button, ( void * ) editor );
 
-	main_window = NACT_MAIN_WINDOW( base_window_get_parent( BASE_WINDOW( editor )));
-	nact_menubar_save_items( BASE_WINDOW( main_window ));
+	main_window = NACT_MAIN_WINDOW( base_window_get_main_window( BASE_WINDOW( editor )));
+	nact_menu_file_save_items( main_window );
 
 	close_dialog( editor, TRUE );
 }

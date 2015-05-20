@@ -27,33 +27,27 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_TOOLBAR_H__
-#define __NACT_MAIN_TOOLBAR_H__
+#ifndef __NACT_MENU_EDIT_H__
+#define __NACT_MENU_EDIT_H__
 
-/**
- * SECTION: nact_main_toolbar
- * @short_description: Main toolbar management.
- * @include: nact/nact-main-toolbar.h
- */
-
-#include "nact-main-window.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
-enum {
-	MAIN_TOOLBAR_FILE_ID = 1,
-	MAIN_TOOLBAR_EDIT_ID,
-	MAIN_TOOLBAR_TOOLS_ID,
-	MAIN_TOOLBAR_HELP_ID,
-};
+void nact_menu_edit_update_sensitivities( NactMainWindow *main_window );
 
-void nact_main_toolbar_init_toggle_actions( NactMainWindow *window,
-													GSimpleActionGroup *toolbar_group );
+void nact_menu_edit_cut                 ( NactMainWindow *main_window );
 
-void nact_main_toolbar_activate           ( NactMainWindow *window,
-													int toolbar_id,
-													gboolean active );
+void nact_menu_edit_copy                ( NactMainWindow *main_window );
+
+void nact_menu_edit_paste               ( NactMainWindow *main_window );
+
+void nact_menu_edit_paste_into          ( NactMainWindow *main_window );
+
+void nact_menu_edit_duplicate           ( NactMainWindow *main_window );
+
+void nact_menu_edit_delete              ( NactMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __NACT_MAIN_TOOLBAR_H__ */
+#endif /* __NACT_MENU_EDIT_H__ */

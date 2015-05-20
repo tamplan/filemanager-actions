@@ -31,26 +31,21 @@
 #include <config.h>
 #endif
 
-#include <core/na-iprefs.h>
-#include <core/na-updater.h>
+#include "core/na-gtk-utils.h"
+#include "core/na-iprefs.h"
+#include "core/na-updater.h"
 
 #include "nact-application.h"
+#include "nact-main-window.h"
 #include "nact-sort-buttons.h"
 #include "nact-tree-view.h"
 
-/* private class data
- */
-struct _NactSortButtonsClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
-
 struct _NactSortButtonsPrivate {
-	gboolean    dispose_has_run;
-	BaseWindow *window;
-	NAUpdater  *updater;
-	gboolean    toggling;
-	gint        active;
-	guint       count_items;
+	gboolean        dispose_has_run;
+	NAUpdater      *updater;
+	gboolean        toggling;
+	gint            active;
+	guint           count_items;
 };
 
 typedef struct {
@@ -67,8 +62,6 @@ static ToggleGroup st_toggle_group [] = {
 		{ NULL }
 };
 
-#define WINDOW_DATA_SORT_BUTTONS				"window-data-sort-buttons"
-
 static GObjectClass *st_parent_class = NULL;
 
 static GType register_type( void );
@@ -76,12 +69,10 @@ static void  class_init( NactSortButtonsClass *klass );
 static void  instance_init( GTypeInstance *instance, gpointer klass );
 static void  instance_dispose( GObject *application );
 static void  instance_finalize( GObject *application );
-
-static void  on_base_initialize_buttons( BaseWindow *window, gpointer user_data );
-static void  on_toggle_button_toggled( GtkToggleButton *button, BaseWindow *window );
+static void  initialize_buttons( NactSortButtons *buttons, NactMainWindow *window );
+static void  on_toggle_button_toggled( GtkToggleButton *button, NactSortButtons *buttons );
 static void  on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactSortButtons *sort_buttons );
-static void  on_tree_view_count_changed( BaseWindow *window, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, gpointer user_data );
-
+static void  on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, NactSortButtons *sort_buttons );
 static void  enable_buttons( const NactSortButtons *sort_buttons, gboolean enabled );
 static gint  toggle_group_get_from_mode( guint mode );
 static gint  toggle_group_get_from_button( GtkToggleButton *toggled_button );
@@ -136,8 +127,6 @@ class_init( NactSortButtonsClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-
-	klass->private = g_new0( NactSortButtonsClassPrivate, 1 );
 }
 
 static void
@@ -210,31 +199,26 @@ instance_finalize( GObject *instance )
  * Returns: a new #NactSortButtons object.
  */
 NactSortButtons *
-nact_sort_buttons_new( BaseWindow *window )
+nact_sort_buttons_new( NactMainWindow *window )
 {
 	NactSortButtons *obj;
-	NactApplication *application;
+	GtkApplication *application;
 
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), NULL );
+	application = gtk_window_get_application( GTK_WINDOW( window ));
+	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), NULL );
 
 	obj = g_object_new( NACT_TYPE_SORT_BUTTONS, NULL );
+	obj->private->updater = nact_application_get_updater( NACT_APPLICATION( application ));
 
-	base_window_signal_connect( window,
-			G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_buttons ));
-
-	g_object_set_data( G_OBJECT( window ), WINDOW_DATA_SORT_BUTTONS, obj );
-
-	obj->private->window = window;
-
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	obj->private->updater = nact_application_get_updater( application );
+	initialize_buttons( obj, window );
 
 	return( obj );
 }
 
 /*
- * on_base_initialize_buttons:
- * @window: the #BaseWindow.
+ * initialize_buttons:
+ * @window: the #NactMainWindow.
  *
  * Initialization of the UI each time it is displayed.
  *
@@ -244,75 +228,68 @@ nact_sort_buttons_new( BaseWindow *window )
  * - enabled (sensitive) if sort order mode is modifiable.
  */
 static void
-on_base_initialize_buttons( BaseWindow *window, gpointer user_data )
+initialize_buttons( NactSortButtons *buttons, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_sort_buttons_on_base_initialize_buttons";
-	NactSortButtons *sort_buttons;
+	NactTreeView *treeview;
 	gint i;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-
-	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-
-	base_window_signal_connect( window,
-			G_OBJECT( window ), TREE_SIGNAL_COUNT_CHANGED, G_CALLBACK( on_tree_view_count_changed ));
-
-	sort_buttons = NACT_SORT_BUTTONS( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_SORT_BUTTONS ));
+	treeview = nact_main_window_get_items_view( window );
+	g_signal_connect(
+			treeview, TREE_SIGNAL_COUNT_CHANGED,
+			G_CALLBACK( on_tree_view_count_changed ), buttons );
 
 	for( i = 0 ; st_toggle_group[i].btn_name ; ++i ){
 		st_toggle_group[i].button =
-				GTK_TOGGLE_BUTTON( base_window_get_widget( window, st_toggle_group[i].btn_name ));
-		base_window_signal_connect( window,
-				G_OBJECT( st_toggle_group[i].button ), "toggled", G_CALLBACK( on_toggle_button_toggled ));
+				GTK_TOGGLE_BUTTON(
+						na_gtk_utils_find_widget_by_name(
+								GTK_CONTAINER( window ), st_toggle_group[i].btn_name ));
+		g_signal_connect(
+				st_toggle_group[i].button, "toggled",
+				G_CALLBACK( on_toggle_button_toggled ), buttons );
 	}
 
 	na_settings_register_key_callback(
-			NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), sort_buttons );
+			NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), buttons );
 
 	/* for now, disable the sort buttons
 	 * they will be enabled as soon as we receive the count of displayed items
 	 */
-	enable_buttons( sort_buttons, FALSE );
+	enable_buttons( buttons, FALSE );
 }
 
 /*
  * if the user re-clicks on the already active buttons, reset it active
  */
 static void
-on_toggle_button_toggled( GtkToggleButton *toggled_button, BaseWindow *window )
+on_toggle_button_toggled( GtkToggleButton *toggled_button, NactSortButtons *buttons )
 {
-	NactSortButtons *sort_buttons;
+	NactSortButtonsPrivate *priv;
 	gint i, ibtn;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
+	priv = buttons->private;
 
-	sort_buttons = NACT_SORT_BUTTONS( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_SORT_BUTTONS ));
+	if( !priv->toggling ){
 
-	if( !sort_buttons->private->dispose_has_run ){
-		if( !sort_buttons->private->toggling ){
+		priv->toggling = TRUE;
+		ibtn = toggle_group_get_from_button( toggled_button );
 
-			sort_buttons->private->toggling = TRUE;
-			ibtn = toggle_group_get_from_button( toggled_button );
+		/* the user re-clicks on the already active button
+		 * do not let it becomes false, but keep it active */
+		if( ibtn == priv->active ){
+			gtk_toggle_button_set_active( st_toggle_group[ibtn].button, TRUE );
 
-			/* the user re-clicks on the already active button
-			 * do not let it becomes false, but keep it active
-			 */
-			if( ibtn == sort_buttons->private->active ){
-				gtk_toggle_button_set_active( st_toggle_group[ibtn].button, TRUE );
-
-			/* reset all buttons to false, then the clicked one to active
-			 */
-			} else {
-				for( i = 0 ; st_toggle_group[i].btn_name ; ++i ){
-					gtk_toggle_button_set_active( st_toggle_group[i].button, FALSE );
-				}
-				gtk_toggle_button_set_active( toggled_button, TRUE );
-				sort_buttons->private->active = ibtn;
-				na_iprefs_set_order_mode( st_toggle_group[ibtn].order_mode );
+		/* reset all buttons to false, then the clicked one to active
+		 */
+		} else {
+			for( i = 0 ; st_toggle_group[i].btn_name ; ++i ){
+				gtk_toggle_button_set_active( st_toggle_group[i].button, FALSE );
 			}
-
-			sort_buttons->private->toggling = FALSE;
+			gtk_toggle_button_set_active( toggled_button, TRUE );
+			priv->active = ibtn;
+			na_iprefs_set_order_mode( st_toggle_group[ibtn].order_mode );
 		}
+
+		priv->toggling = FALSE;
 	}
 }
 
@@ -331,13 +308,16 @@ static void
 on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactSortButtons *sort_buttons )
 {
 	static const gchar *thisfn = "nact_sort_buttons_on_settings_order_mode_changed";
+	NactSortButtonsPrivate *priv;
 	const gchar *order_mode_str;
 	guint order_mode;
 	gint ibtn;
 
 	g_return_if_fail( NACT_IS_SORT_BUTTONS( sort_buttons ));
 
-	if( !sort_buttons->private->dispose_has_run ){
+	priv = sort_buttons->private;
+
+	if( !priv->dispose_has_run ){
 
 		order_mode_str = ( const gchar * ) new_value;
 		order_mode = na_iprefs_get_order_mode_by_label( order_mode_str );
@@ -349,35 +329,33 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 		ibtn = toggle_group_get_from_mode( order_mode );
 		g_return_if_fail( ibtn >= 0 );
 
-		if( sort_buttons->private->active == -1 || ibtn != sort_buttons->private->active ){
-			sort_buttons->private->active = ibtn;
+		if( priv->active == -1 || ibtn != priv->active ){
+			priv->active = ibtn;
 			gtk_toggle_button_set_active( st_toggle_group[ibtn].button, TRUE );
 		}
 	}
 }
 
 static void
-on_tree_view_count_changed( BaseWindow *window, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, gpointer user_data )
+on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, NactSortButtons *buttons )
 {
 	static const gchar *thisfn = "nact_sort_buttons_on_tree_view_count_changed";
-	NactSortButtons *sort_buttons;
+	NactSortButtonsPrivate *priv;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
+	priv = buttons->private;
 
-	sort_buttons = NACT_SORT_BUTTONS( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_SORT_BUTTONS ));
-
-	if( !sort_buttons->private->dispose_has_run ){
-		g_debug( "%s: window=%p, reset=%s, nb_menus=%d, nb_actions=%d, nb_profiles=%d, user_data=%p",
-				thisfn, ( void * ) window, reset ? "True":"False",
-						menus_count, actions_count, profiles_count, ( void * ) user_data );
+	if( !priv->dispose_has_run ){
+		g_debug( "%s: treeview=%p, reset=%s, nb_menus=%d, nb_actions=%d, nb_profiles=%d, buttons=%p",
+				thisfn, ( void * ) treeview, reset ? "True":"False",
+						menus_count, actions_count, profiles_count, ( void * ) buttons );
 
 		if( reset ){
-			sort_buttons->private->count_items = menus_count + actions_count;
+			priv->count_items = menus_count + actions_count;
 		} else {
-			sort_buttons->private->count_items += menus_count + actions_count;
+			priv->count_items += menus_count + actions_count;
 		}
 
-		enable_buttons( sort_buttons, sort_buttons->private->count_items > 0 );
+		enable_buttons( buttons, priv->count_items > 0 );
 	}
 
 }
@@ -385,21 +363,23 @@ on_tree_view_count_changed( BaseWindow *window, gboolean reset, gint menus_count
 static void
 enable_buttons( const NactSortButtons *sort_buttons, gboolean enabled )
 {
+	NactSortButtonsPrivate *priv;
 	gboolean level_zero_writable;
 	gboolean preferences_locked;
 	gboolean finally_enabled;
 	gint i;
 	guint order_mode;
 
-	level_zero_writable = na_updater_is_level_zero_writable( sort_buttons->private->updater );
-	preferences_locked = na_updater_are_preferences_locked( sort_buttons->private->updater );
+	priv = sort_buttons->private;
+	level_zero_writable = na_updater_is_level_zero_writable( priv->updater );
+	preferences_locked = na_updater_are_preferences_locked( priv->updater );
 	finally_enabled = level_zero_writable && !preferences_locked && enabled;
 
 	for( i=0 ; st_toggle_group[i].btn_name ; ++i ){
 		gtk_widget_set_sensitive( GTK_WIDGET( st_toggle_group[i].button ), finally_enabled );
 	}
 
-	if( finally_enabled && sort_buttons->private->active == -1 ){
+	if( finally_enabled && priv->active == -1 ){
 		order_mode = na_iprefs_get_order_mode( NULL );
 		i = toggle_group_get_from_mode( order_mode );
 		gtk_toggle_button_set_active( st_toggle_group[i].button, TRUE );

@@ -28,13 +28,14 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = \
-	m4									\
-	icons								\
-	src									\
-	po									\
 	data								\
 	docs								\
+	m4									\
 	maintainer							\
+	icons								\
+	po									\
+	src									\
+	test								\
 	$(NULL)
 
 # - nautilus-extdir is a foo directory so that make distcheck has a vpath

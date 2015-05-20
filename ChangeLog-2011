@@ -1386,7 +1386,7 @@
 
 	* src/nact/nact-main-window.c:
 	* src/nact/nact-main-window.h: Remove MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES
-	which is replaced by NactMenubar internal MENUBAR_SIGNAL_UPDATE_SENSITIVITIES one.
+	which is replaced by NactMenubar internal MAIN_SIGNAL_UPDATE_SENSITIVITIES one.
 
 	Termination of the main window is managed in NactMainWindow.
 

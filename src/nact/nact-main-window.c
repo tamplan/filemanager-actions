@@ -34,13 +34,13 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
-#include <api/na-object-api.h>
-#include <api/na-timeout.h>
+#include "api/na-object-api.h"
+#include "api/na-timeout.h"
 
-#include <core/na-iprefs.h>
-#include <core/na-pivot.h>
+#include "core/na-gtk-utils.h"
+#include "core/na-iprefs.h"
+#include "core/na-pivot.h"
 
-#include "base-isession.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
 #include "nact-ibasenames-tab.h"
@@ -52,19 +52,12 @@
 #include "nact-iexecution-tab.h"
 #include "nact-iproperties-tab.h"
 #include "nact-main-tab.h"
-#include "nact-main-statusbar.h"
 #include "nact-main-window.h"
-#include "nact-marshal.h"
-#include "nact-menubar.h"
+#include "nact-menu.h"
+#include "nact-statusbar.h"
 #include "nact-tree-view.h"
 #include "nact-confirm-logout.h"
 #include "nact-sort-buttons.h"
-
-/* private class data
- */
-struct _NactMainWindowClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
 
 /* private instance data
  */
@@ -121,7 +114,8 @@ struct _NactMainWindowPrivate {
 	NactTreeView    *items_view;
 	gboolean         is_tree_modified;
 	NactClipboard   *clipboard;
-	NactMenubar     *menubar;
+	NactStatusbar   *statusbar;
+	NactSortButtons *sort_buttons;
 
 	gulong           pivot_handler_id;
 	NATimeout        pivot_timeout;
@@ -145,20 +139,18 @@ enum {
 /* signals
  */
 enum {
-	MAIN_ITEM_UPDATED,
-	TAB_ITEM_UPDATED,
-	SELECTION_CHANGED,
-	CONTEXT_MENU,
+	ITEM_UPDATED,
+	UPDATE_SENSITIVITIES,
 	LAST_SIGNAL
 };
 
-static const gchar     *st_xmlui_filename         = PKGUIDIR "/nautilus-actions-config-tool.ui";
+static const gchar     *st_xmlui_filename         = PKGUIDIR "/nact-main-window.ui";
 static const gchar     *st_toplevel_name          = "MainWindow";
 static const gchar     *st_wsp_name               = NA_IPREFS_MAIN_WINDOW_WSP;
 
 static gint             st_burst_timeout          = 2500;		/* burst timeout in msec */
 static BaseWindowClass *st_parent_class           = NULL;
-static gint             st_signals[ LAST_SIGNAL ] = { 0 };
+static guint            st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType      register_type( void );
 static void       class_init( NactMainWindowClass *klass );
@@ -175,19 +167,15 @@ static void       iproperties_tab_iface_init( NactIPropertiesTabInterface *iface
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void       instance_constructed( GObject *window );
 static void       instance_dispose( GObject *window );
 static void       instance_finalize( GObject *window );
-
-static void       on_base_initialize_gtk( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data );
-static void       on_base_initialize_window( NactMainWindow *window, gpointer user_data );
-static void       on_base_show_widgets( NactMainWindow *window, gpointer user_data );
-
+static void       setup_main_ui( NactMainWindow *main_window );
+static void       setup_treeview( NactMainWindow *main_window );
+static void       setup_monitor_pivot( NactMainWindow *main_window );
 static void       on_block_items_changed_timeout( NactMainWindow *window );
-static void       on_tree_view_modified_status_changed( NactMainWindow *window, gboolean is_modified, gpointer user_data );
-static void       on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, gpointer user_data );
-static void       on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items );
-static void       on_tab_updatable_item_updated( NactMainWindow *window, NAIContext *context, guint data, gpointer user_data );
+static void       on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, NactMainWindow *window );
+static void       on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, NactMainWindow *window );
+static void       on_tab_item_updated( NactMainWindow *window, NAIContext *context, guint data, void *empty );
 static void       raz_selection_properties( NactMainWindow *window );
 static void       setup_current_selection( NactMainWindow *window, NAObjectId *selected_row );
 static void       setup_dialog_title( NactMainWindow *window );
@@ -200,8 +188,7 @@ static gboolean   confirm_for_giveup_from_menu( const NactMainWindow *window );
 static void       load_or_reload_items( NactMainWindow *window );
 
 /* application termination */
-static gboolean   on_base_quit_requested( NactApplication *application, NactMainWindow *window );
-static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
+static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, void *empty );
 static gboolean   warn_modified( NactMainWindow *window );
 
 GType
@@ -296,7 +283,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_WINDOW, "NactMainWindow", &info, 0 );
+	type = g_type_register_static( GTK_TYPE_APPLICATION_WINDOW, "NactMainWindow", &info, 0 );
 
 	g_type_add_interface_static( type, NACT_TYPE_IACTION_TAB, &iaction_tab_iface_info );
 
@@ -334,7 +321,6 @@ class_init( NactMainWindowClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
-	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
@@ -375,111 +361,55 @@ class_init( NactMainWindowClass *klass )
 					0, 255, 0,
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
-
 	/**
 	 * NactMainWindow::main-item-updated:
 	 *
-	 * This signal is emitted on the BaseWindow when the item has been modified
-	 * elsewhere that in a tab. The tabs should so update accordingly their
-	 * widgets.
+	 * This signal is emitted on the main window when an item is
+	 * modified from the user interface
 	 *
 	 * Args:
 	 * - an OR-ed list of the modified data, or 0 if not relevant.
+	 *
+	 * Handler:
+	 *   void handler( NactMainWindow *main_window,
+	 *   				NAIContext *updated_context,
+	 *   				guint       updated_data,
+	 *   				void       *user_data );
 	 */
-	st_signals[ MAIN_ITEM_UPDATED ] = g_signal_new(
+	st_signals[ ITEM_UPDATED ] = g_signal_new(
 			MAIN_SIGNAL_ITEM_UPDATED,
-			G_TYPE_OBJECT,
+			NACT_TYPE_MAIN_WINDOW,
 			G_SIGNAL_RUN_LAST,
 			0,					/* no default handler */
 			NULL,
 			NULL,
-			nact_cclosure_marshal_VOID__POINTER_UINT,
+			NULL,
 			G_TYPE_NONE,
 			2,
 			G_TYPE_POINTER,
 			G_TYPE_UINT );
 
 	/**
-	 * nact-tab-updatable-item-updated:
+	 * NactMainWindow::main-signal-update-sensitivities
 	 *
-	 * This signal is emitted by the notebook tabs, when any property
-	 * of an item has been modified.
+	 * This signal is emitted on the NactMainWindow when any menu item
+	 *  sensitivity has to be refreshed.
 	 *
-	 * Args:
-	 * - an OR-ed list of the modified data, or 0 if not relevant.
+	 * Signal arg.: None
 	 *
-	 * This main window is rather the only consumer of this message,
-	 * does its tricks (title, etc.), and then reforward an item-updated
-	 * message to IActionsList.
+	 * Handler prototype:
+	 * void handler( NactMainWindow *main_window, gpointer user_data );
 	 */
-	st_signals[ TAB_ITEM_UPDATED ] = g_signal_new(
-			TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
-			G_TYPE_OBJECT,
-			G_SIGNAL_RUN_LAST,
+	st_signals[ UPDATE_SENSITIVITIES ] = g_signal_new(
+			MAIN_SIGNAL_UPDATE_SENSITIVITIES,
+			NACT_TYPE_MAIN_WINDOW,
+			G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 			0,					/* no default handler */
 			NULL,
 			NULL,
-			nact_cclosure_marshal_VOID__POINTER_UINT,
+			NULL,
 			G_TYPE_NONE,
-			2,
-			G_TYPE_POINTER,
-			G_TYPE_UINT );
-
-	/**
-	 * NactMainWindow::main-selection-changed:
-	 *
-	 * This signal is emitted on the window parent each time the selection
-	 * has changed in the treeview, after having set the current item/profile/
-	 * context properties.
-	 *
-	 * This way, we are sure that notebook edition tabs which required to
-	 * have a current item/profile/context will have it, whenever they have
-	 * connected to the 'selection-changed' signal.
-	 *
-	 * Signal args:
-	 * - a #GList of currently selected #NAObjectItems.
-	 *
-	 * Handler prototype:
-	 * void ( *handler )( BaseWindow *window, GList *selected, gpointer user_data );
-	 */
-	st_signals[ SELECTION_CHANGED ] = g_signal_new_class_handler(
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_TYPE_OBJECT,
-			G_SIGNAL_RUN_CLEANUP,
-			G_CALLBACK( on_selection_changed_cleanup_handler ),
-			NULL,
-			NULL,
-			g_cclosure_marshal_VOID__POINTER,
-			G_TYPE_NONE,
-			1,
-			G_TYPE_POINTER );
-
-	/**
-	 * NactMainWindow::main-signal-open-popup
-	 *
-	 * This signal is emitted on the BaseWindow parent when the user right
-	 * clicks somewhere (on an active zone).
-	 *
-	 * Signal args:
-	 * - the GdkEvent
-	 * - the popup name to be opened.
-	 *
-	 * Handler prototype:
-	 * void ( *handler )( BaseWindow *window, GdkEvent *event, const gchar *popup_name, gpointer user_data );
-	 */
-	st_signals[ CONTEXT_MENU ] = g_signal_new(
-			MAIN_SIGNAL_CONTEXT_MENU,
-			G_TYPE_OBJECT,
-			G_SIGNAL_RUN_LAST,
-			0,
-			NULL,
-			NULL,
-			nact_cclosure_marshal_VOID__POINTER_STRING,
-			G_TYPE_NONE,
-			2,
-			G_TYPE_POINTER,
-			G_TYPE_STRING);
+			0 );
 }
 
 static void
@@ -664,88 +594,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 }
 
 static void
-instance_constructed( GObject *window )
-{
-	static const gchar *thisfn = "nact_main_window_instance_constructed";
-	NactMainWindowPrivate *priv;
-	NactApplication *application;
-
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	priv = NACT_MAIN_WINDOW( window )->private;
-
-	if( !priv->dispose_has_run ){
-
-		/* chain up to the parent class */
-		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
-			G_OBJECT_CLASS( st_parent_class )->constructed( window );
-		}
-
-		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
-
-		/* connect to BaseWindow signals
-		 * so that convenience objects instanciated later will have this same signal
-		 * triggered after the one of NactMainWindow
-		 */
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				BASE_SIGNAL_INITIALIZE_GTK,
-				G_CALLBACK( on_base_initialize_gtk ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				BASE_SIGNAL_INITIALIZE_WINDOW,
-				G_CALLBACK( on_base_initialize_window ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				BASE_SIGNAL_SHOW_WIDGETS,
-				G_CALLBACK( on_base_show_widgets ));
-
-		/* monitor the items stored on the disk for modifications
-		 * outside of this application
-		 */
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		priv->updater = nact_application_get_updater( application );
-
-		priv->pivot_handler_id = base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( priv->updater ),
-				PIVOT_SIGNAL_ITEMS_CHANGED,
-				G_CALLBACK( on_pivot_items_changed ));
-
-		/* monitor the updates which originates from each property tab
-		 */
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
-				G_CALLBACK( on_tab_updatable_item_updated ));
-
-		/* create the menubar and other convenience objects
-		 */
-		priv->menubar = nact_menubar_new( BASE_WINDOW( window ));
-		priv->clipboard = nact_clipboard_new( BASE_WINDOW( window ));
-
-		/* initialize the notebook interfaces
-		 */
-		nact_iaction_tab_init( NACT_IACTION_TAB( window ));
-		nact_icommand_tab_init( NACT_ICOMMAND_TAB( window ));
-		nact_ibasenames_tab_init( NACT_IBASENAMES_TAB( window ));
-		nact_imimetypes_tab_init( NACT_IMIMETYPES_TAB( window ));
-		nact_ifolders_tab_init( NACT_IFOLDERS_TAB( window ));
-		nact_ischemes_tab_init( NACT_ISCHEMES_TAB( window ));
-		nact_icapabilities_tab_init( NACT_ICAPABILITIES_TAB( window ));
-		nact_ienvironment_tab_init( NACT_IENVIRONMENT_TAB( window ));
-		nact_iexecution_tab_init( NACT_IEXECUTION_TAB( window ));
-		nact_iproperties_tab_init( NACT_IPROPERTIES_TAB( window ));
-	}
-}
-
-static void
 instance_dispose( GObject *window )
 {
 	static const gchar *thisfn = "nact_main_window_instance_dispose";
@@ -763,29 +611,21 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
-		gtk_main_quit();
-
 		g_object_unref( self->private->clipboard );
-		g_object_unref( self->private->menubar );
 
-		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
+		pane = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-paned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		na_settings_set_uint( NA_IPREFS_MAIN_PANED, pos );
 
-		notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
+		notebook = GTK_NOTEBOOK( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-notebook" ));
 		pos = gtk_notebook_get_tab_pos( notebook );
 		na_iprefs_set_tabs_pos( pos );
 
-		/* unref items view at last as gtk_tree_model_store_clear() will
-		 * finalize all objects, thus invaliditing all our references
-		 */
-		g_object_unref( self->private->items_view );
-
-		/* chain up to the parent class */
-		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
-			G_OBJECT_CLASS( st_parent_class )->dispose( window );
-		}
+		na_gtk_utils_save_window_position( GTK_WINDOW( window ), st_wsp_name );
 	}
+
+	/* chain up to the parent class */
+	G_OBJECT_CLASS( st_parent_class )->dispose( window );
 }
 
 static void
@@ -802,157 +642,159 @@ instance_finalize( GObject *window )
 
 	g_free( self->private );
 
-	/* chain call to parent class */
-	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
-		G_OBJECT_CLASS( st_parent_class )->finalize( window );
-	}
+	/* chain up to the parent class */
+	G_OBJECT_CLASS( st_parent_class )->finalize( window );
 }
 
 /**
  * Returns a newly allocated NactMainWindow object.
  */
 NactMainWindow *
-nact_main_window_new( const NactApplication *application )
+nact_main_window_new( NactApplication *application )
 {
 	NactMainWindow *window;
 
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
 	window = g_object_new( NACT_TYPE_MAIN_WINDOW,
-			BASE_PROP_APPLICATION,        application,
-			BASE_PROP_XMLUI_FILENAME,     st_xmlui_filename,
-			BASE_PROP_TOPLEVEL_NAME,      st_toplevel_name,
-			BASE_PROP_WSP_NAME,           st_wsp_name,
-			BASE_PROP_DESTROY_ON_DISPOSE, TRUE,
+			"application", application,		/* GtkWindow property */
 			NULL );
 
-	if( !base_window_init( BASE_WINDOW( window ))){
-		g_object_unref( window );
-		window = NULL;
-	}
+	setup_main_ui( window );
+	setup_treeview( window );
+	nact_menu_win( window );
+
+	window->private->clipboard = nact_clipboard_new( window );
+	window->private->sort_buttons = nact_sort_buttons_new( window );
+
+	/* initialize the notebook interfaces
+	 *  and monitor the updates which originates from each property tab
+	 */
+	nact_iaction_tab_init( NACT_IACTION_TAB( window ));
+	nact_icommand_tab_init( NACT_ICOMMAND_TAB( window ));
+	nact_ibasenames_tab_init( NACT_IBASENAMES_TAB( window ));
+	nact_imimetypes_tab_init( NACT_IMIMETYPES_TAB( window ));
+	nact_ifolders_tab_init( NACT_IFOLDERS_TAB( window ));
+	nact_ischemes_tab_init( NACT_ISCHEMES_TAB( window ));
+	nact_icapabilities_tab_init( NACT_ICAPABILITIES_TAB( window ));
+	nact_ienvironment_tab_init( NACT_IENVIRONMENT_TAB( window ));
+	nact_iexecution_tab_init( NACT_IEXECUTION_TAB( window ));
+	nact_iproperties_tab_init( NACT_IPROPERTIES_TAB( window ));
+
+	g_signal_connect( window, MAIN_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_item_updated ), NULL );
+
+	na_gtk_utils_restore_window_position( GTK_WINDOW( window ), st_wsp_name );
+	g_signal_connect( window, "delete-event", G_CALLBACK( on_delete_event ), NULL );
+
+	setup_monitor_pivot( window );
+	load_or_reload_items( window );
 
 	return( window );
 }
 
 /*
- * note that for this NactMainWindow, on_base_initialize_gtk_toplevel() and
- * on_base_initialize_base_window() are roughly equivalent, as there is only
- * one occurrence on this window in the application: closing this window
- * is the same than quitting the application
+ * Load and initialize the user interface
  */
 static void
-on_base_initialize_gtk( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data )
+setup_main_ui( NactMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_main_window_on_base_initialize_gtk";
-	GtkWidget *tree_parent;
-	GtkNotebook *notebook;
-
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	if( !window->private->dispose_has_run ){
-
-		g_debug( "%s: window=%p, toplevel=%p, user_data=%p",
-				thisfn,
-				( void * ) window,
-				( void * ) toplevel,
-				( void * ) user_data );
-
-		/* create the tree view which will create itself its own tree model
-		 */
-		tree_parent = base_window_get_widget( BASE_WINDOW( window ), "MainVBox" );
-		g_debug( "%s: tree_parent=%p (%s)", thisfn, ( void * ) tree_parent, G_OBJECT_TYPE_NAME( tree_parent ));
-		window->private->items_view = nact_tree_view_new(
-				BASE_WINDOW( window ),
-				GTK_CONTAINER( tree_parent ),
-				"ActionsList",
-				TREE_MODE_EDITION );
-
-		nact_main_statusbar_initialize_gtk_toplevel( window );
-
-		/* enable popup menu on  the notebook
-		 */
-		notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
-		gtk_notebook_popup_enable( notebook );
-	}
-}
-
-static void
-on_base_initialize_window( NactMainWindow *window, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_main_window_on_base_initialize_window";
+	GtkBuilder *builder;
+	GObject *top_window;
+	GtkWidget *top_widget, *alignment;
+	GtkWidget *notebook;
 	guint pos;
 	GtkWidget *pane;
-	NactApplication *application;
-	GtkNotebook *notebook;
+	NactStatusbar *bar;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	/* no error condition here:
+	 * If there is an error opening the file or parsing the description
+	 * then the program will be aborted. */
+	builder = gtk_builder_new_from_file( st_xmlui_filename );
+	top_window = gtk_builder_get_object( builder, st_toplevel_name );
+	g_return_if_fail( top_window && GTK_IS_WINDOW( top_window ));
 
-	if( !window->private->dispose_has_run ){
+	top_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_window ), "top" );
+	g_return_if_fail( top_widget && GTK_IS_CONTAINER( top_widget ));
 
-		g_debug( "%s: window=%p, user_data=%p",
-				thisfn,
-				( void * ) window,
-				( void * ) user_data );
+	gtk_widget_reparent( top_widget, GTK_WIDGET( main_window ));
+	gtk_widget_destroy( GTK_WIDGET( top_window ));
+	g_object_unref( builder );
 
-		pos = na_settings_get_uint( NA_IPREFS_MAIN_PANED, NULL, NULL );
-		if( pos ){
-			pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
-			gtk_paned_set_position( GTK_PANED( pane ), pos );
-		}
+	/* restore the notebook tabs position, and enable its popup menu
+	 */
+	notebook = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-notebook" );
+	g_return_if_fail( notebook && GTK_IS_NOTEBOOK( notebook ));
+	pos = na_iprefs_get_tabs_pos( NULL );
+	gtk_notebook_set_tab_pos( GTK_NOTEBOOK( notebook ), pos );
+	gtk_notebook_popup_enable( GTK_NOTEBOOK( notebook ));
 
-		/* terminate the application by clicking the top right [X] button
-		 */
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( base_window_get_gtk_toplevel( BASE_WINDOW( window ))),
-				"delete-event",
-				G_CALLBACK( on_delete_event ));
-
-		/* is willing to quit ?
-		 * connect to the signal of the BaseISession interface
-		 */
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( application ),
-				BASE_SIGNAL_QUIT_REQUESTED,
-				G_CALLBACK( on_base_quit_requested ));
-
-		/* connect to treeview signals
-		 */
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				MAIN_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tree_view_selection_changed ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				TREE_SIGNAL_MODIFIED_STATUS_CHANGED,
-				G_CALLBACK( on_tree_view_modified_status_changed ));
-
-		/* restore the notebook tabs position
-		 */
-		pos = na_iprefs_get_tabs_pos( NULL );
-		notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
-		gtk_notebook_set_tab_pos( notebook, pos );
+	/* restore pane position
+	 */
+	pos = na_settings_get_uint( NA_IPREFS_MAIN_PANED, NULL, NULL );
+	if( pos ){
+		pane = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-paned" );
+		g_return_if_fail( pane && GTK_IS_PANED( pane ));
+		gtk_paned_set_position( GTK_PANED( pane ), pos );
 	}
+
+	/* setup statusbar
+	 */
+	bar = nact_statusbar_new();
+	alignment = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-statusbar" );
+	g_return_if_fail( alignment && GTK_IS_ALIGNMENT( alignment ));
+	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( bar ));
+	main_window->private->statusbar = bar;
 }
 
+/*
+ * setup the ActionsList treeview, and connect to management signals
+ */
 static void
-on_base_show_widgets( NactMainWindow *window, gpointer user_data )
+setup_treeview( NactMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_main_window_on_base_show_widgets";
+	NactMainWindowPrivate *priv;
+	GtkWidget *top_widget;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	priv = main_window->private;
+	priv->items_view = nact_tree_view_new( main_window );
 
-	if( !window->private->dispose_has_run ){
+	top_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "ActionsList" );
+	g_return_if_fail( top_widget && GTK_IS_CONTAINER( top_widget ));
+	gtk_container_add( GTK_CONTAINER( top_widget ), GTK_WIDGET( priv->items_view ));
 
-		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+	nact_tree_view_set_mnemonic( priv->items_view, GTK_CONTAINER( main_window ), "ActionsListLabel" );
+	nact_tree_view_set_edition_mode( priv->items_view, TREE_MODE_EDITION );
 
-		load_or_reload_items( window );
-	}
+	g_signal_connect(
+			priv->items_view,
+			TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tree_view_selection_changed ), main_window );
+
+	g_signal_connect(
+			priv->items_view,
+			TREE_SIGNAL_MODIFIED_STATUS_CHANGED,
+			G_CALLBACK( on_tree_view_modified_status_changed ), main_window );
+}
+
+/*
+ * monitor the items stored on the disk for modifications
+ *  from outside of this application
+ */
+static void
+setup_monitor_pivot( NactMainWindow *main_window )
+{
+	NactMainWindowPrivate *priv;
+	GtkApplication *application;
+
+	priv = main_window->private;
+
+	application = gtk_window_get_application( GTK_WINDOW( main_window ));
+	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
+
+	priv->updater = nact_application_get_updater( NACT_APPLICATION ( application ));
+
+	priv->pivot_handler_id = g_signal_connect( priv->updater,
+			PIVOT_SIGNAL_ITEMS_CHANGED, G_CALLBACK( on_pivot_items_changed ), main_window );
 }
 
 /**
@@ -976,6 +818,52 @@ nact_main_window_get_clipboard( const NactMainWindow *window )
 	}
 
 	return( clipboard );
+}
+
+/**
+ * nact_main_window_get_sort_buttons:
+ * @window: this #NactMainWindow instance.
+ *
+ * Returns: the #NactSortButtons object.
+ */
+NactSortButtons *
+nact_main_window_get_sort_buttons( const NactMainWindow *window )
+{
+	NactSortButtons *buttons;
+
+	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), NULL );
+
+	buttons = NULL;
+
+	if( !window->private->dispose_has_run ){
+
+		buttons = window->private->sort_buttons;
+	}
+
+	return( buttons );
+}
+
+/**
+ * nact_main_window_get_statusbar:
+ * @window: this #NactMainWindow instance.
+ *
+ * Returns: the #NactStatusbar object.
+ */
+NactStatusbar *
+nact_main_window_get_statusbar( const NactMainWindow *window )
+{
+	NactStatusbar *bar;
+
+	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), NULL );
+
+	bar = NULL;
+
+	if( !window->private->dispose_has_run ){
+
+		bar = window->private->statusbar;
+	}
+
+	return( bar );
 }
 
 /**
@@ -1062,12 +950,12 @@ on_block_items_changed_timeout( NactMainWindow *window )
  * the modification status of the items view has changed
  */
 static void
-on_tree_view_modified_status_changed( NactMainWindow *window, gboolean is_modified, gpointer user_data )
+on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_on_tree_view_modified_status_changed";
 
-	g_debug( "%s: window=%p, is_modified=%s, user_data=%p",
-			thisfn, ( void * ) window, is_modified ? "True":"False", ( void * ) user_data );
+	g_debug( "%s: treeview=%p, is_modified=%s, window=%p",
+			thisfn, ( void * ) treeview, is_modified ? "True":"False", ( void * ) window );
 
 	if( !window->private->dispose_has_run ){
 
@@ -1080,7 +968,7 @@ on_tree_view_modified_status_changed( NactMainWindow *window, gboolean is_modifi
  * tree view selection has changed
  */
 static void
-on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, gpointer user_data )
+on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_on_tree_view_selection_changed";
 	guint count;
@@ -1088,9 +976,9 @@ on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, g
 	count = g_list_length( selected_items );
 
 	if( !window->private->dispose_has_run ){
-		g_debug( "%s: window=%p, selected_items=%p (count=%d), user_data=%p",
-				thisfn, ( void * ) window,
-				( void * ) selected_items, count, ( void * ) user_data );
+		g_debug( "%s: treeview=%p, selected_items=%p (count=%d), window=%p",
+				thisfn, ( void * ) treeview,
+				( void * ) selected_items, count, ( void * ) window );
 
 		raz_selection_properties( window );
 
@@ -1104,32 +992,17 @@ on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, g
 	}
 }
 
-/*
- * cleanup handler for our MAIN_SIGNAL_SELECTION_CHANGED signal
- */
 static void
-on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items )
+on_tab_item_updated( NactMainWindow *window, NAIContext *context, guint data, void *empty )
 {
-	static const gchar *thisfn = "nact_main_window_on_selection_changed_cleanup_handler";
-
-	g_debug( "%s: window=%p, selected_items=%p (count=%u)",
-			thisfn, ( void * ) window,
-			( void * ) selected_items, g_list_length( selected_items ));
-
-	na_object_free_items( selected_items );
-}
-
-static void
-on_tab_updatable_item_updated( NactMainWindow *window, NAIContext *context, guint data, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_main_window_on_tab_updatable_item_updated";
+	static const gchar *thisfn = "nact_main_window_on_tab_item_updated";
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
-		g_debug( "%s: window=%p, context=%p (%s), data=%u, user_data=%p",
+		g_debug( "%s: window=%p, context=%p (%s), data=%u, empty=%p",
 				thisfn, ( void * ) window, ( void * ) context, G_OBJECT_TYPE_NAME( context ),
-				data, ( void * ) user_data );
+				data, ( void * ) empty );
 
 		if( context ){
 			na_object_check_status( context );
@@ -1146,7 +1019,7 @@ raz_selection_properties( NactMainWindow *window )
 	window->private->editable = FALSE;
 	window->private->reason = 0;
 
-	nact_main_statusbar_set_locked( window, FALSE, 0 );
+	nact_statusbar_set_locked( window->private->statusbar, FALSE, 0 );
 }
 
 /*
@@ -1191,8 +1064,8 @@ static void
 setup_dialog_title( NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_setup_dialog_title";
-	GtkWindow *toplevel;
-	NactApplication *application;
+	NactMainWindowPrivate *priv;
+	GtkApplication *application;
 	gchar *title;
 	gchar *label;
 	gchar *tmp;
@@ -1200,20 +1073,21 @@ setup_dialog_title( NactMainWindow *window )
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	title = base_application_get_application_name( BASE_APPLICATION( application ));
+	priv = window->private;
+	application = gtk_window_get_application( GTK_WINDOW( window ));
+	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
+	title = nact_application_get_application_name( NACT_APPLICATION( application ));
 
-	if( window->private->current_item ){
-		label = na_object_get_label( window->private->current_item );
-		is_modified = na_object_is_modified( window->private->current_item );
+	if( priv->current_item ){
+		label = na_object_get_label( priv->current_item );
+		is_modified = na_object_is_modified( priv->current_item );
 		tmp = g_strdup_printf( "%s%s - %s", is_modified ? "*" : "", label, title );
 		g_free( label );
 		g_free( title );
 		title = tmp;
 	}
 
-	toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
-	gtk_window_set_title( toplevel, title );
+	gtk_window_set_title( GTK_WINDOW( window ), title );
 	g_free( title );
 }
 
@@ -1223,7 +1097,7 @@ setup_writability_status( NactMainWindow *window )
 	g_return_if_fail( NA_IS_OBJECT_ITEM( window->private->current_item ));
 
 	window->private->editable = na_object_is_finally_writable( window->private->current_item, &window->private->reason );
-	nact_main_statusbar_set_locked( window, !window->private->editable, window->private->reason );
+	nact_statusbar_set_locked( window->private->statusbar, !window->private->editable, window->private->reason );
 }
 
 /*
@@ -1323,7 +1197,6 @@ load_or_reload_items( NactMainWindow *window )
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	raz_selection_properties( window );
-
 	tree = na_updater_load_items( window->private->updater );
 	nact_tree_view_fill( window->private->items_view, tree );
 
@@ -1353,7 +1226,7 @@ nact_main_window_quit( NactMainWindow *window )
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		if( !window->private->is_tree_modified  || warn_modified( window )){
-			g_object_unref( window );
+			gtk_widget_destroy( GTK_WIDGET( window ));
 			terminated = TRUE;
 		}
 	}
@@ -1361,6 +1234,7 @@ nact_main_window_quit( NactMainWindow *window )
 	return( terminated );
 }
 
+#if 0
 /*
  * signal handler
  * should return %FALSE if it is not willing to quit
@@ -1387,6 +1261,7 @@ on_base_quit_requested( NactApplication *application, NactMainWindow *window )
 
 	return( willing_to );
 }
+#endif
 
 /*
  * triggered when the user clicks on the top right [X] button
@@ -1394,14 +1269,16 @@ on_base_quit_requested( NactApplication *application, NactMainWindow *window )
  * window to be destroyed); instead we gracefully quit the application
  */
 static gboolean
-on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window )
+on_delete_event( GtkWidget *toplevel, GdkEvent *event, void *empty )
 {
 	static const gchar *thisfn = "nact_main_window_on_delete_event";
 
-	g_debug( "%s: toplevel=%p, event=%p, window=%p",
-			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) window );
+	g_debug( "%s: toplevel=%p, event=%p, empty=%p",
+			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) empty );
 
-	nact_main_window_quit( window );
+	g_return_val_if_fail( toplevel && NACT_IS_MAIN_WINDOW( toplevel ), FALSE );
+
+	nact_main_window_quit( NACT_MAIN_WINDOW( toplevel ));
 
 	return( TRUE );
 }

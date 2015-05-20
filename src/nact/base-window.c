@@ -35,13 +35,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <core/na-gtk-utils.h>
+#include "core/na-gtk-utils.h"
 
-#include "base-application.h"
 #include "base-builder.h"
 #include "base-window.h"
 #include "base-gtk-utils.h"
 #include "base-marshal.h"
+#include "nact-application.h"
 
 /* private class data
  */
@@ -52,24 +52,23 @@ struct _BaseWindowClassPrivate {
 /* private instance data
  */
 struct _BaseWindowPrivate {
-	gboolean         dispose_has_run;
+	gboolean              dispose_has_run;
 
 	/* properties
 	 */
-	BaseWindow      *parent;
-	BaseApplication *application;
-	gchar           *xmlui_filename;
-	gboolean         has_own_builder;
-	gchar           *toplevel_name;
-	gchar           *wsp_name;
-	gboolean         destroy_on_dispose;
+	GtkApplicationWindow *main_window;
+	gchar                *xmlui_filename;
+	gboolean              has_own_builder;
+	gchar                *toplevel_name;
+	gchar                *wsp_name;
+	gboolean              destroy_on_dispose;
 
 	/* internals
 	 */
-	GtkWindow       *gtk_toplevel;
-	gboolean         initialized;
-	GList           *signals;
-	BaseBuilder     *builder;
+	GtkWindow            *gtk_toplevel;
+	gboolean              initialized;
+	GList                *signals;
+	BaseBuilder          *builder;
 };
 
 /* instance properties
@@ -77,8 +76,7 @@ struct _BaseWindowPrivate {
 enum {
 	BASE_PROP_0,
 
-	BASE_PROP_PARENT_ID,
-	BASE_PROP_APPLICATION_ID,
+	BASE_PROP_MAIN_WINDOW_ID,
 	BASE_PROP_XMLUI_FILENAME_ID,
 	BASE_PROP_HAS_OWN_BUILDER_ID,
 	BASE_PROP_TOPLEVEL_NAME_ID,
@@ -115,7 +113,7 @@ typedef struct {
 	RecordedSignal;
 
 static GObjectClass *st_parent_class           = NULL;
-static gint          st_signals[ LAST_SIGNAL ] = { 0 };
+static guint         st_signals[ LAST_SIGNAL ] = { 0 };
 static gboolean      st_debug_signal_connect   = FALSE;
 
 static GType        register_type( void );
@@ -222,16 +220,9 @@ class_init( BaseWindowClass *klass )
 					"",
 					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	g_object_class_install_property( object_class, BASE_PROP_APPLICATION_ID,
+	g_object_class_install_property( object_class, BASE_PROP_MAIN_WINDOW_ID,
 			g_param_spec_pointer(
-					BASE_PROP_APPLICATION,
-					_( "BaseApplication" ),
-					_( "A pointer (not a reference) to the BaseApplication instance" ),
-					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
-
-	g_object_class_install_property( object_class, BASE_PROP_PARENT_ID,
-			g_param_spec_pointer(
-					BASE_PROP_PARENT,
+					BASE_PROP_MAIN_WINDOW,
 					_( "Parent BaseWindow" ),
 					_( "A pointer (not a reference) to the BaseWindow parent of this BaseWindow" ),
 					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
@@ -277,6 +268,11 @@ class_init( BaseWindowClass *klass )
 	 * method.
 	 *
 	 * The default virtual method just does nothing.
+	 *
+	 * Handler:
+	 *   void handler( BaseWindow *window,
+	 *   				GtkWindow *toplevel,
+	 *   				void      *user_data );
 	 */
 	st_signals[ INITIALIZE_GTK ] =
 		g_signal_new_class_handler(
@@ -286,7 +282,7 @@ class_init( BaseWindowClass *klass )
 				G_CALLBACK( on_initialize_gtk_toplevel_class_handler ),
 				NULL,
 				NULL,
-				g_cclosure_marshal_VOID__POINTER,
+				NULL,
 				G_TYPE_NONE,
 				1,
 				G_TYPE_POINTER );
@@ -306,6 +302,10 @@ class_init( BaseWindowClass *klass )
 	 * The default virtual method set transient state of the Gtk toplevel
 	 * againts its parent, and manages its size and position on the desktop.
 	 * It so should really be called by the derived class.
+	 *
+	 * Handler:
+	 *   void handler( BaseWindow *window,
+	 *   				void      *user_data );
 	 */
 	st_signals[ INITIALIZE_BASE ] =
 		g_signal_new_class_handler(
@@ -315,7 +315,7 @@ class_init( BaseWindowClass *klass )
 				G_CALLBACK( on_initialize_base_window_class_handler ),
 				NULL,
 				NULL,
-				g_cclosure_marshal_VOID__VOID,
+				NULL,
 				G_TYPE_NONE,
 				0 );
 
@@ -334,6 +334,10 @@ class_init( BaseWindowClass *klass )
 	 *
 	 * The default virtual method calls gtk_widget_show_all().
 	 * It so should really be called by the derived class.
+	 *
+	 * Handler:
+	 *   void handler( BaseWindow *window,
+	 *   				void      *user_data );
 	 */
 	st_signals[ SHOW_WIDGETS ] =
 		g_signal_new_class_handler(
@@ -343,7 +347,7 @@ class_init( BaseWindowClass *klass )
 				G_CALLBACK( on_show_widgets_class_handler ),
 				NULL,
 				NULL,
-				g_cclosure_marshal_VOID__VOID,
+				NULL,
 				G_TYPE_NONE,
 				0 );
 }
@@ -378,12 +382,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case BASE_PROP_PARENT_ID:
-				g_value_set_pointer( value, self->private->parent );
-				break;
-
-			case BASE_PROP_APPLICATION_ID:
-				g_value_set_pointer( value, self->private->application );
+			case BASE_PROP_MAIN_WINDOW_ID:
+				g_value_set_pointer( value, self->private->main_window );
 				break;
 
 			case BASE_PROP_XMLUI_FILENAME_ID:
@@ -424,12 +424,8 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case BASE_PROP_PARENT_ID:
-				self->private->parent = g_value_get_pointer( value );
-				break;
-
-			case BASE_PROP_APPLICATION_ID:
-				self->private->application = g_value_get_pointer( value );
+			case BASE_PROP_MAIN_WINDOW_ID:
+				self->private->main_window = g_value_get_pointer( value );
 				break;
 
 			case BASE_PROP_XMLUI_FILENAME_ID:
@@ -487,17 +483,7 @@ instance_constructed( GObject *window )
 
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-		/* at least the BaseWindow parent or the BaseApplication application
-		 * must have been provided at instanciation time
-		 */
-		if( !priv->application ){
-			g_return_if_fail( priv->parent );
-			g_return_if_fail( BASE_IS_WINDOW( priv->parent ));
-
-			priv->application = priv->parent->private->application;
-		}
-
-		g_return_if_fail( BASE_IS_APPLICATION( priv->application ));
+		g_return_if_fail( priv->main_window && GTK_IS_APPLICATION_WINDOW( priv->main_window ));
 	}
 }
 
@@ -538,8 +524,6 @@ instance_dispose( GObject *window )
 		}
 		g_list_free( priv->signals );
 
-		/* at least the main window should have this property set
-		 */
 		if( priv->destroy_on_dispose ){
 			gtk_widget_destroy( GTK_WIDGET( priv->gtk_toplevel ));
 		}
@@ -851,7 +835,6 @@ do_initialize_base_window( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_do_initialize_base_window";
 	BaseWindowPrivate *priv;
-	GtkWindow *parent_toplevel;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
@@ -861,10 +844,9 @@ do_initialize_base_window( BaseWindow *window )
 
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-		if( priv->parent ){
-			g_return_if_fail( BASE_IS_WINDOW( priv->parent ));
-			parent_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( priv->parent ));
-			gtk_window_set_transient_for( priv->gtk_toplevel, parent_toplevel );
+		if( priv->main_window ){
+			g_return_if_fail( GTK_IS_APPLICATION_WINDOW( priv->main_window ));
+			gtk_window_set_transient_for( priv->gtk_toplevel, GTK_WINDOW( priv->main_window ));
 		}
 
 		if( priv->wsp_name && strlen( priv->wsp_name )){
@@ -920,15 +902,15 @@ do_show_widgets( BaseWindow *window )
  * implement the run() virtual method.
  *
  * Returns: the exit code as set by the derived class, or:
- * - %BASE_EXIT_CODE_PROGRAM if the window has already been disposed,
- * - %BASE_EXIT_CODE_INIT_WINDOW if the window was not and cannot be
+ * - %NACT_EXIT_CODE_PROGRAM if the window has already been disposed,
+ * - %NACT_EXIT_CODE_WINDOW if the window was not and cannot be
  *   loaded and initialized.
  */
 int
 base_window_run( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_run";
-	int code = BASE_EXIT_CODE_PROGRAM;
+	int code = NACT_EXIT_CODE_PROGRAM;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), code );
 
@@ -936,13 +918,13 @@ base_window_run( BaseWindow *window )
 
 		if( !base_window_init( window )){
 			g_debug( "%s: base_window_init() returns False", thisfn );
-			code = BASE_EXIT_CODE_INIT_WINDOW;
+			code = NACT_EXIT_CODE_WINDOW;
 
 		} else {
-			g_return_val_if_fail( GTK_IS_WINDOW( window->private->gtk_toplevel ), BASE_EXIT_CODE_PROGRAM );
+			g_return_val_if_fail( GTK_IS_WINDOW( window->private->gtk_toplevel ), NACT_EXIT_CODE_PROGRAM );
 			g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-			code = BASE_EXIT_CODE_OK;
+			code = NACT_EXIT_CODE_OK;
 
 			if( BASE_WINDOW_GET_CLASS( window )->run ){
 				code = BASE_WINDOW_GET_CLASS( window )->run( window );
@@ -976,45 +958,54 @@ base_window_dump_children( const BaseWindow *window )
  * base_window_get_application:
  * @window: this #BaseWindow object.
  *
- * Returns: a pointer on the #BaseApplication object.
+ * Returns: a pointer TO the #GtkApplication -derived object.
  *
  * The returned pointer is owned by the primary allocator of the
- * application ; it should not be g_free() nor g_object_unref() by the
- * caller.
+ * application ; it should not be freed not unreffed by the caller.
  */
-BaseApplication *
+GtkApplication *
 base_window_get_application( const BaseWindow *window )
 {
-	BaseApplication *application = NULL;
+	BaseWindowPrivate *priv;
+	GtkApplicationWindow *main_window;
+	GtkApplication *application = NULL;
 
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+	g_return_val_if_fail( window && BASE_IS_WINDOW( window ), NULL );
 
-	if( !window->private->dispose_has_run ){
+	priv = window->private;
 
-		application = window->private->application;
+	if( !priv->dispose_has_run ){
+
+		main_window = base_window_get_main_window( window );
+		application = gtk_window_get_application( GTK_WINDOW( main_window ));
 	}
 
 	return( application );
 }
 
 /**
- * base_window_get_parent:
+ * base_window_get_main_window:
  * @window: this #BaseWindow instance..
  *
- * Returns the #BaseWindow parent of @window.
+ * Returns the #GtkApplicationWindow main_window (which should be the
+ * parent of this @window).
  *
- * The returned object is owned by @window, and should not be freed.
+ * The returned object is owned by the application, and should not be
+ * freed nor unreffed by the caller.
  */
-BaseWindow *
-base_window_get_parent( const BaseWindow *window )
+GtkApplicationWindow *
+base_window_get_main_window( const BaseWindow *window )
 {
-	BaseWindow *parent = NULL;
+	BaseWindowPrivate *priv;
+	GtkApplicationWindow *parent = NULL;
 
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+	g_return_val_if_fail( window && BASE_IS_WINDOW( window ), NULL );
 
-	if( !window->private->dispose_has_run ){
+	priv = window->private;
 
-		parent = window->private->parent;
+	if( !priv->dispose_has_run ){
+
+		parent = priv->main_window;
 	}
 
 	return( parent );

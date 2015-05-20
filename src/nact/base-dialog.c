@@ -32,6 +32,7 @@
 #endif
 
 #include "base-dialog.h"
+#include "nact-application.h"
 
 /* private class data
  */
@@ -187,9 +188,9 @@ do_run( BaseWindow *window )
 	int code;
 	GtkWindow *toplevel;
 
-	g_return_val_if_fail( BASE_IS_DIALOG( window ), BASE_EXIT_CODE_PROGRAM );
+	g_return_val_if_fail( BASE_IS_DIALOG( window ), NACT_EXIT_CODE_PROGRAM );
 
-	code = BASE_EXIT_CODE_INIT_WINDOW;
+	code = NACT_EXIT_CODE_WINDOW;
 
 	if( !BASE_DIALOG( window )->private->dispose_has_run ){
 

@@ -47,9 +47,10 @@
  * construction time.
  */
 
-#include <api/na-object-item.h>
+#include "api/na-object-item.h"
 
 #include "base-window.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -64,35 +65,16 @@ typedef struct _NactTreeViewPrivate        NactTreeViewPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObject              parent;
+	GtkBin               parent;
 	NactTreeViewPrivate *private;
 }
 	NactTreeView;
 
-typedef struct _NactTreeViewClassPrivate   NactTreeViewClassPrivate;
-
 typedef struct {
 	/*< private >*/
-	GObjectClass              parent;
-	NactTreeViewClassPrivate *private;
+	GtkBinClass          parent;
 }
 	NactTreeViewClass;
-
-/**
- * Properties defined by the NactTreeView class.
- * They should be provided at object instantiation time.
- *
- * @TREE_PROP_WINDOW:         the BaseWindow.
- * @TREE_PROP_PARENT:         the widget which is parent of this tree view.
- * @TREE_PROP_WIDGET_NAME:    the tree view widget name.
- * @TREE_PROP_MODE:           management mode.
- * @TREE_PROP_NOTIFY_ALLOWED: whether notifications are allowed.
- */
-#define TREE_PROP_WINDOW						"tree-prop-window"
-#define TREE_PROP_PARENT						"tree-prop-parent"
-#define TREE_PROP_WIDGET_NAME					"tree-prop-widget-name"
-#define TREE_PROP_MODE							"tree-prop-mode"
-#define TREE_PROP_NOTIFY_ALLOWED				"tree-prop-notify-allowed"
 
 /**
  * Signals emitted by the NactTreeView instance.
@@ -102,9 +84,11 @@ typedef struct {
 #define TREE_SIGNAL_FOCUS_OUT					"tree-signal-focus-out"
 #define TREE_SIGNAL_LEVEL_ZERO_CHANGED			"tree-signal-level-zero-changed"
 #define TREE_SIGNAL_MODIFIED_STATUS_CHANGED		"tree-signal-modified-status-changed"
+#define TREE_SIGNAL_SELECTION_CHANGED		    "tree-selection-changed"
+#define TREE_SIGNAL_CONTEXT_MENU			    "tree-signal-open-popup"
 
 typedef enum {
-	TREE_MODE_EDITION = 0,
+	TREE_MODE_EDITION = 1,
 	TREE_MODE_SELECTION,
 	/*< private >*/
 	TREE_MODE_N_MODES
@@ -112,7 +96,7 @@ typedef enum {
 	NactTreeMode;
 
 /**
- * When getting a list of items; these indcators may be OR-ed.
+ * When getting a list of items; these indicators may be OR-ed.
  */
 enum {
 	TREE_LIST_SELECTED = 1<<0,
@@ -121,17 +105,18 @@ enum {
 	TREE_LIST_DELETED  = 1<<8,
 };
 
-/**
- * The NactTreeView is attached to the parent BaseWindow via a GObject data.
- * Only NactTreeView itself and NactTreeIEditable interface should use it.
- */
-#define WINDOW_DATA_TREE_VIEW					"window-data-tree-view"
-
 GType         nact_tree_view_get_type( void );
 
-NactTreeView *nact_tree_view_new( BaseWindow *window, GtkContainer *parent, const gchar *treeview_name, NactTreeMode mode );
+NactTreeView *nact_tree_view_new               ( NactMainWindow *main_window );
 
-void          nact_tree_view_fill     ( NactTreeView *view, GList *items );
+void          nact_tree_view_set_mnemonic      ( NactTreeView *view,
+														GtkContainer *parent,
+														const gchar *widget_name );
+
+void          nact_tree_view_set_edition_mode  ( NactTreeView *view,
+														NactTreeMode mode );
+
+void          nact_tree_view_fill              ( NactTreeView *view, GList *items );
 
 gboolean      nact_tree_view_are_notify_allowed( const NactTreeView *view );
 void          nact_tree_view_set_notify_allowed( NactTreeView *view, gboolean allow );

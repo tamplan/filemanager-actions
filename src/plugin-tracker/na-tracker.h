@@ -43,14 +43,6 @@
  * extension, it is instantiated when the module is loaded by the file
  * manager, usually at startup time.
  *
- * glib-dbus
- *
- * The #NATracker object initiates a connection on the session D-Bus, takes
- * ownership of our well-known name, and then register itself as the object
- * which serves our object path (so installing introspection infos).
- *
- * GDBus
- *
  * The #NATracker object instanciates and keeps a new GDBusObjectManagerServer
  * rooted on our D-Bus path.
  * It then allocates an object at this same path, and another object which
@@ -89,10 +81,6 @@ typedef struct {
 
 GType    na_tracker_get_type          ( void );
 void     na_tracker_register_type     ( GTypeModule *module );
-
-#ifdef HAVE_DBUS_GLIB
-gboolean na_tracker_get_selected_paths( NATracker *tracker, char ***paths, GError **error );
-#endif
 
 G_END_DECLS
 

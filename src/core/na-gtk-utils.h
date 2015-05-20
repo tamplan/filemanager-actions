@@ -41,7 +41,13 @@ G_BEGIN_DECLS
 
 /* widget hierarchy
  */
-GtkWidget *na_gtk_utils_find_widget_by_name( GtkContainer *container, const gchar *name );
+GtkWidget *na_gtk_utils_find_widget_by_name   ( GtkContainer *container,
+													const gchar *name );
+void       na_gtk_utils_connect_widget_by_name( GtkContainer *container,
+													const gchar *name,
+													const gchar *signal,
+													GCallback cb,
+													void *user_data );
 
 #ifdef NA_MAINTAINER_MODE
 void       na_gtk_utils_dump_children          ( GtkContainer *container );

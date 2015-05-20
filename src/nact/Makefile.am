@@ -44,15 +44,9 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 BUILT_SOURCES = \
-	base-marshal.c										\
-	base-marshal.h										\
-	nact-marshal.c										\
-	nact-marshal.h										\
 	$(NULL)
 
 nautilus_actions_config_tool_SOURCES = \
-	base-application.c									\
-	base-application.h									\
 	base-assistant.c									\
 	base-assistant.h									\
 	base-builder.c										\
@@ -61,19 +55,11 @@ nautilus_actions_config_tool_SOURCES = \
 	base-dialog.h										\
 	base-gtk-utils.c									\
 	base-gtk-utils.h									\
-	base-isession.c										\
-	base-isession.h										\
-	base-iunique.c										\
-	base-iunique.h										\
 	base-keysyms.h										\
 	base-window.c										\
 	base-window.h										\
 	egg-desktop-file.c									\
 	egg-desktop-file.h									\
-	egg-sm-client.c										\
-	egg-sm-client.h										\
-	egg-sm-client-private.h								\
-	egg-sm-client-xsmp.c								\
 	egg-tree-multi-dnd.c								\
 	egg-tree-multi-dnd.h								\
 	main.c												\
@@ -99,6 +85,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-ibasenames-tab.h								\
 	nact-icapabilities-tab.c							\
 	nact-icapabilities-tab.h							\
+	nact-icommand-tab.c									\
+	nact-icommand-tab.h									\
 	nact-icon-chooser.c									\
 	nact-icon-chooser.h									\
 	nact-ienvironment-tab.c								\
@@ -107,33 +95,27 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iexecution-tab.h								\
 	nact-ifolders-tab.c									\
 	nact-ifolders-tab.h									\
-	nact-icommand-tab.c									\
-	nact-icommand-tab.h									\
 	nact-imimetypes-tab.c								\
 	nact-imimetypes-tab.h								\
 	nact-iproperties-tab.c								\
 	nact-iproperties-tab.h								\
 	nact-ischemes-tab.c									\
 	nact-ischemes-tab.h									\
-	nact-main-statusbar.c								\
-	nact-main-statusbar.h								\
 	nact-main-tab.c										\
 	nact-main-tab.h										\
 	nact-main-toolbar.c									\
 	nact-main-toolbar.h									\
 	nact-main-window.c									\
 	nact-main-window.h									\
+	nact-main-window-def.h								\
 	nact-match-list.c									\
 	nact-match-list.h									\
-	nact-menubar.c										\
-	nact-menubar.h										\
-	nact-menubar-priv.h									\
-	nact-menubar-edit.c									\
-	nact-menubar-file.c									\
-	nact-menubar-help.c									\
-	nact-menubar-maintainer.c							\
-	nact-menubar-tools.c								\
-	nact-menubar-view.c									\
+	nact-menu.c											\
+	nact-menu.h											\
+	nact-menu-edit.c									\
+	nact-menu-edit.h									\
+	nact-menu-file.c									\
+	nact-menu-file.h									\
 	nact-preferences-editor.c							\
 	nact-preferences-editor.h							\
 	nact-providers-list.c								\
@@ -142,6 +124,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-schemes-list.h									\
 	nact-sort-buttons.c									\
 	nact-sort-buttons.h									\
+	nact-statusbar.c									\
+	nact-statusbar.h									\
 	nact-tree-ieditable.c								\
 	nact-tree-ieditable.h								\
 	nact-tree-model.c									\
@@ -152,20 +136,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-tree-view.h									\
 	$(BUILT_SOURCES)									\
 	$(NULL)
-
-base-marshal.h: base-marshal.def $(GLIB_GENMARSHAL)
-	$(GLIB_GENMARSHAL) $< --header --prefix=base_cclosure_marshal > $@
-
-base-marshal.c: base-marshal.def $(GLIB_GENMARSHAL)
-	echo "#include \"base-marshal.h\"" > $@ && \
-	$(GLIB_GENMARSHAL) $< --body --prefix=base_cclosure_marshal >> $@
-
-nact-marshal.h: nact-marshal.def $(GLIB_GENMARSHAL)
-	$(GLIB_GENMARSHAL) $< --header --prefix=nact_cclosure_marshal > $@
-
-nact-marshal.c: nact-marshal.def $(GLIB_GENMARSHAL)
-	echo "#include \"nact-marshal.h\"" > $@ && \
-	$(GLIB_GENMARSHAL) $< --body --prefix=nact_cclosure_marshal >> $@
 
 nautilus_actions_config_tool_LDADD = \
 	$(top_builddir)/src/core/libna-core.la				\
@@ -182,9 +152,12 @@ ui_files = \
 	nact-add-scheme.ui									\
 	nact-assistant-export.ui							\
 	nact-assistant-import.ui							\
+	nact-confirm-logout.ui								\
+	nact-export-ask.ui									\
 	nact-icon-chooser.ui								\
+	nact-legend.ui										\
+	nact-main-window.ui									\
 	nact-preferences.ui									\
-	nautilus-actions-config-tool.ui						\
 	$(NULL)
 
 images_files = \

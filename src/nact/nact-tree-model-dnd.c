@@ -43,7 +43,7 @@
 
 #include "nact-application.h"
 #include "nact-clipboard.h"
-#include "nact-main-statusbar.h"
+#include "nact-statusbar.h"
 #include "nact-main-window.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-priv.h"
@@ -579,7 +579,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	gboolean relabel;
 	NactTreeView *items_view;
 
-	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
+	application = NACT_APPLICATION( gtk_window_get_application( GTK_WINDOW( model->private->window )));
 	updater = nact_application_get_updater( application );
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( model->private->window ), FALSE );
@@ -662,18 +662,22 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 static gboolean
 is_drop_possible( NactTreeModel *model, GtkTreePath *dest, NAObjectItem **parent )
 {
+	NactTreeModelPrivate *priv;
 	gboolean drop_ok;
-	NactApplication *application;
+	GtkApplication *application;
 	NactMainWindow *main_window;
 	GtkTreeIter iter;
 	NAObjectItem *parent_dest;
+	NactStatusbar *bar;
 
+	priv = model->private;
 	drop_ok = FALSE;
 	parent_dest = NULL;
-	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
+	application = gtk_window_get_application( GTK_WINDOW( priv->window ));
+	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), FALSE );
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( model->private->window ), FALSE );
-	main_window = NACT_MAIN_WINDOW( model->private->window );
+	g_return_val_if_fail( priv->window && NACT_IS_MAIN_WINDOW( priv->window ), FALSE );
+	main_window = NACT_MAIN_WINDOW( priv->window );
 
 	/* if we can have an iter on given dest, then the dest already exists
 	 * so dropped items should be of the same type that already existing
@@ -686,9 +690,10 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, NAObjectItem **parent
 	 */
 	} else if( gtk_tree_path_get_depth( dest ) == 1 ){
 
-		if( model->private->drag_has_profiles ){
-			nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
+		if( priv->drag_has_profiles ){
+			bar = nact_main_window_get_statusbar( main_window );
+			nact_statusbar_display_with_timeout(
+						bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 
 		} else {
 			drop_ok = TRUE;
@@ -703,7 +708,8 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, NAObjectItem **parent
 	}
 
 	if( drop_ok ){
-		drop_ok = is_parent_accept_new_children( application, main_window, parent_dest );
+		drop_ok = is_parent_accept_new_children(
+				NACT_APPLICATION( application ), main_window, parent_dest );
 	}
 
 	if( drop_ok && parent ){
@@ -719,9 +725,11 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainW
 	static const gchar *thisfn = "nact_tree_model_dnd_is_drop_possible_before_iter";
 	gboolean drop_ok;
 	NAObject *object;
+	NactStatusbar *bar;
 
 	drop_ok = FALSE;
 	*parent = NULL;
+	bar = nact_main_window_get_statusbar( window );
 
 	gtk_tree_model_get( GTK_TREE_MODEL( model ), iter, TREE_COLUMN_NAOBJECT, &object, -1 );
 	g_object_unref( object );
@@ -735,8 +743,8 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainW
 
 		} else {
 			/* unable to drop a profile here */
-			nact_main_statusbar_display_with_timeout(
-					window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
+			nact_statusbar_display_with_timeout(
+					bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 		}
 
 	} else if( NA_IS_OBJECT_ITEM( object )){
@@ -745,8 +753,8 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainW
 
 	} else {
 		/* unable to drop an action or a menu here */
-		nact_main_statusbar_display_with_timeout(
-				window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_item ));
+		nact_statusbar_display_with_timeout(
+				bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_item ));
 	}
 
 	return( drop_ok );
@@ -760,9 +768,11 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWin
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	NAObject *object;
+	NactStatusbar *bar;
 
 	drop_ok = FALSE;
 	*parent = NULL;
+	bar = nact_main_window_get_statusbar( window );
 
 	path = gtk_tree_path_copy( dest );
 
@@ -779,8 +789,8 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWin
 					*parent = NA_OBJECT_ITEM( object );
 
 				} else {
-					nact_main_statusbar_display_with_timeout(
-							window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
+					nact_statusbar_display_with_timeout(
+							bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 				}
 
 			} else if( NA_IS_OBJECT_MENU( object )){
@@ -788,8 +798,8 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWin
 					*parent = na_object_get_parent( object );
 
 			} else {
-				nact_main_statusbar_display_with_timeout(
-						window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_item ));
+				nact_statusbar_display_with_timeout(
+						bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_item ));
 			}
 		}
 	}
@@ -852,8 +862,9 @@ static gboolean
 drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
 {
 	static const gchar *thisfn = "nact_tree_model_dnd_drop_uri_list";
+	NactTreeModelPrivate *priv;
 	gboolean drop_done;
-	NactApplication *application;
+	GtkApplication *application;
 	NAUpdater *updater;
 	NactMainWindow *main_window;
 	NAImporterParms parms;
@@ -866,7 +877,9 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	GSList *messages;
 	gchar *dlg_message;
 	GtkWidget *dialog;
+	NactStatusbar *bar;
 
+	priv = model->private;
 	gchar *dest_str = gtk_tree_path_to_string( dest );
 	g_debug( "%s: model=%p, dest=%p (%s), selection_data=%p",
 			thisfn, ( void * ) model, ( void * ) dest, dest_str, ( void * ) selection_data );
@@ -879,11 +892,12 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		return( FALSE );
 	}
 
-	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
-	updater = nact_application_get_updater( application );
+	application = gtk_window_get_application( GTK_WINDOW( priv->window ));
+	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), FALSE );
+	updater = nact_application_get_updater( NACT_APPLICATION( application ));
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( model->private->window ), FALSE );
-	main_window = NACT_MAIN_WINDOW( model->private->window );
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( priv->window ), FALSE );
+	main_window = NACT_MAIN_WINDOW( priv->window );
 
 	selection_data_data = ( const gchar * ) gtk_selection_data_get_data( selection_data );
 	g_debug( "%s", selection_data_data );
@@ -893,7 +907,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	parms.check_fn = ( NAImporterCheckFn ) is_dropped_already_exists;
 	parms.check_fn_data = main_window;
 	parms.preferred_mode = 0;
-	parms.parent_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( main_window ));
+	parms.parent_toplevel = GTK_WINDOW( main_window );
 
 	import_results = na_importer_import_from_uris( NA_PIVOT( updater ), &parms );
 
@@ -927,8 +941,9 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	count = g_slist_length( messages );
 	g_debug( "%s: count=%d", thisfn, count );
 	if( count == 1 ){
-		nact_main_statusbar_display_with_timeout(
-				main_window, TREE_MODEL_STATUSBAR_CONTEXT, messages->data );
+		bar = nact_main_window_get_statusbar( main_window );
+		nact_statusbar_display_with_timeout(
+				bar, TREE_MODEL_STATUSBAR_CONTEXT, messages->data );
 	}
 	if( count > 1 ){
 		dlg_message = na_core_utils_slist_join_at_end( messages, "\n" );
@@ -1139,9 +1154,11 @@ is_parent_accept_new_children( NactApplication *application, NactMainWindow *win
 {
 	gboolean accept_ok;
 	NAUpdater *updater;
+	NactStatusbar *bar;
 
 	accept_ok = FALSE;
 	updater = nact_application_get_updater( application );
+	bar = nact_main_window_get_statusbar( window );
 
 	/* inserting as a level zero item
 	 * ensure that level zero is writable
@@ -1151,8 +1168,8 @@ is_parent_accept_new_children( NactApplication *application, NactMainWindow *win
 			accept_ok = TRUE;
 
 		} else {
-			nact_main_statusbar_display_with_timeout(
-						window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_level_zero_not_writable ));
+			nact_statusbar_display_with_timeout(
+						bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_level_zero_not_writable ));
 		}
 
 	/* see if the parent is writable
@@ -1161,8 +1178,8 @@ is_parent_accept_new_children( NactApplication *application, NactMainWindow *win
 		accept_ok = TRUE;
 
 	} else {
-			nact_main_statusbar_display_with_timeout(
-						window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_parent_not_writable ));
+			nact_statusbar_display_with_timeout(
+						bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_parent_not_writable ));
 	}
 
 	return( accept_ok );

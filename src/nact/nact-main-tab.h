@@ -32,7 +32,7 @@
 
 #include <api/na-icontext.h>
 
-#include "nact-main-window.h"
+#include "nact-main-window-def.h"
 
 /**
  * SECTION: nact_main_tab
@@ -41,12 +41,6 @@
  *
  * Here as defined signals and properties common to all tabs.
  */
-
-/* signals
- *
- * TAB_UPDATABLE_SIGNAL_ITEM_UPDATED: see definition in nact-main-window.c
- */
-#define TAB_UPDATABLE_SIGNAL_ITEM_UPDATED				"nact-tab-updatable-item-updated"
 
 /* notebook tabs
  */

@@ -36,13 +36,12 @@
 #include <string.h>
 #include <strings.h>
 
-#include <api/na-boxed.h>
-#include <api/na-data-types.h>
-#include <api/na-core-utils.h>
-#include <api/na-timeout.h>
+#include "api/na-boxed.h"
+#include "api/na-data-types.h"
+#include "api/na-core-utils.h"
+#include "api/na-timeout.h"
 
 #include "na-settings.h"
-#include "na-marshal.h"
 
 #define NA_SETTINGS_TYPE                ( settings_get_type())
 #define NA_SETTINGS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_SETTINGS_TYPE, NASettings ))
@@ -318,7 +317,7 @@ class_init( NASettingsClass *klass )
 				G_CALLBACK( on_key_changed_final_handler ),
 				NULL,								/* accumulator */
 				NULL,								/* accumulator data */
-				na_cclosure_marshal_VOID__STRING_STRING_POINTER_BOOLEAN,
+				NULL,
 				G_TYPE_NONE,
 				4,
 				G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_BOOLEAN );

@@ -31,9 +31,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-iduplicable.h>
-
-#include "na-marshal.h"
+#include "api/na-iduplicable.h"
 
 /* private interface data
  */
@@ -162,7 +160,7 @@ interface_base_init( NAIDuplicableInterface *klass )
 				G_CALLBACK( on_modified_changed_class_handler ),
 				NULL,
 				NULL,
-				na_cclosure_marshal_VOID__POINTER_BOOLEAN,
+				NULL,
 				G_TYPE_NONE,
 				2,
 				G_TYPE_POINTER, G_TYPE_BOOLEAN );
@@ -194,7 +192,7 @@ interface_base_init( NAIDuplicableInterface *klass )
 				G_CALLBACK( on_valid_changed_class_handler ),
 				NULL,
 				NULL,
-				na_cclosure_marshal_VOID__POINTER_BOOLEAN,
+				NULL,
 				G_TYPE_NONE,
 				2,
 				G_TYPE_POINTER, G_TYPE_BOOLEAN );

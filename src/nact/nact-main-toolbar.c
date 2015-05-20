@@ -35,19 +35,25 @@
 #include "nact-main-toolbar.h"
 
 typedef struct {
-	int      id;
-	gchar   *prefs_key;
-	gboolean displayed_per_default;
-	gchar   *ui_item;
-	gchar   *ui_path;
+	gint         id;
+	const gchar *prefs_key;
+	const gchar *action_name;
 }
 	ToolbarProps;
 
 static ToolbarProps toolbar_props[] = {
-		{ MAIN_TOOLBAR_FILE_ID , NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,   TRUE, "ViewFileToolbarItem" , "/ui/FileToolbar" },
-		{ MAIN_TOOLBAR_EDIT_ID , NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,  FALSE, "ViewEditToolbarItem" , "/ui/EditToolbar" },
-		{ MAIN_TOOLBAR_TOOLS_ID, NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY, FALSE, "ViewToolsToolbarItem", "/ui/ToolsToolbar" },
-		{ MAIN_TOOLBAR_HELP_ID , NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,   TRUE, "ViewHelpToolbarItem" , "/ui/HelpToolbar" }
+		{ MAIN_TOOLBAR_FILE_ID,
+				NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,
+				"view-toolbar-file" },
+		{ MAIN_TOOLBAR_EDIT_ID,
+				NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,
+				"view-toolbar-edit" },
+		{ MAIN_TOOLBAR_TOOLS_ID,
+				NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY,
+				"view-toolbar-tools" },
+		{ MAIN_TOOLBAR_HELP_ID,
+				NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,
+				"view-toolbar-help" }
 };
 
 /* defines the relative position of the main toolbars
@@ -60,18 +66,16 @@ static int toolbar_pos[] = {
 		MAIN_TOOLBAR_HELP_ID
 };
 
-static void          init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id );
+static void          init_toolbar( NactMainWindow *window, GSimpleActionGroup *toolbar_group, int toolbar_id );
+#if 0
 static void          reorder_toolbars( GtkWidget *hbox, int toolbar_id, GtkWidget *handle );
-#if !GTK_CHECK_VERSION( 3,4,0 )
-static void          on_handle_finalize( gpointer data, GObject *handle );
-static void          on_attach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
-static void          on_detach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
 #endif
 static ToolbarProps *get_toolbar_properties( int toolbar_id );
 
 /**
- * nact_main_toolbar_init:
+ * nact_main_toolbar_init_toggle_actions:
  * @window: this #NactMainWindow window.
+ * @toolbar_group: the group of toolbar toggle actions
  *
  * Setup the initial display of the standard main toolbars.
  *
@@ -81,31 +85,32 @@ static ToolbarProps *get_toolbar_properties( int toolbar_id );
  * toolbar.
  */
 void
-nact_main_toolbar_init( BaseWindow *window, GtkActionGroup *group )
+nact_main_toolbar_init_toggle_actions( NactMainWindow *window, GSimpleActionGroup *toolbar_group )
 {
-	static const gchar *thisfn = "nact_main_toolbar_init";
+	static const gchar *thisfn = "nact_main_toolbar_init_toggle_actions";
 	int i;
 
-	g_debug( "%s: window=%p, group=%p", thisfn, ( void * ) window, ( void * ) group );
+	g_debug( "%s: window=%p, toolbar_group=%p",
+			thisfn, ( void * ) window, ( void * ) toolbar_group );
 
 	for( i = 0 ; i < G_N_ELEMENTS( toolbar_pos ) ; ++i ){
-		init_toolbar( window, group, toolbar_pos[i] );
+		init_toolbar( window, toolbar_group, toolbar_pos[i] );
 	}
 }
 
 static void
-init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id )
+init_toolbar( NactMainWindow *window, GSimpleActionGroup *toolbar_group, int toolbar_id )
 {
 	ToolbarProps *props;
 	gboolean is_active;
-	GtkToggleAction *action;
+	GAction *action;
 
 	props = get_toolbar_properties( toolbar_id );
 	if( props ){
 		is_active = na_settings_get_boolean( props->prefs_key, NULL, NULL );
 		if( is_active ){
-			action = GTK_TOGGLE_ACTION( gtk_action_group_get_action( group, props->ui_item ));
-			gtk_toggle_action_set_active( action, TRUE );
+			action = g_action_map_lookup_action( G_ACTION_MAP( toolbar_group ), props->action_name );
+			g_action_change_state( action, g_variant_new_boolean( TRUE ));
 		}
 	}
 }
@@ -114,7 +119,6 @@ init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id )
  * nact_main_toolbar_activate:
  * @window: this #NactMainWindow.
  * @toolbar_id: the id of the activated toolbar.
- * @ui_manager: the #GtkUIManager.
  * @is_active: whether this toolbar is activated or not.
  *
  * Activate or desactivate the toolbar.
@@ -125,8 +129,9 @@ init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id )
  * So exit floating toolbars :(
  */
 void
-nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager *ui_manager, gboolean is_active )
+nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, gboolean is_active )
 {
+#if 0
 	static const gchar *thisfn = "nact_main_toolbar_activate";
 	ToolbarProps *props;
 	GtkWidget *toolbar, *hbox;
@@ -138,9 +143,8 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 
 	toolbar = gtk_ui_manager_get_widget( ui_manager, props->ui_path );
 	g_debug( "%s: toolbar=%p, path=%s, ref_count=%d", thisfn, ( void * ) toolbar, props->ui_path, G_OBJECT( toolbar )->ref_count );
-	hbox = base_window_get_widget( BASE_WINDOW( window ), "ToolbarHBox" );
+	hbox = base_window_get_widget( BASE_WINDOW( window ), "Toolbar" );
 
-#if GTK_CHECK_VERSION( 3,4,0 )
 	if( is_active ){
 		gtk_container_add( GTK_CONTAINER( hbox ), toolbar );
 		reorder_toolbars( hbox, toolbar_id, toolbar );
@@ -149,34 +153,6 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 	} else {
 		gtk_container_remove( GTK_CONTAINER( hbox ), toolbar );
 	}
-#else
-	GtkWidget *handle;
-	gulong attach_id, detach_id;
-
-	if( is_active ){
-		handle = gtk_handle_box_new();
-		gtk_handle_box_set_snap_edge( GTK_HANDLE_BOX( handle ), GTK_POS_LEFT );
-		g_object_set_data( G_OBJECT( toolbar ), "nact-main-toolbar-handle", handle );
-		attach_id = g_signal_connect( handle, "child-attached", (GCallback ) on_attach_toolbar, window );
-		g_object_set_data( G_OBJECT( handle ), "nact-handle-attach-id", ( gpointer ) attach_id );
-		detach_id = g_signal_connect( handle, "child-detached", (GCallback ) on_detach_toolbar, window );
-		g_object_set_data( G_OBJECT( handle ), "nact-handle-detach-id", ( gpointer ) detach_id );
-		g_object_weak_ref( G_OBJECT( handle ), ( GWeakNotify ) on_handle_finalize, NULL );
-		gtk_container_add( GTK_CONTAINER( handle ), toolbar );
-		gtk_container_add( GTK_CONTAINER( hbox ), handle );
-		reorder_toolbars( hbox, toolbar_id, handle );
-		gtk_widget_show_all( handle );
-
-	} else {
-		handle = ( GtkWidget * ) g_object_get_data( G_OBJECT( toolbar ), "nact-main-toolbar-handle" );
-		detach_id = ( gulong ) g_object_get_data( G_OBJECT( handle ), "nact-handle-detach-id" );
-		g_signal_handler_disconnect( handle, detach_id );
-		attach_id = ( gulong ) g_object_get_data( G_OBJECT( handle ), "nact-handle-attach-id" );
-		g_signal_handler_disconnect( handle, attach_id );
-		gtk_container_remove( GTK_CONTAINER( handle ), toolbar );
-		gtk_container_remove( GTK_CONTAINER( hbox ), handle );
-	}
-#endif
 
 	na_settings_set_boolean( props->prefs_key, is_active );
 }
@@ -219,35 +195,8 @@ reorder_toolbars( GtkWidget *hbox, int toolbar_id, GtkWidget *handle )
 	}
 
 	gtk_box_reorder_child( GTK_BOX( hbox ), handle, pos );
-}
-
-#if !GTK_CHECK_VERSION( 3,4,0 )
-static void
-on_handle_finalize( gpointer data, GObject *handle )
-{
-	g_debug( "nact_main_toolbar_on_handle_finalize: handle=%p", ( void * ) handle );
-}
-
-static void
-on_attach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window )
-{
-	static const gchar *thisfn = "nact_main_toolbar_on_attach_toolbar";
-
-	g_debug( "%s: handle=%p, toolbar=%p, window=%p", thisfn, ( void * ) handle, ( void * ) toolbar, ( void * ) window );
-
-	gtk_toolbar_set_show_arrow( toolbar, TRUE );
-}
-
-static void
-on_detach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window )
-{
-	static const gchar *thisfn = "nact_main_toolbar_on_detach_toolbar";
-
-	g_debug( "%s: handle=%p, toolbar=%p, window=%p", thisfn, ( void * ) handle, ( void * ) toolbar, ( void * ) window );
-
-	gtk_toolbar_set_show_arrow( toolbar, FALSE );
-}
 #endif
+}
 
 static ToolbarProps *
 get_toolbar_properties( int toolbar_id )

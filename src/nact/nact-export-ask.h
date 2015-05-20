@@ -45,7 +45,7 @@
  * - a 'NoImport' capability is provided by clicking on Cancel button.
  */
 
-#include <api/na-object-item.h>
+#include "api/na-object-item.h"
 
 #include "base-dialog.h"
 
@@ -67,18 +67,16 @@ typedef struct {
 }
 	NactExportAsk;
 
-typedef struct _NactExportAskClassPrivate   NactExportAskClassPrivate;
-
 typedef struct {
 	/*< private >*/
-	BaseDialogClass            parent;
-	NactExportAskClassPrivate *private;
+	BaseDialogClass       parent;
 }
 	NactExportAskClass;
 
 GType  nact_export_ask_get_type( void );
 
-gchar *nact_export_ask_user    ( BaseWindow *window, NAObjectItem *item, gboolean first );
+gchar *nact_export_ask_user    ( NAObjectItem *item,
+										gboolean first );
 
 G_END_DECLS
 

@@ -34,15 +34,9 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 
-#include "base-application.h"
 #include "base-assistant.h"
 #include "base-keysyms.h"
-
-/* private class data
- */
-struct _BaseAssistantClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
+#include "nact-application.h"
 
 /* private instance data
  */
@@ -163,10 +157,6 @@ class_init( BaseAssistantClass *klass )
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->run = do_run;
-
-	klass->private = g_new0( BaseAssistantClassPrivate, 1 );
-	klass->apply = NULL;
-	klass->prepare = NULL;
 }
 
 static void
@@ -378,9 +368,9 @@ do_run( BaseWindow *window )
 	static const gchar *thisfn = "base_assistant_do_run";
 	int code;
 
-	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), BASE_EXIT_CODE_PROGRAM );
+	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), NACT_EXIT_CODE_PROGRAM );
 
-	code = BASE_EXIT_CODE_INIT_WINDOW;
+	code = NACT_EXIT_CODE_WINDOW;
 
 	if( !BASE_ASSISTANT( window )->private->dispose_has_run ){
 
@@ -390,7 +380,7 @@ do_run( BaseWindow *window )
 
 		gtk_main();
 
-		code = BASE_EXIT_CODE_OK;
+		code = NACT_EXIT_CODE_OK;
 	}
 
 	return( code );

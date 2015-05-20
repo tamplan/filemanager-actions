@@ -46,9 +46,9 @@
  * The modified count is fully recomputed after a save.
  */
 
-#include <api/na-object.h>
+#include "api/na-object.h"
 
-#include "base-window.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -62,7 +62,7 @@ typedef struct _NactTreeIEditableInterfacePrivate     NactTreeIEditableInterface
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                 parent;
+	GTypeInterface                     parent;
 	NactTreeIEditableInterfacePrivate *private;
 }
 	NactTreeIEditableInterface;
@@ -76,22 +76,39 @@ typedef enum {
 }
 	TreeIEditableDeleteOpe;
 
-GType    nact_tree_ieditable_get_type( void );
+GType    nact_tree_ieditable_get_type              ( void );
 
-void     nact_tree_ieditable_initialize    ( NactTreeIEditable *instance, GtkTreeView *treeview, BaseWindow *window );
-void     nact_tree_ieditable_terminate     ( NactTreeIEditable *instance );
+void     nact_tree_ieditable_initialize            ( NactTreeIEditable *instance,
+															GtkTreeView *treeview,
+															NactMainWindow *main_window );
 
-void     nact_tree_ieditable_delete        ( NactTreeIEditable *instance, GList *items, TreeIEditableDeleteOpe ope );
-gboolean nact_tree_ieditable_remove_deleted( NactTreeIEditable *instance, GSList **messages );
-GList   *nact_tree_ieditable_get_deleted   ( NactTreeIEditable *instance );
+void     nact_tree_ieditable_terminate             ( NactTreeIEditable *instance );
 
-void     nact_tree_ieditable_insert_items  ( NactTreeIEditable *instance, GList *items, NAObject *sibling );
-void     nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, GtkTreePath *path );
-void     nact_tree_ieditable_insert_into   ( NactTreeIEditable *instance, GList *items );
+void     nact_tree_ieditable_delete                ( NactTreeIEditable *instance,
+															GList *items,
+															TreeIEditableDeleteOpe ope );
 
-void     nact_tree_ieditable_set_items     ( NactTreeIEditable *instance, GList *items );
+gboolean nact_tree_ieditable_remove_deleted        ( NactTreeIEditable *instance,
+															GSList **messages );
+
+GList   *nact_tree_ieditable_get_deleted           ( NactTreeIEditable *instance );
+
+void     nact_tree_ieditable_insert_items          ( NactTreeIEditable *instance,
+															GList *items,
+															NAObject *sibling );
+
+void     nact_tree_ieditable_insert_at_path        ( NactTreeIEditable *instance,
+															GList *items,
+															GtkTreePath *path );
+
+void     nact_tree_ieditable_insert_into           ( NactTreeIEditable *instance,
+															GList *items );
+
+void     nact_tree_ieditable_set_items             ( NactTreeIEditable *instance,
+															GList *items );
 
 void     nact_tree_ieditable_dump_modified         ( const NactTreeIEditable *instance );
+
 gboolean nact_tree_ieditable_is_level_zero_modified( const NactTreeIEditable *instance );
 
 G_END_DECLS

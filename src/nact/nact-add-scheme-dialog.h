@@ -40,6 +40,7 @@
  */
 
 #include "base-dialog.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -59,18 +60,16 @@ typedef struct {
 }
 	NactAddSchemeDialog;
 
-typedef struct _NactAddSchemeDialogClassPrivate    NactAddSchemeDialogClassPrivate;
-
 typedef struct {
 	/*< private >*/
-	BaseDialogClass                  parent;
-	NactAddSchemeDialogClassPrivate *private;
+	BaseDialogClass             parent;
 }
 	NactAddSchemeDialogClass;
 
 GType  nact_add_scheme_dialog_get_type( void );
 
-gchar *nact_add_scheme_dialog_run( BaseWindow *parent, GSList *schemes );
+gchar *nact_add_scheme_dialog_run     ( NactMainWindow *parent,
+												GSList *schemes );
 
 G_END_DECLS
 

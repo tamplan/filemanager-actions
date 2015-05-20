@@ -1,107 +1,225 @@
-<?xml version="1.0"?>
-<ui>
-    <menubar name="MainMenubar">
-        <menu action="FileMenu">
-            <menuitem action="NewMenuItem" />
-            <menuitem action="NewActionItem" />
-            <menuitem action="NewProfileItem" />
-            <menuitem action="SaveItem" />
-            <separator />
-            <menuitem action="QuitItem" />
-        </menu>
-        <menu action="EditMenu">
-            <menuitem action="CutItem" />
-            <menuitem action="CopyItem" />
-            <menuitem action="PasteItem" />
-            <menuitem action="PasteIntoItem" />
-            <menuitem action="DuplicateItem" />
-            <menuitem action="DeleteItem" />
-            <separator />
-            <menuitem action="ReloadActionsItem" />
-            <separator />
-            <menuitem action="PreferencesItem" />
-        </menu>
-        <menu action="ViewMenu">
-            <menuitem action="ExpandAllItem" />
-            <menuitem action="CollapseAllItem" />
-            <separator />
-            <menu action="ViewToolbarMenu">
-                <menuitem action="ViewFileToolbarItem" />
-                <menuitem action="ViewEditToolbarItem" />
-                <menuitem action="ViewToolsToolbarItem" />
-                <menuitem action="ViewHelpToolbarItem" />
-            </menu>
-	        <menu action="NotebookLabelMenu">
-	            <menuitem action="TabsPosLeftItem" />
-	            <menuitem action="TabsPosRightItem" />
-	            <menuitem action="TabsPosTopItem" />
-	            <menuitem action="TabsPosBottomItem" />
-	        </menu>
-        </menu>
-        <menu action="ToolsMenu">
-            <menuitem action="ImportItem" />
-            <menuitem action="ExportItem" />
-        </menu>
-        <placeholder name="MaintainerMenuPlace" />
-        <menu action="HelpMenu">
-            <menuitem action="HelpItem" />
-            <separator />
-            <menuitem action="AboutItem" />
-        </menu>
-    </menubar>
-
-    <popup name="TreeContext">
-            <menuitem action="NewMenuItem" />
-            <menuitem action="NewActionItem" />
-            <menuitem action="NewProfileItem" />
-            <separator />
-            <menuitem action="CutItem" />
-            <menuitem action="CopyItem" />
-            <menuitem action="PasteItem" />
-            <menuitem action="PasteIntoItem" />
-            <menuitem action="DuplicateItem" />
-            <menuitem action="DeleteItem" />
-            <separator />
-            <menuitem action="ImportItem" />
-            <menuitem action="ExportItem" />
-            <separator />
-            <menuitem action="PreferencesItem" />
-            <menuitem action="AboutItem" />
-    </popup>
-
-	<!-- only set in toolbars items which have an icon -->
-
-    <toolbar name="FileToolbar">
-            <toolitem action="NewActionItem" />
-            <toolitem action="SaveItem" />
-            <toolitem action="QuitItem" />
-    </toolbar>
-
-    <toolbar name="EditToolbar">
-            <toolitem action="CutItem" />
-            <toolitem action="CopyItem" />
-            <toolitem action="PasteItem" />
-            <toolitem action="DeleteItem" />
-            <toolitem action="ReloadActionsItem" />
-            <toolitem action="PreferencesItem" />
-    </toolbar>
-
-    <!--
-    <toolbar name="ViewToolbar">
-            <toolitem action="ExpandAllItem" />
-            <toolitem action="CollapseAllItem" />
-    </toolbar>
-    -->
-
-    <toolbar name="ToolsToolbar">
-            <toolitem action="ImportItem" />
-            <!-- not yet an icon: do not set in toolbar
-            <toolitem action="ExportItem" />
-            -->
-    </toolbar>
-
-    <toolbar name="HelpToolbar">
-            <toolitem action="HelpItem" />
-            <toolitem action="AboutItem" />
-    </toolbar>
-</ui>
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="app-menu">
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Pre_ferences</attribute>
+          <attribute name="action">app.preferences</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Content</attribute>
+          <attribute name="action">app.help</attribute>
+          <attribute name="accel">F1</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_About Nautilus-Actions</attribute>
+          <attribute name="action">app.about</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Quit</attribute>
+          <attribute name="action">win.quit</attribute>
+        </item>
+      </section>
+  </menu>
+  <menu id="menubar">
+    <submenu>
+      <attribute name="label" translatable="yes">_File</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">New _menu</attribute>
+          <attribute name="action">win.new-menu</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_New action</attribute>
+          <attribute name="action">win.new-action</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">New _profile</attribute>
+          <attribute name="action">win.new-profile</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Save</attribute>
+          <attribute name="action">win.save</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Quit</attribute>
+          <attribute name="action">app.quit</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Edit</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Cut</attribute>
+          <attribute name="action">win.cut</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">C_opy</attribute>
+          <attribute name="action">win.copy</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Paste</attribute>
+          <attribute name="action">win.paste</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">paste _into</attribute>
+          <attribute name="action">win.paste-into</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">D_uplicate</attribute>
+          <attribute name="action">win.duplicate</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Delete</attribute>
+          <attribute name="action">win.delete</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Reload the items</attribute>
+          <attribute name="action">win.reload</attribute>
+          <attribute name="accel">F5</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Pre_ferences</attribute>
+          <attribute name="action">app.preferences</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_View</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">E_xpand all</attribute>
+          <attribute name="action">win.expand</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Collapse all</attribute>
+          <attribute name="action">win.collapse</attribute>
+        </item>
+      </section>
+      <section>
+        <submenu>
+          <attribute name="label" translatable="yes">_Toolbars</attribute>
+          <section>
+            <item>
+              <attribute name="label" translatable="yes">_File</attribute>
+              <attribute name="action">win.view-toolbar-file</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">_Edit</attribute>
+              <attribute name="action">win.view-toolbar-edit</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">_Tools</attribute>
+              <attribute name="action">win.view-toolbar-tools</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">_Help</attribute>
+              <attribute name="action">win.view-toolbar-help</attribute>
+            </item>
+          </section>
+        </submenu>
+      </section>
+      <section>
+        <submenu>
+          <attribute name="label" translatable="yes">_Notebook labels</attribute>
+          <section>
+            <item>
+              <attribute name="label" translatable="yes">_Left</attribute>
+              <attribute name="action">win.tab-left</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">_Right</attribute>
+              <attribute name="action">win.tab-right</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">_Top</attribute>
+              <attribute name="action">win.tab-top</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">_Bottom</attribute>
+              <attribute name="action">win.tab-bottom</attribute>
+            </item>
+          </section>
+        </submenu>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Tools</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Import assistant...</attribute>
+          <attribute name="action">win.import</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">E_xport assistant...</attribute>
+          <attribute name="action">win.export</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Help</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Content</attribute>
+          <attribute name="action">app.help</attribute>
+          <attribute name="accel">F1</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_About Nautilus-Actions</attribute>
+          <attribute name="action">app.about</attribute>
+        </item>
+      </section>
+    </submenu>
+  </menu>
+  <menu id="maintainer">
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Dump the selection</attribute>
+          <attribute name="action">win.dump-selection</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Brief tree store dump</attribute>
+          <attribute name="action">win.tree-store-dump</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_List modified items</attribute>
+          <attribute name="action">win.list-modified</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Dump the clipboard</attribute>
+          <attribute name="action">win.dump-clipboard</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Test a function</attribute>
+          <attribute name="action">win.fntest</attribute>
+        </item>
+      </section>
+  </menu>
+  <menu id="tree-context">
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">New _menu</attribute>
+          <attribute name="action">win.new-menu</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_New action</attribute>
+          <attribute name="action">win.new-action</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">New _profile</attribute>
+          <attribute name="action">win.new-profile</attribute>
+        </item>
+      </section>
+  </menu>
+</interface>

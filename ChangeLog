@@ -1,3 +1,16 @@
+2015-05-20 Pierre Wieser <pwieser@trychlos.org>
+
+	Lot of changes to make NACT compile with Gtk3, removing deprecated
+	items:
+
+	* NactApplication now directly derives from GtkApplication.
+	* NactMainWindow now directly derives from GtkApplicationWindow.
+	* NactStatusbar is now a class.
+	* NactSortButtons is now a class.
+	* NactMenubar class is replaced with NactMenu helper functions.
+	* NactTreeView now derives from GtkBin.
+	* Most of signals are moved from NactMainWindow to NactTreeView.
+
 2015-02-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* maintainer/run-autogen.sh: defaults to enable nautilus.

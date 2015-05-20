@@ -33,9 +33,12 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-object-api.h>
+#include "api/na-object-api.h"
+
+#include "core/na-gtk-utils.h"
 
 #include "nact-main-tab.h"
+#include "nact-main-window.h"
 #include "nact-match-list.h"
 #include "nact-imimetypes-tab.h"
 
@@ -54,15 +57,11 @@ static guint st_initializations = 0;	/* interface initialization count */
 static GType   register_type( void );
 static void    interface_base_init( NactIMimetypesTabInterface *klass );
 static void    interface_base_finalize( NactIMimetypesTabInterface *klass );
-
-static void    on_base_initialize_gtk( NactIMimetypesTab *instance, GtkWindow *toplevel, gpointer user_data );
-static void    on_base_initialize_window( NactIMimetypesTab *instance, gpointer user_data );
-
-static void    on_main_selection_changed( NactIMimetypesTab *instance, GList *selected_items, gpointer user_data );
-
+static void    initialize_gtk( NactIMimetypesTab *instance );
+static void    initialize_window( NactIMimetypesTab *instance );
+static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIMimetypesTab *instance );
 static GSList *get_mimetypes( void *context );
 static void    set_mimetypes( void *context, GSList *filters );
-
 static void    on_instance_finalized( gpointer user_data, NactIMimetypesTab *instance );
 
 GType
@@ -99,7 +98,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactIMimetypesTab", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, BASE_TYPE_WINDOW );
+	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
 	return( type );
 }
@@ -152,49 +151,36 @@ nact_imimetypes_tab_init( NactIMimetypesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ));
-
 	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_MIMETYPES );
+	initialize_gtk( instance );
+	initialize_window( instance );
 
 	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 }
 
 /*
- * on_base_initialize_gtk:
+ * initialize_gtk:
  * @window: this #NactIMimetypesTab instance.
  *
  * Initializes the tab widget at initial load.
  */
 static void
-on_base_initialize_gtk( NactIMimetypesTab *instance, GtkWindow *toplevel, void *user_data )
+initialize_gtk( NactIMimetypesTab *instance )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_on_base_initialize_gtk";
+	static const gchar *thisfn = "nact_imimetypes_tab_initialize_gtk";
 
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), toplevel=%p, user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) toplevel,
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			BASE_WINDOW( instance ),
+			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_MIMETYPES,
-			base_window_get_widget( BASE_WINDOW( instance ), "MimetypesTreeView" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "AddMimetypeButton" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "RemoveMimetypeButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "MimetypesTreeView" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddMimetypeButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveMimetypeButton" ),
 			( pget_filters ) get_mimetypes,
 			( pset_filters ) set_mimetypes,
 			NULL,
@@ -205,33 +191,32 @@ on_base_initialize_gtk( NactIMimetypesTab *instance, GtkWindow *toplevel, void *
 }
 
 /*
- * on_base_initialize_window:
+ * initialize_window:
  * @window: this #NactIMimetypesTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
  * Connect signals and setup runtime values.
  */
 static void
-on_base_initialize_window( NactIMimetypesTab *instance, void *user_data )
+initialize_window( NactIMimetypesTab *instance )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_on_base_initialize_window";
+	static const gchar *thisfn = "nact_imimetypes_tab_initialize_window";
+	NactTreeView *tview;
 
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ));
+	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+
+	g_signal_connect(
+			tview, TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tree_selection_changed ), instance );
 }
 
 static void
-on_main_selection_changed( NactIMimetypesTab *instance, GList *selected_items, gpointer user_data )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIMimetypesTab *instance )
 {
 	NAIContext *context;
 	gboolean editable;

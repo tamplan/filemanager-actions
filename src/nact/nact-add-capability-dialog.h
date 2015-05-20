@@ -40,6 +40,7 @@
  */
 
 #include "base-dialog.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -70,7 +71,8 @@ typedef struct {
 
 GType  nact_add_capability_dialog_get_type( void );
 
-gchar *nact_add_capability_dialog_run( BaseWindow *parent, GSList *capabilities );
+gchar *nact_add_capability_dialog_run     ( NactMainWindow *parent,
+													GSList *capabilities );
 
 G_END_DECLS
 

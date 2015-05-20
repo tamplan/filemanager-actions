@@ -34,17 +34,18 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
-#include <api/na-object-api.h>
+#include "api/na-core-utils.h"
+#include "api/na-object-api.h"
 
-#include <core/na-factory-object.h>
-#include <core/na-tokens.h>
+#include "core/na-factory-object.h"
+#include "core/na-gtk-utils.h"
+#include "core/na-tokens.h"
 
-#include "base-window.h"
 #include "nact-application.h"
-#include "nact-main-statusbar.h"
+#include "nact-statusbar.h"
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
+#include "nact-main-window.h"
 #include "nact-icommand-tab.h"
 #include "nact-ischemes-tab.h"
 
@@ -61,8 +62,9 @@ struct _NactICommandTabInterfacePrivate {
 /* data set against the instance
  */
 typedef struct {
-	gboolean  on_selection_change;
-	NATokens *tokens;
+	gboolean   on_selection_change;
+	NATokens  *tokens;
+	GtkWindow *legend;
 }
 	ICommandData;
 
@@ -73,13 +75,10 @@ static guint st_initializations = 0;	/* interface initialization count */
 static GType         register_type( void );
 static void          interface_base_init( NactICommandTabInterface *klass );
 static void          interface_base_finalize( NactICommandTabInterface *klass );
-
-static void          on_base_initialize_gtk( NactICommandTab *instance, GtkWindow *toplevel, gpointer user_data );
-static void          on_base_initialize_window( NactICommandTab *instance, gpointer user_data );
-
-static void          on_tree_view_content_changed( NactICommandTab *instance, NAObject *object, gpointer user_data );
-static void          on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpointer user_data );
-
+static void          initialize_gtk( NactICommandTab *instance );
+static void          initialize_window( NactICommandTab *instance );
+static void          on_main_item_updated( NactICommandTab *instance, NAIContext *context, guint data, void *empty );
+static void          on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICommandTab *instance );
 static GtkWidget    *get_label_entry( NactICommandTab *instance );
 static GtkButton    *get_legend_button( NactICommandTab *instance );
 static GtkWindow    *get_legend_dialog( NactICommandTab *instance );
@@ -90,7 +89,9 @@ static void          legend_dialog_show( NactICommandTab *instance );
 static void          legend_dialog_hide( NactICommandTab *instance );
 static void          on_label_changed( GtkEntry *entry, NactICommandTab *instance );
 static void          on_legend_clicked( GtkButton *button, NactICommandTab *instance );
+#if 0
 static gboolean      on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, NactICommandTab *instance );
+#endif
 static void          on_parameters_changed( GtkEntry *entry, NactICommandTab *instance );
 static void          on_path_browse( GtkButton *button, NactICommandTab *instance );
 static void          on_path_changed( GtkEntry *entry, NactICommandTab *instance );
@@ -98,7 +99,6 @@ static void          on_wdir_browse( GtkButton *button, NactICommandTab *instanc
 static void          on_wdir_changed( GtkEntry *entry, NactICommandTab *instance );
 static gchar        *parse_parameters( NactICommandTab *instance );
 static void          update_example_label( NactICommandTab *instance, NAObjectProfile *profile );
-
 static ICommandData *get_icommand_data( NactICommandTab *instance );
 static void          on_instance_finalized( gpointer user_data, NactICommandTab *instance );
 
@@ -136,7 +136,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactICommandTab", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, BASE_TYPE_WINDOW );
+	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
 	return( type );
 }
@@ -190,19 +190,9 @@ nact_icommand_tab_init( NactICommandTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ));
-
 	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_COMMAND );
+	initialize_gtk( instance );
+	initialize_window( instance );
 
 	data = get_icommand_data( instance );
 	data->on_selection_change = FALSE;
@@ -212,11 +202,8 @@ nact_icommand_tab_init( NactICommandTab *instance )
 }
 
 static void
-on_base_initialize_gtk( NactICommandTab *instance, GtkWindow *toplevel, gpointer user_data )
+initialize_gtk( NactICommandTab *instance )
 {
-#if GTK_CHECK_VERSION( 3,0,0 )
-	base_gtk_utils_table_to_grid( BASE_WINDOW( instance ), "table220" );
-#endif
 }
 
 /*
@@ -227,88 +214,70 @@ on_base_initialize_gtk( NactICommandTab *instance, GtkWindow *toplevel, gpointer
  * Connect signals and setup runtime values.
  */
 static void
-on_base_initialize_window( NactICommandTab *instance, void *user_data )
+initialize_window( NactICommandTab *instance )
 {
-	static const gchar *thisfn = "nact_icommand_tab_on_base_initialize_window";
+	static const gchar *thisfn = "nact_icommand_tab_initialize_window";
+#if 0
 	GtkWindow *legend_dialog;
-	GtkWidget *label_entry, *path_entry, *parameters_entry, *wdir_entry;
-	GtkButton *path_button, *legend_button, *wdir_button;
+#endif
+	GtkWidget *label_entry, *path_entry, *parameters_entry;
+	GtkButton *legend_button, *path_button;
 	ICommandData *data;
+	NactTreeView *tview;
 
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	label_entry = get_label_entry( instance );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
+	g_signal_connect(
 			G_OBJECT( label_entry ),
-			"changed",
-			G_CALLBACK( on_label_changed ));
+			"changed", G_CALLBACK( on_label_changed ), instance );
 
 	path_entry = get_path_entry( instance );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
+	g_signal_connect(
 			G_OBJECT( path_entry ),
-			"changed",
-			G_CALLBACK( on_path_changed ));
+			"changed", G_CALLBACK( on_path_changed ), instance );
 
 	path_button = get_path_button( instance );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
+	g_signal_connect(
 			G_OBJECT( path_button ),
-			"clicked",
-			G_CALLBACK( on_path_browse ));
+			"clicked", G_CALLBACK( on_path_browse ), instance );
 
 	parameters_entry = get_parameters_entry( instance );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
+	g_signal_connect(
 			G_OBJECT( parameters_entry ),
-			"changed",
-			G_CALLBACK( on_parameters_changed ));
+			"changed", G_CALLBACK( on_parameters_changed ), instance );
 
 	legend_button = get_legend_button( instance );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
+	g_signal_connect(
 			G_OBJECT( legend_button ),
-			"clicked",
-			G_CALLBACK( on_legend_clicked ));
+			"clicked", G_CALLBACK( on_legend_clicked ), instance );
 
+#if 0
 	legend_dialog = get_legend_dialog( instance );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
+	g_signal_connect(
 			G_OBJECT( legend_dialog ),
-			"delete-event",
-			G_CALLBACK( on_legend_dialog_deleted ));
+			"delete-event", G_CALLBACK( on_legend_dialog_deleted ), instance );
+#endif
 
-	wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( wdir_entry ),
-			"changed",
-			G_CALLBACK( on_wdir_changed ));
+	na_gtk_utils_connect_widget_by_name(
+			GTK_CONTAINER( instance ), "WorkingDirectoryEntry",
+			"changed", G_CALLBACK( on_wdir_changed ), instance );
 
-	wdir_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "CommandWorkingDirectoryButton" ));
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( wdir_button ),
-			"clicked",
-			G_CALLBACK( on_wdir_browse ));
+	na_gtk_utils_connect_widget_by_name(
+				GTK_CONTAINER( instance ), "CommandWorkingDirectoryButton",
+			"clicked", G_CALLBACK( on_wdir_browse ), instance );
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ));
+	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			MAIN_SIGNAL_ITEM_UPDATED,
-			G_CALLBACK( on_tree_view_content_changed ));
+	g_signal_connect(
+			tview, TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tree_selection_changed ), instance );
+
+	g_signal_connect( instance,
+			MAIN_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_main_item_updated ), NULL );
 
 	/* allocate a static fake NATokens object which will be used to build
 	 * the example label - this object will be g_object_unref() on instance
@@ -321,25 +290,25 @@ on_base_initialize_window( NactICommandTab *instance, void *user_data )
 }
 
 static void
-on_tree_view_content_changed( NactICommandTab *instance, NAObject *object, gpointer user_data )
+on_main_item_updated( NactICommandTab *instance, NAIContext *context, guint data, void *empty )
 {
 	GtkWidget *label_widget;
 	gchar *label;
 
-	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
+	g_return_if_fail( instance && NACT_IS_ICOMMAND_TAB( instance ));
 
-	if( NA_IS_OBJECT_PROFILE( object )){
+	if( NA_IS_OBJECT_PROFILE( context )){
 		label_widget = get_label_entry( instance );
-		label = na_object_get_label( object );
+		label = na_object_get_label( context );
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		g_free( label );
 	}
 }
 
 static void
-on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpointer user_data )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICommandTab *instance )
 {
-	static const gchar *thisfn = "nact_icommand_tab_on_main_selection_changed";
+	static const gchar *thisfn = "nact_icommand_tab_on_tree_selection_changed";
 	NAObjectProfile *profile;
 	gboolean editable;
 	gboolean enable_tab;
@@ -351,10 +320,10 @@ on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpo
 
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), selected_items=%p (count=%d)",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) selected_items, g_list_length( selected_items ));
+	g_debug( "%s: tview=%p, selected_items=%p (count=%d), instance=%p (%s)",
+			thisfn, tview,
+			( void * ) selected_items, g_list_length( selected_items ),
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -401,7 +370,7 @@ on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpo
 
 	update_example_label( instance, profile );
 
-	wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
+	wdir_entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "WorkingDirectoryEntry" );
 	wdir = profile ? na_object_get_working_dir( profile ) : g_strdup( "" );
 	wdir = wdir ? wdir : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir );
@@ -409,7 +378,7 @@ on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpo
 	gtk_widget_set_sensitive( wdir_entry, profile != NULL );
 	base_gtk_utils_set_editable( G_OBJECT( wdir_entry ), editable );
 
-	wdir_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "CommandWorkingDirectoryButton" ));
+	wdir_button = GTK_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandWorkingDirectoryButton" ));
 	gtk_widget_set_sensitive( GTK_WIDGET( wdir_button ), profile != NULL );
 	base_gtk_utils_set_editable( G_OBJECT( wdir_button ), editable );
 
@@ -419,37 +388,40 @@ on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpo
 static GtkWidget *
 get_label_entry( NactICommandTab *instance )
 {
-	return( base_window_get_widget( BASE_WINDOW( instance ), "ProfileLabelEntry" ));
+	return( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ProfileLabelEntry" ));
 }
 
 static GtkButton *
 get_legend_button( NactICommandTab *instance )
 {
-	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "CommandLegendButton" )));
+	return( GTK_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandLegendButton" )));
 }
 
 static GtkWindow *
 get_legend_dialog( NactICommandTab *instance )
 {
+#if 0
 	return( base_window_get_gtk_toplevel_by_name( BASE_WINDOW( instance ), "LegendDialog" ));
+#endif
+	return( NULL );
 }
 
 static GtkWidget *
 get_parameters_entry( NactICommandTab *instance )
 {
-	return( base_window_get_widget( BASE_WINDOW( instance ), "CommandParametersEntry" ));
+	return( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandParametersEntry" ));
 }
 
 static GtkButton *
 get_path_button( NactICommandTab *instance )
 {
-	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "CommandPathButton" )));
+	return( GTK_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandPathButton" )));
 }
 
 static GtkWidget *
 get_path_entry( NactICommandTab *instance )
 {
-	return( base_window_get_widget( BASE_WINDOW( instance ), "CommandPathEntry" ));
+	return( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandPathEntry" ));
 }
 
 static void
@@ -484,13 +456,11 @@ static void
 legend_dialog_show( NactICommandTab *instance )
 {
 	GtkWindow *legend_dialog;
-	GtkWindow *toplevel;
 
 	legend_dialog = get_legend_dialog( instance );
 	gtk_window_set_deletable( legend_dialog, FALSE );
 
-	toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( instance ));
-	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
+	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), GTK_WINDOW( instance ));
 
 	base_gtk_utils_restore_window_position( BASE_WINDOW( instance ), NA_IPREFS_COMMAND_LEGEND_WSP );
 	gtk_widget_show( GTK_WIDGET( legend_dialog ));
@@ -516,7 +486,7 @@ on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 		if( profile ){
 			label = gtk_entry_get_text( entry );
 			na_object_set_label( profile, label );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, MAIN_DATA_LABEL );
+			g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, profile, MAIN_DATA_LABEL );
 		}
 	}
 }
@@ -532,6 +502,7 @@ on_legend_clicked( GtkButton *button, NactICommandTab *instance )
 	}
 }
 
+#if 0
 static gboolean
 on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, NactICommandTab *instance )
 {
@@ -539,6 +510,7 @@ on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, NactICommandTab *i
 	legend_dialog_hide( instance );
 	return( TRUE );
 }
+#endif
 
 static void
 on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
@@ -556,7 +528,7 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 
 		if( profile ){
 			na_object_set_parameters( profile, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
+			g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, profile, 0 );
 			update_example_label( instance, profile );
 		}
 	}
@@ -587,7 +559,7 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 
 		if( profile ){
 			na_object_set_path( profile, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
+			g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, profile, 0 );
 			update_example_label( instance, profile );
 		}
 	}
@@ -605,7 +577,7 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 			NULL );
 
 	if( profile ){
-		wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
+		wdir_entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "WorkingDirectoryEntry" );
 		base_gtk_utils_select_dir(
 				BASE_WINDOW( instance ), _( "Choosing a working directory" ),
 				NA_IPREFS_WORKING_DIR_WSP, wdir_entry, NA_IPREFS_WORKING_DIR_URI );
@@ -628,7 +600,7 @@ on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 
 		if( profile ){
 			na_object_set_working_dir( profile, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
+			g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, profile, 0 );
 		}
 	}
 }
@@ -660,7 +632,7 @@ update_example_label( NactICommandTab *instance, NAObjectProfile *profile )
 	gchar *parameters;
 	GtkWidget *example_widget;
 
-	example_widget = base_window_get_widget( BASE_WINDOW( instance ), "CommandExampleLabel" );
+	example_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandExampleLabel" );
 
 	if( profile ){
 		parameters = parse_parameters( instance );

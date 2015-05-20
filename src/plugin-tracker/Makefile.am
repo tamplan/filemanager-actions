@@ -77,7 +77,6 @@ libnautilus_actions_tracker_la_LDFLAGS = \
 	$(NULL)
 
 EXTRA_DIST = \
-	na-tracker-dbus-glib.xml									\
 	na-tracker-gdbus.xml										\
 	$(NULL)
 

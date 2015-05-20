@@ -33,12 +33,15 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-object-api.h>
+#include "api/na-object-api.h"
 
-#include "nact-main-tab.h"
+#include "core/na-gtk-utils.h"
+
 #include "base-gtk-utils.h"
-#include "nact-match-list.h"
 #include "nact-ibasenames-tab.h"
+#include "nact-main-tab.h"
+#include "nact-main-window.h"
+#include "nact-match-list.h"
 
 /* private interface data
  */
@@ -64,16 +67,12 @@ static guint    st_initializations = 0;	/* interface initialization count */
 static GType           register_type( void );
 static void            interface_base_init( NactIBasenamesTabInterface *klass );
 static void            interface_base_finalize( NactIBasenamesTabInterface *klass );
-
-static void            on_base_initialize_gtk( NactIBasenamesTab *instance, GtkWindow *toplevel, gpointer user_data );
-static void            on_base_initialize_window( NactIBasenamesTab *instance, gpointer user_data );
-
-static void            on_main_selection_changed( NactIBasenamesTab *instance, GList *selected_items, gpointer user_data );
-
-static void            on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window );
+static void            initialize_gtk( NactIBasenamesTab *instance );
+static void            initialize_window( NactIBasenamesTab *instance );
+static void            on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBasenamesTab *instance );
+static void            on_matchcase_toggled( GtkToggleButton *button, NactIBasenamesTab *instance );
 static GSList         *get_basenames( void *context );
 static void            set_basenames( void *context, GSList *filters );
-
 static IBasenamesData *get_ibasenames_data( NactIBasenamesTab *instance );
 static void            on_instance_finalized( gpointer user_data, NactIBasenamesTab *instance );
 
@@ -111,7 +110,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactIBasenamesTab", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, BASE_TYPE_WINDOW );
+	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
 	return( type );
 }
@@ -165,19 +164,9 @@ nact_ibasenames_tab_init( NactIBasenamesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ));
-
 	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES );
+	initialize_gtk( instance );
+	initialize_window( instance );
 
 	data = get_ibasenames_data( instance );
 	data->on_selection_change = FALSE;
@@ -192,25 +181,22 @@ nact_ibasenames_tab_init( NactIBasenamesTab *instance )
  * Initializes the tab widget at initial load.
  */
 static void
-on_base_initialize_gtk( NactIBasenamesTab *instance, GtkWindow *toplevel, void *user_data )
+initialize_gtk( NactIBasenamesTab *instance )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_on_base_initialize_gtk";
+	static const gchar *thisfn = "nact_ibasenames_tab_initialize_gtk";
 
-	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
+	g_return_if_fail( instance && NACT_IS_IBASENAMES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), toplevel=%p, user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) toplevel,
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			BASE_WINDOW( instance ),
+			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_BASENAMES,
-			base_window_get_widget( BASE_WINDOW( instance ), "BasenamesTreeView" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "AddBasenameButton" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "RemoveBasenameButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "BasenamesTreeView" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddBasenameButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveBasenameButton" ),
 			( pget_filters ) get_basenames,
 			( pset_filters ) set_basenames,
 			NULL,
@@ -228,34 +214,28 @@ on_base_initialize_gtk( NactIBasenamesTab *instance, GtkWindow *toplevel, void *
  * Connect signals and setup runtime values.
  */
 static void
-on_base_initialize_window( NactIBasenamesTab *instance, void *user_data )
+initialize_window( NactIBasenamesTab *instance )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_on_base_initialize_window";
-	GtkWidget *button;
+	static const gchar *thisfn = "nact_ibasenames_tab_initialize_window";
+	NactTreeView *tview;
 
-	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
+	g_return_if_fail( instance && NACT_IS_IBASENAMES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ));
+	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	g_signal_connect(
+			tview, TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tree_selection_changed ), instance );
 
-	button = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesMatchcaseButton" );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( button ),
-			"toggled",
-			G_CALLBACK( on_matchcase_toggled ));
+	na_gtk_utils_connect_widget_by_name(
+			GTK_CONTAINER( instance ), "BasenamesMatchcaseButton",
+			"toggled", G_CALLBACK( on_matchcase_toggled ), instance );
 }
 
 static void
-on_main_selection_changed( NactIBasenamesTab *instance, GList *selected_items, gpointer user_data )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBasenamesTab *instance )
 {
 	NAIContext *context;
 	gboolean editable;
@@ -274,7 +254,7 @@ on_main_selection_changed( NactIBasenamesTab *instance, GList *selected_items, g
 	data = get_ibasenames_data( NACT_IBASENAMES_TAB( instance ));
 	data->on_selection_change = TRUE;
 
-	matchcase_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "BasenamesMatchcaseButton" ));
+	matchcase_button = GTK_TOGGLE_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "BasenamesMatchcaseButton" ));
 	matchcase = context ? na_object_get_matchcase( context ) : FALSE;
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
 	base_gtk_utils_set_editable( G_OBJECT( matchcase_button ), editable );
@@ -283,17 +263,17 @@ on_main_selection_changed( NactIBasenamesTab *instance, GList *selected_items, g
 }
 
 static void
-on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window )
+on_matchcase_toggled( GtkToggleButton *button, NactIBasenamesTab *instance )
 {
 	NAIContext *context;
 	gboolean editable;
 	gboolean matchcase;
 	IBasenamesData *data;
 
-	data = get_ibasenames_data( NACT_IBASENAMES_TAB( window ));
+	data = get_ibasenames_data( NACT_IBASENAMES_TAB( instance ));
 
 	if( !data->on_selection_change ){
-		g_object_get( G_OBJECT( window ),
+		g_object_get( G_OBJECT( instance ),
 				MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -302,12 +282,12 @@ on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window )
 
 			if( editable ){
 				na_object_set_matchcase( context, matchcase );
-				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
+				g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 
 			} else {
-				g_signal_handlers_block_by_func(( gpointer ) button, on_matchcase_toggled, window );
+				g_signal_handlers_block_by_func(( gpointer ) button, on_matchcase_toggled, instance );
 				gtk_toggle_button_set_active( button, !matchcase );
-				g_signal_handlers_unblock_by_func(( gpointer ) button, on_matchcase_toggled, window );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_matchcase_toggled, instance );
 			}
 		}
 	}

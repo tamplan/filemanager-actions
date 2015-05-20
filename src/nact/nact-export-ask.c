@@ -33,28 +33,22 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-object-api.h>
+#include "api/na-object-api.h"
 
-#include <core/na-exporter.h>
-#include <core/na-export-format.h>
-#include <core/na-gtk-utils.h>
-#include <core/na-ioptions-list.h>
+#include "core/na-exporter.h"
+#include "core/na-export-format.h"
+#include "core/na-gtk-utils.h"
+#include "core/na-ioptions-list.h"
 
+#include "base-gtk-utils.h"
 #include "nact-application.h"
 #include "nact-export-ask.h"
-#include "base-gtk-utils.h"
-
-/* private class data
- */
-struct _NactExportAskClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
+#include "nact-main-window.h"
 
 /* private instance data
  */
 struct _NactExportAskPrivate {
 	gboolean      dispose_has_run;
-	BaseWindow   *parent;
 	gboolean      preferences_locked;
 	NAObjectItem *item;
 	gchar        *format;
@@ -63,7 +57,7 @@ struct _NactExportAskPrivate {
 	gboolean      keep_last_choice_mandatory;
 };
 
-static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-assistant-export.ui";
+static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-export-ask.ui";
 static const gchar     *st_toplevel_name  = "ExportAskDialog";
 static const gchar     *st_wsp_name       = NA_IPREFS_EXPORT_ASK_USER_WSP;
 
@@ -145,8 +139,6 @@ class_init( NactExportAskClass *klass )
 	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-
-	klass->private = g_new0( NactExportAskClassPrivate, 1 );
 }
 
 static void
@@ -281,7 +273,6 @@ instance_finalize( GObject *dialog )
 
 /**
  * nact_export_ask_user:
- * @parent: the NactAssistant parent of this dialog.
  * @item: the NAObjectItem to be exported.
  * @first: whether this is the first call of a serie.
  *  On a first call, the user is really asked for his choice.
@@ -301,7 +292,7 @@ instance_finalize( GObject *dialog )
  * becomes his new preferred export format.
  */
 gchar *
-nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
+nact_export_ask_user( NAObjectItem *item, gboolean first )
 {
 	static const gchar *thisfn = "nact_export_ask_user";
 	NactExportAsk *editor;
@@ -310,11 +301,8 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 	int code;
 	gchar *format;
 
-	g_return_val_if_fail( BASE_IS_WINDOW( parent ), NULL );
-
-	g_debug( "%s: parent=%p, item=%p (%s), first=%s",
+	g_debug( "%s: item=%p (%s), first=%s",
 			thisfn,
-			( void * ) parent,
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			first ? "True":"False" );
 
@@ -323,7 +311,6 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 
 	if( first || !keep ){
 		editor = g_object_new( NACT_TYPE_EXPORT_ASK,
-				BASE_PROP_PARENT,         parent,
 				BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 				BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 				BASE_PROP_WSP_NAME,       st_wsp_name,
@@ -333,7 +320,6 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 		editor->private->format_mandatory = mandatory;
 		editor->private->keep_last_choice = keep;
 		editor->private->keep_last_choice_mandatory = keep_mandatory;
-		editor->private->parent = parent;
 		editor->private->item = item;
 
 		are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
@@ -373,12 +359,8 @@ on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel, gpointer use
 		g_debug( "%s: dialog=%p, toplevel=%p, user_data=%p",
 				thisfn, ( void * ) editor, ( void * ) toplevel, ( void * ) user_data );
 
-		container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+		container = base_window_get_widget( BASE_WINDOW( editor ), "export-format-ask" );
 		na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( editor ), container, FALSE );
-
-#if !GTK_CHECK_VERSION( 2,22,0 )
-		gtk_dialog_set_has_separator( toplevel, FALSE );
-#endif
 	}
 }
 
@@ -413,7 +395,7 @@ on_base_initialize_window( NactExportAsk *editor, gpointer user_data )
 		g_free( label );
 		g_free( item_label );
 
-		widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+		widget = base_window_get_widget( BASE_WINDOW( editor ), "export-format-ask" );
 		na_ioptions_list_set_editable(
 				NA_IOPTIONS_LIST( editor ), widget,
 				!priv->format_mandatory && !priv->preferences_locked );
@@ -488,7 +470,7 @@ get_export_format( NactExportAsk *editor )
 	NAIOption *format;
 	gchar *format_id;
 
-	widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+	widget = base_window_get_widget( BASE_WINDOW( editor ), "export-format-ask" );
 	format = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), widget );
 	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), 0 );
 

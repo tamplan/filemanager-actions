@@ -59,8 +59,6 @@ typedef struct {
 }
 	BaseAssistant;
 
-typedef struct _BaseAssistantClassPrivate  BaseAssistantClassPrivate;
-
 /**
  * BaseAssistantClass:
  * @apply:   apply the result of the assistant.
@@ -70,8 +68,7 @@ typedef struct _BaseAssistantClassPrivate  BaseAssistantClassPrivate;
  */
 typedef struct {
 	/*< private >*/
-	BaseWindowClass            parent;
-	BaseAssistantClassPrivate *private;
+	BaseWindowClass       parent;
 
 	/*< public >*/
 	/**
@@ -80,8 +77,12 @@ typedef struct {
 	 * @assistant: the #GtkAssistant toplevel.
 	 *
 	 * Invoked when the user has clicked on the 'Apply' button.
+	 *
+	 * This is a pure virtual function. The #BaseAssistant class does
+	 * not provide any default implementation for it.
 	 */
-	void ( *apply )  ( BaseAssistant *window, GtkAssistant *assistant );
+	void ( *apply )  ( BaseAssistant *window,
+							GtkAssistant *assistant );
 
 	/**
 	 * prepare:
@@ -89,8 +90,13 @@ typedef struct {
 	 * @assistant: the #GtkAssistant toplevel.
 	 *
 	 * Invoked when the Gtk+ runtime is preparing a page.
+	 *
+	 * This is a pure virtual function. The #BaseAssistant class does
+	 * not provide any default implementation for it.
 	 */
-	void ( *prepare )( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
+	void ( *prepare )( BaseAssistant *window,
+							GtkAssistant *assistant,
+							GtkWidget *page );
 }
 	BaseAssistantClass;
 

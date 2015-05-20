@@ -265,18 +265,16 @@ targets_from_selection( void )
 	GList *selection;
 	GError *error;
 	gchar **paths;
+	GDBusObjectManager *manager;
+	gchar *name_owner;
+	GDBusObject *object;
+	GDBusInterface *iface;
 
 	g_debug( "%s", thisfn );
 
 	selection = NULL;
 	error = NULL;
 	paths = NULL;
-
-#ifdef HAVE_GDBUS
-	GDBusObjectManager *manager;
-	gchar *name_owner;
-	GDBusObject *object;
-	GDBusInterface *iface;
 
 	manager = na_tracker_object_manager_client_new_for_bus_sync(
 			G_BUS_TYPE_SESSION,
@@ -319,50 +317,6 @@ targets_from_selection( void )
 			&paths,
 			NULL,
 			&error );
-
-#else
-# ifdef HAVE_DBUS_GLIB
-	DBusGConnection *connection;
-	DBusGProxy *proxy = NULL;
-
-	connection = dbus_g_bus_get( DBUS_BUS_SESSION, &error );
-	if( !connection ){
-		if( error ){
-			g_printerr( _( "Error: unable to get a connection to session DBus: %s" ), error->message );
-			g_error_free( error );
-		}
-		return( NULL );
-	}
-	g_debug( "%s: connection is ok", thisfn );
-
-	proxy = dbus_g_proxy_new_for_name( connection,
-			NAUTILUS_ACTIONS_DBUS_SERVICE,
-			NAUTILUS_ACTIONS_DBUS_TRACKER_PATH "/0",
-			NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
-
-	if( !proxy ){
-		g_printerr( _( "Error: unable to get a proxy on %s service" ), NAUTILUS_ACTIONS_DBUS_SERVICE );
-		dbus_g_connection_unref( connection );
-		return( NULL );
-	}
-	g_debug( "%s: proxy is ok", thisfn );
-
-	if( !dbus_g_proxy_call( proxy, "GetSelectedPaths", &error,
-			G_TYPE_INVALID,
-			G_TYPE_STRV, &paths, G_TYPE_INVALID )){
-
-		g_printerr( _( "Error on GetSelectedPaths call: %s" ), error->message );
-		g_error_free( error );
-		/* TODO: unref proxy */
-		dbus_g_connection_unref( connection );
-		return( NULL );
-	}
-	g_debug( "%s: function call is ok", thisfn );
-
-	/* TODO: unref proxy */
-	dbus_g_connection_unref( connection );
-# endif
-#endif
 
 	selection = get_selection_from_strv(( const gchar ** ) paths, TRUE );
 

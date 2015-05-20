@@ -27,26 +27,25 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_STATUSBAR_H__
-#define __NACT_MAIN_STATUSBAR_H__
+#ifndef __NACT_MENU_FILE_H__
+#define __NACT_MENU_FILE_H__
 
-/**
- * SECTION: nact_main_statusbar
- * @short_description: Main statusbar functions.
- * @include: nact/nact-main-statusbar.h
- */
-
-#include "nact-main-window.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
-void  nact_main_statusbar_initialize_gtk_toplevel( NactMainWindow *window );
+void nact_menu_file_initialize          ( NactMainWindow *main_window );
 
-void  nact_main_statusbar_display_status( NactMainWindow *window, const gchar *context, const gchar *status );
-void  nact_main_statusbar_display_with_timeout( NactMainWindow *window, const gchar *context, const gchar *status );
-void  nact_main_statusbar_hide_status( NactMainWindow *window, const gchar *context );
-void  nact_main_statusbar_set_locked( NactMainWindow *window, gboolean readonly, gint reason );
+void nact_menu_file_update_sensitivities( NactMainWindow *main_window );
+
+void nact_menu_file_new_menu            ( NactMainWindow *main_window );
+
+void nact_menu_file_new_action          ( NactMainWindow *main_window );
+
+void nact_menu_file_new_profile         ( NactMainWindow *main_window );
+
+void nact_menu_file_save_items          ( NactMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __NACT_MAIN_STATUSBAR_H__ */
+#endif /* __NACT_MENU_FILE_H__ */

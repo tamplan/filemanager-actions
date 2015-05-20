@@ -34,13 +34,14 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include <api/na-object-api.h>
+#include "api/na-object-api.h"
 
-#include <core/na-exporter.h>
-#include <core/na-export-format.h>
+#include "core/na-exporter.h"
+#include "core/na-export-format.h"
 
 #include "nact-application.h"
 #include "nact-export-ask.h"
+#include "nact-main-window.h"
 #include "nact-tree-model.h"
 #include "nact-clipboard.h"
 
@@ -70,12 +71,12 @@ typedef struct {
 	PrimaryData;
 
 struct _NactClipboardPrivate {
-	gboolean      dispose_has_run;
-	BaseWindow   *window;
-	GtkClipboard *dnd;
-	GtkClipboard *primary;
-	PrimaryData  *primary_data;
-	gboolean      primary_got;
+	gboolean        dispose_has_run;
+	NactMainWindow *window;
+	GtkClipboard   *dnd;
+	GtkClipboard   *primary;
+	PrimaryData    *primary_data;
+	gboolean        primary_got;
 };
 
 #define NACT_CLIPBOARD_ATOM				gdk_atom_intern( "_NACT_CLIPBOARD", FALSE )
@@ -257,11 +258,9 @@ instance_finalize( GObject *instance )
  * Returns: a new #NactClipboard object.
  */
 NactClipboard *
-nact_clipboard_new( BaseWindow *window )
+nact_clipboard_new( NactMainWindow *window )
 {
 	NactClipboard *clipboard;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
 	clipboard = g_object_new( NACT_TYPE_CLIPBOARD, NULL );
 
@@ -605,7 +604,8 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 		item = NA_OBJECT_ITEM( na_object_get_parent( object ));
 	}
 
-	application = NACT_APPLICATION( base_window_get_application( clipboard->private->window ));
+	application = NACT_APPLICATION(
+			gtk_window_get_application( GTK_WINDOW( clipboard->private->window )));
 	updater = nact_application_get_updater( application );
 
 	index = g_list_index( *exported, ( gconstpointer ) item );
@@ -621,7 +621,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 
 		if( !strcmp( format, EXPORTER_FORMAT_ASK )){
 			g_free( format );
-			format = nact_export_ask_user( clipboard->private->window, item, first );
+			format = nact_export_ask_user( item, first );
 			g_return_val_if_fail( format && strlen( format ), NULL );
 		}
 

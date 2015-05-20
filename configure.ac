@@ -66,16 +66,10 @@ if test "${PKG_CONFIG}" = "no"; then
 	AC_MSG_ERROR([You need to install pkg-config])
 fi
 
-# Oldest supported distribution as of Feb. 2015: Ubuntu 12.04 LTS
-glib_required=2.32.1
-gtk_required=3.4.1
-intltool_required=0.50.2
-
-nautilus_required=3.4.1
+# required versions of tools and libraries
+source ${0%/*}/na_required_versions
 
 # localization
-# note that this same intltool version is also required by autogen.sh
-# and thus set in maintainer/run-autogen.sh script
 IT_PROG_INTLTOOL([${intltool_required}])
 GETTEXT_PACKAGE=${PACKAGE}
 AC_SUBST([GETTEXT_PACKAGE])
@@ -93,7 +87,7 @@ if test "${GLIB_GENMARSHAL}" = "no"; then
 	let na_fatal_count+=1
 fi
 # Have and want GConf support ?
-# As of 3.4 release, we are deprecating GConf, disabled it by default.
+# As of 3.4 release, we are deprecating GConf, disabling it by default.
 # We only search for the libraries when explicitely required from 
 # configure. This is a first step deprecation; in a second step, we
 # will emit a warning.
@@ -105,8 +99,8 @@ NA_CHECK_MODULE([GTK3],    [gtk+-3.0],   [${gtk_required}])
 NA_CHECK_MODULE([GLIB],    [glib-2.0],   [${glib_required}])
 NA_CHECK_MODULE([GMODULE], [gmodule-2.0],[${glib_required}])
 NA_CHECK_MODULE([GIO_UNIX],[gio-unix-2.0])
-NA_CHECK_MODULE([GTOP],    [libgtop-2.0],[2.23.1])
-NA_CHECK_MODULE([LIBXML],  [libxml-2.0], [2.6])
+NA_CHECK_MODULE([GTOP],    [libgtop-2.0],[${gtop_required}])
+NA_CHECK_MODULE([LIBXML],  [libxml-2.0], [${xml_required}])
 NA_CHECK_MODULE([UUID],    [uuid])
 
 # target a file manager (nautilus, nemo, ...)
@@ -136,26 +130,28 @@ AC_CONFIG_FILES([
 	docs/nact/Makefile
 	docs/reference/Makefile
 	docs/reference/version.xml
-	m4/Makefile
 	icons/Makefile
 	icons/16x16/Makefile
 	icons/22x22/Makefile
 	icons/32x32/Makefile
 	icons/48x48/Makefile
 	icons/scalable/Makefile
+	m4/Makefile
+	maintainer/Makefile
+	po/Makefile.in
 	src/Makefile
 	src/api/Makefile
 	src/core/Makefile
 	src/io-desktop/Makefile
 	src/io-gconf/Makefile
 	src/io-xml/Makefile
+	src/nact/Makefile
 	src/plugin-menu/Makefile
 	src/plugin-tracker/Makefile
-	src/nact/Makefile
 	src/test/Makefile
 	src/utils/Makefile
-	po/Makefile.in
-	maintainer/Makefile
+	test/Makefile
+	test/plugman/Makefile
 ])
 
 # Enable deprecated functions ?

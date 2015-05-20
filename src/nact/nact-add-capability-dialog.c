@@ -289,7 +289,7 @@ instance_finalize( GObject *dialog )
  * be g_free() by the caller, or NULL.
  */
 gchar *
-nact_add_capability_dialog_run( BaseWindow *parent, GSList *capabilities )
+nact_add_capability_dialog_run( NactMainWindow *parent, GSList *capabilities )
 {
 	static const gchar *thisfn = "nact_add_capability_dialog_run";
 	NactAddCapabilityDialog *dialog;
@@ -300,7 +300,7 @@ nact_add_capability_dialog_run( BaseWindow *parent, GSList *capabilities )
 	g_return_val_if_fail( BASE_IS_WINDOW( parent ), NULL );
 
 	dialog = g_object_new( NACT_TYPE_ADD_CAPABILITY_DIALOG,
-					BASE_PROP_PARENT,         parent,
+					BASE_PROP_MAIN_WINDOW,    parent,
 					BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 					BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 					BASE_PROP_WSP_NAME,       st_wsp_name,
@@ -366,10 +366,6 @@ on_base_initialize_gtk( NactAddCapabilityDialog *dialog, GtkDialog *toplevel, gp
 
 		selection = gtk_tree_view_get_selection( listview );
 		gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
-
-#if !GTK_CHECK_VERSION( 2,22,0 )
-		gtk_dialog_set_has_separator( toplevel, FALSE );
-#endif
 	}
 }
 

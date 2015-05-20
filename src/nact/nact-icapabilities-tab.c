@@ -33,10 +33,13 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-core-utils.h>
-#include <api/na-object-api.h>
+#include "api/na-core-utils.h"
+#include "api/na-object-api.h"
+
+#include "core/na-gtk-utils.h"
 
 #include "nact-main-tab.h"
+#include "nact-main-window.h"
 #include "nact-match-list.h"
 #include "nact-add-capability-dialog.h"
 #include "nact-icapabilities-tab.h"
@@ -54,16 +57,12 @@ static guint st_initializations = 0;	/* interface initialization count */
 static GType   register_type( void );
 static void    interface_base_init( NactICapabilitiesTabInterface *klass );
 static void    interface_base_finalize( NactICapabilitiesTabInterface *klass );
-
-static void    on_base_initialize_gtk( NactICapabilitiesTab *instance, GtkWindow *toplevel, gpointer user_data );
-static void    on_base_initialize_window( NactICapabilitiesTab *instance, gpointer user_data );
-
-static void    on_main_selection_changed( NactICapabilitiesTab *instance, GList *selected_items, gpointer user_data );
-
-static void    on_add_clicked( GtkButton *button, BaseWindow *window );
+static void    initialize_gtk( NactICapabilitiesTab *instance );
+static void    initialize_window( NactICapabilitiesTab *instance );
+static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICapabilitiesTab *instance );
+static void    on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance );
 static GSList *get_capabilities( NAIContext *context );
 static void    set_capabilities( NAIContext *context, GSList *list );
-
 static void    on_instance_finalized( gpointer user_data, NactICapabilitiesTab *instance );
 
 GType
@@ -100,7 +99,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactICapabilitiesTab", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, BASE_TYPE_WINDOW );
+	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
 	return( type );
 }
@@ -153,43 +152,30 @@ nact_icapabilities_tab_init( NactICapabilitiesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ));
-
 	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_CAPABILITIES );
+	initialize_gtk( instance );
+	initialize_window( instance );
 
 	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 }
 
 static void
-on_base_initialize_gtk( NactICapabilitiesTab *instance, GtkWindow *toplevel, void *user_data )
+initialize_gtk( NactICapabilitiesTab *instance )
 {
-	static const gchar *thisfn = "nact_icapabilities_tab_on_base_initialize_gtk";
+	static const gchar *thisfn = "nact_icapabilities_tab_initialize_gtk";
 
 	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), toplevel=%p, user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) toplevel,
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			BASE_WINDOW( instance ),
+			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_CAPABILITIES,
-			base_window_get_widget( BASE_WINDOW( instance ), "CapabilitiesTreeView" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "AddCapabilityButton" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "RemoveCapabilityButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CapabilitiesTreeView" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddCapabilityButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveCapabilityButton" ),
 			( pget_filters ) get_capabilities,
 			( pset_filters ) set_capabilities,
 			( pon_add_cb ) on_add_clicked,
@@ -200,26 +186,25 @@ on_base_initialize_gtk( NactICapabilitiesTab *instance, GtkWindow *toplevel, voi
 }
 
 static void
-on_base_initialize_window( NactICapabilitiesTab *instance, void *user_data )
+initialize_window( NactICapabilitiesTab *instance )
 {
-	static const gchar *thisfn = "nact_icapabilities_tab_on_base_initialize_window";
+	static const gchar *thisfn = "nact_icapabilities_tab_initialize_window";
+	NactTreeView *tview;
 
 	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ));
+	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+
+	g_signal_connect(
+			tview, TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tree_selection_changed ), instance );
 }
 
 static void
-on_main_selection_changed( NactICapabilitiesTab *instance, GList *selected_items, gpointer user_data )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICapabilitiesTab *instance )
 {
 	NAIContext *context;
 	gboolean editable;
@@ -234,20 +219,20 @@ on_main_selection_changed( NactICapabilitiesTab *instance, GList *selected_items
 }
 
 static void
-on_add_clicked( GtkButton *button, BaseWindow *window )
+on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance )
 {
 	NAIContext *context;
 	GSList *capabilities;
 	gchar *new_cap;
 
-	g_object_get( G_OBJECT( window ), MAIN_PROP_CONTEXT, &context, NULL );
+	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 
 	if( context ){
-		capabilities = nact_match_list_get_rows( window, ITAB_NAME );
-		new_cap = nact_add_capability_dialog_run( window, capabilities );
+		capabilities = nact_match_list_get_rows( NACT_MAIN_WINDOW( instance ), ITAB_NAME );
+		new_cap = nact_add_capability_dialog_run( NACT_MAIN_WINDOW( instance ), capabilities );
 
 		if( new_cap ){
-			nact_match_list_insert_row( window, ITAB_NAME, new_cap, FALSE, FALSE );
+			nact_match_list_insert_row( NACT_MAIN_WINDOW( instance ), ITAB_NAME, new_cap, FALSE, FALSE );
 			g_free( new_cap );
 		}
 

@@ -36,7 +36,6 @@
 #ifndef __NACT_TREE_MODEL_PRIV_H__
 #define __NACT_TREE_MODEL_PRIV_H__
 
-#include "base-window.h"
 #include "egg-tree-multi-dnd.h"
 #include "nact-clipboard.h"
 
@@ -45,20 +44,25 @@ G_BEGIN_DECLS
 /* private instance data
  */
 struct _NactTreeModelPrivate {
-	gboolean       dispose_has_run;
+	gboolean        dispose_has_run;
 
 	/* data set at instanciation time
 	 */
-	BaseWindow    *window;
-	GtkTreeView   *treeview;
-	guint          mode;
-	NactClipboard *clipboard;
+	GtkTreeView    *treeview;
+	gboolean        item_updated_connected;
+	gboolean        dnd_setup;
+
+	/* must be initialized right after the instanciation
+	 */
+	NactMainWindow *window;
+	NactClipboard  *clipboard;
+	guint           mode;
 
 	/* runtime data
 	 */
-	gboolean       drag_has_profiles;
-	gboolean       drag_highlight;		/* defined for on_drag_motion handler */
-	gboolean       drag_drop;			/* defined for on_drag_motion handler */
+	gboolean        drag_has_profiles;
+	gboolean        drag_highlight;		/* defined for on_drag_motion handler */
+	gboolean        drag_drop;			/* defined for on_drag_motion handler */
 };
 
 #define TREE_MODEL_STATUSBAR_CONTEXT	"nact-tree-model-statusbar-context"

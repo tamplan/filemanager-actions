@@ -67,9 +67,7 @@ main( int argc, char *argv[] )
 	/* create and run the application
 	 */
 	appli = nact_application_new();
-
-	ret = base_application_run_with_args( BASE_APPLICATION( appli ), argc, argv );
-
+	ret = nact_application_run_with_args( appli, argc, argv );
 	g_object_unref( appli );
 
 	return( ret );

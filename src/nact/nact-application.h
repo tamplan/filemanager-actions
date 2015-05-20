@@ -37,18 +37,19 @@
  *
  * This is the main class for nautilus-actions-config-tool program.
  *
- * The #NactApplication object is instanciated in main() function.
+ * The #NactApplication object is instanciated from main() function,
+ * then later #g_object_unref() after nact_application_run() has
+ * returned.
  *
- * Properties are explicitely set in nact_application_new() before
- * calling base_application_run().
- *
- * The #NactApplication object is later g_object_unref() in main() after
- * base_application_run() has returned.
+ * NactApplication is a non-unique application e.g. the user is able
+ * to run several instance of the applications, all pointing to the
+ * same actions set, potentially being able to simultaneously have
+ * different views or to simultaneously act on different subsets.
  */
 
-#include <core/na-updater.h>
+#include <gtk/gtk.h>
 
-#include "base-application.h"
+#include "core/na-updater.h"
 
 G_BEGIN_DECLS
 
@@ -63,25 +64,48 @@ typedef struct _NactApplicationPrivate       NactApplicationPrivate;
 
 typedef struct {
 	/*< private >*/
-	BaseApplication         parent;
+	GtkApplicationClass     parent;
+}
+	NactApplicationClass;
+
+typedef struct {
+	/*< private >*/
+	GtkApplication          parent;
 	NactApplicationPrivate *private;
 }
 	NactApplication;
 
-typedef struct _NactApplicationClassPrivate  NactApplicationClassPrivate;
-
-typedef struct {
-	/*< private >*/
-	BaseApplicationClass         parent;
-	NactApplicationClassPrivate *private;
+/**
+ * NactExitCode:
+ *
+ * The code returned by the application.
+ *
+ * @NACT_EXIT_CODE_PROGRAM = -1: this is a program error code.
+ * @NACT_EXIT_CODE_OK = 0:       the program has successfully run, and returns zero.
+ * @NACT_EXIT_CODE_ARGS = 1:     unable to interpret command-line options
+ * @NACT_EXIT_CODE_WINDOW = 2:   unable to create a window
+ */
+typedef enum {
+	NACT_EXIT_CODE_PROGRAM = -1,
+	NACT_EXIT_CODE_OK = 0,
+	NACT_EXIT_CODE_ARGS,
+	NACT_EXIT_CODE_WINDOW,
 }
-	NactApplicationClass;
+	NactExitCode;
 
-GType            nact_application_get_type   ( void );
+GType            nact_application_get_type            ( void );
 
-NactApplication *nact_application_new        ( void );
+NactApplication *nact_application_new                 ( void );
 
-NAUpdater       *nact_application_get_updater( const NactApplication *application );
+int              nact_application_run_with_args       ( NactApplication *application,
+																int argc,
+																GStrv argv );
+
+gchar           *nact_application_get_application_name( const NactApplication *application );
+
+NAUpdater       *nact_application_get_updater         ( const NactApplication *application );
+
+gboolean         nact_application_is_willing_to_quit  ( const NactApplication *application );
 
 G_END_DECLS
 

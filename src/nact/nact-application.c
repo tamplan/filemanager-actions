@@ -34,29 +34,32 @@
 #include <glib/gi18n.h>
 #include <libintl.h>
 
-#include <api/na-core-utils.h>
+#include "api/na-core-utils.h"
 
-#include <core/na-about.h>
+#include "core/na-about.h"
 
 #include "nact-application.h"
 #include "nact-main-window.h"
-
-/* private class data
- */
-struct _NactApplicationClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
+#include "nact-menu.h"
 
 /* private instance data
  */
 struct _NactApplicationPrivate {
-	gboolean   dispose_has_run;
-	NAUpdater *updater;
+	gboolean        dispose_has_run;
+
+	const gchar    *application_name;	/* new: st_application_name localized version */
+	const gchar    *description;		/* new: st_description localized version */
+	const gchar    *icon_name;			/* new: icon name */
+	int             argc;
+	GStrv           argv;
+	int             code;
+
+	NAUpdater      *updater;
 };
 
 static const gchar *st_application_name	= N_( "Nautilus-Actions Configuration Tool" );
 static const gchar *st_description		= N_( "A user interface to edit your own contextual actions" );
-static const gchar *st_unique_name		= "org.gnome.nautilus-actions.ConfigurationTool";
+static const gchar *st_application_id   = "org.gnome.nautilus-actions.ConfigurationTool";
 
 static gboolean     st_non_unique_opt = FALSE;
 static gboolean     st_version_opt    = FALSE;
@@ -69,17 +72,19 @@ static GOptionEntry st_option_entries[] = {
 	{ NULL }
 };
 
-static BaseApplicationClass *st_parent_class = NULL;
+static GtkApplicationClass *st_parent_class = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactApplicationClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
-
-static gboolean appli_manage_options( BaseApplication *application );
-static gboolean appli_init_application( BaseApplication *application );
-static gboolean appli_create_windows( BaseApplication *application );
+static void     init_i18n( NactApplication *application );
+static gboolean init_gtk_args( NactApplication *application );
+static gboolean manage_options( NactApplication *application );
+static void     application_startup( GApplication *application );
+static void     application_activate( GApplication *application );
+static void     application_open( GApplication *application, GFile **files, gint n_files, const gchar *hint );
 
 GType
 nact_application_get_type( void )
@@ -113,7 +118,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_APPLICATION, "NactApplication", &info, 0 );
+	type = g_type_register_static( GTK_TYPE_APPLICATION, "NactApplication", &info, 0 );
 
 	return( type );
 }
@@ -122,23 +127,17 @@ static void
 class_init( NactApplicationClass *klass )
 {
 	static const gchar *thisfn = "nact_application_class_init";
-	GObjectClass *object_class;
-	BaseApplicationClass *appli_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-	st_parent_class = BASE_APPLICATION_CLASS( g_type_class_peek_parent( klass ));
+	st_parent_class = GTK_APPLICATION_CLASS( g_type_class_peek_parent( klass ));
 
-	object_class = G_OBJECT_CLASS( klass );
-	object_class->dispose = instance_dispose;
-	object_class->finalize = instance_finalize;
+	G_OBJECT_CLASS( klass )->dispose = instance_dispose;
+	G_OBJECT_CLASS( klass )->finalize = instance_finalize;
 
-	klass->private = g_new0( NactApplicationClassPrivate, 1 );
-
-	appli_class = BASE_APPLICATION_CLASS( klass );
-	appli_class->manage_options = appli_manage_options;
-	appli_class->init_application = appli_init_application;
-	appli_class->create_windows = appli_create_windows;
+	G_APPLICATION_CLASS( klass )->startup = application_startup;
+	G_APPLICATION_CLASS( klass )->activate = application_activate;
+	G_APPLICATION_CLASS( klass )->open = application_open;
 }
 
 static void
@@ -163,27 +162,25 @@ static void
 instance_dispose( GObject *application )
 {
 	static const gchar *thisfn = "nact_application_instance_dispose";
-	NactApplication *self;
+	NactApplicationPrivate *priv;
 
-	g_return_if_fail( NACT_IS_APPLICATION( application ));
+	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
 
-	self = NACT_APPLICATION( application );
+	priv = NACT_APPLICATION( application )->private;
 
-	if( !self->private->dispose_has_run ){
+	if( !priv->dispose_has_run ){
 
 		g_debug( "%s: application=%p (%s)", thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ));
 
-		self->private->dispose_has_run = TRUE;
+		priv->dispose_has_run = TRUE;
 
-		if( self->private->updater ){
-			g_object_unref( self->private->updater );
-		}
-
-		/* chain up to the parent class */
-		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
-			G_OBJECT_CLASS( st_parent_class )->dispose( application );
+		if( priv->updater ){
+			g_clear_object( &priv->updater );
 		}
 	}
+
+	/* chain up to the parent class */
+	G_OBJECT_CLASS( st_parent_class )->dispose( application );
 }
 
 static void
@@ -200,10 +197,8 @@ instance_finalize( GObject *application )
 
 	g_free( self->private );
 
-	/* chain call to parent class */
-	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
-		G_OBJECT_CLASS( st_parent_class )->finalize( application );
-	}
+	/* chain call to the parent class */
+	G_OBJECT_CLASS( st_parent_class )->finalize( application );
 }
 
 /**
@@ -215,37 +210,148 @@ NactApplication *
 nact_application_new( void )
 {
 	NactApplication *application;
+	NactApplicationPrivate *priv;
 
-	application = g_object_new( NACT_TYPE_APPLICATION, NULL );
-
-	g_object_set( G_OBJECT( application ),
-			BASE_PROP_OPTIONS,          st_option_entries,
-			BASE_PROP_APPLICATION_NAME, gettext( st_application_name ),
-			BASE_PROP_DESCRIPTION,      gettext( st_description ),
-			BASE_PROP_ICON_NAME,        na_about_get_icon_name(),
-			BASE_PROP_UNIQUE_NAME,      st_unique_name,
+	application = g_object_new( NACT_TYPE_APPLICATION,
+			"application-id", st_application_id,
 			NULL );
+
+	priv = application->private;
+	priv->application_name = gettext( st_application_name );
+	priv->description = gettext( st_description );
+	priv->icon_name = na_about_get_icon_name();
 
 	return( application );
 }
 
+/**
+ * nact_application_run_with_args:
+ * @application: this #GtkApplication -derived instance.
+ * @argc:
+ * @argv:
+ *
+ * Starts and runs the application.
+ * Takes care of creating, initializing, and running the main window.
+ *
+ * All steps are implemented as virtual functions which provide some
+ * suitable defaults, and may be overriden by a derived class.
+ *
+ * Returns: an %int code suitable as an exit code for the program.
+ *
+ * Though it is defined as a virtual function itself, it should be very
+ * seldomly needed to override this in a derived class.
+ */
+int
+nact_application_run_with_args( NactApplication *application, int argc, GStrv argv )
+{
+	static const gchar *thisfn = "nact_application_run_with_args";
+	NactApplicationPrivate *priv;
+
+	g_debug( "%s: application=%p (%s), argc=%d",
+			thisfn,
+			( void * ) application, G_OBJECT_TYPE_NAME( application ),
+			argc );
+
+	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), NACT_EXIT_CODE_PROGRAM );
+
+	priv = application->private;
+
+	if( !priv->dispose_has_run ){
+
+		priv->argc = argc;
+		priv->argv = g_strdupv( argv );
+		priv->code = NACT_EXIT_CODE_OK;
+
+		init_i18n( application );
+		g_set_application_name( priv->application_name );
+		gtk_window_set_default_icon_name( priv->icon_name );
+
+		if( init_gtk_args( application ) &&
+			manage_options( application )){
+
+			g_debug( "%s: entering g_application_run", thisfn );
+			priv->code = g_application_run( G_APPLICATION( application ), 0, NULL );
+		}
+	}
+
+	return( priv->code );
+}
+
 /*
- * overriden to manage command-line options
+ * i18n initialization
+ *
+ * Returns: %TRUE to continue the execution, %FALSE to terminate the program.
+ * The program exit code will be taken from @code.
+ */
+static void
+init_i18n( NactApplication *application )
+{
+	static const gchar *thisfn = "nact_application_init_i18n";
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+#ifdef ENABLE_NLS
+	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
+# ifdef HAVE_BIND_TEXTDOMAIN_CODESET
+	bind_textdomain_codeset( GETTEXT_PACKAGE, "UTF-8" );
+# endif
+	textdomain( GETTEXT_PACKAGE );
+#endif
+}
+
+/*
+ * Pre-Gtk+ initialization
+ *
+ * Though GApplication has its own infrastructure to handle command-line
+ * arguments, it appears that it does not deal with Gtk+-specific arguments.
+ * We so have to explicitely call gtk_init_with_args() in order to let Gtk+
+ * "eat" its own arguments, and only have to handle our owns...
  */
 static gboolean
-appli_manage_options( BaseApplication *application )
+init_gtk_args( NactApplication *application )
 {
-	static const gchar *thisfn = "nact_application_appli_manage_options";
+	static const gchar *thisfn = "nact_application_init_gtk_args";
+	NactApplicationPrivate *priv;
 	gboolean ret;
+	char *parameter_string;
+	GError *error;
 
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), FALSE );
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	priv = application->private;
+
+	parameter_string = g_strdup( g_get_application_name());
+	error = NULL;
+	ret = gtk_init_with_args(
+			&priv->argc,
+			( char *** ) &priv->argv,
+			parameter_string,
+			st_option_entries,
+			GETTEXT_PACKAGE,
+			&error );
+	if( !ret ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		ret = FALSE;
+		priv->code = NACT_EXIT_CODE_ARGS;
+	}
+	g_free( parameter_string );
+
+	return( ret );
+}
+
+static gboolean
+manage_options( NactApplication *application )
+{
+	static const gchar *thisfn = "nact_application_manage_options";
+	gboolean ret;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	ret = TRUE;
 
 	/* display the program version ?
-	 * if yes, then stops here
+	 * if yes, then stops here, exiting with code ok
 	 */
 	if( st_version_opt ){
 		na_core_utils_print_version();
@@ -255,33 +361,50 @@ appli_manage_options( BaseApplication *application )
 	/* run the application as non-unique ?
 	 */
 	if( ret && st_non_unique_opt ){
-		g_object_set( G_OBJECT( application ), BASE_PROP_UNIQUE_NAME, "", NULL );
-	}
-
-	/* call parent class */
-	if( ret && BASE_APPLICATION_CLASS( st_parent_class )->manage_options ){
-		ret = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application );
+		g_application_set_flags( G_APPLICATION( application ), G_APPLICATION_NON_UNIQUE );
 	}
 
 	return( ret );
 }
 
 /*
- * initialize the application
+ * https://wiki.gnome.org/HowDoI/GtkApplication
+ *
+ * Invoked on the primary instance immediately after registration.
+ *
+ * When your application starts, the startup signal will be fired. This
+ * gives you a chance to perform initialisation tasks that are not
+ * directly related to showing a new window. After this, depending on
+ * how the application is started, either activate or open will be called
+ * next.
+ *
+ * GtkApplication defaults to applications being single-instance. If the
+ * user attempts to start a second instance of a single-instance
+ * application then GtkApplication will signal the first instance and
+ * you will receive additional activate or open signals. In this case,
+ * the second instance will exit immediately, without calling startup
+ * or shutdown.
+ *
+ * For this reason, you should do essentially no work at all from main().
+ * All startup initialisation should be done in startup. This avoids
+ * wasting work in the second-instance case where the program just exits
+ * immediately.
  */
-static gboolean
-appli_init_application( BaseApplication *application )
+static void
+application_startup( GApplication *application )
 {
-	static const gchar *thisfn = "nact_application_appli_init_application";
-	gboolean ret;
+	static const gchar *thisfn = "nact_application_startup";
 	NactApplicationPrivate *priv;
-
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), FALSE );
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	ret = TRUE;
+	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
 	priv = NACT_APPLICATION( application )->private;
+
+	/* chain up to the parent class */
+	if( G_APPLICATION_CLASS( st_parent_class )->startup ){
+		G_APPLICATION_CLASS( st_parent_class )->startup( application );
+	}
 
 	/* create the NAPivot object (loading the plugins and so on)
 	 * after having dealt with command-line arguments
@@ -289,43 +412,115 @@ appli_init_application( BaseApplication *application )
 	priv->updater = na_updater_new();
 	na_pivot_set_loadable( NA_PIVOT( priv->updater ), PIVOT_LOAD_ALL );
 
-	/* call parent class */
-	if( ret && BASE_APPLICATION_CLASS( st_parent_class )->init_application ){
-		ret = BASE_APPLICATION_CLASS( st_parent_class )->init_application( application );
-	}
-
-	return( ret );
+	/* define the application menu */
+	nact_menu_app( NACT_APPLICATION( application ));
 }
 
 /*
- * create application startup windows
+ * https://wiki.gnome.org/Projects/GLib/GApplication/Introduction
+ * https://wiki.gnome.org/HowDoI/GtkApplication
+ *
+ * activate is executed by GApplication when the application is "activated".
+ * This corresponds to the program being run from the command line, or when
+ * its icon is clicked on in an application launcher.
+ * From a semantic standpoint, activate should usually do one of two things,
+ * depending on the type of application.
+ *
+ * If your application is the type of application that deals with several
+ * documents at a time, in separate windows (and/or tabs) then activate
+ * should involve showing a window or creating a tab for a new document.
+ *
+ * If your application is more like the type of application with one primary
+ * main window then activate should usually involve raising this window with
+ * gtk_window_present(). It is the choice of the application in this case if
+ * the window itself is constructed in startup or on the first execution of
+ * activate.
+ *
+ * activate is potentially called many times in a process or maybe never.
+ * If the process is started without files to open then activate will be run
+ * after startup. It may also be run again if a second instance of the
+ * process is started.
  */
-static gboolean
-appli_create_windows( BaseApplication *application )
+static void
+application_activate( GApplication *application )
 {
-	static const gchar *thisfn = "nact_application_appli_create_windows";
-	gboolean ret;
-	NactMainWindow *window;
-
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), FALSE );
+	static const gchar *thisfn = "nact_application_activate";
+	GList *windows_list;
+	NactMainWindow *main_window;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	ret = FALSE;
+	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
 
-	/* creating main window
-	 */
-	window = nact_main_window_new( NACT_APPLICATION( application ));
+	windows_list = gtk_application_get_windows( GTK_APPLICATION( application ));
 
-	if( window ){
-		g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
-		ret = TRUE;
+	/* if the application is unique, have only one main window */
+	if( !st_non_unique_opt ){
+		if( !g_list_length( windows_list )){
+			main_window = nact_main_window_new( NACT_APPLICATION( application ));
+			g_debug( "%s: main window instanciated at %p", thisfn, main_window );
+		} else {
+			main_window = ( NactMainWindow * ) windows_list->data;
+		}
 
+	/* have as many main windows we want */
 	} else {
-		g_object_set( G_OBJECT( application ), BASE_PROP_CODE, BASE_EXIT_CODE_INIT_WINDOW, NULL );
+		main_window = nact_main_window_new( NACT_APPLICATION( application ));
 	}
 
-	return( ret );
+	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
+	gtk_window_present( GTK_WINDOW( main_window ));
+}
+
+/*
+ * https://wiki.gnome.org/Projects/GLib/GApplication/Introduction
+ *
+ * open is similar to activate, but it is used when some files have been
+ * passed to the application to open.
+ * In fact, you could think of activate as a special case of open: the
+ * one with zero files.
+ * Similar to activate, open should create a window or tab. It should
+ * open the file in this window. If multiple files are given, possibly
+ * several windows should be opened.
+ * open will only be invoked in the case that your application declares
+ * that it supports opening files with the G_APPLICATION_HANDLES_OPEN
+ * GApplicationFlag.
+ *
+ * Openbook: as the G_APPLICATION_HANDLES_OPEN flag is not set, then
+ * this function should never be called.
+ */
+static void
+application_open( GApplication *application, GFile **files, gint n_files, const gchar *hint )
+{
+	static const gchar *thisfn = "nact_application_open";
+
+	g_warning( "%s: application=%p, n_files=%d, hint=%s: unexpected run here",
+			thisfn, ( void * ) application, n_files, hint );
+}
+
+/**
+ * nact_application_get_application_name:
+ * @application: this #NactApplication instance.
+ *
+ * Returns: the application name as a newly allocated string which should
+ * be be g_free() by the caller.
+ */
+gchar *
+nact_application_get_application_name( const NactApplication *application )
+{
+	NactApplicationPrivate *priv;
+	gchar *name = NULL;
+
+	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), NULL );
+
+	priv = application->private;
+
+	if( !priv->dispose_has_run ){
+
+		name = g_strdup( priv->application_name );
+	}
+
+	return( name );
 }
 
 /**
@@ -340,14 +535,23 @@ appli_create_windows( BaseApplication *application )
 NAUpdater *
 nact_application_get_updater( const NactApplication *application )
 {
+	NactApplicationPrivate *priv;
 	NAUpdater *updater = NULL;
 
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
+	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), NULL );
 
-	if( !application->private->dispose_has_run ){
+	priv = application->private;
 
-		updater = application->private->updater;
+	if( !priv->dispose_has_run ){
+
+		updater = priv->updater;
 	}
 
 	return( updater );
+}
+
+gboolean
+nact_application_is_willing_to_quit( const NactApplication *application )
+{
+	return( FALSE );
 }

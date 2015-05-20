@@ -73,7 +73,8 @@ for d in $(find ${top_srcdir} -maxdepth 2 -type d -name 'nautilus-actions-*'); d
 	rm -fr $d
 done
 
-REQUIRED_INTLTOOL_VERSION=0.35.5
+# tools required version
+source ${top_srcdir}/na_required_versions
 
 # requires gtk-doc package
 # used for Developer Reference Manual generation (devhelp)

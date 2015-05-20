@@ -1,14 +1,16 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.16.1 -->
 <interface>
-  <requires lib="gtk+" version="2.20"/>
-  <!-- interface-naming-policy toplevel-contextual -->
+  <requires lib="gtk+" version="3.4"/>
   <object class="GtkAssistant" id="ImportAssistant">
+    <property name="can_focus">False</property>
     <property name="title" translatable="yes">Importing actions</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
     <child>
       <object class="GtkLabel" id="p0-l1-label1">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
         <property name="wrap">True</property>
       </object>
@@ -17,181 +19,189 @@
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="p1-l1-vbox1">
+      <object class="GtkAlignment" id="p1-l1-vbox1">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <child>
-          <object class="GtkAlignment" id="p1-l2-alignment1">
+          <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <child>
-              <object class="GtkFileChooserWidget" id="ImportFileChooser">
-                <property name="visible">True</property>
-                <property name="use_preview_label">False</property>
-                <property name="preview_widget_active">False</property>
-                <property name="local_only">False</property>
-                <property name="select_multiple">True</property>
-              </object>
-            </child>
+            <property name="can_focus">False</property>
+            <property name="local_only">False</property>
+            <property name="preview_widget_active">False</property>
+            <property name="select_multiple">True</property>
+            <property name="use_preview_label">False</property>
           </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
         </child>
       </object>
       <packing>
         <property name="title" translatable="yes">Selecting files to import</property>
-        <property name="page_type">content</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="p2-l1-vbox1">
+      <object class="GtkAlignment" id="p2-l1-vbox1">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <child>
-          <object class="GtkAlignment" id="p2-l2-alignment1">
+          <object class="GtkGrid" id="grid1">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="row_spacing">2</property>
             <child>
-              <object class="GtkVBox" id="p2-l3-vbox1">
+              <object class="GtkLabel" id="p2-l4-label1">
                 <property name="visible">True</property>
-                <property name="spacing">10</property>
-                <child>
-                  <object class="GtkLabel" id="p2-l4-label1">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">What should I do when importing an item whose ID already exists ?</property>
-                    <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
-                    <attributes>
-                      <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkTreeView" id="p2-AskTreeView">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                        <property name="headers_visible">False</property>
-                    <property name="rules_hint">True</property>
-                    <property name="show_expanders">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="position">1</property>
-                  </packing>
+                <property name="can_focus">False</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">What should I do when importing an item whose ID already exists ?</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+                <property name="width">1</property>
+                <property name="height">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkTreeView" id="p2-AskTreeView">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="headers_visible">False</property>
+                <property name="rules_hint">True</property>
+                <property name="show_expanders">False</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection" id="treeview-selection"/>
                 </child>
               </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+                <property name="width">1</property>
+                <property name="height">1</property>
+              </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
         </child>
       </object>
       <packing>
         <property name="title" translatable="yes">Managing duplicates</property>
-        <property name="page_type">content</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="p3-l1-vbox1">
+      <object class="GtkAlignment" id="p3-l1-vbox1">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <child>
-          <object class="GtkAlignment" id="p3-l2-alignment1">
+          <object class="GtkScrolledWindow" id="p3-l3-scrolledwindow1">
             <property name="visible">True</property>
+            <property name="can_focus">True</property>
             <child>
-              <object class="GtkScrolledWindow" id="p3-l3-scrolledwindow1">
+              <object class="GtkViewport" id="p3-l4-viewport1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">automatic</property>
-                <property name="vscrollbar_policy">automatic</property>
+                <property name="can_focus">False</property>
+                <property name="shadow_type">none</property>
                 <child>
-                  <object class="GtkViewport" id="p3-l4-viewport1">
+                  <object class="GtkBox" id="p3-ConfirmVBox">
                     <property name="visible">True</property>
-                    <property name="shadow_type">GTK_SHADOW_NONE</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
                     <child>
-                      <object class="GtkVBox" id="p3-ConfirmVBox">
+                      <object class="GtkGrid" id="grid2">
                         <property name="visible">True</property>
-                        <property name="spacing">15</property>
+                        <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkVBox" id="p3-l6-vbox1">
+                          <object class="GtkLabel" id="p3-l7-label1">
                             <property name="visible">True</property>
-                            <property name="spacing">8</property>
-                            <child>
-                              <object class="GtkLabel" id="p3-l7-label1">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">About to import selected files:</property>
-                                <attributes>
-                                  <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-                                </attributes>
-                              </object>
-                              <packing>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="p3-ConfirmFilesList">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="xpad">15</property>
-                              </object>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">About to import selected files:</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="position">0</property>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkVBox" id="p3-l6-vbox2">
+                          <object class="GtkLabel" id="p3-ConfirmFilesList">
                             <property name="visible">True</property>
-                            <property name="spacing">8</property>
-                            <child>
-                              <object class="GtkLabel" id="p3-l7-label2">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">When importing an item whose ID already exists:</property>
-                                <property name="wrap">True</property>
-                                <attributes>
-                                  <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-                                </attributes>
-                              </object>
-                              <packing>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="p3-ConfirmImportMode">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="xpad">15</property>
-                                <property name="wrap">True</property>
-                              </object>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="xpad">15</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="position">1</property>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
                           </packing>
                         </child>
                       </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkGrid" id="grid3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkLabel" id="p3-l7-label2">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">When importing an item whose ID already exists:</property>
+                            <property name="wrap">True</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="p3-ConfirmImportMode">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="xpad">15</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
         </child>
       </object>
       <packing>
@@ -200,56 +210,55 @@
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="p4-l1-vbox1">
+      <object class="GtkAlignment" id="p4-l1-vbox1">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <child>
-          <object class="GtkAlignment" id="p4-l2-alignment1">
+          <object class="GtkScrolledWindow" id="p4-l3-scrolledwindow1">
             <property name="visible">True</property>
+            <property name="can_focus">True</property>
             <child>
-              <object class="GtkScrolledWindow" id="p4-l3-scrolledwindow1">
+              <object class="GtkViewport" id="p4-l4-viewport1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">automatic</property>
-                <property name="vscrollbar_policy">automatic</property>
+                <property name="can_focus">False</property>
+                <property name="shadow_type">none</property>
                 <child>
-                  <object class="GtkViewport" id="p4-l4-viewport1">
+                  <object class="GtkBox" id="p4-SummaryVBox">
                     <property name="visible">True</property>
-                    <property name="shadow_type">GTK_SHADOW_NONE</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkVBox" id="p4-SummaryVBox">
+                      <object class="GtkLabel" id="p4-l6-label1">
                         <property name="visible">True</property>
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">8</property>
-                        <child>
-                          <object class="GtkLabel" id="p4-l6-label1">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Selected files have been proceeded:</property>
-                            <attributes>
-                              <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-                            </attributes>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
+                        <property name="can_focus">False</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Selected files have been proceeded:</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
         </child>
       </object>
       <packing>
         <property name="page_type">summary</property>
         <property name="title" translatable="yes">Import is done</property>
       </packing>
+    </child>
+    <child internal-child="action_area">
+      <object class="GtkBox" id="assistant-action_area1">
+        <property name="can_focus">False</property>
+      </object>
     </child>
   </object>
 </interface>

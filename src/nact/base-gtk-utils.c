@@ -31,28 +31,15 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
-#include <core/na-gtk-utils.h>
-#include <core/na-updater.h>
+#include "core/na-gtk-utils.h"
+#include "core/na-updater.h"
 
 #include "base-gtk-utils.h"
 
 #define DEFAULT_WIDTH		22
-
-typedef struct {
-	GtkWidget *table;
-	guint      rows;
-	guint      ir;
-	guint      columns;
-	guint      ic;
-	GtkWidget *grid;
-}
-	TableToGridData;
-
-#if GTK_CHECK_VERSION( 3,0,0 )
-static void table_to_grid_foreach_cb( GtkWidget *widget, TableToGridData *ttg );
-#endif
 
 /**
  * base_gtk_utils_position_window:
@@ -238,7 +225,7 @@ base_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button )
 
 /**
  * base_gtk_utils_get_pixbuf:
- * @name: the name of the file or an icon.
+ * @name: either the name of a themed icon, or a filename.
  * @widget: the widget on which the image should be rendered.
  * @size: the desired size.
  *
@@ -274,29 +261,18 @@ base_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
 			}
 
 		} else {
-/* gtk_widget_render_icon() is deprecated since Gtk+ 3.0
- * see http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#gtk-widget-render-icon
- * and http://git.gnome.org/browse/gtk+/commit/?id=07eeae15825403037b7df139acf9bfa104d5559d
- */
-#if GTK_CHECK_VERSION( 2, 91, 7 )
-			pixbuf = gtk_widget_render_icon_pixbuf( widget, name, size );
-#else
-			pixbuf = gtk_widget_render_icon( widget, name, size, NULL );
-#endif
-			if( !pixbuf ){
-				icon_theme = gtk_icon_theme_get_default();
-				pixbuf = gtk_icon_theme_load_icon(
-								icon_theme, name, width, GTK_ICON_LOOKUP_GENERIC_FALLBACK, &error );
-				if( error ){
-					/* it happens that the message "Icon 'xxxx' not present in theme"
-					 * is generated with a domain of 'gtk-icon-theme-error-quark' and
-					 * an error code of zero - it seems difficult to just test zero
-					 * so does not display warning, but just debug
-					 */
-					g_debug( "%s: %s (%s:%d)",
-							thisfn, error->message, g_quark_to_string( error->domain ), error->code );
-					g_error_free( error );
-				}
+			icon_theme = gtk_icon_theme_get_default();
+			pixbuf = gtk_icon_theme_load_icon(
+							icon_theme, name, width, GTK_ICON_LOOKUP_GENERIC_FALLBACK, &error );
+			if( error ){
+				/* it happens that the message "Icon 'xxxx' not present in theme"
+				 * is generated with a domain of 'gtk-icon-theme-error-quark' and
+				 * an error code of zero - it seems difficult to just test zero
+				 * so does not display warning, but just debug
+				 */
+				g_debug( "%s: %s (%s:%d)",
+						thisfn, error->message, g_quark_to_string( error->domain ), error->code );
+				g_error_free( error );
 			}
 		}
 	}
@@ -406,8 +382,8 @@ base_gtk_utils_select_file_with_preview( BaseWindow *window,
 			title,
 			toplevel,
 			GTK_FILE_CHOOSER_ACTION_OPEN,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			_( "_Cancel" ), GTK_RESPONSE_CANCEL,
+			_( "_OK" ), GTK_RESPONSE_ACCEPT,
 			NULL
 			);
 
@@ -482,8 +458,8 @@ base_gtk_utils_select_dir( BaseWindow *window,
 			title,
 			toplevel,
 			GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			_( "_Cancel" ), GTK_RESPONSE_CANCEL,
+			_( "_OK" ), GTK_RESPONSE_ACCEPT,
 			NULL
 			);
 
@@ -516,84 +492,3 @@ base_gtk_utils_select_dir( BaseWindow *window,
 
 	gtk_widget_destroy( dialog );
 }
-
-/*
- * base_gtk_utils_table_to_grid:
- * @window: the #BaseWindow container.
- * @table_name: the name of the #GtkTable to be replaced.
- *
- * Dynamically replaces a GtkTable with a GtkGrid, doing its best in order
- * to preserve order and name of all children.
- *
- * The caller has to take care of calling this function for Gtk 3.x, only
- * replacing valuable GtkTables.
- *
- * This function should be called from on_base_initialize_gtk().
- */
-void
-base_gtk_utils_table_to_grid( BaseWindow *window, const gchar *table_name )
-{
-#if GTK_CHECK_VERSION( 3,0,0 )
-	static const gchar *thisfn = "base_gtk_utils_table_to_grid";
-	TableToGridData ttg;
-	GtkWidget *parent;
-	guint col_spacing, row_spacing;
-
-	memset( &ttg, '\0', sizeof( TableToGridData ));
-
-	ttg.table = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( base_window_get_gtk_toplevel( window )), table_name );
-	g_return_if_fail( ttg.table );
-	g_return_if_fail( GTK_IS_TABLE( ttg.table ));
-	g_debug( "%s: table=%p (%s)", thisfn, ( void * ) ttg.table, gtk_buildable_get_name( GTK_BUILDABLE( ttg.table )));
-
-	parent = gtk_widget_get_parent( ttg.table );
-
-#ifdef NA_MAINTAINER_MODE
-	na_gtk_utils_dump_children( GTK_CONTAINER( parent ));
-#endif
-
-#if !GTK_CHECK_VERSION( 3,4,0 )
-	gtk_table_get_size( GTK_TABLE( ttg.table ), &ttg.rows, &ttg.columns );
-	col_spacing = gtk_table_get_default_col_spacing( GTK_TABLE( ttg.table ));
-	row_spacing = gtk_table_get_default_row_spacing( GTK_TABLE( ttg.table ));
-#else
-	col_spacing = 6;
-	row_spacing = 6;
-#endif
-
-	ttg.grid = gtk_grid_new();
-	gtk_grid_set_column_spacing( GTK_GRID( ttg.grid ), col_spacing );
-	gtk_grid_set_row_spacing( GTK_GRID( ttg.grid ), row_spacing );
-
-	gtk_container_foreach( GTK_CONTAINER( ttg.table ), ( GtkCallback ) table_to_grid_foreach_cb, &ttg );
-	/*gtk_widget_unparent( ttg.table );*/
-
-	if( GTK_IS_ALIGNMENT( parent )){
-		gtk_container_remove( GTK_CONTAINER( parent ), ttg.table );
-		gtk_container_add( GTK_CONTAINER( parent ), ttg.grid );
-	} else {
-		g_warning( "%s: untreated parent of class %s", thisfn, G_OBJECT_TYPE_NAME( parent ));
-	}
-
-#ifdef NA_MAINTAINER_MODE
-	na_gtk_utils_dump_children( GTK_CONTAINER( parent ));
-#endif
-#endif
-}
-
-#if GTK_CHECK_VERSION( 3,0,0 )
-static void
-table_to_grid_foreach_cb( GtkWidget *widget, TableToGridData *ttg )
-{
-	static const gchar *thisfn = "base_gtk_utils_table_to_grid_foreach_cb";
-	guint left, top, x_options;
-
-	g_debug( "%s: widget=%p (%s)", thisfn, ( void * ) widget, gtk_buildable_get_name( GTK_BUILDABLE( widget )));
-
-	gtk_container_child_get( GTK_CONTAINER( ttg->table ), widget,
-			"left-attach", &left, "top-attach", &top, "x-options", &x_options, NULL );
-	gtk_widget_unparent( widget );
-	gtk_grid_attach( GTK_GRID( ttg->grid ), widget, left, top, 1, 1 );
-	gtk_widget_set_hexpand( widget, x_options & GTK_EXPAND );
-}
-#endif

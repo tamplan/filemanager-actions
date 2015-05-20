@@ -40,6 +40,7 @@
  */
 
 #include "base-dialog.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -59,18 +60,15 @@ typedef struct {
 }
 	NactPreferencesEditor;
 
-typedef struct _NactPreferencesEditorClassPrivate   NactPreferencesEditorClassPrivate;
-
 typedef struct {
 	/*< private >*/
-	BaseDialogClass                    parent;
-	NactPreferencesEditorClassPrivate *private;
+	BaseDialogClass               parent;
 }
 	NactPreferencesEditorClass;
 
 GType nact_preferences_editor_get_type( void );
 
-void  nact_preferences_editor_run     ( BaseWindow *parent );
+void  nact_preferences_editor_run     ( NactMainWindow *main_window );
 
 G_END_DECLS
 

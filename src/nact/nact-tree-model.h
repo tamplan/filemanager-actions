@@ -44,9 +44,9 @@
 #ifndef __NACT_TREE_MODEL_H__
 #define __NACT_TREE_MODEL_H__
 
-#include <api/na-object.h>
+#include "api/na-object.h"
 
-#include "nact-tree-view.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -61,17 +61,14 @@ typedef struct _NactTreeModelPrivate        NactTreeModelPrivate;
 
 typedef struct {
 	/*< private >*/
-	GtkTreeModelFilter    parent;
-	NactTreeModelPrivate *private;
+	GtkTreeModelFilter      parent;
+	NactTreeModelPrivate   *private;
 }
 	NactTreeModel;
 
-typedef struct _NactTreeModelClassPrivate   NactTreeModelClassPrivate;
-
 typedef struct {
 	/*< private >*/
-	GtkTreeModelFilterClass    parent;
-	NactTreeModelClassPrivate *private;
+	GtkTreeModelFilterClass parent;
 }
 	NactTreeModelClass;
 
@@ -85,19 +82,41 @@ enum {
 	TREE_N_COLUMN
 };
 
-GType          nact_tree_model_get_type( void );
+GType          nact_tree_model_get_type        ( void );
 
-NactTreeModel *nact_tree_model_new( BaseWindow *window, GtkTreeView *view, NactTreeMode mode );
+NactTreeModel *nact_tree_model_new             ( GtkTreeView *treeview );
 
-GtkTreePath   *nact_tree_model_delete       ( NactTreeModel *model, NAObject *object );
-void           nact_tree_model_fill         ( NactTreeModel *model, GList *items );
-GtkTreePath   *nact_tree_model_insert_before( NactTreeModel *model, const NAObject *object, GtkTreePath *path );
-GtkTreePath   *nact_tree_model_insert_into  ( NactTreeModel *model, const NAObject *object, GtkTreePath *path );
+void           nact_tree_model_set_main_window ( NactTreeModel *tmodel,
+														NactMainWindow *main_window );
 
-NAObjectItem  *nact_tree_model_get_item_by_id( const NactTreeModel *model, const gchar *id );
-GList         *nact_tree_model_get_items     ( const NactTreeModel *model, guint mode );
-NAObject      *nact_tree_model_object_at_path( const NactTreeModel *model, GtkTreePath *path );
-GtkTreePath   *nact_tree_model_object_to_path( const NactTreeModel *model, const NAObject *object );
+void           nact_tree_model_set_edition_mode( NactTreeModel *tmodel,
+														guint mode );
+
+GtkTreePath   *nact_tree_model_delete          ( NactTreeModel *model,
+														NAObject *object );
+
+void           nact_tree_model_fill            ( NactTreeModel *model,
+														GList *items );
+
+GtkTreePath   *nact_tree_model_insert_before   ( NactTreeModel *model,
+														const NAObject *object,
+														GtkTreePath *path );
+
+GtkTreePath   *nact_tree_model_insert_into     ( NactTreeModel *model,
+														const NAObject *object,
+														GtkTreePath *path );
+
+NAObjectItem  *nact_tree_model_get_item_by_id  ( const NactTreeModel *model,
+														const gchar *id );
+
+GList         *nact_tree_model_get_items       ( const NactTreeModel *model,
+														guint mode );
+
+NAObject      *nact_tree_model_object_at_path  ( const NactTreeModel *model,
+														GtkTreePath *path );
+
+GtkTreePath   *nact_tree_model_object_to_path  ( const NactTreeModel *model,
+														const NAObject *object );
 
 G_END_DECLS
 

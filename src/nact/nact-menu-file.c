@@ -41,9 +41,11 @@
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
-#include "nact-main-statusbar.h"
+#include "nact-statusbar.h"
 #include "nact-main-tab.h"
-#include "nact-menubar-priv.h"
+#include "nact-main-window.h"
+#include "nact-menu.h"
+#include "nact-menu-file.h"
 #include "nact-tree-ieditable.h"
 
 static NATimeout st_autosave_prefs_timeout = { 0 };
@@ -54,144 +56,129 @@ static gchar *st_save_warning     = N_( "Some items may not have been saved" );
 static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items list" );
 static gchar *st_delete_error     = N_( "Some items have not been deleted" );
 
-static gboolean save_item( BaseWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages );
-static void     install_autosave( NactMenubar *bar );
+static gboolean save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages );
+static void     install_autosave( NactMainWindow *main_window );
 static void     on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer new_value, gpointer user_data );
-static void     on_autosave_prefs_timeout( NactMenubar *bar );
-static gboolean autosave_callback( NactMenubar *bar );
-static void     autosave_destroyed( NactMenubar *bar );
+static void     on_autosave_prefs_timeout( NactMainWindow *main_window );
+static gboolean autosave_callback( NactMainWindow *main_window );
+static void     autosave_destroyed( NactMainWindow *main_window );
 
 /*
- * nact_menubar_file_initialize:
- * @bar: this #NactMenubar object.
+ * nact_menu_file_initialize:
+ * @main_window: the #NactMainWindow main window.
  */
 void
-nact_menubar_file_initialize( NactMenubar *bar )
+nact_menu_file_initialize( NactMainWindow *main_window )
 {
-	install_autosave( bar );
+	install_autosave( main_window );
 }
 
 /**
- * nact_menubar_file_on_update_sensitivities:
- * @bar: this #NactMenubar object.
+ * nact_menu_file_update_sensitivities:
+ * @main_window: the #NactMainWindow main window.
  *
  * Update sensitivity of items of the File menu.
  */
 void
-nact_menubar_file_on_update_sensitivities( const NactMenubar *bar )
+nact_menu_file_update_sensitivities( NactMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menubar_file_on_update_sensitivities";
+	static const gchar *thisfn = "nact_menu_file_update_sensitivities";
+	sMenuData *sdata;
 	gboolean new_item_enabled;
+
+	sdata = nact_menu_get_data( main_window );
 
 	/* new menu / new action
 	 * new item will be inserted just before the beginning of selection
 	 * parent of the first selected row must be writable
 	 * we must have at least one writable provider
 	 */
-	new_item_enabled = bar->private->is_parent_writable && bar->private->has_writable_providers;
+	new_item_enabled = sdata->is_parent_writable && sdata->has_writable_providers;
 	g_debug( "%s: is_parent_writable=%s, has_writable_providers=%s, new_item_enabled=%s",
 			thisfn,
-			bar->private->is_parent_writable ? "True":"False",
-			bar->private->has_writable_providers ? "True":"False",
+			sdata->is_parent_writable ? "True":"False",
+			sdata->has_writable_providers ? "True":"False",
 			new_item_enabled ? "True":"False" );
-	nact_menubar_enable_item( bar, "NewMenuItem", new_item_enabled );
-	nact_menubar_enable_item( bar, "NewActionItem", new_item_enabled );
+	nact_menu_enable_item( main_window, "new-menu", new_item_enabled );
+	nact_menu_enable_item( main_window, "new-action", new_item_enabled );
 
 	/* new profile enabled if selection is relative to only one writable action
 	 * i.e. contains profile(s) of the same action, or only contains one action
 	 * action must be writable
 	 */
-	nact_menubar_enable_item( bar, "NewProfileItem",
-			bar->private->enable_new_profile && bar->private->is_action_writable );
+	nact_menu_enable_item( main_window, "new-profile",
+			sdata->enable_new_profile && sdata->is_action_writable );
 
 	/* save enabled if at least one item has been modified
 	 * or level-zero has been resorted and is writable
 	 */
-	nact_menubar_enable_item( bar, "SaveItem", ( bar->private->is_tree_modified ));
-
-	/* quit always enabled */
+	nact_menu_enable_item( main_window, "save", ( sdata->is_tree_modified ));
 }
 
 /**
- * nact_menubar_file_on_new_menu:
- * @gtk_action: the #GtkAction action.
- * @window: the #BaseWindow main window.
+ * nact_menu_file_new_menu:
+ * @main_window: the #NactMainWindow main window.
  *
  * Triggers File / New menu item.
  */
 void
-nact_menubar_file_on_new_menu( GtkAction *gtk_action, BaseWindow *window )
+nact_menu_file_new_menu( NactMainWindow *main_window )
 {
+	sMenuData *sdata;
 	NAObjectMenu *menu;
-	NactApplication *application;
-	NAUpdater *updater;
 	NactTreeView *items_view;
 	GList *items;
 
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
+	sdata = nact_menu_get_data( main_window );
 	menu = na_object_menu_new_with_defaults();
 	na_object_check_status( menu );
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
-	na_updater_check_item_writability_status( updater, NA_OBJECT_ITEM( menu ));
+	na_updater_check_item_writability_status( sdata->updater, NA_OBJECT_ITEM( menu ));
 	items = g_list_prepend( NULL, menu );
-	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+	items_view = nact_main_window_get_items_view( main_window );
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
 	na_object_free_items( items );
 }
 
 /**
- * nact_menubar_file_on_new_action:
- * @gtk_action: the #GtkAction action.
- * @window: the #BaseWindow main window.
+ * nact_menu_file_new_action:
+ * @main_window: the #NactMainWindow main window.
  *
  * Triggers File / New action item.
  */
 void
-nact_menubar_file_on_new_action( GtkAction *gtk_action, BaseWindow *window )
+nact_menu_file_new_action( NactMainWindow *main_window )
 {
+	sMenuData *sdata;
 	NAObjectAction *action;
-	NactApplication *application;
-	NAUpdater *updater;
 	NactTreeView *items_view;
 	GList *items;
 
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
+	sdata = nact_menu_get_data( main_window );
 	action = na_object_action_new_with_defaults();
 	na_object_check_status( action );
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
-	na_updater_check_item_writability_status( updater, NA_OBJECT_ITEM( action ));
+	na_updater_check_item_writability_status( sdata->updater, NA_OBJECT_ITEM( action ));
 	items = g_list_prepend( NULL, action );
-	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+	items_view = nact_main_window_get_items_view( main_window );
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
 	na_object_free_items( items );
 }
 
 /**
- * nact_menubar_file_on_new_profile:
- * @gtk_action: the #GtkAction action.
- * @window: the #BaseWindow main window.
+ * nact_menu_file_new_profile:
+ * @main_window: the #NactMainWindow main window.
  *
  * Triggers File / New profile item.
  */
 void
-nact_menubar_file_on_new_profile( GtkAction *gtk_action, BaseWindow *window )
+nact_menu_file_new_profile( NactMainWindow *main_window )
 {
 	NAObjectAction *action;
 	NAObjectProfile *profile;
 	NactTreeView *items_view;
 	GList *items;
 
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
 	g_object_get(
-			G_OBJECT( window ),
+			G_OBJECT( main_window ),
 			MAIN_PROP_ITEM, &action,
 			NULL );
 
@@ -204,43 +191,17 @@ nact_menubar_file_on_new_profile( GtkAction *gtk_action, BaseWindow *window )
 	na_object_check_status( profile );
 
 	items = g_list_prepend( NULL, profile );
-	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+	items_view = nact_main_window_get_items_view( main_window );
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
 	na_object_free_items( items );
 }
 
 /**
- * nact_menubar_file_on_save:
- * @gtk_action: the #GtkAction action.
- * @window: the #BaseWindow main window.
- *
- * Triggers File /Save item.
- *
- * Saving is not only saving modified items, but also saving hierarchy
- * (and order if alpha order is not set).
- *
- * This is the same function that nact_menubar_file_save_items(), just with
- * different arguments.
- */
-void
-nact_menubar_file_on_save( GtkAction *gtk_action, BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_menubar_file_on_save";
-
-	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	nact_menubar_file_save_items( window );
-}
-
-/**
- * nact_menubar_file_save_items:
- * @gtk_action: the #GtkAction action.
- * @window: the #BaseWindow main window.
+ * nact_menu_file_save_items:
+ * @window: the #NactMainWindow main window.
  *
  * Save items.
- * This is the same function that nact_menubar_file_on_save(), just
+ * This is the same function that nact_menu_file_save(), just
  * with different arguments.
  *
  * Synopsis:
@@ -265,9 +226,10 @@ nact_menubar_file_on_save( GtkAction *gtk_action, BaseWindow *window )
  * - idem if some items cannot be actually rewritten...
  */
 void
-nact_menubar_file_save_items( BaseWindow *window )
+nact_menu_file_save_items( NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_menubar_file_save_items";
+	static const gchar *thisfn = "nact_menu_file_save_items";
+	sMenuData *sdata;
 	NactTreeView *items_view;
 	GList *items, *it;
 	GList *new_pivot;
@@ -275,14 +237,14 @@ nact_menubar_file_save_items( BaseWindow *window )
 	GSList *messages;
 	gchar *msg;
 
-	BAR_WINDOW_VOID( window );
-
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	sdata = nact_menu_get_data( window );
 
 	/* always write the level zero list of items as the first save phase
 	 * and reset the corresponding modification flag
 	 */
-	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+	items_view = nact_main_window_get_items_view( window );
 	items = nact_tree_view_get_items( items_view );
 	na_object_dump_tree( items );
 	messages = NULL;
@@ -294,14 +256,14 @@ nact_menubar_file_save_items( BaseWindow *window )
 			} else {
 				msg = g_strdup( gettext( st_level_zero_write ));
 			}
-			base_window_display_error_dlg( window, gettext( st_save_error ), msg );
+			base_window_display_error_dlg( NULL, gettext( st_save_error ), msg );
 			g_free( msg );
 			na_core_utils_slist_free( messages );
 			messages = NULL;
 		}
 
 	} else {
-		g_signal_emit_by_name( window, TREE_SIGNAL_LEVEL_ZERO_CHANGED, FALSE );
+		g_signal_emit_by_name( items_view, TREE_SIGNAL_LEVEL_ZERO_CHANGED, FALSE );
 	}
 
 	/* remove deleted items
@@ -314,7 +276,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 		} else {
 			msg = g_strdup( gettext( st_delete_error ));
 		}
-		base_window_display_error_dlg( window, gettext( st_save_error ), msg );
+		base_window_display_error_dlg( NULL, gettext( st_save_error ), msg );
 		g_free( msg );
 		na_core_utils_slist_free( messages );
 		messages = NULL;
@@ -332,7 +294,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 	new_pivot = NULL;
 
 	for( it = items ; it ; it = it->next ){
-		save_item( window, bar->private->updater, NA_OBJECT_ITEM( it->data ), &messages );
+		save_item( window, sdata->updater, NA_OBJECT_ITEM( it->data ), &messages );
 		duplicate = NA_OBJECT_ITEM( na_object_duplicate( it->data, DUPLICATE_REC ));
 		na_object_reset_origin( it->data, duplicate );
 		na_object_check_status( it->data );
@@ -341,25 +303,25 @@ nact_menubar_file_save_items( BaseWindow *window )
 
 	if( g_slist_length( messages )){
 		msg = na_core_utils_slist_join_at_end( messages, "\n" );
-		base_window_display_error_dlg( window, gettext( st_save_warning ), msg );
+		base_window_display_error_dlg( NULL, gettext( st_save_warning ), msg );
 		g_free( msg );
 		na_core_utils_slist_free( messages );
 		messages = NULL;
 	}
 
-	na_pivot_set_new_items( NA_PIVOT( bar->private->updater ), g_list_reverse( new_pivot ));
+	na_pivot_set_new_items( NA_PIVOT( sdata->updater ), g_list_reverse( new_pivot ));
 	na_object_free_items( items );
-	nact_main_window_block_reload( NACT_MAIN_WINDOW( window ));
-	g_signal_emit_by_name( window, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, FALSE );
+	nact_main_window_block_reload( window );
+	g_signal_emit_by_name( items_view, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, FALSE );
 }
 
 /*
  * iterates here on each and every NAObjectItem row stored in the tree
  */
 static gboolean
-save_item( BaseWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages )
+save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "nact_menubar_file_save_item";
+	static const gchar *thisfn = "nact_menu_file_save_item";
 	gboolean ret;
 	NAIOProvider *provider_before;
 	NAIOProvider *provider_after;
@@ -408,41 +370,23 @@ save_item( BaseWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **
 	return( ret );
 }
 
-/**
- * nact_menubar_file_on_quit:
- * @gtk_action: the #GtkAction action.
- * @window: the #BaseWindow main window.
- *
- * Triggers the File / Quit item.
- */
-void
-nact_menubar_file_on_quit( GtkAction *gtk_action, BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_menubar_file_on_quit";
-
-	g_debug( "%s: item=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
-	g_return_if_fail( GTK_IS_ACTION( gtk_action ) || gtk_action == NULL );
-
-	nact_main_window_quit( NACT_MAIN_WINDOW( window ));
-}
-
 /*
- * nact_menubar_file_install_autosave:
- * @bar: this #NactMenubar instance.
+ * nact_menu_file_install_autosave:
+ * @main_window: this #NactMainWindow main window.
  *
  * Setup the autosave feature and initialize its monitoring.
  */
 static void
-install_autosave( NactMenubar *bar )
+install_autosave( NactMainWindow *main_window )
 {
 	st_autosave_prefs_timeout.timeout = 100;
 	st_autosave_prefs_timeout.handler = ( NATimeoutFunc ) on_autosave_prefs_timeout;
-	st_autosave_prefs_timeout.user_data = bar;
+	st_autosave_prefs_timeout.user_data = main_window;
 
 	na_settings_register_key_callback( NA_IPREFS_MAIN_SAVE_AUTO, G_CALLBACK( on_autosave_prefs_changed ), NULL );
 	na_settings_register_key_callback( NA_IPREFS_MAIN_SAVE_PERIOD, G_CALLBACK( on_autosave_prefs_changed ), NULL );
 
-	on_autosave_prefs_timeout( bar );
+	on_autosave_prefs_timeout( main_window );
 }
 
 static void
@@ -452,13 +396,11 @@ on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer n
 }
 
 static void
-on_autosave_prefs_timeout( NactMenubar *bar )
+on_autosave_prefs_timeout( NactMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menubar_file_on_autosave_prefs_timeout";
+	static const gchar *thisfn = "nact_menu_file_autosave_prefs_timeout";
 	gboolean autosave_on;
 	guint autosave_period;
-
-	g_return_if_fail( NACT_IS_MENUBAR( bar ));
 
 	autosave_on = na_settings_get_boolean( NA_IPREFS_MAIN_SAVE_AUTO, NULL, NULL );
 	autosave_period = na_settings_get_uint( NA_IPREFS_MAIN_SAVE_PERIOD, NULL, NULL );
@@ -475,26 +417,28 @@ on_autosave_prefs_timeout( NactMenubar *bar )
 				G_PRIORITY_DEFAULT,
 				autosave_period * 60,
 				( GSourceFunc ) autosave_callback,
-				bar,
+				main_window,
 				( GDestroyNotify ) autosave_destroyed );
 	}
 }
 
 static gboolean
-autosave_callback( NactMenubar *bar )
+autosave_callback( NactMainWindow *main_window )
 {
+	NactStatusbar *bar;
 	const gchar *context = "autosave-context";
-	g_debug( "nact_menubar_file_autosave_callback" );
+	g_debug( "nact_menu_file_autosave_callback" );
 
-	nact_main_statusbar_display_status( NACT_MAIN_WINDOW( bar->private->window ), context, _( "Automatically saving pending modifications..." ));
-	nact_menubar_file_save_items( bar->private->window );
-	nact_main_statusbar_hide_status( NACT_MAIN_WINDOW( bar->private->window ), context );
+	bar = nact_main_window_get_statusbar( main_window );
+	nact_statusbar_display_status( bar, context, _( "Automatically saving pending modifications..." ));
+	nact_menu_file_save_items( main_window );
+	nact_statusbar_hide_status( bar, context );
 
 	return( TRUE );
 }
 
 static void
-autosave_destroyed( NactMenubar *bar )
+autosave_destroyed( NactMainWindow *main_window )
 {
-	g_debug( "nact_menubar_file_autosave_destroyed" );
+	g_debug( "nact_menu_file_autosave_destroyed" );
 }

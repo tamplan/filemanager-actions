@@ -220,7 +220,7 @@
 	* src/nact/nact-tree-view.c (class_init, on_selection_changed):
 	* src/nact/nact-tree-view.h:
 	Get rid of TREE_SIGNAL_SELECTION_CHANGED signal, only using
-	MAIN_SIGNAL_SELECTION_CHANGED one, based on the assertion that the
+	TREE_SIGNAL_SELECTION_CHANGED one, based on the assertion that the
 	NactMainWindow will be the first triggered handler.
 
 	* src/nact/nact-tree-view.c (get_selected_items): Improve debug message.
@@ -326,7 +326,7 @@
 2012-02-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-window.c:
-	* src/nact/nact-main-window.h: New MAIN_SIGNAL_CONTEXT_MENU signal.
+	* src/nact/nact-main-window.h: New TREE_SIGNAL_CONTEXT_MENU signal.
 
 	* src/nact/nact-marshal.def: New closure definition.
 

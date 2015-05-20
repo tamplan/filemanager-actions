@@ -42,7 +42,7 @@
 
 #include <gtk/gtk.h>
 
-#include "base-window.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -88,21 +88,37 @@ enum {
 	CLIPBOARD_MODE_COPY
 };
 
-GType          nact_clipboard_get_type( void );
+GType          nact_clipboard_get_type      ( void );
 
-NactClipboard *nact_clipboard_new( BaseWindow *window );
+NactClipboard *nact_clipboard_new           ( NactMainWindow *window );
 
-void           nact_clipboard_dnd_set( NactClipboard *clipboard, guint target, GList *rows, const gchar *folder, gboolean copy );
-GList         *nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy );
-gchar         *nact_clipboard_dnd_get_text( NactClipboard *clipboard, GList *rows );
-void           nact_clipboard_dnd_drag_end( NactClipboard *clipboard );
-void           nact_clipboard_dnd_clear( NactClipboard *clipboard );
+void           nact_clipboard_dnd_set       ( NactClipboard *clipboard,
+													guint target,
+													GList *rows,
+													const gchar *folder,
+													gboolean copy );
 
-void           nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode );
-GList         *nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel );
-void           nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *profiles, guint *menus );
+GList         *nact_clipboard_dnd_get_data  ( NactClipboard *clipboard, gboolean *copy );
 
-void           nact_clipboard_dump( NactClipboard *clipboard );
+gchar         *nact_clipboard_dnd_get_text  ( NactClipboard *clipboard, GList *rows );
+
+void           nact_clipboard_dnd_drag_end  ( NactClipboard *clipboard );
+
+void           nact_clipboard_dnd_clear     ( NactClipboard *clipboard );
+
+void           nact_clipboard_primary_set   ( NactClipboard *clipboard,
+													GList *items,
+													gint mode );
+
+GList         *nact_clipboard_primary_get   ( NactClipboard *clipboard,
+													gboolean *relabel );
+
+void           nact_clipboard_primary_counts( NactClipboard *clipboard,
+													guint *actions,
+													guint *profiles,
+													guint *menus );
+
+void           nact_clipboard_dump          ( NactClipboard *clipboard );
 
 G_END_DECLS
 

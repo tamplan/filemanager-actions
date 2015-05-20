@@ -691,12 +691,12 @@ na_io_provider_get_name( const NAIOProvider *provider )
 				name = NULL;
 				name = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name( provider->private->provider );
 				if( !name ){
-					g_warning( "%s: NAIIOProvider %s get_name() interface returns NULL", thisfn, provider->private->id );
+					g_message( "%s: NAIIOProvider %s get_name() interface returns NULL", thisfn, provider->private->id );
 					name = g_strdup( "" );
 			}
 
 		} else {
-			g_warning( "%s: NAIIOProvider %s doesn't support get_name() interface", thisfn, provider->private->id );
+			g_message( "%s: NAIIOProvider %s is not available or doesn't support get_name() interface", thisfn, provider->private->id );
 		}
 	}
 

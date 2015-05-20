@@ -47,11 +47,6 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
-BUILT_SOURCES = \
-	na-marshal.c										\
-	na-marshal.h										\
-	$(NULL)
-
 libna_core_la_SOURCES = \
 	na-about.c											\
 	na-about.h											\
@@ -127,13 +122,6 @@ libna_core_la_SOURCES = \
 	$(BUILT_SOURCES)									\
 	$(NULL)
 
-na-marshal.h: na-marshal.def $(GLIB_GENMARSHAL)
-	$(GLIB_GENMARSHAL) $< --header --prefix=na_cclosure_marshal > $@
-
-na-marshal.c: na-marshal.def $(GLIB_GENMARSHAL)
-	echo "#include \"na-marshal.h\"" > $@
-	$(GLIB_GENMARSHAL) $< --body --prefix=na_cclosure_marshal >> $@
-
 libna_core_la_LIBADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
@@ -160,12 +148,10 @@ importmode_data_DATA = \
 	$(NULL)
 
 CLEANFILES = \
-	$(BUILT_SOURCES)									\
 	$(NULL)
 
 EXTRA_DIST = \
 	$(ui_data_DATA)										\
 	$(exportformat_data_DATA)							\
 	$(importmode_data_DATA)								\
-	na-marshal.def										\
 	$(NULL)

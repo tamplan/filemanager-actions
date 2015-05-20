@@ -33,11 +33,14 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-core-utils.h>
-#include <api/na-object-api.h>
+#include "api/na-core-utils.h"
+#include "api/na-object-api.h"
+
+#include "core/na-gtk-utils.h"
 
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
+#include "nact-main-window.h"
 #include "nact-match-list.h"
 #include "nact-add-scheme-dialog.h"
 #include "nact-ischemes-tab.h"
@@ -57,16 +60,12 @@ static guint st_initializations = 0;	/* interface initialization count */
 static GType   register_type( void );
 static void    interface_base_init( NactISchemesTabInterface *klass );
 static void    interface_base_finalize( NactISchemesTabInterface *klass );
-
-static void    on_base_initialize_gtk( NactISchemesTab *instance, GtkWindow *toplevel, gpointer user_data );
-static void    on_base_initialize_window( NactISchemesTab *instance, gpointer user_data );
-
-static void    on_main_selection_changed( NactISchemesTab *instance, GList *selected_items, gpointer user_data );
-
-static void    on_add_from_defaults( GtkButton *button, BaseWindow *window );
+static void    initialize_gtk( NactISchemesTab *instance );
+static void    initialize_window( NactISchemesTab *instance );
+static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactISchemesTab *instance );
+static void    on_add_from_defaults( GtkButton *button, NactISchemesTab *instance );
 static GSList *get_schemes( void *context );
 static void    set_schemes( void *context, GSList *filters );
-
 static void    on_instance_finalized( gpointer user_data, NactISchemesTab *instance );
 
 GType
@@ -103,7 +102,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactISchemesTab", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, BASE_TYPE_WINDOW );
+	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
 	return( type );
 }
@@ -156,43 +155,30 @@ nact_ischemes_tab_init( NactISchemesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ));
-
 	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES );
+	initialize_gtk( instance );
+	initialize_window( instance );
 
 	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 }
 
 static void
-on_base_initialize_gtk( NactISchemesTab *instance, GtkWindow *toplevel, void *user_data )
+initialize_gtk( NactISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_on_base_initialize_gtk";
+	static const gchar *thisfn = "nact_ischemes_tab_initialize_gtk";
 
 	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), toplevel=%p, user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) toplevel,
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			BASE_WINDOW( instance ),
+			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_SCHEMES,
-			base_window_get_widget( BASE_WINDOW( instance ), "SchemesTreeView" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "AddSchemeButton" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "RemoveSchemeButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "SchemesTreeView" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddSchemeButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveSchemeButton" ),
 			( pget_filters ) get_schemes,
 			( pset_filters ) set_schemes,
 			NULL,
@@ -203,34 +189,29 @@ on_base_initialize_gtk( NactISchemesTab *instance, GtkWindow *toplevel, void *us
 }
 
 static void
-on_base_initialize_window( NactISchemesTab *instance, void *user_data )
+initialize_window( NactISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_on_base_initialize_window";
-	GtkWidget *button;
+	static const gchar *thisfn = "nact_ischemes_tab_initialize_window";
+	NactTreeView *tview;
 
 	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ));
+	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
 
-	button = base_window_get_widget( BASE_WINDOW( instance ), "AddFromDefaultButton" );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( button ),
-			"clicked",
-			G_CALLBACK( on_add_from_defaults ));
+	g_signal_connect(
+			tview, TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tree_selection_changed ), instance );
+
+	na_gtk_utils_connect_widget_by_name(
+			GTK_CONTAINER( instance ), "AddFromDefaultButton",
+			"clicked", G_CALLBACK( on_add_from_defaults ), instance );
 }
 
 static void
-on_main_selection_changed( NactISchemesTab *instance, GList *selected_items, gpointer user_data )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactISchemesTab *instance )
 {
 	NAIContext *context;
 	gboolean editable;
@@ -244,26 +225,26 @@ on_main_selection_changed( NactISchemesTab *instance, GList *selected_items, gpo
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES, enable_tab );
 
-	button = base_window_get_widget( BASE_WINDOW( instance ), "AddFromDefaultButton" );
+	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddFromDefaultButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }
 
 static void
-on_add_from_defaults( GtkButton *button, BaseWindow *window )
+on_add_from_defaults( GtkButton *button, NactISchemesTab *instance )
 {
 	GSList *schemes;
 	gchar *new_scheme;
 	NAIContext *context;
 
-	g_object_get( G_OBJECT( window ), MAIN_PROP_CONTEXT, &context, NULL );
+	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 	g_return_if_fail( context );
 
-	schemes = nact_match_list_get_rows( window, ITAB_NAME );
-	new_scheme = nact_add_scheme_dialog_run( window, schemes );
+	schemes = nact_match_list_get_rows( NACT_MAIN_WINDOW( instance ), ITAB_NAME );
+	new_scheme = nact_add_scheme_dialog_run( NACT_MAIN_WINDOW( instance ), schemes );
 	na_core_utils_slist_free( schemes );
 
 	if( new_scheme ){
-		nact_match_list_insert_row( window, ITAB_NAME, new_scheme, FALSE, FALSE );
+		nact_match_list_insert_row( NACT_MAIN_WINDOW( instance ), ITAB_NAME, new_scheme, FALSE, FALSE );
 		g_free( new_scheme );
 	}
 }

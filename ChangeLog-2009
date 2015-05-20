@@ -1259,7 +1259,7 @@
 	New function.
 
 	* src/nact/base-window.c:
-	* src/nact/base-window.h (base_window_get_parent): New function.
+	* src/nact/base-window.h (base_window_get_main_window): New function.
 
 	* src/nact/nact-assistant-export.c
 	(instance_dispose): Clear the tree model.

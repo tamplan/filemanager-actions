@@ -48,7 +48,7 @@
  * - sort order mode is not a mandatory preference.
  */
 
-#include "base-window.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -68,17 +68,15 @@ typedef struct {
 }
 	NactSortButtons;
 
-typedef struct _NactSortButtonsClassPrivate   NactSortButtonsClassPrivate;
-
 typedef struct {
 	/*< private >*/
-	GObjectClass                 parent;
-	NactSortButtonsClassPrivate *private;
+	GObjectClass            parent;
 }
 	NactSortButtonsClass;
 
 GType            nact_sort_buttons_get_type( void );
-NactSortButtons *nact_sort_buttons_new     ( BaseWindow *window );
+
+NactSortButtons *nact_sort_buttons_new     ( NactMainWindow *window );
 
 G_END_DECLS
 

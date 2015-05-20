@@ -121,6 +121,28 @@ na_gtk_utils_dump_children( GtkContainer *container )
 }
 #endif
 
+/*
+ * na_gtk_utils_connect_widget_by_name:
+ * @container: a #GtkContainer, usually the #GtkWindow toplevel.
+ * @name: the name of the searched widget.
+ * @signal: the name of the signal to connect the #callabck to.
+ * @cb: the callback
+ * @user_data:
+ *
+ * Connect the signal to the widget.
+ */
+void
+na_gtk_utils_connect_widget_by_name(
+		GtkContainer *container, const gchar *name,
+		const gchar *signal, GCallback cb, void *user_data )
+{
+	GtkWidget *widget;
+
+	widget = na_gtk_utils_find_widget_by_name( container, name );
+	g_return_if_fail( widget && GTK_IS_WIDGET( widget ));
+	g_signal_connect( G_OBJECT( widget ), signal, cb, user_data );
+}
+
 /**
  * na_gtk_utils_restore_position_window:
  * @toplevel: the #GtkWindow window.

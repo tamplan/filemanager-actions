@@ -34,12 +34,13 @@
 #include <glib/gi18n.h>
 #include <libintl.h>
 
-#include <api/na-object-api.h>
-#include <api/na-core-utils.h>
+#include "api/na-object-api.h"
+#include "api/na-core-utils.h"
 
 #include "base-keysyms.h"
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
+#include "nact-main-window.h"
 #include "nact-match-list.h"
 
 /* column ordering
@@ -61,7 +62,7 @@ typedef struct {
  * addressed with the tab name
  */
 typedef struct {
-	BaseWindow      *window;
+	NactMainWindow  *window;
 	gchar           *tab_name;
 	guint            tab_id;
 	GtkTreeView     *listview;
@@ -90,10 +91,9 @@ static ColumnHeaderStruct st_match_headers[] = {
 	{ 0 }
 };
 
-static void         initialize_pseudo_iface( MatchListData *data );
 static void         create_tree_model( MatchListData *data );
-static void         on_base_initialize_window( BaseWindow *window, MatchListData *data );
-static void         on_main_selection_changed( BaseWindow *window, GList *selected_items, MatchListData *data );
+static void         initialize_window( MatchListData *data );
+static void         on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchListData *data );
 
 static void         on_add_filter_clicked( GtkButton *button, MatchListData *data );
 static void         on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data );
@@ -126,7 +126,7 @@ static void         on_instance_finalized( MatchListData *data, BaseWindow *wind
 
 /**
  * nact_match_list_init_with_args:
- * @window: the #BaseWindow window which contains the view.
+ * @window: the #NactMainWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  * @tab_id: our id for this page.
  * @listview: the #GtkTreeView widget.
@@ -145,7 +145,7 @@ static void         on_instance_finalized( MatchListData *data, BaseWindow *wind
  * here pointers to GtkTreeView and GtkButton widgets.
  */
 void
-nact_match_list_init_with_args( BaseWindow *window, const gchar *tab_name,
+nact_match_list_init_with_args( NactMainWindow *window, const gchar *tab_name,
 				guint tab_id,
 				GtkWidget *listview,
 				GtkWidget *addbutton,
@@ -161,7 +161,7 @@ nact_match_list_init_with_args( BaseWindow *window, const gchar *tab_name,
 	static const gchar *thisfn = "nact_match_list_init_with_args";
 	MatchListData *data;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
 
 	g_debug( "%s: window=%p, tab_name=%s", thisfn, ( void * ) window, tab_name );
 
@@ -191,22 +191,10 @@ nact_match_list_init_with_args( BaseWindow *window, const gchar *tab_name,
 	data->sort_order = 0;
 
 	g_object_set_data( G_OBJECT( window ), tab_name, data );
+	g_object_weak_ref( G_OBJECT( window ), ( GWeakNotify ) on_instance_finalized, data );
 
-	initialize_pseudo_iface( data );
 	create_tree_model( data );
-}
-
-static void
-initialize_pseudo_iface( MatchListData *data )
-{
-	base_window_signal_connect_with_data(
-			data->window,
-			G_OBJECT( data->window ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ),
-			data );
-
-	g_object_weak_ref( G_OBJECT( data->window ), ( GWeakNotify ) on_instance_finalized, data );
+	initialize_window( data );
 }
 
 static void
@@ -265,105 +253,52 @@ create_tree_model( MatchListData *data )
  * Connect signals.
  */
 static void
-on_base_initialize_window( BaseWindow *window, MatchListData *data )
+initialize_window( MatchListData *data )
 {
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	GtkTreeModel *model;
+	NactTreeView *treeview;
 
 	g_return_if_fail( data != NULL );
 
 	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( column ),
-			"clicked",
-			G_CALLBACK( on_filter_clicked ),
-			data );
+	g_signal_connect( column, "clicked", G_CALLBACK( on_filter_clicked ), data );
 
 	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( renderers->data ),
-			"edited",
-			G_CALLBACK( on_filter_edited ),
-			data );
+	g_signal_connect( renderers->data, "edited", G_CALLBACK( on_filter_edited ), data );
 
 	column = gtk_tree_view_get_column( data->listview, MUST_MATCH_COLUMN );
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( column ),
-			"clicked",
-			G_CALLBACK( on_must_match_clicked ),
-			data );
+	g_signal_connect( column, "clicked", G_CALLBACK( on_must_match_clicked ), data );
 
 	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( renderers->data ),
-			"toggled",
-			G_CALLBACK( on_must_match_toggled ),
-			data );
+	g_signal_connect( renderers->data, "toggled", G_CALLBACK( on_must_match_toggled ), data );
 
 	column = gtk_tree_view_get_column( data->listview, MUST_NOT_MATCH_COLUMN );
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( column ),
-			"clicked",
-			G_CALLBACK( on_must_not_match_clicked ),
-			data );
+	g_signal_connect( column, "clicked", G_CALLBACK( on_must_not_match_clicked ), data );
 
 	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( renderers->data ),
-			"toggled",
-			G_CALLBACK( on_must_not_match_toggled ),
-			data );
+	g_signal_connect( renderers->data, "toggled", G_CALLBACK( on_must_not_match_toggled ), data );
 
 	if( data->pon_add ){
-		base_window_signal_connect(
-				window,
-				G_OBJECT( data->addbutton ),
-				"clicked",
-				G_CALLBACK( data->pon_add ));
+		g_signal_connect( data->addbutton, "clicked", G_CALLBACK( data->pon_add ), data );
 	} else {
-		base_window_signal_connect_with_data(
-				window,
-				G_OBJECT( data->addbutton ),
-				"clicked",
-				G_CALLBACK( on_add_filter_clicked ),
-				data );
+		g_signal_connect( data->addbutton, "clicked", G_CALLBACK( on_add_filter_clicked ), data );
 	}
 
 	if( data->pon_remove ){
-		base_window_signal_connect(
-				window,
-				G_OBJECT( data->removebutton ),
-				"clicked",
-				G_CALLBACK( data->pon_remove ));
+		g_signal_connect( data->removebutton, "clicked", G_CALLBACK( data->pon_remove ), data );
 	} else {
-		base_window_signal_connect_with_data(
-				window,
-				G_OBJECT( data->removebutton ),
-				"clicked",
-				G_CALLBACK( on_remove_filter_clicked ),
-				data );
+		g_signal_connect( data->removebutton, "clicked", G_CALLBACK( on_remove_filter_clicked ), data );
 	}
 
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( gtk_tree_view_get_selection( data->listview )),
-			"changed",
-			G_CALLBACK( on_selection_changed ),
-			data );
+	g_signal_connect(
+			gtk_tree_view_get_selection( data->listview ),
+			"changed", G_CALLBACK( on_selection_changed ), data );
 
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( data->listview ),
-			"key-press-event",
-			G_CALLBACK( on_key_pressed_event ),
-			data );
+	g_signal_connect(
+			data->listview,
+			"key-press-event", G_CALLBACK( on_key_pressed_event ), data );
 
 	model = gtk_tree_view_get_model( data->listview );
 	gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), ITEM_COLUMN, GTK_SORT_ASCENDING );
@@ -373,12 +308,8 @@ on_base_initialize_window( BaseWindow *window, MatchListData *data )
 	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
 	sort_on_column( column, data, ITEM_COLUMN );
 
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( window ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ),
-			data );
+	treeview = nact_main_window_get_items_view( data->window );
+	g_signal_connect( treeview, TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_selection_changed ), data );
 }
 
 /*
@@ -393,9 +324,9 @@ on_base_initialize_window( BaseWindow *window, MatchListData *data )
  * - update the object with a summary of the listbox contents
  */
 static void
-on_main_selection_changed( BaseWindow *window, GList *selected_items, MatchListData *data )
+on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchListData *data )
 {
-	static const gchar *thisfn = "nact_match_list_on_main_selection_changed";
+	static const gchar *thisfn = "nact_match_list_on_tree_selection_changed";
 	NAIContext *context;
 	gboolean enable_tab;
 	GSList *filters;
@@ -404,15 +335,15 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, MatchListD
 	GtkTreeViewColumn *column;
 	GtkTreePath *path;
 
-	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( treeview && NACT_IS_TREE_VIEW( treeview ));
 	g_return_if_fail( data != NULL );
 
-	g_object_get( G_OBJECT( window ),
+	g_object_get( G_OBJECT( data->window ),
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &data->editable_item,
 			NULL );
 
 	enable_tab = ( context != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( data->window ), data->tab_id, enable_tab );
+	nact_main_tab_enable_page( data->window, data->tab_id, enable_tab );
 
 	data->on_selection_change = TRUE;
 
@@ -448,7 +379,7 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, MatchListD
 
 /**
  * nact_match_list_insert_row:
- * @window: the #BaseWindow window which contains the view.
+ * @window: the #NactMainWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  * @filter: the item to add.
  * @match: whether the 'must match' column is checked.
@@ -457,7 +388,7 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, MatchListD
  * Add a new row to the list view.
  */
 void
-nact_match_list_insert_row( BaseWindow *window, const gchar *tab_name, const gchar *filter, gboolean match, gboolean not_match )
+nact_match_list_insert_row( NactMainWindow *window, const gchar *tab_name, const gchar *filter, gboolean match, gboolean not_match )
 {
 	MatchListData *data;
 
@@ -469,14 +400,14 @@ nact_match_list_insert_row( BaseWindow *window, const gchar *tab_name, const gch
 
 /**
  * nact_match_list_get_rows:
- * @window: the #BaseWindow window which contains the view.
+ * @window: the #NactMainWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  *
  * Returns the list of rows as a newly allocated string list which should
  * be na_core_utils_slist_free() by the caller.
  */
 GSList *
-nact_match_list_get_rows( BaseWindow *window, const gchar *tab_name )
+nact_match_list_get_rows( NactMainWindow *window, const gchar *tab_name )
 {
 	GSList *filters;
 	MatchListData *data;
@@ -543,7 +474,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 
 	if( count_filters( text, data ) >= 1 ){
 		dialog = gtk_message_dialog_new(
-				base_window_get_gtk_toplevel( BASE_WINDOW( data->window )),
+				GTK_WINDOW( data->window ),
 				GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
 				_( "'%s' filter already exists in the list.\nPlease provide another one." ), text );
 		gtk_dialog_run( GTK_DIALOG( dialog ));
@@ -582,7 +513,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 	na_core_utils_slist_free( filters );
 	g_free( old_text );
 
-	g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
+	g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 }
 
 static gboolean
@@ -667,7 +598,7 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 			na_core_utils_slist_free( filters );
 			g_free( filter );
 
-			g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
+			g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 		}
 	} else {
 		g_signal_handlers_block_by_func(( gpointer ) cell_renderer, on_must_match_toggled, data );
@@ -718,7 +649,7 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 			na_core_utils_slist_free( filters );
 			g_free( filter );
 
-			g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
+			g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 		}
 	} else {
 		g_signal_handlers_block_by_func(( gpointer ) cell_renderer, on_must_not_match_toggled, data );
@@ -756,7 +687,7 @@ add_filter( MatchListData *data, const gchar *filter, const gchar *prefix )
 		( *data->pset )( context, filters );
 		na_core_utils_slist_free( filters );
 
-		g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
+		g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }
 
@@ -813,7 +744,7 @@ delete_current_row( MatchListData *data )
 				( *data->pset )( context, filters );
 				na_core_utils_slist_free( filters );
 
-				g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
+				g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 			}
 		}
 

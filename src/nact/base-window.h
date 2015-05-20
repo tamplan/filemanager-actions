@@ -58,8 +58,6 @@
 
 #include <gtk/gtk.h>
 
-#include "base-application.h"
-
 G_BEGIN_DECLS
 
 #define BASE_TYPE_WINDOW                ( base_window_get_type())
@@ -69,24 +67,24 @@ G_BEGIN_DECLS
 #define BASE_IS_WINDOW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_TYPE_WINDOW ))
 #define BASE_WINDOW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_TYPE_WINDOW, BaseWindowClass ))
 
+typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
+
 typedef struct _BaseWindowPrivate       BaseWindowPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObject            parent;
-	BaseWindowPrivate *private;
+	GObject                 parent;
+	BaseWindowPrivate      *private;
 }
 	BaseWindow;
 
-typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
-
 /**
  * BaseWindowClass:
- * @initialize_gtk_toplevel: initialize the toplevel GtkWindow
- * @initialize_base_window:  initialize the BaseWindow
+ * @initialize_gtk_toplevel: initialize the toplevel GtkWindow (once)
+ * @initialize_base_window:  initialize the BaseWindow (each time the
+ *                           window is displayed)
  * @all_widgets_showed:      all widgets have been showed
  * @run:                     run the dialog box loop
- * @is_willing_to_quit:      asks if the window is willing to quit
  *
  * This defines the virtual method a derived class may, should or must implement.
  */
@@ -177,13 +175,12 @@ typedef struct {
  * They should be provided at object instanciation time.
  *
  * Instanciation time requires:
- * - either PARENT or APPLICATION
+ * - MAIN_WINDOW
  * - XMLUI_FILENAME
  * - TOPLEVEL_NAME
  * - HAS_OWN_BUILDER
  */
-#define BASE_PROP_PARENT						"base-prop-window-parent"
-#define BASE_PROP_APPLICATION					"base-prop-window-application"
+#define BASE_PROP_MAIN_WINDOW					"base-prop-window-main-window"
 #define BASE_PROP_XMLUI_FILENAME				"base-prop-window-xmlui-filename"
 #define BASE_PROP_HAS_OWN_BUILDER				"base-prop-window-has-own-builder"
 #define BASE_PROP_TOPLEVEL_NAME					"base-prop-window-toplevel-name"
@@ -213,30 +210,51 @@ typedef struct {
 #define BASE_SIGNAL_INITIALIZE_WINDOW			"base-signal-window-initialize-window"
 #define BASE_SIGNAL_SHOW_WIDGETS				"base-signal-window-show-widgets"
 
-GType            base_window_get_type( void );
+GType                 base_window_get_type                ( void );
 
-gboolean         base_window_init( BaseWindow *window );
-int              base_window_run ( BaseWindow *window );
+gboolean              base_window_init                    ( BaseWindow *window );
+int                   base_window_run                     ( BaseWindow *window );
 
 #ifdef NA_MAINTAINER_MODE
-void             base_window_dump_children           ( const BaseWindow *window );
+void                  base_window_dump_children           ( const BaseWindow *window );
 #endif
 
-BaseApplication *base_window_get_application         ( const BaseWindow *window );
-BaseWindow      *base_window_get_parent              ( const BaseWindow *window );
-GtkWindow       *base_window_get_gtk_toplevel        ( const BaseWindow *window );
-GtkWindow       *base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *name );
-GtkWidget       *base_window_get_widget              ( const BaseWindow *window, const gchar *name );
+GtkApplication       *base_window_get_application         ( const BaseWindow *window );
+GtkApplicationWindow *base_window_get_main_window         ( const BaseWindow *window );
+GtkWindow            *base_window_get_gtk_toplevel        ( const BaseWindow *window );
+GtkWindow            *base_window_get_gtk_toplevel_by_name( const BaseWindow *window,
+																const gchar *name );
+GtkWidget            *base_window_get_widget              ( const BaseWindow *window,
+																const gchar *name );
 
-void             base_window_display_error_dlg       ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
-gboolean         base_window_display_yesno_dlg       ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
-void             base_window_display_message_dlg     ( const BaseWindow *parent, GSList *message );
+void                  base_window_display_error_dlg       ( const BaseWindow *parent,
+																const gchar *primary,
+																const gchar *secondary );
+gboolean              base_window_display_yesno_dlg       ( const BaseWindow *parent,
+																const gchar *primary,
+																const gchar *secondary );
+void                  base_window_display_message_dlg     ( const BaseWindow *parent,
+																GSList *message );
 
-gulong           base_window_signal_connect          ( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
-gulong           base_window_signal_connect_after    ( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
-gulong           base_window_signal_connect_by_name  ( BaseWindow *window, const gchar *name, const gchar *signal, GCallback fn );
-gulong           base_window_signal_connect_with_data( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn, void *user_data );
-void             base_window_signal_disconnect       ( BaseWindow *window, gulong handler_id );
+gulong                base_window_signal_connect          ( BaseWindow *window,
+																GObject *instance,
+																const gchar *signal,
+																GCallback fn );
+gulong                base_window_signal_connect_after    ( BaseWindow *window,
+																GObject *instance,
+																const gchar *signal,
+																GCallback fn );
+gulong                base_window_signal_connect_by_name  ( BaseWindow *window,
+																const gchar *name,
+																const gchar *signal,
+																GCallback fn );
+gulong                base_window_signal_connect_with_data( BaseWindow *window,
+																GObject *instance,
+																const gchar *signal,
+																GCallback fn,
+																void *user_data );
+void                  base_window_signal_disconnect       ( BaseWindow *window,
+																gulong handler_id );
 
 G_END_DECLS
 

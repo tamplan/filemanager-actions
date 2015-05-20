@@ -62,6 +62,7 @@
  */
 
 #include "base-assistant.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -81,18 +82,15 @@ typedef struct {
 }
 	NactAssistantExport;
 
-typedef struct _NactAssistantExportClassPrivate   NactAssistantExportClassPrivate;
-
 typedef struct {
 	/*< private >*/
-	BaseAssistantClass               parent;
-	NactAssistantExportClassPrivate *private;
+	BaseAssistantClass          parent;
 }
 	NactAssistantExportClass;
 
 GType nact_assistant_export_get_type( void );
 
-void  nact_assistant_export_run( BaseWindow *parent );
+void  nact_assistant_export_run     ( NactMainWindow *main_window );
 
 G_END_DECLS
 

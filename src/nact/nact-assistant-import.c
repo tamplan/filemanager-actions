@@ -78,12 +78,6 @@ enum {
 	N_COLUMN
 };
 
-/* private class data
- */
-struct _NactAssistantImportClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
-
 /* private instance data
  */
 struct _NactAssistantImportPrivate {
@@ -190,8 +184,6 @@ class_init( NactAssistantImportClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-
-	klass->private = g_new0( NactAssistantImportClassPrivate, 1 );
 
 	assist_class = BASE_ASSISTANT_CLASS( klass );
 	assist_class->apply = assistant_apply;
@@ -317,7 +309,7 @@ instance_finalize( GObject *window )
  * Run the assistant.
  */
 void
-nact_assistant_import_run( BaseWindow *main_window )
+nact_assistant_import_run( NactMainWindow *main_window )
 {
 	NactAssistantImport *assistant;
 	gboolean esc_quit, esc_confirm;
@@ -328,7 +320,7 @@ nact_assistant_import_run( BaseWindow *main_window )
 	esc_confirm = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 
 	assistant = g_object_new( NACT_TYPE_ASSISTANT_IMPORT,
-			BASE_PROP_PARENT,          main_window,
+			BASE_PROP_MAIN_WINDOW,     main_window,
 			BASE_PROP_HAS_OWN_BUILDER, TRUE,
 			BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,   st_toplevel_name,
@@ -664,7 +656,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	window = NACT_ASSISTANT_IMPORT( wnd );
-	g_object_get( G_OBJECT( window ), BASE_PROP_PARENT, &main_window, NULL );
+	g_object_get( G_OBJECT( window ), BASE_PROP_MAIN_WINDOW, &main_window, NULL );
 	application = NACT_APPLICATION( base_window_get_application( main_window ));
 	updater = nact_application_get_updater( application );
 

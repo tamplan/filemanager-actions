@@ -33,18 +33,13 @@
 
 #include <gdk/gdkkeysyms.h>
 
-#include <api/na-core-utils.h>
+#include "api/na-core-utils.h"
 
-#include <core/na-settings.h>
+#include "core/na-settings.h"
 
 #include "nact-schemes-list.h"
 #include "nact-add-scheme-dialog.h"
-
-/* private class data
- */
-struct _NactAddSchemeDialogClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
-};
+#include "nact-main-window.h"
 
 /* private instance data
  */
@@ -130,8 +125,6 @@ class_init( NactAddSchemeDialogClass *klass )
 	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-
-	klass->private = g_new0( NactAddSchemeDialogClassPrivate, 1 );
 
 	dialog_class = BASE_DIALOG_CLASS( klass );
 	dialog_class->ok = on_dialog_ok;
@@ -261,7 +254,7 @@ instance_finalize( GObject *dialog )
  * be g_free() by the caller, or NULL.
  */
 gchar *
-nact_add_scheme_dialog_run( BaseWindow *parent, GSList *schemes )
+nact_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
 {
 	static const gchar *thisfn = "nact_add_scheme_dialog_run";
 	NactAddSchemeDialog *dialog;
@@ -272,7 +265,7 @@ nact_add_scheme_dialog_run( BaseWindow *parent, GSList *schemes )
 	g_return_val_if_fail( BASE_IS_WINDOW( parent ), NULL );
 
 	dialog = g_object_new( NACT_TYPE_ADD_SCHEME_DIALOG,
-			BASE_PROP_PARENT,         parent,
+			BASE_PROP_MAIN_WINDOW,    parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 			BASE_PROP_WSP_NAME,       st_wsp_name,
@@ -305,10 +298,6 @@ on_base_initialize_gtk( NactAddSchemeDialog *dialog, GtkDialog *toplevel, gpoint
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( dialog ), "SchemesTreeView" ));
 		nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_ADD_FROM_DEFAULTS );
-
-#if !GTK_CHECK_VERSION( 2,22,0 )
-		gtk_dialog_set_has_separator( toplevel, FALSE );
-#endif
 	}
 }
 

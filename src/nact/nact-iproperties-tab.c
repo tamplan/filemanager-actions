@@ -35,13 +35,15 @@
 #include <libintl.h>
 #include <string.h>
 
-#include <api/na-object-api.h>
+#include "api/na-object-api.h"
 
-#include <core/na-io-provider.h>
+#include "core/na-gtk-utils.h"
+#include "core/na-io-provider.h"
 
 #include "base-gtk-utils.h"
 #include "nact-iproperties-tab.h"
 #include "nact-main-tab.h"
+#include "nact-main-window.h"
 
 /* private interface data
  */
@@ -66,20 +68,15 @@ static guint st_initializations = 0;	/* interface initialization count */
 static GType            register_type( void );
 static void             interface_base_init( NactIPropertiesTabInterface *klass );
 static void             interface_base_finalize( NactIPropertiesTabInterface *klass );
-
-static void             on_base_initialize_window( NactIPropertiesTab *instance, gpointer user_data );
-
-static void             on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, gpointer user_data );
-static void             on_main_item_updated( NactIPropertiesTab *instance, NAObjectItem *item, guint data, gpointer user_data );
-
+static void             initialize_window( NactIPropertiesTab *instance );
+static void             on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIPropertiesTab *instance );
+static void             on_main_item_updated( NactIPropertiesTab *instance, NAIContext *context, guint data, void *empty );
 static GtkButton       *get_enabled_button( NactIPropertiesTab *instance );
 static void             on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
 static void             on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
 static void             on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance );
 static void             on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance );
-
 static void             display_provider_name( NactIPropertiesTab *instance, NAObjectItem *item );
-
 static IPropertiesData *get_iproperties_data( NactIPropertiesTab *instance );
 static void             on_instance_finalized( gpointer user_data, NactIPropertiesTab *instance );
 
@@ -117,7 +114,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactIPropertiesTab", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, BASE_TYPE_WINDOW );
+	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
 	return( type );
 }
@@ -171,13 +168,8 @@ nact_iproperties_tab_init( NactIPropertiesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ));
-
 	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES );
+	initialize_window( instance );
 
 	data = get_iproperties_data( instance );
 	data->on_selection_change = FALSE;
@@ -186,64 +178,51 @@ nact_iproperties_tab_init( NactIPropertiesTab *instance )
 }
 
 static void
-on_base_initialize_window( NactIPropertiesTab *instance, void *user_data )
+initialize_window( NactIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_base_initialize_window";
+	static const gchar *thisfn = "nact_iproperties_tab_initialize_window";
 	GtkButton *enabled_button;
 	GtkWidget *label_widget;
 	GtkTextBuffer *buffer;
+	NactTreeView *tview;
 
 	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ));
+	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			MAIN_SIGNAL_ITEM_UPDATED,
-			G_CALLBACK( on_main_item_updated ));
+	g_signal_connect(
+			tview, TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tree_selection_changed ), instance );
+
+	g_signal_connect(
+			instance, MAIN_SIGNAL_ITEM_UPDATED,
+			G_CALLBACK( on_main_item_updated ), NULL );
 
 	enabled_button = get_enabled_button( instance );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( enabled_button ),
-			"toggled",
-			G_CALLBACK( on_enabled_toggled ));
+	g_signal_connect(
+			enabled_button, "toggled", G_CALLBACK( on_enabled_toggled ), instance );
 
-	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionDescriptionText" );
+	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionDescriptionText" );
 	buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( label_widget ));
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( buffer ),
-			"changed",
-			G_CALLBACK( on_description_changed ));
+	g_signal_connect(
+			buffer, "changed", G_CALLBACK( on_description_changed ), instance );
 
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( instance ),
-			"SuggestedShortcutButton",
-			"clicked",
-			G_CALLBACK( on_shortcut_clicked ));
+	na_gtk_utils_connect_widget_by_name(
+			GTK_CONTAINER( instance ), "SuggestedShortcutButton",
+			"clicked", G_CALLBACK( on_shortcut_clicked ), instance );
 
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( instance ),
-			"ActionReadonlyButton",
-			"toggled",
-			G_CALLBACK( on_readonly_toggled ));
+	na_gtk_utils_connect_widget_by_name(
+			GTK_CONTAINER( instance ), "ActionReadonlyButton",
+			"toggled", G_CALLBACK( on_readonly_toggled ), instance );
 }
 
 static void
-on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, gpointer user_data )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_main_selection_changed";
+	static const gchar *thisfn = "nact_iproperties_tab_on_tree_selection_changed";
 	guint count_selected;
 	NAObjectItem *item;
 	gboolean editable;
@@ -258,12 +237,11 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 	gchar *label, *shortcut;
 	IPropertiesData *data;
 
-	g_return_if_fail( BASE_IS_WINDOW( instance ));
 	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
 
 	count_selected = g_list_length( selected_items );
-	g_debug( "%s: instance=%p (%s), count_selected=%d",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), count_selected );
+	g_debug( "%s: tview=%p, count_selected=%d, instance=%p (%s)",
+			thisfn, tview, count_selected, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -279,9 +257,9 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 	data = get_iproperties_data( instance );
 	data->on_selection_change = TRUE;
 
-	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( instance ), "MainNotebook" ));
+	notebook = GTK_NOTEBOOK( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "main-notebook" ));
 	page = gtk_notebook_get_nth_page( notebook, TAB_ACTION );
-	title_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionPropertiesTitle" );
+	title_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionPropertiesTitle" );
 	label_widget = gtk_notebook_get_tab_label( notebook, page );
 
 	if( item && NA_IS_OBJECT_MENU( item )){
@@ -297,14 +275,14 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( enabled_button ), enabled_item );
 	base_gtk_utils_set_editable( G_OBJECT( enabled_button ), editable );
 
-	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionDescriptionText" );
+	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionDescriptionText" );
 	buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( label_widget ));
 	label = item ? na_object_get_description( item ) : g_strdup( "" );
 	gtk_text_buffer_set_text( buffer, label, -1 );
 	g_free( label );
 	base_gtk_utils_set_editable( G_OBJECT( label_widget ), editable );
 
-	shortcut_button = base_window_get_widget( BASE_WINDOW( instance ), "SuggestedShortcutButton" );
+	shortcut_button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "SuggestedShortcutButton" );
 	shortcut = item ? na_object_get_shortcut( item ) : g_strdup( "" );
 	if( !shortcut || !strlen( shortcut )){
 		g_free( shortcut );
@@ -320,11 +298,11 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 	/* read-only toggle only indicates the intrinsic writability status of this item
 	 * _not_ the writability status of the provider
 	 */
-	readonly_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionReadonlyButton" ));
+	readonly_button = GTK_TOGGLE_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionReadonlyButton" ));
 	gtk_toggle_button_set_active( readonly_button, item ? na_object_is_readonly( item ) : FALSE );
 	base_gtk_utils_set_editable( G_OBJECT( readonly_button ), FALSE );
 
-	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemID" );
+	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionItemID" );
 	label = item ? na_object_get_id( item ) : g_strdup( "" );
 	gtk_label_set_text( GTK_LABEL( label_widget ), label );
 	g_free( label );
@@ -335,21 +313,24 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 }
 
 static void
-on_main_item_updated( NactIPropertiesTab *instance, NAObjectItem *item, guint data, gpointer user_data )
+on_main_item_updated( NactIPropertiesTab *instance, NAIContext *context, guint data, void *empty )
 {
 	static const gchar *thisfn = "nact_iproperties_tab_on_main_item_updated";
 
 	if( data & MAIN_DATA_PROVIDER ){
-		g_debug( "%s: instance=%p, item=%p, data=%u, user_data=%p",
-				thisfn, ( void * ) instance, ( void * ) item, data, ( void * ) user_data );
-		display_provider_name( instance, item );
+
+		g_debug( "%s: instance=%p, item=%p (%s), data=%u, empty=%p",
+				thisfn, ( void * ) instance,
+				( void * ) context, G_OBJECT_TYPE_NAME( context ), data, empty );
+
+		display_provider_name( instance, NA_OBJECT_ITEM( context ));
 	}
 }
 
 static GtkButton *
 get_enabled_button( NactIPropertiesTab *instance )
 {
-	return( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionEnabledButton" )));
+	return( GTK_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionEnabledButton" )));
 }
 
 static void
@@ -378,7 +359,7 @@ on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 
 			if( editable ){
 				na_object_set_enabled( item, enabled );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
+				g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, item, 0 );
 
 			} else {
 				g_signal_handlers_block_by_func(( gpointer ) button, on_enabled_toggled, instance );
@@ -488,7 +469,7 @@ on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
 		gtk_text_buffer_get_end_iter( buffer, &end );
 		text = gtk_text_buffer_get_text( buffer, &start, &end, TRUE );
 		na_object_set_description( item, text );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
+		g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, item, 0 );
 	}
 }
 
@@ -503,7 +484,7 @@ on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance )
 			NULL );
 
 	if( item ){
-		/*g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, 0 );*/
+		/*g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_TAB_UPDATED, edited, 0 );*/
 	}
 }
 
@@ -514,7 +495,7 @@ display_provider_name( NactIPropertiesTab *instance, NAObjectItem *item )
 	gchar *label;
 	NAIOProvider *provider;
 
-	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemProvider" );
+	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionItemProvider" );
 	label = NULL;
 	if( item ){
 		provider = na_object_get_provider( item );

@@ -34,13 +34,15 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
-#include <api/na-object-api.h>
+#include "api/na-core-utils.h"
+#include "api/na-object-api.h"
 
-#include "base-window.h"
+#include "core/na-gtk-utils.h"
+
 #include "base-gtk-utils.h"
 #include "nact-application.h"
 #include "nact-main-tab.h"
+#include "nact-main-window.h"
 #include "nact-match-list.h"
 #include "nact-ifolders-tab.h"
 
@@ -59,16 +61,12 @@ static guint st_initializations = 0;	/* interface initialization count */
 static GType   register_type( void );
 static void    interface_base_init( NactIFoldersTabInterface *klass );
 static void    interface_base_finalize( NactIFoldersTabInterface *klass );
-
-static void    on_base_initialize_gtk( NactIFoldersTab *instance, GtkWindow *toplevel, gpointer user_data );
-static void    on_base_initialize_window( NactIFoldersTab *instance, gpointer user_data );
-
-static void    on_main_selection_changed( NactIFoldersTab *instance, GList *selected_items, gpointer user_data );
-
-static void    on_browse_folder_clicked( GtkButton *button, BaseWindow *window );
+static void    initialize_gtk( NactIFoldersTab *instance );
+static void    initialize_window( NactIFoldersTab *instance );
+static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIFoldersTab *instance );
+static void    on_browse_folder_clicked( GtkButton *button, NactIFoldersTab *instance );
 static GSList *get_folders( void *context );
 static void    set_folders( void *context, GSList *filters );
-
 static void    on_instance_finalized( gpointer user_data, NactIFoldersTab *instance );
 
 GType
@@ -105,7 +103,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactIFoldersTab", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, BASE_TYPE_WINDOW );
+	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
 	return( type );
 }
@@ -158,43 +156,30 @@ nact_ifolders_tab_init( NactIFoldersTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ));
-
 	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS );
+	initialize_gtk( instance );
+	initialize_window( instance );
 
 	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 }
 
 static void
-on_base_initialize_gtk( NactIFoldersTab *instance, GtkWindow *toplevel, void *user_data )
+initialize_gtk( NactIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_on_base_initialize_gtk";
+	static const gchar *thisfn = "nact_ifolders_tab_initialize_gtk";
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), toplevel=%p, user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) toplevel,
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			BASE_WINDOW( instance ),
+			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_FOLDERS,
-			base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" ),
-			base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "FoldersTreeView" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddFolderButton" ),
+			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveFolderButton" ),
 			( pget_filters ) get_folders,
 			( pset_filters ) set_folders,
 			NULL,
@@ -205,34 +190,29 @@ on_base_initialize_gtk( NactIFoldersTab *instance, GtkWindow *toplevel, void *us
 }
 
 static void
-on_base_initialize_window( NactIFoldersTab *instance, void *user_data )
+initialize_window( NactIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_on_base_initialize_window";
-	GtkWidget *button;
+	static const gchar *thisfn = "nact_ifolders_tab_initialize_window";
+	NactTreeView *tview;
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s), user_data=%p",
-			thisfn,
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) user_data );
+	g_debug( "%s: instance=%p (%s)",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ));
+	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
 
-	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( button ),
-			"clicked",
-			G_CALLBACK( on_browse_folder_clicked ));
+	g_signal_connect(
+			tview, TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_tree_selection_changed ), instance );
+
+	na_gtk_utils_connect_widget_by_name(
+			GTK_CONTAINER( instance ), "FolderBrowseButton",
+			"clicked", G_CALLBACK( on_browse_folder_clicked ), instance );
 }
 
 static void
-on_main_selection_changed( NactIFoldersTab *instance, GList *selected_items, gpointer user_data )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIFoldersTab *instance )
 {
 	NAIContext *context;
 	gboolean editable;
@@ -246,56 +226,29 @@ on_main_selection_changed( NactIFoldersTab *instance, GList *selected_items, gpo
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS, enable_tab );
 
-	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
+	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "FolderBrowseButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }
 
 static void
-on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
+on_browse_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 {
-#if 0
-	/* this is the code I sent to gtk-app-devel list
-	 * to know why one is not able to just enter '/' in the location entry
-	 */
-	GtkWidget *dialog;
-	gchar *path;
-
-	dialog = gtk_file_chooser_dialog_new( _( "Select a folder" ),
-			NULL,
-			GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-			NULL );
-
-	gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), "/" );
-
-	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
-		path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
-		g_debug( "nact_ifolders_tab_on_add_folder_clicked: path=%s", path );
-		g_free( path );
-	}
-
-	gtk_widget_destroy( dialog );
-#endif
-
 	gchar *uri, *path;
-	GtkWindow *toplevel;
 	GtkWidget *dialog;
 
 	uri = NULL;
-	toplevel = base_window_get_gtk_toplevel( window );
 
 	/* i18n: title of the FileChoose dialog when selecting an URI which
 	 * will be compare to Nautilus 'current_folder'
 	 */
 	dialog = gtk_file_chooser_dialog_new( _( "Select a folder" ),
-			toplevel,
+			GTK_WINDOW( instance ),
 			GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			_( "_Cancel" ), GTK_RESPONSE_CANCEL,
+			_( "_Open" ), GTK_RESPONSE_ACCEPT,
 			NULL );
 
-	base_gtk_utils_restore_window_position( window, NA_IPREFS_FOLDER_CHOOSER_WSP );
+	na_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
 
 	uri = na_settings_get_string( NA_IPREFS_FOLDER_CHOOSER_URI, NULL, NULL );
 	if( uri && g_utf8_strlen( uri, -1 )){
@@ -306,15 +259,13 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
 		na_settings_set_string( NA_IPREFS_FOLDER_CHOOSER_URI, uri );
-
 		path = g_filename_from_uri( uri, NULL, NULL );
-		nact_match_list_insert_row( window, ITAB_NAME, path, FALSE, FALSE );
+		nact_match_list_insert_row( NACT_MAIN_WINDOW( instance ), ITAB_NAME, path, FALSE, FALSE );
 		g_free( path );
-
 		g_free( uri );
 	}
 
-	base_gtk_utils_save_window_position( window, NA_IPREFS_FOLDER_CHOOSER_WSP );
+	na_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
 
 	gtk_widget_destroy( dialog );
 }
