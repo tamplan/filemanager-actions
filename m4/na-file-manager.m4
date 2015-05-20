@@ -28,27 +28,6 @@
 # serial 1 let the user choose a target file-manager
 # serial 2 manage Nemo
 
-dnl defaults to nautilus
-
-AC_DEFUN([NA_TARGET_FILE_MANAGER],[
-
-	AC_ARG_ENABLE([file-manager],
-		AC_HELP_STRING(
-			[--enable-file-manager=@<:@nautilus|nemo@:>@],
-			[the targeted file manager @<:@nautilus@:>@]),
-		[enable_file_manager=$withval],
-		[enable_file_manager="nautilus"])
-
-	if test "${enable_file_manager}" = "nautilus"; then
-		AC_MSG_NOTICE([targeting Nautilus file-manager])
-		AC_REQUIRE([_AC_NA_FILE_MANAGER_NAUTILUS])dnl
-
-	elif test "${enable_file_manager}" = "nemo"; then
-		AC_MSG_NOTICE([targeting Nemo file-manager])
-		AC_REQUIRE([_AC_NA_FILE_MANAGER_NEMO])dnl
-	fi
-])
-
 # target file manager: nautilus
 # when working in a test environment, nautilus extensions are typically
 # installed in a non-standard location; lets specify this location here
@@ -56,13 +35,7 @@ AC_DEFUN([NA_TARGET_FILE_MANAGER],[
 
 AC_DEFUN([_AC_NA_FILE_MANAGER_NAUTILUS],[
 
-	AC_ARG_WITH(
-		[nautilus-extdir],
-		AC_HELP_STRING(
-			[--with-nautilus-extdir=DIR],
-			[nautilus plugins extension directory @<:@auto@:>@]),
-		[with_nautilus_extdir=$withval],
-		[with_nautilus_extdir=""])
+	AC_MSG_NOTICE([targeting Nautilus file-manager])
 
 	if test "${with_nautilus_extdir}" = ""; then
 		if test "{PKG_CONFIG}" != ""; then
@@ -95,13 +68,7 @@ AC_DEFUN([_AC_NA_FILE_MANAGER_NAUTILUS],[
 
 AC_DEFUN([_AC_NA_FILE_MANAGER_NEMO],[
 
-	AC_ARG_WITH(
-		[nemo-extdir],
-		AC_HELP_STRING(
-			[--with-nemo-extdir=DIR],
-			[nemo plugins extension directory @<:@auto@:>@]),
-		[with_nemo_extdir=$withval],
-		[with_nemo_extdir=""])
+	AC_MSG_NOTICE([targeting Nemo file-manager])
 
 	if test "${with_nemo_extdir}" = ""; then
 		if test "{PKG_CONFIG}" != ""; then
@@ -121,4 +88,38 @@ AC_DEFUN([_AC_NA_FILE_MANAGER_NEMO],[
 	# Check for menu update function
 	AC_CHECK_LIB([nemo-extension],[nemo_menu_item_new])
 	AC_CHECK_FUNCS([nemo_menu_provider_emit_items_updated_signal])
+])
+
+dnl defaults to nautilus
+dnl manages nemo
+dnl
+AC_DEFUN([NA_TARGET_FILE_MANAGER],[
+
+	AC_ARG_ENABLE([file-manager],
+		AC_HELP_STRING(
+			[--enable-file-manager=@<:@nautilus|nemo@:>@],
+			[the targeted file manager @<:@nautilus@:>@]),
+		[enable_file_manager=$enableval],
+		[enable_file_manager="nautilus"])
+
+	AC_ARG_WITH(
+		[nautilus-extdir],
+		AC_HELP_STRING(
+			[--with-nautilus-extdir=DIR],
+			[nautilus plugins extension directory @<:@auto@:>@]),
+		[with_nautilus_extdir=$withval],
+		[with_nautilus_extdir=""])
+
+	AC_ARG_WITH(
+		[nemo-extdir],
+		AC_HELP_STRING(
+			[--with-nemo-extdir=DIR],
+			[nemo plugins extension directory @<:@auto@:>@]),
+		[with_nemo_extdir=$withval],
+		[with_nemo_extdir=""])
+
+	AS_IF(
+		[test "${enable_file_manager}" = "nautilus"],[_AC_NA_FILE_MANAGER_NAUTILUS()],
+		[test "${enable_file_manager}" = "nemo"],[_AC_NA_FILE_MANAGER_NEMO()],
+		[AC_MSG_NOTICE([no target file-manager specified])])
 ])
