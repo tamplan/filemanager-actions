@@ -102,7 +102,7 @@ NA_CHECK_MODULE([GIO_UNIX],[gio-unix-2.0])
 NA_CHECK_MODULE([GTOP],    [libgtop-2.0],[${gtop_required}])
 NA_CHECK_MODULE([LIBXML],  [libxml-2.0], [${xml_required}])
 NA_CHECK_MODULE([UUID],    [uuid])
-NA_CHECK_MODULE([SM],      [sm >= 1.0])
+NA_CHECK_MODULE([SM],      [sm], [1.0])
 NA_CHECK_MODULE([ICE],     [ice])
 
 # target a file manager (nautilus, nemo, ...)
@@ -194,6 +194,9 @@ $as_echo "
 	Targeted file-manager           ${enable_file_manager}"
 if test "${enable_file_manager}" = "nautilus"; then
 	$as_echo "	Nautilus extensions directory   ${with_nautilus_extdir}"
+fi
+if test "${enable_file_manager}" = "nemmo"; then
+	$as_echo "	Nemo extensions directory       ${with_nemo_extdir}"
 fi
 $as_echo "	GConf enabled                   ${enable_gconf}"
 if test "${enable_gconf}" = "yes"; then

@@ -26,6 +26,7 @@
 #   ... and many others (see AUTHORS)
 
 # serial 1 let the user choose a target file-manager
+# serial 2 manage Nemo
 
 dnl defaults to nautilus
 
@@ -44,6 +45,7 @@ AC_DEFUN([NA_TARGET_FILE_MANAGER],[
 
 	elif test "${enable_file_manager}" = "nemo"; then
 		AC_MSG_NOTICE([targeting Nemo file-manager])
+		AC_REQUIRE([_AC_NA_FILE_MANAGER_NEMO])dnl
 	fi
 ])
 
@@ -86,5 +88,37 @@ AC_DEFUN([_AC_NA_FILE_MANAGER_NAUTILUS],[
 	AC_CHECK_FUNCS([nautilus_menu_provider_get_toolbar_items])
 ])
 
+# target file manager: nemo
+# when working in a test environment, nemo extensions are typically
+# installed in a non-standard location; lets specify this location here
+# --with-nemo-extdir=<dir>
+
 AC_DEFUN([_AC_NA_FILE_MANAGER_NEMO],[
+
+	AC_ARG_WITH(
+		[nemo-extdir],
+		AC_HELP_STRING(
+			[--with-nemo-extdir=DIR],
+			[nemo plugins extension directory @<:@auto@:>@]),
+		[with_nemo_extdir=$withval],
+		[with_nemo_extdir=""])
+
+	if test "${with_nemo_extdir}" = ""; then
+		if test "{PKG_CONFIG}" != ""; then
+			with_nemo_extdir=`${PKG_CONFIG} --variable=extensiondir libnemo-extension`
+		fi
+	fi
+	if test "${with_nemo_extdir}" = ""; then
+		AC_MSG_ERROR([Unable to determine nemo extension folder, please use --with-nemo-extdir option])
+	else
+		AC_MSG_NOTICE([installing plugins in ${with_nemo_extdir}])
+		AC_SUBST([NEMO_EXTENSIONS_DIR],[${with_nemo_extdir}])
+		AC_DEFINE_UNQUOTED([NA_NEMO_EXTENSIONS_DIR],[${with_nemo_extdir}],[Nemo extensions directory])
+	fi
+
+	NA_CHECK_MODULE([NEMO_EXTENSION],[libnemo-extension],[${nemo_required}])
+
+	# Check for menu update function
+	AC_CHECK_LIB([nemo-extension],[nemo_menu_item_new])
+	AC_CHECK_FUNCS([nemo_menu_provider_emit_items_updated_signal])
 ])
