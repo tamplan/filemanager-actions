@@ -102,6 +102,8 @@ NA_CHECK_MODULE([GIO_UNIX],[gio-unix-2.0])
 NA_CHECK_MODULE([GTOP],    [libgtop-2.0],[${gtop_required}])
 NA_CHECK_MODULE([LIBXML],  [libxml-2.0], [${xml_required}])
 NA_CHECK_MODULE([UUID],    [uuid])
+NA_CHECK_MODULE([SM],      [sm >= 1.0])
+NA_CHECK_MODULE([ICE],     [ice])
 
 # target a file manager (nautilus, nemo, ...)
 NA_TARGET_FILE_MANAGER

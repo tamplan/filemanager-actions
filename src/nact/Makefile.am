@@ -55,11 +55,17 @@ nautilus_actions_config_tool_SOURCES = \
 	base-dialog.h										\
 	base-gtk-utils.c									\
 	base-gtk-utils.h									\
+	base-isession.c										\
+	base-isession.h										\
 	base-keysyms.h										\
 	base-window.c										\
 	base-window.h										\
 	egg-desktop-file.c									\
 	egg-desktop-file.h									\
+	egg-sm-client.c										\
+	egg-sm-client.h										\
+	egg-sm-client-private.h								\
+	egg-sm-client-xsmp.c								\
 	egg-tree-multi-dnd.c								\
 	egg-tree-multi-dnd.h								\
 	main.c												\

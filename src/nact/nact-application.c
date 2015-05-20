@@ -38,6 +38,7 @@
 
 #include "core/na-about.h"
 
+#include "base-isession.h"
 #include "nact-application.h"
 #include "nact-main-window.h"
 #include "nact-menu.h"
@@ -85,6 +86,7 @@ static gboolean manage_options( NactApplication *application );
 static void     application_startup( GApplication *application );
 static void     application_activate( GApplication *application );
 static void     application_open( GApplication *application, GFile **files, gint n_files, const gchar *hint );
+static void     isession_iface_init( BaseISessionInterface *iface, void *user_data );
 
 GType
 nact_application_get_type( void )
@@ -116,9 +118,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo isession_iface_info = {
+		( GInterfaceInitFunc ) isession_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( GTK_TYPE_APPLICATION, "NactApplication", &info, 0 );
+
+	g_type_add_interface_static( type, BASE_TYPE_ISESSION, &isession_iface_info );
 
 	return( type );
 }
@@ -265,6 +275,7 @@ nact_application_run_with_args( NactApplication *application, int argc, GStrv ar
 		init_i18n( application );
 		g_set_application_name( priv->application_name );
 		gtk_window_set_default_icon_name( priv->icon_name );
+		base_isession_init( BASE_ISESSION( application ));
 
 		if( init_gtk_args( application ) &&
 			manage_options( application )){
@@ -553,5 +564,16 @@ nact_application_get_updater( const NactApplication *application )
 gboolean
 nact_application_is_willing_to_quit( const NactApplication *application )
 {
-	return( FALSE );
+	g_return_val_if_fail( NACT_IS_APPLICATION( application ), TRUE );
+	g_return_val_if_fail( BASE_IS_ISESSION( application ), TRUE );
+
+	return( base_isession_is_willing_to_quit( BASE_ISESSION( application )));
+}
+
+static void
+isession_iface_init( BaseISessionInterface *iface, void *user_data )
+{
+	static const gchar *thisfn = "nact_application_isession_iface_init";
+
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }

@@ -47,15 +47,14 @@
 G_BEGIN_DECLS
 
 /**
- * Signals defined by the main window
+ * Signals defined on the main window
  */
 #define MAIN_SIGNAL_ITEM_UPDATED            "main-item-updated"
 #define MAIN_SIGNAL_UPDATE_SENSITIVITIES	"main-signal-update-sensitivities"
 
 /**
  * The data which, when modified, should be redisplayed asap.
- * This is used by MAIN_SIGNAL_ITEM_UPDATED and MAIN_SIGNAL_TAB_UPDATED
- * signals.
+ * This is used by MAIN_SIGNAL_ITEM_UPDATED signal.
  */
 enum {
 	MAIN_DATA_LABEL    = 1<<0,
