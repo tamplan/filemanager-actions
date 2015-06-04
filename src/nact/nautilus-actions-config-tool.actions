@@ -113,19 +113,19 @@
           <section>
             <item>
               <attribute name="label" translatable="yes">_File</attribute>
-              <attribute name="action">win.view-toolbar-file</attribute>
+              <attribute name="action">win.toolbar-file</attribute>
             </item>
             <item>
               <attribute name="label" translatable="yes">_Edit</attribute>
-              <attribute name="action">win.view-toolbar-edit</attribute>
+              <attribute name="action">win.toolbar-edit</attribute>
             </item>
             <item>
               <attribute name="label" translatable="yes">_Tools</attribute>
-              <attribute name="action">win.view-toolbar-tools</attribute>
+              <attribute name="action">win.toolbar-tools</attribute>
             </item>
             <item>
               <attribute name="label" translatable="yes">_Help</attribute>
-              <attribute name="action">win.view-toolbar-help</attribute>
+              <attribute name="action">win.toolbar-help</attribute>
             </item>
           </section>
         </submenu>

@@ -62,6 +62,8 @@ void       base_gtk_utils_toggle_set_initial_state ( BaseWindow *window,
 
 void       base_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button );
 
+void       base_gtk_utils_widget_set_color( GtkWidget *widget, GdkRGBA *color );
+
 /* image utilities
  */
 GdkPixbuf *base_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize size );

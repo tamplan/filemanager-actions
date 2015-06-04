@@ -27,16 +27,10 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_TOOLBAR_H__
-#define __NACT_MAIN_TOOLBAR_H__
+#ifndef __NACT_MENU_VIEW_H__
+#define __NACT_MENU_VIEW_H__
 
-/**
- * SECTION: nact_main_toolbar
- * @short_description: Main toolbar management.
- * @include: nact/nact-main-toolbar.h
- */
-
-#include "nact-main-window.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -47,13 +41,16 @@ enum {
 	MAIN_TOOLBAR_HELP_ID,
 };
 
-void nact_main_toolbar_init_toggle_actions( NactMainWindow *window,
-													GSimpleActionGroup *toolbar_group );
+void nact_menu_view_init                ( NactMainWindow *main_window );
 
-void nact_main_toolbar_activate           ( NactMainWindow *window,
-													int toolbar_id,
-													gboolean active );
+void nact_menu_view_update_sensitivities( NactMainWindow *main_window );
+
+void nact_menu_view_toolbar_display     ( NactMainWindow *main_window,
+												const gchar *action_name,
+												gboolean visible );
+
+void nact_menu_view_set_notebook_label  ( NactMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __NACT_MAIN_TOOLBAR_H__ */
+#endif /* __NACT_MENU_VIEW_H__ */

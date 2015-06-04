@@ -34,7 +34,7 @@
 
 G_BEGIN_DECLS
 
-void nact_menu_file_initialize          ( NactMainWindow *main_window );
+void nact_menu_file_init                ( NactMainWindow *main_window );
 
 void nact_menu_file_update_sensitivities( NactMainWindow *main_window );
 

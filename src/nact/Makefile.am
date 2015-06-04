@@ -109,8 +109,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-ischemes-tab.h									\
 	nact-main-tab.c										\
 	nact-main-tab.h										\
-	nact-main-toolbar.c									\
-	nact-main-toolbar.h									\
 	nact-main-window.c									\
 	nact-main-window.h									\
 	nact-main-window-def.h								\
@@ -122,6 +120,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-menu-edit.h									\
 	nact-menu-file.c									\
 	nact-menu-file.h									\
+	nact-menu-view.c									\
+	nact-menu-view.h									\
 	nact-preferences-editor.c							\
 	nact-preferences-editor.h							\
 	nact-providers-list.c								\
@@ -164,11 +164,13 @@ ui_files = \
 	nact-legend.ui										\
 	nact-main-window.ui									\
 	nact-preferences.ui									\
+	nact-toolbar.ui										\
 	$(NULL)
 
 images_files = \
 	locked.png											\
 	transparent.png										\
+	gtk-index.png										\
 	$(NULL)
 
 ui_data_DATA = \

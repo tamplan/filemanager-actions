@@ -40,7 +40,6 @@
 #include "base-keysyms.h"
 #include "nact-application.h"
 #include "nact-main-window.h"
-#include "nact-marshal.h"
 #include "nact-tree-view.h"
 #include "nact-tree-model.h"
 #include "nact-tree-ieditable.h"
@@ -487,10 +486,14 @@ initialize_gtk( NactTreeView *view )
 
 	scrolled = gtk_scrolled_window_new( NULL, NULL );
 	gtk_container_add( GTK_CONTAINER( view ), scrolled );
+	gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scrolled ), GTK_SHADOW_IN );
 
 	tview = gtk_tree_view_new();
+	gtk_widget_set_hexpand( tview, TRUE );
+	gtk_widget_set_vexpand( tview, TRUE );
 	gtk_container_add( GTK_CONTAINER( scrolled ), tview );
 	priv->tree_view = GTK_TREE_VIEW( tview );
+	gtk_tree_view_set_headers_visible( priv->tree_view, FALSE );
 
 	model = nact_tree_model_new( GTK_TREE_VIEW( tview ));
 	nact_tree_model_set_main_window( model, priv->window );

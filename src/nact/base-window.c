@@ -40,7 +40,6 @@
 #include "base-builder.h"
 #include "base-window.h"
 #include "base-gtk-utils.h"
-#include "base-marshal.h"
 #include "nact-application.h"
 
 /* private class data

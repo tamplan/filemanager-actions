@@ -224,6 +224,21 @@ base_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button )
 }
 
 /**
+ * base_gtk_utils_widget_set_color:
+ * @widget:
+ * @color:
+ *
+ * Set a color to the widget.
+ *
+ * gtk_widget_override_color has been deprecated since version 3.16.
+ */
+void
+base_gtk_utils_widget_set_color( GtkWidget *widget, GdkRGBA *color )
+{
+	g_message( "base_gtk_utils_widget_set_color: to be written" );
+}
+
+/**
  * base_gtk_utils_get_pixbuf:
  * @name: either the name of a themed icon, or a filename.
  * @widget: the widget on which the image should be rendered.

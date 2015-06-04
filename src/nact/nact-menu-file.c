@@ -64,11 +64,11 @@ static gboolean autosave_callback( NactMainWindow *main_window );
 static void     autosave_destroyed( NactMainWindow *main_window );
 
 /*
- * nact_menu_file_initialize:
+ * nact_menu_file_init:
  * @main_window: the #NactMainWindow main window.
  */
 void
-nact_menu_file_initialize( NactMainWindow *main_window )
+nact_menu_file_init( NactMainWindow *main_window )
 {
 	install_autosave( main_window );
 }

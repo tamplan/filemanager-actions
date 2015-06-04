@@ -33,16 +33,18 @@
 
 #include <glib/gi18n.h>
 
+#include "core/na-about.h"
 #include "core/na-io-provider.h"
 
 #include "nact-main-window.h"
 #include "nact-menu.h"
 #include "nact-menu-edit.h"
 #include "nact-menu-file.h"
-/* #include "nact-menu-help.h"
+#include "nact-menu-view.h"
+/*
 #include "nact-menu-maintainer.h"
 #include "nact-menu-tools.h"
-#include "nact-menu-view.h" */
+*/
 #include "nact-preferences-editor.h"
 #include "nact-tree-view.h"
 
@@ -74,6 +76,8 @@ static void on_win_paste_into( GSimpleAction *action, GVariant *parameter, gpoin
 static void on_win_reload( GSimpleAction *action, GVariant *parameter, gpointer user_data );
 static void on_win_save( GSimpleAction *action, GVariant *parameter, gpointer user_data );
 static void on_win_test_function( GSimpleAction *action, GVariant *parameter, gpointer user_data );
+static void on_win_toolbar_activate( GSimpleAction *action, GVariant *parameter, gpointer user_data );
+static void on_win_toolbar_changed_state( GSimpleAction *action, GVariant *parameter, gpointer user_data );
 
 /* since the deprecation of GtkAction, I no more know how to display
  * menu item tooltips - but they have been translated and I don't want
@@ -140,6 +144,18 @@ static sActionEntry st_menubar_entries[] = {
 		{{ "collapse", on_win_collapse_all, NULL, NULL, NULL },
 				/* i18n: status bar tooltip displayed on 'Collapse all' item navigation */
 				N_( "Entirely collapse the items hierarchy" )},
+		{{ "toolbar-file", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
+				/* i18n: status bar tooltip displayed on 'Toolbars/File' item navigation */
+				N_( "Display the File toolbar" )},
+		{{ "toolbar-edit", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
+				/* i18n: status bar tooltip displayed on 'Toolbars/Edit' item navigation */
+				N_( "Display the Edit toolbar" )},
+		{{ "toolbar-tools", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
+				/* i18n: status bar tooltip displayed on 'Toolbars/Tools' item navigation */
+				N_( "Display the Tools toolbar" )},
+		{{ "toolbar-help", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
+				/* i18n: status bar tooltip displayed on 'Toolbars/Help' item navigation */
+				N_( "Display the Help toolbar" )},
 		{{ "import", on_win_import, NULL, NULL, NULL },
 				/* i18n: status bar tooltip displayed on 'Import' item navigation */
 				N_( "Import one or more actions from external files into your configuration" )},
@@ -220,6 +236,61 @@ nact_menu_app( NactApplication *application )
 	}
 }
 
+static void
+on_app_about( GSimpleAction *action, GVariant *parameter, gpointer user_data )
+{
+	GtkWindow *window;
+
+	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
+
+	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
+	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
+
+	na_about_display( window );
+}
+
+static void
+on_app_help( GSimpleAction *action, GVariant *parameter, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_menu_on_app_help";
+	GError *error;
+
+	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
+
+	error = NULL;
+	gtk_show_uri( NULL, "ghelp:nautilus-actions-config-tool", GDK_CURRENT_TIME, &error );
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+	}
+}
+
+static void
+on_app_preferences( GSimpleAction *action, GVariant *parameter, gpointer user_data )
+{
+	GtkWindow *window;
+
+	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
+
+	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
+	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
+
+	nact_preferences_editor_run( NACT_MAIN_WINDOW( window ));
+}
+
+static void
+on_app_quit( GSimpleAction *action, GVariant *parameter, gpointer user_data )
+{
+	GtkWindow *window;
+
+	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
+
+	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
+	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
+
+	nact_main_window_quit( NACT_MAIN_WINDOW( window ));
+}
+
 /**
  * nact_menu_win:
  * @main_window: the #NactMainWindow.
@@ -290,43 +361,8 @@ nact_menu_win( NactMainWindow *main_window )
 					main_window, MAIN_SIGNAL_UPDATE_SENSITIVITIES,
 					G_CALLBACK( on_update_sensitivities ), NULL );
 
-	nact_menu_file_initialize( main_window );
-}
-
-static void
-on_app_about( GSimpleAction *action, GVariant *parameter, gpointer user_data )
-{
-	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
-}
-
-static void
-on_app_help( GSimpleAction *action, GVariant *parameter, gpointer user_data )
-{
-	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
-}
-
-static void
-on_app_preferences( GSimpleAction *action, GVariant *parameter, gpointer user_data )
-{
-	GtkWindow *window;
-
-	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
-
-	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
-	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
-
-	nact_preferences_editor_run( NACT_MAIN_WINDOW( window ));
-}
-
-static void
-on_app_quit( GSimpleAction *action, GVariant *parameter, gpointer user_data )
-{
-	GtkWindow *window;
-
-	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
-	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
-	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
-	nact_main_window_quit( NACT_MAIN_WINDOW( window ));
+	nact_menu_file_init( main_window );
+	nact_menu_view_init( main_window );
 }
 
 /**
@@ -612,12 +648,15 @@ on_update_sensitivities( NactMainWindow *window, void *empty )
 
 	g_debug( "%s: window=%p, empty=%p", thisfn, ( void * ) window, empty );
 
-	nact_menu_file_update_sensitivities( window );
-	nact_menu_edit_update_sensitivities( window );
-	/*nact_menu_view_update_sensitivities( window );
-	nact_menu_tools_update_sensitivities( window );
-	nact_menu_maintainer_update_sensitivities( window );
-	nact_menu_help_update_sensitivities( window );*/
+	if( !nact_main_window_dispose_has_run( window )){
+
+		nact_menu_file_update_sensitivities( window );
+		nact_menu_edit_update_sensitivities( window );
+		nact_menu_view_update_sensitivities( window );
+		/*nact_menu_tools_update_sensitivities( window );
+		nact_menu_maintainer_update_sensitivities( window );
+		nact_menu_help_update_sensitivities( window );*/
+	}
 }
 
 static void
@@ -629,7 +668,12 @@ on_win_brief_tree_store_dump( GSimpleAction *action, GVariant *parameter, gpoint
 static void
 on_win_collapse_all( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
+	NactTreeView *items_view;
+
 	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+
+	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( user_data ));
+	nact_tree_view_collapse_all( items_view );
 }
 
 static void
@@ -675,7 +719,12 @@ on_win_duplicate( GSimpleAction *action, GVariant *parameter, gpointer user_data
 static void
 on_win_expand_all( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
+	NactTreeView *items_view;
+
 	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+
+	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( user_data ));
+	nact_tree_view_expand_all( items_view );
 }
 
 static void
@@ -700,18 +749,21 @@ static void
 on_win_new_action( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	nact_menu_file_new_action( NACT_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_new_menu( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	nact_menu_file_new_menu( NACT_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_new_profile( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	nact_menu_file_new_profile( NACT_MAIN_WINDOW( user_data ));
 }
 
 static void
@@ -746,6 +798,40 @@ static void
 on_win_test_function( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+}
+
+/*
+ * the menu item is activated
+ * just toggle the state of the corresponding action
+ */
+static void
+on_win_toolbar_activate( GSimpleAction *action, GVariant *parameter, gpointer user_data )
+{
+	GVariant *state;
+
+	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+
+	state = g_action_get_state( G_ACTION( action ));
+	g_action_change_state( G_ACTION( action ),
+			g_variant_new_boolean( !g_variant_get_boolean( state )));
+	g_variant_unref( state );
+}
+
+/*
+ * the state of the action has been toggled, either directly or by
+ * activating the menu item
+ */
+static void
+on_win_toolbar_changed_state( GSimpleAction *action, GVariant *state, gpointer user_data )
+{
+	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+
+	nact_menu_view_toolbar_display(
+			NACT_MAIN_WINDOW( user_data ),
+			g_action_get_name( G_ACTION( action )),
+			g_variant_get_boolean( state ));
+
+	g_simple_action_set_state( action, state );
 }
 
 /**

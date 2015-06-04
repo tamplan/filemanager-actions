@@ -688,6 +688,7 @@ nact_main_window_new( NactApplication *application )
 
 	setup_monitor_pivot( window );
 	load_or_reload_items( window );
+	gtk_widget_show_all( GTK_WIDGET( window ));
 
 	return( window );
 }
@@ -716,7 +717,12 @@ setup_main_ui( NactMainWindow *main_window )
 	top_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_window ), "top" );
 	g_return_if_fail( top_widget && GTK_IS_CONTAINER( top_widget ));
 
-	gtk_widget_reparent( top_widget, GTK_WIDGET( main_window ));
+	/* reparent */
+	g_object_ref( top_widget );
+	gtk_container_remove( GTK_CONTAINER( top_window ), top_widget );
+	gtk_container_add( GTK_CONTAINER( main_window ), top_widget );
+	g_object_unref( top_widget );
+
 	gtk_widget_destroy( GTK_WIDGET( top_window ));
 	g_object_unref( builder );
 
@@ -741,7 +747,7 @@ setup_main_ui( NactMainWindow *main_window )
 	 */
 	bar = nact_statusbar_new();
 	alignment = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-statusbar" );
-	g_return_if_fail( alignment && GTK_IS_ALIGNMENT( alignment ));
+	g_return_if_fail( alignment && GTK_IS_CONTAINER( alignment ));
 	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( bar ));
 	main_window->private->statusbar = bar;
 }
@@ -1204,6 +1210,20 @@ load_or_reload_items( NactMainWindow *window )
 }
 
 /**
+ * nact_main_window_dispose_has_run:
+ * @window: the #NactMainWindow main window.
+ *
+ * Returns: %TRUE if the main window is terminating.
+ */
+gboolean
+nact_main_window_dispose_has_run( const NactMainWindow *window )
+{
+	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), TRUE );
+
+	return( window->private->dispose_has_run );
+}
+
+/**
  * nact_main_window_quit:
  * @window: the #NactMainWindow main window.
  *
@@ -1218,7 +1238,7 @@ nact_main_window_quit( NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_window_quit";
 	gboolean terminated;
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
+	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), FALSE );
 
 	terminated = FALSE;
 

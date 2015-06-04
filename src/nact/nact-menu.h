@@ -44,6 +44,9 @@
 
 G_BEGIN_DECLS
 
+/* This is private data, set against the main window
+ * for exclusive use of menu functions
+ */
 typedef struct {
 
 	/* set at initialization time
@@ -92,6 +95,16 @@ typedef struct {
 	gint        clipboard_profiles;
 }
 	sMenuData;
+
+/* Toolbars identifiers
+ * they are listed here in the order they should be displayed
+ */
+enum {
+	TOOLBAR_FILE_ID = 1,
+	TOOLBAR_EDIT_ID,
+	TOOLBAR_TOOLS_ID,
+	TOOLBAR_HELP_ID,
+};
 
 void       nact_menu_app        ( NactApplication *application );
 

@@ -611,7 +611,7 @@ set_label_label( NactIActionTab *instance, const gchar *color_str )
 	label = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionMenuLabelLabel" );
 
 	gdk_rgba_parse( &color, color_str );
-	gtk_widget_override_color( label, GTK_STATE_FLAG_ACTIVE, &color );
+	base_gtk_utils_widget_set_color( label, &color );
 }
 
 static void

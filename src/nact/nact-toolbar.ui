@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
+<interface>
+  <requires lib="gtk+" version="3.4"/>
+  <object class="GtkToolbar" id="edit-toolbar">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="toolbar_style">both-horiz</property>
+    <property name="icon_size">2</property>
+  </object>
+  <object class="GtkToolbar" id="file-toolbar">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="toolbar_style">both-horiz</property>
+    <property name="icon_size">2</property>
+    <child>
+      <object class="GtkToolButton" id="new-action-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Define a new action</property>
+        <property name="is_important">True</property>
+        <property name="action_name">new-action</property>
+        <property name="label" translatable="yes">New _action</property>
+        <property name="use_underline">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolButton" id="save-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Save the items tree</property>
+        <property name="is_important">True</property>
+        <property name="action_name">save</property>
+        <property name="label" translatable="yes">_Save</property>
+        <property name="use_underline">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolButton" id="quit-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Quit the application</property>
+        <property name="is_important">True</property>
+        <property name="action_name">quit</property>
+        <property name="label" translatable="yes">_Quit</property>
+        <property name="use_underline">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkToolbar" id="help-toolbar">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="toolbar_style">both-horiz</property>
+    <property name="icon_size">2</property>
+  </object>
+  <object class="GtkToolbar" id="tools-toolbar">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="toolbar_style">both-horiz</property>
+    <property name="icon_size">2</property>
+  </object>
+</interface>

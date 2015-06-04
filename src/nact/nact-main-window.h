@@ -85,6 +85,8 @@ void             nact_main_window_reload          ( NactMainWindow *window );
 
 void             nact_main_window_block_reload    ( NactMainWindow *window );
 
+gboolean         nact_main_window_dispose_has_run ( const NactMainWindow *window );
+
 gboolean         nact_main_window_quit            ( NactMainWindow *window );
 
 G_END_DECLS
