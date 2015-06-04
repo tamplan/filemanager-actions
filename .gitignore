@@ -2,6 +2,7 @@
 .e*
 .p*
 .s*
+*~
 _build/
 _install/
 Makefile.in
