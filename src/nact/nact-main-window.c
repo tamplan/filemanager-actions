@@ -147,6 +147,7 @@ enum {
 static const gchar     *st_xmlui_filename         = PKGUIDIR "/nact-main-window.ui";
 static const gchar     *st_toplevel_name          = "MainWindow";
 static const gchar     *st_wsp_name               = NA_IPREFS_MAIN_WINDOW_WSP;
+static const gchar     *st_icon_filename          = ICON_FNAME;
 
 static gint             st_burst_timeout          = 2500;		/* burst timeout in msec */
 static BaseWindowClass *st_parent_class           = NULL;
@@ -717,12 +718,12 @@ setup_main_ui( NactMainWindow *main_window )
 	top_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_window ), "top" );
 	g_return_if_fail( top_widget && GTK_IS_CONTAINER( top_widget ));
 
-	/* reparent */
+	/* reparent
+	 */
 	g_object_ref( top_widget );
 	gtk_container_remove( GTK_CONTAINER( top_window ), top_widget );
 	gtk_container_add( GTK_CONTAINER( main_window ), top_widget );
 	g_object_unref( top_widget );
-
 	gtk_widget_destroy( GTK_WIDGET( top_window ));
 	g_object_unref( builder );
 
@@ -750,6 +751,10 @@ setup_main_ui( NactMainWindow *main_window )
 	g_return_if_fail( alignment && GTK_IS_CONTAINER( alignment ));
 	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( bar ));
 	main_window->private->statusbar = bar;
+
+	/* application icon
+	 */
+	gtk_window_set_default_icon_from_file( st_icon_filename, NULL );
 }
 
 /*

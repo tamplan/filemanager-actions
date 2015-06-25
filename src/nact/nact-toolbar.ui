@@ -7,6 +7,96 @@
     <property name="can_focus">False</property>
     <property name="toolbar_style">both-horiz</property>
     <property name="icon_size">2</property>
+    <child>
+      <object class="GtkToolButton" id="cut-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Cut the selected item(s) to the clipboard</property>
+        <property name="action_name">win.cut</property>
+        <property name="label" translatable="yes">C_ut</property>
+        <property name="use_underline">True</property>
+        <property name="icon_name">edit-cut</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolButton" id="copy-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Copy the selected item(s) to the clipboard</property>
+        <property name="action_name">win.copy</property>
+        <property name="label" translatable="yes">C_opy</property>
+        <property name="use_underline">True</property>
+        <property name="icon_name">edit-copy</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolButton" id="paste-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Insert the content of the clipboard just before the current position</property>
+        <property name="action_name">win.paste</property>
+        <property name="label" translatable="yes">P_aste</property>
+        <property name="use_underline">True</property>
+        <property name="icon_name">edit-paste</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolButton" id="delete-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Delete the selected item(s)</property>
+        <property name="action_name">win.delete</property>
+        <property name="label" translatable="yes">_Delete</property>
+        <property name="use_underline">True</property>
+        <property name="icon_name">edit-delete</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolButton" id="reload-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Cancel your current modifications and reload the initial list of menus and actions</property>
+        <property name="action_name">win.reload</property>
+        <property name="label" translatable="yes">_Reload</property>
+        <property name="use_underline">True</property>
+        <property name="icon_name">view-refresh</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolButton" id="preferences-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Edit your preferences</property>
+        <property name="action_name">app.preferences</property>
+        <property name="label" translatable="yes">_Preferences</property>
+        <property name="use_underline">True</property>
+        <property name="icon_name">preferences-system</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
   </object>
   <object class="GtkToolbar" id="file-toolbar">
     <property name="visible">True</property>
@@ -18,10 +108,10 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="tooltip_text" translatable="yes">Define a new action</property>
-        <property name="is_important">True</property>
-        <property name="action_name">new-action</property>
+        <property name="action_name">win.new-action</property>
         <property name="label" translatable="yes">New _action</property>
         <property name="use_underline">True</property>
+        <property name="icon_name">document-new</property>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -33,10 +123,10 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="tooltip_text" translatable="yes">Save the items tree</property>
-        <property name="is_important">True</property>
-        <property name="action_name">save</property>
+        <property name="action_name">win.save</property>
         <property name="label" translatable="yes">_Save</property>
         <property name="use_underline">True</property>
+        <property name="icon_name">document-save</property>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -48,10 +138,10 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="tooltip_text" translatable="yes">Quit the application</property>
-        <property name="is_important">True</property>
-        <property name="action_name">quit</property>
+        <property name="action_name">app.quit</property>
         <property name="label" translatable="yes">_Quit</property>
         <property name="use_underline">True</property>
+        <property name="icon_name">application-exit</property>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -64,11 +154,61 @@
     <property name="can_focus">False</property>
     <property name="toolbar_style">both-horiz</property>
     <property name="icon_size">2</property>
+    <child>
+      <object class="GtkToolButton" id="help-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Display help about this program</property>
+        <property name="action_name">app.help</property>
+        <property name="label" translatable="yes">_Help</property>
+        <property name="use_underline">True</property>
+        <property name="icon_name">help-browser</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolButton" id="about-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Display informations about this program</property>
+        <property name="action_name">app.about</property>
+        <property name="label" translatable="yes">_About...</property>
+        <property name="use_underline">True</property>
+        <property name="icon_name">help-about</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">gtk-convert.png</property>
   </object>
   <object class="GtkToolbar" id="tools-toolbar">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="toolbar_style">both-horiz</property>
     <property name="icon_size">2</property>
+    <child>
+      <object class="GtkToolButton" id="import-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Import one or more actions from external files into your configuration</property>
+        <property name="action_name">win.import</property>
+        <property name="label" translatable="yes">_Import...</property>
+        <property name="use_underline">True</property>
+        <property name="icon_widget">image1</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="homogeneous">True</property>
+      </packing>
+    </child>
   </object>
 </interface>

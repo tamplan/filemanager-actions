@@ -48,7 +48,7 @@
 #include "nact-preferences-editor.h"
 #include "nact-tree-view.h"
 
-static const gchar *st_ui_actions       = PKGUIDIR "/nautilus-actions-config-tool.actions";
+static const gchar *st_uixml_actions    = PKGUIDIR "/nautilus-actions-config-tool.actions";
 static const gchar *st_ui_app_menu      = "app-menu";
 static const gchar *st_ui_menubar       = "menubar";
 
@@ -205,12 +205,12 @@ nact_menu_app( NactApplication *application )
 
 	error = NULL;
 	builder = gtk_builder_new();
-	if( gtk_builder_add_from_file( builder, st_ui_actions, &error )){
+	if( gtk_builder_add_from_file( builder, st_uixml_actions, &error )){
 
 		appmenu = G_MENU_MODEL( gtk_builder_get_object( builder, st_ui_app_menu ));
 		if( !appmenu ){
 			g_warning( "%s: unable to find '%s' object in '%s' file",
-					thisfn, st_ui_app_menu, st_ui_actions );
+					thisfn, st_ui_app_menu, st_uixml_actions );
 		} else {
 			gtk_application_set_app_menu( GTK_APPLICATION( application ), appmenu );
 		}
@@ -218,7 +218,7 @@ nact_menu_app( NactApplication *application )
 		menubar = G_MENU_MODEL( gtk_builder_get_object( builder, st_ui_menubar ));
 		if( !menubar ){
 			g_warning( "%s: unable to find '%s' object in '%s' file",
-					thisfn, st_ui_menubar, st_ui_actions );
+					thisfn, st_ui_menubar, st_uixml_actions );
 		} else {
 			gtk_application_set_menubar( GTK_APPLICATION( application ), menubar );
 		}
@@ -361,7 +361,10 @@ nact_menu_win( NactMainWindow *main_window )
 					main_window, MAIN_SIGNAL_UPDATE_SENSITIVITIES,
 					G_CALLBACK( on_update_sensitivities ), NULL );
 
+	/* install autosave */
 	nact_menu_file_init( main_window );
+
+	/* install toolbar submenu */
 	nact_menu_view_init( main_window );
 }
 

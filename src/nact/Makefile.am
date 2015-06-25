@@ -29,6 +29,8 @@ bin_PROGRAMS = \
 	nautilus-actions-config-tool						\
 	$(NULL)
 
+icon_fname = $(datadir)/icons/hicolor/48x48/apps/nautilus-actions.png
+
 ui_datadir = $(pkgdatadir)/ui
 
 egg_platform_defines = -DEGG_SM_CLIENT_BACKEND_XSMP
@@ -38,6 +40,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"				\
+	-DICON_FNAME=\"$(icon_fname)\"						\
 	-DPKGUIDIR=\"$(ui_datadir)\"						\
 	$(egg_platform_defines)								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
@@ -150,7 +153,6 @@ nautilus_actions_config_tool_LDADD = \
 
 actions_files = \
 	nautilus-actions-config-tool.actions				\
-	nautilus-actions-maintainer.actions					\
 	$(NULL)
 
 ui_files = \
@@ -168,9 +170,10 @@ ui_files = \
 	$(NULL)
 
 images_files = \
+	gtk-convert.png										\
+	gtk-index.png										\
 	locked.png											\
 	transparent.png										\
-	gtk-index.png										\
 	$(NULL)
 
 ui_data_DATA = \
