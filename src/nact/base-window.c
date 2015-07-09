@@ -843,6 +843,20 @@ do_initialize_base_window( BaseWindow *window )
 
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
+		/* pwi 2015- 6-25
+		 * Making the child window transient regarding its parent make
+		 * these two windows attached, and the user is no more able to
+		 * move the child without also moving the parent :(
+		 * THIS IS A BAD GTK+ CHOICE.
+		 * More, modifying this settings requires the TweakSettings tool
+		 * which is not even part of the core distribution.
+		 * See: Windows - Attached modal dialogs.
+		 *
+		 * When transient is not set, the user will now get a message:
+		 *   Gtk-Message: GtkDialog mapped without a transient parent.
+		 *   This is discouraged.
+		 * THIS IS A BAD GTK+ CHOICE.
+		 */
 		if( priv->main_window ){
 			g_return_if_fail( GTK_IS_APPLICATION_WINDOW( priv->main_window ));
 			gtk_window_set_transient_for( priv->gtk_toplevel, GTK_WINDOW( priv->main_window ));
