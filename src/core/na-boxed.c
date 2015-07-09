@@ -83,9 +83,10 @@ struct _NABoxedPrivate {
 	} u;
 };
 
-#define LIST_SEPARATOR						";"
+#define LIST_SEPARATOR					";"
+#define DEBUG							if( 0 ) g_debug
 
-static GObjectClass *st_parent_class   = NULL;
+static GObjectClass *st_parent_class    = NULL;
 
 static GType           register_type( void );
 static void            class_init( NABoxedClass *klass );
@@ -355,7 +356,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	g_return_if_fail( NA_IS_BOXED( instance ));
 
-	g_debug( "%s: instance=%p (%s), klass=%p",
+	DEBUG( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self = NA_BOXED( instance );
@@ -395,7 +396,7 @@ instance_finalize( GObject *object )
 
 	g_return_if_fail( NA_IS_BOXED( object ));
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	DEBUG( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	self = NA_BOXED( object );
 
