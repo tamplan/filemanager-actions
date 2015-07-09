@@ -569,7 +569,6 @@ If this is not an absolute path, then the PATH environment variable at execution
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="tooltip_text" translatable="yes">The parameters of the command.</property>
-                                <property name="hexpand">True</property>
                                 <property name="invisible_char">●</property>
                               </object>
                               <packing>
@@ -630,33 +629,28 @@ If this is not an absolute path, then the PATH environment variable at execution
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkExpander" id="expander22">
+                              <object class="GtkExpander" id="expander1">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="expanded">True</property>
                                 <child>
-                                  <object class="GtkFrame" id="frame1">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label_xalign">0</property>
-                                    <property name="shadow_type">none</property>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child type="label_item">
-                                      <placeholder/>
-                                    </child>
-                                  </object>
-                                </child>
-                                <child type="label">
                                   <object class="GtkLabel" id="CommandExampleLabel">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
+                                    <property name="halign">start</property>
                                     <property name="label" translatable="yes">Example</property>
+                                    <property name="wrap">True</property>
                                     <attributes>
                                       <attribute name="style" value="italic"/>
                                       <attribute name="scale" value="0.80000000000000004"/>
                                     </attributes>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkLabel" id="label1">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">&lt;small&gt;&lt;i&gt;Example&lt;/i&gt;&lt;/small&gt;</property>
+                                    <property name="use_markup">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -1709,6 +1703,7 @@ Capabilities may be negated to specify for which capabilities your item must not
                               <object class="GtkGrid" id="grid820">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="row_spacing">3</property>
                                 <property name="column_spacing">3</property>
                                 <child>
                                   <object class="GtkButton" id="AddCapabilityButton">
