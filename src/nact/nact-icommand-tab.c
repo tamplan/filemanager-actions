@@ -191,13 +191,11 @@ nact_icommand_tab_init( NactICommandTab *instance )
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_COMMAND );
-	initialize_gtk( instance );
-	initialize_window( instance );
-
 	data = get_icommand_data( instance );
 	data->on_selection_change = FALSE;
 	data->tokens = NULL;
-
+	initialize_gtk( instance );
+	initialize_window( instance );
 	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 }
 
@@ -286,6 +284,7 @@ initialize_window( NactICommandTab *instance )
 	data = get_icommand_data( instance );
 	if( !data->tokens ){
 		data->tokens = na_tokens_new_for_example();
+		g_debug( "%s: data=%p, tokens=%p", thisfn, ( void * ) data, ( void * ) data->tokens );
 	}
 }
 
@@ -330,6 +329,8 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 			MAIN_PROP_PROFILE, &profile,
 			MAIN_PROP_EDITABLE, &editable,
 			NULL );
+	g_debug( "%s: profile=%p (%s)",
+			thisfn, ( void * ) profile, G_OBJECT_TYPE_NAME( profile ));
 
 	enable_tab = ( profile != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_COMMAND, enable_tab );
@@ -538,7 +539,7 @@ static void
 on_path_browse( GtkButton *button, NactICommandTab *instance )
 {
 	base_gtk_utils_select_file(
-			BASE_WINDOW( instance ),
+			GTK_APPLICATION_WINDOW( instance ),
 			_( "Choosing a command" ), NA_IPREFS_COMMAND_CHOOSER_WSP,
 			get_path_entry( instance ), NA_IPREFS_COMMAND_CHOOSER_URI );
 }
@@ -577,10 +578,14 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 			NULL );
 
 	if( profile ){
-		wdir_entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "WorkingDirectoryEntry" );
+		wdir_entry = na_gtk_utils_find_widget_by_name(
+							GTK_CONTAINER( instance ), "WorkingDirectoryEntry" );
 		base_gtk_utils_select_dir(
-				BASE_WINDOW( instance ), _( "Choosing a working directory" ),
-				NA_IPREFS_WORKING_DIR_WSP, wdir_entry, NA_IPREFS_WORKING_DIR_URI );
+				GTK_APPLICATION_WINDOW( instance ),
+				_( "Choosing a working directory" ),
+				NA_IPREFS_WORKING_DIR_WSP,
+				wdir_entry,
+				NA_IPREFS_WORKING_DIR_URI );
 	}
 }
 
@@ -611,6 +616,8 @@ on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 static gchar *
 parse_parameters( NactICommandTab *instance )
 {
+	static const gchar *thisfn = "nact_icommand_tab_parse_parameters";
+
 	const gchar *command = gtk_entry_get_text( GTK_ENTRY( get_path_entry( instance )));
 	const gchar *param_template = gtk_entry_get_text( GTK_ENTRY( get_parameters_entry( instance )));
 	gchar *exec, *returned;
@@ -618,6 +625,8 @@ parse_parameters( NactICommandTab *instance )
 
 	data = get_icommand_data( instance );
 	exec = g_strdup_printf( "%s %s", command, param_template );
+	g_debug( "%s: data=%p, tokens=%p, exec=%s",
+			thisfn, ( void * ) data, ( void * ) data->tokens, exec );
 	returned = na_tokens_parse_for_display( data->tokens, exec, FALSE );
 	g_free( exec );
 
@@ -651,21 +660,21 @@ update_example_label( NactICommandTab *instance, NAObjectProfile *profile )
 		newlabel = g_strdup( "" );
 	}
 
-	gtk_label_set_label( GTK_LABEL( example_widget ), newlabel );
+	gtk_label_set_markup( GTK_LABEL( example_widget ), newlabel );
 	g_free( newlabel );
 }
 
 static ICommandData *
 get_icommand_data( NactICommandTab *instance )
 {
+	static const gchar *thisfn = "nact_icommand_tab_get_icommand_data";
 	ICommandData *data;
 
 	data = ( ICommandData * ) g_object_get_data( G_OBJECT( instance ), ICOMMAND_TAB_PROP_DATA );
 
 	if( !data ){
 		data = g_new0( ICommandData, 1 );
-		/* g_object_set_data_full() would be called after the weak ref function
-		 */
+		g_debug( "%s: allocating new ICommandData structure at %p", thisfn, ( void * ) data );
 		g_object_set_data( G_OBJECT( instance ), ICOMMAND_TAB_PROP_DATA, data );
 	}
 

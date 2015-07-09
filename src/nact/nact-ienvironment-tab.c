@@ -726,7 +726,7 @@ on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance )
 	entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "TryExecEntry" );
 
 	base_gtk_utils_select_file(
-			BASE_WINDOW( instance ),
+			GTK_APPLICATION_WINDOW( instance ),
 			_( "Choosing an executable" ), NA_IPREFS_TRY_EXEC_WSP,
 			entry, NA_IPREFS_TRY_EXEC_URI );
 }
@@ -784,7 +784,7 @@ on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance )
 	entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ShowIfRunningEntry" );
 
 	base_gtk_utils_select_file(
-			BASE_WINDOW( instance ),
+			GTK_APPLICATION_WINDOW( instance ),
 			_( "Choosing an executable" ), NA_IPREFS_SHOW_IF_RUNNING_WSP,
 			entry, NA_IPREFS_SHOW_IF_RUNNING_URI );
 }

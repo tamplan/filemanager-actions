@@ -39,6 +39,7 @@
  */
 
 #include "base-dialog.h"
+#include "nact-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -69,7 +70,7 @@ typedef struct {
 
 GType  nact_icon_chooser_get_type( void );
 
-gchar *nact_icon_chooser_choose_icon( BaseWindow *main_window, const gchar *icon_name );
+gchar *nact_icon_chooser_choose_icon( NactMainWindow *main_window, const gchar *icon_name );
 
 G_END_DECLS
 

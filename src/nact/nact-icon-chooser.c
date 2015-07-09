@@ -37,6 +37,7 @@
 #include "nact-application.h"
 #include "base-gtk-utils.h"
 #include "nact-icon-chooser.h"
+#include "nact-main-window.h"
 
 /* private class data
  */
@@ -47,11 +48,10 @@ struct _NactIconChooserClassPrivate {
 /* private instance data
  */
 struct _NactIconChooserPrivate {
-	gboolean      dispose_has_run;
-	BaseWindow   *main_window;
-	const gchar  *initial_icon;
-	gchar        *current_icon;
-	GtkWidget    *path_preview;
+	gboolean        dispose_has_run;
+	const gchar    *initial_icon;
+	gchar          *current_icon;
+	GtkWidget      *path_preview;
 };
 
 #define VIEW_ICON_SIZE					GTK_ICON_SIZE_DND
@@ -307,24 +307,23 @@ instance_finalize( GObject *dialog )
  * by the caller.
  */
 gchar *
-nact_icon_chooser_choose_icon( BaseWindow *parent, const gchar *icon_name )
+nact_icon_chooser_choose_icon( NactMainWindow *parent, const gchar *icon_name )
 {
 	static const gchar *thisfn = "nact_icon_chooser_choose_icon";
 	NactIconChooser *editor;
 	gchar *new_name;
 
-	g_return_val_if_fail( BASE_IS_WINDOW( parent ), NULL );
+	g_return_val_if_fail( parent && GTK_IS_APPLICATION_WINDOW( parent ), NULL );
 
 	g_debug( "%s: parent=%p, icon_name=%s", thisfn, ( void * ) parent, icon_name );
 
 	editor = g_object_new( NACT_TYPE_ICON_CHOOSER,
-			BASE_PROP_MAIN_WINDOW,         parent,
+			BASE_PROP_MAIN_WINDOW,    parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 			BASE_PROP_WSP_NAME,       st_wsp_name,
 			NULL );
 
-	editor->private->main_window = parent;
 	editor->private->initial_icon = icon_name;
 
 	new_name = g_strdup( editor->private->initial_icon );

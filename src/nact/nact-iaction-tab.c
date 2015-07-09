@@ -843,7 +843,7 @@ on_icon_browse( GtkButton *button, NactIActionTab *instance )
 
 	if( item ){
 		icon_name = na_object_get_icon( item );
-		new_icon_name = nact_icon_chooser_choose_icon( BASE_WINDOW( instance ), icon_name );
+		new_icon_name = nact_icon_chooser_choose_icon( NACT_MAIN_WINDOW( instance ), icon_name );
 
 		if( g_utf8_collate( icon_name, new_icon_name ) != 0 ){
 			icon_entry = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconEntry" );
@@ -893,7 +893,7 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 	/* icon_name may be null if there is no current item
 	 * in such a case, we blank the image
 	 */
-	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
+	image = GTK_IMAGE( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionIconImage" ));
 	base_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_SMALL_TOOLBAR );
 	g_free( icon_name );
 }

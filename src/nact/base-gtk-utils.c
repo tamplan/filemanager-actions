@@ -336,7 +336,7 @@ base_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
 
 /**
  * base_gtk_utils_select_file:
- * @window: the #BaseWindow which will be the parent of the dialog box.
+ * @window: the #NactMainWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
  * @wsp_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
@@ -352,7 +352,7 @@ base_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
  * URI will be written as @entry_name in Preferences.
  */
 void
-base_gtk_utils_select_file( BaseWindow *window,
+base_gtk_utils_select_file( GtkApplicationWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name )
 {
@@ -362,7 +362,7 @@ base_gtk_utils_select_file( BaseWindow *window,
 
 /**
  * base_gtk_utils_select_file_with_preview:
- * @window: the #BaseWindow which will be the parent of the dialog box.
+ * @window: the #NactMainWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
  * @wsp_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
@@ -380,22 +380,19 @@ base_gtk_utils_select_file( BaseWindow *window,
  * URI will be written as @entry_name in Preferences.
  */
 void
-base_gtk_utils_select_file_with_preview( BaseWindow *window,
+base_gtk_utils_select_file_with_preview( GtkApplicationWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name,
 				GCallback update_preview_cb )
 {
-	GtkWindow *toplevel;
 	GtkWidget *dialog;
 	const gchar *text;
 	gchar *filename, *uri;
 	GtkWidget *preview;
 
-	toplevel = base_window_get_gtk_toplevel( window );
-
 	dialog = gtk_file_chooser_dialog_new(
 			title,
-			toplevel,
+			NULL /*GTK_WINDOW( window )*/,
 			GTK_FILE_CHOOSER_ACTION_OPEN,
 			_( "_Cancel" ), GTK_RESPONSE_CANCEL,
 			_( "_OK" ), GTK_RESPONSE_ACCEPT,
@@ -408,7 +405,7 @@ base_gtk_utils_select_file_with_preview( BaseWindow *window,
 		g_signal_connect( dialog, "update-preview", update_preview_cb, preview );
 	}
 
-	base_gtk_utils_restore_window_position( window, wsp_name );
+	na_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), wsp_name );
 
 	text = gtk_entry_get_text( GTK_ENTRY( entry ));
 
@@ -433,14 +430,14 @@ base_gtk_utils_select_file_with_preview( BaseWindow *window,
 	na_settings_set_string( entry_name, uri );
 	g_free( uri );
 
-	base_gtk_utils_save_window_position( window, wsp_name );
+	na_gtk_utils_save_window_position( GTK_WINDOW( dialog ), wsp_name );
 
 	gtk_widget_destroy( dialog );
 }
 
 /**
  * base_gtk_utils_select_dir:
- * @window: the #BaseWindow which will be the parent of the dialog box.
+ * @window: the #NactMainWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
  * @wsp_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
@@ -458,27 +455,24 @@ base_gtk_utils_select_file_with_preview( BaseWindow *window,
  * URI will be written as @entry_name in Preferences.
  */
 void
-base_gtk_utils_select_dir( BaseWindow *window,
+base_gtk_utils_select_dir( GtkApplicationWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name )
 {
-	GtkWindow *toplevel;
 	GtkWidget *dialog;
 	const gchar *text;
 	gchar *dir, *uri;
 
-	toplevel = base_window_get_gtk_toplevel( window );
-
 	dialog = gtk_file_chooser_dialog_new(
 			title,
-			toplevel,
+			NULL /*GTK_WINDOW( window )*/,
 			GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 			_( "_Cancel" ), GTK_RESPONSE_CANCEL,
 			_( "_OK" ), GTK_RESPONSE_ACCEPT,
 			NULL
 			);
 
-	base_gtk_utils_restore_window_position( window, wsp_name );
+	na_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), wsp_name );
 
 	text = gtk_entry_get_text( GTK_ENTRY( entry ));
 
@@ -503,7 +497,7 @@ base_gtk_utils_select_dir( BaseWindow *window,
 	na_settings_set_string( entry_name, uri );
 	g_free( uri );
 
-	base_gtk_utils_save_window_position( window, wsp_name );
+	na_gtk_utils_save_window_position( GTK_WINDOW( dialog ), wsp_name );
 
 	gtk_widget_destroy( dialog );
 }

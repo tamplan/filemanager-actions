@@ -71,16 +71,16 @@ void       base_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSi
 
 /* standard dialog boxes
  */
-void       base_gtk_utils_select_file( BaseWindow *window,
+void       base_gtk_utils_select_file( GtkApplicationWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name );
 
-void       base_gtk_utils_select_file_with_preview( BaseWindow *window,
+void       base_gtk_utils_select_file_with_preview( GtkApplicationWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name,
 				GCallback update_preview_cb );
 
-void       base_gtk_utils_select_dir( BaseWindow *window,
+void       base_gtk_utils_select_dir( GtkApplicationWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name );
 

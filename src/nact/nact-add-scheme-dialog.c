@@ -262,7 +262,7 @@ nact_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 
-	g_return_val_if_fail( BASE_IS_WINDOW( parent ), NULL );
+	g_return_val_if_fail( GTK_IS_APPLICATION_WINDOW( parent ), NULL );
 
 	dialog = g_object_new( NACT_TYPE_ADD_SCHEME_DIALOG,
 			BASE_PROP_MAIN_WINDOW,    parent,
