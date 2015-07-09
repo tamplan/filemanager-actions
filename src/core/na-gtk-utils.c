@@ -144,7 +144,7 @@ na_gtk_utils_connect_widget_by_name(
 }
 
 /**
- * na_gtk_utils_restore_position_window:
+ * na_gtk_utils_restore_window_position:
  * @toplevel: the #GtkWindow window.
  * @wsp_name: the string which handles the window size and position in user preferences.
  *
