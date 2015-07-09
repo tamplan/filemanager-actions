@@ -488,6 +488,7 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 static GList *
 build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection )
 {
+	static const gchar *thisfn = "nautilus_actions_build_nautilus_menu";
 	GList *nautilus_menu;
 	NATokens *tokens;
 	GList *tree;
@@ -499,6 +500,7 @@ build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection )
 	tokens = na_tokens_new_from_selection( selection );
 
 	tree = na_pivot_get_items( plugin->private->pivot );
+	g_debug( "%s: tree=%p, count=%d", thisfn, ( void * ) tree, g_list_length( tree ));
 
 	nautilus_menu = build_nautilus_menu_rec( tree, target, selection, tokens );
 
@@ -539,7 +541,7 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 
 	nautilus_menu = NULL;
 
-	for( it = tree ; it ; it = it->next ){
+	for( it=tree ; it ; it=it->next ){
 
 		g_return_val_if_fail( NA_IS_OBJECT_ITEM( it->data ), NULL );
 		label = na_object_get_label( it->data );
