@@ -31,6 +31,8 @@ exportformat_datadir = $(pkgdatadir)/export-format
 
 importmode_datadir = $(pkgdatadir)/import-mode
 
+icon_fname = $(datadir)/icons/hicolor/48x48/apps/nautilus-actions.png
+
 ui_datadir = $(pkgdatadir)/ui
 
 AM_CPPFLAGS += \
@@ -41,6 +43,7 @@ AM_CPPFLAGS += \
 	-DPKGLIBEXECDIR=\""$(pkglibexecdir)"\"				\
 	-DSYSCONFDIR=\"$(sysconfdir)\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_CORE}\"				\
+	-DICON_FNAME=\"$(icon_fname)\"						\
 	-DPKGEXPORTFORMATDIR=\"$(exportformat_datadir)\"	\
 	-DPKGIMPORTMODEDIR=\"$(importmode_datadir)\"		\
 	-DPKGUIDIR=\"$(ui_datadir)\"						\

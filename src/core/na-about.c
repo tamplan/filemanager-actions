@@ -36,6 +36,8 @@
 
 #include "na-about.h"
 
+static const gchar *st_icon_filename    = ICON_FNAME;
+
 /*
  * na_about_display:
  * @toplevel: the parent window.
@@ -101,7 +103,10 @@ na_about_display( GtkWindow *toplevel )
 			"copyright", copyright,
 			"documenters", documenters,
 			"license", license_i18n->str,
-			"logo-icon-name", na_about_get_icon_name(),
+			/* using NULL here works because the icon is taken from the
+			 * main window - have to be tested when displayed in file-
+			 * manager context menu */
+			"logo-icon-name", NULL,
 			"program-name", application_name,
 			"translator-credits", _( "The GNOME Translation Project <gnome-i18n@gnome.org>" ),
 			"version", PACKAGE_VERSION,
@@ -135,11 +140,12 @@ na_about_get_application_name( void )
  * This name is owned by the package, and should not be released by the caller.
  *
  * cf. Makefile: PACKAGE = nautilus-actions
+ * while st_icon_filename points to full path of the icon.
  */
 const gchar *
 na_about_get_icon_name( void )
 {
-	return( PACKAGE );
+	return( st_icon_filename );
 }
 
 /*
