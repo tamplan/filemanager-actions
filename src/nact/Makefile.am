@@ -29,8 +29,6 @@ bin_PROGRAMS = \
 	nautilus-actions-config-tool						\
 	$(NULL)
 
-icon_fname = $(datadir)/icons/hicolor/48x48/apps/nautilus-actions.png
-
 ui_datadir = $(pkgdatadir)/ui
 
 egg_platform_defines = -DEGG_SM_CLIENT_BACKEND_XSMP
@@ -40,7 +38,6 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"				\
-	-DICON_FNAME=\"$(icon_fname)\"						\
 	-DPKGUIDIR=\"$(ui_datadir)\"						\
 	$(egg_platform_defines)								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\

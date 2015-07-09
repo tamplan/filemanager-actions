@@ -37,6 +37,7 @@
 #include "api/na-object-api.h"
 #include "api/na-timeout.h"
 
+#include "core/na-about.h"
 #include "core/na-gtk-utils.h"
 #include "core/na-iprefs.h"
 #include "core/na-pivot.h"
@@ -147,7 +148,6 @@ enum {
 static const gchar     *st_xmlui_filename         = PKGUIDIR "/nact-main-window.ui";
 static const gchar     *st_toplevel_name          = "MainWindow";
 static const gchar     *st_wsp_name               = NA_IPREFS_MAIN_WINDOW_WSP;
-static const gchar     *st_icon_filename          = ICON_FNAME;
 
 static gint             st_burst_timeout          = 2500;		/* burst timeout in msec */
 static BaseWindowClass *st_parent_class           = NULL;
@@ -754,7 +754,7 @@ setup_main_ui( NactMainWindow *main_window )
 
 	/* application icon
 	 */
-	gtk_window_set_default_icon_from_file( st_icon_filename, NULL );
+	gtk_window_set_default_icon_from_file( na_about_get_icon_name(), NULL );
 }
 
 /*
