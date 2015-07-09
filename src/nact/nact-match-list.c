@@ -281,13 +281,13 @@ initialize_window( MatchListData *data )
 	g_signal_connect( renderers->data, "toggled", G_CALLBACK( on_must_not_match_toggled ), data );
 
 	if( data->pon_add ){
-		g_signal_connect( data->addbutton, "clicked", G_CALLBACK( data->pon_add ), data );
+		g_signal_connect( data->addbutton, "clicked", G_CALLBACK( data->pon_add ), data->window );
 	} else {
 		g_signal_connect( data->addbutton, "clicked", G_CALLBACK( on_add_filter_clicked ), data );
 	}
 
 	if( data->pon_remove ){
-		g_signal_connect( data->removebutton, "clicked", G_CALLBACK( data->pon_remove ), data );
+		g_signal_connect( data->removebutton, "clicked", G_CALLBACK( data->pon_remove ), data->window );
 	} else {
 		g_signal_connect( data->removebutton, "clicked", G_CALLBACK( on_remove_filter_clicked ), data );
 	}
