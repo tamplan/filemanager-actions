@@ -1048,6 +1048,7 @@ load_items_filter_unwanted_items_rec( GList *hierarchy, guint loadable_set )
 	gboolean selected;
 	gchar *label;
 	gboolean load_invalid, load_disabled;
+	gboolean is_valid, is_enabled;
 
 	filtered = NULL;
 	load_invalid = loadable_set & PIVOT_LOAD_INVALID;
@@ -1057,18 +1058,20 @@ load_items_filter_unwanted_items_rec( GList *hierarchy, guint loadable_set )
 
 		itnext = it->next;
 		selected = FALSE;
+		is_enabled = FALSE;
+		is_valid = na_object_is_valid( it->data );
 
 		if( NA_IS_OBJECT_PROFILE( it->data )){
-			if( na_object_is_valid( it->data ) || load_invalid ){
+			if( is_valid || load_invalid ){
 				filtered = g_list_append( filtered, it->data );
 				selected = TRUE;
 			}
 		}
 
 		if( NA_IS_OBJECT_ITEM( it->data )){
-			if(( na_object_is_enabled( it->data ) || load_disabled ) &&
-				( na_object_is_valid( it->data ) || load_invalid )){
+			is_enabled = na_object_is_enabled( it->data );
 
+			if(( is_enabled || load_disabled ) && ( is_valid || load_invalid )){
 				subitems = na_object_get_items( it->data );
 				subitems_f = load_items_filter_unwanted_items_rec( subitems, loadable_set );
 				na_object_set_items( it->data, subitems_f );
@@ -1079,7 +1082,9 @@ load_items_filter_unwanted_items_rec( GList *hierarchy, guint loadable_set )
 
 		if( !selected ){
 			label = na_object_get_label( it->data );
-			g_debug( "%s: filtering %p (%s) '%s'", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), label );
+			g_debug( "%s: filtering %p (%s) '%s': valid=%s, enabled=%s",
+					thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), label,
+					is_valid ? "true":"false", is_enabled ? "true":"false" );
 			g_free( label );
 			na_object_unref( it->data );
 		}
