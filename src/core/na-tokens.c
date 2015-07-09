@@ -246,6 +246,7 @@ instance_finalize( GObject *object )
 NATokens *
 na_tokens_new_for_example( void )
 {
+	static const gchar *thisfn = "na_tokens_new_for_example";
 	NATokens *tokens;
 	const gchar *ex_uri1 = _( "file:///path/to/file1.mid" );
 	const gchar *ex_uri2 = _( "file:///path/to/file2.jpeg" );
@@ -258,6 +259,8 @@ na_tokens_new_for_example( void )
 	gchar *dirname, *bname, *bname_woext, *ext;
 	GSList *is;
 	gboolean first;
+
+	g_debug( "%s:", thisfn );
 
 	tokens = g_object_new( NA_TYPE_TOKENS, NULL );
 	first = TRUE;
@@ -735,9 +738,13 @@ is_singular_exec( const NATokens *tokens, const gchar *exec )
 static gchar *
 parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted )
 {
+	static const gchar *thisfn = "na_tokens_parse_singular";
 	GString *output;
 	gchar *iter, *prev_iter;
 	const gchar *nth;
+
+	g_debug( "%s: tokens=%p, input=%s, i=%d, utf8=%s, quoted=%s",
+			thisfn, ( void * ) tokens, input, i, utf8 ? "true":"false", quoted ? "true":"false" );
 
 	output = g_string_new( "" );
 
