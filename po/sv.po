@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-03-10 12:51+0000\n"
+"POT-Creation-Date: 2015-03-15 21:53+0000\n"
 "PO-Revision-Date: 2015-03-08 13:08+0100\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -4813,7 +4813,7 @@ msgstr "Fel: kunde inte få en anslutning till sessions-DBus: %s"
 #: ../src/utils/nautilus-actions-run.c:344
 #, c-format
 msgid "Error: unable to get a proxy on %s service"
-msgstr "Fel: kunde inte gå en proxy på %s-tjänsten"
+msgstr "Fel: kunde inte få en proxy på %s-tjänsten"
 
 #: ../src/utils/nautilus-actions-run.c:354
 #, c-format
