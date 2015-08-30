@@ -9,20 +9,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: el\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product"
-"=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-04-02 17:56+0000\n"
-"PO-Revision-Date: 2013-05-17 08:03+0300\n"
-"Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=nautilus-actions&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2014-07-27 18:17+0000\n"
+"PO-Revision-Date: 2015-08-30 13:52+0300\n"
+"Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
 "Language-Team: team@gnome.gr\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
-"X-Poedit-Language: Greek\n"
-"X-Poedit-Country: GREECE\n"
+"X-Generator: Poedit 1.8.4\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Project-Style: gnome\n"
 
@@ -108,13 +106,13 @@ msgid ""
 "format for newly exported actions. The exported file may later be imported "
 "via Import assistant of the Nautilus-Actions Configuration Tool, or via the "
 "gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
-"runtime for the format he wishes use."
+"runtime for the format he wishes to use."
 msgstr ""
 "Αυτή είναι η προτιμώμενη μορφή εξαγωγής, που χρησιμοποιείται ως προεπιλογή "
 "κατά την εξαγωγή στοιχείων, ή απόθεσή τους έξω από την εφαρμογή. Πιθανές "
-"τιμές είναι: - \"GConfSchemaV1\": αυτή ήταν η χρησιμοποιούμενη ιστορική μορφή "
-"εξαγωγής. Το εξαγόμενο αρχείο μπορεί αργότερα να εισαχθεί μέσα από τον βοηθό "
-"εισαγωγής του εργαλείου διαμόρφωσης ενεργειών Ναυτίλου, ή μέσα από το "
+"τιμές είναι: - \"GConfSchemaV1\": αυτή ήταν η χρησιμοποιούμενη ιστορική "
+"μορφή εξαγωγής. Το εξαγόμενο αρχείο μπορεί αργότερα να εισαχθεί μέσα από τον "
+"βοηθό εισαγωγής του εργαλείου διαμόρφωσης ενεργειών Ναυτίλου, ή μέσα από το "
 "εργαλείο γραμμής εντολών gconftool-2 --import-schema-file. - "
 "\"GConfSchemaV2\": ένα πιο ελαφρύ αλλά ακόμα συμβατό σχήμα. Το εξαγόμενο "
 "αρχείο μπορεί αργότερα να εισαχθεί μέσα από τον βοηθό εισαγωγής του "
@@ -191,7 +189,7 @@ msgstr "Τελευταία κατάσταση εισαγωγής που επιλ
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
 msgid ""
-"Last import mode chosen by the user when he is asked for in import mode. "
+"Last import mode chosen by the user when he was asked for an import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
 "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
 "already exists, - \"Override\": override the existing action with the "
@@ -247,8 +245,8 @@ msgstr ""
 "Η τελευταία κατάσταση εισαγωγής που επιλέχτηκε στον βοηθό εισαγωγής. Δυνατές "
 "τιμές είναι: \"Χωρίς εισαγωγή\": να μην εισαχθεί μια ενέργεια της οποίας ήδη "
 "υπάρχει το UUID, - \"Αναρίθμηση\" παραχώρηση ενός νέου UUID αν το εισαγόμενο "
-"UUID υπάρχει ήδη, - \"Αντικατάσταση\": αντικατάσταση της υπάρχουσας ενέργειας "
-"με την εισαγόμενη, - \"Ερώτηση\": να ερωτάται ο χρήστης κάθε φορά."
+"UUID υπάρχει ήδη, - \"Αντικατάσταση\": αντικατάσταση της υπάρχουσας "
+"ενέργειας με την εισαγόμενη, - \"Ερώτηση\": να ερωτάται ο χρήστης κάθε φορά."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:34
 msgid "I/O providers Write priority"
@@ -263,7 +261,6 @@ msgstr ""
 "να καταγράψουμε ένα νέο στοιχείο στο υποσύστημα αποθήκευσης."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:36
-#| msgid "Add items to the Nautilus popup menu"
 msgid "Add an 'About' item in the Nautilus context menu"
 msgstr "Προσθήκη ενός στοιχείου 'Περί' στο μενού περιεχομένου του Ναυτίλου"
 
@@ -292,8 +289,8 @@ msgstr ""
 "Αυτή η προτίμηση δείχνει την προτιμώμενη κατάσταση ταξινόμησης. Δυνατές "
 "τιμές είναι: - \"Αύξουσα\": οι ενέργειες διατηρούνται με αύξουσα αλφαβητική "
 "σειρά (ιστορική συμπεριφορά). - \"Φθίνουσα\": οι ενέργειες διατηρούνται με "
-"φθίνουσα αλφαβητική σειρά. - \"Χειροκίνητη\": ο χρήστης είναι ελεύθερος να τις "
-"αναδιατάξει μέσα από το εργαλείο διαμόρφωσης των ενεργειών του Ναυτίλου."
+"φθίνουσα αλφαβητική σειρά. - \"Χειροκίνητη\": ο χρήστης είναι ελεύθερος να "
+"τις αναδιατάξει μέσα από το εργαλείο διαμόρφωσης των ενεργειών του Ναυτίλου."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:40
 msgid "Define a 'Nautilus-Actions actions' root menu"
@@ -361,7 +358,8 @@ msgstr "Εμφάνιση εργαλειοθήκης επεξεργασίας"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:51
 msgid "Whether to display or not the Edit toolbar in the main window."
-msgstr "Αν θα εμφανίζεται ή όχι η εργαλειοθήκη επεξεργασίας στο κύριο παράθυρο."
+msgstr ""
+"Αν θα εμφανίζεται ή όχι η εργαλειοθήκη επεξεργασίας στο κύριο παράθυρο."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:52
 msgid "Display File toolbar"
@@ -427,7 +425,7 @@ msgstr "Λίστα των προεπιλεγμένων σχημάτων"
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
 msgid ""
 "The list of schemes proposed by default on each new profile. A default "
-"default list is harcoded in nautilus-actions-config-tool, which may be "
+"default list is hardcoded in nautilus-actions-config-tool, which may be "
 "updated by the user."
 msgstr ""
 "Η λίστα των προτεινόμενων σχημάτων από προεπιλογή για κάθε νέα κατατομή. Μια "
@@ -435,7 +433,6 @@ msgstr ""
 "μπορεί να ενημερωθεί από τον χρήστη."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:66
-#| msgid "The version of the configuration format"
 msgid "Whether the whole configuration is locked"
 msgstr "Αν η συνολική διαμόρφωση κλειδώνεται"
 
@@ -563,7 +560,6 @@ msgstr "Το έργο μετάφρασης του GNOME <gnome-i18n@gnome.org>"
 
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
 #: ../src/core/na-about.c:127
-#| msgid "Nautilus Actions"
 msgid "Nautilus-Actions"
 msgstr "Ενέργειες του Ναυτίλου"
 
@@ -572,11 +568,11 @@ msgstr "Ενέργειες του Ναυτίλου"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009-2012 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009-2014 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
-"Πνευματικά δικαιώματα %s 2005 Το ίδρυμα GNOME\n"
+"Πνευματικά δικαιώματα %s 2005 Το Ίδρυμα GNOME\n"
 "Πνευματικά δικαιώματα %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
-"Πνευματικά δικαιώματα %s 2009-2012 Pierre Wieser <pwieser@trychlos.org>"
+"Πνευματικά δικαιώματα %s 2009-2014 Pierre Wieser <pwieser@trychlos.org>"
 
 #: ../src/core/na-desktop-environment.c:39
 msgid "GNOME desktop"
@@ -603,18 +599,12 @@ msgid "Legacy systems"
 msgstr "Παλιά συστήματα"
 
 #: ../src/core/na-icontext-factory.c:51
-#| msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
-msgstr ""
-"Η λίστα των υποδειγμάτων που θα ταιριάξει με τα επιλεγμένα αρχεία/φακέλους"
+msgstr "Η λίστα των μοτίβων που θα ταιριάξει με τα επιλεγμένα αρχεία/φακέλους"
 
 #. i18n: wildcard characters '*' and '?' should be considered as literals,
 #. *  and not be translated
 #: ../src/core/na-icontext-factory.c:54
-#| msgid ""
-#| "A list of strings with joker '*' or '?' to match the name of the selected "
-#| "file(s)/folder(s). Each selected items must match at least one of the "
-#| "filename patterns for the action to appear"
 msgid ""
 "A list of strings with joker '*' or '?' to be matched against the name(s) of "
 "the selected file(s)/folder(s). Each selected item must match at least one "
@@ -625,31 +615,27 @@ msgid ""
 msgstr ""
 "Μια λίστα με συμβολοσειρές με τζόκερ το '*' ή το '?' που θα ταιριάξει με τα "
 "ονόματα των επιλεγμένων αρχείων/φακέλων. Κάθε επιλεγμένο στοιχείο πρέπει να "
-"ταιριάζει με ένα τουλάχιστον από τα υποδείγματα ονομάτων αρχείων για την "
-"ενέργεια ή το μενού που είναι υποψήφιο να εμφανιστεί.\n"
+"ταιριάζει με ένα τουλάχιστον από τα μοτίβα ονομάτων αρχείων για την ενέργεια "
+"ή το μενού που είναι υποψήφιο να εμφανιστεί.\n"
 "Αυτό προφανώς εφαρμόζεται μόνο όταν υπάρχει μια επιλογή.\n"
 "Προεπιλογή το '*'."
 
 #. i18n: wildcard characters '*' and '?' should be considered as literalls,
 #. *  and not be translated
 #: ../src/core/na-icontext-factory.c:75
-#| msgid ""
-#| "A pattern to match selected files against. May include wildcards (* or ?) "
-#| "(you must set one option for each pattern you need)"
 msgid ""
 "A pattern to be matched against basenames of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr ""
-"Ένα υπόδειγμα που θα ταιριάξει με τα ονόματα βάσης των επιλεγμένων "
-"αρχείων/φακέλων. Ίσως περιλαμβάνει σύμβολα υποκατάστασης (* ή ?). Πρέπει να "
-"ορίσετε μια επιλογή για κάθε υπόδειγμα που χρειάζεστε"
+"Ένα μοτίβο που θα ταιριάξει με τα ονόματα βάσης των επιλεγμένων αρχείων/"
+"φακέλων. Ίσως περιλαμβάνει σύμβολα υποκατάστασης (* ή ?). Πρέπει να ορίσετε "
+"μια επιλογή για κάθε μοτίβο που χρειάζεστε"
 
 #. i18n: the "<EXPR>" is just an abbreviation for "an expression",
 #. *  so is tranlatable
 #. i18n: "<EXPR>" is just an abbreviation for "an expression", so is tranlatable
 #: ../src/core/na-icontext-factory.c:80 ../src/core/na-icontext-factory.c:139
 #: ../src/core/na-icontext-factory.c:358
-#| msgid "EXPR"
 msgid "<EXPR>"
 msgstr "<ΕΚΦΡΑΣΗ>"
 
@@ -660,10 +646,6 @@ msgstr ""
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:88
-#| msgid ""
-#| "If you need to match a filename in a case-sensitive manner, set this key "
-#| "to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', "
-#| "set 'false'"
 msgid ""
 "Must be set to 'true' if the filename patterns are case sensitive, to "
 "'false' otherwise. E.g., if you need to match a filename in a case-sensitive "
@@ -672,29 +654,24 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to 'true'."
 msgstr ""
-"Πρέπει να οριστεί σε 'true' αν τα υποδείγματα του ονόματος αρχείου "
-"εξαρτώνται από πεζά/κεφαλαία, σε 'false' αλλιώς. Π.χ., αν χρειάζεται να "
-"ταιριάξετε ένα όνομα αρχείου με τρόπο που εξαρτάται από πεζά/κεφαλαία, "
-"ορίστε αυτό το κλειδί σε 'αληθές'. Αν επίσης θέλετε, για παράδειγμα το "
-"'*.jpg' να ταιριάξει με 'photo.JPG', τότε ορίστε 'ψευδές'.\n"
+"Πρέπει να οριστεί σε 'true' αν τα μοτίβα του ονόματος αρχείου εξαρτώνται από "
+"πεζά/κεφαλαία, σε 'false' αλλιώς. Π.χ., αν χρειάζεται να ταιριάξετε ένα "
+"όνομα αρχείου με τρόπο που εξαρτάται από πεζά/κεφαλαία, ορίστε αυτό το "
+"κλειδί σε 'αληθές'. Αν επίσης θέλετε, για παράδειγμα το '*.jpg' να ταιριάξει "
+"με 'photo.JPG', τότε ορίστε 'ψευδές'.\n"
 "Αυτό προφανώς εφαρμόζεται μόνο όταν υπάρχει μια επιλογή.\n"
 "Προεπιλογή το 'αληθές'."
 
 #: ../src/core/na-icontext-factory.c:114
-#| msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgid ""
 "List of patterns to be matched against the mimetypes of the selected file(s)/"
 "folder(s)"
 msgstr ""
-"Η λίστα των υποδειγμάτων που θα ταιριάξει με τους τύπους mime των "
-"επιλεγμένων αρχείων/φακέλων"
+"Η λίστα των μοτίβων που θα ταιριάξει με τους τύπους mime των επιλεγμένων "
+"αρχείων/φακέλων"
 
 #. i18n: wildcard character '*' is taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:116
-#| msgid ""
-#| "A list of strings with joker '*' or '?' to match the mimetypes of the "
-#| "selected file(s). Each selected items must match at least one of the "
-#| "mimetype patterns for the action to appear"
 msgid ""
 "A list of strings with joker '*' to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected item must match at least one of "
@@ -704,24 +681,21 @@ msgid ""
 msgstr ""
 "Μια λίστα με συμβολοσειρές με τζόκερ το '*' ή το '?' που θα ταιριάξει με "
 "τους τύπους mime των επιλεγμένων αρχείων/φακέλων. Κάθε επιλεγμένο στοιχείο "
-"πρέπει να ταιριάζει τουλάχιστον με ένα από τα υποδείγματα τύπων mime για την "
+"πρέπει να ταιριάζει τουλάχιστον με ένα από τα μοτίβα τύπων mime για την "
 "ενέργεια που θα εμφανιστεί.\n"
 "Αυτό προφανώς εφαρμόζεται μόνο όταν υπάρχει μια επιλογή.\n"
 "Προεπιλογή το '*/*'."
 
 #. i18n: wildcard character '*' is taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:135
-#| msgid ""
-#| "A pattern to match selected files against. May include wildcards (* or ?) "
-#| "(you must set one option for each pattern you need)"
 msgid ""
 "A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
 "include the asterisk wildcard '*'. You must set one option for each pattern "
 "you need"
 msgstr ""
-"Ένα υπόδειγμα που θα ταιριάξει με τους τύπους mime των επιλεγμένων "
-"αρχείων/φακέλων. Μπορεί να περιλαμβάνει το σύμβολο υποκατάστασης αστερίσκου "
-"'*'. Πρέπει να ορίσετε μια επιλογή για κάθε υπόδειγμα που χρειάζεστε"
+"Ένα μοτίβο που θα ταιριάξει με τους τύπους mime των επιλεγμένων αρχείων/"
+"φακέλων. Μπορεί να περιλαμβάνει το σύμβολο υποκατάστασης αστερίσκου '*'. "
+"Πρέπει να ορίσετε μια επιλογή για κάθε μοτίβο που χρειάζεστε"
 
 #: ../src/core/na-icontext-factory.c:179
 msgid "Whether the profile applies to files (deprecated option, see mimetype)"
@@ -758,8 +732,7 @@ msgstr ""
 msgid ""
 "Whether the profile applies to folders (deprecated option, see mimetype)"
 msgstr ""
-"Αν η κατατομή εφαρμόζεται σε φακέλους (ξεπερασμένη επιλογή, δείτε τύπος "
-"mime)"
+"Αν η κατατομή εφαρμόζεται σε φακέλους (ξεπερασμένη επιλογή, δείτε τύπος mime)"
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:212
@@ -778,7 +751,8 @@ msgid ""
 msgstr ""
 "Ορισμός σε 'αληθές' αν η επιλογή μπορεί να έχει φακέλους, αλλιώς σε "
 "'ψευδές'.\n"
-"Αυτή η ρύθμιση συμφωνεί με τη ρύθμιση 'isfile'. Οι έγκυροι συνδυασμοί είναι:\n"
+"Αυτή η ρύθμιση συμφωνεί με τη ρύθμιση 'isfile'. Οι έγκυροι συνδυασμοί "
+"είναι:\n"
 "isfile='true' και isdir='false': η επιλογή μπορεί να κρατήσει μόνο αρχεία\n"
 "isfile='false' και isdir='true': η επιλογή μπορεί να κρατήσει μόνο φακέλους\n"
 "isfile='true' και isdir='true': η επιλογή μπορεί να κρατήσει και αρχεία και "
@@ -798,9 +772,6 @@ msgstr ""
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:246
-#| msgid ""
-#| "If you need one or more files or folders to be selected, set this key to "
-#| "'true'. If you want just one file or folder, set 'false'"
 msgid ""
 "If you need more than one files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set it to 'false'.\n"
@@ -814,7 +785,6 @@ msgstr ""
 "Προεπιλογή το 'false'."
 
 #: ../src/core/na-icontext-factory.c:270
-#| msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgid ""
 "List of schemes to be matched against those of selected file(s)/folder(s)"
 msgstr "Η λίστα των σχημάτων που θα ταιριάξει με τα επιλεγμένα αρχεία/φακέλους"
@@ -823,24 +793,6 @@ msgstr "Η λίστα των σχημάτων που θα ταιριάξει μ�
 #. i18n: schemes (sftp, ssh, ftp, file, etc.) are standard keywords which define
 #. *  the access protocol to an object, they should not be translated
 #: ../src/core/na-icontext-factory.c:274
-#| msgid ""
-#| "Defines the list of valid GnomeVFS schemes to be matched against the "
-#| "selected items. The GnomeVFS scheme is the protocol used to access the "
-#| "files. The keyword to use is the one used in the GnomeVFS URI.\n"
-#| "\n"
-#| "Examples of GnomeVFS URI include: \n"
-#| "file:///tmp/foo.txt\n"
-#| "sftp:///root@test.example.net/tmp/foo.txt\n"
-#| "\n"
-#| "The most common schemes are:\n"
-#| "\n"
-#| "'file': local files\n"
-#| "'sftp': files accessed via SSH\n"
-#| "'ftp': files accessed via FTP\n"
-#| "'smb': files accessed via Samba (Windows share)\n"
-#| "'dav': files accessed via WebDav\n"
-#| "\n"
-#| "All GnomeVFS schemes used by Nautilus can be used here."
 msgid ""
 "Defines the list of valid schemes to be matched against the selected items. "
 "The scheme is the protocol used to access the files. The keyword to use is "
@@ -879,9 +831,6 @@ msgstr ""
 "Προεπιλογή το 'file'."
 
 #: ../src/core/na-icontext-factory.c:303
-#| msgid ""
-#| "A GnomeVFS scheme where the selected files should be located (you must "
-#| "set it for each scheme you need)"
 msgid ""
 "A valid GIO scheme where the selected file(s)/folder(s) should be located. "
 "You must set one option for each scheme you need"
@@ -932,12 +881,11 @@ msgstr ""
 #: ../src/core/na-icontext-factory.c:332 ../src/core/na-icontext-factory.c:433
 #: ../src/core/na-icontext-factory.c:486
 #: ../src/core/na-object-profile-factory.c:117
-#| msgid "PATH"
+#: ../src/core/na-object-profile-factory.c:205
 msgid "<PATH>"
 msgstr "<Διαδρομή>"
 
 #: ../src/core/na-icontext-factory.c:338
-#| msgid "Set it if the selection can contain files"
 msgid "Operator of the selection count relation"
 msgstr "Ο τελεστής της σχέσης μέτρησης της επιλογής"
 
@@ -1016,7 +964,8 @@ msgstr ""
 
 #: ../src/core/na-icontext-factory.c:431
 msgid "the path to a file whose executability is to be checked"
-msgstr "η διαδρομή σε ένα αρχείο του οποίου η εκτελεσιμότητα πρέπει να ελεγχθεί"
+msgstr ""
+"η διαδρομή σε ένα αρχείο του οποίου η εκτελεσιμότητα πρέπει να ελεγχθεί"
 
 #: ../src/core/na-icontext-factory.c:439
 msgid "Show if registered"
@@ -1237,20 +1186,20 @@ msgstr "Αδύνατη η φόρτωση του 'ImporterAskDialog' από το 
 #: ../src/core/na-importer-ask.c:401
 #, c-format
 msgid ""
-"The action \"%s\" imported from \"%s\" has the same identifiant than the "
+"The action \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr ""
-"Η ενέργεια \"%s\" που εισήχθη από το \"%s\" έχει τον ίδιο ταυτοποιητή με το ήδη "
-"υπάρχον \"%s\"."
+"Η ενέργεια \"%s\" που εισήχθη από το \"%s\" έχει τον ίδιο ταυτοποιητή με το "
+"ήδη υπάρχον \"%s\"."
 
 #: ../src/core/na-importer-ask.c:407
 #, c-format
 msgid ""
-"The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+"The menu \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr ""
-"Το μενού \"%s\" που εισήχθη από το \"%s\" έχει τον ίδιο ταυτοποιητή με το ήδη "
-"υπάρχον \"%s\"."
+"Το μενού \"%s\" που εισήχθη από το \"%s\" έχει τον ίδιο ταυτοποιητή με το "
+"ήδη υπάρχον \"%s\"."
 
 #: ../src/core/na-importer-ask.ui.h:1
 msgid "Already existing item"
@@ -1269,42 +1218,42 @@ msgid ""
 "Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
 "org/enter_bug.cgi?product=nautilus-actions."
 msgstr ""
-"Παρακαλούμε, συμπληρώστε μια αναφορά σφάλματος στο "
-"https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions."
+"Παρακαλούμε, συμπληρώστε μια αναφορά σφάλματος στο https://bugzilla.gnome."
+"org/enter_bug.cgi?product=nautilus-actions."
 
-#: ../src/core/na-io-provider.c:1372
+#: ../src/core/na-io-provider.c:1364
 msgid "Unavailable I/O provider."
 msgstr "Μη διαθέσιμος πάροχος εισόδου/εξόδου."
 
-#: ../src/core/na-io-provider.c:1376
+#: ../src/core/na-io-provider.c:1368
 msgid "I/O provider implementation lacks of required API."
 msgstr "Έλλειψη του απαιτούμενου API για υλοποίηση του παρόχου εισόδου/εξόδου."
 
-#: ../src/core/na-io-provider.c:1380
+#: ../src/core/na-io-provider.c:1372
 msgid "I/O provider is not willing to write."
 msgstr "Ο πάροχος εισόδου/εξόδου δεν είναι πρόθυμος να γράψει."
 
-#: ../src/core/na-io-provider.c:1384
+#: ../src/core/na-io-provider.c:1376
 msgid "I/O provider announces itself as unable to write."
 msgstr "Ο πάροχος εισόδου/εξόδου ανακοίνωσε στον εαυτό του αδυναμία εγγραφής."
 
-#: ../src/core/na-io-provider.c:1388
+#: ../src/core/na-io-provider.c:1380
 msgid "I/O provider has been locked down by an administrator."
 msgstr "Ο πάροχος εισόδου/εξόδου έχει κλειδωθεί από έναν διαχειριστή."
 
-#: ../src/core/na-io-provider.c:1392
+#: ../src/core/na-io-provider.c:1384
 msgid "I/O provider has been locked down by the user."
 msgstr "Ο πάροχος εισόδου/εξόδου έχει κλειδωθεί από τον χρήστη."
 
-#: ../src/core/na-io-provider.c:1396
+#: ../src/core/na-io-provider.c:1388
 msgid "Item is read-only."
 msgstr "Το στοιχείο είναι μόνο για ανάγνωση."
 
-#: ../src/core/na-io-provider.c:1400
+#: ../src/core/na-io-provider.c:1392
 msgid "No writable I/O provider found."
 msgstr "Δεν βρέθηκε εγγράψιμος πάροχος εισόδου/εξόδου."
 
-#: ../src/core/na-io-provider.c:1405
+#: ../src/core/na-io-provider.c:1397
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
@@ -1313,11 +1262,11 @@ msgstr ""
 "Το στοιχείο δεν είναι εγγράψιμο για άγνωστη αιτία (%d).\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1428
+#: ../src/core/na-io-provider.c:1420
 msgid "OK."
 msgstr "Εντάξει."
 
-#: ../src/core/na-io-provider.c:1432
+#: ../src/core/na-io-provider.c:1424
 #, c-format
 msgid ""
 "Program flow error.\n"
@@ -1326,24 +1275,23 @@ msgstr ""
 "Σφάλμα ροής προγράμματος.\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1436
+#: ../src/core/na-io-provider.c:1428
 msgid "The I/O provider is not willing to do that."
 msgstr "Ο πάροχος εισόδου/εξόδου δεν είναι πρόθυμος να το κάνει."
 
-#: ../src/core/na-io-provider.c:1440
+#: ../src/core/na-io-provider.c:1432
 msgid "Write error in I/O provider."
 msgstr "Σφάλμα εγγραφής στον πάροχο εισόδου/εξόδου."
 
-#: ../src/core/na-io-provider.c:1444
+#: ../src/core/na-io-provider.c:1436
 msgid "Unable to delete GConf schemas."
 msgstr "Αδύνατη η διαγραφή σχημάτων GConf."
 
-#: ../src/core/na-io-provider.c:1448
-#| msgid "Import new configurations"
+#: ../src/core/na-io-provider.c:1440
 msgid "Unable to delete configuration."
 msgstr "Αδύνατη η διαγραφή διαμόρφωσης."
 
-#: ../src/core/na-io-provider.c:1452
+#: ../src/core/na-io-provider.c:1444
 #, c-format
 msgid ""
 "Unknown return code (%d).\n"
@@ -1354,7 +1302,6 @@ msgstr ""
 
 #. i18n: default label for a new action
 #: ../src/core/na-object-action.c:59
-#| msgid "Nautilus Actions"
 msgid "New Nautilus action"
 msgstr "Νέα ενέργεια του Ναυτίλου"
 
@@ -1363,7 +1310,6 @@ msgid "Profile automatically created from pre-v2 action"
 msgstr "Η κατατομή δημιουργήθηκε αυτόματα από την ενέργεια pre-v2"
 
 #: ../src/core/na-object-action-factory.c:80
-#| msgid "Set it if the selection can contain files"
 msgid "Targets the selection context menu"
 msgstr "Προορισμοί του μενού περιεχομένων επιλογής"
 
@@ -1432,7 +1378,6 @@ msgid "Targets the toolbar [false]"
 msgstr "Στόχος η εργαλειοθήκη [ψευδές]"
 
 #: ../src/core/na-object-action-factory.c:157
-#| msgid "The label of the menu item"
 msgid "Label of the toolbar item"
 msgstr "Η ετικέτα του στοιχείου της εργαλειοθήκης"
 
@@ -1456,7 +1401,6 @@ msgid "Copy of %s"
 msgstr "Αντίγραφο του %s"
 
 #: ../src/core/na-object-item-factory.c:65
-#| msgid "The icon of the menu item"
 msgid "Type of the item"
 msgstr "Τύπος του στοιχείου"
 
@@ -1473,14 +1417,10 @@ msgstr ""
 "Η τιμή εξαρτάται από πεζά/κεφαλαία και δεν πρέπει να τοπικοποιηθεί."
 
 #: ../src/core/na-object-item-factory.c:94
-#| msgid "The label of the menu item"
 msgid "Label of the context menu item (mandatory)"
 msgstr "Η ετικέτα του στοιχείου μενού περιεχομένων (υποχρεωτική)"
 
 #: ../src/core/na-object-item-factory.c:95
-#| msgid ""
-#| "The label of the menu item that will appear in the Nautilus popup menu "
-#| "when the selection matches the appearance condition settings"
 msgid ""
 "The label of the menu item that will appear in the file manager context menu "
 "when the selection matches the appearance condition settings.\n"
@@ -1497,14 +1437,10 @@ msgid "Empty label"
 msgstr "Κενή ετικέτα"
 
 #: ../src/core/na-object-item-factory.c:118
-#| msgid "The tooltip of the menu item"
 msgid "Tooltip of the context menu item"
 msgstr "Η συμβουλή οθόνης του στοιχείου μενού περιεχομένων"
 
 #: ../src/core/na-object-item-factory.c:119
-#| msgid ""
-#| "The tooltip of the menu item that will appear in the Nautilus statusbar "
-#| "when the user points to the Nautilus popup menu item with his/her mouse"
 msgid ""
 "The tooltip of the menu item that will appear in the file manager statusbar "
 "when the user points to the file manager context menu item with his/her "
@@ -1515,15 +1451,10 @@ msgstr ""
 "μενού περιεχομένων του διαχειριστή αρχείων με το ποντίκι του."
 
 #: ../src/core/na-object-item-factory.c:142
-#| msgid "The icon of the menu item"
 msgid "Icon of the context menu item"
 msgstr "Το εικονίδιο του στοιχείου του μενού περιεχομένων"
 
 #: ../src/core/na-object-item-factory.c:143
-#| msgid ""
-#| "The icon of the menu item that will appear next to the label in the "
-#| "Nautilus popup menu when the selection matches the appearance conditions "
-#| "settings"
 msgid ""
 "The icon of the menu item that will appear next to the label in the file "
 "manager context menu when the selection matches the appearance conditions "
@@ -1542,7 +1473,6 @@ msgid "<PATH|NAME>"
 msgstr "<ΔΙΑΔΡΟΜΗ|ΟΝΟΜΑ>"
 
 #: ../src/core/na-object-item-factory.c:191
-#| msgid "A description name of the profile"
 msgid "Description relative to the item"
 msgstr "Μια περιγραφή σχετική με το στοιχείο"
 
@@ -1593,7 +1523,6 @@ msgstr ""
 "υποστοιχεία προσαρτώνται στη σειρά των λειτουργιών ανάγνωσης."
 
 #: ../src/core/na-object-item-factory.c:293
-#| msgid "The icon of the menu item"
 msgid "Whether the action or the menu is enabled"
 msgstr "Αν η ενέργεια ή το μενού είναι ενεργά"
 
@@ -1612,14 +1541,10 @@ msgid "Whether the action or the menu is enabled [enabled]"
 msgstr "Αν η ενέργεια ή το μενού είναι ενεργά [enabled]"
 
 #: ../src/core/na-object-item-factory.c:409
-#| msgid "The version of the configuration format"
 msgid "Version of the format"
 msgstr "Η έκδοση της μορφής"
 
 #: ../src/core/na-object-item-factory.c:410
-#| msgid ""
-#| "The version of the configuration format that will be used to manage "
-#| "backward compatibility"
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility."
@@ -1629,7 +1554,6 @@ msgstr ""
 
 #. i18n: default label for a new menu
 #: ../src/core/na-object-menu.c:57
-#| msgid "Nautilus Actions"
 msgid "New Nautilus menu"
 msgstr "Νέο μενού του Ναυτίλου"
 
@@ -1639,7 +1563,6 @@ msgid "Default profile"
 msgstr "Προεπιλεγμένη κατατομή"
 
 #: ../src/core/na-object-profile-factory.c:49
-#| msgid "A description name of the profile"
 msgid "Name of the profile"
 msgstr "Όνομα της κατατομής"
 
@@ -1652,14 +1575,10 @@ msgstr ""
 "Αν δεν οριστεί, η προεπιλογή είναι ένα αυτόματα δημιουργούμενο όνομα."
 
 #: ../src/core/na-object-profile-factory.c:100
-#| msgid "The path of the command"
 msgid "Path of the command"
 msgstr "Η διαδρομή της εντολής"
 
 #: ../src/core/na-object-profile-factory.c:101
-#| msgid ""
-#| "The path of the command to start when the user select the menu item in "
-#| "the Nautilus popup menu"
 msgid ""
 "The path of the command to be executed when the user select the menu item in "
 "the file manager context menu or in the toolbar."
@@ -1669,7 +1588,6 @@ msgstr ""
 "εργαλειοθήκη."
 
 #: ../src/core/na-object-profile-factory.c:127
-#| msgid "The parameters of the command"
 msgid "Parameters of the command"
 msgstr "Οι παράμετροι της εντολής"
 
@@ -1685,8 +1603,8 @@ msgid ""
 "  %f: the name of the selected file or the first one if several are "
 "selected\n"
 "  %h: hostname of the URI\n"
-"  %m: space-separated list of the basenames of the selected file(s)/folder"
-"(s)\n"
+"  %m: space-separated list of the basenames of the selected file(s)/"
+"folder(s)\n"
 "  %M: space-separated list of the selected file(s)/folder(s), with their "
 "full paths\n"
 "  %p: port number of the first URI\n"
@@ -1697,19 +1615,19 @@ msgid ""
 "  %%: a percent sign.\n"
 "- starting from version 3:\n"
 "  %b: (first) basename\n"
-"  %B: space-separated list of the basenames of the selected file(s)/folder"
-"(s)\n"
+"  %B: space-separated list of the basenames of the selected file(s)/"
+"folder(s)\n"
 "  %c: count the selected file(s)/folder(s)\n"
 "  %d: (first) base directory\n"
-"  %D: space-separated list of base directories of the selected file(s)/folder"
-"(s)\n"
+"  %D: space-separated list of base directories of the selected file(s)/"
+"folder(s)\n"
 "  %f: (first) filename\n"
-"  %F: space-separated list of the filenames of the selected file(s)/folder"
-"(s)\n"
+"  %F: space-separated list of the filenames of the selected file(s)/"
+"folder(s)\n"
 "  %h: hostname of the (first) URI\n"
 "  %m: (first) mimetype\n"
-"  %M: space-separated list of the mimetypes of the selected file(s)/folder"
-"(s)\n"
+"  %M: space-separated list of the mimetypes of the selected file(s)/"
+"folder(s)\n"
 "  %n: username of the (first) URI\n"
 "  %o: no-op operator which forces the singular form of execution (since "
 "3.0.2)\n"
@@ -1722,8 +1640,8 @@ msgid ""
 "  %w: (first) basename without the extension\n"
 "  %W: space-separated list of basenames without the extension\n"
 "  %x: (first) extension\n"
-"  %X: space-separated list of the extensions of the selected file(s)/folder"
-"(s)\n"
+"  %X: space-separated list of the extensions of the selected file(s)/"
+"folder(s)\n"
 "  %%: a percent sign."
 msgstr ""
 "Οι παράμετροι της εντολής που θα εκτελεστεί, όταν ο χρήστης επιλέγει το "
@@ -1741,7 +1659,7 @@ msgstr ""
 "  %M: λίστα που διαχωρίζεται με κενά των επιλεγμένων αρχείων/φακέλων, με τις "
 "πλήρεις διαδρομές τους\n"
 "  %p: αριθμός θύρας του πρώτου URI\n"
-"  %R: λίστα που διαχωρίζεται με κενά των επιλεγμένων URIs\n"
+"  %R: λίστα που διαχωρίζεται με κενά των επιλεγμένων URI\n"
 "  %s: σχήμα του URI\n"
 "  %u: URI\n"
 "  %U: όνομα χρήστη του URI\n"
@@ -1759,8 +1677,8 @@ msgstr ""
 "αρχείων/φακέλων\n"
 "  %h: όνομα οικοδεσπότη του (πρώτου) URI\n"
 "  %m: (πρώτος) τύπος mime\n"
-"  %M: λίστα που διαχωρίζεται με κενά των τύπων mime των επιλεγμένων "
-"αρχείων/φακέλων\n"
+"  %M: λίστα που διαχωρίζεται με κενά των τύπων mime των επιλεγμένων αρχείων/"
+"φακέλων\n"
 "  %n: όνομα χρήστη του (πρώτου) URI\n"
 "  %o: τελεστής ουδέτερης εντολής που εξαναγκάζει την ενιαία φόρμα εκτέλεσης "
 "(από το 3.0.2)\n"
@@ -1769,13 +1687,13 @@ msgstr ""
 "  %p: αριθμός θύρας του (πρώτου) URI\n"
 "  %s: σχήμα του (πρώτου) URI\n"
 "  %u: (first) URI\n"
-"  %U: λίστα που διαχωρίζεται με κενά των URIs των επιλεγμένων "
-"αρχείων/φακέλων\n"
+"  %U: λίστα που διαχωρίζεται με κενά των URI των επιλεγμένων αρχείων/"
+"φακέλων\n"
 "  %w: (πρώτο) όνομα βάσης χωρίς την επέκταση\n"
 "  %W: λίστα που διαχωρίζεται με κενά των ονομάτων βάσης χωρίς την επέκταση\n"
 "  %x: (πρώτη) επέκταση\n"
-"  %X: λίστα που διαχωρίζεται με κενά των επεκτάσεων των επιλεγμένων "
-"αρχείων/φακέλων\n"
+"  %X: λίστα που διαχωρίζεται με κενά των επεκτάσεων των επιλεγμένων αρχείων/"
+"φακέλων\n"
 "  %%: σύμβολο ποσοστού."
 
 #: ../src/core/na-object-profile-factory.c:188
@@ -1893,7 +1811,6 @@ msgid "user"
 msgstr "χρήστης"
 
 #: ../src/core/na-tokens.c:431
-#| msgid "The path of the command"
 msgid "Output of the run command"
 msgstr "Έξοδος της εντολής εκτέλεσης"
 
@@ -1910,7 +1827,6 @@ msgid "Standard error:"
 msgstr "Τυπικό σφάλμα:"
 
 #: ../src/io-desktop/nadp-desktop-provider.c:259
-#| msgid "Nautilus Action Profile Editor"
 msgid "Nautilus-Actions Desktop I/O Provider"
 msgstr "Πάροχος εισόδου/εξόδου επιφάνειας εργασίας των ενεργειών του Ναυτίλου"
 
@@ -1953,7 +1869,6 @@ msgid "unknown type: %s"
 msgstr "άγνωστος τύπος: %s"
 
 #: ../src/io-gconf/nagp-gconf-provider.c:247
-#| msgid "Nautilus Actions Configuration"
 msgid "Nautilus-Actions GConf I/O Provider"
 msgstr "Πάροχος εισόδου/εξόδου GConf ενεργειών του Ναυτίλου"
 
@@ -1974,7 +1889,8 @@ msgstr "Το στοιχείο %s στη γραμμή %d βρέθηκε ήδη, �
 #: ../src/io-xml/naxml-reader.c:150
 #, c-format
 msgid "Invalid item ID: waited for %s, found %s at line %d."
-msgstr "Άκυρο αναγνωριστικό στοιχείου: αναμενόταν %s, βρέθηκε %s στη γραμμή %d."
+msgstr ""
+"Άκυρο αναγνωριστικό στοιχείου: αναμενόταν %s, βρέθηκε %s στη γραμμή %d."
 
 #: ../src/io-xml/naxml-reader.c:151
 #, c-format
@@ -2063,75 +1979,72 @@ msgstr ""
 "και πάνω),\n"
 "- ή μέσα από το εργαλείο γραμμής εντολών gconftool-2 --load."
 
-#: ../src/nact/base-application.c:184
+#: ../src/nact/base-application.c:186
 msgid "Arguments count"
 msgstr "Μέτρηση ορισμάτων"
 
-#: ../src/nact/base-application.c:185
+#: ../src/nact/base-application.c:187
 msgid "The count of command-line arguments"
 msgstr "Η μέτρηση των ορισμάτων της γραμμής εντολών"
 
-#: ../src/nact/base-application.c:192
+#: ../src/nact/base-application.c:194
 msgid "Arguments"
 msgstr "Ορίσματα"
 
-#: ../src/nact/base-application.c:193
+#: ../src/nact/base-application.c:195
 msgid "The array of command-line arguments"
 msgstr "Ο πίνακας των ορισμάτων της γραμμής εντολών"
 
-#: ../src/nact/base-application.c:200
+#: ../src/nact/base-application.c:202
 msgid "Option entries"
 msgstr "Καταχωρίσεις επιλογής"
 
-#: ../src/nact/base-application.c:201
+#: ../src/nact/base-application.c:203
 msgid "The array of command-line option definitions"
 msgstr "Ο πίνακας ορισμών επιλογής γραμμής εντολών"
 
-#: ../src/nact/base-application.c:207
+#: ../src/nact/base-application.c:209
 msgid "Application name"
 msgstr "Όνομα εφαρμογής"
 
-#: ../src/nact/base-application.c:208
-#| msgid "The parameters of the command"
+#: ../src/nact/base-application.c:210
 msgid "The name of the application"
 msgstr "Το όνομα της εφαρμογής"
 
-#: ../src/nact/base-application.c:215 ../src/nact/nact-schemes-list.c:167
+#: ../src/nact/base-application.c:217 ../src/nact/nact-schemes-list.c:167
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: ../src/nact/base-application.c:216
+#: ../src/nact/base-application.c:218
 msgid "A short description to be displayed in the first line of --help output"
 msgstr ""
 "Μια σύντομη περιγραφή που θα εμφανιστεί στην πρώτη γραμμή της εξόδου --help"
 
-#: ../src/nact/base-application.c:223
-#| msgid "Icon"
+#: ../src/nact/base-application.c:225
 msgid "Icon name"
 msgstr "Όνομα εικονιδίου"
 
-#: ../src/nact/base-application.c:224
+#: ../src/nact/base-application.c:226
 msgid "The name of the icon of the application"
 msgstr "Το όνομα του εικονιδίου της εφαρμογής"
 
-#: ../src/nact/base-application.c:231
+#: ../src/nact/base-application.c:233
 msgid "UniqueApp name"
 msgstr "Όνομα UniqueApp"
 
-#: ../src/nact/base-application.c:232
+#: ../src/nact/base-application.c:234
 msgid "The Unique name of the application"
 msgstr "Το μοναδικό όνομα της εφαρμογής"
 
-#: ../src/nact/base-application.c:239
+#: ../src/nact/base-application.c:241
 msgid "Return code"
 msgstr "Κώδικας επιστροφής"
 
-#: ../src/nact/base-application.c:240
-#| msgid "The parameters of the command"
+#: ../src/nact/base-application.c:242
 msgid "The return code of the application"
 msgstr "Ο κώδικας επιστροφής της εφαρμογής"
 
-#: ../src/nact/base-application.c:603
+#: ../src/nact/base-application.c:605
 msgid "Unable to interpret command-line arguments"
 msgstr "Αδύνατη η ερμηνεία των ορισμάτων γραμμής εντολών"
 
@@ -2258,7 +2171,6 @@ msgstr "Μη αναγνωρίσιμη έκδοση αρχείου desktop '%s'"
 
 #: ../src/nact/egg-desktop-file.c:957
 #, c-format
-#| msgid "Creating %s..."
 msgid "Starting %s"
 msgstr "Έναρξη του %s"
 
@@ -2276,8 +2188,8 @@ msgstr "Μη αναγνωρίσιμη επιλογή εκκίνησης: %d"
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr ""
-"Αδύνατο το πέρασμα των URIs εγγράφων σε μια καταχώριση επιφάνειας εργασίας "
-"'Type=Link'"
+"Αδύνατο το πέρασμα των URI των εγγράφων σε μια καταχώριση επιφάνειας "
+"εργασίας 'Type=Link'"
 
 #: ../src/nact/egg-desktop-file.c:1386
 #, c-format
@@ -2313,7 +2225,6 @@ msgid "Show session management options"
 msgstr "Εμφάνιση επιλογών διαχείρισης συνεδρίας"
 
 #: ../src/nact/nact-application.c:57 ../src/nact/nact.desktop.in.h:1
-#| msgid "Nautilus Actions Configuration"
 msgid "Nautilus-Actions Configuration Tool"
 msgstr "Εργαλείο ρυθμίσεων ενεργειών Ναυτίλου"
 
@@ -2331,7 +2242,6 @@ msgid "Output the version number, and exit gracefully [no]"
 msgstr "Εμφάνιση του αριθμού έκδοσης και ελεγχόμενη έξοδος [όχι]"
 
 #: ../src/nact/nact-add-capability-dialog.c:74
-#| msgid "The icon of the menu item"
 msgid "User is the owner of the item"
 msgstr "Ο χρήστης είναι ο κάτοχος του στοιχείου"
 
@@ -2366,12 +2276,10 @@ msgid "<b>Managed capabilities</b>"
 msgstr "<b>Διαχειριζόμενες δυνατότητες</b>"
 
 #: ../src/nact/nact-add-scheme.ui.h:1
-#| msgid "Click to add a new scheme."
 msgid "Adding a new scheme"
 msgstr "Προσθήκη νέου σχήματος"
 
 #: ../src/nact/nact-add-scheme.ui.h:2
-#| msgid "Scheme"
 msgid "<b>Scheme</b>"
 msgstr "<b>Σχήμα</b>"
 
@@ -2389,15 +2297,13 @@ msgid "You may not have write permissions on selected folder."
 msgstr "Μπορεί να μην έχετε δικαιώματα εγγραφής στον επιλεγμένο φάκελο."
 
 #: ../src/nact/nact-assistant-export.ui.h:1
-#| msgid "Export existing configs"
 msgid "Exporting actions"
 msgstr "Ενέργειες εξαγωγής"
 
 #: ../src/nact/nact-assistant-export.ui.h:2
 msgid "This assistant will guide you through the process of exporting actions."
 msgstr ""
-"Αυτός ο βοηθός θα σας οδηγήσει μέσα από τη διαδικασία της εξαγωγής "
-"ενεργειών."
+"Αυτός ο βοηθός θα σας οδηγήσει μέσα από τη διαδικασία της εξαγωγής ενεργειών."
 
 #: ../src/nact/nact-assistant-export.ui.h:3
 msgid "Actions _list :"
@@ -2449,12 +2355,10 @@ msgid "Selected items have been proceeded:"
 msgstr "Τα επιλεγμένα στοιχεία έχουν προχωρήσει:"
 
 #: ../src/nact/nact-assistant-export.ui.h:15
-#| msgid "Export existing configs"
 msgid "Export is done"
 msgstr "Η εξαγωγή ολοκληρώθηκε"
 
 #: ../src/nact/nact-assistant-export.ui.h:16
-#| msgid "Export existing configs"
 msgid "Exporting an action"
 msgstr "Εξαγωγή μιας ενέργειας"
 
@@ -2483,7 +2387,6 @@ msgid "Not imported"
 msgstr "Δεν εισήχθη"
 
 #: ../src/nact/nact-assistant-import.ui.h:1
-#| msgid "Import new configurations"
 msgid "Importing actions"
 msgstr "Εισαγωγή ενεργειών"
 
@@ -2496,7 +2399,6 @@ msgstr ""
 "στοιχείων, ενεργειών ή μενού."
 
 #: ../src/nact/nact-assistant-import.ui.h:3
-#| msgid "Select the file you want to import."
 msgid "Selecting files to import"
 msgstr "Επιλογή των αρχείων για εισαγωγή"
 
@@ -2528,7 +2430,6 @@ msgid "Import is done"
 msgstr "Η εισαγωγή ολοκληρώθηκε"
 
 #: ../src/nact/nact.desktop.in.h:2
-#| msgid "Add items to the Nautilus popup menu"
 msgid "Configure items to be added to the Nautilus context menus"
 msgstr "Ρύθμιση στοιχείων για προσθήκη στα μενού περιεχομένων του Ναυτίλου"
 
@@ -2601,12 +2502,10 @@ msgstr "Φίλτρο φακέλων"
 #. * will be compare to Nautilus 'current_folder'
 #.
 #: ../src/nact/nact-ifolders-tab.c:263 ../src/nact/nact-ifolders-tab.c:291
-#| msgid "Save in Folder:"
 msgid "Select a folder"
 msgstr "Επιλογή ενός φακέλου"
 
 #: ../src/nact/nact-imimetypes-tab.c:203
-#| msgid "Mimetypes:"
 msgid "Mimetype filter"
 msgstr "Φίλτρο τύπου mime"
 
@@ -2626,7 +2525,6 @@ msgstr "<b>Επεξεργάσιμες ιδιότητες μενού</b>"
 
 #: ../src/nact/nact-iproperties-tab.c:291
 #: ../src/nact/nautilus-actions-config-tool.ui.h:97
-#| msgid "Action"
 msgid "_Action"
 msgstr "_Ενέργεια"
 
@@ -2636,7 +2534,6 @@ msgid "<b>Action editable properties</b>"
 msgstr "<b>Επεξεργάσιμες ιδιότητες ενέργειας</b>"
 
 #: ../src/nact/nact-ischemes-tab.c:201
-#| msgid "Scheme"
 msgid "Scheme filter"
 msgstr "Φίλτρο σχήματος"
 
@@ -2647,8 +2544,7 @@ msgstr "Τρέχον NAObjectItem"
 #: ../src/nact/nact-main-window.c:345
 msgid "A pointer to the currently edited NAObjectItem, an action or a menu"
 msgstr ""
-"Ένας δείκτης στο τρέχον επεξεργαζόμενο NAObjectItem, μια ενέργεια ή ένα "
-"μενού"
+"Ένας δείκτης στο τρέχον επεξεργαζόμενο NAObjectItem, μια ενέργεια ή ένα μενού"
 
 #: ../src/nact/nact-main-window.c:351
 msgid "Current NAObjectProfile"
@@ -2672,7 +2568,8 @@ msgstr "Επεξεργάσιμο στοιχείο ;"
 
 #: ../src/nact/nact-main-window.c:366
 msgid "Whether the item will be able to be updated against its I/O provider"
-msgstr "Αν το στοιχείο θα μπορεί να ενημερωθεί με τον πάροχο εισόδου/εξόδου του"
+msgstr ""
+"Αν το στοιχείο θα μπορεί να ενημερωθεί με τον πάροχο εισόδου/εξόδου του"
 
 #: ../src/nact/nact-main-window.c:373
 msgid "No edition reason"
@@ -2794,18 +2691,15 @@ msgid "Insert a new menu at the current position"
 msgstr "Εισαγωγή νέου μενού στην τρέχουσα θέση"
 
 #: ../src/nact/nact-menubar.c:72
-#| msgid "Add a New Action"
 msgid "_New action"
 msgstr "_Νέα ενέργεια"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New action' item
 #: ../src/nact/nact-menubar.c:74
-#| msgid "Add a New Action"
 msgid "Define a new action"
 msgstr "Ορισμός μιας νέας ενέργειας"
 
 #: ../src/nact/nact-menubar.c:76
-#| msgid "Add a New Profile"
 msgid "New _profile"
 msgstr "Νέα _κατατομή"
 
@@ -2859,13 +2753,11 @@ msgstr "Δ_ιπλασιασμός"
 
 #. i18n: tooltip displayed in the status bar when selecting the Duplicate item
 #: ../src/nact/nact-menubar.c:106
-#| msgid "Click to remove the selected scheme."
 msgid "Duplicate the selected item(s)"
 msgstr "Διπλασιασμός των επιλεγμένων στοιχείων"
 
 #. i18n: tooltip displayed in the status bar when selecting the Delete item
 #: ../src/nact/nact-menubar.c:110
-#| msgid "Click to remove the selected scheme."
 msgid "Delete the selected item(s)"
 msgstr "Διαγραφή των επιλεγμένων στοιχείων"
 
@@ -2964,7 +2856,6 @@ msgid "Dump the content of the clipboard object"
 msgstr "Απόρριψη του περιεχομένου του αντικειμένου προχείρου"
 
 #: ../src/nact/nact-menubar.c:158
-#| msgid "Conditions"
 msgid "Contents"
 msgstr "Περιεχόμενα"
 
@@ -3068,7 +2959,6 @@ msgid "Some items have not been deleted"
 msgstr "Μερικά στοιχεία δεν διαγράφηκαν"
 
 #: ../src/nact/nact-menubar-file.c:201
-#| msgid "Add a New Profile"
 msgid "New profile"
 msgstr "Νέα κατατομή"
 
@@ -3077,7 +2967,6 @@ msgid "Automatically saving pending modifications..."
 msgstr "Αυτόματη αποθήκευση εκκρεμών τροποποιήσεων..."
 
 #: ../src/nact/nact-preferences.ui.h:1
-#| msgid "Nautilus Action Profile Editor"
 msgid "Nautilus-Actions Preferences"
 msgstr "Προτιμήσεις ενεργειών Ναυτίλου"
 
@@ -3161,7 +3050,6 @@ msgstr ""
 "παραπάνω ριζική επιλογή μενού 'Ενέργειες Ναυτίλου')."
 
 #: ../src/nact/nact-preferences.ui.h:14
-#| msgid "<b>Nautilus Menu Item</b>"
 msgid "<b>Nautilus menu layout</b>"
 msgstr "<b>Διάταξη μενού του Ναυτίλου</b>"
 
@@ -3193,7 +3081,7 @@ msgstr ""
 
 #: ../src/nact/nact-preferences.ui.h:19
 msgid "_Command pattern :"
-msgstr "_Υπόδειγμα εντολής:"
+msgstr "Μο_τίβο εντολής:"
 
 #: ../src/nact/nact-preferences.ui.h:20
 msgid "<b>Execution in a terminal</b>"
@@ -3213,7 +3101,7 @@ msgid "<b>Desktop environment</b>"
 msgstr "<b>Περιβάλλον επιφάνειας εργασίας</b>"
 
 #: ../src/nact/nact-preferences.ui.h:24
-msgid "This tab lets you specify parameters needed for. some execution modes."
+msgid "This tab lets you specify parameters needed for some execution modes."
 msgstr ""
 "Αυτή η καρτέλα επιτρέπει τον καθορισμό των απαιτούμενων παραμέτρων για "
 "μερικές καταστάσεις εκτέλεσης."
@@ -3298,7 +3186,6 @@ msgstr ""
 "πλήκτρου διαφυγής."
 
 #: ../src/nact/nact-preferences.ui.h:38
-#| msgid "<b>Action</b>"
 msgid "<b>Assistants</b>"
 msgstr "<b>Βοηθοί</b>"
 
@@ -3323,7 +3210,6 @@ msgid "minutes"
 msgstr "λεπτά"
 
 #: ../src/nact/nact-preferences.ui.h:43
-#| msgid "<b>Action</b>"
 msgid "<b>Auto-save</b>"
 msgstr "<b>Αυτόματη αποθήκευση</b>"
 
@@ -3348,7 +3234,6 @@ msgstr ""
 "έχει τον ίδιο ταυτοποιητή με τον τρέχοντα ταυτοποιητή που υπάρχει;"
 
 #: ../src/nact/nact-preferences.ui.h:47
-#| msgid "<b>Profiles</b>"
 msgid "<b>Import mode</b>"
 msgstr "<b>Εισαγωγή κατάστασης</b>"
 
@@ -3359,7 +3244,6 @@ msgstr ""
 "λειτουργιών εισαγωγής."
 
 #: ../src/nact/nact-preferences.ui.h:49
-#| msgid "Import/Export"
 msgid "_Import"
 msgstr "Ε_ισαγωγή"
 
@@ -3378,7 +3262,6 @@ msgstr ""
 "λειτουργιών εξαγωγής."
 
 #: ../src/nact/nact-preferences.ui.h:53
-#| msgid "Import/Export"
 msgid "_Export"
 msgstr "Ε_ξαγωγή"
 
@@ -3397,12 +3280,10 @@ msgstr ""
 "Μπορείτε να προσθέσετε ένα νέο σχήμα πατώντας στο κουμπί '+'."
 
 #: ../src/nact/nact-preferences.ui.h:57
-#| msgid "Click to add a new scheme."
 msgid "Click to add a new default scheme."
 msgstr "Πατήστε για προσθήκη ενός νέου προεπιλεγμένου σχήματος."
 
 #: ../src/nact/nact-preferences.ui.h:58
-#| msgid "Click to remove the selected scheme."
 msgid "Click to remove the selected default scheme."
 msgstr "Πατήστε για αφαίρεση του επιλεγμένου προεπιλεγμένου σχήματος."
 
@@ -3420,7 +3301,6 @@ msgstr ""
 
 #: ../src/nact/nact-preferences.ui.h:61
 #: ../src/nact/nautilus-actions-config-tool.ui.h:190
-#| msgid "Scheme"
 msgid "_Schemes"
 msgstr "_Σχήματα"
 
@@ -3451,7 +3331,6 @@ msgid "_Down"
 msgstr "_Κάτω"
 
 #: ../src/nact/nact-preferences.ui.h:66
-#| msgid "<b>Action</b>"
 msgid "<b>Activation and priority</b>"
 msgstr "<b>Ενεργοποίηση και προτεραιότητα</b>"
 
@@ -3474,7 +3353,7 @@ msgstr "_Πάροχοι εισόδου/εξόδου"
 msgid "Rely on runtime detection"
 msgstr "Να βασίζεται στην αναγνώριση του χρόνου εκτέλεσης"
 
-#: ../src/nact/nact-preferences-editor.c:804
+#: ../src/nact/nact-preferences-editor.c:819
 msgid "Ex.:"
 msgstr "Παράδειγμα:"
 
@@ -3506,31 +3385,26 @@ msgstr "Λέξη-κλειδί"
 
 #. i18n notes : description of 'file' scheme
 #: ../src/nact/nact-schemes-list.c:283
-#| msgid "%sLocal Files"
 msgid "Local files"
 msgstr "Τοπικά αρχεία"
 
 #. i18n notes : description of 'sftp' scheme
 #: ../src/nact/nact-schemes-list.c:285
-#| msgid "%sSSH Files"
 msgid "SSH files"
 msgstr "Αρχεία SSH"
 
 #. i18n notes : description of 'smb' scheme
 #: ../src/nact/nact-schemes-list.c:287
-#| msgid "%sWindows Files"
 msgid "Windows files"
 msgstr "Αρχεία Windows"
 
 #. i18n notes : description of 'ftp' scheme
 #: ../src/nact/nact-schemes-list.c:289
-#| msgid "%sFTP Files"
 msgid "FTP files"
 msgstr "Αρχεία FTP"
 
 #. i18n notes : description of 'dav' scheme
 #: ../src/nact/nact-schemes-list.c:291
-#| msgid "%sWebdav Files"
 msgid "WebDAV files"
 msgstr "Αρχεία Webdav"
 
@@ -3546,7 +3420,6 @@ msgid "new-scheme"
 msgstr "νέο σχήμα"
 
 #: ../src/nact/nact-schemes-list.c:702
-#| msgid "New Scheme Description"
 msgid "New scheme description"
 msgstr "Νέα περιγραφή σχήματος"
 
@@ -3606,7 +3479,6 @@ msgstr "Το γονικό BaseWindow"
 
 #. i18n: NactTreeView property short description
 #: ../src/nact/nact-tree-view.c:224
-#| msgid "Conditions"
 msgid "Container"
 msgstr "Περιέκτης"
 
@@ -3673,7 +3545,6 @@ msgstr "<b>%B</b>:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:10
 #, no-c-format
-#| msgid "<b>Action</b>"
 msgid "<b>%c</b> :"
 msgstr "<b>%c</b>:"
 
@@ -3694,7 +3565,6 @@ msgstr "<b>%p</b>:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:18
 #, no-c-format
-#| msgid "<b>Profiles</b>"
 msgid "<b>%s</b> :"
 msgstr "<b>%s</b>:"
 
@@ -3718,14 +3588,11 @@ msgid "(first) basename."
 msgstr "(πρώτο) όνομα βάσης."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:26
-#| msgid ""
-#| "<b>%m</b>: space-separated list of the basenames of the selected\n"
-#| "file(s)/folder(s)"
 msgid ""
 "space-separated list of the basenames of the selected file(s)/folder(s)."
 msgstr ""
-"λίστα που διαχωρίζεται με κενά των ονομάτων βάσης των επιλεγμένων "
-"αρχείων/φακέλων."
+"λίστα που διαχωρίζεται με κενά των ονομάτων βάσης των επιλεγμένων αρχείων/"
+"φακέλων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:27
 msgid "count of selected item(s)."
@@ -3736,15 +3603,12 @@ msgid "(first) base directory."
 msgstr "(πρώτος) κατάλογος βάσης."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:29
-#| msgid ""
-#| "<b>%m</b>: space-separated list of the basenames of the selected\n"
-#| "file(s)/folder(s)"
 msgid ""
-"space-separated list of the base directories of the selected file(s)/folder"
-"(s)."
+"space-separated list of the base directories of the selected file(s)/"
+"folder(s)."
 msgstr ""
-"λίστα που διαχωρίζεται με κενά των καταλόγων βάσης των επιλεγμένων "
-"αρχείων/φακέλων."
+"λίστα που διαχωρίζεται με κενά των καταλόγων βάσης των επιλεγμένων αρχείων/"
+"φακέλων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:30
 msgid "port number of the (first) selected URI."
@@ -3759,21 +3623,16 @@ msgid "(first) URI."
 msgstr "(πρώτο) URI."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:33
-#| msgid ""
-#| "<b>%m</b>: space-separated list of the basenames of the selected\n"
-#| "file(s)/folder(s)"
 msgid "space-separated list of the URIs of the selected file(s)/folder(s)."
 msgstr ""
-"λίστα που διαχωρίζεται με κενά των URIs των επιλεγμένων αρχείων/φακέλων."
+"λίστα που διαχωρίζεται με κενά των URI των επιλεγμένων αρχείων/φακέλων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:34
-#| msgid "<b>%%</b>: a percent sign"
 msgid "a percent sign."
 msgstr "ένα σύμβολο ποσοστού."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:36
 #, no-c-format
-#| msgid "<b>Profiles</b>"
 msgid "<b>%f</b> :"
 msgstr "<b>%f</b>:"
 
@@ -3787,14 +3646,11 @@ msgid "<b>%F</b> :"
 msgstr "<b>%F</b>:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:40
-#| msgid ""
-#| "<b>%m</b>: space-separated list of the basenames of the selected\n"
-#| "file(s)/folder(s)"
 msgid ""
 "space-separated list of the filenames of the selected file(s)/folder(s)."
 msgstr ""
-"λίστα που διαχωρίζεται με κενά των ονομάτων αρχείων των επιλεγμένων "
-"αρχείων/φακέλων."
+"λίστα που διαχωρίζεται με κενά των ονομάτων αρχείων των επιλεγμένων αρχείων/"
+"φακέλων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:42
 #, no-c-format
@@ -3807,7 +3663,6 @@ msgstr "όνομα οικοδεσπότη του (πρώτου) επιλεγμέ
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:45
 #, no-c-format
-#| msgid "<b>Action</b>"
 msgid "<b>%n</b> :"
 msgstr "<b>%n</b>:"
 
@@ -3820,9 +3675,6 @@ msgid "(first) basename without the extension."
 msgstr "(πρώτο) όνομα βάσης χωρίς την επέκταση."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:48
-#| msgid ""
-#| "<b>%m</b>: space-separated list of the basenames of the selected\n"
-#| "file(s)/folder(s)"
 msgid "space-separated list of the basenames without the extension."
 msgstr "λίστα που διαχωρίζεται με κενά των ονομάτων βάσης χωρίς την επέκταση."
 
@@ -3831,14 +3683,11 @@ msgid "(first) extension."
 msgstr "(πρώτη) επέκταση."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:50
-#| msgid ""
-#| "<b>%m</b>: space-separated list of the basenames of the selected\n"
-#| "file(s)/folder(s)"
 msgid ""
 "space-separated list of the extensions of the selected file(s)/folder(s)."
 msgstr ""
-"λίστα που διαχωρίζεται με κενά των επεκτάσεων των επιλεγμένων "
-"αρχείων/φακέλων."
+"λίστα που διαχωρίζεται με κενά των επεκτάσεων των επιλεγμένων αρχείων/"
+"φακέλων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:52
 #, no-c-format
@@ -3875,18 +3724,14 @@ msgid "(first) mimetype."
 msgstr "(πρώτος) τύπος mime."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:64
-#| msgid ""
-#| "<b>%m</b>: space-separated list of the basenames of the selected\n"
-#| "file(s)/folder(s)"
 msgid ""
 "space-separated list of the mimetypes of the selected file(s)/folder(s)."
 msgstr ""
-"λίστα που διαχωρίζεται με κενά των τύπων mime των επιλεγμένων "
-"αρχείων/φακέλων."
+"λίστα που διαχωρίζεται με κενά των τύπων mime των επιλεγμένων αρχείων/"
+"φακέλων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:66
 #, no-c-format
-#| msgid "<b>Action</b>"
 msgid "<b>%o</b> :"
 msgstr "<b>%o</b>:"
 
@@ -3936,9 +3781,9 @@ msgstr ""
 "περιεχομένων του διαχειριστή αρχείων, με μια μη κενή επιλογή."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:77
-#| msgid "Label of the menu item in the Nautilus popup menu."
 msgid "The label of the item in the file manager context menus."
-msgstr "Η ετικέτα του στοιχείου στα μενού περιεχομένων του διαχειριστή αρχείων."
+msgstr ""
+"Η ετικέτα του στοιχείου στα μενού περιεχομένων του διαχειριστή αρχείων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:78
 msgid "_Context label :"
@@ -3997,12 +3842,10 @@ msgid "T_oolbar label :"
 msgstr "Ετικέτα της _εργαλειοθήκης:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:89
-#| msgid "Tooltip:"
 msgid "Toolti_p :"
 msgstr "Συμ_βουλή οθόνης:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:90
-#| msgid "Icon:"
 msgid "_Icon :"
 msgstr "Ε_ικονίδιο:"
 
@@ -4020,12 +3863,10 @@ msgid "The name of a themed icon or the filename of an image."
 msgstr "Το όνομα ενός θεματικού εικονιδίου ή το όνομα αρχείου μιας εικόνας."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:94
-#| msgid "_Browse"
 msgid "_Browse..."
 msgstr "_Περιήγηση..."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:95
-#| msgid "<b>Nautilus Menu Item</b>"
 msgid "<b>Nautilus Item</b>"
 msgstr "<b>Στοιχείο του Ναυτίλου</b>"
 
@@ -4044,22 +3885,18 @@ msgstr ""
 "κατατομή."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:99
-#| msgid "Label:"
 msgid "_Label :"
 msgstr "_Ετικέτα:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:100
-#| msgid "<b>Profiles</b>"
 msgid "<b>Profile</b>"
 msgstr "<b>Κατατομή</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:101
-#| msgid "Path:"
 msgid "_Path :"
 msgstr "_Διαδρομή:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:102
-#| msgid "Parameters:"
 msgid "P_arameters :"
 msgstr "_Παράμετροι:"
 
@@ -4074,12 +3911,10 @@ msgstr ""
 "ΔΙΑΔΡΟΜΗΣ στο χρόνο εκτέλεσης θα ληφθεί υπόψη."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:105
-#| msgid "The parameters of the command"
 msgid "The parameters of the command."
 msgstr "Οι παράμετροι της εντολής."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:106
-#| msgid "_Legend"
 msgid "Le_gend"
 msgstr "Υπό_μνημα"
 
@@ -4090,11 +3925,9 @@ msgstr "Κατάλογος ε_ργασίας:"
 #: ../src/nact/nautilus-actions-config-tool.ui.h:108
 msgid "The default working directory the command should be started in."
 msgstr ""
-"Ο προεπιλεγμένος κατάλογος εργασίας στον οποίον πρέπει να ξεκινήσει η "
-"εντολή."
+"Ο προεπιλεγμένος κατάλογος εργασίας στον οποίον πρέπει να ξεκινήσει η εντολή."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:109
-#| msgid "_Browse"
 msgid "B_rowse..."
 msgstr "_Περιήγηση..."
 
@@ -4103,7 +3936,6 @@ msgid "Example"
 msgstr "Παράδειγμα"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:111
-#| msgid "<b>Action</b>"
 msgid "<b>Command</b>"
 msgstr "<b>Εντολή</b>"
 
@@ -4173,13 +4005,13 @@ msgstr ""
 "Μια αποδεκτή υποχώρηση τρέχει στον τυπικό τερματικό."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:126
-#| msgid "<b>Action</b>"
 msgid "<b>Execution mode</b>"
 msgstr "<b>Κατάσταση εκτέλεσης</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:127
 msgid "Note: this is not yet implemented in Nautilus-Actions.\n"
-msgstr "Σημείωση: αυτή δεν έχει ακόμα υλοποιηθεί στις Ενέργειες του Ναυτίλου.\n"
+msgstr ""
+"Σημείωση: αυτή δεν έχει ακόμα υλοποιηθεί στις Ενέργειες του Ναυτίλου.\n"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:129
 msgid "_Startup notify"
@@ -4251,7 +4083,6 @@ msgstr ""
 "εντολή σας."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:145
-#| msgid "Action"
 msgid "E_xecution"
 msgstr "Εκ_τέλεση"
 
@@ -4282,28 +4113,24 @@ msgstr ""
 "στοιχείου σας δεν πρέπει να εμφανιστούν."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:150
-#| msgid "Click to add a new scheme."
 msgid "Click to add a new basename filter."
 msgstr "Πατήστε για προσθήκη νέου φίλτρου ονόματος βάσης."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:151
-#| msgid "Click to remove the selected scheme."
 msgid "Click to remove the current basename filter."
 msgstr "Πατήστε για αφαίρεση του τρέχοντος φίλτρου ονόματος βάσης."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:152
-#| msgid "Match case"
 msgid "Match _case"
 msgstr "Διάκριση _πεζών/κεφαλαίων"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:153
 msgid "Click to define the above basename filters as case sensitive."
 msgstr ""
-"Πατήστε για ορισμό των παραπάνω φίλτρων ονόματος βάσης με διάκριση "
-"πεζών/κεφαλαίων."
+"Πατήστε για ορισμό των παραπάνω φίλτρων ονόματος βάσης με διάκριση πεζών/"
+"κεφαλαίων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:154
-#| msgid "<b>Appears if selection contains</b>"
 msgid "<b>Basenames conditions</b>"
 msgstr "<b>Συνθήκες ονομάτων βάσης</b>"
 
@@ -4320,7 +4147,6 @@ msgstr ""
 "στοιχείου σας δεν πρέπει να εμφανιστούν."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:157
-#| msgid "Filenames:"
 msgid "_Basenames"
 msgstr "_Ονόματα βάσης"
 
@@ -4331,8 +4157,8 @@ msgid ""
 "matching any of the filters of the 'Must not match any of' column."
 msgstr ""
 "Το τρέχον στοιχείο θα εμφανιστεί αν ο τύπος mime κάθε στοιχείου της επιλογής "
-"ταιριάζει με ένα φίλτρο της στήλης 'Πρέπει να ταιριάζει με ένα από', ενώ "
-"δεν ταιριάζει με κανένα από τα φίλτρα της στήλης 'Δεν πρέπει να ταιριάζει με "
+"ταιριάζει με ένα φίλτρο της στήλης 'Πρέπει να ταιριάζει με ένα από', ενώ δεν "
+"ταιριάζει με κανένα από τα φίλτρα της στήλης 'Δεν πρέπει να ταιριάζει με "
 "κανένα από'."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:159
@@ -4345,23 +4171,20 @@ msgid ""
 msgstr ""
 "Αυτή η λίστα επιτρέπει τον προσδιορισμό για ποιους τύπους mime του τρέχοντος "
 "επιλεγμένου στοιχείου θα εμφανιστεί στο μενού περιεχομένων του Ναυτίλου.\n"
-"Οι τύποι mime μπορεί να καθοριστούν ως '*', '*/*', 'group/*' ή "
-"'group/subgroup'.\n"
+"Οι τύποι mime μπορεί να καθοριστούν ως '*', '*/*', 'group/*' ή 'group/"
+"subgroup'.\n"
 "Οι τύποι mime μπορεί να αρνηθούν να ορίσουν ποιοι τύποι αντικειμένων του "
 "στοιχείου σας δεν πρέπει να εμφανιστούν."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:162
-#| msgid "Click to add a new scheme."
 msgid "Click to add a new mimetype filter."
 msgstr "Πατήστε για προσθήκη νέου φίλτρου τύπου mime."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:163
-#| msgid "Click to remove the selected scheme."
 msgid "Click to remove the current mimetype filter."
 msgstr "Πατήστε για αφαίρεση του τρέχοντος φίλτρου τύπου mime."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:164
-#| msgid "<b>Action</b>"
 msgid "<b>Mimetypes conditions</b>"
 msgstr "<b>Συνθήκες τύπων mime</b>"
 
@@ -4375,13 +4198,12 @@ msgid ""
 msgstr ""
 "Αυτή η καρτέλα επιτρέπει τον προσδιορισμό ποιοι τύποι mime του τρέχοντος "
 "επιλεγμένου στοιχείου θα εμφανιστούν στο μενού περιεχομένων του Ναυτίλου.\n"
-"Οι τύποι mime μπορεί να καθοριστούν ως '*', '*/*', 'group/*' ή "
-"'group/subgroup'.\n"
+"Οι τύποι mime μπορεί να καθοριστούν ως '*', '*/*', 'group/*' ή 'group/"
+"subgroup'.\n"
 "Οι τύποι mime μπορεί να αρνηθούν να ορίσουν ποιοι τύποι αντικειμένων του "
 "στοιχείου σας δεν πρέπει να εμφανιστούν."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:168
-#| msgid "Mimetypes:"
 msgid "_Mimetypes"
 msgstr "Τύποι _mime"
 
@@ -4407,14 +4229,13 @@ msgid ""
 "not appear."
 msgstr ""
 "Αυτή η λίστα επιτρέπει τον προσδιορισμό πού (σε ποιους φακέλους) τα τρέχοντα "
-"επιλεγμένα αρχεία πρέπει να βρεθούν ώστε το στοιχείο να εμφανιστεί στο "
-"μενού περιεχομένων του Ναυτίλου.\n"
+"επιλεγμένα αρχεία πρέπει να βρεθούν ώστε το στοιχείο να εμφανιστεί στο μενού "
+"περιεχομένων του Ναυτίλου.\n"
 "Οι φάκελοι μπορούν να χρησιμοποιούν τα σύμβολα υποκατάστασης '*' και '?'.\n"
 "Τα φίλτρα φακέλου μπορεί να αρνηθούν να ορίσουν ποιοι φάκελοι του στοιχείου "
 "σας δεν πρέπει να εμφανιστούν."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:173
-#| msgid "Click to add a new scheme."
 msgid "Click to add a new folder filter."
 msgstr "Πατήστε για προσθήκη νέου φίλτρου φακέλου."
 
@@ -4425,12 +4246,10 @@ msgstr ""
 "φακέλου."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:175
-#| msgid "Click to remove the selected scheme."
 msgid "Click to remove the current folder filter."
 msgstr "Πατήστε για αφαίρεση του τρέχοντος φίλτρου φακέλου."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:176
-#| msgid "<b>Action</b>"
 msgid "<b>Folders conditions</b>"
 msgstr "<b>Συνθήκες φακέλων</b>"
 
@@ -4443,13 +4262,12 @@ msgid ""
 "not appear."
 msgstr ""
 "Αυτή η λίστα επιτρέπει τον προσδιορισμό πού (σε ποιους φακέλους) τα τρέχοντα "
-"επιλεγμένα αρχεία πρέπει να βρεθούν ώστε το στοιχείο να εμφανιστεί στο "
-"μενού περιεχομένων του Ναυτίλου.\n"
+"επιλεγμένα αρχεία πρέπει να βρεθούν ώστε το στοιχείο να εμφανιστεί στο μενού "
+"περιεχομένων του Ναυτίλου.\n"
 "Τα φίλτρα του φακέλου μπορούν να αρνηθούν να ορίσουν ποιοι φάκελοι του "
 "στοιχείου σας δεν πρέπει να εμφανιστούν."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:179
-#| msgid "folder"
 msgid "_Folders"
 msgstr "_Φάκελοι"
 
@@ -4477,7 +4295,6 @@ msgstr ""
 "πρέπει να εμφανιστούν."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:183
-#| msgid "Click to add a new scheme."
 msgid "Click to add a new scheme filter."
 msgstr "Πατήστε για προσθήκη νέου φίλτρου σχήματος."
 
@@ -4492,12 +4309,10 @@ msgstr ""
 "σχημάτων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:186
-#| msgid "Click to remove the selected scheme."
 msgid "Click to remove the current scheme filter."
 msgstr "Πατήστε για αφαίρεση του τρέχοντος φίλτρου σχήματος."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:187
-#| msgid "<b>Action</b>"
 msgid "<b>Schemes conditions</b>"
 msgstr "<b>Συνθήκες σχημάτων</b>"
 
@@ -4539,17 +4354,14 @@ msgstr ""
 "στοιχείου σας δεν πρέπει να εμφανιστούν."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:194
-#| msgid "Click to add a new scheme."
 msgid "Click to add a new capability filter."
 msgstr "Πατήστε για προσθήκη νέου φίλτρου δυνατοτήτων."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:195
-#| msgid "Click to remove the selected scheme."
 msgid "Click to remove the current capability."
 msgstr "Πατήστε για αφαίρεση της τρέχουσας δυνατότητας."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:196
-#| msgid "<b>Appears if selection contains</b>"
 msgid "<b>Capabilities conditions</b>"
 msgstr "<b>Συνθήκες δυνατοτήτων</b>"
 
@@ -4637,7 +4449,6 @@ msgstr ""
 "προαπαιτούμενο πακέτο."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:214
-#| msgid "_Browse"
 msgid "Bro_wse..."
 msgstr "_Περιήγηση..."
 
@@ -4694,7 +4505,6 @@ msgstr ""
 "προαπαιτούμενου δαίμονα."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:226
-#| msgid "_Browse"
 msgid "Brow_se..."
 msgstr "_Περιήγηση..."
 
@@ -4717,7 +4527,6 @@ msgid "_Environment"
 msgstr "Π_εριβάλλον"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:230
-#| msgid "Description"
 msgid "_Description :"
 msgstr "_Περιγραφή:"
 
@@ -4798,7 +4607,6 @@ msgstr "_Ιδιότητες"
 
 #. i18n: label of an automagic root submenu
 #: ../src/plugin-menu/nautilus-actions.c:933
-#| msgid "Nautilus Actions Configuration"
 msgid "Nautilus-Actions actions"
 msgstr "Ενέργειες των ενεργειών του Ναυτίλου"
 
@@ -4812,12 +4620,11 @@ msgstr ""
 "των Ενεργειών του Ναυτίλου"
 
 #: ../src/plugin-menu/nautilus-actions.c:979
-#| msgid "Nautilus Actions"
 msgid "About Nautilus-Actions"
 msgstr "Περί των Ενεργειών του Ναυτίλου"
 
 #: ../src/plugin-menu/nautilus-actions.c:980
-msgid "Display some informations about Nautilus-Actions"
+msgid "Display some information about Nautilus-Actions"
 msgstr "Εμφάνιση μερικών πληροφοριών για τις Ενέργειες του Ναυτίλου"
 
 #: ../src/test/test-reader.c:48
@@ -4829,56 +4636,53 @@ msgid "<URI>"
 msgstr "<URI>"
 
 #: ../src/test/test-reader.c:55 ../src/utils/na-delete-xmltree.c:77
-#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:155
+#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:157
 #: ../src/utils/nautilus-actions-print.c:70
 #: ../src/utils/nautilus-actions-run.c:68
 msgid "Output the version number"
 msgstr "Εμφάνιση του αριθμού έκδοσης"
 
-#: ../src/test/test-reader.c:106
+#: ../src/test/test-reader.c:108
 msgid "Import a file."
 msgstr "Εισαγωγή αρχείου."
 
-#: ../src/test/test-reader.c:120
+#: ../src/test/test-reader.c:122
 msgid ""
 "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
 "mail to <maintainer@nautilus-actions.org>.\n"
-msgstr "Αναφορές σφάλματος είναι καλοδεχούμενες στο http://bugzilla.gnome.org, ή "
-"μπορεί να προτιμήσετε να ταχυδρομήσετε στο <maintainer@nautilus-"
-"actions.org>.\n"
+msgstr ""
+"Αναφορές σφάλματος είναι καλοδεχούμενες στο http://bugzilla.gnome.org, ή "
+"μπορεί να προτιμήσετε να ταχυδρομήσετε στο <maintainer@nautilus-actions."
+"org>.\n"
 
-#: ../src/test/test-reader.c:128 ../src/utils/na-delete-xmltree.c:180
-#: ../src/utils/na-print-schemas.c:188 ../src/utils/na-set-conf.c:205
-#: ../src/utils/nautilus-actions-new.c:382
-#: ../src/utils/nautilus-actions-print.c:180
-#: ../src/utils/nautilus-actions-run.c:207
+#: ../src/test/test-reader.c:130 ../src/utils/na-delete-xmltree.c:183
+#: ../src/utils/na-print-schemas.c:191 ../src/utils/na-set-conf.c:208
+#: ../src/utils/nautilus-actions-new.c:387
+#: ../src/utils/nautilus-actions-print.c:183
+#: ../src/utils/nautilus-actions-run.c:210
 msgid "Miscellaneous options"
 msgstr "Διάφορες επιλογές"
 
-#: ../src/test/test-reader.c:149 ../src/utils/na-delete-xmltree.c:110
-#: ../src/utils/na-print-schemas.c:109 ../src/utils/na-set-conf.c:117
-#: ../src/utils/nautilus-actions-new.c:202
-#: ../src/utils/nautilus-actions-print.c:107
-#: ../src/utils/nautilus-actions-run.c:116
+#: ../src/test/test-reader.c:151 ../src/utils/na-delete-xmltree.c:113
+#: ../src/utils/na-print-schemas.c:112 ../src/utils/na-set-conf.c:120
+#: ../src/utils/nautilus-actions-new.c:207
+#: ../src/utils/nautilus-actions-print.c:110
+#: ../src/utils/nautilus-actions-run.c:119
 #, c-format
-#| msgid ""
-#| "Syntax error:\n"
-#| "\t- %s\n"
-#| "Try %s --help\n"
 msgid "Syntax error: %s\n"
 msgstr "Συντακτικό σφάλμα: %s\n"
 
-#: ../src/test/test-reader.c:164
+#: ../src/test/test-reader.c:166
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Σφάλμα: το uri είναι υποχρεωτικό.\n"
 
 #. i18: '--help' is a command-line option - do not translate
-#: ../src/test/test-reader.c:176 ../src/utils/na-delete-xmltree.c:194
-#: ../src/utils/na-print-schemas.c:301 ../src/utils/na-set-conf.c:219
-#: ../src/utils/nautilus-actions-new.c:626
-#: ../src/utils/nautilus-actions-print.c:237
-#: ../src/utils/nautilus-actions-run.c:481
+#: ../src/test/test-reader.c:178 ../src/utils/na-delete-xmltree.c:197
+#: ../src/utils/na-print-schemas.c:304 ../src/utils/na-set-conf.c:222
+#: ../src/utils/nautilus-actions-new.c:632
+#: ../src/utils/nautilus-actions-print.c:240
+#: ../src/utils/nautilus-actions-run.c:484
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Δοκιμάστε το %s --help για χρήση.\n"
@@ -4889,8 +4693,8 @@ msgid ""
 "product=nautilus-actions,\n"
 "or you may prefer to mail to <maintainer@nautilus-actions.org>.\n"
 msgstr ""
-"Αναφορές σφάλματος είναι καλοδεχούμενες "
-"στοhttps://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions,\n"
+"Αναφορές σφάλματος είναι καλοδεχούμενες στοhttps://bugzilla.gnome.org/"
+"enter_bug.cgi?product=nautilus-actions,\n"
 "ή μπορεί να προτιμήσετε να τις ταχυδρομήσετε στο <maintainer@nautilus-"
 "actions.org>.\n"
 
@@ -4899,35 +4703,34 @@ msgid "The XPath to the tree to be deleted"
 msgstr "Η XPath στο δένδρο που θα διαγραφεί"
 
 #: ../src/utils/na-delete-xmltree.c:70
-#| msgid "The parameters of the command"
 msgid "The filename of the XML backend"
 msgstr "Το όνομα αρχείου της υποστήριξης του XML"
 
-#: ../src/utils/na-delete-xmltree.c:125
+#: ../src/utils/na-delete-xmltree.c:128
 #, c-format
 msgid "Error: a XPath is mandatory.\n"
 msgstr "Σφάλμα: ένα XPath είναι υποχρεωτικό.\n"
 
-#: ../src/utils/na-delete-xmltree.c:130
+#: ../src/utils/na-delete-xmltree.c:133
 #, c-format
 msgid "Error: a XML filename is mandatory.\n"
 msgstr "Σφάλμα: ένα όνομα αρχείου XML είναι υποχρεωτικό.\n"
 
-#: ../src/utils/na-delete-xmltree.c:161
+#: ../src/utils/na-delete-xmltree.c:164
 msgid "Delete a XPath from a XML document."
 msgstr "Διαγραφή ενός XPath από ένα έγγραφο XML."
 
-#: ../src/utils/na-delete-xmltree.c:210
+#: ../src/utils/na-delete-xmltree.c:213
 #, c-format
 msgid "Error: unable to parse file '%s'\n"
 msgstr "Σφάλμα: αδύνατη η ανάλυση αρχείου '%s'\n"
 
-#: ../src/utils/na-delete-xmltree.c:217
+#: ../src/utils/na-delete-xmltree.c:220
 #, c-format
 msgid "Error: unable to create new XPath context\n"
 msgstr "Σφάλμα: αδύνατη η δημιουργία νέου περιεχομένου XPath\n"
 
-#: ../src/utils/na-delete-xmltree.c:225
+#: ../src/utils/na-delete-xmltree.c:228
 #, c-format
 msgid "Error: unable to evaluate XPath expression '%s'\n"
 msgstr "Σφάλμα: αδύνατη η εκτίμηση της έκφρασης XPath '%s'\n"
@@ -4944,11 +4747,12 @@ msgstr "Έξοδος των σχημάτων ενέργειας [προεπιλ�
 msgid "Output the menu schemas"
 msgstr "Έξοδος των σχημάτων μενού"
 
-#: ../src/utils/na-print-schemas.c:159
+#: ../src/utils/na-print-schemas.c:162
 msgid "Output the Nautilus-Actions GConf schemas on stdout."
-msgstr "Έξοδος των σχημάτων GConf των Ενεργειών του Ναυτίλου στην τυπική έξοδο."
+msgstr ""
+"Έξοδος των σχημάτων GConf των Ενεργειών του Ναυτίλου στην τυπική έξοδο."
 
-#: ../src/utils/na-print-schemas.c:163
+#: ../src/utils/na-print-schemas.c:166
 msgid ""
 "As of version 3.1.0, GConf as an I/O provider is deprecated.\n"
 "This program is no more maintained."
@@ -4956,7 +4760,7 @@ msgstr ""
 "Από την έκδοση 3.1.0, το GConf ως πάροχος εισόδου/εξόδου καταργήθηκε.\n"
 "Αυτό το πρόγραμμα δεν συντηρείται πια."
 
-#: ../src/utils/na-print-schemas.c:182
+#: ../src/utils/na-print-schemas.c:185
 msgid "Type options"
 msgstr "Επιλογές τύπου"
 
@@ -4975,7 +4779,8 @@ msgstr "Το κλειδί που θα ενημερωθεί"
 #. i18n: 'str', 'int' and 'bool' are literal values: do not translate
 #: ../src/utils/na-set-conf.c:66
 msgid "The type of the value to be set, may be 'str', 'int' or 'bool'"
-msgstr "Ο τύπος της τιμής που θα οριστεί, μπορεί να είναι 'str', 'int' ή 'bool'"
+msgstr ""
+"Ο τύπος της τιμής που θα οριστεί, μπορεί να είναι 'str', 'int' ή 'bool'"
 
 #: ../src/utils/na-set-conf.c:68
 msgid "The value to be set"
@@ -4985,93 +4790,90 @@ msgstr "Η τιμή που θα οριστεί"
 msgid "Output the version number and exit gracefully"
 msgstr "Εμφάνιση του αριθμού έκδοσης και ελεγχόμενη έξοδος"
 
-#: ../src/utils/na-set-conf.c:133
+#: ../src/utils/na-set-conf.c:136
 #, c-format
 msgid "Error: a group is mandatory.\n"
 msgstr "Σφάλμα: μια ομάδα είναι υποχρεωτική.\n"
 
-#: ../src/utils/na-set-conf.c:138
+#: ../src/utils/na-set-conf.c:141
 #, c-format
 msgid "Error: a key is mandatory.\n"
 msgstr "Σφάλμα: ένα κλειδί είναι υποχρεωτικό.\n"
 
-#: ../src/utils/na-set-conf.c:143
+#: ../src/utils/na-set-conf.c:146
 #, c-format
 msgid "Error: a type is mandatory for setting/updating a value.\n"
-msgstr "Σφάλμα: ένας τύπος είναι υποχρεωτικός για ορισμό/ενημέρωση μιας τιμής.\n"
+msgstr ""
+"Σφάλμα: ένας τύπος είναι υποχρεωτικός για ορισμό/ενημέρωση μιας τιμής.\n"
 
 #. i18n: 'str', 'int' and 'bool' are literal values: do not translate
-#: ../src/utils/na-set-conf.c:154
+#: ../src/utils/na-set-conf.c:157
 #, c-format
 msgid "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n"
 msgstr "Σφάλμα: άγνωστος τύπος: %s. Χρησιμοποιήστε 'str', 'int' ή 'bool'.\n"
 
-#: ../src/utils/na-set-conf.c:161
+#: ../src/utils/na-set-conf.c:164
 #, c-format
 msgid "Error: a value is mandatory.\n"
 msgstr "Σφάλμα: μια τιμή είναι υποχρεωτική.\n"
 
-#: ../src/utils/nautilus-actions-new.c:133
+#: ../src/utils/nautilus-actions-new.c:135
 msgid "Set it if the item should be disabled at creation"
 msgstr "Ορίστε το αν το στοιχείο πρέπει να απενεργοποιηθεί κατά τη δημιουργία"
 
-#: ../src/utils/nautilus-actions-new.c:135
+#: ../src/utils/nautilus-actions-new.c:137
 msgid "Set it if the item doesn't target the selection context menu"
 msgstr ""
 "Ορίστε το αν το στοιχείο δεν προορίζεται για το μενού περιεχομένων της "
 "επιλογής"
 
-#: ../src/utils/nautilus-actions-new.c:137
+#: ../src/utils/nautilus-actions-new.c:139
 msgid "Set it if the item doesn't target the location context menu"
 msgstr ""
 "Ορίστε το αν το στοιχείο δεν προορίζεται για το μενού περιεχομένων της θέσης"
 
-#: ../src/utils/nautilus-actions-new.c:139
+#: ../src/utils/nautilus-actions-new.c:141
 msgid "Set it if the item doesn't target the toolbar"
 msgstr "Ορίστε το αν το στοιχείο δεν προορίζεται για την εργαλειοθήκη"
 
-#: ../src/utils/nautilus-actions-new.c:141
-#| msgid ""
-#| "'true' if the filename patterns have to be case sensitive, 'false' "
-#| "otherwise"
+#: ../src/utils/nautilus-actions-new.c:143
 msgid "Set it if the basename patterns are case insensitive"
-msgstr ""
-"Ορίστε το αν τα υποδείγματα ονόματος βάσης δεν εξαρτώνται από πεζά/κεφαλαία"
+msgstr "Ορίστε το αν τα μοτίβα ονόματος βάσης δεν εξαρτώνται από πεζά/κεφαλαία"
 
-#: ../src/utils/nautilus-actions-new.c:147
+#: ../src/utils/nautilus-actions-new.c:149
 msgid "Output the new item content on stdout (default)"
 msgstr "Έξοδος του νέου περιεχομένου στοιχείου στην τυπική έξοδο (προεπιλογή)"
 
-#: ../src/utils/nautilus-actions-new.c:148
+#: ../src/utils/nautilus-actions-new.c:150
 msgid "Create the new item as a .desktop file"
 msgstr "Δημιουργία του νέου στοιχείου ως αρχείου .desktop"
 
-#: ../src/utils/nautilus-actions-new.c:159
+#: ../src/utils/nautilus-actions-new.c:161
 #, c-format
 msgid "Error: '%s' and '%s' options cannot both be specified\n"
-msgstr "Σφάλμα: οι επιλογές '%s' και '%s' δεν μπορούν να καθοριστούν και οι δύο\n"
+msgstr ""
+"Σφάλμα: οι επιλογές '%s' και '%s' δεν μπορούν να καθοριστούν και οι δύο\n"
 
-#: ../src/utils/nautilus-actions-new.c:160
+#: ../src/utils/nautilus-actions-new.c:162
 #, c-format
 msgid "'%s' option is deprecated, see %s\n"
 msgstr "Η επιλογή '%s' είναι παρωχημένη, δείτε %s\n"
 
-#: ../src/utils/nautilus-actions-new.c:215
+#: ../src/utils/nautilus-actions-new.c:220
 #, c-format
 msgid "Error: an action label is mandatory.\n"
 msgstr "Σφάλμα: μια ετικέτα ενέργειας είναι υποχρεωτική.\n"
 
-#: ../src/utils/nautilus-actions-new.c:261
+#: ../src/utils/nautilus-actions-new.c:266
 #, c-format
 msgid "Error: only one output option may be specified.\n"
 msgstr "Σφάλμα: μόνο μια επιλογή εξόδου μπορεί να καθοριστεί.\n"
 
-#: ../src/utils/nautilus-actions-new.c:347
-#| msgid "Add a New Action"
+#: ../src/utils/nautilus-actions-new.c:352
 msgid "Define a new action."
 msgstr "Ορισμός μιας νέας ενέργειας."
 
-#: ../src/utils/nautilus-actions-new.c:350
+#: ../src/utils/nautilus-actions-new.c:355
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -5085,16 +4887,16 @@ msgstr ""
 "Ή μπορείτε να επιλέξετε την άμεση εγγραφή της ενέργειας στη διαμόρφωση των "
 "Ενεργειών του Ναυτίλου."
 
-#: ../src/utils/nautilus-actions-new.c:376
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Output of the program"
 msgstr "Έξοδος του προγράμματος"
 
-#: ../src/utils/nautilus-actions-new.c:376
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Choose where the program creates the action"
 msgstr "Επιλέξτε πού το πρόγραμμα δημιουργεί την ενέργεια"
 
 #. i18n: 'na-desktop' is a plugin identifier - do not translate
-#: ../src/utils/nautilus-actions-new.c:589
+#: ../src/utils/nautilus-actions-new.c:595
 msgid "Error: unable to find 'na-desktop' i/o provider."
 msgstr "Σφάλμα: αδύνατη η εύρεση παρόχου εισόδου/εξόδου 'na-desktop'"
 
@@ -5104,7 +4906,7 @@ msgid "Print a menu or an action to stdout."
 msgstr "Εκτύπωση ενός μενού ή μιας ενέργειας στην τυπική έξοδο."
 
 #: ../src/utils/nautilus-actions-print.c:60
-msgid "The identifiant of the menu or the action to be printed"
+msgid "The identifier of the menu or the action to be printed"
 msgstr "Ο ταυτοποιητής του μενού ή της ενέργειας που θα εκτυπωθεί"
 
 #. i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable
@@ -5112,18 +4914,18 @@ msgstr "Ο ταυτοποιητής του μενού ή της ενέργεια
 msgid "An export format [Desktop1]"
 msgstr "Μια μορφή εξαγωγής [επιφάνεια εργασίας 1]"
 
-#: ../src/utils/nautilus-actions-print.c:122
+#: ../src/utils/nautilus-actions-print.c:125
 #, c-format
 msgid "Error: a menu or action id is mandatory.\n"
 msgstr "Σφάλμα: ένα αναγνωριστικό μενού ή ενέργειας είναι υποχρεωτικό.\n"
 
 #. i18n: %s stands for the id of the export format, and is not translatable
-#: ../src/utils/nautilus-actions-print.c:138
+#: ../src/utils/nautilus-actions-print.c:141
 #, c-format
 msgid "Error: %s: unknown export format.\n"
 msgstr "Σφάλμα: %s: άγνωστη μορφή εξαγωγής.\n"
 
-#: ../src/utils/nautilus-actions-print.c:203
+#: ../src/utils/nautilus-actions-print.c:206
 #, c-format
 msgid "Error: item '%s' doesn't exist.\n"
 msgstr "Σφάλμα: το στοιχείο '%s' δεν υπάρχει.\n"
@@ -5140,57 +4942,57 @@ msgstr ""
 "Ένας προορισμός, αρχείου ή φακέλου, για την ενέργεια. Περισσότερες από μία "
 "επιλογές μπορούν να καθοριστούν"
 
-#: ../src/utils/nautilus-actions-run.c:131
+#: ../src/utils/nautilus-actions-run.c:134
 #, c-format
 msgid "Error: action id is mandatory.\n"
 msgstr "Σφάλμα: το αναγνωριστικό ενέργειας είναι υποχρεωτικό.\n"
 
-#: ../src/utils/nautilus-actions-run.c:156
+#: ../src/utils/nautilus-actions-run.c:159
 #, c-format
 msgid "No current selection. Nothing to do. Exiting.\n"
 msgstr "Χωρίς τρέχουσα επιλογή. Δεν υπάρχει τίποτα να κάνετε. Έξοδος.\n"
 
-#: ../src/utils/nautilus-actions-run.c:161
+#: ../src/utils/nautilus-actions-run.c:164
 #, c-format
 msgid "Action %s is not a valid candidate. Exiting.\n"
 msgstr "Η ενέργεια %s δεν είναι έγκυρη υποψήφια ενέργεια. Έξοδος.\n"
 
-#: ../src/utils/nautilus-actions-run.c:167
+#: ../src/utils/nautilus-actions-run.c:170
 #, c-format
 msgid "No valid profile is candidate to execution. Exiting.\n"
-msgstr "Δεν υπάρχει έγκυρη κατατομή που να είναι υποψήφια για εκτέλεση. Έξοδος.\n"
+msgstr ""
+"Δεν υπάρχει έγκυρη κατατομή που να είναι υποψήφια για εκτέλεση. Έξοδος.\n"
 
-#: ../src/utils/nautilus-actions-run.c:188
-#| msgid "Create a copy of the selected action."
+#: ../src/utils/nautilus-actions-run.c:191
 msgid "Execute an action on the specified target."
 msgstr "Εκτέλεση μιας ενέργειας στον συγκεκριμένο προορισμό."
 
-#: ../src/utils/nautilus-actions-run.c:233
+#: ../src/utils/nautilus-actions-run.c:236
 #, c-format
 msgid "Error: action '%s' doesn't exist.\n"
 msgstr "Σφάλμα: η ενέργεια '%s' δεν υπάρχει.\n"
 
-#: ../src/utils/nautilus-actions-run.c:237
+#: ../src/utils/nautilus-actions-run.c:240
 #, c-format
 msgid "Error: action '%s' is disabled.\n"
 msgstr "Σφάλμα: η ενέργεια '%s' είναι ανενεργή.\n"
 
-#: ../src/utils/nautilus-actions-run.c:242
+#: ../src/utils/nautilus-actions-run.c:245
 #, c-format
 msgid "Error: action '%s' is not valid.\n"
 msgstr "Σφάλμα: η ενέργεια '%s' δεν είναι έγκυρη.\n"
 
-#: ../src/utils/nautilus-actions-run.c:328
+#: ../src/utils/nautilus-actions-run.c:331
 #, c-format
 msgid "Error: unable to get a connection to session DBus: %s"
 msgstr "Σφάλμα: αδύνατη η σύνδεση με την συνεδρία DBus: %s"
 
-#: ../src/utils/nautilus-actions-run.c:341
+#: ../src/utils/nautilus-actions-run.c:344
 #, c-format
 msgid "Error: unable to get a proxy on %s service"
 msgstr "Σφάλμα: αδύνατη η λήψη μεσολαβητή στην υπηρεσία %s"
 
-#: ../src/utils/nautilus-actions-run.c:351
+#: ../src/utils/nautilus-actions-run.c:354
 #, c-format
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Σφάλμα στην κλήση GetSelectedPaths: %s"
@@ -5524,8 +5326,8 @@ msgstr "Σφάλμα στην κλήση GetSelectedPaths: %s"
 #~ "\n"
 #~ "%d: base folder of the selected file(s)\n"
 #~ "%f: the name of the selected file or the first one if many are selected\n"
-#~ "%m: space-separated list of the basenames of the selected file(s)/folder"
-#~ "(s)\n"
+#~ "%m: space-separated list of the basenames of the selected file(s)/"
+#~ "folder(s)\n"
 #~ "%M: space-separated list of the selected file(s)/folder(s), with their "
 #~ "full paths\n"
 #~ "%u: GnomeVFS URI\n"
@@ -5621,8 +5423,8 @@ msgstr "Σφάλμα στην κλήση GetSelectedPaths: %s"
 #~ msgid ""
 #~ "This config file is more recent than this version of Nautilus-actions can "
 #~ "support. Please upgrade Nautilus-actions to the latest version if you "
-#~ "want to be able to import it (File version: %s (max supported version : %"
-#~ "s))"
+#~ "want to be able to import it (File version: %s (max supported version : "
+#~ "%s))"
 #~ msgstr ""
 #~ "Το αρχείο ρυθμίσεων είναι πιο πρόσφατο από αυτή την έκδοση που "
 #~ "υποστηρίζουν οι ενέργειες του Ναυτίλου. Παρακαλώ ενημερώστε τις ενέργειες "
@@ -5631,11 +5433,11 @@ msgstr "Σφάλμα στην κλήση GetSelectedPaths: %s"
 #~ "υποστηρίζεται: %s))"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
-#~ "s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
+#~ "%s)%s"
 #~ msgid_plural ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing keys: %"
-#~ "s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing keys: "
+#~ "%s)%s"
 #~ msgstr[0] ""
 #~ "Αυτό το αρχείο τύπου XML δεν είναι ένα έγκυρο αρχείο ρυθμίσεων των "
 #~ "ενεργειών του Ναυτίλου (λείπει το κλειδί: %s)%s"
@@ -5644,15 +5446,15 @@ msgstr "Σφάλμα στην κλήση GetSelectedPaths: %s"
 #~ "ενεργειών του Ναυτίλου (λείπουν τα κλειδιά: %s)%s"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
-#~ "s)"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
+#~ "%s)"
 #~ msgstr ""
 #~ "Αυτό το αρχείο τύπου XML δεν είναι ένα έγκυρο αρχείο ρυθμίσεων των "
 #~ "ενεργειών του Ναυτίλου (λείπει το κλειδί: %s)"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (root node is <%"
-#~ "s> instead of <%s>)"
+#~ "This XML file is not a valid Nautilus-actions config file (root node is <"
+#~ "%s> instead of <%s>)"
 #~ msgstr ""
 #~ "Αυτό το αρχείο τύπου XML δεν είναι ένα έγκυρο αρχείο ρυθμίσεων των "
 #~ "ενεργειών του Ναυτίλου (ο ριζικός κόμβος είναι ο <%s> αντί για τον <%s>)"
