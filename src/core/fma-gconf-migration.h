@@ -27,15 +27,15 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_CORE_NA_GCONF_MIGRATION_H__
-#define __NAUTILUS_ACTIONS_CORE_NA_GCONF_MIGRATION_H__
+#ifndef __CORE_FMA_GCONF_MIGRATION_H__
+#define __CORE_FMA_GCONF_MIGRATION_H__
 
 #include <glib.h>
 
 G_BEGIN_DECLS
 
-void  na_gconf_migration_run( void );
+void  fma_gconf_migration_run( void );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_CORE_NA_GCONF_MIGRATION_H__ */
+#endif /* __CORE_FMA_GCONF_MIGRATION_H__ */

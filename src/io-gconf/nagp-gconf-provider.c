@@ -238,7 +238,7 @@ iio_provider_iface_init( FMAIIOProviderInterface *iface )
 static gchar *
 iio_provider_get_id( const FMAIIOProvider *provider )
 {
-	return( g_strdup( "na-gconf" ));
+	return( g_strdup( "fma-gconf" ));
 }
 
 static gchar *

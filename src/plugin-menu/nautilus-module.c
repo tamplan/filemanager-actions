@@ -37,7 +37,7 @@
 
 #include <libnautilus-extension/nautilus-extension-types.h>
 
-#include <core/na-gconf-migration.h>
+#include <core/fma-gconf-migration.h>
 #include <core/na-settings.h>
 
 #include "nautilus-actions.h"
@@ -76,7 +76,7 @@ nautilus_module_initialize( GTypeModule *module )
 	 * run GConf migration tools before doing anything else
 	 * above all before allocating a new NAPivot
 	 */
-	na_gconf_migration_run();
+	fma_gconf_migration_run();
 
 	nautilus_actions_register_type( module );
 }

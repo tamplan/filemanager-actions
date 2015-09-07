@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <core/na-gconf-migration.h>
+#include <core/fma-gconf-migration.h>
 
 #include "nact-application.h"
 
@@ -62,7 +62,7 @@ main( int argc, char *argv[] )
 	 * run GConf migration tools before doing anything else
 	 * above all before allocating a new NAPivot
 	 */
-	na_gconf_migration_run();
+	fma_gconf_migration_run();
 
 	/* create and run the application
 	 */

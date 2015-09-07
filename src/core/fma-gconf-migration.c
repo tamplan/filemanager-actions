@@ -31,12 +31,12 @@
 #include <config.h>
 #endif
 
-#include "na-gconf-migration.h"
+#include "fma-gconf-migration.h"
 
-#define MIGRATION_COMMAND				PKGLIBEXECDIR "/na-gconf2key.sh -delete -nodummy -verbose"
+#define MIGRATION_COMMAND				PKGLIBEXECDIR "/fma-gconf2key.sh -delete -nodummy -verbose"
 
 /**
- * na_gconf_migration_run:
+ * fma_gconf_migration_run:
  *
  * Migrate users actions and menus from GConf to .desktop files.
  * Disable GConf I/O provider both for reading and writing.
@@ -45,9 +45,9 @@
  * Since: 3.1
  */
 void
-na_gconf_migration_run( void )
+fma_gconf_migration_run( void )
 {
-	static const gchar *thisfn = "na_gconf_migration_run";
+	static const gchar *thisfn = "fma_gconf_migration_run";
 #ifdef HAVE_GCONF
 	gchar *out, *err;
 	GError *error;

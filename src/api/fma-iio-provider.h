@@ -150,7 +150,7 @@
  *          <entry>2009-12-16</entry>
  *        </row>
  *        <row>
- *          <entry><literal>na-gconf</literal></entry>
+ *          <entry><literal>fma-gconf</literal></entry>
  *          <entry>NA GConf I/O Provider</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2009-12-16</entry>

@@ -160,7 +160,7 @@ class_init( NAIOProviderClass *klass )
 	spec = g_param_spec_string(
 			IO_PROVIDER_PROP_ID,
 			"I/O Provider Id",
-			"Internal identifier of the I/O provider (e.g. 'na-gconf')", "",
+			"Internal identifier of the I/O provider (e.g. 'fma-gconf')", "",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, IO_PROVIDER_PROP_ID_ID, spec );
 

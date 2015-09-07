@@ -119,7 +119,7 @@ na_set_conf_LDADD = \
 	$(NULL)
 
 EXTRA_DIST = \
-	na-gconf2key.sh.in											\
+	fma-gconf2key.sh.in											\
 	$(NULL)
 
 CLEANFILES = \
@@ -144,7 +144,7 @@ na_delete_xmltree_LDADD = \
 	$(NULL)
 
 pkglibexec_SCRIPTS = \
-	na-gconf2key.sh												\
+	fma-gconf2key.sh												\
 	$(NULL)
 
 do_subst = sed \

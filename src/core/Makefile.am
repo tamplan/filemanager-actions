@@ -68,8 +68,8 @@ libna_core_la_SOURCES = \
 	fma-factory-object.h									\
 	fma-factory-provider.c								\
 	fma-factory-provider.h								\
-	na-gconf-migration.c								\
-	na-gconf-migration.h								\
+	fma-gconf-migration.c								\
+	fma-gconf-migration.h								\
 	fma-gconf-monitor.c									\
 	fma-gconf-utils.c									\
 	na-gnome-vfs-uri.c									\

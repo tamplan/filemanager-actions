@@ -33,7 +33,7 @@
 /**
  * SECTION: nagp_gconf_provider
  * @short_description: #NagpGConfProvider class definition.
- * @include: na-gconf-provider.h
+ * @include: fma-gconf-provider.h
  *
  * This class manages the GConf I/O storage subsystem, or, in other words,
  * the GConf subsystem as an #FMAIIOProvider. As this, it should only be

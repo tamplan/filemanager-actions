@@ -41,7 +41,7 @@
 #include <api/fma-object-api.h>
 #include <api/fma-dbus.h>
 
-#include <core/na-gconf-migration.h>
+#include <core/fma-gconf-migration.h>
 #include <core/na-pivot.h>
 #include <core/na-selected-info.h>
 #include <core/na-tokens.h>
@@ -103,7 +103,7 @@ main( int argc, char** argv )
 	 * run GConf migration tools before doing anything else
 	 * above all before allocating a new NAPivot
 	 */
-	na_gconf_migration_run();
+	fma_gconf_migration_run();
 
 	context = init_options();
 

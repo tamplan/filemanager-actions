@@ -402,8 +402,8 @@ function add_pref
 
 	# make sure that GConf is at the end of the list of I/O providers
 	if [ "${_key}" = "io-providers-order" ]; then
-		if [ "$(echo ${_newvalue} | grep na-gconf)" != "" ]; then
-			typeset _v="$(echo "${_newvalue}" | sed -e 's/na-gconf//');na-gconf;"
+		if [ "$(echo ${_newvalue} | grep fma-gconf)" != "" ]; then
+			typeset _v="$(echo "${_newvalue}" | sed -e 's/fma-gconf//');fma-gconf;"
 			_newvalue="$(echo "${_v}" | sed -e 's/;\+/;/g')"
 		fi
 	fi
@@ -643,7 +643,7 @@ fi
 if [ "${opt_admin}" = "yes" ]; then
 	for dir in $(gconftool-2 --all-dirs ${na_mandatory}); do
 		bdir=${dir##*/}
-		if [ "${bdir}" != "na-gconf" ]; then
+		if [ "${bdir}" != "fma-gconf" ]; then
 			value=$(gconftool-2 --get ${dir}/locked 2>/dev/null)
 			if [ "${value}" != "" ]; then
 				# 'all/locked' means 'all preferences are read-only'
@@ -663,7 +663,7 @@ fi
 if [ "${opt_admin}" = "no" ]; then
 	for dir in $(gconftool-2 --all-dirs ${na_providers}); do
 		bdir=${dir##*/}
-		if [ "${bdir}" != "na-gconf" ]; then
+		if [ "${bdir}" != "fma-gconf" ]; then
 			gconftool-2 --all-entries ${dir} | while read key x value; do
 				case ${key} in
 					read-at-startup)
@@ -680,7 +680,7 @@ fi
 
 # whether we are running admin tasks or not, we try to force the GConf i/o provider
 # to be locked
-cat <<! >${my_tmproot}.io-provider_na-gconf
+cat <<! >${my_tmproot}.io-provider_fma-gconf
 # Starting with 3.1.0, GConf as I/O provider is deprecated
 readable=true
 writable = false
@@ -690,7 +690,7 @@ let nbprefs=0
 
 if [ -e ${destconf} ]; then
 	msg "${destconf} already exists: do not replace it, update the N-A configuration file instead"
-	command "@pkglibexecdir@/na-set-conf --group 'io-provider na-gconf' --key writable --type bool --value false"
+	command "@pkglibexecdir@/na-set-conf --group 'io-provider fma-gconf' --key writable --type bool --value false"
 else
 	nbprefs=$(cat ${my_tmproot}.nact ${my_tmproot}.runtime ${my_tmproot}.io-provider_* 2>/dev/null | wc -l)
 

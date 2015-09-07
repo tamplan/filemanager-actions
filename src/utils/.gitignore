@@ -3,5 +3,5 @@ file-manager-actions-print
 file-manager-actions-run
 file-manager-actions-run-bindings.h
 na-delete-xmltree
-na-gconf2key.sh
+fma-gconf2key.sh
 na-print-schemas
