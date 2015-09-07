@@ -67,7 +67,7 @@ FMADataDef data_def_item [] = {
 					"- 'Action',\n" \
 					"- 'Menu'.\n" \
 					"The value is case sensitive and must not be localized." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				NULL,
 				FALSE,
 				FALSE,
@@ -95,7 +95,7 @@ FMADataDef data_def_item [] = {
 				N_( "The label of the menu item that will appear in the file manager context " \
 					"menu when the selection matches the appearance condition settings.\n" \
 					"It is also used as a default for the toolbar label of an action." ),
-				NA_DATA_TYPE_LOCALE_STRING,
+				FMA_DATA_TYPE_LOCALE_STRING,
 				N_( "Empty label" ),
 				FALSE,
 				TRUE,
@@ -119,7 +119,7 @@ FMADataDef data_def_item [] = {
 				N_( "The tooltip of the menu item that will appear in the file manager " \
 					"statusbar when the user points to the file manager context menu item " \
 					"with his/her mouse." ),
-				NA_DATA_TYPE_LOCALE_STRING,
+				FMA_DATA_TYPE_LOCALE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -144,7 +144,7 @@ FMADataDef data_def_item [] = {
 					"in the file manager context menu when the selection matches the appearance " \
 					"conditions settings.\n" \
 					"May be the localized name of a themed icon, or a full path to any appropriate image." ),
-				NA_DATA_TYPE_LOCALE_STRING,
+				FMA_DATA_TYPE_LOCALE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -168,7 +168,7 @@ FMADataDef data_def_item [] = {
 				FALSE,
 				"Unlocalized icon name or path",
 				NULL,
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				FALSE,
@@ -191,7 +191,7 @@ FMADataDef data_def_item [] = {
 				N_( "Description relative to the item" ),
 				N_( "Some text which explains the goal of the menu or the action.\n" \
 					"May be used, e.g. when displaying available items on a web site." ),
-				NA_DATA_TYPE_LOCALE_STRING,
+				FMA_DATA_TYPE_LOCALE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -218,7 +218,7 @@ FMADataDef data_def_item [] = {
 					"an already existing shortcut to define this one.\n" \
 					"The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n" \
 					"Defaults to empty." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -242,7 +242,7 @@ FMADataDef data_def_item [] = {
 				TRUE,
 				"Subitems",
 				"List of subitems objects",
-				NA_DATA_TYPE_POINTER,
+				FMA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,
 				FALSE,			/* not copyable */
@@ -270,7 +270,7 @@ FMADataDef data_def_item [] = {
 					"if the item is a menu, or profiles if the item is an action.\n" \
 					"If this list doesn't exist or is empty for an action or a menu, " \
 					"subitems are attached in the order of the read operations." ),
-				NA_DATA_TYPE_STRING_LIST,
+				FMA_DATA_TYPE_STRING_LIST,
 				NULL,
 				FALSE,
 				FALSE,
@@ -294,7 +294,7 @@ FMADataDef data_def_item [] = {
 				N_( "If the or the menu action is disabled, it will never appear in the " \
 					"file manager context menu.\n" \
 					"Defaults to TRUE." ),
-				NA_DATA_TYPE_BOOLEAN,
+				FMA_DATA_TYPE_BOOLEAN,
 				"true",
 				FALSE,
 				TRUE,
@@ -324,7 +324,7 @@ FMADataDef data_def_item [] = {
 				"as this also depend of parameters set by user and administrator. " \
 				"Also, a property initially set to FALSE when first unserializing may be set to" \
 				"TRUE if an eccor occurs on a later write operation.",
-				NA_DATA_TYPE_BOOLEAN,
+				FMA_DATA_TYPE_BOOLEAN,
 				"false",
 				FALSE,
 				FALSE,
@@ -348,7 +348,7 @@ FMADataDef data_def_item [] = {
 				TRUE,
 				"I/O provider",
 				"A pointer to the NAIOProvider object.",
-				NA_DATA_TYPE_POINTER,
+				FMA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,
 				TRUE,
@@ -375,7 +375,7 @@ FMADataDef data_def_item [] = {
 				TRUE,
 				"I/O provider data",
 				"A pointer to some NAIOProvider specific data.",
-				NA_DATA_TYPE_POINTER,
+				FMA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,
 				FALSE,
@@ -408,7 +408,7 @@ FMADataDef data_def_item [] = {
 				TRUE,
 				N_( "Version of the format" ),
 				N_( "The version of the configuration format that will be used to manage backward compatibility." ),
-				NA_DATA_TYPE_UINT,
+				FMA_DATA_TYPE_UINT,
 				"3",
 				FALSE,
 				TRUE,

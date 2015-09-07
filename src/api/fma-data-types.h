@@ -43,47 +43,50 @@ G_BEGIN_DECLS
 
 /**
  * FMADataType:
- * @NA_DATA_TYPE_BOOLEAN:       a boolean
- *                              can be initialized with "true" or "false" (case insensitive)
- * @NA_DATA_TYPE_POINTER:       a ( void * ) pointer
- * @NA_DATA_TYPE_STRING:        an ASCII string
- * @NA_DATA_TYPE_STRING_LIST:   a list of ASCII strings
- * @NA_DATA_TYPE_LOCALE_STRING: a localized UTF-8 string
- * @NA_DATA_TYPE_UINT:          an unsigned integer
- * @NA_DATA_TYPE_UINT_LIST:     a list of unsigned integers
+ * @FMA_DATA_TYPE_BOOLEAN:       a boolean
+ *                               can be initialized with "true" or "false"
+ *                               (case insensitive)
+ * @FMA_DATA_TYPE_POINTER:       a ( void * ) pointer
+ * @FMA_DATA_TYPE_STRING:        an ASCII string
+ * @FMA_DATA_TYPE_STRING_LIST:   a list of ASCII strings
+ * @FMA_DATA_TYPE_LOCALE_STRING: a localized UTF-8 string
+ * @FMA_DATA_TYPE_UINT:          an unsigned integer
+ * @FMA_DATA_TYPE_UINT_LIST:     a list of unsigned integers
  *
- * Each elementary data which would take advantage of #FMABoxed facilities
- * should be typed at instanciation time.
+ * Each elementary data which would take advantage of #FMABoxed
+ * facilities should be typed at instanciation time.
  *
- * #NAIFactoryProvider implementations should provide a primitive for reading
- * (resp. writing) a value for each of these elementary data types.
+ * #NAIFactoryProvider implementations should provide a primitive for
+ * reading (resp. writing) a value for each of these elementary data
+ * types.
  *
  * <note>
  *   <para>
- * Please note that this enumeration may be compiled in by the extensions.
- * They must so remain fixed, unless you are prepared to see strange effects
- * (e.g. an extension has been compiled with %NA_DATA_TYPE_STRING = 2, while you
- * have inserted another element, making it to 3 !) - or you know what
- * you are doing...
+ * Please note that this enumeration may be compiled in by the
+ * extensions. They must so remain fixed, unless you are prepared to
+ * see strange effects (e.g. an extension may have been compiled with
+ * %FMA_DATA_TYPE_STRING = 2, while you have inserted another element,
+ * making it to 3 !) - or you know what you are doing...
  *   </para>
  *   <para>
- *     So, only add new items at the end of the enum. You have been warned!
+ *     So, only add new items at the end of the enum. You have been
+ *     warned!
  *   </para>
  * </note>
  *
  * Since: 2.30
  */
 typedef enum {
-	NA_DATA_TYPE_BOOLEAN = 1,
-	NA_DATA_TYPE_POINTER,
-	NA_DATA_TYPE_STRING,
-	NA_DATA_TYPE_STRING_LIST,
-	NA_DATA_TYPE_LOCALE_STRING,
-	NA_DATA_TYPE_UINT,
-	NA_DATA_TYPE_UINT_LIST,
+	FMA_DATA_TYPE_BOOLEAN = 1,
+	FMA_DATA_TYPE_POINTER,
+	FMA_DATA_TYPE_STRING,
+	FMA_DATA_TYPE_STRING_LIST,
+	FMA_DATA_TYPE_LOCALE_STRING,
+	FMA_DATA_TYPE_UINT,
+	FMA_DATA_TYPE_UINT_LIST,
 	/*< private >*/
 	/* count of defined types */
-	NA_DATA_TYPE_N
+	FMA_DATA_TYPE_N
 }
 	FMADataType;
 

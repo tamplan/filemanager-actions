@@ -551,7 +551,7 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const FMADa
 
 	/* boolean value must be lowercase
 	 */
-	if( def->type == NA_DATA_TYPE_BOOLEAN ){
+	if( def->type == FMA_DATA_TYPE_BOOLEAN ){
 		tmp = g_ascii_strdown( value_str, -1 );
 		g_free( value_str );
 		value_str = tmp;
@@ -560,7 +560,7 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const FMADa
 	/* string or uint list value must be converted to gconf format
 	 * comma-separated and enclosed within square brackets
 	 */
-	if( def->type == NA_DATA_TYPE_STRING_LIST || def->type == NA_DATA_TYPE_UINT_LIST ){
+	if( def->type == FMA_DATA_TYPE_STRING_LIST || def->type == FMA_DATA_TYPE_UINT_LIST ){
 		tmp = convert_to_gconf_slist( value_str );
 		g_free( value_str );
 		value_str = tmp;
@@ -605,7 +605,7 @@ write_data_schema_v2_element( NAXMLWriter *writer, const FMADataDef *def, const 
 	xmlFree( content );
 
 	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_TYPE ), BAD_CAST( fma_data_types_get_gconf_dump_key( def->type )));
-	if( def->type == NA_DATA_TYPE_STRING_LIST ){
+	if( def->type == FMA_DATA_TYPE_STRING_LIST ){
 		xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LISTTYPE ), BAD_CAST( "string" ));
 	}
 
@@ -663,7 +663,7 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const FMADataBox
 
 	/* boolean value must be lowercase
 	 */
-	if( def->type == NA_DATA_TYPE_BOOLEAN ){
+	if( def->type == FMA_DATA_TYPE_BOOLEAN ){
 		tmp = g_ascii_strdown( value_str, -1 );
 		g_free( value_str );
 		value_str = tmp;
@@ -672,7 +672,7 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const FMADataBox
 	/* string or uint list value must be converted to gconf format
 	 * comma-separated and enclosed within square brackets
 	 */
-	if( def->type == NA_DATA_TYPE_STRING_LIST || def->type == NA_DATA_TYPE_UINT_LIST ){
+	if( def->type == FMA_DATA_TYPE_STRING_LIST || def->type == FMA_DATA_TYPE_UINT_LIST ){
 		tmp = convert_to_gconf_slist( value_str );
 		g_free( value_str );
 		value_str = tmp;
@@ -707,7 +707,7 @@ write_data_dump_element( NAXMLWriter *writer, const FMADataDef *def, const FMADa
 
 	value_node = xmlNewChild( entry_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE ), NULL );
 
-	if( def->type == NA_DATA_TYPE_STRING_LIST ){
+	if( def->type == FMA_DATA_TYPE_STRING_LIST ){
 		value_list_node = xmlNewChild( value_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_LIST ), NULL );
 		xmlNewProp( value_list_node, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_LIST_PARM_TYPE ), BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING ));
 		value_list_value_node = xmlNewChild( value_list_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE ), NULL );

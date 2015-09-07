@@ -376,25 +376,25 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 
 		switch( def->type ){
 
-			case NA_DATA_TYPE_STRING:
-			case NA_DATA_TYPE_LOCALE_STRING:
+			case FMA_DATA_TYPE_STRING:
+			case FMA_DATA_TYPE_LOCALE_STRING:
 				str_value = fma_gconf_utils_read_string( provider->private->gconf, entry_path, TRUE, NULL );
 				fma_boxed_set_from_string( FMA_BOXED( boxed ), str_value );
 				g_free( str_value );
 				break;
 
-			case NA_DATA_TYPE_BOOLEAN:
+			case FMA_DATA_TYPE_BOOLEAN:
 				bool_value = fma_gconf_utils_read_bool( provider->private->gconf, entry_path, TRUE, FALSE );
 				fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( bool_value ));
 				break;
 
-			case NA_DATA_TYPE_STRING_LIST:
+			case FMA_DATA_TYPE_STRING_LIST:
 				slist_value = fma_gconf_utils_read_string_list( provider->private->gconf, entry_path );
 				fma_boxed_set_from_void( FMA_BOXED( boxed ), slist_value );
 				fma_core_utils_slist_free( slist_value );
 				break;
 
-			case NA_DATA_TYPE_UINT:
+			case FMA_DATA_TYPE_UINT:
 				int_value = fma_gconf_utils_read_int( provider->private->gconf, entry_path, TRUE, 0 );
 				fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( int_value ));
 				break;

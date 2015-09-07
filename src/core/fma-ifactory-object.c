@@ -206,8 +206,8 @@ fma_ifactory_object_get_data_groups( const FMAIFactoryObject *object )
  * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data whose value is to be got.
  *
- * If the type of the value is %NA_DATA_TYPE_STRING, %NA_DATA_TYPE_LOCALE_STRING,
- * or %NA_DATA_TYPE_STRING_LIST, then the returned value is a newly allocated
+ * If the type of the value is %FMA_DATA_TYPE_STRING, %FMA_DATA_TYPE_LOCALE_STRING,
+ * or %FMA_DATA_TYPE_STRING_LIST, then the returned value is a newly allocated
  * one and should be g_free() (resp. fma_core_utils_slist_free()) by the
  * caller.
  *

@@ -277,7 +277,7 @@ attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const FMADataDef *def )
 	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
 
 	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_TYPE ), BAD_CAST( fma_data_types_get_gconf_dump_key( def->type )));
-	if( def->type == NA_DATA_TYPE_STRING_LIST ){
+	if( def->type == FMA_DATA_TYPE_STRING_LIST ){
 		xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LISTTYPE ), BAD_CAST( "string" ));
 	}
 

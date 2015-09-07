@@ -104,37 +104,37 @@ static gboolean            uint_list_is_default( const FMADataBoxed *boxed );
 static gboolean            uint_list_is_valid( const FMADataBoxed *boxed );
 
 static DataBoxedDef st_data_boxed_def[] = {
-		{ NA_DATA_TYPE_BOOLEAN,
+		{ FMA_DATA_TYPE_BOOLEAN,
 				bool_spec,
 				bool_is_default,
 				bool_is_valid
 				},
-		{ NA_DATA_TYPE_POINTER,
+		{ FMA_DATA_TYPE_POINTER,
 				pointer_spec,
 				pointer_is_default,
 				pointer_is_valid
 				},
-		{ NA_DATA_TYPE_STRING,
+		{ FMA_DATA_TYPE_STRING,
 				string_spec,
 				string_is_default,
 				string_is_valid
 				},
-		{ NA_DATA_TYPE_STRING_LIST,
+		{ FMA_DATA_TYPE_STRING_LIST,
 				string_list_spec,
 				string_list_is_default,
 				string_list_is_valid
 				},
-		{ NA_DATA_TYPE_LOCALE_STRING,
+		{ FMA_DATA_TYPE_LOCALE_STRING,
 				string_spec,
 				locale_is_default,
 				locale_is_valid
 				},
-		{ NA_DATA_TYPE_UINT,
+		{ FMA_DATA_TYPE_UINT,
 				uint_spec,
 				uint_is_default,
 				uint_is_valid
 				},
-		{ NA_DATA_TYPE_UINT_LIST,
+		{ FMA_DATA_TYPE_UINT_LIST,
 				uint_list_spec,
 				uint_list_is_default,
 				uint_list_is_valid

@@ -754,8 +754,8 @@ na_factory_object_get_as_value( const FMAIFactoryObject *object, const gchar *na
  *
  * Returns: the searched value.
  *
- * If the type of the value is NA_DATA_TYPE_STRING or NA_DATA_TYPE_LOCALE_STRING
- * (resp. NA_DATA_TYPE_STRING_LIST), then the returned value is a newly allocated
+ * If the type of the value is FMA_DATA_TYPE_STRING or FMA_DATA_TYPE_LOCALE_STRING
+ * (resp. FMA_DATA_TYPE_STRING_LIST), then the returned value is a newly allocated
  * string (resp. GSList) and should be g_free() (resp. fma_core_utils_slist_free())
  * by the caller.
  */

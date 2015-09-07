@@ -172,7 +172,7 @@ static void             uint_list_to_value( const FMABoxed *boxed, GValue *value
 static void            *uint_list_to_void( const FMABoxed *boxed );
 
 static sBoxedDef st_boxed_def[] = {
-		{ NA_DATA_TYPE_BOOLEAN,
+		{ FMA_DATA_TYPE_BOOLEAN,
 				"boolean",
 				bool_are_equal,
 				bool_copy,
@@ -189,7 +189,7 @@ static sBoxedDef st_boxed_def[] = {
 				bool_to_value,
 				bool_to_void
 				},
-		{ NA_DATA_TYPE_POINTER,
+		{ FMA_DATA_TYPE_POINTER,
 				"pointer",
 				pointer_are_equal,
 				pointer_copy,
@@ -206,7 +206,7 @@ static sBoxedDef st_boxed_def[] = {
 				pointer_to_value,
 				pointer_to_void
 				},
-		{ NA_DATA_TYPE_STRING,
+		{ FMA_DATA_TYPE_STRING,
 				"string",
 				string_are_equal,
 				string_copy,
@@ -223,7 +223,7 @@ static sBoxedDef st_boxed_def[] = {
 				string_to_value,
 				string_to_void
 				},
-		{ NA_DATA_TYPE_STRING_LIST,
+		{ FMA_DATA_TYPE_STRING_LIST,
 				"string_list",
 				string_list_are_equal,
 				string_list_copy,
@@ -240,7 +240,7 @@ static sBoxedDef st_boxed_def[] = {
 				string_list_to_value,
 				string_list_to_void
 				},
-		{ NA_DATA_TYPE_LOCALE_STRING,
+		{ FMA_DATA_TYPE_LOCALE_STRING,
 				"locale_string",
 				locale_are_equal,
 				string_copy,
@@ -257,7 +257,7 @@ static sBoxedDef st_boxed_def[] = {
 				string_to_value,
 				string_to_void
 				},
-		{ NA_DATA_TYPE_UINT,
+		{ FMA_DATA_TYPE_UINT,
 				"uint",
 				uint_are_equal,
 				uint_copy,
@@ -274,7 +274,7 @@ static sBoxedDef st_boxed_def[] = {
 				uint_to_value,
 				uint_to_void
 				},
-		{ NA_DATA_TYPE_UINT_LIST,
+		{ FMA_DATA_TYPE_UINT_LIST,
 				"uint_list",
 				uint_list_are_equal,
 				uint_list_copy,
@@ -627,7 +627,7 @@ fma_boxed_new_from_string( guint type, const gchar *string )
  * fma_boxed_get_boolean:
  * @boxed: the #FMABoxed structure.
  *
- * Returns: the boolean value if @boxed is of %NA_DATA_TYPE_BOOLEAN type,
+ * Returns: the boolean value if @boxed is of %FMA_DATA_TYPE_BOOLEAN type,
  * %FALSE else.
  *
  * Since: 3.1
@@ -640,7 +640,7 @@ fma_boxed_get_boolean( const FMABoxed *boxed )
 	g_return_val_if_fail( FMA_IS_BOXED( boxed ), FALSE );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, FALSE );
 	g_return_val_if_fail( boxed->private->def, FALSE );
-	g_return_val_if_fail( boxed->private->def->type == NA_DATA_TYPE_BOOLEAN, FALSE );
+	g_return_val_if_fail( boxed->private->def->type == FMA_DATA_TYPE_BOOLEAN, FALSE );
 	g_return_val_if_fail( boxed->private->def->to_bool, FALSE );
 
 	value = ( *boxed->private->def->to_bool )( boxed );
@@ -652,7 +652,7 @@ fma_boxed_get_boolean( const FMABoxed *boxed )
  * fma_boxed_get_pointer:
  * @boxed: the #FMABoxed structure.
  *
- * Returns: a const pointer to the data if @boxed is of %NA_DATA_TYPE_POINTER
+ * Returns: a const pointer to the data if @boxed is of %FMA_DATA_TYPE_POINTER
  * type, %NULL else.
  *
  * Since: 3.1
@@ -676,7 +676,7 @@ fma_boxed_get_pointer( const FMABoxed *boxed )
  * fma_boxed_get_string:
  * @boxed: the #FMABoxed structure.
  *
- * Returns: a newly allocated string if @boxed is of %NA_DATA_TYPE_STRING
+ * Returns: a newly allocated string if @boxed is of %FMA_DATA_TYPE_STRING
  * type, which should be g_free() by the caller, %NULL else.
  *
  * Since: 3.1
@@ -700,7 +700,7 @@ fma_boxed_get_string( const FMABoxed *boxed )
  * fma_boxed_get_string_list:
  * @boxed: the #FMABoxed structure.
  *
- * Returns: a newly allocated string list if @boxed is of %NA_DATA_TYPE_STRING_LIST
+ * Returns: a newly allocated string list if @boxed is of %FMA_DATA_TYPE_STRING_LIST
  * type, which should be fma_core_utils_slist_free() by the caller, %NULL else.
  *
  * Since: 3.1
@@ -713,7 +713,7 @@ fma_boxed_get_string_list( const FMABoxed *boxed )
 	g_return_val_if_fail( FMA_IS_BOXED( boxed ), NULL );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, NULL );
 	g_return_val_if_fail( boxed->private->def, NULL );
-	g_return_val_if_fail( boxed->private->def->type == NA_DATA_TYPE_STRING_LIST, NULL );
+	g_return_val_if_fail( boxed->private->def->type == FMA_DATA_TYPE_STRING_LIST, NULL );
 	g_return_val_if_fail( boxed->private->def->to_string_list, NULL );
 
 	value = ( *boxed->private->def->to_string_list )( boxed );
@@ -725,7 +725,7 @@ fma_boxed_get_string_list( const FMABoxed *boxed )
  * fma_boxed_get_uint:
  * @boxed: the #FMABoxed structure.
  *
- * Returns: an unsigned integer if @boxed is of %NA_DATA_TYPE_UINT type,
+ * Returns: an unsigned integer if @boxed is of %FMA_DATA_TYPE_UINT type,
  * zero else.
  *
  * Since: 3.1
@@ -738,7 +738,7 @@ fma_boxed_get_uint( const FMABoxed *boxed )
 	g_return_val_if_fail( FMA_IS_BOXED( boxed ), 0 );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, 0 );
 	g_return_val_if_fail( boxed->private->def, 0 );
-	g_return_val_if_fail( boxed->private->def->type == NA_DATA_TYPE_UINT, 0 );
+	g_return_val_if_fail( boxed->private->def->type == FMA_DATA_TYPE_UINT, 0 );
 	g_return_val_if_fail( boxed->private->def->to_uint, 0 );
 
 	value = ( *boxed->private->def->to_uint )( boxed );
@@ -750,7 +750,7 @@ fma_boxed_get_uint( const FMABoxed *boxed )
  * fma_boxed_get_uint_list:
  * @boxed: the #FMABoxed structure.
  *
- * Returns: a newly allocated list if @boxed is of %NA_DATA_TYPE_UINT_LIST
+ * Returns: a newly allocated list if @boxed is of %FMA_DATA_TYPE_UINT_LIST
  * type, which should be g_list_free() by the caller, %FALSE else.
  *
  * Since: 3.1
@@ -763,7 +763,7 @@ fma_boxed_get_uint_list( const FMABoxed *boxed )
 	g_return_val_if_fail( FMA_IS_BOXED( boxed ), NULL );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, NULL );
 	g_return_val_if_fail( boxed->private->def, NULL );
-	g_return_val_if_fail( boxed->private->def->type == NA_DATA_TYPE_UINT_LIST, NULL );
+	g_return_val_if_fail( boxed->private->def->type == FMA_DATA_TYPE_UINT_LIST, NULL );
 	g_return_val_if_fail( boxed->private->def->to_uint_list, NULL );
 
 	value = ( *boxed->private->def->to_uint_list )( boxed );
@@ -797,8 +797,8 @@ fma_boxed_get_as_value( const FMABoxed *boxed, GValue *value )
  *
  * Returns: the content of the @boxed.
  *
- * If of type NA_DATA_TYPE_STRING (resp. NA_DATA_TYPE_LOCALE_STRING,
- * NA_DATA_TYPE_STRING_LIST or NA_DATA_TYPE_UINT_LIST), then the content
+ * If of type FMA_DATA_TYPE_STRING (resp. FMA_DATA_TYPE_LOCALE_STRING,
+ * FMA_DATA_TYPE_STRING_LIST or FMA_DATA_TYPE_UINT_LIST), then the content
  * is returned in a newly allocated value, which should be g_free() (resp.
  * g_free(), fma_core_utils_slist_free(), g_list_free()) by the caller.
  *

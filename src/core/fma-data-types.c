@@ -42,13 +42,13 @@ typedef struct {
 	FactoryType;
 
 static FactoryType st_factory_type[] = {
-		{ NA_DATA_TYPE_BOOLEAN,       "bool",   NULL },
-		{ NA_DATA_TYPE_POINTER,        NULL,    NULL },
-		{ NA_DATA_TYPE_STRING,        "string", NULL },
-		{ NA_DATA_TYPE_STRING_LIST,   "list",   "string" },
-		{ NA_DATA_TYPE_LOCALE_STRING, "string", NULL },
-		{ NA_DATA_TYPE_UINT,          "int",    NULL },
-		{ NA_DATA_TYPE_UINT_LIST,     "list",   "int" },
+		{ FMA_DATA_TYPE_BOOLEAN,       "bool",   NULL },
+		{ FMA_DATA_TYPE_POINTER,        NULL,    NULL },
+		{ FMA_DATA_TYPE_STRING,        "string", NULL },
+		{ FMA_DATA_TYPE_STRING_LIST,   "list",   "string" },
+		{ FMA_DATA_TYPE_LOCALE_STRING, "string", NULL },
+		{ FMA_DATA_TYPE_UINT,          "int",    NULL },
+		{ FMA_DATA_TYPE_UINT_LIST,     "list",   "int" },
 		{ 0 }
 };
 

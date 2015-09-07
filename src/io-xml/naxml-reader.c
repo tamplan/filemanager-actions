@@ -1224,14 +1224,14 @@ dump_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def )
 	string = NULL;
 
 	switch( def->type ){
-		case NA_DATA_TYPE_STRING:
-		case NA_DATA_TYPE_LOCALE_STRING:
-		case NA_DATA_TYPE_UINT:
-		case NA_DATA_TYPE_BOOLEAN:
+		case FMA_DATA_TYPE_STRING:
+		case FMA_DATA_TYPE_LOCALE_STRING:
+		case FMA_DATA_TYPE_UINT:
+		case FMA_DATA_TYPE_BOOLEAN:
 			string = get_value_from_child_child_node( node, NAXML_KEY_DUMP_NODE_VALUE, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
 			break;
 
-		case NA_DATA_TYPE_STRING_LIST:
+		case FMA_DATA_TYPE_STRING_LIST:
 			slist = NULL;
 			value_node = search_for_child_node( node, NAXML_KEY_DUMP_NODE_VALUE );
 
@@ -1257,7 +1257,7 @@ dump_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def )
 			fma_core_utils_slist_free( slist );
 			break;
 
-		case NA_DATA_TYPE_POINTER:
+		case FMA_DATA_TYPE_POINTER:
 		default:
 			break;
 	}

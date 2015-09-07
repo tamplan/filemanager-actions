@@ -49,7 +49,7 @@ static FMADataDef data_def_profile [] = {
 				N_( "Name of the profile" ),
 				N_( "May be used as a description for the function of the profile.\n" \
 					"If not set, it defaults to an auto-generated name." ),
-				NA_DATA_TYPE_LOCALE_STRING,
+				FMA_DATA_TYPE_LOCALE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -73,7 +73,7 @@ static FMADataDef data_def_profile [] = {
 				FALSE,
 				"Unlocalized name of the profile",
 				NULL,
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				FALSE,
@@ -100,7 +100,7 @@ static FMADataDef data_def_profile [] = {
 				N_( "Path of the command" ),
 				N_( "The path of the command to be executed when the user select the menu item " \
 					"in the file manager context menu or in the toolbar." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -165,7 +165,7 @@ static FMADataDef data_def_profile [] = {
 					"  %x: (first) extension\n" \
 					"  %X: space-separated list of the extensions of the selected file(s)/folder(s)\n" \
 					"  %%: a percent sign." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -188,7 +188,7 @@ static FMADataDef data_def_profile [] = {
 				N_( "Working directory" ),
 				N_( "The working directory the command will be started in.\n" \
 					"Defaults to \"%d\"." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"%d",
 				FALSE,
 				TRUE,
@@ -221,7 +221,7 @@ static FMADataDef data_def_profile [] = {
 						"standard streams (stdout, stderr) should be collected and displayed; " \
 						"an acceptable fallback is Terminal.\n" \
 					"Defaults to \"Normal\"." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"Normal",
 				FALSE,
 				TRUE,
@@ -244,7 +244,7 @@ static FMADataDef data_def_profile [] = {
 				N_( "Startup notify" ),
 				N_( "Only relevant when ExecutionMode=Normal.\n" \
 					"Defaults to FALSE." ),
-				NA_DATA_TYPE_BOOLEAN,
+				FMA_DATA_TYPE_BOOLEAN,
 				"false",
 				FALSE,
 				TRUE,
@@ -267,7 +267,7 @@ static FMADataDef data_def_profile [] = {
 				N_( "Startup WM Class" ),
 				N_( "Only relevant when ExecutionMode=Normal.\n" \
 					"Defaults to empty." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -292,7 +292,7 @@ static FMADataDef data_def_profile [] = {
 					"The user may be identified by its numeric UID or by its login.\n" \
 					"The profile is ignored if defined with a non-existing UID or login.\n" \
 					"Defaults to empty: the command will be executed as the current user." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,

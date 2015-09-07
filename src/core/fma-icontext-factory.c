@@ -57,7 +57,7 @@ FMADataDef data_def_conditions [] = {
 					"display.\n" \
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to '*'." ),
-				NA_DATA_TYPE_STRING_LIST,
+				FMA_DATA_TYPE_STRING_LIST,
 				"*",
 				FALSE,
 				TRUE,
@@ -91,7 +91,7 @@ FMADataDef data_def_conditions [] = {
 					"then set 'false'.\n" \
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to 'true'." ),
-				NA_DATA_TYPE_BOOLEAN,
+				FMA_DATA_TYPE_BOOLEAN,
 				"true",
 				FALSE,
 				TRUE,
@@ -118,7 +118,7 @@ FMADataDef data_def_conditions [] = {
 					"the mimetype patterns for the action to appear.\n" \
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to '*/*'." ),
-				NA_DATA_TYPE_STRING_LIST,
+				FMA_DATA_TYPE_STRING_LIST,
 				"*",
 				FALSE,
 				TRUE,
@@ -153,7 +153,7 @@ FMADataDef data_def_conditions [] = {
 				"The generic wildcard may be coded as '*', or '*/*' or 'all' or 'all/*' or 'all/all'. "
 				"In each case, we will try to spend as less time as possible to check " \
 				"selection mimetypes",
-				NA_DATA_TYPE_BOOLEAN,
+				FMA_DATA_TYPE_BOOLEAN,
 				"true",
 				FALSE,
 				TRUE,
@@ -187,7 +187,7 @@ FMADataDef data_def_conditions [] = {
 					"(your configuration will never appear).\n" \
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to 'true'." ),
-				NA_DATA_TYPE_BOOLEAN,
+				FMA_DATA_TYPE_BOOLEAN,
 				"true",
 				FALSE,
 				TRUE,
@@ -218,7 +218,7 @@ FMADataDef data_def_conditions [] = {
 					"(your configuration will never appear).\n" \
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to 'false'." ),
-				NA_DATA_TYPE_BOOLEAN,
+				FMA_DATA_TYPE_BOOLEAN,
 				"false",
 				FALSE,
 				TRUE,
@@ -247,7 +247,7 @@ FMADataDef data_def_conditions [] = {
 					"key to 'true'. If you want just one file or folder, set it to 'false'.\n" \
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to 'false'." ),
-				NA_DATA_TYPE_BOOLEAN,
+				FMA_DATA_TYPE_BOOLEAN,
 				"false",
 				FALSE,
 				FALSE,
@@ -287,7 +287,7 @@ FMADataDef data_def_conditions [] = {
 					"This obviously only applies when there is a selection, " \
 					"or when targeting the special 'x-nautilus-desktop' scheme.\n" \
 					"Defaults to 'file'." ),
-				NA_DATA_TYPE_STRING_LIST,
+				FMA_DATA_TYPE_STRING_LIST,
 				"*",
 				FALSE,
 				TRUE,
@@ -313,7 +313,7 @@ FMADataDef data_def_conditions [] = {
 				N_( "Defines the list of valid paths to be matched against the current folder.\n " \
 					"All folders 'under' the specified path are considered valid.\n" \
 					"Defaults to '/'." ),
-				NA_DATA_TYPE_STRING_LIST,
+				FMA_DATA_TYPE_STRING_LIST,
 				"/",
 				FALSE,
 				TRUE,
@@ -340,7 +340,7 @@ FMADataDef data_def_conditions [] = {
 					"This is a string of the form \"{'<'|'='|'>'} number\".\n" \
 					"Examples of valid strings are: \"=0\", \"> 1\", \"< 10\".\n" \
 					"Defaults to \">0\"." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				">0",
 				FALSE,
 				TRUE,
@@ -363,7 +363,7 @@ FMADataDef data_def_conditions [] = {
 				TRUE,
 				N_( "Only show in environment" ),
 				N_( "Defaults to all." ),
-				NA_DATA_TYPE_STRING_LIST,
+				FMA_DATA_TYPE_STRING_LIST,
 				"",
 				FALSE,
 				TRUE,
@@ -387,7 +387,7 @@ FMADataDef data_def_conditions [] = {
 				TRUE,
 				N_( "Not show in environment" ),
 				N_( "Defaults to none." ),
-				NA_DATA_TYPE_STRING_LIST,
+				FMA_DATA_TYPE_STRING_LIST,
 				"",
 				FALSE,
 				TRUE,
@@ -415,7 +415,7 @@ FMADataDef data_def_conditions [] = {
 					"the specified file are checked.\n" \
 					"Parameters may appear in 'TryExec' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -442,7 +442,7 @@ FMADataDef data_def_conditions [] = {
 					"The item will be candidate if the named service is registered on session DBus at runtime.\n" \
 					"Parameters may appear in 'ShowIfRegistered' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -468,7 +468,7 @@ FMADataDef data_def_conditions [] = {
 					"The item will be candidate if the outputed string is equal to \"true\".\n" \
 					"Parameters may appear in 'ShowIfTrue' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -495,7 +495,7 @@ FMADataDef data_def_conditions [] = {
 					"The item will be candidate if the process name is found in memory at runtime.\n" \
 					"Parameters may appear in 'ShowIfRunning' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
-				NA_DATA_TYPE_STRING,
+				FMA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -527,7 +527,7 @@ FMADataDef data_def_conditions [] = {
 					"- 'Executable': selected items are executable by user\n" \
 					"- 'Local': selected items are local.\n" \
 					"Defaults to empty list." ),
-				NA_DATA_TYPE_STRING_LIST,
+				FMA_DATA_TYPE_STRING_LIST,
 				"",
 				FALSE,
 				TRUE,
