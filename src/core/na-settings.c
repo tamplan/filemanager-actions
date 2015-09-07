@@ -39,7 +39,7 @@
 #include "api/fma-boxed.h"
 #include "api/fma-data-types.h"
 #include "api/fma-core-utils.h"
-#include "api/na-timeout.h"
+#include "api/fma-timeout.h"
 
 #include "na-settings.h"
 
@@ -114,7 +114,7 @@ struct _NASettingsPrivate {
 	KeyFile  *user;
 	GList    *content;
 	GList    *consumers;
-	NATimeout timeout;
+	FMATimeout timeout;
 };
 
 #define GROUP_NACT						"nact"
@@ -345,7 +345,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->consumers = NULL;
 
 	self->private->timeout.timeout = st_burst_timeout;
-	self->private->timeout.handler = ( NATimeoutFunc ) on_keyfile_changed_timeout;
+	self->private->timeout.handler = ( FMATimeoutFunc ) on_keyfile_changed_timeout;
 	self->private->timeout.user_data = NULL;
 	self->private->timeout.source_id = 0;
 }

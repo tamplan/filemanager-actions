@@ -35,7 +35,7 @@
 #include <libintl.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-timeout.h>
+#include <api/fma-timeout.h>
 
 #include <core/na-io-provider.h>
 #include <core/na-iprefs.h>
@@ -48,7 +48,7 @@
 #include "nact-menu-file.h"
 #include "nact-tree-ieditable.h"
 
-static NATimeout st_autosave_prefs_timeout = { 0 };
+static FMATimeout st_autosave_prefs_timeout = { 0 };
 static guint     st_event_autosave         = 0;
 
 static gchar *st_save_error       = N_( "Save error" );
@@ -380,7 +380,7 @@ static void
 install_autosave( NactMainWindow *main_window )
 {
 	st_autosave_prefs_timeout.timeout = 100;
-	st_autosave_prefs_timeout.handler = ( NATimeoutFunc ) on_autosave_prefs_timeout;
+	st_autosave_prefs_timeout.handler = ( FMATimeoutFunc ) on_autosave_prefs_timeout;
 	st_autosave_prefs_timeout.user_data = main_window;
 
 	na_settings_register_key_callback( NA_IPREFS_MAIN_SAVE_AUTO, G_CALLBACK( on_autosave_prefs_changed ), NULL );

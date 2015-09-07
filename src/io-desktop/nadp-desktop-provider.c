@@ -173,7 +173,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->dispose_has_run = FALSE;
 	self->private->monitors = NULL;
 	self->private->timeout.timeout = st_burst_timeout;
-	self->private->timeout.handler = ( NATimeoutFunc ) on_monitor_timeout;
+	self->private->timeout.handler = ( FMATimeoutFunc ) on_monitor_timeout;
 	self->private->timeout.user_data = self;
 	self->private->timeout.source_id = 0;
 }

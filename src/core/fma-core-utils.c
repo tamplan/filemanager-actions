@@ -40,7 +40,7 @@
 
 #include <api/fma-core-utils.h>
 
-#include "na-about.h"
+#include "fma-about.h"
 
 /* minimal and maximal size for loading the content of a file in memory
  * used by fma_core_utils_file_is_size_ok()
@@ -1223,7 +1223,7 @@ fma_core_utils_print_version( void )
 
 	g_print( "\n" );
 	g_print( "%s (%s) v %s\n", g_get_prgname(), PACKAGE_NAME, PACKAGE_VERSION );
-	copyright = na_about_get_copyright( TRUE );
+	copyright = fma_about_get_copyright( TRUE );
 	g_print( "%s\n", copyright );
 	g_free( copyright );
 

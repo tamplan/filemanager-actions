@@ -34,18 +34,18 @@
 #include <glib/gi18n.h>
 #include <libintl.h>
 
-#include "na-about.h"
+#include "fma-about.h"
 
 static const gchar *st_icon_filename    = ICON_FNAME;
 
 /*
- * na_about_display:
+ * fma_about_display:
  * @toplevel: the parent window.
  *
  * Displays the About dialog.
  */
 void
-na_about_display( GtkWindow *toplevel )
+fma_about_display( GtkWindow *toplevel )
 {
 	gchar *application_name, *copyright;
 	int i;
@@ -84,8 +84,8 @@ na_about_display( GtkWindow *toplevel )
 		NULL
 	};
 
-	application_name = na_about_get_application_name();
-	copyright = na_about_get_copyright( FALSE );
+	application_name = fma_about_get_application_name();
+	copyright = fma_about_get_copyright( FALSE );
 
 	i = 0;
 	license_i18n = g_string_new( "" );
@@ -120,20 +120,20 @@ na_about_display( GtkWindow *toplevel )
 }
 
 /*
- * na_about_get_application_name:
+ * fma_about_get_application_name:
  *
  * Returns: the name of the application, as a newly allocated string
  * which should be g_free() by the caller.
  */
 gchar *
-na_about_get_application_name( void )
+fma_about_get_application_name( void )
 {
 	/* i18n: title of the About dialog box, when seen from Nautilus file manager */
 	return( g_strdup( _( "FileManager-Actions" )));
 }
 
 /*
- * na_about_get_icon_name:
+ * fma_about_get_icon_name:
  *
  * Returns: the name of the default icon for the application.
  *
@@ -143,20 +143,20 @@ na_about_get_application_name( void )
  * while st_icon_filename points to full path of the icon.
  */
 const gchar *
-na_about_get_icon_name( void )
+fma_about_get_icon_name( void )
 {
 	return( st_icon_filename );
 }
 
 /*
- * na_about_get_copyright:
+ * fma_about_get_copyright:
  * @console: whether the string is to be printed on a console.
  *
  * Returns: the copyright string, as a newly allocated string which
  * should be g_free() by the caller.
  */
 gchar *
-na_about_get_copyright( gboolean console )
+fma_about_get_copyright( gboolean console )
 {
 	gchar *copyright;
 	gchar *symbol;

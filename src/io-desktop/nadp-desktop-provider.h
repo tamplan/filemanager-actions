@@ -41,7 +41,7 @@
  */
 
 #include <api/fma-object-item.h>
-#include <api/na-timeout.h>
+#include <api/fma-timeout.h>
 
 #include "nadp-desktop-file.h"
 
@@ -60,7 +60,7 @@ typedef struct _NadpDesktopProviderPrivate {
 	/*< private >*/
 	gboolean  dispose_has_run;
 	GList    *monitors;
-	NATimeout timeout;
+	FMATimeout timeout;
 }
 	NadpDesktopProviderPrivate;
 

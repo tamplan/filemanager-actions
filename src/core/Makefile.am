@@ -51,8 +51,8 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libna_core_la_SOURCES = \
-	na-about.c											\
-	na-about.h											\
+	fma-about.c											\
+	fma-about.h											\
 	fma-boxed.c											\
 	fma-core-utils.c										\
 	fma-data-boxed.c										\
@@ -117,7 +117,7 @@ libna_core_la_SOURCES = \
 	na-selected-info.h									\
 	na-settings.c										\
 	na-settings.h										\
-	na-timeout.c										\
+	fma-timeout.c										\
 	na-tokens.c											\
 	na-tokens.h											\
 	na-updater.c										\

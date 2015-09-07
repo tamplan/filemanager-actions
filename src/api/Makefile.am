@@ -34,26 +34,26 @@ api_include_HEADERS = \
 	fma-iexporter.h										\
 	fma-iimporter.h										\
 	fma-ifactory-provider.h								\
-	fma-ifactory-provider-provider.h						\
+	fma-ifactory-provider-provider.h					\
 	fma-iio-provider.h									\
 	\
 	fma-boxed.h											\
-	fma-core-utils.h										\
-	fma-data-boxed.h										\
+	fma-core-utils.h									\
+	fma-data-boxed.h									\
 	fma-data-def.h										\
-	fma-data-types.h										\
+	fma-data-types.h									\
 	fma-gconf-monitor.h									\
 	fma-gconf-utils.h									\
 	fma-icontext.h										\
 	fma-iduplicable.h									\
 	fma-ifactory-object.h								\
 	fma-ifactory-object-data.h							\
-	fma-object-api.h										\
-	fma-object.h											\
+	fma-object-api.h									\
+	fma-object.h										\
 	fma-object-id.h										\
 	fma-object-item.h									\
 	fma-object-action.h									\
-	fma-object-profile.h									\
+	fma-object-profile.h								\
 	fma-object-menu.h									\
-	na-timeout.h										\
+	fma-timeout.h										\
 	$(NULL)

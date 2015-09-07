@@ -27,16 +27,16 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_TIMEOUT_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_TIMEOUT_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_TIMEOUT_H__
+#define __FILE_MANAGER_ACTIONS_API_TIMEOUT_H__
 
 /**
  * SECTION: timeout
- * @title: NATimeout
- * @short_description: The NATimeout Structure
- * @include: file-manager-actions/na-timeout.h
+ * @title: FMATimeout
+ * @short_description: The FMATimeout Structure
+ * @include: file-manager-actions/fma-timeout.h
  *
- * The NATimeout structure is a convenience structure to manage timeout
+ * The FMATimeout structure is a convenience structure to manage timeout
  * functions.
  *
  * Since: 3.1
@@ -47,17 +47,17 @@
 G_BEGIN_DECLS
 
 /**
- * NATimeoutFunc:
+ * FMATimeoutFunc:
  * @user_data: data to be passed to the callback function.
  *
  * Prototype of the callback function.
  *
  * Since: 3.1
  */
-typedef void ( *NATimeoutFunc )( void *user_data );
+typedef void ( *FMATimeoutFunc )( void *user_data );
 
 /**
- * NATimeout:
+ * FMATimeout:
  * @timeout:   (i) timeout configurable parameter (ms)
  * @handler:   (i) handler function
  * @user_data: (i) user data
@@ -81,17 +81,17 @@ typedef void ( *NATimeoutFunc )( void *user_data );
  */
 typedef struct {
 	/*< public >*/
-	guint         timeout;
-	NATimeoutFunc handler;
-	gpointer      user_data;
+	guint          timeout;
+	FMATimeoutFunc handler;
+	gpointer       user_data;
 	/*< private >*/
-	GTimeVal      last_time;
-	guint         source_id;
+	GTimeVal       last_time;
+	guint          source_id;
 }
-	NATimeout;
+	FMATimeout;
 
-void na_timeout_event( NATimeout *timeout );
+void na_timeout_event( FMATimeout *timeout );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_TIMEOUT_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_TIMEOUT_H__ */

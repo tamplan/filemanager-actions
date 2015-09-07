@@ -31,17 +31,17 @@
 #include <config.h>
 #endif
 
-#include <api/na-timeout.h>
+#include <api/fma-timeout.h>
 
-static gboolean on_timeout_event_timeout( NATimeout *timeout );
+static gboolean on_timeout_event_timeout( FMATimeout *timeout );
 static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 /**
  * na_timeout_event:
- * @timeout: the #NATimeout structure which will handle this event.
+ * @timeout: the #FMATimeout structure which will handle this event.
  */
 void
-na_timeout_event( NATimeout *event )
+na_timeout_event( FMATimeout *event )
 {
 	g_return_if_fail( event != NULL );
 
@@ -57,7 +57,7 @@ na_timeout_event( NATimeout *event )
  * we continue to loop until last event is older that our burst timeout
  */
 static gboolean
-on_timeout_event_timeout( NATimeout *timeout )
+on_timeout_event_timeout( FMATimeout *timeout )
 {
 	GTimeVal now;
 	gulong diff;

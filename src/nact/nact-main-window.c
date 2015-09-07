@@ -35,9 +35,9 @@
 #include <stdlib.h>
 
 #include "api/fma-object-api.h"
-#include "api/na-timeout.h"
+#include "api/fma-timeout.h"
 
-#include "core/na-about.h"
+#include "core/fma-about.h"
 #include "core/na-gtk-utils.h"
 #include "core/na-iprefs.h"
 #include "core/na-pivot.h"
@@ -119,7 +119,7 @@ struct _NactMainWindowPrivate {
 	NactSortButtons *sort_buttons;
 
 	gulong           pivot_handler_id;
-	NATimeout        pivot_timeout;
+	FMATimeout        pivot_timeout;
 };
 
 /* properties set against the main window
@@ -513,7 +513,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	/* initialize timeout parameters when blocking 'pivot-items-changed' handler
 	 */
 	priv->pivot_timeout.timeout = st_burst_timeout;
-	priv->pivot_timeout.handler = ( NATimeoutFunc ) on_block_items_changed_timeout;
+	priv->pivot_timeout.handler = ( FMATimeoutFunc ) on_block_items_changed_timeout;
 	priv->pivot_timeout.user_data = self;
 	priv->pivot_timeout.source_id = 0;
 }
@@ -754,7 +754,7 @@ setup_main_ui( NactMainWindow *main_window )
 
 	/* application icon
 	 */
-	gtk_window_set_default_icon_from_file( na_about_get_icon_name(), NULL );
+	gtk_window_set_default_icon_from_file( fma_about_get_icon_name(), NULL );
 }
 
 /*

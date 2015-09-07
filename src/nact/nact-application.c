@@ -36,7 +36,7 @@
 
 #include "api/fma-core-utils.h"
 
-#include "core/na-about.h"
+#include "core/fma-about.h"
 
 #include "base-isession.h"
 #include "nact-application.h"
@@ -229,7 +229,7 @@ nact_application_new( void )
 	priv = application->private;
 	priv->application_name = gettext( st_application_name );
 	priv->description = gettext( st_description );
-	priv->icon_name = na_about_get_icon_name();
+	priv->icon_name = fma_about_get_icon_name();
 
 	return( application );
 }

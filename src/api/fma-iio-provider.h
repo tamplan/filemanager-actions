@@ -90,7 +90,7 @@
  *   </para>
  *   <para>
  *    The #FMAIIOProvider interface does not define specific monitoring
- *    methods (but you can also take a glance at #NATimeout object).
+ *    methods (but you can also take a glance at #FMATimeout object).
  *    Instead, it is waited that the I/O provider module takes care
  *    itself of managing its own monitoring services at
  *    load/unload time, calling the fma_iio_provider_item_changed()

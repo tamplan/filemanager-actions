@@ -41,10 +41,10 @@
 
 #include <api/fma-core-utils.h>
 #include <api/fma-object-api.h>
-#include <api/na-timeout.h>
+#include <api/fma-timeout.h>
 
 #include <core/na-pivot.h>
-#include <core/na-about.h>
+#include <core/fma-about.h>
 #include <core/na-selected-info.h>
 #include <core/na-tokens.h>
 
@@ -63,7 +63,7 @@ struct _NautilusActionsPrivate {
 	NAPivot  *pivot;
 	gulong    items_changed_handler;
 	gulong    settings_changed_handler;
-	NATimeout change_timeout;
+	FMATimeout change_timeout;
 };
 
 static GObjectClass *st_parent_class  = NULL;
@@ -180,7 +180,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->dispose_has_run = FALSE;
 	self->private->change_timeout.timeout = st_burst_timeout;
-	self->private->change_timeout.handler = ( NATimeoutFunc ) on_change_event_timeout;
+	self->private->change_timeout.handler = ( FMATimeoutFunc ) on_change_event_timeout;
 	self->private->change_timeout.user_data = self;
 	self->private->change_timeout.source_id = 0;
 }
@@ -935,7 +935,7 @@ create_root_menu( NautilusActions *plugin, GList *menu )
 			_( "FileManager-Actions actions" ),
 			/* i18n: tooltip of an automagic root submenu */
 			_( "A submenu which embeds the currently available FileManager-Actions actions and menus" ),
-			na_about_get_icon_name());
+			fma_about_get_icon_name());
 	attach_submenu_to_item( root_item, menu );
 	nautilus_menu = g_list_append( NULL, root_item );
 
@@ -980,7 +980,7 @@ add_about_item( NautilusActions *plugin, GList *menu )
 				"AboutNautilusActions",
 				_( "About FileManager-Actions" ),
 				_( "Display some information about FileManager-Actions" ),
-				na_about_get_icon_name());
+				fma_about_get_icon_name());
 
 		g_signal_connect_data(
 				about_item,
@@ -1001,7 +1001,7 @@ execute_about( NautilusMenuItem *item, NautilusActions *plugin )
 {
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
-	na_about_display( NULL );
+	fma_about_display( NULL );
 }
 
 /*

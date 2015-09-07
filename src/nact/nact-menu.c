@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include "core/na-about.h"
+#include "core/fma-about.h"
 #include "core/na-io-provider.h"
 
 #include "nact-main-window.h"
@@ -251,7 +251,7 @@ on_app_about( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
 	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
 
-	na_about_display( window );
+	fma_about_display( window );
 }
 
 static void

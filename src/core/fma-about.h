@@ -27,12 +27,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_ABOUT_H__
-#define __CORE_NA_ABOUT_H__
+#ifndef __CORE_FMA_ABOUT_H__
+#define __CORE_FMA_ABOUT_H__
 
 /* @title NAAbout
  * @short_description: The #NAAbout API
- * @include: runtime/na-about.h
+ * @include: runtime/fma-about.h
  *
  * These functions displays the 'About FileManager-Actions' dialog box,
  * and provides contant informations about the application.
@@ -42,12 +42,12 @@
 
 G_BEGIN_DECLS
 
-void         na_about_display( GtkWindow *parent );
+void         fma_about_display( GtkWindow *parent );
 
-gchar       *na_about_get_application_name( void );
-const gchar *na_about_get_icon_name( void );
-gchar       *na_about_get_copyright( gboolean console );
+gchar       *fma_about_get_application_name( void );
+const gchar *fma_about_get_icon_name( void );
+gchar       *fma_about_get_copyright( gboolean console );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_IABOUT_H__ */
+#endif /* __CORE_FMA_IABOUT_H__ */

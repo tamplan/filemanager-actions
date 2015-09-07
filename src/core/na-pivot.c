@@ -34,7 +34,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-timeout.h>
+#include <api/fma-timeout.h>
 
 #include "na-io-provider.h"
 #include "na-module.h"
@@ -63,7 +63,7 @@ struct _NAPivotPrivate {
 
 	/* timeout to manage i/o providers 'item-changed' burst
 	 */
-	NATimeout   change_timeout;
+	FMATimeout   change_timeout;
 };
 
 /* NAPivot properties
@@ -217,7 +217,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	/* initialize timeout parameters for 'item-changed' handler
 	 */
 	self->private->change_timeout.timeout = st_burst_timeout;
-	self->private->change_timeout.handler = ( NATimeoutFunc ) on_items_changed_timeout;
+	self->private->change_timeout.handler = ( FMATimeoutFunc ) on_items_changed_timeout;
 	self->private->change_timeout.user_data = self;
 	self->private->change_timeout.source_id = 0;
 }
