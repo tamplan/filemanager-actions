@@ -31,18 +31,18 @@
 #include <config.h>
 #endif
 
-#include "na-export-format.h"
+#include "fma-export-format.h"
 #include "na-ioption.h"
 
 /* private class data
  */
-struct _NAExportFormatClassPrivate {
+struct _FMAExportFormatClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAExportFormatPrivate {
+struct _FMAExportFormatPrivate {
 	gboolean     dispose_has_run;
 	gchar       *format;
 	gchar       *label;
@@ -54,7 +54,7 @@ struct _NAExportFormatPrivate {
 static GObjectClass *st_parent_class = NULL;
 
 static GType      register_type( void );
-static void       class_init( NAExportFormatClass *klass );
+static void       class_init( FMAExportFormatClass *klass );
 static void       ioption_iface_init( NAIOptionInterface *iface, void *user_data );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_dispose( GObject *object );
@@ -65,7 +65,7 @@ static gchar     *ioption_get_description( const NAIOption *option );
 static GdkPixbuf *ioption_get_pixbuf( const NAIOption *option );
 
 GType
-na_export_format_get_type( void )
+fma_export_format_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -79,17 +79,17 @@ na_export_format_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_export_format_register_type";
+	static const gchar *thisfn = "fma_export_format_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAExportFormatClass ),
+		sizeof( FMAExportFormatClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAExportFormat ),
+		sizeof( FMAExportFormat ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -102,7 +102,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NAExportFormat", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMAExportFormat", &info, 0 );
 
 	g_type_add_interface_static( type, NA_TYPE_IOPTION, &ioption_iface_info );
 
@@ -110,9 +110,9 @@ register_type( void )
 }
 
 static void
-class_init( NAExportFormatClass *klass )
+class_init( FMAExportFormatClass *klass )
 {
-	static const gchar *thisfn = "na_export_format_class_init";
+	static const gchar *thisfn = "fma_export_format_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -123,13 +123,13 @@ class_init( NAExportFormatClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAExportFormatClassPrivate, 1 );
+	klass->private = g_new0( FMAExportFormatClassPrivate, 1 );
 }
 
 static void
 ioption_iface_init( NAIOptionInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "na_export_format_ioption_iface_init";
+	static const gchar *thisfn = "fma_export_format_ioption_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
@@ -150,10 +150,10 @@ static gchar *
 ioption_get_id( const NAIOption *option )
 {
 	gchar *id;
-	NAExportFormat *format;
+	FMAExportFormat *format;
 
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( option ), NULL );
-	format = NA_EXPORT_FORMAT( option );
+	g_return_val_if_fail( FMA_IS_EXPORT_FORMAT( option ), NULL );
+	format = FMA_EXPORT_FORMAT( option );
 	id = NULL;
 
 	if( !format->private->dispose_has_run ){
@@ -175,10 +175,10 @@ static gchar *
 ioption_get_label( const NAIOption *option )
 {
 	gchar *label;
-	NAExportFormat *format;
+	FMAExportFormat *format;
 
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( option ), NULL );
-	format = NA_EXPORT_FORMAT( option );
+	g_return_val_if_fail( FMA_IS_EXPORT_FORMAT( option ), NULL );
+	format = FMA_EXPORT_FORMAT( option );
 	label = NULL;
 
 	if( !format->private->dispose_has_run ){
@@ -200,10 +200,10 @@ static gchar *
 ioption_get_description( const NAIOption *option )
 {
 	gchar *description;
-	NAExportFormat *format;
+	FMAExportFormat *format;
 
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( option ), NULL );
-	format = NA_EXPORT_FORMAT( option );
+	g_return_val_if_fail( FMA_IS_EXPORT_FORMAT( option ), NULL );
+	format = FMA_EXPORT_FORMAT( option );
 	description = NULL;
 
 	if( !format->private->dispose_has_run ){
@@ -225,10 +225,10 @@ static GdkPixbuf *
 ioption_get_pixbuf( const NAIOption *option )
 {
 	GdkPixbuf *pixbuf;
-	NAExportFormat *format;
+	FMAExportFormat *format;
 
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( option ), NULL );
-	format = NA_EXPORT_FORMAT( option );
+	g_return_val_if_fail( FMA_IS_EXPORT_FORMAT( option ), NULL );
+	format = FMA_EXPORT_FORMAT( option );
 	pixbuf = NULL;
 
 	if( !format->private->dispose_has_run ){
@@ -242,16 +242,16 @@ ioption_get_pixbuf( const NAIOption *option )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_export_format_instance_init";
-	NAExportFormat *self;
+	static const gchar *thisfn = "fma_export_format_instance_init";
+	FMAExportFormat *self;
 
-	g_return_if_fail( NA_IS_EXPORT_FORMAT( instance ));
+	g_return_if_fail( FMA_IS_EXPORT_FORMAT( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	self = NA_EXPORT_FORMAT( instance );
+	self = FMA_EXPORT_FORMAT( instance );
 
-	self->private = g_new0( NAExportFormatPrivate, 1 );
+	self->private = g_new0( FMAExportFormatPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -259,12 +259,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_export_format_instance_dispose";
-	NAExportFormat *self;
+	static const gchar *thisfn = "fma_export_format_instance_dispose";
+	FMAExportFormat *self;
 
-	g_return_if_fail( NA_IS_EXPORT_FORMAT( object ));
+	g_return_if_fail( FMA_IS_EXPORT_FORMAT( object ));
 
-	self = NA_EXPORT_FORMAT( object );
+	self = FMA_EXPORT_FORMAT( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -292,13 +292,13 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_export_format_instance_finalize";
-	NAExportFormat *self;
+	static const gchar *thisfn = "fma_export_format_instance_finalize";
+	FMAExportFormat *self;
 
-	g_return_if_fail( NA_IS_EXPORT_FORMAT( object ));
+	g_return_if_fail( FMA_IS_EXPORT_FORMAT( object ));
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	self = NA_EXPORT_FORMAT( object );
+	self = FMA_EXPORT_FORMAT( object );
 
 	g_free( self->private->format );
 	g_free( self->private->label );
@@ -312,17 +312,17 @@ instance_finalize( GObject *object )
 }
 
 /*
- * na_export_format_new:
+ * fma_export_format_new:
  * @exporter_format: a #FMAIExporterFormatv2 which describes an export format.
  *
- * Returns: a newly allocated #NAExportFormat object.
+ * Returns: a newly allocated #FMAExportFormat object.
  */
-NAExportFormat *
-na_export_format_new( const FMAIExporterFormatv2 *exporter_format )
+FMAExportFormat *
+fma_export_format_new( const FMAIExporterFormatv2 *exporter_format )
 {
-	NAExportFormat *format;
+	FMAExportFormat *format;
 
-	format = g_object_new( NA_TYPE_EXPORT_FORMAT, NULL );
+	format = g_object_new( FMA_TYPE_EXPORT_FORMAT, NULL );
 
 	format->private->format = g_strdup( exporter_format->format );
 	format->private->label = g_strdup( exporter_format->label );
@@ -334,8 +334,8 @@ na_export_format_new( const FMAIExporterFormatv2 *exporter_format )
 }
 
 /*
- * na_export_format_get_provider:
- * @format: this #NAExportFormat object.
+ * fma_export_format_get_provider:
+ * @format: this #FMAExportFormat object.
  *
  * Returns: a pointer to the #FMAIExporter which provides this format.
  *
@@ -343,11 +343,11 @@ na_export_format_new( const FMAIExporterFormatv2 *exporter_format )
  * by the caller.
  */
 FMAIExporter *
-na_export_format_get_provider( const NAExportFormat *format )
+fma_export_format_get_provider( const FMAExportFormat *format )
 {
 	FMAIExporter *exporter;
 
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), NULL );
+	g_return_val_if_fail( FMA_IS_EXPORT_FORMAT( format ), NULL );
 
 	exporter = NULL;
 

@@ -36,7 +36,7 @@
 #include "api/fma-object-api.h"
 
 #include "core/fma-exporter.h"
-#include "core/na-export-format.h"
+#include "core/fma-export-format.h"
 #include "core/na-gtk-utils.h"
 #include "core/na-ioptions-list.h"
 
@@ -472,7 +472,7 @@ get_export_format( NactExportAsk *editor )
 
 	widget = base_window_get_widget( BASE_WINDOW( editor ), "export-format-ask" );
 	format = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), widget );
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), 0 );
+	g_return_val_if_fail( FMA_IS_EXPORT_FORMAT( format ), 0 );
 
 	if( !editor->private->keep_last_choice_mandatory ){
 		na_settings_set_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, editor->private->keep_last_choice );

@@ -62,8 +62,8 @@ libna_core_la_SOURCES = \
 	fma-desktop-environment.h							\
 	fma-exporter.c										\
 	fma-exporter.h										\
-	na-export-format.c									\
-	na-export-format.h									\
+	fma-export-format.c									\
+	fma-export-format.h									\
 	na-factory-object.c									\
 	na-factory-object.h									\
 	na-factory-provider.c								\

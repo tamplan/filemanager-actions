@@ -38,7 +38,7 @@
 #include "api/fma-object-api.h"
 
 #include "core/fma-exporter.h"
-#include "core/na-export-format.h"
+#include "core/fma-export-format.h"
 #include "core/na-gtk-utils.h"
 #include "core/na-ioptions-list.h"
 
@@ -715,7 +715,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	tree_view = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( format_page ), "p3-ExportFormatTreeView" );
 	g_return_if_fail( GTK_IS_TREE_VIEW( tree_view ));
 	format = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( window ), tree_view );
-	g_return_if_fail( NA_IS_EXPORT_FORMAT( format ));
+	g_return_if_fail( FMA_IS_EXPORT_FORMAT( format ));
 
 	format_label = na_ioption_get_label( format );
 	format_label2 = fma_core_utils_str_remove_char( format_label, "_" );

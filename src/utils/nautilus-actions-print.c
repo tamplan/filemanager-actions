@@ -42,7 +42,7 @@
 #include <api/fma-object-api.h>
 
 #include <core/fma-exporter.h>
-#include <core/na-export-format.h>
+#include <core/fma-export-format.h>
 #include <core/na-ioption.h>
 
 #include "console-utils.h"

@@ -38,7 +38,7 @@
 
 #include <core/fma-desktop-environment.h>
 #include <core/fma-exporter.h>
-#include <core/na-export-format.h>
+#include <core/fma-export-format.h>
 #include <core/na-gtk-utils.h>
 #include <core/na-import-mode.h>
 #include <core/na-importer.h>
@@ -1257,7 +1257,7 @@ on_dialog_ok( BaseDialog *dialog )
 			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 			option = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), container );
 			g_debug( "nact_preferences_editor_on_dialog_ok: option=%p", ( void * ) option );
-			g_return_if_fail( NA_IS_EXPORT_FORMAT( option ));
+			g_return_if_fail( FMA_IS_EXPORT_FORMAT( option ));
 			export_format = na_ioption_get_id( option );
 			na_settings_set_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, export_format );
 			g_free( export_format );

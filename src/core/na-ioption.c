@@ -228,7 +228,7 @@ na_ioption_get_label( const NAIOption *option )
 
 /*
  * na_ioption_get_description:
- * @format: this #NAExportFormat object.
+ * @format: this #FMAExportFormat object.
  *
  * Returns: the UTF-8 localizable description of the format, as a newly
  * allocated string which should be g_free() by the caller.

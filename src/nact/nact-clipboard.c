@@ -37,7 +37,7 @@
 #include "api/fma-object-api.h"
 
 #include "core/fma-exporter.h"
-#include "core/na-export-format.h"
+#include "core/fma-export-format.h"
 
 #include "nact-application.h"
 #include "nact-export-ask.h"

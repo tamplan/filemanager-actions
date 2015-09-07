@@ -36,7 +36,7 @@
 #include <string.h>
 
 #include "fma-exporter.h"
-#include "na-export-format.h"
+#include "fma-export-format.h"
 #include "na-settings.h"
 
 typedef struct {
@@ -68,7 +68,7 @@ static void   on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
  * fma_exporter_get_formats:
  * @pivot: the #NAPivot instance.
  *
- * Returns: a list of #NAExportFormat objects, each of them addressing an
+ * Returns: a list of #FMAExportFormat objects, each of them addressing an
  * available export format, i.e. a format provided by a module which
  * implement the #FMAIExporter interface.
  *
@@ -80,7 +80,7 @@ fma_exporter_get_formats( const NAPivot *pivot )
 	GList *iexporters, *imod;
 	GList *formats;
 	GList *str_list, *is;
-	NAExportFormat *format;
+	FMAExportFormat *format;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
@@ -91,7 +91,7 @@ fma_exporter_get_formats( const NAPivot *pivot )
 		str_list = exporter_get_formats( FMA_IEXPORTER( imod->data ));
 
 		for( is = str_list ; is ; is = is->next ){
-			format = na_export_format_new(( FMAIExporterFormatv2 * ) is->data );
+			format = fma_export_format_new(( FMAIExporterFormatv2 * ) is->data );
 			formats = g_list_prepend( formats, format );
 		}
 
@@ -204,7 +204,7 @@ fma_exporter_get_ask_option( void )
 	FMAIExporterFormatv2 *str;
 	gint width, height;
 	gchar *fname;
-	NAExportFormat *format;
+	FMAExportFormat *format;
 
 	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
 		width = height = 48;
@@ -226,7 +226,7 @@ fma_exporter_get_ask_option( void )
 		}
 	}
 
-	format = na_export_format_new( str );
+	format = fma_export_format_new( str );
 
 	if( str->pixbuf ){
 		g_object_unref( str->pixbuf );
@@ -418,7 +418,7 @@ fma_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
 	FMAIExporter *exporter;
 	GList *formats, *ifmt;
 	gchar *id;
-	NAExportFormat *export_format;
+	FMAExportFormat *export_format;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
@@ -427,10 +427,10 @@ fma_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
 
 	for( ifmt = formats ; ifmt && !exporter ; ifmt = ifmt->next ){
 
-		export_format = NA_EXPORT_FORMAT( ifmt->data );
+		export_format = FMA_EXPORT_FORMAT( ifmt->data );
 		id = na_ioption_get_id( NA_IOPTION( export_format ));
 		if( !strcmp( id, format )){
-			exporter = na_export_format_get_provider( NA_EXPORT_FORMAT( ifmt->data ));
+			exporter = fma_export_format_get_provider( FMA_EXPORT_FORMAT( ifmt->data ));
 		}
 		g_free( id );
 	}
