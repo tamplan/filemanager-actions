@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 #include <libintl.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include <core/na-settings.h>
 
@@ -266,7 +266,7 @@ instance_finalize( GObject *dialog )
 
 	self = NACT_ADD_CAPABILITY_DIALOG( dialog );
 
-	na_core_utils_slist_free( self->private->already_used );
+	fma_core_utils_slist_free( self->private->already_used );
 	g_free( self->private->capability );
 
 	g_free( self->private );
@@ -306,7 +306,7 @@ nact_add_capability_dialog_run( NactMainWindow *parent, GSList *capabilities )
 					BASE_PROP_WSP_NAME,       st_wsp_name,
 					NULL );
 
-	dialog->private->already_used = na_core_utils_slist_duplicate( capabilities );
+	dialog->private->already_used = fma_core_utils_slist_duplicate( capabilities );
 	capability = NULL;
 
 	if( base_window_run( BASE_WINDOW( dialog )) == GTK_RESPONSE_OK ){
@@ -519,7 +519,7 @@ setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GS
 
 	gtk_tree_model_get( model, iter, CAPABILITY_KEYWORD_COLUMN, &keyword, CAPABILITY_DESC_COLUMN, &description, -1 );
 
-	if( na_core_utils_slist_find_negated( capabilities, keyword )){
+	if( fma_core_utils_slist_find_negated( capabilities, keyword )){
 		/* i18n: add a comment when a capability is already used by current item */
 		new_description = g_strdup_printf( _( "%s (already inserted)"), description );
 		gtk_list_store_set( GTK_LIST_STORE( model ), iter, CAPABILITY_DESC_COLUMN, new_description, CAPABILITY_ALREADY_USED_COLUMN, TRUE, -1 );

@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <libintl.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-timeout.h>
 
 #include <core/na-io-provider.h>
@@ -252,13 +252,13 @@ nact_menu_file_save_items( NactMainWindow *window )
 	if( nact_tree_ieditable_is_level_zero_modified( NACT_TREE_IEDITABLE( items_view ))){
 		if( !na_iprefs_write_level_zero( items, &messages )){
 			if( g_slist_length( messages )){
-				msg = na_core_utils_slist_join_at_end( messages, "\n" );
+				msg = fma_core_utils_slist_join_at_end( messages, "\n" );
 			} else {
 				msg = g_strdup( gettext( st_level_zero_write ));
 			}
 			base_window_display_error_dlg( NULL, gettext( st_save_error ), msg );
 			g_free( msg );
-			na_core_utils_slist_free( messages );
+			fma_core_utils_slist_free( messages );
 			messages = NULL;
 		}
 
@@ -272,13 +272,13 @@ nact_menu_file_save_items( NactMainWindow *window )
 	 */
 	if( !nact_tree_ieditable_remove_deleted( NACT_TREE_IEDITABLE( items_view ), &messages )){
 		if( g_slist_length( messages )){
-			msg = na_core_utils_slist_join_at_end( messages, "\n" );
+			msg = fma_core_utils_slist_join_at_end( messages, "\n" );
 		} else {
 			msg = g_strdup( gettext( st_delete_error ));
 		}
 		base_window_display_error_dlg( NULL, gettext( st_save_error ), msg );
 		g_free( msg );
-		na_core_utils_slist_free( messages );
+		fma_core_utils_slist_free( messages );
 		messages = NULL;
 
 	} else {
@@ -302,10 +302,10 @@ nact_menu_file_save_items( NactMainWindow *window )
 	}
 
 	if( g_slist_length( messages )){
-		msg = na_core_utils_slist_join_at_end( messages, "\n" );
+		msg = fma_core_utils_slist_join_at_end( messages, "\n" );
 		base_window_display_error_dlg( NULL, gettext( st_save_warning ), msg );
 		g_free( msg );
-		na_core_utils_slist_free( messages );
+		fma_core_utils_slist_free( messages );
 		messages = NULL;
 	}
 

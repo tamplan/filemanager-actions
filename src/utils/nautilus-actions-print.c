@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
 
 #include <core/na-exporter.h>
@@ -115,7 +115,7 @@ main( int argc, char** argv )
 	g_option_context_free( context );
 
 	if( version ){
-		na_core_utils_print_version();
+		fma_core_utils_print_version();
 		exit( status );
 	}
 
@@ -223,7 +223,7 @@ export_item( const NAObjectItem *item, const gchar *format )
 	for( it = messages ; it ; it = it->next ){
 		g_printerr( "%s\n", ( const gchar * ) it->data );
 	}
-	na_core_utils_slist_free( messages );
+	fma_core_utils_slist_free( messages );
 
 	if( buffer ){
 		g_printf( "%s\n", buffer );

@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "base-builder.h"
 
@@ -187,7 +187,7 @@ instance_finalize( GObject *instance )
 
 	self = BASE_BUILDER( instance );
 
-	na_core_utils_slist_free( self->private->fnames );
+	fma_core_utils_slist_free( self->private->fnames );
 
 	g_free( self->private );
 
@@ -258,7 +258,7 @@ already_loaded( BaseBuilder *builder, const gchar *filename )
 	GSList *it;
 
 	for( it = builder->private->fnames ; it && !loaded ; it = it->next ){
-		if( !na_core_utils_str_collate(( const gchar * ) it->data, filename )){
+		if( !fma_core_utils_str_collate(( const gchar * ) it->data, filename )){
 			loaded = TRUE;
 		}
 	}
@@ -295,7 +295,7 @@ base_builder_get_toplevel_by_name( const BaseBuilder *builder, const gchar *name
 		if( toplevel ){
 			g_return_val_if_fail( GTK_IS_WINDOW( toplevel ), NULL );
 		} else {
-			na_core_utils_slist_dump( thisfn, builder->private->fnames );
+			fma_core_utils_slist_dump( thisfn, builder->private->fnames );
 		}
 	}
 

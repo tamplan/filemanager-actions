@@ -36,7 +36,7 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-iio-provider.h>
 #include <api/na-ifactory-object.h>
 #include <api/na-object-api.h>
@@ -619,15 +619,15 @@ convert_pre_v3_isfiledir( NAObjectProfile *profile )
 		if( converted ){
 			na_object_set_mimetypes( profile, mimetypes );
 
-			before_str = na_core_utils_slist_join_at_end( before_list, ";" );
-			after_str = na_core_utils_slist_join_at_end( mimetypes, ";" );
+			before_str = fma_core_utils_slist_join_at_end( before_list, ";" );
+			after_str = fma_core_utils_slist_join_at_end( mimetypes, ";" );
 			g_debug( "%s; mimetypes=[%s] changed to [%s]", thisfn, before_str, after_str );
 			g_free( after_str );
 			g_free( before_str );
 		}
 
-		na_core_utils_slist_free( mimetypes );
-		na_core_utils_slist_free( before_list );
+		fma_core_utils_slist_free( mimetypes );
+		fma_core_utils_slist_free( before_list );
 	}
 
 	return( converted );
@@ -668,7 +668,7 @@ split_path_parameters( NAObjectProfile *profile )
 	g_free( parameters );
 	g_free( path );
 
-	na_core_utils_str_split_first_word( exec, &path, &parameters );
+	fma_core_utils_str_split_first_word( exec, &path, &parameters );
 	g_free( exec );
 
 	na_object_set_path( profile, path );

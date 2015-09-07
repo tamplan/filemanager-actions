@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include "api/na-core-utils.h"
+#include "api/fma-core-utils.h"
 #include "api/na-object-api.h"
 
 #include "core/na-gtk-utils.h"
@@ -236,7 +236,7 @@ on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance )
 			g_free( new_cap );
 		}
 
-		na_core_utils_slist_free( capabilities );
+		fma_core_utils_slist_free( capabilities );
 	}
 }
 

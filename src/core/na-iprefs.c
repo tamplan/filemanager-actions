@@ -33,7 +33,7 @@
 
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "na-importer.h"
 #include "na-iprefs.h"
@@ -199,7 +199,7 @@ na_iprefs_write_level_zero( const GList *items, GSList **messages )
 
 	written = na_settings_set_string_list( NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, content );
 
-	na_core_utils_slist_free( content );
+	fma_core_utils_slist_free( content );
 
 	return( written );
 }

@@ -38,7 +38,7 @@
 #include <api/na-ifactory-provider.h>
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-gconf-utils.h>
 
 #include "nagp-gconf-provider.h"
@@ -391,7 +391,7 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 			case NA_DATA_TYPE_STRING_LIST:
 				slist_value = na_gconf_utils_read_string_list( provider->private->gconf, entry_path );
 				fma_boxed_set_from_void( FMA_BOXED( boxed ), slist_value );
-				na_core_utils_slist_free( slist_value );
+				fma_core_utils_slist_free( slist_value );
 				break;
 
 			case NA_DATA_TYPE_UINT:

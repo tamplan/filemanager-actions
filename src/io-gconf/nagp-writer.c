@@ -38,7 +38,7 @@
 #include <api/na-iio-provider.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-gconf-utils.h>
 
 #include "nagp-gconf-provider.h"
@@ -358,7 +358,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 					*messages = g_slist_append( *messages, msg );
 					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
 				}
-				na_core_utils_slist_free( slist_value );
+				fma_core_utils_slist_free( slist_value );
 				break;
 
 			case NA_DATA_TYPE_UINT:

@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-ifactory-provider.h>
 
 #include "nadp-desktop-provider.h"

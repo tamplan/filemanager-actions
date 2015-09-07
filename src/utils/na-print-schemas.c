@@ -39,7 +39,7 @@
 #include <locale.h>
 #include <stdlib.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-data-types.h>
 #include <api/na-ifactory-object-data.h>
 
@@ -115,7 +115,7 @@ main( int argc, char** argv )
 	}
 
 	if( version ){
-		na_core_utils_print_version();
+		fma_core_utils_print_version();
 		exit( status );
 	}
 
@@ -139,7 +139,7 @@ main( int argc, char** argv )
 		for( im = msgs ; im ; im = im->next ){
 			g_printerr( "%s\n", ( gchar * ) im->data );
 		}
-		na_core_utils_slist_free( msgs );
+		fma_core_utils_slist_free( msgs );
 		status = EXIT_FAILURE;
 	}
 
@@ -242,7 +242,7 @@ output_to_stdout( NADataGroup *groups, GSList **msgs )
 	for( ig = 0 ; groups[ig].group ; ++ig ){
 		for( id = 0 ; groups[ig].def[id].name ; ++id ){
 			if( groups[ig].def[id].writable ){
-				if( !na_core_utils_slist_count( displayed, groups[ig].def[id].name )){
+				if( !fma_core_utils_slist_count( displayed, groups[ig].def[id].name )){
 					displayed = g_slist_prepend( displayed, groups[ig].def[id].name );
 					attach_schema_node( doc, list_node, ( const NADataDef * ) groups[ig].def+id );
 				}

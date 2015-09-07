@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include "api/na-core-utils.h"
+#include "api/fma-core-utils.h"
 
 #include "core/na-io-provider.h"
 
@@ -218,13 +218,13 @@ nact_menu_edit_cut( NactMainWindow *main_window )
 	to_delete = get_deletables( sdata->updater, items, &ndeletables );
 
 	if( ndeletables ){
-		gchar *second = na_core_utils_slist_join_at_end( ndeletables, "\n" );
+		gchar *second = fma_core_utils_slist_join_at_end( ndeletables, "\n" );
 		base_window_display_error_dlg(
 				BASE_WINDOW( main_window ),
 				_( "Not all items have been cut as following ones are not modifiable:" ),
 				second );
 		g_free( second );
-		na_core_utils_slist_free( ndeletables );
+		fma_core_utils_slist_free( ndeletables );
 	}
 
 	if( to_delete ){
@@ -464,13 +464,13 @@ nact_menu_edit_delete( NactMainWindow *main_window )
 	to_delete = get_deletables( sdata->updater, items, &ndeletables );
 
 	if( ndeletables ){
-		gchar *second = na_core_utils_slist_join_at_end( ndeletables, "\n" );
+		gchar *second = fma_core_utils_slist_join_at_end( ndeletables, "\n" );
 		base_window_display_error_dlg(
 				BASE_WINDOW( main_window ),
 				_( "Not all items have been deleted as following ones are not modifiable:" ),
 				second );
 		g_free( second );
-		na_core_utils_slist_free( ndeletables );
+		fma_core_utils_slist_free( ndeletables );
 	}
 
 	if( to_delete ){

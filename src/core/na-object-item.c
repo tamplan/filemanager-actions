@@ -35,7 +35,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
 
 #include "na-io-provider.h"
@@ -304,12 +304,12 @@ object_are_equal( const NAObject *a, const NAObject *b )
 		g_debug( "%s: a=%p, b=%p", thisfn, ( void * ) a, ( void * ) b );
 
 		a_slist = get_children_slist( origin );
-		a_list = na_core_utils_slist_join_at_end( a_slist, ";" );
-		na_core_utils_slist_free( a_slist );
+		a_list = fma_core_utils_slist_join_at_end( a_slist, ";" );
+		fma_core_utils_slist_free( a_slist );
 
 		b_slist = get_children_slist( duplicate );
-		b_list = na_core_utils_slist_join_at_end( b_slist, ";" );
-		na_core_utils_slist_free( b_slist );
+		b_list = fma_core_utils_slist_join_at_end( b_slist, ";" );
+		fma_core_utils_slist_free( b_slist );
 
 		are_equal = ( strcmp( a_list, b_list ) == 0 );
 
@@ -815,7 +815,7 @@ na_object_item_rebuild_children_slist( NAObjectItem *item )
 
 		slist = get_children_slist( item );
 		na_object_set_items_slist( item, slist );
-		na_core_utils_slist_free( slist );
+		fma_core_utils_slist_free( slist );
 	}
 }
 

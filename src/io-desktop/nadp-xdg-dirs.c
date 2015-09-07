@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "nadp-xdg-dirs.h"
 
@@ -106,7 +106,7 @@ nadp_xdg_dirs_get_system_data_dirs( void )
 
 	dirs = ( const gchar ** ) g_get_system_data_dirs();
 
-	paths = na_core_utils_slist_from_array( dirs );
+	paths = fma_core_utils_slist_from_array( dirs );
 
 	return( paths );
 }

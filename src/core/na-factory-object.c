@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-data-boxed.h>
 #include <api/na-data-types.h>
 #include <api/na-iio-provider.h>
@@ -756,7 +756,7 @@ na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *nam
  *
  * If the type of the value is NA_DATA_TYPE_STRING or NA_DATA_TYPE_LOCALE_STRING
  * (resp. NA_DATA_TYPE_STRING_LIST), then the returned value is a newly allocated
- * string (resp. GSList) and should be g_free() (resp. na_core_utils_slist_free())
+ * string (resp. GSList) and should be g_free() (resp. fma_core_utils_slist_free())
  * by the caller.
  */
 void *

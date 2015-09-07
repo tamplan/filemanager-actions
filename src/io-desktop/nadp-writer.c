@@ -34,7 +34,7 @@
 #include <errno.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-data-types.h>
 #include <api/na-object-api.h>
 #include <api/na-ifactory-provider.h>
@@ -105,14 +105,14 @@ nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 	userdir = nadp_xdg_dirs_get_user_data_dir();
 
 	if( g_file_test( userdir, G_FILE_TEST_IS_DIR )){
-		able_to = na_core_utils_dir_is_writable_path( userdir );
+		able_to = fma_core_utils_dir_is_writable_path( userdir );
 
 	} else if( g_mkdir_with_parents( userdir, 0750 )){
 		g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));
 
 	} else {
-		na_core_utils_dir_list_perms( userdir, thisfn );
-		able_to = na_core_utils_dir_is_writable_path( userdir );
+		fma_core_utils_dir_list_perms( userdir, thisfn );
+		able_to = fma_core_utils_dir_is_writable_path( userdir );
 	}
 
 	g_free( userdir );
@@ -155,7 +155,7 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 
 	} else {
 		userdir = nadp_xdg_dirs_get_user_data_dir();
-		subdirs = na_core_utils_slist_from_split( NADP_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
+		subdirs = fma_core_utils_slist_from_split( NADP_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
 		fulldir = g_build_filename( userdir, ( gchar * ) subdirs->data, NULL );
 		dir_ok = TRUE;
 
@@ -164,11 +164,11 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 				g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));
 				dir_ok = FALSE;
 			} else {
-				na_core_utils_dir_list_perms( userdir, thisfn );
+				fma_core_utils_dir_list_perms( userdir, thisfn );
 			}
 		}
 		g_free( userdir );
-		na_core_utils_slist_free( subdirs );
+		fma_core_utils_slist_free( subdirs );
 
 		if( dir_ok ){
 			id = na_object_get_id( item );
@@ -565,7 +565,7 @@ nadp_writer_ifactory_provider_write_data(
 				case NA_DATA_TYPE_STRING_LIST:
 					slist_value = ( GSList * ) fma_boxed_get_as_void( FMA_BOXED( boxed ));
 					nadp_desktop_file_set_string_list( ndf, group_name, def->desktop_entry, slist_value );
-					na_core_utils_slist_free( slist_value );
+					fma_core_utils_slist_free( slist_value );
 					break;
 
 				case NA_DATA_TYPE_UINT:
@@ -609,7 +609,7 @@ write_done_write_subitems_list( NadpDesktopFile *ndp, NAObjectItem *item )
 
 	subitems = na_object_get_items_slist( item );
 	tmp = g_strdup_printf( "%s (written subitems)", thisfn );
-	na_core_utils_slist_dump( tmp, subitems );
+	fma_core_utils_slist_dump( tmp, subitems );
 	g_free( tmp );
 
 	nadp_desktop_file_set_string_list(
@@ -620,18 +620,18 @@ write_done_write_subitems_list( NadpDesktopFile *ndp, NAObjectItem *item )
 
 	profile_groups = nadp_desktop_file_get_profiles( ndp );
 	tmp = g_strdup_printf( "%s (existing profiles)", thisfn );
-	na_core_utils_slist_dump( tmp, profile_groups );
+	fma_core_utils_slist_dump( tmp, profile_groups );
 	g_free( tmp );
 
 	for( ip = profile_groups ; ip ; ip = ip->next ){
-		if( na_core_utils_slist_count( subitems, ( const gchar * ) ip->data ) == 0 ){
+		if( fma_core_utils_slist_count( subitems, ( const gchar * ) ip->data ) == 0 ){
 			g_debug( "%s: deleting (removed) profile %s", thisfn, ( const gchar * ) ip->data );
 			nadp_desktop_file_remove_profile( ndp, ( const gchar * ) ip->data );
 		}
 	}
 
-	na_core_utils_slist_free( profile_groups );
-	na_core_utils_slist_free( subitems );
+	fma_core_utils_slist_free( profile_groups );
+	fma_core_utils_slist_free( subitems );
 }
 
 static ExportFormatFn *

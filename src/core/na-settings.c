@@ -38,7 +38,7 @@
 
 #include "api/fma-boxed.h"
 #include "api/na-data-types.h"
-#include "api/na-core-utils.h"
+#include "api/fma-core-utils.h"
 #include "api/na-timeout.h"
 
 #include "na-settings.h"
@@ -615,7 +615,7 @@ na_settings_get_string( const gchar *key, gboolean *found, gboolean *mandatory )
  * is otherwise undefined (and rather unpredictable).
  *
  * Returns: the value of the key as a newly allocated list of strings.
- * The returned list should be na_core_utils_slist_free() by the caller.
+ * The returned list should be fma_core_utils_slist_free() by the caller.
  *
  * Since: 3.1
  */
@@ -936,7 +936,7 @@ na_settings_set_uint_list( const gchar *key, const GList *value )
  * na_settings_get_groups:
  *
  * Returns: the list of groups in the configuration; this list should be
- * na_core_utils_slist_free() by the caller.
+ * fma_core_utils_slist_free() by the caller.
  *
  * This function participates to a rather bad hack to obtain the list of
  * known i/o providers from preferences. We do not care of returning unique
@@ -955,13 +955,13 @@ na_settings_get_groups( void )
 
 	array = g_key_file_get_groups( st_settings->private->mandatory->key_file, NULL );
 	if( array ){
-		groups = na_core_utils_slist_from_array(( const gchar ** ) array );
+		groups = fma_core_utils_slist_from_array(( const gchar ** ) array );
 		g_strfreev( array );
 	}
 
 	array = g_key_file_get_groups( st_settings->private->user->key_file, NULL );
 	if( array ){
-		groups = g_slist_concat( groups, na_core_utils_slist_from_array(( const gchar ** ) array ));
+		groups = g_slist_concat( groups, fma_core_utils_slist_from_array(( const gchar ** ) array ));
 		g_strfreev( array );
 	}
 
@@ -1133,7 +1133,7 @@ key_file_new( const gchar *dir )
 
 	keyfile->key_file = g_key_file_new();
 	keyfile->fname = g_strdup_printf( "%s/%s.conf", dir, PACKAGE );
-	na_core_utils_file_list_perms( keyfile->fname, thisfn );
+	fma_core_utils_file_list_perms( keyfile->fname, thisfn );
 
 	error = NULL;
 	file = g_file_new_for_path( keyfile->fname );

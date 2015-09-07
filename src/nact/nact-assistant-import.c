@@ -36,7 +36,7 @@
 #include <string.h>
 
 #include <api/na-object-api.h>
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include <core/na-import-mode.h>
 #include <core/na-importer.h>
@@ -488,7 +488,7 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 			g_free( folder );
 		}
 
-		na_core_utils_slist_free( uris );
+		fma_core_utils_slist_free( uris );
 
 		content = gtk_assistant_get_nth_page( assistant, pos );
 		gtk_assistant_set_page_complete( assistant, content, enabled );
@@ -513,7 +513,7 @@ has_loadable_files( GSList *uris )
 			continue;
 		}
 
-		if( na_core_utils_file_is_loadable( uri )){
+		if( fma_core_utils_file_is_loadable( uri )){
 			loadables += 1;
 		}
 	}
@@ -623,7 +623,7 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 			NA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ));
 	g_return_if_fail( NA_IS_IMPORT_MODE( window->private->mode ));
 	mode_label = na_ioption_get_label( window->private->mode );
-	label2 = na_core_utils_str_remove_char( mode_label, "_" );
+	label2 = fma_core_utils_str_remove_char( mode_label, "_" );
 	mode_description = na_ioption_get_description( window->private->mode );
 	text = g_markup_printf_escaped( "%s\n\n<span style=\"italic\">%s</span>", label2, mode_description );
 	gtk_label_set_markup( GTK_LABEL( label ), text );
@@ -685,7 +685,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		}
 	}
 
-	na_core_utils_slist_free( importer_parms.uris );
+	fma_core_utils_slist_free( importer_parms.uris );
 	window->private->results = import_results;
 
 	/* then insert the list

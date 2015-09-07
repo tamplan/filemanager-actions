@@ -36,7 +36,7 @@
 
 #include <api/fma-boxed.h>
 #include <api/na-data-types.h>
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 /* private class data
  */
@@ -701,7 +701,7 @@ fma_boxed_get_string( const FMABoxed *boxed )
  * @boxed: the #FMABoxed structure.
  *
  * Returns: a newly allocated string list if @boxed is of %NA_DATA_TYPE_STRING_LIST
- * type, which should be na_core_utils_slist_free() by the caller, %NULL else.
+ * type, which should be fma_core_utils_slist_free() by the caller, %NULL else.
  *
  * Since: 3.1
  */
@@ -800,7 +800,7 @@ fma_boxed_get_as_value( const FMABoxed *boxed, GValue *value )
  * If of type NA_DATA_TYPE_STRING (resp. NA_DATA_TYPE_LOCALE_STRING,
  * NA_DATA_TYPE_STRING_LIST or NA_DATA_TYPE_UINT_LIST), then the content
  * is returned in a newly allocated value, which should be g_free() (resp.
- * g_free(), na_core_utils_slist_free(), g_list_free()) by the caller.
+ * g_free(), fma_core_utils_slist_free(), g_list_free()) by the caller.
  *
  * Since: 3.1
  */
@@ -932,7 +932,7 @@ bool_free( FMABoxed *boxed )
 static void
 bool_from_string( FMABoxed *boxed, const gchar *string )
 {
-	boxed->private->u.boolean = na_core_utils_boolean_from_string( string );
+	boxed->private->u.boolean = fma_core_utils_boolean_from_string( string );
 }
 
 static void
@@ -1146,14 +1146,14 @@ string_list_copy( FMABoxed *dest, const FMABoxed *src )
 	if( dest->private->is_set ){
 		string_list_free( dest );
 	}
-	dest->private->u.string_list = na_core_utils_slist_duplicate( src->private->u.string_list );
+	dest->private->u.string_list = fma_core_utils_slist_duplicate( src->private->u.string_list );
 	dest->private->is_set = TRUE;
 }
 
 static void
 string_list_free( FMABoxed *boxed )
 {
-	na_core_utils_slist_free( boxed->private->u.string_list );
+	fma_core_utils_slist_free( boxed->private->u.string_list );
 	boxed->private->u.string_list = NULL;
 	boxed->private->is_set = FALSE;
 }
@@ -1174,7 +1174,7 @@ string_list_from_string( FMABoxed *boxed, const gchar *string )
 	if( array ){
 		i = ( gchar ** ) array;
 		while( *i ){
-			if( !na_core_utils_slist_count( boxed->private->u.string_list, ( const gchar * )( *i ))){
+			if( !fma_core_utils_slist_count( boxed->private->u.string_list, ( const gchar * )( *i ))){
 				boxed->private->u.string_list = g_slist_prepend( boxed->private->u.string_list, g_strdup( *i ));
 			}
 			i++;
@@ -1199,7 +1199,7 @@ string_list_from_void( FMABoxed *boxed, const void *value )
 
 	value_slist = ( GSList * ) value;
 	for( it = value_slist ; it ; it = it->next ){
-		if( !na_core_utils_slist_count( boxed->private->u.string_list, ( const gchar * ) it->data )){
+		if( !fma_core_utils_slist_count( boxed->private->u.string_list, ( const gchar * ) it->data )){
 			boxed->private->u.string_list = g_slist_prepend( boxed->private->u.string_list, g_strdup(( const gchar * ) it->data ));
 		}
 	}
@@ -1234,13 +1234,13 @@ string_list_to_string( const FMABoxed *boxed )
 static GSList *
 string_list_to_string_list( const FMABoxed *boxed )
 {
-	return( na_core_utils_slist_duplicate( boxed->private->u.string_list ));
+	return( fma_core_utils_slist_duplicate( boxed->private->u.string_list ));
 }
 
 static void
 string_list_to_value( const FMABoxed *boxed, GValue *value )
 {
-	g_value_set_pointer( value, na_core_utils_slist_duplicate( boxed->private->u.string_list ));
+	g_value_set_pointer( value, fma_core_utils_slist_duplicate( boxed->private->u.string_list ));
 }
 
 static void *
@@ -1249,7 +1249,7 @@ string_list_to_void( const FMABoxed *boxed )
 	void *value = NULL;
 
 	if( boxed->private->u.string_list ){
-		value = na_core_utils_slist_duplicate( boxed->private->u.string_list );
+		value = fma_core_utils_slist_duplicate( boxed->private->u.string_list );
 	}
 
 	return( value );
@@ -1264,7 +1264,7 @@ locale_are_equal( const FMABoxed *a, const FMABoxed *b )
 	if( !a->private->u.string || !b->private->u.string ){
 		return( FALSE );
 	}
-	return( na_core_utils_str_collate( a->private->u.string, b->private->u.string ) == 0 );
+	return( fma_core_utils_str_collate( a->private->u.string, b->private->u.string ) == 0 );
 }
 
 static gboolean

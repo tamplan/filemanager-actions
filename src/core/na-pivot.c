@@ -33,7 +33,7 @@
 
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-timeout.h>
 
 #include "na-io-provider.h"
@@ -576,7 +576,7 @@ na_pivot_load_items( NAPivot *pivot )
 			g_warning( "%s: %s", thisfn, ( const gchar * ) im->data );
 		}
 
-		na_core_utils_slist_free( messages );
+		fma_core_utils_slist_free( messages );
 	}
 }
 

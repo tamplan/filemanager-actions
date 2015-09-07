@@ -38,12 +38,12 @@
 #include <gio/gio.h>
 #include <glib/gstdio.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "na-about.h"
 
 /* minimal and maximal size for loading the content of a file in memory
- * used by na_core_utils_file_is_size_ok()
+ * used by fma_core_utils_file_is_size_ok()
  */
 #define SIZE_MIN		  1
 #define SIZE_MAX	1048576		/* 1 MB */
@@ -56,7 +56,7 @@ static gboolean file_is_loadable( GFile *file );
 static void     list_perms( const gchar *path, const gchar *message, const gchar *command );
 
 /**
- * na_core_utils_boolean_from_string
+ * fma_core_utils_boolean_from_string
  * @string: a string to be converted.
  *
  * Returns: %TRUE if the string evaluates to "true" (case insensitive),
@@ -65,7 +65,7 @@ static void     list_perms( const gchar *path, const gchar *message, const gchar
  * Since: 2.30
  */
 gboolean
-na_core_utils_boolean_from_string( const gchar *string )
+fma_core_utils_boolean_from_string( const gchar *string )
 {
 	if( !string ) return( FALSE );
 
@@ -74,7 +74,7 @@ na_core_utils_boolean_from_string( const gchar *string )
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
- * na_core_utils_str_add_prefix:
+ * fma_core_utils_str_add_prefix:
  * @prefix: the prefix to be prepended.
  * @str: a multiline string.
  *
@@ -86,7 +86,7 @@ na_core_utils_boolean_from_string( const gchar *string )
  * Deprecated: 3.2
  */
 gchar *
-na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str )
+fma_core_utils_str_add_prefix( const gchar *prefix, const gchar *str )
 {
 	GSList *list, *il;
 	GString *result;
@@ -98,7 +98,7 @@ na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str )
 		g_string_append_printf( result, "%s%s\n", prefix, ( gchar * ) il->data );
 	}
 
-	na_core_utils_slist_free( list );
+	fma_core_utils_slist_free( list );
 
 	return( g_string_free( result, FALSE ));
 }
@@ -120,7 +120,7 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
 
 	} else {
 		tokens = g_strsplit( source, separator, -1 );
-		strlist = na_core_utils_slist_from_array(( const gchar ** ) tokens );
+		strlist = fma_core_utils_slist_from_array(( const gchar ** ) tokens );
 		g_strfreev( tokens );
 	}
 
@@ -130,7 +130,7 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
 #endif /* NA_ENABLE_DEPRECATED */
 
 /**
- * na_core_utils_str_collate:
+ * fma_core_utils_str_collate:
  * @str1: an UTF-8 encoded string.
  * @str2: an UTF-8 encoded string.
  *
@@ -150,7 +150,7 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
  * Since: 2.30
  */
 int
-na_core_utils_str_collate( const gchar *str1, const gchar *str2 )
+fma_core_utils_str_collate( const gchar *str1, const gchar *str2 )
 {
 	int res;
 
@@ -171,7 +171,7 @@ na_core_utils_str_collate( const gchar *str1, const gchar *str2 )
 }
 
 /**
- * na_core_utils_str_remove_char:
+ * fma_core_utils_str_remove_char:
  * @string: source string.
  * @to_remove: the character to remove.
  *
@@ -183,9 +183,9 @@ na_core_utils_str_collate( const gchar *str1, const gchar *str2 )
  * Since: 2.30
  */
 gchar *
-na_core_utils_str_remove_char( const gchar *string, const gchar *to_remove )
+fma_core_utils_str_remove_char( const gchar *string, const gchar *to_remove )
 {
-	static const gchar *thisfn = "na_core_utils_str_remove_char";
+	static const gchar *thisfn = "fma_core_utils_str_remove_char";
 	gchar *removed;
 	GRegex *regex;
 	GError *error;
@@ -214,7 +214,7 @@ na_core_utils_str_remove_char( const gchar *string, const gchar *to_remove )
 }
 
 /**
- * na_core_utils_str_remove_suffix:
+ * fma_core_utils_str_remove_suffix:
  * @string: source string.
  * @suffix: suffix to be removed from @string.
  *
@@ -227,7 +227,7 @@ na_core_utils_str_remove_char( const gchar *string, const gchar *to_remove )
  * Since: 2.30
  */
 gchar *
-na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
+fma_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
 {
 	gchar *removed;
 	gchar *ptr;
@@ -243,7 +243,7 @@ na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
 }
 
 /**
- * na_core_utils_str_split_first_word:
+ * fma_core_utils_str_split_first_word:
  * @string: a space-separated string.
  * @first: a pointer to a gchar *.
  * @other: a pointer to a gchar *.
@@ -263,7 +263,7 @@ na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
  * Since: 2.30
  */
 void
-na_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **other )
+fma_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **other )
 {
 	gchar **splitted, **iter;
 
@@ -290,7 +290,7 @@ na_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **
 }
 
 /**
- * na_core_utils_str_subst:
+ * fma_core_utils_str_subst:
  * @pattern: the pattern.
  * @key: the key string to be substituted.
  * @subst: the string which will replace @key.
@@ -302,7 +302,7 @@ na_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **
  * or a copy of @pattern if @key is not found in @pattern.
  */
 gchar *
-na_core_utils_str_subst( const gchar *pattern, const gchar *key, const gchar *subst )
+fma_core_utils_str_subst( const gchar *pattern, const gchar *key, const gchar *subst )
 {
 	GString *result;
 	gchar *found;
@@ -322,7 +322,7 @@ na_core_utils_str_subst( const gchar *pattern, const gchar *key, const gchar *su
 }
 
 void
-na_core_utils_slist_add_message( GSList **messages, const gchar *format, ... )
+fma_core_utils_slist_add_message( GSList **messages, const gchar *format, ... )
 {
 	va_list va;
 	gchar *tmp;
@@ -335,17 +335,17 @@ na_core_utils_slist_add_message( GSList **messages, const gchar *format, ... )
 }
 
 /**
- * na_core_utils_slist_duplicate:
+ * fma_core_utils_slist_duplicate:
  * @slist: the #GSList to be duplicated.
  *
  * Returns: a #GSList of strings.
  *
- * The returned list should be na_core_utils_slist_free() by the caller.
+ * The returned list should be fma_core_utils_slist_free() by the caller.
  *
  * Since: 2.30
  */
 GSList *
-na_core_utils_slist_duplicate( GSList *slist )
+fma_core_utils_slist_duplicate( GSList *slist )
 {
 	GSList *dest_slist, *it;
 
@@ -361,7 +361,7 @@ na_core_utils_slist_duplicate( GSList *slist )
 }
 
 /**
- * na_core_utils_slist_dump:
+ * fma_core_utils_slist_dump:
  * @prefix: a string to be used as a prefix for each outputed line.
  * @list: a list of strings.
  *
@@ -370,9 +370,9 @@ na_core_utils_slist_duplicate( GSList *slist )
  * Since: 2.30
  */
 void
-na_core_utils_slist_dump( const gchar *prefix, GSList *list )
+fma_core_utils_slist_dump( const gchar *prefix, GSList *list )
 {
-	static const gchar *thisfn = "na_core_utils_slist_dump";
+	static const gchar *thisfn = "fma_core_utils_slist_dump";
 	GSList *i;
 	int c;
 	const gchar *thispfx;
@@ -388,18 +388,18 @@ na_core_utils_slist_dump( const gchar *prefix, GSList *list )
 }
 
 /**
- * na_core_utils_slist_from_split:
+ * fma_core_utils_slist_from_split:
  * @text: a string to be splitted.
  * @separator: the string to be used as the separator.
  *
  * Returns: a #GSList with the list of strings after having been splitted.
  *
- * The returned #GSList should be na_core_utils_slist_free() by the caller.
+ * The returned #GSList should be fma_core_utils_slist_free() by the caller.
  *
  * Since: 2.30
  */
 GSList *
-na_core_utils_slist_from_split( const gchar *text, const gchar *separator )
+fma_core_utils_slist_from_split( const gchar *text, const gchar *separator )
 {
 	GSList *slist;
 	gchar **tokens;
@@ -417,7 +417,7 @@ na_core_utils_slist_from_split( const gchar *text, const gchar *separator )
 	}
 
 	tokens = g_strsplit( tmp, separator, -1 );
-	slist = na_core_utils_slist_from_array(( const gchar ** ) tokens );
+	slist = fma_core_utils_slist_from_array(( const gchar ** ) tokens );
 	g_strfreev( tokens );
 
 	g_free( source );
@@ -426,16 +426,16 @@ na_core_utils_slist_from_split( const gchar *text, const gchar *separator )
 }
 
 /**
- * na_core_utils_slist_from_array:
+ * fma_core_utils_slist_from_array:
  * @str_array: an NULL-terminated array of strings.
  *
- * Returns: a #GSList list of strings, which should be #na_core_utils_slist_free()
+ * Returns: a #GSList list of strings, which should be #fma_core_utils_slist_free()
  * by the caller.
  *
  * Since: 2.30
  */
 GSList *
-na_core_utils_slist_from_array( const gchar **str_array )
+fma_core_utils_slist_from_array( const gchar **str_array )
 {
 	GSList *slist;
 	gchar **idx;
@@ -452,7 +452,7 @@ na_core_utils_slist_from_array( const gchar **str_array )
 }
 
 /**
- * na_core_utils_slist_join_at_end:
+ * fma_core_utils_slist_join_at_end:
  * @slist: the string list to join.
  * @link: the string used to join each element.
  *
@@ -461,7 +461,7 @@ na_core_utils_slist_from_array( const gchar **str_array )
  * Since: 2.30
  */
 gchar *
-na_core_utils_slist_join_at_end( GSList *slist, const gchar *link )
+fma_core_utils_slist_join_at_end( GSList *slist, const gchar *link )
 {
 	GSList *is;
 	GString *str;
@@ -479,7 +479,7 @@ na_core_utils_slist_join_at_end( GSList *slist, const gchar *link )
 }
 
 /**
- * na_core_utils_slist_remove_ascii:
+ * fma_core_utils_slist_remove_ascii:
  * @slist: the #GSList to be updated.
  * @text: string to remove.
  *
@@ -490,7 +490,7 @@ na_core_utils_slist_join_at_end( GSList *slist, const gchar *link )
  * Since: 2.30
  */
 GSList *
-na_core_utils_slist_remove_ascii( GSList *slist, const gchar *text )
+fma_core_utils_slist_remove_ascii( GSList *slist, const gchar *text )
 {
 	GSList *il;
 
@@ -508,7 +508,7 @@ na_core_utils_slist_remove_ascii( GSList *slist, const gchar *text )
 }
 
 /**
- * na_core_utils_slist_remove_utf8:
+ * fma_core_utils_slist_remove_utf8:
  * @slist: the #GSList to be updated.
  * @text: the string to be removed.
  *
@@ -520,13 +520,13 @@ na_core_utils_slist_remove_ascii( GSList *slist, const gchar *text )
  * Since: 2.30
  */
 GSList *
-na_core_utils_slist_remove_utf8( GSList *slist, const gchar *text )
+fma_core_utils_slist_remove_utf8( GSList *slist, const gchar *text )
 {
 	GSList *is;
 
 	for( is = slist ; is ; is = is->next ){
 		const gchar *istr = ( const gchar * ) is->data;
-		if( !na_core_utils_str_collate( text, istr )){
+		if( !fma_core_utils_str_collate( text, istr )){
 			g_free( is->data );
 			slist = g_slist_delete_link( slist, is );
 			break;
@@ -537,7 +537,7 @@ na_core_utils_slist_remove_utf8( GSList *slist, const gchar *text )
 }
 
 /**
- * na_core_utils_slist_to_array:
+ * fma_core_utils_slist_to_array:
  * @slist: a list of strings.
  *
  * Returns: a newly allocated array of strings, which should be
@@ -546,7 +546,7 @@ na_core_utils_slist_remove_utf8( GSList *slist, const gchar *text )
  * Since: 2.30
  */
 gchar **
-na_core_utils_slist_to_array( GSList *slist )
+fma_core_utils_slist_to_array( GSList *slist )
 {
 	GString *str;
 	GSList *is;
@@ -563,7 +563,7 @@ na_core_utils_slist_to_array( GSList *slist )
 }
 
 /**
- * na_core_utils_slist_to_text:
+ * fma_core_utils_slist_to_text:
  * @slist: a list of strings.
  *
  * Concatenates a string list to a semi-colon-separated text
@@ -575,7 +575,7 @@ na_core_utils_slist_to_array( GSList *slist )
  * Since: 2.30
  */
 gchar *
-na_core_utils_slist_to_text( GSList *slist )
+fma_core_utils_slist_to_text( GSList *slist )
 {
 	GSList *ib;
 	gchar *tmp;
@@ -596,7 +596,7 @@ na_core_utils_slist_to_text( GSList *slist )
 }
 
 /**
- * na_core_utils_slist_setup_element:
+ * fma_core_utils_slist_setup_element:
  * @list: the GSList of strings to be setup.
  * @element: the string to add to or remove of the list.
  * @set: whether the @element should be set or removed.
@@ -609,24 +609,24 @@ na_core_utils_slist_to_text( GSList *slist )
  * Since: 2.30
  */
 GSList *
-na_core_utils_slist_setup_element( GSList *list, const gchar *element, gboolean set )
+fma_core_utils_slist_setup_element( GSList *list, const gchar *element, gboolean set )
 {
 	guint count;
 
-	count = na_core_utils_slist_count( list, element );
+	count = fma_core_utils_slist_count( list, element );
 
 	if( set && count == 0 ){
 		list = g_slist_prepend( list, g_strdup( element ));
 	}
 	if( !set && count > 0 ){
-		list = na_core_utils_slist_remove_ascii( list, element );
+		list = fma_core_utils_slist_remove_ascii( list, element );
 	}
 
 	return( list );
 }
 
 /**
- * na_core_utils_slist_count:
+ * fma_core_utils_slist_count:
  * @list: the GSList of strings to be searched.
  * @str: the searched string.
  *
@@ -637,7 +637,7 @@ na_core_utils_slist_setup_element( GSList *list, const gchar *element, gboolean 
  * Since: 2.30
  */
 guint
-na_core_utils_slist_count( GSList *list, const gchar *str )
+fma_core_utils_slist_count( GSList *list, const gchar *str )
 {
 	guint count;
 	GSList *il;
@@ -646,7 +646,7 @@ na_core_utils_slist_count( GSList *list, const gchar *str )
 
 	for( il = list ; il ; il = il->next ){
 		const gchar *istr = ( const gchar * ) il->data;
-		if( !na_core_utils_str_collate( str, istr )){
+		if( !fma_core_utils_str_collate( str, istr )){
 			count += 1;
 		}
 	}
@@ -655,7 +655,7 @@ na_core_utils_slist_count( GSList *list, const gchar *str )
 }
 
 /**
- * na_core_utils_slist_find_negated:
+ * fma_core_utils_slist_find_negated:
  * @list: the GSList of strings to be searched.
  * @str: the searched string.
  *
@@ -666,7 +666,7 @@ na_core_utils_slist_count( GSList *list, const gchar *str )
  * Since: 2.30
  */
 gboolean
-na_core_utils_slist_find_negated( GSList *list, const gchar *str )
+fma_core_utils_slist_find_negated( GSList *list, const gchar *str )
 {
 	GSList *il;
 
@@ -675,13 +675,13 @@ na_core_utils_slist_find_negated( GSList *list, const gchar *str )
 
 		if( istr[0] == '!' ){
 			gchar *istrdup = g_strdup( istr+1 );
-			int match = na_core_utils_str_collate( str, istrdup );
+			int match = fma_core_utils_str_collate( str, istrdup );
 			g_free( istrdup );
 			if( match == 0 ){
 				return( TRUE );
 			}
 
-		} else if( na_core_utils_str_collate( str, istr ) == 0 ){
+		} else if( fma_core_utils_str_collate( str, istr ) == 0 ){
 				return( TRUE );
 		}
 	}
@@ -690,7 +690,7 @@ na_core_utils_slist_find_negated( GSList *list, const gchar *str )
 }
 
 /**
- * na_core_utils_slist_are_equal:
+ * fma_core_utils_slist_are_equal:
  * @a: a GSList of strings.
  * @b: another GSList of strings to be compared with @first.
  *
@@ -701,20 +701,20 @@ na_core_utils_slist_find_negated( GSList *list, const gchar *str )
  * Since: 2.30
  */
 gboolean
-na_core_utils_slist_are_equal( GSList *a, GSList *b )
+fma_core_utils_slist_are_equal( GSList *a, GSList *b )
 {
 	GSList *il;
 
 	for( il = a ; il ; il = il->next ){
 		const gchar *str = ( const gchar * ) il->data;
-		if( na_core_utils_slist_count( b, str ) == 0 ){
+		if( fma_core_utils_slist_count( b, str ) == 0 ){
 			return( FALSE );
 		}
 	}
 
 	for( il = b ; il ; il = il->next ){
 		const gchar *str = ( const gchar * ) il->data;
-		if( na_core_utils_slist_count( a, str ) == 0 ){
+		if( fma_core_utils_slist_count( a, str ) == 0 ){
 			return( FALSE );
 		}
 	}
@@ -723,7 +723,7 @@ na_core_utils_slist_are_equal( GSList *a, GSList *b )
 }
 
 /**
- * na_core_utils_slist_free:
+ * fma_core_utils_slist_free:
  * @slist: a #GSList list of strings.
  *
  * Releases the strings and the list itself.
@@ -731,14 +731,14 @@ na_core_utils_slist_are_equal( GSList *a, GSList *b )
  * Since: 2.30
  */
 void
-na_core_utils_slist_free( GSList *slist )
+fma_core_utils_slist_free( GSList *slist )
 {
 	g_slist_foreach( slist, ( GFunc ) g_free, NULL );
 	g_slist_free( slist );
 }
 
 /**
- * na_core_utils_gstring_joinv:
+ * fma_core_utils_gstring_joinv:
  * @start: a prefix to be written at the beginning of the output string.
  * @separator: a string to be used as separator.
  * @list: the list of strings to be concatenated.
@@ -750,7 +750,7 @@ na_core_utils_slist_free( GSList *slist )
  * Since: 2.30
  */
 gchar *
-na_core_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list )
+fma_core_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list )
 {
 	GString *tmp_string = g_string_new( "" );
 	int i;
@@ -776,7 +776,7 @@ na_core_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar *
 }
 
 /***
- * na_core_utils_selcount_get_ope:
+ * fma_core_utils_selcount_get_ope:
  * @selcount: the selection count condition string.
  * @ope: a pointer to a newly allocated string which will contains the
  *  operation code.
@@ -791,7 +791,7 @@ na_core_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar *
  * Since: 2.30
  */
 void
-na_core_utils_selcount_get_ope_int( const gchar *selcount, gchar **ope, gchar **uint )
+fma_core_utils_selcount_get_ope_int( const gchar *selcount, gchar **ope, gchar **uint )
 {
 	gchar *dup, *dup2;
 	guint uint_int;
@@ -814,7 +814,7 @@ na_core_utils_selcount_get_ope_int( const gchar *selcount, gchar **ope, gchar **
 }
 
 /**
- * na_core_utils_dir_is_writable_path:
+ * fma_core_utils_dir_is_writable_path:
  * @path: the path of the directory to be tested.
  *
  * Returns: %TRUE if the directory is writable, %FALSE else.
@@ -828,9 +828,9 @@ na_core_utils_selcount_get_ope_int( const gchar *selcount, gchar **ope, gchar **
  * Since: 2.30
  */
 gboolean
-na_core_utils_dir_is_writable_path( const gchar *path )
+fma_core_utils_dir_is_writable_path( const gchar *path )
 {
-	static const gchar *thisfn = "na_core_utils_path_is_writable";
+	static const gchar *thisfn = "fma_core_utils_path_is_writable";
 	GFile *file;
 	gboolean writable;
 
@@ -847,7 +847,7 @@ na_core_utils_dir_is_writable_path( const gchar *path )
 }
 
 /**
- * na_core_utils_dir_is_writable_uri:
+ * fma_core_utils_dir_is_writable_uri:
  * @uri: the URI of the directory to be tested.
  *
  * Returns: %TRUE if the directory is writable, %FALSE else.
@@ -861,9 +861,9 @@ na_core_utils_dir_is_writable_path( const gchar *path )
  * Since: 2.30
  */
 gboolean
-na_core_utils_dir_is_writable_uri( const gchar *uri )
+fma_core_utils_dir_is_writable_uri( const gchar *uri )
 {
-	static const gchar *thisfn = "na_core_utils_dir_is_writable_uri";
+	static const gchar *thisfn = "fma_core_utils_dir_is_writable_uri";
 	GFile *file;
 	gboolean writable;
 
@@ -882,7 +882,7 @@ na_core_utils_dir_is_writable_uri( const gchar *uri )
 static gboolean
 info_dir_is_writable( GFile *file, const gchar *path_or_uri )
 {
-	static const gchar *thisfn = "na_core_utils_info_dir_is_writable";
+	static const gchar *thisfn = "fma_core_utils_info_dir_is_writable";
 	GError *error = NULL;
 	GFileInfo *info;
 	GFileType type;
@@ -918,7 +918,7 @@ info_dir_is_writable( GFile *file, const gchar *path_or_uri )
 }
 
 /**
- * na_core_utils_dir_list_perms:
+ * fma_core_utils_dir_list_perms:
  * @path: the path of the directory to be tested.
  * @message: a message to be printed if not %NULL.
  *
@@ -927,13 +927,13 @@ info_dir_is_writable( GFile *file, const gchar *path_or_uri )
  * Since: 3.1
  */
 void
-na_core_utils_dir_list_perms( const gchar *path, const gchar *message )
+fma_core_utils_dir_list_perms( const gchar *path, const gchar *message )
 {
 	list_perms( path, message, "ls -ld" );
 }
 
 /**
- * na_core_utils_dir_split_ext:
+ * fma_core_utils_dir_split_ext:
  * @string: the input path or URI to be splitted.
  * @first: a pointer to a buffer which will contain the first part of the split.
  * @ext: a pointer to a buffer which will contain the extension part of the path.
@@ -946,7 +946,7 @@ na_core_utils_dir_list_perms( const gchar *path, const gchar *message )
  * Since: 2.30
  */
 void
-na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext )
+fma_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext )
 {
 	gchar *dupped;
 	gchar **array, **iter;
@@ -977,7 +977,7 @@ na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext )
 }
 
 /**
- * na_core_utils_file_delete:
+ * fma_core_utils_file_delete:
  * @path: the path of the file to be deleted.
  *
  * Returns: %TRUE if the file is successfully deleted, %FALSE else.
@@ -985,9 +985,9 @@ na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext )
  * Since: 2.30
  */
 gboolean
-na_core_utils_file_delete( const gchar *path )
+fma_core_utils_file_delete( const gchar *path )
 {
-	static const gchar *thisfn = "na_core_utils_file_delete";
+	static const gchar *thisfn = "fma_core_utils_file_delete";
 	gboolean deleted = FALSE;
 
 	if( !path || !g_utf8_strlen( path, -1 )){
@@ -1005,18 +1005,18 @@ na_core_utils_file_delete( const gchar *path )
 }
 
 /**
- * na_core_utils_file_exists:
+ * fma_core_utils_file_exists:
  * @uri: a file URI.
  *
  * Returns: %TRUE if the specified file exists, %FALSE else.
  *
- * Race condition: cf. na_core_utils_dir_is_writable_path() and
- * na_core_utils_dir_is_writable_uri() comments.
+ * Race condition: cf. fma_core_utils_dir_is_writable_path() and
+ * fma_core_utils_dir_is_writable_uri() comments.
  *
  * Since: 2.30
  */
 gboolean
-na_core_utils_file_exists( const gchar *uri )
+fma_core_utils_file_exists( const gchar *uri )
 {
 	GFile *file;
 	gboolean exists;
@@ -1029,7 +1029,7 @@ na_core_utils_file_exists( const gchar *uri )
 }
 
 /**
- * na_core_utils_file_is_loadable:
+ * fma_core_utils_file_is_loadable:
  * @uri: the URI to be checked.
  *
  * Checks that the file is suitable to be loaded in memory, because
@@ -1042,9 +1042,9 @@ na_core_utils_file_exists( const gchar *uri )
  * Since: 3.1
  */
 gboolean
-na_core_utils_file_is_loadable( const gchar *uri )
+fma_core_utils_file_is_loadable( const gchar *uri )
 {
-	static const gchar *thisfn = "na_core_utils_file_is_loadable";
+	static const gchar *thisfn = "fma_core_utils_file_is_loadable";
 	GFile *file;
 	gboolean isok;
 
@@ -1063,7 +1063,7 @@ na_core_utils_file_is_loadable( const gchar *uri )
 static gboolean
 file_is_loadable( GFile *file )
 {
-	static const gchar *thisfn = "na_core_utils_file_is_loadable";
+	static const gchar *thisfn = "fma_core_utils_file_is_loadable";
 	GError *error;
 	GFileInfo *info;
 	guint64 size;
@@ -1115,7 +1115,7 @@ file_is_loadable( GFile *file )
 }
 
 /**
- * na_core_utils_file_list_perms:
+ * fma_core_utils_file_list_perms:
  * @path: the path of the file to be tested.
  * @message: a message to be printed if not %NULL.
  *
@@ -1124,7 +1124,7 @@ file_is_loadable( GFile *file )
  * Since: 3.2
  */
 void
-na_core_utils_file_list_perms( const gchar *path, const gchar *message )
+fma_core_utils_file_list_perms( const gchar *path, const gchar *message )
 {
 	list_perms( path, message, "ls -l" );
 }
@@ -1132,7 +1132,7 @@ na_core_utils_file_list_perms( const gchar *path, const gchar *message )
 static void
 list_perms( const gchar *path, const gchar *message, const gchar *command )
 {
-	static const gchar *thisfn = "na_core_utils_list_perms";
+	static const gchar *thisfn = "fma_core_utils_list_perms";
 	gchar *cmd;
 	gchar *out, *err;
 	GError *error;
@@ -1155,7 +1155,7 @@ list_perms( const gchar *path, const gchar *message, const gchar *command )
 }
 
 /**
- * na_core_utils_file_load_from_uri:
+ * fma_core_utils_file_load_from_uri:
  * @uri: the URI the file must be loaded from.
  * @length: a pointer to the length of the read content.
  *
@@ -1168,9 +1168,9 @@ list_perms( const gchar *path, const gchar *message, const gchar *command )
  * Since: 2.30
  */
 gchar *
-na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
+fma_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
 {
-	static const gchar *thisfn = "na_core_utils_file_load_from_uri";
+	static const gchar *thisfn = "fma_core_utils_file_load_from_uri";
 	gchar *data;
 	GFile *file;
 	GError *error;
@@ -1203,7 +1203,7 @@ na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
 }
 
 /**
- * na_core_utils_print_version:
+ * fma_core_utils_print_version:
  *
  * Print a version message on the console
  *
@@ -1217,7 +1217,7 @@ na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
  * Since: 2.30
  */
 void
-na_core_utils_print_version( void )
+fma_core_utils_print_version( void )
 {
 	gchar *copyright;
 

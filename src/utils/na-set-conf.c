@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "console-utils.h"
 
@@ -125,7 +125,7 @@ main( int argc, char** argv )
 	g_option_context_free( context );
 
 	if( st_version ){
-		na_core_utils_print_version();
+		fma_core_utils_print_version();
 		exit( status );
 	}
 
@@ -234,7 +234,7 @@ do_update_conf( const gchar *group, const gchar *key, NAType type, const gchar *
 
 	switch( type ){
 		case TYPE_BOOL:
-			bvalue = na_core_utils_boolean_from_string( value );
+			bvalue = fma_core_utils_boolean_from_string( value );
 			ok = na_settings_set_boolean_ex( group, key, bvalue );
 			break;
 

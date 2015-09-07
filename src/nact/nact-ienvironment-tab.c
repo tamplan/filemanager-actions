@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "api/na-core-utils.h"
+#include "api/fma-core-utils.h"
 #include "api/na-object-api.h"
 
 #include "core/na-gtk-utils.h"
@@ -383,7 +383,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIEnvi
 	/* selection count
 	 */
 	sel_count = context ? na_object_get_selection_count( context ) : g_strdup( "" );
-	na_core_utils_selcount_get_ope_int( sel_count, &selcount_ope, &selcount_int );
+	fma_core_utils_selcount_get_ope_int( sel_count, &selcount_ope, &selcount_int );
 	set_selection_count_selection( instance, selcount_ope, selcount_int );
 	g_free( selcount_int );
 	g_free( selcount_ope );

@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-iimporter.h>
 #include <api/na-object-api.h>
 
@@ -236,7 +236,7 @@ na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
 
 	} else {
 		renumber_label_item( parms );
-		na_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered because the caller did not provide any check function." ));
+		fma_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered because the caller did not provide any check function." ));
 		parms->import_mode = IMPORTER_MODE_RENUMBER;
 	}
 
@@ -251,7 +251,7 @@ na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
 
 			} else {
 				renumber_label_item( parms );
-				na_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered because the caller did not provide any ask user function." ));
+				fma_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered because the caller did not provide any ask user function." ));
 				parms->import_mode = IMPORTER_MODE_RENUMBER;
 			}
 
@@ -270,22 +270,22 @@ na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
 			case IMPORTER_MODE_RENUMBER:
 				renumber_label_item( parms );
 				if( parms->asked_mode == IMPORTER_MODE_ASK ){
-					na_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered due to user request." ));
+					fma_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered due to user request." ));
 				}
 				break;
 
 			case IMPORTER_MODE_OVERRIDE:
 				if( parms->asked_mode == IMPORTER_MODE_ASK ){
-					na_core_utils_slist_add_message( &parms->messages, "%s", _( "Existing item was overriden due to user request." ));
+					fma_core_utils_slist_add_message( &parms->messages, "%s", _( "Existing item was overriden due to user request." ));
 				}
 				break;
 
 			case IMPORTER_MODE_NO_IMPORT:
 			default:
 				id = na_object_get_id( parms->imported );
-				na_core_utils_slist_add_message( &parms->messages, _( "Item %s already exists." ), id );
+				fma_core_utils_slist_add_message( &parms->messages, _( "Item %s already exists." ), id );
 				if( parms->asked_mode == IMPORTER_MODE_ASK ){
-					na_core_utils_slist_add_message( &parms->messages, "%s", _( "Import was canceled due to user request." ));
+					fma_core_utils_slist_add_message( &parms->messages, "%s", _( "Import was canceled due to user request." ));
 				}
 				g_free( id );
 				code = IMPORTER_CODE_CANCELLED;

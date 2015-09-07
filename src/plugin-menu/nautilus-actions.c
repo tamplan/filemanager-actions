@@ -39,7 +39,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
 #include <api/na-timeout.h>
 
@@ -684,8 +684,8 @@ expand_tokens_item( const NAObjectItem *src, NATokens *tokens )
 		new_slist = g_slist_prepend( new_slist, new );
 	}
 	na_object_set_items_slist( item, new_slist );
-	na_core_utils_slist_free( subitems_slist );
-	na_core_utils_slist_free( new_slist );
+	fma_core_utils_slist_free( subitems_slist );
+	fma_core_utils_slist_free( new_slist );
 
 	/* last, deal with profiles of an action
 	 */

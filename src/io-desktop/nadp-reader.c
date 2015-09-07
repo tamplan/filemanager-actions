@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-data-types.h>
 #include <api/na-ifactory-object-data.h>
 #include <api/na-ifactory-provider.h>
@@ -137,7 +137,7 @@ get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **messages )
 
 	files = NULL;
 	xdg_dirs = nadp_xdg_dirs_get_data_dirs();
-	subdirs = na_core_utils_slist_from_split( NADP_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
+	subdirs = fma_core_utils_slist_from_split( NADP_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
 
 	/* explore each directory from XDG_DATA_DIRS
 	 */
@@ -154,8 +154,8 @@ get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **messages )
 		}
 	}
 
-	na_core_utils_slist_free( subdirs );
-	na_core_utils_slist_free( xdg_dirs );
+	fma_core_utils_slist_free( subdirs );
+	fma_core_utils_slist_free( xdg_dirs );
 
 	return( files );
 }
@@ -195,7 +195,7 @@ get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, c
 	if( dir_handle ){
 		while(( name = g_dir_read_name( dir_handle ))){
 			if( g_str_has_suffix( name, NADP_DESKTOP_FILE_SUFFIX )){
-				desktop_id = na_core_utils_str_remove_suffix( name, NADP_DESKTOP_FILE_SUFFIX );
+				desktop_id = fma_core_utils_str_remove_suffix( name, NADP_DESKTOP_FILE_SUFFIX );
 				if( !is_already_loaded( provider, *files, desktop_id )){
 					*files = desktop_path_from_id( provider, *files, dir, desktop_id );
 				}
@@ -289,7 +289,7 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 
 	} else {
 		/* i18n: 'type' is the nature of the item: Action or Menu */
-		na_core_utils_slist_add_message( messages, _( "unknown type: %s" ), type );
+		fma_core_utils_slist_add_message( messages, _( "unknown type: %s" ), type );
 	}
 
 	if( item ){
@@ -375,7 +375,7 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, void *parms_
 
 	parms = ( NAIImporterImportFromUriParmsv2 * ) parms_ptr;
 
-	if( !na_core_utils_file_is_loadable( parms->uri )){
+	if( !fma_core_utils_file_is_loadable( parms->uri )){
 		code = IMPORTER_CODE_NOT_LOADABLE;
 		return( code );
 	}
@@ -407,7 +407,7 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, void *parms_
 	}
 
 	if( code == IMPORTER_CODE_NOT_WILLING_TO ){
-		na_core_utils_slist_add_message( &parms->messages, ERR_NOT_DESKTOP );
+		fma_core_utils_slist_add_message( &parms->messages, ERR_NOT_DESKTOP );
 	}
 
 	return( code );
@@ -463,7 +463,7 @@ read_start_read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *
 		na_object_set_items_slist( item, subitems );
 	}
 
-	na_core_utils_slist_free( subitems );
+	fma_core_utils_slist_free( subitems );
 }
 
 static void
@@ -540,7 +540,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					break;
 
 				case NA_DATA_TYPE_BOOLEAN:
-					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, def->desktop_entry, &found, na_core_utils_boolean_from_string( def->default_value ));
+					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, def->desktop_entry, &found, fma_core_utils_boolean_from_string( def->default_value ));
 					if( found ){
 						boxed = na_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( bool_value ));
@@ -553,7 +553,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 						boxed = na_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), slist_value );
 					}
-					na_core_utils_slist_free( slist_value );
+					fma_core_utils_slist_free( slist_value );
 					break;
 
 				case NA_DATA_TYPE_UINT:
@@ -656,7 +656,7 @@ read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectActi
 		}
 	}
 
-	na_core_utils_slist_free( order );
+	fma_core_utils_slist_free( order );
 
 	if( !na_object_get_items_count( action )){
 		g_warning( "%s: no profile found in .desktop file", thisfn );

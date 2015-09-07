@@ -47,7 +47,7 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
 
 #include "na-desktop-environment.h"
@@ -318,7 +318,7 @@ na_icontext_check_mimetypes( const NAIContext *context )
 
 	na_object_set_all_mimetypes( context, is_all );
 
-	na_core_utils_slist_free( mimetypes );
+	fma_core_utils_slist_free( mimetypes );
 }
 
 /**
@@ -377,9 +377,9 @@ na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selec
 	g_return_if_fail( NA_IS_ICONTEXT( context ));
 
 	schemes = na_object_get_schemes( context );
-	schemes = na_core_utils_slist_setup_element( schemes, scheme, selected );
+	schemes = fma_core_utils_slist_setup_element( schemes, scheme, selected );
 	na_object_set_schemes( context, schemes );
-	na_core_utils_slist_free( schemes );
+	fma_core_utils_slist_free( schemes );
 }
 
 /**
@@ -400,9 +400,9 @@ na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolea
 	g_return_if_fail( NA_IS_ICONTEXT( context ));
 
 	desktops = na_object_get_only_show_in( context );
-	desktops = na_core_utils_slist_setup_element( desktops, desktop, selected );
+	desktops = fma_core_utils_slist_setup_element( desktops, desktop, selected );
 	na_object_set_only_show_in( context, desktops );
-	na_core_utils_slist_free( desktops );
+	fma_core_utils_slist_free( desktops );
 }
 
 /**
@@ -423,9 +423,9 @@ na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean
 	g_return_if_fail( NA_IS_ICONTEXT( context ));
 
 	desktops = na_object_get_not_show_in( context );
-	desktops = na_core_utils_slist_setup_element( desktops, desktop, selected );
+	desktops = fma_core_utils_slist_setup_element( desktops, desktop, selected );
 	na_object_set_not_show_in( context, desktops );
-	na_core_utils_slist_free( desktops );
+	fma_core_utils_slist_free( desktops );
 }
 
 /**
@@ -446,10 +446,10 @@ na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *
 	g_return_if_fail( NA_IS_ICONTEXT( context ));
 
 	folders = na_object_get_folders( context );
-	folders = na_core_utils_slist_remove_utf8( folders, old );
+	folders = fma_core_utils_slist_remove_utf8( folders, old );
 	folders = g_slist_append( folders, ( gpointer ) g_strdup( new ));
 	na_object_set_folders( context, folders );
-	na_core_utils_slist_free( folders );
+	fma_core_utils_slist_free( folders );
 }
 
 static gboolean
@@ -535,21 +535,21 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 	}
 
 	if( only_in && g_slist_length( only_in )){
-		ok = ( na_core_utils_slist_count( only_in, environment ) > 0 );
+		ok = ( fma_core_utils_slist_count( only_in, environment ) > 0 );
 	} else if( not_in && g_slist_length( not_in )){
-		ok = ( na_core_utils_slist_count( not_in, environment ) == 0 );
+		ok = ( fma_core_utils_slist_count( not_in, environment ) == 0 );
 	}
 
 	if( !ok ){
-		gchar *only_str = na_core_utils_slist_to_text( only_in );
-		gchar *not_str = na_core_utils_slist_to_text( not_in );
+		gchar *only_str = fma_core_utils_slist_to_text( only_in );
+		gchar *not_str = fma_core_utils_slist_to_text( not_in );
 		g_debug( "%s: object is not candidate because OnlyShowIn=%s, NotShowIn=%s", thisfn, only_str, not_str );
 		g_free( not_str );
 		g_free( only_str );
 	}
 
-	na_core_utils_slist_free( not_in );
-	na_core_utils_slist_free( only_in );
+	fma_core_utils_slist_free( not_in );
+	fma_core_utils_slist_free( only_in );
 
 	return( ok );
 }
@@ -761,7 +761,7 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 				}
 
 				if( !match ){
-					gchar *mimetypes_str = na_core_utils_slist_to_text( mimetypes );
+					gchar *mimetypes_str = fma_core_utils_slist_to_text( mimetypes );
 					g_debug( "%s: no positive match found for Mimetypes=%s", thisfn, mimetypes_str );
 					g_free( mimetypes_str );
 					ok = FALSE;
@@ -777,7 +777,7 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 			g_free( ftype );
 		}
 
-		na_core_utils_slist_free( mimetypes );
+		fma_core_utils_slist_free( mimetypes );
 	}
 
 	return( ok );
@@ -896,7 +896,7 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 				}
 
 				if( !match ){
-					gchar *basenames_str = na_core_utils_slist_to_text( basenames );
+					gchar *basenames_str = fma_core_utils_slist_to_text( basenames );
 					g_debug( "%s: no positive match found for Basenames=%s", thisfn, basenames_str );
 					g_free( basenames_str );
 					ok = FALSE;
@@ -907,7 +907,7 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 			}
 		}
 
-		na_core_utils_slist_free( basenames );
+		fma_core_utils_slist_free( basenames );
 	}
 
 	return( ok );
@@ -976,7 +976,7 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 			for( it = files ; it && ok ; it = it->next ){
 				gchar *scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( it->data ));
 
-				if( na_core_utils_slist_count( distincts, scheme ) == 0 ){
+				if( fma_core_utils_slist_count( distincts, scheme ) == 0 ){
 					GSList *is;
 					gchar *pattern;
 					gboolean match, positive;
@@ -1005,16 +1005,16 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 				g_free( scheme );
 			}
 
-			na_core_utils_slist_free( distincts );
+			fma_core_utils_slist_free( distincts );
 		}
 
 		if( !ok ){
-			gchar *schemes_str = na_core_utils_slist_to_text( schemes );
+			gchar *schemes_str = fma_core_utils_slist_to_text( schemes );
 			g_debug( "%s: object is not candidate because Schemes=%s", thisfn, schemes_str );
 			g_free( schemes_str );
 		}
 
-		na_core_utils_slist_free( schemes );
+		fma_core_utils_slist_free( schemes );
 	}
 
 	g_debug( "%s: ok=%s", thisfn, ok ? "True":"False" );
@@ -1059,7 +1059,7 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 			for( it = files ; it && ok ; it = it->next ){
 				gchar *dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( it->data ));
 
-				if( na_core_utils_slist_count( distincts, dirname ) == 0 ){
+				if( fma_core_utils_slist_count( distincts, dirname ) == 0 ){
 					g_debug( "%s: examining new distinct selected dirname=%s", thisfn, dirname );
 
 					GSList *id;
@@ -1092,16 +1092,16 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 				g_free( dirname );
 			}
 
-			na_core_utils_slist_free( distincts );
+			fma_core_utils_slist_free( distincts );
 		}
 
 		if( !ok ){
-			gchar *folders_str = na_core_utils_slist_to_text( folders );
+			gchar *folders_str = fma_core_utils_slist_to_text( folders );
 			g_debug( "%s: object is not candidate because Folders=%s", thisfn, folders_str );
 			g_free( folders_str );
 		}
 
-		na_core_utils_slist_free( folders );
+		fma_core_utils_slist_free( folders );
 	}
 
 	return( ok );
@@ -1150,12 +1150,12 @@ is_candidate_for_capabilities( const NAIContext *object, guint target, GList *fi
 		}
 
 		if( !ok ){
-			gchar *capabilities_str = na_core_utils_slist_to_text( capabilities );
+			gchar *capabilities_str = fma_core_utils_slist_to_text( capabilities );
 			g_debug( "%s: object is not candidate because Capabilities=%s", thisfn, capabilities_str );
 			g_free( capabilities_str );
 		}
 
-		na_core_utils_slist_free( capabilities );
+		fma_core_utils_slist_free( capabilities );
 	}
 
 	return( ok );
@@ -1169,7 +1169,7 @@ is_valid_basenames( const NAIContext *object )
 
 	basenames = na_object_get_basenames( object );
 	valid = basenames && g_slist_length( basenames ) > 0;
-	na_core_utils_slist_free( basenames );
+	fma_core_utils_slist_free( basenames );
 
 	if( !valid ){
 		na_object_debug_invalid( object, "basenames" );
@@ -1229,7 +1229,7 @@ is_valid_mimetypes( const NAIContext *object )
 		na_object_debug_invalid( object, "mimetypes" );
 	}
 
-	na_core_utils_slist_free( mimetypes );
+	fma_core_utils_slist_free( mimetypes );
 
 	return( valid );
 }
@@ -1242,7 +1242,7 @@ is_valid_schemes( const NAIContext *object )
 
 	schemes = na_object_get_schemes( object );
 	valid = schemes && g_slist_length( schemes ) > 0;
-	na_core_utils_slist_free( schemes );
+	fma_core_utils_slist_free( schemes );
 
 	if( !valid ){
 		na_object_debug_invalid( object, "schemes" );
@@ -1259,7 +1259,7 @@ is_valid_folders( const NAIContext *object )
 
 	folders = na_object_get_folders( object );
 	valid = folders && g_slist_length( folders ) > 0;
-	na_core_utils_slist_free( folders );
+	fma_core_utils_slist_free( folders );
 
 	if( !valid ){
 		na_object_debug_invalid( object, "folders" );

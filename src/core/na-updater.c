@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-gconf-utils.h>
 #include <api/na-object-api.h>
 
@@ -224,7 +224,7 @@ is_level_zero_writable( const NAUpdater *updater )
 
 	level_zero = na_settings_get_string_list( NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, &mandatory );
 
-	na_core_utils_slist_free( level_zero );
+	fma_core_utils_slist_free( level_zero );
 
 	g_debug( "na_updater_is_level_zero_writable: NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER: mandatory=%s",
 			mandatory ? "True":"False" );

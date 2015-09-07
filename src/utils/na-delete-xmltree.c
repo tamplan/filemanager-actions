@@ -52,7 +52,7 @@
  * XML backend. It is based on http://xmlsoft.org/examples/xpath2.c
  */
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "console-utils.h"
 
@@ -118,7 +118,7 @@ main( int argc, char** argv )
 	g_option_context_free( context );
 
 	if( version ){
-		na_core_utils_print_version();
+		fma_core_utils_print_version();
 		exit( status );
 	}
 

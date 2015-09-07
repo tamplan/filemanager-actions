@@ -36,7 +36,7 @@
 #include <libxml/tree.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-data-types.h>
 #include <api/na-object-api.h>
 #include <api/na-ifactory-provider.h>
@@ -719,7 +719,7 @@ write_data_dump_element( NAXMLWriter *writer, const NADataDef *def, const NAData
 			xmlFree( encoded_content );
 		}
 
-		na_core_utils_slist_free( list );
+		fma_core_utils_slist_free( list );
 
 	} else {
 		encoded_content = xmlEncodeSpecialChars( writer->private->doc, BAD_CAST( value_str ));
@@ -746,7 +746,7 @@ convert_to_gconf_slist( const gchar *slist_str )
 	gboolean first;
 	GString *str = g_string_new( "[" );
 
-	values = na_core_utils_slist_from_split( slist_str, ";" );
+	values = fma_core_utils_slist_from_split( slist_str, ";" );
 	first = TRUE;
 
 	for( is = values ; is ; is = is->next ){
@@ -856,7 +856,7 @@ get_output_fname( const NAObjectItem *item, const gchar *folder, const gchar *fo
 
 	candidate_fname = g_strdup_printf( "%s/%s.%s", folder, canonical_fname, canonical_ext );
 
-	if( !na_core_utils_file_exists( candidate_fname )){
+	if( !fma_core_utils_file_exists( candidate_fname )){
 		g_free( canonical_fname );
 		g_free( canonical_ext );
 		return( candidate_fname );
@@ -865,7 +865,7 @@ get_output_fname( const NAObjectItem *item, const gchar *folder, const gchar *fo
 	for( counter = 0 ; ; ++counter ){
 		g_free( candidate_fname );
 		candidate_fname = g_strdup_printf( "%s/%s_%d.%s", folder, canonical_fname, counter, canonical_ext );
-		if( !na_core_utils_file_exists( candidate_fname )){
+		if( !fma_core_utils_file_exists( candidate_fname )){
 			break;
 		}
 	}

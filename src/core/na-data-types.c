@@ -32,7 +32,7 @@
 #endif
 
 #include <api/na-data-types.h>
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 typedef struct {
 	guint  type;

@@ -33,7 +33,7 @@
 
 #include <gmodule.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "na-module.h"
 
@@ -260,7 +260,7 @@ na_module_load_modules( void )
 				fname = g_build_filename( dirname, entry, NULL );
 				module = module_new( fname );
 				if( module ){
-					module->private->name = na_core_utils_str_remove_suffix( entry, suffix );
+					module->private->name = fma_core_utils_str_remove_suffix( entry, suffix );
 					modules = g_list_prepend( modules, module );
 					g_debug( "%s: module %s successfully loaded", thisfn, entry );
 				}

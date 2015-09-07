@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include "api/na-core-utils.h"
+#include "api/fma-core-utils.h"
 #include "api/na-object-api.h"
 
 #include "core/na-exporter.h"
@@ -617,7 +617,7 @@ on_folder_chooser_selection_changed( GtkFileChooser *chooser, NactAssistantExpor
 
 		uri = gtk_file_chooser_get_current_folder_uri( chooser );
 		g_debug( "%s: uri=%s", thisfn, uri );
-		enabled = ( uri && strlen( uri ) && na_core_utils_dir_is_writable_uri( uri ));
+		enabled = ( uri && strlen( uri ) && fma_core_utils_dir_is_writable_uri( uri ));
 
 		if( enabled ){
 			g_free( window->private->uri );
@@ -718,7 +718,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	g_return_if_fail( NA_IS_EXPORT_FORMAT( format ));
 
 	format_label = na_ioption_get_label( format );
-	format_label2 = na_core_utils_str_remove_char( format_label, "_" );
+	format_label2 = fma_core_utils_str_remove_char( format_label, "_" );
 	text = g_strdup_printf( "%s:", format_label2 );
 	label = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmExportFormat" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
@@ -728,7 +728,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	g_free( text );
 
 	format_description = na_ioption_get_description( format );
-	format_description2 = na_core_utils_str_remove_char( format_description, "_" );
+	format_description2 = fma_core_utils_str_remove_char( format_description, "_" );
 	label = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmExportTooltip" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
 	gtk_label_set_text( GTK_LABEL( label ), format_description2 );
@@ -902,7 +902,7 @@ free_results( GList *list )
 	for( ir = list ; ir ; ir = ir->next ){
 		str = ( ExportStruct * ) ir->data;
 		g_free( str->fname );
-		na_core_utils_slist_free( str->msg );
+		fma_core_utils_slist_free( str->msg );
 	}
 
 	g_list_free( list );

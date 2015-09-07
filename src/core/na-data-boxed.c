@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-gconf-utils.h>
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
@@ -582,7 +582,7 @@ bool_spec( const NADataDef *def )
 			def->name,
 			gettext( def->short_label ),
 			gettext( def->long_label ),
-			na_core_utils_boolean_from_string( def->default_value ),
+			fma_core_utils_boolean_from_string( def->default_value ),
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 }
 
@@ -593,7 +593,7 @@ bool_is_default( const NADataBoxed *boxed )
 	gboolean default_value;
 
 	if( boxed->private->data_def->default_value && strlen( boxed->private->data_def->default_value )){
-		default_value = na_core_utils_boolean_from_string( boxed->private->data_def->default_value );
+		default_value = fma_core_utils_boolean_from_string( boxed->private->data_def->default_value );
 		is_default = ( default_value == fma_boxed_get_boolean( FMA_BOXED( boxed )));
 	}
 
@@ -758,7 +758,7 @@ locale_is_default( const NADataBoxed *boxed )
 	if( boxed->private->data_def->default_value && g_utf8_strlen( boxed->private->data_def->default_value, -1 )){
 		if( value && strlen( value )){
 			/* default value is not null and string has something */
-			is_default = ( na_core_utils_str_collate( value, boxed->private->data_def->default_value ) == 0 );
+			is_default = ( fma_core_utils_str_collate( value, boxed->private->data_def->default_value ) == 0 );
 
 		} else {
 			/* default value is not null, but string is null */

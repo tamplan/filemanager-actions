@@ -38,7 +38,7 @@ api_include_HEADERS = \
 	na-iio-provider.h									\
 	\
 	fma-boxed.h											\
-	na-core-utils.h										\
+	fma-core-utils.h										\
 	na-data-boxed.h										\
 	na-data-def.h										\
 	na-data-types.h										\

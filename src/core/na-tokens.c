@@ -36,7 +36,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
 
 #include "na-gnome-vfs-uri.h"
@@ -220,13 +220,13 @@ instance_finalize( GObject *object )
 	g_free( self->private->scheme );
 	g_free( self->private->username );
 	g_free( self->private->hostname );
-	na_core_utils_slist_free( self->private->mimetypes );
-	na_core_utils_slist_free( self->private->exts );
-	na_core_utils_slist_free( self->private->basenames_woext );
-	na_core_utils_slist_free( self->private->basenames );
-	na_core_utils_slist_free( self->private->basedirs );
-	na_core_utils_slist_free( self->private->filenames );
-	na_core_utils_slist_free( self->private->uris );
+	fma_core_utils_slist_free( self->private->mimetypes );
+	fma_core_utils_slist_free( self->private->exts );
+	fma_core_utils_slist_free( self->private->basenames_woext );
+	fma_core_utils_slist_free( self->private->basenames );
+	fma_core_utils_slist_free( self->private->basedirs );
+	fma_core_utils_slist_free( self->private->filenames );
+	fma_core_utils_slist_free( self->private->uris );
 
 	g_free( self->private );
 
@@ -278,7 +278,7 @@ na_tokens_new_for_example( void )
 		tokens->private->basedirs = g_slist_append( tokens->private->basedirs, dirname );
 		bname = g_path_get_basename( vfs->path );
 		tokens->private->basenames = g_slist_append( tokens->private->basenames, bname );
-		na_core_utils_dir_split_ext( bname, &bname_woext, &ext );
+		fma_core_utils_dir_split_ext( bname, &bname_woext, &ext );
 		tokens->private->basenames_woext = g_slist_append( tokens->private->basenames_woext, bname_woext );
 		tokens->private->exts = g_slist_append( tokens->private->exts, ext );
 
@@ -329,7 +329,7 @@ na_tokens_new_from_selection( GList *selection )
 		filename = na_selected_info_get_path( NA_SELECTED_INFO( it->data ));
 		basedir = na_selected_info_get_dirname( NA_SELECTED_INFO( it->data ));
 		basename = na_selected_info_get_basename( NA_SELECTED_INFO( it->data ));
-		na_core_utils_dir_split_ext( basename, &bname_woext, &ext );
+		fma_core_utils_dir_split_ext( basename, &bname_woext, &ext );
 
 		if( first ){
 			tokens->private->hostname = na_selected_info_get_uri_host( NA_SELECTED_INFO( it->data ));
@@ -646,7 +646,7 @@ na_tokens_command_for_terminal( const gchar *pattern, const gchar *command )
 
 	if( pattern && strlen( pattern )){
 		quoted = g_shell_quote( command );
-		run_command = na_core_utils_str_subst( pattern, "COMMAND", quoted );
+		run_command = fma_core_utils_str_subst( pattern, "COMMAND", quoted );
 		g_free( quoted );
 
 	} else {
@@ -733,7 +733,7 @@ is_singular_exec( const NATokens *tokens, const gchar *exec )
  * commands are executed one time for each element of the selection
  *
  * Returns: a #GSList which contains two fields: the command and its parameters.
- * The returned #GSList should be na_core_utils_slist_free() by the caller.
+ * The returned #GSList should be fma_core_utils_slist_free() by the caller.
  */
 static gchar *
 parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted )
@@ -959,11 +959,11 @@ quote_string_list( GString *input, GSList *names, gboolean quoted )
 		for( it = names ; it ; it = it->next ){
 			quoted_names = g_slist_append( quoted_names, g_shell_quote(( const gchar * ) it->data ));
 		}
-		tmp = na_core_utils_slist_join_at_end( quoted_names, " " );
-		na_core_utils_slist_free( quoted_names );
+		tmp = fma_core_utils_slist_join_at_end( quoted_names, " " );
+		fma_core_utils_slist_free( quoted_names );
 
 	} else {
-		tmp = na_core_utils_slist_join_at_end( g_slist_reverse( names ), " " );
+		tmp = fma_core_utils_slist_join_at_end( g_slist_reverse( names ), " " );
 	}
 
 	input = g_string_append( input, tmp );

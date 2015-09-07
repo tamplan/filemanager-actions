@@ -35,7 +35,7 @@
 
 #include <gio/gio.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "nadp-desktop-file.h"
 #include "nadp-keys.h"
@@ -284,7 +284,7 @@ nadp_desktop_file_new_from_uri( const gchar *uri )
 	g_debug( "%s: uri=%s", thisfn, uri );
 	g_return_val_if_fail( uri && g_utf8_strlen( uri, -1 ), ndf );
 
-	data = na_core_utils_file_load_from_uri( uri, &length );
+	data = fma_core_utils_file_load_from_uri( uri, &length );
 	g_debug( "%s: length=%lu", thisfn, ( unsigned long ) length );
 
 	/* normally, length and data should be both NULL or both not NULL
@@ -419,7 +419,7 @@ path2id( const gchar *path )
 	gchar *id;
 
 	bname = g_path_get_basename( path );
-	id = na_core_utils_str_remove_suffix( bname, NADP_DESKTOP_FILE_SUFFIX );
+	id = fma_core_utils_str_remove_suffix( bname, NADP_DESKTOP_FILE_SUFFIX );
 	g_free( bname );
 
 	return( id );
@@ -578,7 +578,7 @@ nadp_desktop_file_get_id( const NadpDesktopFile *ndf )
  * @ndf: the #NadpDesktopFile instance.
  *
  * Returns: the list of profiles in the file, as a newly allocated GSList
- * which must be na_core_utils_slist_free() by the caller.
+ * which must be fma_core_utils_slist_free() by the caller.
  *
  * Silently ignore unknown groups.
  */
@@ -900,8 +900,8 @@ nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *grou
 				g_error_free( error );
 
 			} else {
-				na_core_utils_slist_free( value );
-				value = na_core_utils_slist_from_array(( const gchar ** ) read_array );
+				fma_core_utils_slist_free( value );
+				value = fma_core_utils_slist_from_array(( const gchar ** ) read_array );
 				*key_found = TRUE;
 			}
 
@@ -1111,7 +1111,7 @@ nadp_desktop_file_set_string_list( const NadpDesktopFile *ndf, const gchar *grou
 
 	if( !ndf->private->dispose_has_run ){
 
-		array = na_core_utils_slist_to_array( value );
+		array = fma_core_utils_slist_to_array( value );
 		g_key_file_set_string_list( ndf->private->key_file, group, key, ( const gchar * const * ) array, g_slist_length( value ));
 		g_strfreev( array );
 	}

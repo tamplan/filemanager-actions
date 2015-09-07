@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include <core/na-pivot.h>
 #include <core/na-importer.h>
@@ -92,8 +92,8 @@ main( int argc, char **argv )
 		g_object_unref( result->imported );
 	}
 
-	na_core_utils_slist_dump( NULL, result->messages );
-	na_core_utils_slist_free( result->messages );
+	fma_core_utils_slist_dump( NULL, result->messages );
+	fma_core_utils_slist_free( result->messages );
 
 	return( 0 );
 }
@@ -156,7 +156,7 @@ check_options( int argc, char **argv, GOptionContext *context )
 	g_option_context_free( context );
 
 	if( version ){
-		na_core_utils_print_version();
+		fma_core_utils_print_version();
 		exit( EXIT_SUCCESS );
 	}
 

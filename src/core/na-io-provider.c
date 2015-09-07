@@ -36,7 +36,7 @@
 
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "na-iprefs.h"
 #include "na-io-provider.h"
@@ -421,7 +421,7 @@ io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_lis
 		merged = io_providers_list_append_object( pivot, merged, NULL, id );
 	}
 
-	na_core_utils_slist_free( io_providers );
+	fma_core_utils_slist_free( io_providers );
 
 	return( merged );
 }
@@ -490,7 +490,7 @@ io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list )
 		merged = io_providers_list_append_object( pivot, merged, NULL, id );
 	}
 
-	na_core_utils_slist_free( io_providers );
+	fma_core_utils_slist_free( io_providers );
 
 	return( merged );
 }
@@ -506,7 +506,7 @@ io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list )
  * to be unique, nor sorted.
  *
  * Returns: a list of i/o provider identifiers found in preferences
- * system; this list should be na_core_utils_slist_free() by the caller.
+ * system; this list should be fma_core_utils_slist_free() by the caller.
  *
  * Since: 3.1
  */
@@ -533,7 +533,7 @@ io_providers_get_from_prefs( void )
 	}
 
 	g_free( group_prefix );
-	na_core_utils_slist_free( groups );
+	fma_core_utils_slist_free( groups );
 
 	return( providers );
 }
@@ -885,7 +885,7 @@ na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **me
 		}
 	}
 
-	na_core_utils_slist_free( level_zero );
+	fma_core_utils_slist_free( level_zero );
 
 	/* sort the hierarchy according to preferences
 	 */
@@ -1168,7 +1168,7 @@ load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_e
 					subitems_ids = na_object_get_items_slist( it->data );
 					subitems = load_items_hierarchy_build( tree, subitems_ids, FALSE, NA_OBJECT_ITEM( it->data ));
 					na_object_set_items( it->data, subitems );
-					na_core_utils_slist_free( subitems_ids );
+					fma_core_utils_slist_free( subitems_ids );
 				}
 			}
 		}

@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <libintl.h>
 
-#include "api/na-core-utils.h"
+#include "api/fma-core-utils.h"
 
 #include "core/na-about.h"
 
@@ -365,7 +365,7 @@ manage_options( NactApplication *application )
 	 * if yes, then stops here, exiting with code ok
 	 */
 	if( st_version_opt ){
-		na_core_utils_print_version();
+		fma_core_utils_print_version();
 		ret = FALSE;
 	}
 

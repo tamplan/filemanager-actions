@@ -38,7 +38,7 @@
 #include <locale.h>
 #include <stdlib.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
@@ -210,7 +210,7 @@ main( int argc, char** argv )
 	}
 
 	if( version ){
-		na_core_utils_print_version();
+		fma_core_utils_print_version();
 		exit( status );
 	}
 
@@ -283,7 +283,7 @@ main( int argc, char** argv )
 		for( im = msg ; im ; im = im->next ){
 			g_printerr( "%s\n", ( gchar * ) im->data );
 		}
-		na_core_utils_slist_free( msg );
+		fma_core_utils_slist_free( msg );
 		status = EXIT_FAILURE;
 	}
 
@@ -446,7 +446,7 @@ get_action_from_cmdline( void )
 	}
 	if( basenames && g_slist_length( basenames )){
 		na_object_set_basenames( profile, basenames );
-		na_core_utils_slist_free( basenames );
+		fma_core_utils_slist_free( basenames );
 	}
 
 	na_object_set_matchcase( profile, matchcase );
@@ -474,7 +474,7 @@ get_action_from_cmdline( void )
 	}
 	if( mimetypes && g_slist_length( mimetypes )){
 		na_object_set_mimetypes( profile, mimetypes );
-		na_core_utils_slist_free( mimetypes );
+		fma_core_utils_slist_free( mimetypes );
 	}
 
 	if( accept_multiple ){
@@ -495,7 +495,7 @@ get_action_from_cmdline( void )
 	}
 	if( schemes && g_slist_length( schemes )){
 		na_object_set_schemes( profile, schemes );
-		na_core_utils_slist_free( schemes );
+		fma_core_utils_slist_free( schemes );
 	}
 
 	i = 0;
@@ -506,7 +506,7 @@ get_action_from_cmdline( void )
 	}
 	if( folders && g_slist_length( folders )){
 		na_object_set_folders( profile, folders );
-		na_core_utils_slist_free( folders );
+		fma_core_utils_slist_free( folders );
 	}
 
 	if( onlyshow_array ){
@@ -516,7 +516,7 @@ get_action_from_cmdline( void )
 		}
 		if( only_show_in && g_slist_length( only_show_in )){
 			na_object_set_only_show_in( profile, only_show_in );
-			na_core_utils_slist_free( only_show_in );
+			fma_core_utils_slist_free( only_show_in );
 		}
 	}
 
@@ -527,7 +527,7 @@ get_action_from_cmdline( void )
 		}
 		if( not_show_in && g_slist_length( not_show_in )){
 			na_object_set_not_show_in( profile, not_show_in );
-			na_core_utils_slist_free( not_show_in );
+			fma_core_utils_slist_free( not_show_in );
 		}
 	}
 
@@ -564,7 +564,7 @@ get_action_from_cmdline( void )
 		}
 		if( capabilities && g_slist_length( capabilities )){
 			na_object_set_capabilities( profile, capabilities );
-			na_core_utils_slist_free( capabilities );
+			fma_core_utils_slist_free( capabilities );
 		}
 	}
 

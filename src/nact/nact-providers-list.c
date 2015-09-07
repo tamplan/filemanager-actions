@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-gconf-utils.h>
 #include <api/na-object-api.h>
 
@@ -366,7 +366,7 @@ nact_providers_list_save( BaseWindow *window )
 	plsd->order = g_slist_reverse( plsd->order );
 	na_settings_set_string_list( NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, plsd->order );
 
-	na_core_utils_slist_free( plsd->order );
+	fma_core_utils_slist_free( plsd->order );
 	g_free( plsd );
 }
 

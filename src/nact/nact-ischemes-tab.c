@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include "api/na-core-utils.h"
+#include "api/fma-core-utils.h"
 #include "api/na-object-api.h"
 
 #include "core/na-gtk-utils.h"
@@ -241,7 +241,7 @@ on_add_from_defaults( GtkButton *button, NactISchemesTab *instance )
 
 	schemes = nact_match_list_get_rows( NACT_MAIN_WINDOW( instance ), ITAB_NAME );
 	new_scheme = nact_add_scheme_dialog_run( NACT_MAIN_WINDOW( instance ), schemes );
-	na_core_utils_slist_free( schemes );
+	fma_core_utils_slist_free( schemes );
 
 	if( new_scheme ){
 		nact_match_list_insert_row( NACT_MAIN_WINDOW( instance ), ITAB_NAME, new_scheme, FALSE, FALSE );

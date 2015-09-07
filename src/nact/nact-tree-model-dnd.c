@@ -35,7 +35,7 @@
 #include <libintl.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
 
 #include <core/na-gnome-vfs-uri.h>
@@ -350,7 +350,7 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 
 				/* check that target folder is writable
 				 */
-				is_writable = na_core_utils_dir_is_writable_uri( dest_folder );
+				is_writable = fma_core_utils_dir_is_writable_uri( dest_folder );
 				g_debug( "%s: dest_folder=%s, is_writable=%s", thisfn, dest_folder, is_writable ? "True":"False" );
 				gtk_selection_data_set( selection_data,
 						selection_data_target, 8, ( guchar * )( is_writable ? "S" : "F" ), 1 );
@@ -903,7 +903,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	g_debug( "%s", selection_data_data );
 
 	memset( &parms, '\0', sizeof( NAImporterParms ));
-	parms.uris = g_slist_reverse( na_core_utils_slist_from_split( selection_data_data, "\r\n" ));
+	parms.uris = g_slist_reverse( fma_core_utils_slist_from_split( selection_data_data, "\r\n" ));
 	parms.check_fn = ( NAImporterCheckFn ) is_dropped_already_exists;
 	parms.check_fn_data = main_window;
 	parms.preferred_mode = 0;
@@ -946,7 +946,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 				bar, TREE_MODEL_STATUSBAR_CONTEXT, messages->data );
 	}
 	if( count > 1 ){
-		dlg_message = na_core_utils_slist_join_at_end( messages, "\n" );
+		dlg_message = fma_core_utils_slist_join_at_end( messages, "\n" );
 		g_debug( "%s: dlg_message='%s'", thisfn, dlg_message );
 		dialog = gtk_message_dialog_new(
 				parms.parent_toplevel,
@@ -980,7 +980,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	drop_done = TRUE;
 	na_object_free_items( imported );
 	na_object_free_items( overriden );
-	na_core_utils_slist_free( parms.uris );
+	fma_core_utils_slist_free( parms.uris );
 
 	for( it = import_results ; it ; it = it->next ){
 		na_importer_free_result( it->data );

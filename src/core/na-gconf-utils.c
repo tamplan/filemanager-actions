@@ -35,7 +35,7 @@
 
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-gconf-utils.h>
 
 static void        dump_entry( GConfEntry *entry, void *user_data );
@@ -85,7 +85,7 @@ na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
 void
 na_gconf_utils_free_subdirs( GSList *subdirs )
 {
-	na_core_utils_slist_free( subdirs );
+	fma_core_utils_slist_free( subdirs );
 }
 
 /**
@@ -255,7 +255,7 @@ na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gch
  * If the entry was not found, or was not of string list type, @value
  * is set to %NULL.
  *
- * If @value is returned not NULL, it should be na_core_utils_slist_free()
+ * If @value is returned not NULL, it should be fma_core_utils_slist_free()
  * by the caller.
  *
  * Since: 2.30
@@ -502,7 +502,7 @@ na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_
  * Returns: a list of strings,
  * or %NULL if the entry was not found or was not of string list type.
  *
- * The returned list must be released with na_core_utils_slist_free().
+ * The returned list must be released with fma_core_utils_slist_free().
  *
  * Since: 2.30
  */
@@ -730,7 +730,7 @@ na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **mess
  * to a list of strings.
  *
  * Returns: a newly allocated list of strings, which should be
- * na_core_utils_slist_free() by the caller, or %NULL if the provided
+ * fma_core_utils_slist_free() by the caller, or %NULL if the provided
  * string was not of the GConf form.
  *
  * Since: 2.30
@@ -757,7 +757,7 @@ na_gconf_utils_slist_from_string( const gchar *value )
 
 	tmp_string += 1;
 	tmp_string[strlen(tmp_string)-1] = '\0';
-	slist = na_core_utils_slist_from_split( tmp_string, "," );
+	slist = fma_core_utils_slist_from_split( tmp_string, "," );
 
 	return( slist );
 }

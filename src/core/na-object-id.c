@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
 
 /* private class data
@@ -207,7 +207,7 @@ na_object_id_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b )
 	label_a = na_object_get_label( a );
 	label_b = na_object_get_label( b );
 
-	compare = na_core_utils_str_collate( label_a, label_b );
+	compare = fma_core_utils_str_collate( label_a, label_b );
 
 	g_free( label_b );
 	g_free( label_a );

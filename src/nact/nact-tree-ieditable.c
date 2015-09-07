@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
 
 #include <core/na-factory-object.h>
@@ -1069,8 +1069,8 @@ get_items_id_list_str( GList *items_list )
 	}
 
 	slist = g_slist_reverse( slist );
-	list_str = na_core_utils_slist_join_at_end( slist, ";" );
-	na_core_utils_slist_free( slist );
+	list_str = fma_core_utils_slist_join_at_end( slist, ";" );
+	fma_core_utils_slist_free( slist );
 
 	return( list_str );
 }

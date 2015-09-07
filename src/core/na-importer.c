@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-iimporter.h>
 #include <api/na-object-api.h>
 
@@ -197,7 +197,7 @@ void
 na_importer_free_result( NAImporterResult *result )
 {
 	g_free( result->uri );
-	na_core_utils_slist_free( result->messages );
+	fma_core_utils_slist_free( result->messages );
 
 	g_free( result );
 }
@@ -243,14 +243,14 @@ import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
 			provider_parms.messages = NULL;
 
 		} else if( code == IMPORTER_CODE_NOT_LOADABLE ){
-			na_core_utils_slist_free( all_messages );
+			fma_core_utils_slist_free( all_messages );
 			all_messages = NULL;
-			na_core_utils_slist_free( provider_parms.messages );
+			fma_core_utils_slist_free( provider_parms.messages );
 			provider_parms.messages = NULL;
-			na_core_utils_slist_add_message( &all_messages, ERR_NOT_LOADABLE, ( const gchar * ) uri );
+			fma_core_utils_slist_add_message( &all_messages, ERR_NOT_LOADABLE, ( const gchar * ) uri );
 
 		} else {
-			na_core_utils_slist_free( all_messages );
+			fma_core_utils_slist_free( all_messages );
 			all_messages = provider_parms.messages;
 			provider = NA_IIMPORTER( im->data );
 		}
@@ -287,7 +287,7 @@ manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserPar
 	 */
 	if( !parms->check_fn ){
 		renumber_label_item( result->imported );
-		na_core_utils_slist_add_message(
+		fma_core_utils_slist_add_message(
 				&result->messages,
 				"%s",
 				_( "Item was renumbered because the caller did not provide any check function." ));
@@ -320,7 +320,7 @@ manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserPar
 			case IMPORTER_MODE_RENUMBER:
 				renumber_label_item( result->imported );
 				if( parms->preferred_mode == IMPORTER_MODE_ASK ){
-					na_core_utils_slist_add_message(
+					fma_core_utils_slist_add_message(
 							&result->messages,
 							"%s",
 							_( "Item was renumbered due to user request." ));
@@ -329,7 +329,7 @@ manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserPar
 
 			case IMPORTER_MODE_OVERRIDE:
 				if( parms->preferred_mode == IMPORTER_MODE_ASK ){
-					na_core_utils_slist_add_message(
+					fma_core_utils_slist_add_message(
 							&result->messages,
 							"%s",
 							_( "Existing item was overriden due to user request." ));
@@ -339,12 +339,12 @@ manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserPar
 			case IMPORTER_MODE_NO_IMPORT:
 			default:
 				id = na_object_get_id( result->imported );
-				na_core_utils_slist_add_message(
+				fma_core_utils_slist_add_message(
 						&result->messages,
 						_( "Item %s already exists." ),
 						id );
 				if( parms->preferred_mode == IMPORTER_MODE_ASK ){
-					na_core_utils_slist_add_message(
+					fma_core_utils_slist_add_message(
 							&result->messages,
 							"%s",
 							_( "Import was canceled due to user request." ));

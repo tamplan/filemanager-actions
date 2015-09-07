@@ -33,7 +33,7 @@
 
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 
 #include "na-gtk-utils.h"
 #include "na-ioptions-list.h"
@@ -682,7 +682,7 @@ tree_view_add_item( GtkTreeView *listview, GtkTreeModel *model, const NAIOption 
 	GdkPixbuf *pixbuf;
 
 	label = na_ioption_get_label( option );
-	label2 = na_core_utils_str_remove_char( label, "_" );
+	label2 = fma_core_utils_str_remove_char( label, "_" );
 	description = na_ioption_get_description( option );
 	pixbuf = na_ioption_get_pixbuf( option );
 	gtk_list_store_append( GTK_LIST_STORE( model ), &iter );

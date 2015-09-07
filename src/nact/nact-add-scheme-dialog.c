@@ -33,7 +33,7 @@
 
 #include <gdk/gdkkeysyms.h>
 
-#include "api/na-core-utils.h"
+#include "api/fma-core-utils.h"
 
 #include "core/na-settings.h"
 
@@ -231,7 +231,7 @@ instance_finalize( GObject *dialog )
 
 	self = NACT_ADD_SCHEME_DIALOG( dialog );
 
-	na_core_utils_slist_free( self->private->already_used );
+	fma_core_utils_slist_free( self->private->already_used );
 	g_free( self->private->scheme );
 
 	g_free( self->private );
@@ -271,7 +271,7 @@ nact_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
 			BASE_PROP_WSP_NAME,       st_wsp_name,
 			NULL );
 
-	dialog->private->already_used = na_core_utils_slist_duplicate( schemes );
+	dialog->private->already_used = fma_core_utils_slist_duplicate( schemes );
 	scheme = NULL;
 
 	if( base_window_run( BASE_WINDOW( dialog )) == GTK_RESPONSE_OK ){

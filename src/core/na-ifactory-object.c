@@ -208,7 +208,7 @@ na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
  *
  * If the type of the value is %NA_DATA_TYPE_STRING, %NA_DATA_TYPE_LOCALE_STRING,
  * or %NA_DATA_TYPE_STRING_LIST, then the returned value is a newly allocated
- * one and should be g_free() (resp. na_core_utils_slist_free()) by the
+ * one and should be g_free() (resp. fma_core_utils_slist_free()) by the
  * caller.
  *
  * Returns: the searched value.

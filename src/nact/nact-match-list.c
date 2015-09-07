@@ -35,7 +35,7 @@
 #include <libintl.h>
 
 #include "api/na-object-api.h"
-#include "api/na-core-utils.h"
+#include "api/fma-core-utils.h"
 
 #include "base-keysyms.h"
 #include "base-gtk-utils.h"
@@ -356,7 +356,7 @@ on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchL
 	gtk_list_store_clear( GTK_LIST_STORE( model ));
 
 	if( filters ){
-		na_core_utils_slist_dump( thisfn, filters );
+		fma_core_utils_slist_dump( thisfn, filters );
 		g_slist_foreach( filters, ( GFunc ) iter_for_setup, model );
 	}
 
@@ -404,7 +404,7 @@ nact_match_list_insert_row( NactMainWindow *window, const gchar *tab_name, const
  * @tab_name: a string constant which identifies this page.
  *
  * Returns the list of rows as a newly allocated string list which should
- * be na_core_utils_slist_free() by the caller.
+ * be fma_core_utils_slist_free() by the caller.
  */
 GSList *
 nact_match_list_get_rows( NactMainWindow *window, const gchar *tab_name )
@@ -494,10 +494,10 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 
 	if( filters ){
 		to_remove = g_strdup( old_text );
-		filters = na_core_utils_slist_remove_ascii( filters, to_remove );
+		filters = fma_core_utils_slist_remove_ascii( filters, to_remove );
 		g_free( to_remove );
 		to_remove = g_strdup_printf( "!%s", old_text );
-		filters = na_core_utils_slist_remove_ascii( filters, to_remove );
+		filters = fma_core_utils_slist_remove_ascii( filters, to_remove );
 		g_free( to_remove );
 	}
 
@@ -510,7 +510,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 	}
 
 	( *data->pset )( context, filters );
-	na_core_utils_slist_free( filters );
+	fma_core_utils_slist_free( filters );
 	g_free( old_text );
 
 	g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
@@ -588,14 +588,14 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 
 			if( filters ){
 				to_remove = g_strdup_printf( "!%s", filter );
-				filters = na_core_utils_slist_remove_ascii( filters, to_remove );
+				filters = fma_core_utils_slist_remove_ascii( filters, to_remove );
 				g_free( to_remove );
 			}
 
 			filters = g_slist_prepend( filters, g_strdup( filter ));
 			( *data->pset )( context, filters );
 
-			na_core_utils_slist_free( filters );
+			fma_core_utils_slist_free( filters );
 			g_free( filter );
 
 			g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
@@ -639,14 +639,14 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 			filters = ( *data->pget )( context );
 
 			if( filters ){
-				filters = na_core_utils_slist_remove_ascii( filters, filter );
+				filters = fma_core_utils_slist_remove_ascii( filters, filter );
 			}
 
 			to_add = g_strdup_printf( "!%s", filter );
 			filters = g_slist_prepend( filters, to_add );
 			( *data->pset )( context, filters );
 
-			na_core_utils_slist_free( filters );
+			fma_core_utils_slist_free( filters );
 			g_free( filter );
 
 			g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
@@ -685,7 +685,7 @@ add_filter( MatchListData *data, const gchar *filter, const gchar *prefix )
 		to_add = g_strdup_printf( "%s%s", prefix, filter );
 		filters = g_slist_prepend( filters, to_add );
 		( *data->pset )( context, filters );
-		na_core_utils_slist_free( filters );
+		fma_core_utils_slist_free( filters );
 
 		g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
@@ -701,8 +701,8 @@ count_filters( const gchar *filter, MatchListData *data )
 	model = gtk_tree_view_get_model( data->listview );
 	filters = NULL;
 	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) get_rows_iter, &filters );
-	count = na_core_utils_slist_count( filters, filter );
-	na_core_utils_slist_free( filters );
+	count = fma_core_utils_slist_count( filters, filter );
+	fma_core_utils_slist_free( filters );
 
 	return( count );
 }
@@ -738,11 +738,11 @@ delete_current_row( MatchListData *data )
 
 			if( filters ){
 				to_remove = g_strdup_printf( "!%s", filter );
-				filters = na_core_utils_slist_remove_ascii( filters, to_remove );
+				filters = fma_core_utils_slist_remove_ascii( filters, to_remove );
 				g_free( to_remove );
-				filters = na_core_utils_slist_remove_ascii( filters, filter );
+				filters = fma_core_utils_slist_remove_ascii( filters, filter );
 				( *data->pset )( context, filters );
-				na_core_utils_slist_free( filters );
+				fma_core_utils_slist_free( filters );
 
 				g_signal_emit_by_name( G_OBJECT( data->window ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 			}
@@ -779,8 +779,8 @@ dump_current_rows( MatchListData *data )
 	model = gtk_tree_view_get_model( data->listview );
 	filters = NULL;
 	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) get_rows_iter, &filters );
-	na_core_utils_slist_dump( "nact_match_list_dump_current_rows", filters );
-	na_core_utils_slist_free( filters );
+	fma_core_utils_slist_dump( "nact_match_list_dump_current_rows", filters );
+	fma_core_utils_slist_free( filters );
 #endif
 }
 

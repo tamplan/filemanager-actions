@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_FMA_BOXED_H__
-#define __FILE_MANAGER_ACTIONS_API_FMA_BOXED_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_BOXED_H__
+#define __FILE_MANAGER_ACTIONS_API_BOXED_H__
 
 /**
  * SECTION: boxed
@@ -95,4 +95,4 @@ void          fma_boxed_set_from_void  ( FMABoxed *boxed, const void *value );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_FMA_BOXED_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_BOXED_H__ */

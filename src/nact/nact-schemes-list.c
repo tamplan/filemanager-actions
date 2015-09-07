@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
 
 #include "base-keysyms.h"
@@ -250,12 +250,12 @@ init_view_setup_defaults( SchemesListData *data )
 		g_strfreev( tokens );
 	}
 
-	na_core_utils_slist_free( schemes );
+	fma_core_utils_slist_free( schemes );
 }
 
 /*
  * return default schemes list
- * the returned list must be released with #na_core_utils_slist_free()
+ * the returned list must be released with #fma_core_utils_slist_free()
  */
 static GSList *
 init_view_get_default_list( SchemesListData *data )
@@ -267,7 +267,7 @@ init_view_get_default_list( SchemesListData *data )
 	if( !list ){
 		list = init_view_get_default_default_list( data );
 	}
-	na_core_utils_slist_dump( "default_list", list );
+	fma_core_utils_slist_dump( "default_list", list );
 
 	data->editable &= !mandatory;
 
@@ -395,7 +395,7 @@ setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GS
 
 	gtk_tree_model_get( model, iter, SCHEMES_KEYWORD_COLUMN, &keyword, SCHEMES_DESC_COLUMN, &description, -1 );
 
-	if( na_core_utils_slist_find_negated( schemes, keyword )){
+	if( fma_core_utils_slist_find_negated( schemes, keyword )){
 		/* i18n: add a comment when a scheme is already used by current item */
 		new_description = g_strdup_printf( _( "%s (already used)"), description );
 		gtk_list_store_set( GTK_LIST_STORE( model ), iter, SCHEMES_DESC_COLUMN, new_description, SCHEMES_ALREADY_USED_COLUMN, TRUE, -1 );
@@ -487,7 +487,7 @@ nact_schemes_list_save_defaults( BaseWindow *window )
 
 	na_settings_set_string_list( NA_IPREFS_SCHEME_DEFAULT_LIST, schemes );
 
-	na_core_utils_slist_free( schemes );
+	fma_core_utils_slist_free( schemes );
 }
 
 static GSList *

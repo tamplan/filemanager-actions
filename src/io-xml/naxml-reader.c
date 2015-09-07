@@ -35,7 +35,7 @@
 #include <libxml/tree.h>
 #include <string.h>
 
-#include <api/na-core-utils.h>
+#include <api/fma-core-utils.h>
 #include <api/na-gconf-utils.h>
 #include <api/na-data-types.h>
 #include <api/na-ifactory-provider.h>
@@ -334,7 +334,7 @@ naxml_reader_import_from_uri( const NAIImporter *instance, void *parms_ptr )
 	parms = ( NAIImporterImportFromUriParmsv2 * ) parms_ptr;
 	parms->imported = NULL;
 
-	if( !na_core_utils_file_is_loadable( parms->uri )){
+	if( !fma_core_utils_file_is_loadable( parms->uri )){
 		return( IMPORTER_CODE_NOT_LOADABLE );
 	}
 
@@ -345,7 +345,7 @@ naxml_reader_import_from_uri( const NAIImporter *instance, void *parms_ptr )
 	code = reader_parse_xmldoc( reader );
 
 	if( code == IMPORTER_CODE_NOT_WILLING_TO ){
-		na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NOT_IOXML );
+		fma_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NOT_IOXML );
 	}
 
 	g_object_unref( reader );
@@ -403,7 +403,7 @@ reader_parse_xmldoc( NAXMLReader *reader )
 		if( !found ){
 			gchar *node_list = build_root_node_list();
 			g_free( node_list );
-			na_core_utils_slist_free( reader->private->parms->messages );
+			fma_core_utils_slist_free( reader->private->parms->messages );
 			reader->private->parms->messages = NULL;
 			code = IMPORTER_CODE_NOT_WILLING_TO;
 		}
@@ -458,14 +458,14 @@ iter_on_root_children( NAXMLReader *reader, xmlNode *root )
 		}
 
 		if( strxcmp( iter->name, reader->private->root_node_str->list_key )){
-			na_core_utils_slist_add_message( &reader->private->parms->messages,
+			fma_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, reader->private->root_node_str->list_key );
 			continue;
 		}
 
 		if( found ){
-			na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_ALREADY_FOUND, ( const char * ) iter->name, iter->line );
+			fma_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_ALREADY_FOUND, ( const char * ) iter->name, iter->line );
 			continue;
 		}
 
@@ -534,7 +534,7 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 		}
 
 		if( strxcmp( iter->name, reader->private->root_node_str->element_key )){
-			na_core_utils_slist_add_message( &reader->private->parms->messages,
+			fma_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, reader->private->root_node_str->element_key );
 			continue;
@@ -565,7 +565,7 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 	 */
 	if( code == IMPORTER_CODE_OK ){
 		if( !reader->private->item_id || !strlen( reader->private->item_id )){
-			na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_ITEM_ID_NOT_FOUND );
+			fma_core_utils_slist_add_message( &reader->private->parms->messages, ERR_ITEM_ID_NOT_FOUND );
 			code = IMPORTER_CODE_NO_ITEM_ID;
 		}
 	}
@@ -689,7 +689,7 @@ read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject 
 	gchar *factory_profile_id;
 
 	adhoc = TRUE;
-	path_slist = na_core_utils_slist_from_split(( const gchar * ) text, "/" );
+	path_slist = fma_core_utils_slist_from_split(( const gchar * ) text, "/" );
 	path_length = g_slist_length( path_slist );
 
 	if( NA_IS_OBJECT_ITEM( object )){
@@ -718,7 +718,7 @@ read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject 
 		g_free( node_profile_id );
 	}
 
-	na_core_utils_slist_free( path_slist );
+	fma_core_utils_slist_free( path_slist );
 
 	return( adhoc );
 }
@@ -975,7 +975,7 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 
 		if( !str ){
 			gchar *node_list = build_key_node_list( naxml_schema_key_schema_str );
-			na_core_utils_slist_add_message( &reader->private->parms->messages,
+			fma_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, node_list );
 			g_free( node_list );
@@ -984,7 +984,7 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 		}
 
 		if( str->reader_found ){
-			na_core_utils_slist_add_message( &reader->private->parms->messages,
+			fma_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_ALREADY_FOUND,
 					( const char * ) iter->name, iter->line );
 			reader->private->node_ok = FALSE;
@@ -1039,7 +1039,7 @@ schema_check_for_id( NAXMLReader *reader, xmlNode *iter )
 
 	if( reader->private->item_id ){
 		if( strcmp( reader->private->item_id, id ) != 0 ){
-			na_core_utils_slist_add_message( &reader->private->parms->messages,
+			fma_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_INVALID_ID,
 					reader->private->item_id, id, iter->line );
 			reader->private->node_ok = FALSE;
@@ -1072,7 +1072,7 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_menu_new());
 
 		} else {
-			na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_UNKNOWN_TYPE, type, iter->line );
+			fma_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_UNKNOWN_TYPE, type, iter->line );
 			reader->private->node_ok = FALSE;
 		}
 
@@ -1145,7 +1145,7 @@ dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
 
 		if( !str ){
 			gchar *node_list = build_key_node_list( naxml_dump_key_entry_str );
-			na_core_utils_slist_add_message( &reader->private->parms->messages,
+			fma_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, node_list );
 			g_free( node_list );
@@ -1154,7 +1154,7 @@ dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
 		}
 
 		if( str->reader_found ){
-			na_core_utils_slist_add_message( &reader->private->parms->messages,
+			fma_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_ALREADY_FOUND,
 					( const char * ) iter->name, iter->line );
 			reader->private->node_ok = FALSE;
@@ -1197,7 +1197,7 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
 			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_menu_new());
 
 		} else {
-			na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_UNKNOWN_TYPE, type, key_node->line );
+			fma_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_UNKNOWN_TYPE, type, key_node->line );
 			reader->private->node_ok = FALSE;
 		}
 
@@ -1254,7 +1254,7 @@ dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 				}
 			}
 			string = slist_to_string( slist );
-			na_core_utils_slist_free( slist );
+			fma_core_utils_slist_free( slist );
 			break;
 
 		case NA_DATA_TYPE_POINTER:
@@ -1379,12 +1379,12 @@ is_profile_path( NAXMLReader *reader, xmlChar *text )
 	GSList *path_slist;
 	guint path_length;
 
-	path_slist = na_core_utils_slist_from_split(( const gchar * ) text, "/" );
+	path_slist = fma_core_utils_slist_from_split(( const gchar * ) text, "/" );
 	path_length = g_slist_length( path_slist );
 
 	is_profile = ( path_length == 1+reader->private->root_node_str->key_length );
 
-	na_core_utils_slist_free( path_slist );
+	fma_core_utils_slist_free( path_slist );
 
 	return( is_profile );
 }
