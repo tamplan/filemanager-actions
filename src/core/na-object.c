@@ -57,10 +57,10 @@ static void     instance_finalize( GObject *object );
 
 static void     object_dump( const NAObject *object );
 
-static void     iduplicable_iface_init( NAIDuplicableInterface *iface, void *user_data );
-static void     iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode );
-static gboolean iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
-static gboolean iduplicable_is_valid( const NAIDuplicable *object );
+static void     iduplicable_iface_init( FMAIDuplicableInterface *iface, void *user_data );
+static void     iduplicable_copy( FMAIDuplicable *target, const FMAIDuplicable *source, guint mode );
+static gboolean iduplicable_are_equal( const FMAIDuplicable *a, const FMAIDuplicable *b );
+static gboolean iduplicable_is_valid( const FMAIDuplicable *object );
 
 static void     check_status_down_rec( const NAObject *object );
 static void     check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was_valid );
@@ -109,7 +109,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NAObject", &info, 0 );
 
-	g_type_add_interface_static( type, NA_TYPE_IDUPLICABLE, &iduplicable_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IDUPLICABLE, &iduplicable_iface_info );
 
 	return( type );
 }
@@ -163,7 +163,7 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		na_iduplicable_dispose( NA_IDUPLICABLE( object ));
+		fma_iduplicable_dispose( FMA_IDUPLICABLE( object ));
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -198,7 +198,7 @@ object_dump( const NAObject *object )
 {
 	if( !object->private->dispose_has_run ){
 
-		na_iduplicable_dump( NA_IDUPLICABLE( object ));
+		fma_iduplicable_dump( FMA_IDUPLICABLE( object ));
 
 		if( NA_IS_IFACTORY_OBJECT( object )){
 			na_factory_object_dump( NA_IFACTORY_OBJECT( object ));
@@ -207,7 +207,7 @@ object_dump( const NAObject *object )
 }
 
 static void
-iduplicable_iface_init( NAIDuplicableInterface *iface, void *user_data )
+iduplicable_iface_init( FMAIDuplicableInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_object_iduplicable_iface_init";
 
@@ -219,11 +219,11 @@ iduplicable_iface_init( NAIDuplicableInterface *iface, void *user_data )
 }
 
 /*
- * implementation of na_iduplicable::copy interface virtual function
+ * implementation of fma_iduplicable::copy interface virtual function
  * it recursively copies @source to @target
  */
 static void
-iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode )
+iduplicable_copy( FMAIDuplicable *target, const FMAIDuplicable *source, guint mode )
 {
 	static const gchar *thisfn = "na_object_iduplicable_copy";
 	NAObject *dest, *src;
@@ -256,7 +256,7 @@ iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode
 }
 
 static gboolean
-iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
+iduplicable_are_equal( const FMAIDuplicable *a, const FMAIDuplicable *b )
 {
 	static const gchar *thisfn = "na_object_iduplicable_are_equal";
 	gboolean are_equal;
@@ -288,7 +288,7 @@ iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 }
 
 static gboolean
-iduplicable_is_valid( const NAIDuplicable *object )
+iduplicable_is_valid( const FMAIDuplicable *object )
 {
 	static const gchar *thisfn = "na_object_iduplicable_is_valid";
 	gboolean is_valid;
@@ -328,7 +328,7 @@ iduplicable_is_valid( const NAIDuplicable *object )
  *
  * <literallayout>
  * na_object_object_check_status_rec( object )
- *  +- na_iduplicable_check_status( object )
+ *  +- fma_iduplicable_check_status( object )
  *      +- get_origin( object )
  *      +- modified_status = v_are_equal( origin, object )
  *      |  +-> interface <structfield>NAObjectClass::are_equal</structfield>
@@ -402,7 +402,7 @@ check_status_down_rec( const NAObject *object )
 		g_list_foreach( na_object_get_items( object ), ( GFunc ) check_status_down_rec, NULL );
 	}
 
-	na_iduplicable_check_status( NA_IDUPLICABLE( object ));
+	fma_iduplicable_check_status( FMA_IDUPLICABLE( object ));
 }
 
 /*
@@ -426,7 +426,7 @@ check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was
 			if( parent ){
 				was_modified = na_object_is_modified( parent );
 				was_valid = na_object_is_valid( parent );
-				na_iduplicable_check_status( NA_IDUPLICABLE( parent ));
+				fma_iduplicable_check_status( FMA_IDUPLICABLE( parent ));
 				check_status_up_rec( NA_OBJECT( parent ), was_modified, was_valid );
 			}
 	}
@@ -594,8 +594,8 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 			na_object_reset_origin( iobj->data, iorig->data );
 		}
 
-		na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
-		na_iduplicable_set_origin( NA_IDUPLICABLE( origin ), NULL );
+		fma_iduplicable_set_origin( FMA_IDUPLICABLE( object ), FMA_IDUPLICABLE( origin ));
+		fma_iduplicable_set_origin( FMA_IDUPLICABLE( origin ), NULL );
 	}
 }
 

@@ -78,7 +78,7 @@ libna_core_la_SOURCES = \
 	na-gtk-utils.h										\
 	fma-icontext.c										\
 	fma-icontext-factory.c								\
-	na-iduplicable.c									\
+	fma-iduplicable.c									\
 	na-iexporter.c										\
 	na-ifactory-object.c								\
 	na-ifactory-provider.c								\

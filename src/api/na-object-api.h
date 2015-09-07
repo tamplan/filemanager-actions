@@ -43,7 +43,7 @@
 
 #include "na-ifactory-object.h"
 #include "na-ifactory-object-data.h"
-#include "na-iduplicable.h"
+#include "fma-iduplicable.h"
 #include "fma-icontext.h"
 #include "na-object-action.h"
 #include "na-object-profile.h"
@@ -51,16 +51,16 @@
 
 G_BEGIN_DECLS
 
-/* NAIDuplicable
+/* FMAIDuplicable
  */
-#define na_object_duplicate( obj, mode )                na_iduplicable_duplicate( NA_IDUPLICABLE( obj ), mode )
+#define na_object_duplicate( obj, mode )                fma_iduplicable_duplicate( FMA_IDUPLICABLE( obj ), mode )
 #define na_object_check_status( obj )                   na_object_object_check_status_rec( NA_OBJECT( obj ))
 
-#define na_object_get_origin( obj )                     na_iduplicable_get_origin( NA_IDUPLICABLE( obj ))
-#define na_object_is_valid( obj )                       na_iduplicable_is_valid( NA_IDUPLICABLE( obj ))
-#define na_object_is_modified( obj )                    na_iduplicable_is_modified( NA_IDUPLICABLE( obj ))
+#define na_object_get_origin( obj )                     fma_iduplicable_get_origin( FMA_IDUPLICABLE( obj ))
+#define na_object_is_valid( obj )                       fma_iduplicable_is_valid( FMA_IDUPLICABLE( obj ))
+#define na_object_is_modified( obj )                    fma_iduplicable_is_modified( FMA_IDUPLICABLE( obj ))
 
-#define na_object_set_origin( obj, origin )             na_iduplicable_set_origin( NA_IDUPLICABLE( obj ), ( NAIDuplicable * )( origin ))
+#define na_object_set_origin( obj, origin )             fma_iduplicable_set_origin( FMA_IDUPLICABLE( obj ), ( FMAIDuplicable * )( origin ))
 #define na_object_reset_origin( obj, origin )           na_object_object_reset_origin( NA_OBJECT( obj ), ( NAObject * )( origin ))
 
 /* NAObject
@@ -213,7 +213,7 @@ G_BEGIN_DECLS
 #define na_object_set_capabilities( obj, cap )          na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_CAPABILITITES, ( const void * )( cap ))
 
 #ifdef NA_ENABLE_DEPRECATED
-#define na_object_set_modified( obj, modified )         na_iduplicable_set_modified( NA_IDUPLICABLE( obj ), ( modified ))
+#define na_object_set_modified( obj, modified )         fma_iduplicable_set_modified( FMA_IDUPLICABLE( obj ), ( modified ))
 #endif
 
 G_END_DECLS

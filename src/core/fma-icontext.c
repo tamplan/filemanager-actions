@@ -255,8 +255,8 @@ fma_icontext_is_candidate( const FMAIContext *context, guint target, GList *sele
  *
  * Returns: %TRUE if this @context is valid, %FALSE else.
  *
- * This function is part of <methodname>NAIDuplicable::check_status</methodname>
- * and is called by #NAIDuplicable objects which also implement #FMAIContext
+ * This function is part of <methodname>FMAIDuplicable::check_status</methodname>
+ * and is called by #FMAIDuplicable objects which also implement #FMAIContext
  * interface. It so doesn't make sense of asking the object for its
  * validity status as it has already been checked before calling the
  * function.

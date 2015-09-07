@@ -273,7 +273,7 @@ object_copy( NAObject *target, const NAObject *source, guint mode )
  * @a: the first (original) #NAObjectItem instance.
  * @b: the second #NAObjectItem instance.
  *
- * This function participates to the #na_iduplicable_check_status() stack,
+ * This function participates to the #fma_iduplicable_check_status() stack,
  * and is triggered after all comparable elementary data (in #NAIFactoryObject
  * sense) have already been successfully compared.
  *

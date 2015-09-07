@@ -203,7 +203,7 @@ nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treevi
 	g_signal_connect( renderers->data, "edited", G_CALLBACK( on_label_edited ), instance );
 
 	/* monitors status changes to refresh the display */
-	na_iduplicable_register_consumer( G_OBJECT( instance ));
+	fma_iduplicable_register_consumer( G_OBJECT( instance ));
 	ied->modified_handler_id =
 			g_signal_connect(
 					instance, IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,

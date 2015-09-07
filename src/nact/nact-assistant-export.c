@@ -774,7 +774,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		str = g_new0( ExportStruct, 1 );
 		window->private->results = g_list_append( window->private->results, str );
 
-		str->item = NA_OBJECT_ITEM( na_object_get_origin( NA_IDUPLICABLE( ia->data )));
+		str->item = NA_OBJECT_ITEM( na_object_get_origin( FMA_IDUPLICABLE( ia->data )));
 		str->format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, NULL );
 		g_return_if_fail( str->format && strlen( str->format ));
 

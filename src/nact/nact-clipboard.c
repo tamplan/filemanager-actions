@@ -662,7 +662,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
  * which has the same characteristics that the previous one ; we so
  * have to renumber actions/menus items when copying into the clipboard.
  *
- * Note that we use NAIDuplicable interface without actually taking care
+ * Note that we use FMAIDuplicable interface without actually taking care
  * of what is origin or so, as origin will be reinitialized when getting
  * data out of the clipboard.
  */

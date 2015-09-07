@@ -31,26 +31,26 @@
 #include <config.h>
 #endif
 
-#include "api/na-iduplicable.h"
+#include "api/fma-iduplicable.h"
 
 /* private interface data
  */
-struct _NAIDuplicableInterfacePrivate {
+struct _FMAIDuplicableInterfacePrivate {
 	GList *consumers;
 };
 
-/* the data sructure set on each NAIDuplicable object
+/* the data sructure set on each FMAIDuplicable object
  */
 typedef struct {
-	NAIDuplicable *origin;
+	FMAIDuplicable *origin;
 	gboolean       modified;
 	gboolean       valid;
 }
 	DuplicableStr;
 
-#define NA_IDUPLICABLE_DATA_DUPLICABLE			"na-iduplicable-data-duplicable"
+#define FMA_IDUPLICABLE_DATA_DUPLICABLE			"fma-iduplicable-data-duplicable"
 
-/* signals emitted on NAIDuplicable when a status changes
+/* signals emitted on FMAIDuplicable when a status changes
  */
 enum {
 	MODIFIED_CHANGED,
@@ -58,27 +58,27 @@ enum {
 	LAST_SIGNAL
 };
 
-static NAIDuplicableInterface *st_interface = NULL;
+static FMAIDuplicableInterface *st_interface = NULL;
 static guint                   st_initializations = 0;
 static gint                    st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType          register_type( void );
-static void           interface_base_init( NAIDuplicableInterface *klass );
-static void           interface_base_finalize( NAIDuplicableInterface *klass );
+static void           interface_base_init( FMAIDuplicableInterface *klass );
+static void           interface_base_finalize( FMAIDuplicableInterface *klass );
 
-static void           v_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode );
-static gboolean       v_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
-static gboolean       v_is_valid( const NAIDuplicable *object );
+static void           v_copy( FMAIDuplicable *target, const FMAIDuplicable *source, guint mode );
+static gboolean       v_are_equal( const FMAIDuplicable *a, const FMAIDuplicable *b );
+static gboolean       v_is_valid( const FMAIDuplicable *object );
 
-static DuplicableStr *get_duplicable_str( const NAIDuplicable *object );
+static DuplicableStr *get_duplicable_str( const FMAIDuplicable *object );
 
-static void           on_modified_changed_class_handler( NAIDuplicable *instance, GObject *object, gboolean is_modified );
-static void           on_valid_changed_class_handler( NAIDuplicable *instance, GObject *object, gboolean is_valid );
-static void           propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal, GObject *object, gboolean new_status );
+static void           on_modified_changed_class_handler( FMAIDuplicable *instance, GObject *object, gboolean is_modified );
+static void           on_valid_changed_class_handler( FMAIDuplicable *instance, GObject *object, gboolean is_valid );
+static void           propagate_signal_to_consumers( FMAIDuplicable *instance, const gchar *signal, GObject *object, gboolean new_status );
 static void           release_signal_consumers( GList *consumers );
 
 GType
-na_iduplicable_get_type( void )
+fma_iduplicable_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -92,11 +92,11 @@ na_iduplicable_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_iduplicable_register_type";
+	static const gchar *thisfn = "fma_iduplicable_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIDuplicableInterface ),
+		sizeof( FMAIDuplicableInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -109,7 +109,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIDuplicable", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIDuplicable", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -117,15 +117,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIDuplicableInterface *klass )
+interface_base_init( FMAIDuplicableInterface *klass )
 {
-	static const gchar *thisfn = "na_iduplicable_interface_base_init";
+	static const gchar *thisfn = "fma_iduplicable_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NAIDuplicableInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIDuplicableInterfacePrivate, 1 );
 
 		klass->private->consumers = NULL;
 
@@ -134,9 +134,9 @@ interface_base_init( NAIDuplicableInterface *klass )
 		klass->is_valid = NULL;
 
 		/**
-		 * NAIDuplicable::modified-changed:
+		 * FMAIDuplicable::modified-changed:
 		 *
-		 * This signal is emitted by #NAIDuplicable when the modification
+		 * This signal is emitted by #FMAIDuplicable when the modification
 		 * status of an object has been modified.
 		 *
 		 * The default class handler propagates the signal to registered
@@ -145,9 +145,9 @@ interface_base_init( NAIDuplicableInterface *klass )
 		 * Signal args: New modification status
 		 *
 		 * Handler prototype:
-		 * void ( *handler )( NAIDuplicable *duplicable, NAObject *object, gboolean is_modified, gpointer user_data );
+		 * void ( *handler )( FMAIDuplicable *duplicable, NAObject *object, gboolean is_modified, gpointer user_data );
 		 *
-		 * When the signal is first emitted, thus on NAIDuplicable, @duplicable
+		 * When the signal is first emitted, thus on FMAIDuplicable, @duplicable
 		 * and @object are pointers to the same address. This duplication is
 		 * relevant when propagating the signal to customer, as the signal is
 		 * emitted on the customer itself, while we still need the @object
@@ -166,9 +166,9 @@ interface_base_init( NAIDuplicableInterface *klass )
 				G_TYPE_POINTER, G_TYPE_BOOLEAN );
 
 		/**
-		 * NAIDuplicable::valid-changed:
+		 * FMAIDuplicable::valid-changed:
 		 *
-		 * This signal is emitted by #NAIDuplicable when the validity
+		 * This signal is emitted by #FMAIDuplicable when the validity
 		 * status of an object has been modified.
 		 *
 		 * The default class handler propagates the signal to registered
@@ -177,9 +177,9 @@ interface_base_init( NAIDuplicableInterface *klass )
 		 * Signal args: New validity status
 		 *
 		 * Handler prototype:
-		 * void ( *handler )( NAIDuplicable *duplicable, NAObject *object, gboolean is_valid, gpointer user_data );
+		 * void ( *handler )( FMAIDuplicable *duplicable, NAObject *object, gboolean is_valid, gpointer user_data );
 		 *
-		 * When the signal is first emitted, thus on NAIDuplicable, @duplicable
+		 * When the signal is first emitted, thus on FMAIDuplicable, @duplicable
 		 * and @object are pointers to the same address. This duplication is
 		 * relevant when propagating the signal to customer, as the signal is
 		 * emitted on the customer itself, while we still need the @object
@@ -204,9 +204,9 @@ interface_base_init( NAIDuplicableInterface *klass )
 }
 
 static void
-interface_base_finalize( NAIDuplicableInterface *klass )
+interface_base_finalize( FMAIDuplicableInterface *klass )
 {
-	static const gchar *thisfn = "na_iduplicable_interface_base_finalize";
+	static const gchar *thisfn = "fma_iduplicable_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -221,33 +221,33 @@ interface_base_finalize( NAIDuplicableInterface *klass )
 }
 
 /**
- * na_iduplicable_dispose:
- * @object: the #NAIDuplicable object to be initialized.
+ * fma_iduplicable_dispose:
+ * @object: the #FMAIDuplicable object to be initialized.
  *
  * Releases resources.
  *
  * Since: 2.30
  */
 void
-na_iduplicable_dispose( const NAIDuplicable *object )
+fma_iduplicable_dispose( const FMAIDuplicable *object )
 {
 	DuplicableStr *str;
 
-	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( FMA_IS_IDUPLICABLE( object ));
 
 	str = get_duplicable_str( object );
 	g_free( str );
-	g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE, NULL );
+	g_object_set_data( G_OBJECT( object ), FMA_IDUPLICABLE_DATA_DUPLICABLE, NULL );
 }
 
 /**
- * na_iduplicable_dump:
- * @object: the #NAIDuplicable object to be dumped.
+ * fma_iduplicable_dump:
+ * @object: the #FMAIDuplicable object to be dumped.
  *
  * Dumps via g_debug the properties of the object.
  *
  * We ouput here only the data we set ourselves againt the
- * #NAIDuplicable -implemented object.
+ * #FMAIDuplicable -implemented object.
  *
  * This function should be called by the implementation when it dumps
  * itself its own content.
@@ -255,12 +255,12 @@ na_iduplicable_dispose( const NAIDuplicable *object )
  * Since: 2.30
  */
 void
-na_iduplicable_dump( const NAIDuplicable *object )
+fma_iduplicable_dump( const FMAIDuplicable *object )
 {
-	static const gchar *thisfn = "na_iduplicable_dump";
+	static const gchar *thisfn = "fma_iduplicable_dump";
 	DuplicableStr *str;
 
-	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( FMA_IS_IDUPLICABLE( object ));
 
 	str = get_duplicable_str( object );
 
@@ -270,26 +270,26 @@ na_iduplicable_dump( const NAIDuplicable *object )
 }
 
 /**
- * na_iduplicable_duplicate:
- * @object: the #NAIDuplicable object to be duplicated.
+ * fma_iduplicable_duplicate:
+ * @object: the #FMAIDuplicable object to be duplicated.
  * @mode: the %DuplicableMode duplication mode.
  *
- * Exactly duplicates a #NAIDuplicable -implemented object, including
+ * Exactly duplicates a #FMAIDuplicable -implemented object, including
  * modification and validity status which are copied from @object to
  * the duplicated one.
  *
- * Returns: a new #NAIDuplicable.
+ * Returns: a new #FMAIDuplicable.
  *
  * Since: 2.30
  */
-NAIDuplicable *
-na_iduplicable_duplicate( const NAIDuplicable *object, guint mode )
+FMAIDuplicable *
+fma_iduplicable_duplicate( const FMAIDuplicable *object, guint mode )
 {
-	static const gchar *thisfn = "na_iduplicable_duplicate";
-	NAIDuplicable *dup;
+	static const gchar *thisfn = "fma_iduplicable_duplicate";
+	FMAIDuplicable *dup;
 	DuplicableStr *dup_str, *obj_str;
 
-	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IDUPLICABLE( object ), NULL );
 
 	g_debug( "%s: object=%p (%s)",
 			thisfn,
@@ -302,7 +302,7 @@ na_iduplicable_duplicate( const NAIDuplicable *object, guint mode )
 	dup_str = get_duplicable_str( dup );
 	obj_str = get_duplicable_str( object );
 
-	dup_str->origin = ( NAIDuplicable * ) object;
+	dup_str->origin = ( FMAIDuplicable * ) object;
 	dup_str->modified = obj_str->modified;
 	dup_str->valid = obj_str->valid;
 
@@ -310,18 +310,18 @@ na_iduplicable_duplicate( const NAIDuplicable *object, guint mode )
 }
 
 /**
- * na_iduplicable_check_status:
- * @object: the #NAIDuplicable object to be checked.
+ * fma_iduplicable_check_status:
+ * @object: the #FMAIDuplicable object to be checked.
  *
- * Checks the edition status of the #NAIDuplicable object, and set up
+ * Checks the edition status of the #FMAIDuplicable object, and set up
  * the corresponding properties.
  *
  * This function is supposed to be called each time the object may have
  * been modified in order to set the corresponding properties. Helper
- * functions na_iduplicable_is_modified() and na_iduplicable_is_valid()
+ * functions fma_iduplicable_is_modified() and fma_iduplicable_is_valid()
  * will then only return the current value of the properties.
  *
- * na_iduplicable_check_status() is not, as itself, recursive.
+ * fma_iduplicable_check_status() is not, as itself, recursive.
  * That is, the modification and validity status are only set on the
  * specified object.
  * #NAObject implementation has chosen to handle itself the recursivity:
@@ -331,13 +331,13 @@ na_iduplicable_duplicate( const NAIDuplicable *object, guint mode )
  * Since: 2.30
  */
 void
-na_iduplicable_check_status( const NAIDuplicable *object )
+fma_iduplicable_check_status( const FMAIDuplicable *object )
 {
-	static const gchar *thisfn = "na_iduplicable_check_status";
+	static const gchar *thisfn = "fma_iduplicable_check_status";
 	DuplicableStr *str;
 	gboolean was_modified, was_valid;
 
-	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( FMA_IS_IDUPLICABLE( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -348,7 +348,7 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 
 	if( str->origin ){
 		g_debug( "%s: vs. origin=%p (%s)", thisfn, ( void * ) str->origin, G_OBJECT_TYPE_NAME( str->origin ));
-		g_return_if_fail( NA_IS_IDUPLICABLE( str->origin ));
+		g_return_if_fail( FMA_IS_IDUPLICABLE( str->origin ));
 		str->modified = !v_are_equal( str->origin, object );
 
 	} else {
@@ -371,22 +371,22 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 }
 
 /**
- * na_iduplicable_get_origin:
- * @object: the #NAIDuplicable object whose origin is to be returned.
+ * fma_iduplicable_get_origin:
+ * @object: the #FMAIDuplicable object whose origin is to be returned.
  *
- * Returns the origin of a duplicated #NAIDuplicable.
+ * Returns the origin of a duplicated #FMAIDuplicable.
  *
- * Returns: the original #NAIDuplicable, or NULL.
+ * Returns: the original #FMAIDuplicable, or NULL.
  *
  * Since: 2.30
  */
-NAIDuplicable *
-na_iduplicable_get_origin( const NAIDuplicable *object )
+FMAIDuplicable *
+fma_iduplicable_get_origin( const FMAIDuplicable *object )
 {
-	NAIDuplicable *origin;
+	FMAIDuplicable *origin;
 	DuplicableStr *str;
 
-	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IDUPLICABLE( object ), NULL );
 
 	str = get_duplicable_str( object );
 	origin = str->origin;
@@ -395,8 +395,8 @@ na_iduplicable_get_origin( const NAIDuplicable *object )
 }
 
 /**
- * na_iduplicable_is_valid:
- * @object: the #NAIDuplicable object whose status is to be returned.
+ * fma_iduplicable_is_valid:
+ * @object: the #FMAIDuplicable object whose status is to be returned.
  *
  * Returns the current value of the relevant property
  * without rechecking the edition status itself.
@@ -406,12 +406,12 @@ na_iduplicable_get_origin( const NAIDuplicable *object )
  * Since: 2.30
  */
 gboolean
-na_iduplicable_is_valid( const NAIDuplicable *object )
+fma_iduplicable_is_valid( const FMAIDuplicable *object )
 {
 	gboolean is_valid;
 	DuplicableStr *str;
 
-	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), FALSE );
+	g_return_val_if_fail( FMA_IS_IDUPLICABLE( object ), FALSE );
 
 	str = get_duplicable_str( object );
 	is_valid = str->valid;
@@ -420,8 +420,8 @@ na_iduplicable_is_valid( const NAIDuplicable *object )
 }
 
 /**
- * na_iduplicable_is_modified:
- * @object: the #NAIDuplicable object whose status is to be returned.
+ * fma_iduplicable_is_modified:
+ * @object: the #FMAIDuplicable object whose status is to be returned.
  *
  * Returns the current value of the 'is_modified'
  * property without rechecking the edition status itself.
@@ -432,12 +432,12 @@ na_iduplicable_is_valid( const NAIDuplicable *object )
  * Since: 2.30
  */
 gboolean
-na_iduplicable_is_modified( const NAIDuplicable *object )
+fma_iduplicable_is_modified( const FMAIDuplicable *object )
 {
 	gboolean is_modified;
 	DuplicableStr *str;
 
-	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), FALSE );
+	g_return_val_if_fail( FMA_IS_IDUPLICABLE( object ), FALSE );
 
 	str = get_duplicable_str( object );
 	is_modified = str->modified;
@@ -446,43 +446,43 @@ na_iduplicable_is_modified( const NAIDuplicable *object )
 }
 
 /**
- * na_iduplicable_set_origin:
- * @object: the #NAIDuplicable object whose origin is to be set.
- * @origin: the new original #NAIDuplicable.
+ * fma_iduplicable_set_origin:
+ * @object: the #FMAIDuplicable object whose origin is to be set.
+ * @origin: the new original #FMAIDuplicable.
  *
- * Sets the new origin of a duplicated #NAIDuplicable.
+ * Sets the new origin of a duplicated #FMAIDuplicable.
  *
  * Since: 2.30
  */
 void
-na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
+fma_iduplicable_set_origin( FMAIDuplicable *object, const FMAIDuplicable *origin )
 {
 	DuplicableStr *str;
 
-	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
-	g_return_if_fail( NA_IS_IDUPLICABLE( origin ) || !origin );
+	g_return_if_fail( FMA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( FMA_IS_IDUPLICABLE( origin ) || !origin );
 
 	str = get_duplicable_str( object );
-	str->origin = ( NAIDuplicable * ) origin;
+	str->origin = ( FMAIDuplicable * ) origin;
 }
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
- * na_iduplicable_set_modified:
- * @object: the #NAIDuplicable object whose modification status is to be set.
- * @modified: the new modification status #NAIDuplicable.
+ * fma_iduplicable_set_modified:
+ * @object: the #FMAIDuplicable object whose modification status is to be set.
+ * @modified: the new modification status #FMAIDuplicable.
  *
- * Sets the new modification status of a duplicated #NAIDuplicable.
+ * Sets the new modification status of a duplicated #FMAIDuplicable.
  *
  * Since: 2.30
  * Deprecated: 3.1
  */
 void
-na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )
+fma_iduplicable_set_modified( FMAIDuplicable *object, gboolean modified )
 {
 	DuplicableStr *str;
 
-	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
+	g_return_if_fail( FMA_IS_IDUPLICABLE( object ));
 
 	str = get_duplicable_str( object );
 	str->modified = modified;
@@ -490,35 +490,35 @@ na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )
 #endif /* NA_ENABLE_DEPRECATED */
 
 static void
-v_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode )
+v_copy( FMAIDuplicable *target, const FMAIDuplicable *source, guint mode )
 {
-	if( NA_IDUPLICABLE_GET_INTERFACE( target )->copy ){
-		NA_IDUPLICABLE_GET_INTERFACE( target )->copy( target, source, mode );
+	if( FMA_IDUPLICABLE_GET_INTERFACE( target )->copy ){
+		FMA_IDUPLICABLE_GET_INTERFACE( target )->copy( target, source, mode );
 	}
 }
 
 static gboolean
-v_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
+v_are_equal( const FMAIDuplicable *a, const FMAIDuplicable *b )
 {
-	if( NA_IDUPLICABLE_GET_INTERFACE( a )->are_equal ){
-		return( NA_IDUPLICABLE_GET_INTERFACE( a )->are_equal( a, b ));
+	if( FMA_IDUPLICABLE_GET_INTERFACE( a )->are_equal ){
+		return( FMA_IDUPLICABLE_GET_INTERFACE( a )->are_equal( a, b ));
 	}
 
 	return( TRUE );
 }
 
 static gboolean
-v_is_valid( const NAIDuplicable *object )
+v_is_valid( const FMAIDuplicable *object )
 {
-	if( NA_IDUPLICABLE_GET_INTERFACE( object )->is_valid ){
-		return( NA_IDUPLICABLE_GET_INTERFACE( object )->is_valid( object ));
+	if( FMA_IDUPLICABLE_GET_INTERFACE( object )->is_valid ){
+		return( FMA_IDUPLICABLE_GET_INTERFACE( object )->is_valid( object ));
 	}
 
 	return( TRUE );
 }
 
 /**
- * na_iduplicable_register_consumer:
+ * fma_iduplicable_register_consumer:
  * @consumer: the target instance.
  *
  * This function registers a consumer, i.e. an instance to which edition
@@ -527,38 +527,38 @@ v_is_valid( const NAIDuplicable *object )
  * Since: 2.30
  */
 void
-na_iduplicable_register_consumer( GObject *consumer )
+fma_iduplicable_register_consumer( GObject *consumer )
 {
 	g_return_if_fail( st_interface );
 
-	g_debug( "na_iduplicable_register_consumer: consumer=%p", ( void * ) consumer );
+	g_debug( "fma_iduplicable_register_consumer: consumer=%p", ( void * ) consumer );
 
 	st_interface->private->consumers = g_list_prepend( st_interface->private->consumers, consumer );
 }
 
 static void
-on_modified_changed_class_handler( NAIDuplicable *instance, GObject *object, gboolean is_modified )
+on_modified_changed_class_handler( FMAIDuplicable *instance, GObject *object, gboolean is_modified )
 {
-	if( NA_IS_IDUPLICABLE( instance )){
+	if( FMA_IS_IDUPLICABLE( instance )){
 		propagate_signal_to_consumers( instance, IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, object, is_modified );
 	}
 }
 
 static void
-on_valid_changed_class_handler( NAIDuplicable *instance, GObject *object, gboolean is_valid )
+on_valid_changed_class_handler( FMAIDuplicable *instance, GObject *object, gboolean is_valid )
 {
-	if( NA_IS_IDUPLICABLE( instance )){
+	if( FMA_IS_IDUPLICABLE( instance )){
 		propagate_signal_to_consumers( instance, IDUPLICABLE_SIGNAL_VALID_CHANGED, object, is_valid );
 	}
 }
 
 static void
-propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal, GObject *object, gboolean new_status )
+propagate_signal_to_consumers( FMAIDuplicable *instance, const gchar *signal, GObject *object, gboolean new_status )
 {
-	static const gchar *thisfn = "na_iduplicable_propagate_signals_to_consumers";
+	static const gchar *thisfn = "fma_iduplicable_propagate_signals_to_consumers";
 	GList *ic;
 
-	g_return_if_fail( NA_IS_IDUPLICABLE( instance ));
+	g_return_if_fail( FMA_IS_IDUPLICABLE( instance ));
 
 	g_debug( "%s: instance=%p, signal=%s", thisfn, ( void * ) instance, signal );
 
@@ -574,11 +574,11 @@ release_signal_consumers( GList *consumers )
 }
 
 static DuplicableStr *
-get_duplicable_str( const NAIDuplicable *object )
+get_duplicable_str( const FMAIDuplicable *object )
 {
 	DuplicableStr *str;
 
-	str = ( DuplicableStr * ) g_object_get_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE );
+	str = ( DuplicableStr * ) g_object_get_data( G_OBJECT( object ), FMA_IDUPLICABLE_DATA_DUPLICABLE );
 
 	if( !str ){
 		str = g_new0( DuplicableStr, 1 );
@@ -587,7 +587,7 @@ get_duplicable_str( const NAIDuplicable *object )
 		str->modified = FALSE;
 		str->valid = TRUE;
 
-		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE, str );
+		g_object_set_data( G_OBJECT( object ), FMA_IDUPLICABLE_DATA_DUPLICABLE, str );
 	}
 
 	return( str );

@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_IDUPLICABLE_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_IDUPLICABLE_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_IDUPLICABLE_H__
+#define __FILE_MANAGER_ACTIONS_API_IDUPLICABLE_H__
 
 /**
  * SECTION: iduplicable
- * @title: NAIDuplicable
+ * @title: FMAIDuplicable
  * @short_description: The Duplication Interface
- * @include: file-manager-actions/private/na-iduplicable.h
+ * @include: file-manager-actions/private/fma-iduplicable.h
  *
  * This interface is implemented by #NAObject in order to let
  * #NAObject -derived instance duplication be easily tracked. This works
@@ -77,7 +77,7 @@
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIDuplicable interface</title>
+ *    <title>Historic of the versions of the #FMAIDuplicable interface</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -85,7 +85,7 @@
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIDuplicable interface version</entry>
+ *          <entry>#FMAIDuplicable interface version</entry>
  *          <entry></entry>
  *        </row>
  *      </thead>
@@ -105,16 +105,16 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_IDUPLICABLE                      ( na_iduplicable_get_type())
-#define NA_IDUPLICABLE( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IDUPLICABLE, NAIDuplicable ))
-#define NA_IS_IDUPLICABLE( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IDUPLICABLE ))
-#define NA_IDUPLICABLE_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IDUPLICABLE, NAIDuplicableInterface ))
+#define FMA_TYPE_IDUPLICABLE                      ( fma_iduplicable_get_type())
+#define FMA_IDUPLICABLE( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IDUPLICABLE, FMAIDuplicable ))
+#define FMA_IS_IDUPLICABLE( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IDUPLICABLE ))
+#define FMA_IDUPLICABLE_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IDUPLICABLE, FMAIDuplicableInterface ))
 
-typedef struct _NAIDuplicable                    NAIDuplicable;
-typedef struct _NAIDuplicableInterfacePrivate    NAIDuplicableInterfacePrivate;
+typedef struct _FMAIDuplicable                    FMAIDuplicable;
+typedef struct _FMAIDuplicableInterfacePrivate    FMAIDuplicableInterfacePrivate;
 
 /**
- * NAIDuplicableInterface:
+ * FMAIDuplicableInterface:
  * @copy:      copies one object to another.
  * @are_equal: tests if two objects are equals.
  * @is_valid:  tests if one object is valid.
@@ -125,13 +125,13 @@ typedef struct _NAIDuplicableInterfacePrivate    NAIDuplicableInterfacePrivate;
 typedef struct {
 	/*< private >*/
 	GTypeInterface                 parent;
-	NAIDuplicableInterfacePrivate *private;
+	FMAIDuplicableInterfacePrivate *private;
 
 	/*< public >*/
 	/**
 	 * copy:
-	 * @target: the #NAIDuplicable target of the copy.
-	 * @source: the #NAIDuplicable source of the copy.
+	 * @target: the #FMAIDuplicable target of the copy.
+	 * @source: the #FMAIDuplicable source of the copy.
 	 * @mode: the duplication mode.
 	 *
 	 * Copies data from @source to @ŧarget, so that @target becomes an
@@ -144,12 +144,12 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void     ( *copy )      ( NAIDuplicable *target, const NAIDuplicable *source, guint mode );
+	void     ( *copy )      ( FMAIDuplicable *target, const FMAIDuplicable *source, guint mode );
 
 	/**
 	 * are_equal:
-	 * @a: a first #NAIDuplicable object.
-	 * @b: a second #NAIDuplicable object to be compared to the first
+	 * @a: a first #FMAIDuplicable object.
+	 * @b: a second #FMAIDuplicable object to be compared to the first
 	 * one.
 	 *
 	 * Compares the two objects.
@@ -166,11 +166,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean ( *are_equal ) ( const NAIDuplicable *a, const NAIDuplicable *b );
+	gboolean ( *are_equal ) ( const FMAIDuplicable *a, const FMAIDuplicable *b );
 
 	/**
 	 * is_valid:
-	 * @object: the NAIDuplicable object to be checked.
+	 * @object: the FMAIDuplicable object to be checked.
 	 *
 	 * Checks @object for validity.
 	 *
@@ -183,9 +183,9 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean ( *is_valid )  ( const NAIDuplicable *object );
+	gboolean ( *is_valid )  ( const FMAIDuplicable *object );
 }
-	NAIDuplicableInterface;
+	FMAIDuplicableInterface;
 
 #define IDUPLICABLE_SIGNAL_MODIFIED_CHANGED		"iduplicable-modified-changed"
 #define IDUPLICABLE_SIGNAL_VALID_CHANGED		"iduplicable-valid-changed"
@@ -204,25 +204,25 @@ typedef enum {
 }
 	DuplicableMode;
 
-GType          na_iduplicable_get_type         ( void );
+GType          fma_iduplicable_get_type         ( void );
 
-void           na_iduplicable_dispose          ( const NAIDuplicable *object );
-void           na_iduplicable_dump             ( const NAIDuplicable *object );
-NAIDuplicable *na_iduplicable_duplicate        ( const NAIDuplicable *object, guint mode );
-void           na_iduplicable_check_status     ( const NAIDuplicable *object );
+void           fma_iduplicable_dispose          ( const FMAIDuplicable *object );
+void           fma_iduplicable_dump             ( const FMAIDuplicable *object );
+FMAIDuplicable *fma_iduplicable_duplicate        ( const FMAIDuplicable *object, guint mode );
+void           fma_iduplicable_check_status     ( const FMAIDuplicable *object );
 
-NAIDuplicable *na_iduplicable_get_origin       ( const NAIDuplicable *object );
-gboolean       na_iduplicable_is_valid         ( const NAIDuplicable *object );
-gboolean       na_iduplicable_is_modified      ( const NAIDuplicable *object );
+FMAIDuplicable *fma_iduplicable_get_origin       ( const FMAIDuplicable *object );
+gboolean       fma_iduplicable_is_valid         ( const FMAIDuplicable *object );
+gboolean       fma_iduplicable_is_modified      ( const FMAIDuplicable *object );
 
-void           na_iduplicable_set_origin       ( NAIDuplicable *object, const NAIDuplicable *origin );
+void           fma_iduplicable_set_origin       ( FMAIDuplicable *object, const FMAIDuplicable *origin );
 
-void           na_iduplicable_register_consumer( GObject *consumer );
+void           fma_iduplicable_register_consumer( GObject *consumer );
 
 #ifdef NA_ENABLE_DEPRECATED
-void           na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified );
+void           fma_iduplicable_set_modified( FMAIDuplicable *object, gboolean modified );
 #endif
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_IDUPLICABLE_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_IDUPLICABLE_H__ */
