@@ -34,7 +34,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-object-api.h>
 
-#include <core/na-factory-object.h>
+#include <core/fma-factory-object.h>
 #include <core/na-updater.h>
 
 #include "base-keysyms.h"
@@ -958,15 +958,15 @@ nact_tree_ieditable_set_items( NactTreeIEditable *instance, GList *items )
 					G_OBJECT_TYPE_NAME( old_item ), G_OBJECT_TYPE_NAME( new_item ));
 
 		} else if( FMA_IS_OBJECT_MENU( old_item )){
-			/* hopefully, na_factory_object_copy only copy valuable properties
+			/* hopefully, fma_factory_object_copy only copy valuable properties
 			 * keeping dynamic variables as parent pointer, provider and provider
 			 * data, read-only status - notably children are not impacted by this
 			 * copy
 			 */
-			na_factory_object_copy( FMA_IFACTORY_OBJECT( old_item ), FMA_IFACTORY_OBJECT( new_item ));
+			fma_factory_object_copy( FMA_IFACTORY_OBJECT( old_item ), FMA_IFACTORY_OBJECT( new_item ));
 
 		} else if( FMA_IS_OBJECT_ACTION( old_item )){
-			/* na_factory_object is not a deep copy, which is fine for the menu
+			/* fma_factory_object is not a deep copy, which is fine for the menu
 			 * but not for the action - it appears more easier to just substitute
 			 * the old item with the new one
 			 *

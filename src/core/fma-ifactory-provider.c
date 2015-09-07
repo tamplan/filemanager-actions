@@ -34,7 +34,7 @@
 #include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-provider.h>
 
-#include "na-factory-object.h"
+#include "fma-factory-object.h"
 #include "na-factory-provider.h"
 
 /* private interface data
@@ -191,7 +191,7 @@ fma_ifactory_provider_read_item( const FMAIFactoryProvider *reader, void *reader
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	v_factory_provider_read_start( reader, reader_data, object, messages );
-	na_factory_object_read_item( object, reader, reader_data, messages );
+	fma_factory_object_read_item( object, reader, reader_data, messages );
 	v_factory_provider_read_done( reader, reader_data, object, messages );
 }
 
@@ -225,7 +225,7 @@ fma_ifactory_provider_write_item( const FMAIFactoryProvider *writer, void *write
 	code = v_factory_provider_write_start( writer, writer_data, object, messages );
 
 	if( code == FMA_IIO_PROVIDER_CODE_OK ){
-		code = na_factory_object_write_item( object, writer, writer_data, messages );
+		code = fma_factory_object_write_item( object, writer, writer_data, messages );
 	}
 
 	if( code == FMA_IIO_PROVIDER_CODE_OK ){

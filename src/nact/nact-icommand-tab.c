@@ -37,7 +37,7 @@
 #include "api/fma-core-utils.h"
 #include "api/fma-object-api.h"
 
-#include "core/na-factory-object.h"
+#include "core/fma-factory-object.h"
 #include "core/na-gtk-utils.h"
 #include "core/na-tokens.h"
 

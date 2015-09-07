@@ -43,7 +43,7 @@
  * types that those defined in fma-data-types.h.
  *
  * Additionally, #FMADataBoxed class holds the #FMADataDef data definition
- * suitable for a NAFactoryObject object. It such provides default value
+ * suitable for a FMAFactoryObject object. It such provides default value
  * and validity status.
  *
  * Since: 2.30

@@ -42,7 +42,7 @@
 #include <api/fma-ifactory-provider.h>
 #include <api/fma-object-api.h>
 
-#include "na-factory-object.h"
+#include "fma-factory-object.h"
 #include "na-factory-provider.h"
 
 typedef gboolean ( *FMADataDefIterFunc )( FMADataDef *def, void *user_data );
@@ -112,16 +112,16 @@ static void         free_data_boxed_list( FMAIFactoryObject *object );
 static void         iter_on_data_defs( const FMADataGroup *idgroups, guint mode, FMADataDefIterFunc pfn, void *user_data );
 
 /*
- * na_factory_object_define_properties:
+ * fma_factory_object_define_properties:
  * @class: the #GObjectClass.
  * @groups: the list of #FMADataGroup structure which define the data of the class.
  *
  * Initializes all the properties for the class.
  */
 void
-na_factory_object_define_properties( GObjectClass *class, const FMADataGroup *groups )
+fma_factory_object_define_properties( GObjectClass *class, const FMADataGroup *groups )
 {
-	static const gchar *thisfn = "na_factory_object_define_properties";
+	static const gchar *thisfn = "fma_factory_object_define_properties";
 
 	g_return_if_fail( G_IS_OBJECT_CLASS( class ));
 
@@ -136,7 +136,7 @@ na_factory_object_define_properties( GObjectClass *class, const FMADataGroup *gr
 static gboolean
 define_class_properties_iter( const FMADataDef *def, GObjectClass *class )
 {
-	static const gchar *thisfn = "na_factory_object_define_class_properties_iter";
+	static const gchar *thisfn = "fma_factory_object_define_class_properties_iter";
 	gboolean stop;
 	GParamSpec *spec;
 
@@ -157,14 +157,14 @@ define_class_properties_iter( const FMADataDef *def, GObjectClass *class )
 }
 
 /*
- * na_factory_object_get_data_def:
+ * fma_factory_object_get_data_def:
  * @object: this #FMAIFactoryObject object.
  * @name: the searched name.
  *
  * Returns: the #FMADataDef structure which describes this @name, or %NULL.
  */
 FMADataDef *
-na_factory_object_get_data_def( const FMAIFactoryObject *object, const gchar *name )
+fma_factory_object_get_data_def( const FMAIFactoryObject *object, const gchar *name )
 {
 	FMADataDef *def;
 
@@ -192,13 +192,13 @@ na_factory_object_get_data_def( const FMAIFactoryObject *object, const gchar *na
 }
 
 /*
- * na_factory_object_get_data_groups:
+ * fma_factory_object_get_data_groups:
  * @object: the #FMAIFactoryObject instance.
  *
  * Returns: a pointer to the list of #FMADataGroup which define the data.
  */
 FMADataGroup *
-na_factory_object_get_data_groups( const FMAIFactoryObject *object )
+fma_factory_object_get_data_groups( const FMAIFactoryObject *object )
 {
 	FMADataGroup *groups;
 
@@ -210,7 +210,7 @@ na_factory_object_get_data_groups( const FMAIFactoryObject *object )
 }
 
 /*
- * na_factory_object_iter_on_boxed:
+ * fma_factory_object_iter_on_boxed:
  * @object: this #FMAIFactoryObject object.
  * @pfn: the function to be called.
  * @user_data: data to be provided to the user function.
@@ -220,7 +220,7 @@ na_factory_object_get_data_groups( const FMAIFactoryObject *object )
  * The @fn called function may return %TRUE to stop the iteration.
  */
 void
-na_factory_object_iter_on_boxed( const FMAIFactoryObject *object, NAFactoryObjectIterBoxedFn pfn, void *user_data )
+fma_factory_object_iter_on_boxed( const FMAIFactoryObject *object, FMAFactoryObjectIterBoxedFn pfn, void *user_data )
 {
 	GList *list, *ibox;
 	gboolean stop;
@@ -237,7 +237,7 @@ na_factory_object_iter_on_boxed( const FMAIFactoryObject *object, NAFactoryObjec
 }
 
 /*
- * na_factory_object_get_default:
+ * fma_factory_object_get_default:
  * @object: this #FMAIFactoryObject object.
  * @name: the searched name.
  *
@@ -245,9 +245,9 @@ na_factory_object_iter_on_boxed( const FMAIFactoryObject *object, NAFactoryObjec
  * string which should be g_free() by the caller.
  */
 gchar *
-na_factory_object_get_default( FMAIFactoryObject *object, const gchar *name )
+fma_factory_object_get_default( FMAIFactoryObject *object, const gchar *name )
 {
-	static const gchar *thisfn = "na_factory_object_set_defaults";
+	static const gchar *thisfn = "fma_factory_object_set_defaults";
 	gchar *value;
 	FMADataDef *def;
 
@@ -257,7 +257,7 @@ na_factory_object_get_default( FMAIFactoryObject *object, const gchar *name )
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	def = na_factory_object_get_data_def( object, name );
+	def = fma_factory_object_get_data_def( object, name );
 	if( def ){
 		value = g_strdup( def->default_value );
 	}
@@ -266,15 +266,15 @@ na_factory_object_get_default( FMAIFactoryObject *object, const gchar *name )
 }
 
 /*
- * na_factory_object_set_defaults:
+ * fma_factory_object_set_defaults:
  * @object: this #FMAIFactoryObject object.
  *
  * Implement default values in this new @object.
  */
 void
-na_factory_object_set_defaults( FMAIFactoryObject *object )
+fma_factory_object_set_defaults( FMAIFactoryObject *object )
 {
-	static const gchar *thisfn = "na_factory_object_set_defaults";
+	static const gchar *thisfn = "fma_factory_object_set_defaults";
 	FMADataGroup *groups;
 	NafoDefaultIter *iter_data;
 
@@ -318,7 +318,7 @@ set_defaults_iter( FMADataDef *def, NafoDefaultIter *data )
 }
 
 /*
- * na_factory_object_move_boxed:
+ * fma_factory_object_move_boxed:
  * @target: the target #FMAIFactoryObject instance.
  * @source: the source #FMAIFactoryObject instance.
  * @boxed: a #FMADataBoxed.
@@ -327,7 +327,7 @@ set_defaults_iter( FMADataDef *def, NafoDefaultIter *data )
  * to be attached to @target one.
  */
 void
-na_factory_object_move_boxed( FMAIFactoryObject *target, const FMAIFactoryObject *source, FMADataBoxed *boxed )
+fma_factory_object_move_boxed( FMAIFactoryObject *target, const FMAIFactoryObject *source, FMADataBoxed *boxed )
 {
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( target ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( source ));
@@ -341,13 +341,13 @@ na_factory_object_move_boxed( FMAIFactoryObject *target, const FMAIFactoryObject
 		attach_boxed_to_object( target, boxed );
 
 		const FMADataDef *src_def = fma_data_boxed_get_data_def( boxed );
-		FMADataDef *tgt_def = na_factory_object_get_data_def( target, src_def->name );
+		FMADataDef *tgt_def = fma_factory_object_get_data_def( target, src_def->name );
 		fma_data_boxed_set_data_def( boxed, tgt_def );
 	}
 }
 
 /*
- * na_factory_object_copy:
+ * fma_factory_object_copy:
  * @target: the target #FMAIFactoryObject instance.
  * @source: the source #FMAIFactoryObject instance.
  *
@@ -355,9 +355,9 @@ na_factory_object_move_boxed( FMAIFactoryObject *target, const FMAIFactoryObject
  * Takes care of not overriding provider data.
  */
 void
-na_factory_object_copy( FMAIFactoryObject *target, const FMAIFactoryObject *source )
+fma_factory_object_copy( FMAIFactoryObject *target, const FMAIFactoryObject *source )
 {
-	static const gchar *thisfn = "na_factory_object_copy";
+	static const gchar *thisfn = "fma_factory_object_copy";
 	GList *dest_list, *idest, *inext;
 	GList *src_list, *isrc;
 	FMADataBoxed *boxed;
@@ -417,16 +417,16 @@ na_factory_object_copy( FMAIFactoryObject *target, const FMAIFactoryObject *sour
 }
 
 /*
- * na_factory_object_are_equal:
+ * fma_factory_object_are_equal:
  * @a: the first (original) #FMAIFactoryObject instance.
  * @b: the second (current) #FMAIFactoryObject isntance.
  *
  * Returns: %TRUE if @a is equal to @b, %FALSE else.
  */
 gboolean
-na_factory_object_are_equal( const FMAIFactoryObject *a, const FMAIFactoryObject *b )
+fma_factory_object_are_equal( const FMAIFactoryObject *a, const FMAIFactoryObject *b )
 {
-	static const gchar *thisfn = "na_factory_object_are_equal";
+	static const gchar *thisfn = "fma_factory_object_are_equal";
 	gboolean are_equal;
 	GList *a_list, *b_list, *ia, *ib;
 
@@ -478,15 +478,15 @@ na_factory_object_are_equal( const FMAIFactoryObject *a, const FMAIFactoryObject
 }
 
 /*
- * na_factory_object_is_valid:
+ * fma_factory_object_is_valid:
  * @object: the #FMAIFactoryObject instance whose validity is to be checked.
  *
  * Returns: %TRUE if @object is valid, %FALSE else.
  */
 gboolean
-na_factory_object_is_valid( const FMAIFactoryObject *object )
+fma_factory_object_is_valid( const FMAIFactoryObject *object )
 {
-	static const gchar *thisfn = "na_factory_object_is_valid";
+	static const gchar *thisfn = "fma_factory_object_is_valid";
 	gboolean is_valid;
 	FMADataGroup *groups;
 	GList *list, *iv;
@@ -527,7 +527,7 @@ is_valid_mandatory_iter( const FMADataDef *def, NafoValidIter *data )
 	if( def->mandatory ){
 		boxed = fma_ifactory_object_get_data_boxed( data->object, def->name );
 		if( !boxed ){
-			g_debug( "na_factory_object_is_valid_mandatory_iter: invalid %s: mandatory but not set", def->name );
+			g_debug( "fma_factory_object_is_valid_mandatory_iter: invalid %s: mandatory but not set", def->name );
 			data->is_valid = FALSE;
 		}
 	}
@@ -537,15 +537,15 @@ is_valid_mandatory_iter( const FMADataDef *def, NafoValidIter *data )
 }
 
 /*
- * na_factory_object_dump:
+ * fma_factory_object_dump:
  * @object: this #FMAIFactoryObject instance.
  *
  * Dumps the content of @object.
  */
 void
-na_factory_object_dump( const FMAIFactoryObject *object )
+fma_factory_object_dump( const FMAIFactoryObject *object )
 {
-	static const gchar *thisfn = "na_factory_object_dump";
+	static const gchar *thisfn = "fma_factory_object_dump";
 	static const gchar *prefix = "na-factory-data-";
 	GList *list, *it;
 	guint length;
@@ -574,19 +574,19 @@ na_factory_object_dump( const FMAIFactoryObject *object )
 }
 
 /*
- * na_factory_object_finalize:
+ * fma_factory_object_finalize:
  * @object: the #FMAIFactoryObject being finalized.
  *
  * Clears all data associated with this @object.
  */
 void
-na_factory_object_finalize( FMAIFactoryObject *object )
+fma_factory_object_finalize( FMAIFactoryObject *object )
 {
 	free_data_boxed_list( object );
 }
 
 /*
- * na_factory_object_read_item:
+ * fma_factory_object_read_item:
  * @object: this #FMAIFactoryObject instance.
  * @reader: the #FMAIFactoryProvider which is at the origin of this read.
  * @reader_data: reader data.
@@ -596,9 +596,9 @@ na_factory_object_finalize( FMAIFactoryObject *object )
  * Unserializes the object.
  */
 void
-na_factory_object_read_item( FMAIFactoryObject *object, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages )
+fma_factory_object_read_item( FMAIFactoryObject *object, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	static const gchar *thisfn = "na_factory_object_read_item";
+	static const gchar *thisfn = "fma_factory_object_read_item";
 
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ));
@@ -651,7 +651,7 @@ read_data_iter( FMADataDef *def, NafoReadIter *iter )
 }
 
 /*
- * na_factory_object_write_item:
+ * fma_factory_object_write_item:
  * @object: this #FMAIFactoryObject instance.
  * @writer: the #FMAIFactoryProvider which is at the origin of this write.
  * @writer_data: writer data.
@@ -663,9 +663,9 @@ read_data_iter( FMADataDef *def, NafoReadIter *iter )
  * Returns: a FMAIIOProvider operation return code.
  */
 guint
-na_factory_object_write_item( FMAIFactoryObject *object, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
+fma_factory_object_write_item( FMAIFactoryObject *object, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	static const gchar *thisfn = "na_factory_object_write_item";
+	static const gchar *thisfn = "fma_factory_object_write_item";
 	guint code;
 	FMADataGroup *groups;
 	gchar *msg;
@@ -695,7 +695,7 @@ na_factory_object_write_item( FMAIFactoryObject *object, const FMAIFactoryProvid
 		iter->messages = messages;
 		iter->code = code;
 
-		na_factory_object_iter_on_boxed( object, ( NAFactoryObjectIterBoxedFn ) write_data_iter, iter );
+		fma_factory_object_iter_on_boxed( object, ( FMAFactoryObjectIterBoxedFn ) write_data_iter, iter );
 
 		code = iter->code;
 		g_free( iter );
@@ -722,7 +722,7 @@ write_data_iter( const FMAIFactoryObject *object, FMADataBoxed *boxed, NafoWrite
 }
 
 /*
- * na_factory_object_get_as_value:
+ * fma_factory_object_get_as_value:
  * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data id.
  * @value: the #GValue to be set.
@@ -733,7 +733,7 @@ write_data_iter( const FMAIFactoryObject *object, FMADataBoxed *boxed, NafoWrite
  * This is to be read as "set value from data element".
  */
 void
-na_factory_object_get_as_value( const FMAIFactoryObject *object, const gchar *name, GValue *value )
+fma_factory_object_get_as_value( const FMAIFactoryObject *object, const gchar *name, GValue *value )
 {
 	FMADataBoxed *boxed;
 
@@ -748,7 +748,7 @@ na_factory_object_get_as_value( const FMAIFactoryObject *object, const gchar *na
 }
 
 /*
- * na_factory_object_get_as_void:
+ * fma_factory_object_get_as_void:
  * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data whose value is to be got.
  *
@@ -760,7 +760,7 @@ na_factory_object_get_as_value( const FMAIFactoryObject *object, const gchar *na
  * by the caller.
  */
 void *
-na_factory_object_get_as_void( const FMAIFactoryObject *object, const gchar *name )
+fma_factory_object_get_as_void( const FMAIFactoryObject *object, const gchar *name )
 {
 	void *value;
 	FMADataBoxed *boxed;
@@ -778,14 +778,14 @@ na_factory_object_get_as_void( const FMAIFactoryObject *object, const gchar *nam
 }
 
 /*
- * na_factory_object_is_set:
+ * fma_factory_object_is_set:
  * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data whose value is to be tested.
  *
  * Returns: %TRUE if the value is set (may be %NULL), %FALSE else.
  */
 gboolean
-na_factory_object_is_set( const FMAIFactoryObject *object, const gchar *name )
+fma_factory_object_is_set( const FMAIFactoryObject *object, const gchar *name )
 {
 	FMADataBoxed *boxed;
 
@@ -797,7 +797,7 @@ na_factory_object_is_set( const FMAIFactoryObject *object, const gchar *name )
 }
 
 /*
- * na_factory_object_set_from_value:
+ * fma_factory_object_set_from_value:
  * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data id.
  * @value: the #GValue whose content is to be got.
@@ -806,9 +806,9 @@ na_factory_object_is_set( const FMAIFactoryObject *object, const gchar *name )
  * attached to @property_id.
  */
 void
-na_factory_object_set_from_value( FMAIFactoryObject *object, const gchar *name, const GValue *value )
+fma_factory_object_set_from_value( FMAIFactoryObject *object, const gchar *name, const GValue *value )
 {
-	static const gchar *thisfn = "na_factory_object_set_from_value";
+	static const gchar *thisfn = "fma_factory_object_set_from_value";
 
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
@@ -817,7 +817,7 @@ na_factory_object_set_from_value( FMAIFactoryObject *object, const gchar *name, 
 		fma_boxed_set_from_value( FMA_BOXED( boxed ), value );
 
 	} else {
-		FMADataDef *def = na_factory_object_get_data_def( object, name );
+		FMADataDef *def = fma_factory_object_get_data_def( object, name );
 		if( !def ){
 			g_warning( "%s: unknown FMADataDef %s", thisfn, name );
 
@@ -830,7 +830,7 @@ na_factory_object_set_from_value( FMAIFactoryObject *object, const gchar *name, 
 }
 
 /*
- * na_factory_object_set_from_void:
+ * fma_factory_object_set_from_void:
  * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data whose value is to be set.
  * @data: the value to set.
@@ -838,9 +838,9 @@ na_factory_object_set_from_value( FMAIFactoryObject *object, const gchar *name, 
  * Set the elementary data with the given value.
  */
 void
-na_factory_object_set_from_void( FMAIFactoryObject *object, const gchar *name, const void *data )
+fma_factory_object_set_from_void( FMAIFactoryObject *object, const gchar *name, const void *data )
 {
-	static const gchar *thisfn = "na_factory_object_set_from_void";
+	static const gchar *thisfn = "fma_factory_object_set_from_void";
 
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
@@ -849,7 +849,7 @@ na_factory_object_set_from_void( FMAIFactoryObject *object, const gchar *name, c
 		fma_boxed_set_from_void( FMA_BOXED( boxed ), data );
 
 	} else {
-		FMADataDef *def = na_factory_object_get_data_def( object, name );
+		FMADataDef *def = fma_factory_object_get_data_def( object, name );
 		if( !def ){
 			g_warning( "%s: unknown FMADataDef %s for %s", thisfn, name, G_OBJECT_TYPE_NAME( object ));
 
@@ -966,7 +966,7 @@ free_data_boxed_list( FMAIFactoryObject *object )
 static void
 iter_on_data_defs( const FMADataGroup *groups, guint mode, FMADataDefIterFunc pfn, void *user_data )
 {
-	static const gchar *thisfn = "na_factory_object_iter_on_data_defs";
+	static const gchar *thisfn = "fma_factory_object_iter_on_data_defs";
 	FMADataDef *def;
 	gboolean stop;
 

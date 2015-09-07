@@ -39,7 +39,7 @@
 #include <api/fma-object-api.h>
 
 #include "na-factory-provider.h"
-#include "na-factory-object.h"
+#include "fma-factory-object.h"
 
 /* private class data
  */
@@ -156,7 +156,7 @@ class_init( FMAObjectMenuClass *klass )
 
 	klass->private = g_new0( FMAObjectMenuClassPrivate, 1 );
 
-	na_factory_object_define_properties( object_class, menu_data_groups );
+	fma_factory_object_define_properties( object_class, menu_data_groups );
 }
 
 static void
@@ -183,7 +183,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 	if( !FMA_OBJECT_MENU( object )->private->dispose_has_run ){
 
-		na_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		fma_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -195,7 +195,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 	if( !FMA_OBJECT_MENU( object )->private->dispose_has_run ){
 
-		na_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		fma_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -304,7 +304,7 @@ ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvide
 
 	/* last, set menu defaults
 	 */
-	na_factory_object_set_defaults( instance );
+	fma_factory_object_set_defaults( instance );
 }
 
 static guint
@@ -371,7 +371,7 @@ fma_object_menu_new_with_defaults( void )
 	FMAObjectMenu *menu = fma_object_menu_new();
 	fma_object_set_new_id( menu, NULL );
 	fma_object_set_label( menu, gettext( NEW_NAUTILUS_MENU ));
-	na_factory_object_set_defaults( FMA_IFACTORY_OBJECT( menu ));
+	fma_factory_object_set_defaults( FMA_IFACTORY_OBJECT( menu ));
 
 	return( menu );
 }

@@ -35,7 +35,7 @@
 
 #include <api/fma-ifactory-object.h>
 
-#include "na-factory-object.h"
+#include "fma-factory-object.h"
 
 /* private interface data
  */
@@ -220,7 +220,7 @@ fma_ifactory_object_get_as_void( const FMAIFactoryObject *object, const gchar *n
 {
 	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
-	return( na_factory_object_get_as_void( object, name ));
+	return( fma_factory_object_get_as_void( object, name ));
 }
 
 /**
@@ -238,5 +238,5 @@ fma_ifactory_object_set_from_void( FMAIFactoryObject *object, const gchar *name,
 {
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	na_factory_object_set_from_void( object, name, data );
+	fma_factory_object_set_from_void( object, name, data );
 }

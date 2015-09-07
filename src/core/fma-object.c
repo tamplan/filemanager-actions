@@ -33,7 +33,7 @@
 
 #include <api/fma-object-api.h>
 
-#include "na-factory-object.h"
+#include "fma-factory-object.h"
 
 /* private class data
  */
@@ -184,7 +184,7 @@ instance_finalize( GObject *object )
 	g_free( self->private );
 
 	if( FMA_IS_IFACTORY_OBJECT( object )){
-		na_factory_object_finalize( FMA_IFACTORY_OBJECT( object ));
+		fma_factory_object_finalize( FMA_IFACTORY_OBJECT( object ));
 	}
 
 	/* chain call to parent class */
@@ -201,7 +201,7 @@ object_dump( const FMAObject *object )
 		fma_iduplicable_dump( FMA_IDUPLICABLE( object ));
 
 		if( FMA_IS_IFACTORY_OBJECT( object )){
-			na_factory_object_dump( FMA_IFACTORY_OBJECT( object ));
+			fma_factory_object_dump( FMA_IFACTORY_OBJECT( object ));
 		}
 	}
 }
@@ -244,7 +244,7 @@ iduplicable_copy( FMAIDuplicable *target, const FMAIDuplicable *source, guint mo
 				mode );
 
 		if( FMA_IS_IFACTORY_OBJECT( target )){
-			na_factory_object_copy( FMA_IFACTORY_OBJECT( target ), FMA_IFACTORY_OBJECT( source ));
+			fma_factory_object_copy( FMA_IFACTORY_OBJECT( target ), FMA_IFACTORY_OBJECT( source ));
 		}
 
 		if( FMA_IS_ICONTEXT( target )){
@@ -274,7 +274,7 @@ iduplicable_are_equal( const FMAIDuplicable *a, const FMAIDuplicable *b )
 		are_equal = TRUE;
 
 		if( FMA_IS_IFACTORY_OBJECT( a )){
-			are_equal &= na_factory_object_are_equal( FMA_IFACTORY_OBJECT( a ), FMA_IFACTORY_OBJECT( b ));
+			are_equal &= fma_factory_object_are_equal( FMA_IFACTORY_OBJECT( a ), FMA_IFACTORY_OBJECT( b ));
 		}
 
 		if( FMA_IS_ICONTEXT( a )){
@@ -303,7 +303,7 @@ iduplicable_is_valid( const FMAIDuplicable *object )
 		is_valid = TRUE;
 
 		if( FMA_IS_IFACTORY_OBJECT( object )){
-			is_valid &= na_factory_object_is_valid( FMA_IFACTORY_OBJECT( object ));
+			is_valid &= fma_factory_object_is_valid( FMA_IFACTORY_OBJECT( object ));
 		}
 
 		if( FMA_IS_ICONTEXT( object )){
@@ -335,7 +335,7 @@ iduplicable_is_valid( const FMAIDuplicable *object )
  *      |      which happens to be iduplicable_are_equal( a, b )
  *      |       +- v_are_equal( a, b )
  *      |           +- FMAObjectAction::are_equal()
- *      |               +- na_factory_object_are_equal()
+ *      |               +- fma_factory_object_are_equal()
  *      |               +- check FMAObjectActionPrivate data
  *      |               +- call parent class
  *      |                  +- FMAObjectItem::are_equal()

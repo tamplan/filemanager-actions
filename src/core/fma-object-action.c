@@ -41,7 +41,7 @@
 #include <api/fma-object-api.h>
 
 #include "na-factory-provider.h"
-#include "na-factory-object.h"
+#include "fma-factory-object.h"
 
 /* private class data
  */
@@ -171,7 +171,7 @@ class_init( FMAObjectActionClass *klass )
 
 	klass->private = g_new0( FMAObjectActionClassPrivate, 1 );
 
-	na_factory_object_define_properties( object_class, action_data_groups );
+	fma_factory_object_define_properties( object_class, action_data_groups );
 }
 
 static void
@@ -198,7 +198,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 	if( !FMA_OBJECT_ACTION( object )->private->dispose_has_run ){
 
-		na_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		fma_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -210,7 +210,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 	if( !FMA_OBJECT_ACTION( object )->private->dispose_has_run ){
 
-		na_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		fma_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -410,7 +410,7 @@ ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvide
 
 	/* last, set action defaults
 	 */
-	na_factory_object_set_defaults( instance );
+	fma_factory_object_set_defaults( instance );
 }
 
 static guint
@@ -493,7 +493,7 @@ read_done_convert_v1_to_v2( FMAIFactoryObject *instance )
 	fma_object_attach_profile( instance, profile );
 
 	for( ibox = to_move ; ibox ; ibox = ibox->next ){
-		na_factory_object_move_boxed(
+		fma_factory_object_move_boxed(
 				FMA_IFACTORY_OBJECT( profile ), instance, FMA_DATA_BOXED( ibox->data ));
 	}
 
@@ -653,7 +653,7 @@ fma_object_action_new_with_defaults( void )
 	fma_object_set_new_id( action, NULL );
 	fma_object_set_label( action, gettext( NEW_NAUTILUS_ACTION ));
 	fma_object_set_toolbar_label( action, gettext( NEW_NAUTILUS_ACTION ));
-	na_factory_object_set_defaults( FMA_IFACTORY_OBJECT( action ));
+	fma_factory_object_set_defaults( FMA_IFACTORY_OBJECT( action ));
 
 	profile = fma_object_profile_new_with_defaults();
 	fma_object_attach_profile( action, profile );

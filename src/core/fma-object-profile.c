@@ -42,7 +42,7 @@
 #include <api/fma-object-api.h>
 
 #include "na-factory-provider.h"
-#include "na-factory-object.h"
+#include "fma-factory-object.h"
 #include "na-selected-info.h"
 #include "na-gnome-vfs-uri.h"
 
@@ -178,7 +178,7 @@ class_init( FMAObjectProfileClass *klass )
 
 	klass->private = g_new0( FMAObjectProfileClassPrivate, 1 );
 
-	na_factory_object_define_properties( object_class, profile_data_groups );
+	fma_factory_object_define_properties( object_class, profile_data_groups );
 }
 
 static void
@@ -207,7 +207,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 	if( !FMA_OBJECT_PROFILE( object )->private->dispose_has_run ){
 
-		na_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		fma_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -219,7 +219,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 	if( !FMA_OBJECT_PROFILE( object )->private->dispose_has_run ){
 
-		na_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		fma_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -587,7 +587,7 @@ convert_pre_v3_isfiledir( FMAObjectProfile *profile )
 		 * value when the data is not set (see #651911)
 		 */
 		isfile = TRUE;
-		if( na_factory_object_is_set( FMA_IFACTORY_OBJECT( profile ), FMAFO_DATA_ISFILE )){
+		if( fma_factory_object_is_set( FMA_IFACTORY_OBJECT( profile ), FMAFO_DATA_ISFILE )){
 			isfile = fma_object_is_file( profile );
 		}
 		isdir = fma_object_is_dir( profile );
@@ -647,7 +647,7 @@ read_done_ending( FMAObjectProfile *profile )
 
 	/* last, set profile defaults
 	 */
-	na_factory_object_set_defaults( FMA_IFACTORY_OBJECT( profile ));
+	fma_factory_object_set_defaults( FMA_IFACTORY_OBJECT( profile ));
 }
 
 /*
@@ -766,7 +766,7 @@ fma_object_profile_new_with_defaults( void )
 	fma_object_set_id( profile, "profile-zero" );
 	/* i18n: label for the default profile */
 	fma_object_set_label( profile, _( "Default profile" ));
-	na_factory_object_set_defaults( FMA_IFACTORY_OBJECT( profile ));
+	fma_factory_object_set_defaults( FMA_IFACTORY_OBJECT( profile ));
 
 	return( profile );
 }
