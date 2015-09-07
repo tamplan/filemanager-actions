@@ -34,19 +34,19 @@
 #include <glib/gi18n.h>
 
 #include <api/na-ifactory-object-data.h>
-#include <api/na-data-def.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-def.h>
+#include <api/fma-data-types.h>
 
 /*
  * As of 3.2 non copyables data are:
  * - n/a
  */
 
-extern NADataDef data_def_id [];			/* defined in na-object-id-factory.c */
-extern NADataDef data_def_item [];			/* defined in na-object-item-factory.c */
-extern NADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
+extern FMADataDef data_def_id [];			/* defined in na-object-id-factory.c */
+extern FMADataDef data_def_item [];			/* defined in na-object-item-factory.c */
+extern FMADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
 
-static NADataDef data_def_action [] = {
+static FMADataDef data_def_action [] = {
 
 	/* this version number, expressed as a string, is obsoleted starting with .desktop
 	 * files introduction ; it is replaced by an integer version number, at the item level
@@ -233,7 +233,7 @@ static NADataDef data_def_action [] = {
  * these are obsoleted since 1.9 (which was a non-official version)
  * readable but non writable, no default, not copyable
  */
-NADataDef data_def_action_v1 [] = {
+FMADataDef data_def_action_v1 [] = {
 
 	{ NAFO_DATA_PATH,
 				TRUE,
@@ -436,7 +436,7 @@ NADataDef data_def_action_v1 [] = {
 	{ NULL },
 };
 
-NADataGroup action_data_groups [] = {
+FMADataGroup action_data_groups [] = {
 	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
 	{ NA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
 	{ NA_FACTORY_OBJECT_ACTION_GROUP,     data_def_action },

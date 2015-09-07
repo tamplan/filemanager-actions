@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-data-types.h>
+#include <api/fma-data-types.h>
 #include <api/fma-core-utils.h>
 
 typedef struct {
@@ -53,7 +53,7 @@ static FactoryType st_factory_type[] = {
 };
 
 /**
- * na_data_types_get_gconf_dump_key:
+ * fma_data_types_get_gconf_dump_key:
  * @type: the FactoryData type.
  *
  * Returns: the GConf key suitable for this type.
@@ -64,9 +64,9 @@ static FactoryType st_factory_type[] = {
  * Since: 2.30
  */
 const gchar *
-na_data_types_get_gconf_dump_key( guint type )
+fma_data_types_get_gconf_dump_key( guint type )
 {
-	static const gchar *thisfn = "na_data_types_get_gconf_dump_key";
+	static const gchar *thisfn = "fma_data_types_get_gconf_dump_key";
 	FactoryType *str;
 
 	str = st_factory_type;

@@ -32,9 +32,9 @@
 
 /**
  * SECTION: data-type
- * @title: NADataType
+ * @title: FMADataType
  * @short_description: The Data Factory Type Definitions
- * @include: file-manager-actions/na-data-types.h
+ * @include: file-manager-actions/fma-data-types.h
  */
 
 #include <glib.h>
@@ -42,7 +42,7 @@
 G_BEGIN_DECLS
 
 /**
- * NADataType:
+ * FMADataType:
  * @NA_DATA_TYPE_BOOLEAN:       a boolean
  *                              can be initialized with "true" or "false" (case insensitive)
  * @NA_DATA_TYPE_POINTER:       a ( void * ) pointer
@@ -85,9 +85,9 @@ typedef enum {
 	/* count of defined types */
 	NA_DATA_TYPE_N
 }
-	NADataType;
+	FMADataType;
 
-const gchar *na_data_types_get_gconf_dump_key( guint type );
+const gchar *fma_data_types_get_gconf_dump_key( guint type );
 
 G_END_DECLS
 

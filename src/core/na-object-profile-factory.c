@@ -34,13 +34,13 @@
 #include <glib/gi18n.h>
 
 #include <api/na-ifactory-object-data.h>
-#include <api/na-data-def.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-def.h>
+#include <api/fma-data-types.h>
 
-extern NADataDef data_def_id [];			/* defined in na-object-id-factory.c */
-extern NADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
+extern FMADataDef data_def_id [];			/* defined in na-object-id-factory.c */
+extern FMADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
 
-static NADataDef data_def_profile [] = {
+static FMADataDef data_def_profile [] = {
 
 	{ NAFO_DATA_DESCNAME,
 				TRUE,
@@ -311,7 +311,7 @@ static NADataDef data_def_profile [] = {
 	{ NULL },
 };
 
-NADataGroup profile_data_groups [] = {
+FMADataGroup profile_data_groups [] = {
 	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
 	{ NA_FACTORY_OBJECT_PROFILE_GROUP,    data_def_profile },
 	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, data_def_conditions },

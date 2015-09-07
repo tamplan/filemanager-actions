@@ -37,7 +37,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/na-gconf-utils.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-types.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
 
@@ -64,7 +64,7 @@ typedef struct {
 	guint   ( *fn_list_parms )     ( NAXMLReader *, xmlNode * );
 	guint   ( *fn_element_parms )  ( NAXMLReader *, xmlNode * );
 	guint   ( *fn_element_content )( NAXMLReader *, xmlNode * );
-	gchar * ( *fn_get_value )      ( NAXMLReader *, xmlNode *, const NADataDef *def );
+	gchar * ( *fn_get_value )      ( NAXMLReader *, xmlNode *, const FMADataDef *def );
 }
 	RootNodeStr;
 
@@ -110,12 +110,12 @@ static NAXMLReader  *reader_new( void );
 static guint         schema_parse_schema_content( NAXMLReader *reader, xmlNode *node );
 static void          schema_check_for_id( NAXMLReader *reader, xmlNode *iter );
 static void          schema_check_for_type( NAXMLReader *reader, xmlNode *iter );
-static gchar        *schema_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def );
+static gchar        *schema_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def );
 
 static guint         dump_parse_list_parms( NAXMLReader *reader, xmlNode *node );
 static guint         dump_parse_entry_content( NAXMLReader *reader, xmlNode *node );
 static void          dump_check_for_type( NAXMLReader *reader, xmlNode *key_node );
-static gchar        *dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def );
+static gchar        *dump_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def );
 
 static RootNodeStr st_root_node_str[] = {
 
@@ -155,7 +155,7 @@ static RootNodeStr st_root_node_str[] = {
 
 static void          read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile );
 static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text );
-static FMADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const NADataDef *def );
+static FMADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const FMADataDef *def );
 static void          read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item );
 static void          read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action );
 static gchar        *read_done_action_get_next_profile_id( NAXMLReader *reader );
@@ -630,7 +630,7 @@ read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile
  * versions). So do not remove dealt-with nodes here
  */
 FMADataBoxed *
-naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
+naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "naxml_reader_read_data";
 	xmlNode *parent_node;
@@ -643,7 +643,7 @@ naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, c
 			thisfn, ( void * ) reader_data, ( void * ) object, G_OBJECT_TYPE_NAME( object ), def->name );
 
 	if( !def->gconf_entry || !strlen( def->gconf_entry )){
-		g_warning( "%s: GConf entry is not set for NADataDef %s", thisfn, def->name );
+		g_warning( "%s: GConf entry is not set for FMADataDef %s", thisfn, def->name );
 		return( NULL );
 	}
 
@@ -724,7 +724,7 @@ read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject 
 }
 
 static FMADataBoxed *
-read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, const NADataDef *def )
+read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, const FMADataDef *def )
 {
 	FMADataBoxed *boxed;
 	gchar *entry;
@@ -1084,7 +1084,7 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 }
 
 static gchar *
-schema_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
+schema_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def )
 {
 	gchar *value;
 
@@ -1211,7 +1211,7 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
  * string list is converted to GSList, then to a FMABoxed string list 'value;value'
  */
 static gchar *
-dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
+dump_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def )
 {
 	gchar *string;
 	GSList *slist;

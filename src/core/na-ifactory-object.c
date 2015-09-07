@@ -164,7 +164,7 @@ na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *
 
 	for( ip = list ; ip ; ip = ip->next ){
 		FMADataBoxed *boxed = FMA_DATA_BOXED( ip->data );
-		const NADataDef *def = fma_data_boxed_get_data_def( boxed );
+		const FMADataDef *def = fma_data_boxed_get_data_def( boxed );
 
 		if( !strcmp( def->name, name )){
 			return( boxed );
@@ -178,17 +178,17 @@ na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *
  * na_ifactory_object_get_data_groups:
  * @object: a #NAIFactoryObject object.
  *
- * The returned #NADataGroup is owned by the #NAIFactoryObject @object,
+ * The returned #FMADataGroup is owned by the #NAIFactoryObject @object,
  * and should not be released by the caller.
  *
- * Returns: The #NADataGroup groups definition, or %NULL.
+ * Returns: The #FMADataGroup groups definition, or %NULL.
  *
  * Since: 2.30
  */
-NADataGroup *
+FMADataGroup *
 na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
 {
-	NADataGroup *groups;
+	FMADataGroup *groups;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 

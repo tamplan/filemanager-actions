@@ -64,7 +64,7 @@ struct _NAObjectProfilePrivate {
 #define na_object_is_dir( obj )				(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISDIR )))
 #define na_object_is_multiple( obj )		(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MULTIPLE )))
 
-extern NADataGroup profile_data_groups [];	/* defined in na-item-profile-factory.c */
+extern FMADataGroup profile_data_groups [];	/* defined in na-item-profile-factory.c */
 
 static NAObjectIdClass *st_parent_class = NULL;
 
@@ -81,7 +81,7 @@ static gboolean     object_is_valid( const NAObject *object );
 
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
-static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
+static FMADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
@@ -334,7 +334,7 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
 	return( 1 );
 }
 
-static NADataGroup *
+static FMADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( profile_data_groups );

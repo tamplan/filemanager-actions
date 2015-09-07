@@ -30,7 +30,7 @@
 #ifndef __NADP_KEYS_H__
 #define __NADP_KEYS_H__
 
-#include <api/na-data-def.h>
+#include <api/fma-data-def.h>
 
 G_BEGIN_DECLS
 

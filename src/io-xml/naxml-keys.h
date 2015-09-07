@@ -30,7 +30,7 @@
 #ifndef __NAXML_KEYS_H__
 #define __NAXML_KEYS_H__
 
-#include <api/na-data-def.h>
+#include <api/fma-data-def.h>
 
 G_BEGIN_DECLS
 

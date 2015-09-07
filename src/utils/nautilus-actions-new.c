@@ -50,7 +50,7 @@
 #include "console-utils.h"
 
 typedef struct {
-	NADataGroup *group;
+	FMADataGroup *group;
 	gchar       *group_name;
 	gchar       *data_name;
 	void        *arg_data;
@@ -95,8 +95,8 @@ static gboolean   output_desktop   = FALSE;
 /* misc entries */
 static gboolean   version          = FALSE;
 
-extern NADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
-extern NADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
+extern FMADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
+extern FMADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
 
 static const ArgFromDataDef st_arg_from_data_def[] = {
 		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_LABEL,              &label },
@@ -301,14 +301,14 @@ build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEnt
 	GOptionEntry *ient;
 	const GOptionEntry *iadd;
 	const ArgFromDataDef *idef;
-	const NADataDef *data_def;
+	const FMADataDef *data_def;
 
 	entries = g_new0( GOptionEntry, 1+nbdefs+nbadds );
 	ient = entries;
 
 	idef = defs;
 	while( idef->group ){
-		data_def = na_data_def_get_data_def( idef->group, idef->group_name, idef->data_name );
+		data_def = fma_data_def_get_data_def( idef->group, idef->group_name, idef->data_name );
 
 		if( data_def ){
 			ient->long_name = data_def->option_long;
@@ -320,7 +320,7 @@ build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEnt
 			ient->arg_description = data_def->option_arg_label;
 
 		} else {
-			g_warning( "%s: group=%s, name=%s: unable to find NADataDef structure", thisfn, idef->group_name, idef->data_name );
+			g_warning( "%s: group=%s, name=%s: unable to find FMADataDef structure", thisfn, idef->group_name, idef->data_name );
 		}
 
 		idef++;

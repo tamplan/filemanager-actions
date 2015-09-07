@@ -40,7 +40,7 @@
  * @reader: the instance which implements this #NAIFactoryProvider interface.
  * @reader_data: instance data.
  * @object: the #NAIFactoryobject being unserialized.
- * @def: a #NADataDef structure which identifies the data to be unserialized.
+ * @def: a #FMADataDef structure which identifies the data to be unserialized.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
  *
@@ -50,7 +50,7 @@
  */
 FMADataBoxed *
 na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data,
-								const NAIFactoryObject *object, const NADataDef *def,
+								const NAIFactoryObject *object, const FMADataDef *def,
 								GSList **messages )
 {
 	FMADataBoxed *boxed;

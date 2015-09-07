@@ -33,8 +33,8 @@
 
 #include <string.h>
 
-#include <api/na-data-def.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-def.h>
+#include <api/fma-data-types.h>
 #include <api/na-iio-provider.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
@@ -285,7 +285,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 {
 	static const gchar *thisfn = "nagp_writer_write_data";
 	guint code;
-	const NADataDef *def;
+	const FMADataDef *def;
 	gchar *this_id;
 	gchar *this_path, *path;
 	gchar *msg;

@@ -34,15 +34,15 @@
 #include <glib/gi18n.h>
 
 #include <api/na-ifactory-object-data.h>
-#include <api/na-data-def.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-def.h>
+#include <api/fma-data-types.h>
 
 /*
  * As of 3.2 non copyables data are:
  * - multiple flag
  */
 
-NADataDef data_def_conditions [] = {
+FMADataDef data_def_conditions [] = {
 
 	{ NAFO_DATA_BASENAMES,
 				TRUE,

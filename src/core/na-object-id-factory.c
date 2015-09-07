@@ -32,15 +32,15 @@
 #endif
 
 #include <api/na-ifactory-object-data.h>
-#include <api/na-data-def.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-def.h>
+#include <api/fma-data-types.h>
 
 /*
  * As of 3.2 non copyables data are:
  * - the parent pointer
  */
 
-NADataDef data_def_id [] = {
+FMADataDef data_def_id [] = {
 
 	/* this data is marked non readable / non writable as it has to be read
 	 * written specifically when serializing / deserializing items

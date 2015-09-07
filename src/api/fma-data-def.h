@@ -32,11 +32,11 @@
 
 /**
  * SECTION: data-def
- * @title: NADataDef, NADataGroup
+ * @title: FMADataDef, FMADataGroup
  * @short_description: The Data Factory Structure Definitions
- * @include: file-manager-actions/na-data-def.h
+ * @include: file-manager-actions/fma-data-def.h
  *
- * #NADataDef and #NADataGroup are structures which handle the list of
+ * #FMADataDef and #FMADataGroup are structures which handle the list of
  * elementary datas for each and every #NAObjectItem which happens to
  * implement the #NAIFactoryObject interface.
  */
@@ -46,7 +46,7 @@
 G_BEGIN_DECLS
 
 /**
- * NADataDef:
+ * FMADataDef:
  * @name:             both the id and the canonical name.
  *                    Used when getting/setting properties.
  *                    Is defined in na-ifactory-object-data.h and must be globally unique.
@@ -121,10 +121,10 @@ typedef struct {
 	gchar     *option_label;
 	gchar     *option_arg_label;
 }
-	NADataDef;
+	FMADataDef;
 
 /**
- * NADataGroup:
+ * FMADataGroup:
  * @group: the name of the group, as defined in na-ifactory-object-data.h.
  * @def: the list of the corresponding data structures.
  *
@@ -133,12 +133,12 @@ typedef struct {
  * these groups.
  */
 typedef struct {
-	gchar     *group;
-	NADataDef *def;
+	gchar      *group;
+	FMADataDef *def;
 }
-	NADataGroup;
+	FMADataGroup;
 
-const NADataDef *na_data_def_get_data_def( const NADataGroup *group, const gchar *group_name, const gchar *name );
+const FMADataDef *fma_data_def_get_data_def( const FMADataGroup *group, const gchar *group_name, const gchar *name );
 
 G_END_DECLS
 

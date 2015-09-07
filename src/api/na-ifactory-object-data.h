@@ -38,7 +38,7 @@
  *
  * Each elementary data get its own name here.
  *
- * Through #NADataDef and #NADataGroup definitions, each #NAObjectItem
+ * Through #FMADataDef and #FMADataGroup definitions, each #NAObjectItem
  * derived object which implement the #NAIFactoryObject interface will
  * dynamically define a property for each attached elementary data.
  */

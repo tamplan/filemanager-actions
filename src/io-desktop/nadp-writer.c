@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-types.h>
 #include <api/na-object-api.h>
 #include <api/na-ifactory-provider.h>
 
@@ -505,7 +505,7 @@ nadp_writer_ifactory_provider_write_data(
 	static const gchar *thisfn = "nadp_writer_ifactory_provider_write_data";
 	NadpDesktopFile *ndf;
 	guint code;
-	const NADataDef *def;
+	const FMADataDef *def;
 	gchar *profile_id;
 	gchar *group_name;
 	gchar *str_value;

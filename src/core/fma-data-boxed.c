@@ -37,8 +37,8 @@
 
 #include <api/fma-core-utils.h>
 #include <api/na-gconf-utils.h>
-#include <api/na-data-def.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-def.h>
+#include <api/fma-data-types.h>
 #include <api/fma-data-boxed.h>
 
 /* private class data
@@ -52,7 +52,7 @@ struct _FMADataBoxedClassPrivate {
  */
 typedef struct {
 	guint           type;
-	GParamSpec * ( *spec )      ( const NADataDef * );
+	GParamSpec * ( *spec )      ( const FMADataDef * );
 	gboolean     ( *is_default )( const FMADataBoxed * );
 	gboolean     ( *is_valid )  ( const FMADataBoxed * );
 }
@@ -62,7 +62,7 @@ typedef struct {
  */
 struct _FMADataBoxedPrivate {
 	gboolean            dispose_has_run;
-	const NADataDef    *data_def ;
+	const FMADataDef    *data_def ;
 	const DataBoxedDef *boxed_def;
 };
 
@@ -76,30 +76,30 @@ static void                instance_finalize( GObject *object );
 
 static const DataBoxedDef *get_data_boxed_def( guint type );
 
-static GParamSpec         *bool_spec( const NADataDef *idtype );
+static GParamSpec         *bool_spec( const FMADataDef *idtype );
 static gboolean            bool_is_default( const FMADataBoxed *boxed );
 static gboolean            bool_is_valid( const FMADataBoxed *boxed );
 
-static GParamSpec         *pointer_spec( const NADataDef *idtype );
+static GParamSpec         *pointer_spec( const FMADataDef *idtype );
 static gboolean            pointer_is_default( const FMADataBoxed *boxed );
 static gboolean            pointer_is_valid( const FMADataBoxed *boxed );
 
-static GParamSpec         *string_spec( const NADataDef *idtype );
+static GParamSpec         *string_spec( const FMADataDef *idtype );
 static gboolean            string_is_default( const FMADataBoxed *boxed );
 static gboolean            string_is_valid( const FMADataBoxed *boxed );
 
-static GParamSpec         *string_list_spec( const NADataDef *idtype );
+static GParamSpec         *string_list_spec( const FMADataDef *idtype );
 static gboolean            string_list_is_default( const FMADataBoxed *boxed );
 static gboolean            string_list_is_valid( const FMADataBoxed *boxed );
 
 static gboolean            locale_is_default( const FMADataBoxed *boxed );
 static gboolean            locale_is_valid( const FMADataBoxed *boxed );
 
-static GParamSpec         *uint_spec( const NADataDef *idtype );
+static GParamSpec         *uint_spec( const FMADataDef *idtype );
 static gboolean            uint_is_default( const FMADataBoxed *boxed );
 static gboolean            uint_is_valid( const FMADataBoxed *boxed );
 
-static GParamSpec         *uint_list_spec( const NADataDef *idtype );
+static GParamSpec         *uint_list_spec( const FMADataDef *idtype );
 static gboolean            uint_list_is_default( const FMADataBoxed *boxed );
 static gboolean            uint_list_is_valid( const FMADataBoxed *boxed );
 
@@ -267,14 +267,14 @@ get_data_boxed_def( guint type )
 
 /**
  * fma_data_boxed_new:
- * @def: the #NADataDef definition structure for this boxed.
+ * @def: the #FMADataDef definition structure for this boxed.
  *
  * Returns: a newly allocated #FMADataBoxed.
  *
  * Since: 2.30
  */
 FMADataBoxed *
-fma_data_boxed_new( const NADataDef *def )
+fma_data_boxed_new( const FMADataDef *def )
 {
 	FMADataBoxed *boxed;
 
@@ -292,15 +292,15 @@ fma_data_boxed_new( const NADataDef *def )
  * fma_data_boxed_get_data_def:
  * @boxed: this #FMADataBoxed object.
  *
- * Returns: a pointer to the #NADataDef structure attached to the object.
+ * Returns: a pointer to the #FMADataDef structure attached to the object.
  * Should never be %NULL.
  *
  * Since: 2.30
  */
-const NADataDef *
+const FMADataDef *
 fma_data_boxed_get_data_def( const FMADataBoxed *boxed )
 {
-	const NADataDef *def;
+	const FMADataDef *def;
 
 	g_return_val_if_fail( FMA_IS_DATA_BOXED( boxed ), NULL );
 
@@ -317,16 +317,16 @@ fma_data_boxed_get_data_def( const FMADataBoxed *boxed )
 /**
  * fma_data_boxed_set_data_def:
  * @boxed: this #FMADataBoxed object.
- * @def: the new #NADataDef to be set.
+ * @def: the new #FMADataDef to be set.
  *
- * Changes the #NADataDef a @boxed points to:
+ * Changes the #FMADataDef a @boxed points to:
  * -> the new type must be the same that the previous one.
  * -> value is unchanged.
  *
  * Since: 2.30
  */
 void
-fma_data_boxed_set_data_def( FMADataBoxed *boxed, const NADataDef *new_def )
+fma_data_boxed_set_data_def( FMADataBoxed *boxed, const FMADataDef *new_def )
 {
 	g_return_if_fail( FMA_IS_DATA_BOXED( boxed ));
 	g_return_if_fail( boxed->private->data_def );
@@ -335,20 +335,20 @@ fma_data_boxed_set_data_def( FMADataBoxed *boxed, const NADataDef *new_def )
 
 	if( !boxed->private->dispose_has_run ){
 
-		boxed->private->data_def = ( NADataDef * ) new_def;
+		boxed->private->data_def = ( FMADataDef * ) new_def;
 	}
 }
 
 /**
  * fma_data_boxed_get_param_spec:
- * @def: a #NADataDef definition structure.
+ * @def: a #FMADataDef definition structure.
  *
  * Returns: a #GParamSpec structure.
  *
  * Since: 2.30
  */
 GParamSpec *
-fma_data_boxed_get_param_spec( const NADataDef *def )
+fma_data_boxed_get_param_spec( const FMADataDef *def )
 {
 	GParamSpec *spec;
 	const DataBoxedDef *fn;
@@ -576,7 +576,7 @@ fma_data_boxed_set_from_void( FMADataBoxed *boxed, const void *value )
 #endif /* NA_ENABLE_DEPRECATED */
 
 static GParamSpec *
-bool_spec( const NADataDef *def )
+bool_spec( const FMADataDef *def )
 {
 	return( g_param_spec_boolean(
 			def->name,
@@ -607,7 +607,7 @@ bool_is_valid( const FMADataBoxed *boxed )
 }
 
 static GParamSpec *
-pointer_spec( const NADataDef *def )
+pointer_spec( const FMADataDef *def )
 {
 	return( g_param_spec_pointer(
 			def->name,
@@ -645,7 +645,7 @@ pointer_is_valid( const FMADataBoxed *boxed )
 }
 
 static GParamSpec *
-string_spec( const NADataDef *def )
+string_spec( const FMADataDef *def )
 {
 	return( g_param_spec_string(
 			def->name,
@@ -702,7 +702,7 @@ string_is_valid( const FMADataBoxed *boxed )
 }
 
 static GParamSpec *
-string_list_spec( const NADataDef *def )
+string_list_spec( const FMADataDef *def )
 {
 	return( g_param_spec_pointer(
 			def->name,
@@ -795,7 +795,7 @@ locale_is_valid( const FMADataBoxed *boxed )
 }
 
 static GParamSpec *
-uint_spec( const NADataDef *def )
+uint_spec( const FMADataDef *def )
 {
 	return( g_param_spec_uint(
 			def->name,
@@ -828,7 +828,7 @@ uint_is_valid( const FMADataBoxed *boxed )
 }
 
 static GParamSpec *
-uint_list_spec( const NADataDef *def )
+uint_list_spec( const FMADataDef *def )
 {
 	return( g_param_spec_pointer(
 			def->name,

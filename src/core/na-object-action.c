@@ -58,8 +58,8 @@ struct _NAObjectActionPrivate {
 /* i18n: default label for a new action */
 #define NEW_NAUTILUS_ACTION				N_( "New Nautilus action" )
 
-extern NADataGroup action_data_groups [];		/* defined in na-object-action-factory.c */
-extern NADataDef   data_def_action_v1 [];		/* defined in na-object-action-factory.c */
+extern FMADataGroup action_data_groups [];		/* defined in na-object-action-factory.c */
+extern FMADataDef   data_def_action_v1 [];		/* defined in na-object-action-factory.c */
 
 static NAObjectItemClass *st_parent_class = NULL;
 
@@ -77,7 +77,7 @@ static gboolean     object_is_valid( const NAObject *object );
 
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
-static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
+static FMADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
@@ -369,7 +369,7 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
 	return( 1 );
 }
 
-static NADataGroup *
+static FMADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( action_data_groups );
@@ -464,7 +464,7 @@ read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 {
 	static const gchar *thisfn = "na_object_action_read_done_read_done_convert_v1_to_last";
 	GList *to_move;
-	NADataDef *def;
+	FMADataDef *def;
 	FMADataBoxed *boxed;
 	GList *ibox;
 	NAObjectProfile *profile;

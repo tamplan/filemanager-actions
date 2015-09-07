@@ -34,8 +34,8 @@
 #include <glib/gi18n.h>
 
 #include <api/na-ifactory-object-data.h>
-#include <api/na-data-def.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-def.h>
+#include <api/fma-data-types.h>
 
 /*
  * As of 3.2 non copyables data are:
@@ -45,7 +45,7 @@
  * - read-only status
  */
 
-NADataDef data_def_item [] = {
+FMADataDef data_def_item [] = {
 
 	/* this data is marked as non readable as it has to be read specifically
 	 * in order to be able to create the corresponding NAObjectItem-derived

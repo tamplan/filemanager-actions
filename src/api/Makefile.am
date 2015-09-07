@@ -40,8 +40,8 @@ api_include_HEADERS = \
 	fma-boxed.h											\
 	fma-core-utils.h										\
 	fma-data-boxed.h										\
-	na-data-def.h										\
-	na-data-types.h										\
+	fma-data-def.h										\
+	fma-data-types.h										\
 	na-gconf-monitor.h									\
 	na-gconf-utils.h									\
 	na-icontext.h										\

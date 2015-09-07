@@ -40,9 +40,9 @@
  * A #FMADataBoxed object has a type and a value.
  *
  * #FMADataBoxed class is derived from #FMABoxed one, and implements the same
- * types that those defined in na-data-types.h.
+ * types that those defined in fma-data-types.h.
  *
- * Additionally, #FMADataBoxed class holds the #NADataDef data definition
+ * Additionally, #FMADataBoxed class holds the #FMADataDef data definition
  * suitable for a NAFactoryObject object. It such provides default value
  * and validity status.
  *
@@ -52,7 +52,7 @@
 #include <glib-object.h>
 
 #include "fma-boxed.h"
-#include "na-data-def.h"
+#include "fma-data-def.h"
 
 G_BEGIN_DECLS
 
@@ -83,12 +83,12 @@ typedef struct {
 
 GType             fma_data_boxed_get_type( void );
 
-FMADataBoxed     *fma_data_boxed_new            ( const NADataDef *def );
+FMADataBoxed     *fma_data_boxed_new            ( const FMADataDef *def );
 
-const NADataDef *fma_data_boxed_get_data_def   ( const FMADataBoxed *boxed );
-void              fma_data_boxed_set_data_def   ( FMADataBoxed *boxed, const NADataDef *def );
+const FMADataDef *fma_data_boxed_get_data_def   ( const FMADataBoxed *boxed );
+void              fma_data_boxed_set_data_def   ( FMADataBoxed *boxed, const FMADataDef *def );
 
-GParamSpec       *fma_data_boxed_get_param_spec ( const NADataDef *def );
+GParamSpec       *fma_data_boxed_get_param_spec ( const FMADataDef *def );
 
 gboolean          fma_data_boxed_is_default     ( const FMADataBoxed *boxed );
 gboolean          fma_data_boxed_is_valid       ( const FMADataBoxed *boxed );

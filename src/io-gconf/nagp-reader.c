@@ -33,8 +33,8 @@
 
 #include <string.h>
 
-#include <api/na-data-def.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-def.h>
+#include <api/fma-data-types.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
@@ -60,7 +60,7 @@ static gboolean      read_done_item_is_writable( const NAIFactoryProvider *provi
 static void          read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
 static void          read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
 
-static FMADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
+static FMADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const FMADataDef *def );
 static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 
 /*
@@ -196,7 +196,7 @@ read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectP
 }
 
 FMADataBoxed *
-nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
+nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_read_data";
 	FMADataBoxed *boxed;
@@ -211,7 +211,7 @@ nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, co
 			def->name );*/
 
 	if( !def->gconf_entry || !strlen( def->gconf_entry )){
-		g_warning( "%s: GConf entry is not set for NADataDef %s", thisfn, def->name );
+		g_warning( "%s: GConf entry is not set for FMADataDef %s", thisfn, def->name );
 		return( NULL );
 	}
 
@@ -356,7 +356,7 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 }
 
 static FMADataBoxed *
-get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def )
+get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const FMADataDef *def )
 {
 	static const gchar *thisfn = "nagp_reader_get_boxed_from_path";
 	FMADataBoxed *boxed;

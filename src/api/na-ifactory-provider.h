@@ -198,7 +198,7 @@ typedef struct {
 	 * @reader_data: the data associated to this instance, as provided
 	 *  when na_ifactory_provider_read_item() was called.
 	 * @object: the #NAIFactoryobject being unserialized.
-	 * @def: a #NADataDef structure which identifies the data to be unserialized.
+	 * @def: a #FMADataDef structure which identifies the data to be unserialized.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
@@ -209,7 +209,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	FMADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
+	FMADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const FMADataDef *def, GSList **messages );
 
 	/**
 	 * read_done:

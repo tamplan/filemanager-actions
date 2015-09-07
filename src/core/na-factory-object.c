@@ -37,7 +37,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/fma-data-boxed.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-types.h>
 #include <api/na-iio-provider.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
@@ -45,7 +45,7 @@
 #include "na-factory-object.h"
 #include "na-factory-provider.h"
 
-typedef gboolean ( *NADataDefIterFunc )( NADataDef *def, void *user_data );
+typedef gboolean ( *FMADataDefIterFunc )( FMADataDef *def, void *user_data );
 
 enum {
 	DATA_DEF_ITER_SET_PROPERTIES = 1,
@@ -92,13 +92,13 @@ typedef struct {
 extern gboolean                   ifactory_object_initialized;
 extern gboolean                   ifactory_object_finalized;
 
-static gboolean     define_class_properties_iter( const NADataDef *def, GObjectClass *class );
-static gboolean     set_defaults_iter( NADataDef *def, NafoDefaultIter *data );
-static gboolean     is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data );
-static gboolean     read_data_iter( NADataDef *def, NafoReadIter *iter );
+static gboolean     define_class_properties_iter( const FMADataDef *def, GObjectClass *class );
+static gboolean     set_defaults_iter( FMADataDef *def, NafoDefaultIter *data );
+static gboolean     is_valid_mandatory_iter( const FMADataDef *def, NafoValidIter *data );
+static gboolean     read_data_iter( FMADataDef *def, NafoReadIter *iter );
 static gboolean     write_data_iter( const NAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteIter *iter );
 
-static NADataGroup *v_get_groups( const NAIFactoryObject *object );
+static FMADataGroup *v_get_groups( const NAIFactoryObject *object );
 static void         v_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
 static gboolean     v_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     v_is_valid( const NAIFactoryObject *object );
@@ -109,17 +109,17 @@ static guint        v_write_done( NAIFactoryObject *serializable, const NAIFacto
 
 static void         attach_boxed_to_object( NAIFactoryObject *object, FMADataBoxed *boxed );
 static void         free_data_boxed_list( NAIFactoryObject *object );
-static void         iter_on_data_defs( const NADataGroup *idgroups, guint mode, NADataDefIterFunc pfn, void *user_data );
+static void         iter_on_data_defs( const FMADataGroup *idgroups, guint mode, FMADataDefIterFunc pfn, void *user_data );
 
 /*
  * na_factory_object_define_properties:
  * @class: the #GObjectClass.
- * @groups: the list of #NADataGroup structure which define the data of the class.
+ * @groups: the list of #FMADataGroup structure which define the data of the class.
  *
  * Initializes all the properties for the class.
  */
 void
-na_factory_object_define_properties( GObjectClass *class, const NADataGroup *groups )
+na_factory_object_define_properties( GObjectClass *class, const FMADataGroup *groups )
 {
 	static const gchar *thisfn = "na_factory_object_define_properties";
 
@@ -130,11 +130,11 @@ na_factory_object_define_properties( GObjectClass *class, const NADataGroup *gro
 
 	/* define class properties
 	 */
-	iter_on_data_defs( groups, DATA_DEF_ITER_SET_PROPERTIES, ( NADataDefIterFunc ) define_class_properties_iter, class );
+	iter_on_data_defs( groups, DATA_DEF_ITER_SET_PROPERTIES, ( FMADataDefIterFunc ) define_class_properties_iter, class );
 }
 
 static gboolean
-define_class_properties_iter( const NADataDef *def, GObjectClass *class )
+define_class_properties_iter( const FMADataDef *def, GObjectClass *class )
 {
 	static const gchar *thisfn = "na_factory_object_define_class_properties_iter";
 	gboolean stop;
@@ -161,21 +161,21 @@ define_class_properties_iter( const NADataDef *def, GObjectClass *class )
  * @object: this #NAIFactoryObject object.
  * @name: the searched name.
  *
- * Returns: the #NADataDef structure which describes this @name, or %NULL.
+ * Returns: the #FMADataDef structure which describes this @name, or %NULL.
  */
-NADataDef *
+FMADataDef *
 na_factory_object_get_data_def( const NAIFactoryObject *object, const gchar *name )
 {
-	NADataDef *def;
+	FMADataDef *def;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	def = NULL;
 
-	NADataGroup *groups = v_get_groups( object );
+	FMADataGroup *groups = v_get_groups( object );
 	while( groups->group ){
 
-		NADataDef *def = groups->def;
+		FMADataDef *def = groups->def;
 		if( def ){
 			while( def->name ){
 
@@ -195,12 +195,12 @@ na_factory_object_get_data_def( const NAIFactoryObject *object, const gchar *nam
  * na_factory_object_get_data_groups:
  * @object: the #NAIFactoryObject instance.
  *
- * Returns: a pointer to the list of #NADataGroup which define the data.
+ * Returns: a pointer to the list of #FMADataGroup which define the data.
  */
-NADataGroup *
+FMADataGroup *
 na_factory_object_get_data_groups( const NAIFactoryObject *object )
 {
-	NADataGroup *groups;
+	FMADataGroup *groups;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
@@ -249,7 +249,7 @@ na_factory_object_get_default( NAIFactoryObject *object, const gchar *name )
 {
 	static const gchar *thisfn = "na_factory_object_set_defaults";
 	gchar *value;
-	NADataDef *def;
+	FMADataDef *def;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
@@ -275,7 +275,7 @@ void
 na_factory_object_set_defaults( NAIFactoryObject *object )
 {
 	static const gchar *thisfn = "na_factory_object_set_defaults";
-	NADataGroup *groups;
+	FMADataGroup *groups;
 	NafoDefaultIter *iter_data;
 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
@@ -284,13 +284,13 @@ na_factory_object_set_defaults( NAIFactoryObject *object )
 
 	groups = v_get_groups( object );
 	if( !groups ){
-		g_warning( "%s: no NADataGroup found for %s", thisfn, G_OBJECT_TYPE_NAME( object ));
+		g_warning( "%s: no FMADataGroup found for %s", thisfn, G_OBJECT_TYPE_NAME( object ));
 
 	} else {
 		iter_data = g_new0( NafoDefaultIter, 1 );
 		iter_data->object = object;
 
-		iter_on_data_defs( groups, DATA_DEF_ITER_SET_DEFAULTS, ( NADataDefIterFunc ) set_defaults_iter, iter_data );
+		iter_on_data_defs( groups, DATA_DEF_ITER_SET_DEFAULTS, ( FMADataDefIterFunc ) set_defaults_iter, iter_data );
 
 		g_free( iter_data );
 	}
@@ -303,7 +303,7 @@ na_factory_object_set_defaults( NAIFactoryObject *object )
  * as an 'unset' value.
  */
 static gboolean
-set_defaults_iter( NADataDef *def, NafoDefaultIter *data )
+set_defaults_iter( FMADataDef *def, NafoDefaultIter *data )
 {
 	FMADataBoxed *boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
 
@@ -340,8 +340,8 @@ na_factory_object_move_boxed( NAIFactoryObject *target, const NAIFactoryObject *
 
 		attach_boxed_to_object( target, boxed );
 
-		const NADataDef *src_def = fma_data_boxed_get_data_def( boxed );
-		NADataDef *tgt_def = na_factory_object_get_data_def( target, src_def->name );
+		const FMADataDef *src_def = fma_data_boxed_get_data_def( boxed );
+		FMADataDef *tgt_def = na_factory_object_get_data_def( target, src_def->name );
 		fma_data_boxed_set_data_def( boxed, tgt_def );
 	}
 }
@@ -361,7 +361,7 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 	GList *dest_list, *idest, *inext;
 	GList *src_list, *isrc;
 	FMADataBoxed *boxed;
-	const NADataDef *def;
+	const FMADataDef *def;
 	void *provider, *provider_data;
 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( target ));
@@ -441,7 +441,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 	for( ia = a_list ; ia && are_equal ; ia = ia->next ){
 
 		FMADataBoxed *a_boxed = FMA_DATA_BOXED( ia->data );
-		const NADataDef *a_def = fma_data_boxed_get_data_def( a_boxed );
+		const FMADataDef *a_def = fma_data_boxed_get_data_def( a_boxed );
 		if( a_def->comparable ){
 
 			FMADataBoxed *b_boxed = na_ifactory_object_get_data_boxed( b, a_def->name );
@@ -461,7 +461,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 	for( ib = b_list ; ib && are_equal ; ib = ib->next ){
 
 		FMADataBoxed *b_boxed = FMA_DATA_BOXED( ib->data );
-		const NADataDef *b_def = fma_data_boxed_get_data_def( b_boxed );
+		const FMADataDef *b_def = fma_data_boxed_get_data_def( b_boxed );
 		if( b_def->comparable ){
 
 			FMADataBoxed *a_boxed = na_ifactory_object_get_data_boxed( a, b_def->name );
@@ -488,7 +488,7 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 {
 	static const gchar *thisfn = "na_factory_object_is_valid";
 	gboolean is_valid;
-	NADataGroup *groups;
+	FMADataGroup *groups;
 	GList *list, *iv;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), FALSE );
@@ -506,7 +506,7 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 
 	groups = v_get_groups( object );
 	if( groups ){
-		iter_on_data_defs( groups, DATA_DEF_ITER_IS_VALID, ( NADataDefIterFunc ) is_valid_mandatory_iter, &iter_data );
+		iter_on_data_defs( groups, DATA_DEF_ITER_IS_VALID, ( FMADataDefIterFunc ) is_valid_mandatory_iter, &iter_data );
 	}
 	is_valid = iter_data.is_valid;
 
@@ -520,7 +520,7 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 }
 
 static gboolean
-is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data )
+is_valid_mandatory_iter( const FMADataDef *def, NafoValidIter *data )
 {
 	FMADataBoxed *boxed;
 
@@ -557,7 +557,7 @@ na_factory_object_dump( const NAIFactoryObject *object )
 
 	for( it = list ; it ; it = it->next ){
 		FMADataBoxed *boxed = FMA_DATA_BOXED( it->data );
-		const NADataDef *def = fma_data_boxed_get_data_def( boxed );
+		const FMADataDef *def = fma_data_boxed_get_data_def( boxed );
 		length = MAX( length, strlen( def->name ));
 	}
 
@@ -566,7 +566,7 @@ na_factory_object_dump( const NAIFactoryObject *object )
 
 	for( it = list ; it ; it = it->next ){
 		FMADataBoxed *boxed = FMA_DATA_BOXED( it->data );
-		const NADataDef *def = fma_data_boxed_get_data_def( boxed );
+		const FMADataDef *def = fma_data_boxed_get_data_def( boxed );
 		gchar *value = fma_boxed_get_string( FMA_BOXED( boxed ));
 		g_debug( "| %s: %*s=%s", thisfn, length, def->name+l_prefix, value );
 		g_free( value );
@@ -603,7 +603,7 @@ na_factory_object_read_item( NAIFactoryObject *object, const NAIFactoryProvider 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 
-	NADataGroup *groups = v_get_groups( object );
+	FMADataGroup *groups = v_get_groups( object );
 
 	if( groups ){
 		v_read_start( object, reader, reader_data, messages );
@@ -614,20 +614,20 @@ na_factory_object_read_item( NAIFactoryObject *object, const NAIFactoryProvider 
 		iter->reader_data = reader_data;
 		iter->messages = messages;
 
-		iter_on_data_defs( groups, DATA_DEF_ITER_READ_ITEM, ( NADataDefIterFunc ) read_data_iter, iter );
+		iter_on_data_defs( groups, DATA_DEF_ITER_READ_ITEM, ( FMADataDefIterFunc ) read_data_iter, iter );
 
 		g_free( iter );
 
 		v_read_done( object, reader, reader_data, messages );
 
 	} else {
-		g_warning( "%s: class %s doesn't return any NADataGroup structure",
+		g_warning( "%s: class %s doesn't return any FMADataGroup structure",
 				thisfn, G_OBJECT_TYPE_NAME( object ));
 	}
 }
 
 static gboolean
-read_data_iter( NADataDef *def, NafoReadIter *iter )
+read_data_iter( FMADataDef *def, NafoReadIter *iter )
 {
 	gboolean stop;
 
@@ -667,7 +667,7 @@ na_factory_object_write_item( NAIFactoryObject *object, const NAIFactoryProvider
 {
 	static const gchar *thisfn = "na_factory_object_write_item";
 	guint code;
-	NADataGroup *groups;
+	FMADataGroup *groups;
 	gchar *msg;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
@@ -681,7 +681,7 @@ na_factory_object_write_item( NAIFactoryObject *object, const NAIFactoryProvider
 		code = v_write_start( object, writer, writer_data, messages );
 
 	} else {
-		msg = g_strdup_printf( "%s: class %s doesn't return any NADataGroup structure",
+		msg = g_strdup_printf( "%s: class %s doesn't return any FMADataGroup structure",
 				thisfn, G_OBJECT_TYPE_NAME( object ));
 		g_warning( "%s", msg );
 		*messages = g_slist_append( *messages, msg );
@@ -711,7 +711,7 @@ na_factory_object_write_item( NAIFactoryObject *object, const NAIFactoryProvider
 static gboolean
 write_data_iter( const NAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteIter *iter )
 {
-	const NADataDef *def = fma_data_boxed_get_data_def( boxed );
+	const FMADataDef *def = fma_data_boxed_get_data_def( boxed );
 
 	if( def->writable ){
 		iter->code = na_factory_provider_write_data( iter->writer, iter->writer_data, object, boxed, iter->messages );
@@ -817,9 +817,9 @@ na_factory_object_set_from_value( NAIFactoryObject *object, const gchar *name, c
 		fma_boxed_set_from_value( FMA_BOXED( boxed ), value );
 
 	} else {
-		NADataDef *def = na_factory_object_get_data_def( object, name );
+		FMADataDef *def = na_factory_object_get_data_def( object, name );
 		if( !def ){
-			g_warning( "%s: unknown NADataDef %s", thisfn, name );
+			g_warning( "%s: unknown FMADataDef %s", thisfn, name );
 
 		} else {
 			boxed = fma_data_boxed_new( def );
@@ -849,9 +849,9 @@ na_factory_object_set_from_void( NAIFactoryObject *object, const gchar *name, co
 		fma_boxed_set_from_void( FMA_BOXED( boxed ), data );
 
 	} else {
-		NADataDef *def = na_factory_object_get_data_def( object, name );
+		FMADataDef *def = na_factory_object_get_data_def( object, name );
 		if( !def ){
-			g_warning( "%s: unknown NADataDef %s for %s", thisfn, name, G_OBJECT_TYPE_NAME( object ));
+			g_warning( "%s: unknown FMADataDef %s for %s", thisfn, name, G_OBJECT_TYPE_NAME( object ));
 
 		} else {
 			boxed = fma_data_boxed_new( def );
@@ -861,7 +861,7 @@ na_factory_object_set_from_void( NAIFactoryObject *object, const gchar *name, co
 	}
 }
 
-static NADataGroup *
+static FMADataGroup *
 v_get_groups( const NAIFactoryObject *object )
 {
 	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
@@ -964,10 +964,10 @@ free_data_boxed_list( NAIFactoryObject *object )
  * the iter function must return TRUE to stops the enumeration
  */
 static void
-iter_on_data_defs( const NADataGroup *groups, guint mode, NADataDefIterFunc pfn, void *user_data )
+iter_on_data_defs( const FMADataGroup *groups, guint mode, FMADataDefIterFunc pfn, void *user_data )
 {
 	static const gchar *thisfn = "na_factory_object_iter_on_data_defs";
-	NADataDef *def;
+	FMADataDef *def;
 	gboolean stop;
 
 	stop = FALSE;

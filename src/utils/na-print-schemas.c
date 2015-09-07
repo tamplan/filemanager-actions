@@ -40,7 +40,7 @@
 #include <stdlib.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-types.h>
 #include <api/na-ifactory-object-data.h>
 
 #include <io-gconf/nagp-keys.h>
@@ -49,9 +49,9 @@
 
 #include "console-utils.h"
 
-extern NADataGroup menu_data_groups[];				/* defined in na-object-menu-factory.c */
-extern NADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
-extern NADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
+extern FMADataGroup menu_data_groups[];				/* defined in na-object-menu-factory.c */
+extern FMADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
+extern FMADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
 
 static gboolean   output_action = FALSE;
 static gboolean   output_menu   = FALSE;
@@ -75,9 +75,9 @@ static GOptionEntry misc_entries[] = {
 };
 
 static GOptionContext *init_options( void );
-static NADataGroup    *build_full_action_group( void );
-static int             output_to_stdout( NADataGroup *groups, GSList **msgs );
-static void            attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const NADataDef *data_def );
+static FMADataGroup    *build_full_action_group( void );
+static int             output_to_stdout( FMADataGroup *groups, GSList **msgs );
+static void            attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const FMADataDef *data_def );
 static void            exit_with_usage( void );
 
 int
@@ -89,7 +89,7 @@ main( int argc, char** argv )
 	GError *error = NULL;
 	GSList *msgs = NULL;
 	GSList *im;
-	NADataGroup *full_action_groups = NULL;
+	FMADataGroup *full_action_groups = NULL;
 
 #if !GLIB_CHECK_VERSION( 2,36, 0 )
 	g_type_init();
@@ -197,33 +197,33 @@ init_options( void )
 }
 
 /*
- * build a NADataGroup array with action and profile definitions
+ * build a FMADataGroup array with action and profile definitions
  * so that the action schemas also include profile ones
  */
-static NADataGroup *
+static FMADataGroup *
 build_full_action_group( void )
 {
 	guint i, action_count, profile_count;
-	NADataGroup *group;
+	FMADataGroup *group;
 
 	for( action_count = 0 ; action_data_groups[action_count].group ; ++action_count )
 		;
 	for( profile_count = 0 ; profile_data_groups[profile_count].group ; ++profile_count )
 		;
-	group = g_new0( NADataGroup, 1+action_count+profile_count );
+	group = g_new0( FMADataGroup, 1+action_count+profile_count );
 
 	for( i = action_count = 0 ; action_data_groups[action_count].group ; ++action_count, ++i ){
-		memcpy( group+i, action_data_groups+action_count, sizeof( NADataGroup ));
+		memcpy( group+i, action_data_groups+action_count, sizeof( FMADataGroup ));
 	}
 	for( profile_count = 0 ; profile_data_groups[profile_count].group ; ++profile_count, ++i ){
-		memcpy( group+i, profile_data_groups+profile_count, sizeof( NADataGroup ));
+		memcpy( group+i, profile_data_groups+profile_count, sizeof( FMADataGroup ));
 	}
 
 	return( group );
 }
 
 static int
-output_to_stdout( NADataGroup *groups, GSList **msgs )
+output_to_stdout( FMADataGroup *groups, GSList **msgs )
 {
 	xmlDocPtr doc;
 	xmlNodePtr root_node;
@@ -244,7 +244,7 @@ output_to_stdout( NADataGroup *groups, GSList **msgs )
 			if( groups[ig].def[id].writable ){
 				if( !fma_core_utils_slist_count( displayed, groups[ig].def[id].name )){
 					displayed = g_slist_prepend( displayed, groups[ig].def[id].name );
-					attach_schema_node( doc, list_node, ( const NADataDef * ) groups[ig].def+id );
+					attach_schema_node( doc, list_node, ( const FMADataDef * ) groups[ig].def+id );
 				}
 			}
 		}
@@ -261,7 +261,7 @@ output_to_stdout( NADataGroup *groups, GSList **msgs )
 }
 
 static void
-attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const NADataDef *def )
+attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const FMADataDef *def )
 {
 	xmlNodePtr schema_node;
 	xmlChar *content;
@@ -276,7 +276,7 @@ attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const NADataDef *def )
 
 	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
 
-	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_TYPE ), BAD_CAST( na_data_types_get_gconf_dump_key( def->type )));
+	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_TYPE ), BAD_CAST( fma_data_types_get_gconf_dump_key( def->type )));
 	if( def->type == NA_DATA_TYPE_STRING_LIST ){
 		xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LISTTYPE ), BAD_CAST( "string" ));
 	}

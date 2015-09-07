@@ -38,7 +38,7 @@ G_BEGIN_DECLS
 GList       *nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
 
 void         nagp_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
-FMADataBoxed *nagp_reader_read_data ( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
+FMADataBoxed *nagp_reader_read_data ( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const FMADataDef *def, GSList **messages );
 void         nagp_reader_read_done ( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
 
 G_END_DECLS

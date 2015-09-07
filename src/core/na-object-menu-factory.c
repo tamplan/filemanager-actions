@@ -32,23 +32,23 @@
 #endif
 
 #include <api/na-ifactory-object-data.h>
-#include <api/na-data-def.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-def.h>
+#include <api/fma-data-types.h>
 
-extern NADataDef data_def_id [];			/* defined in na-object-id-factory.c */
-extern NADataDef data_def_item [];			/* defined in na-object-item-factory.c */
-extern NADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
+extern FMADataDef data_def_id [];			/* defined in na-object-id-factory.c */
+extern FMADataDef data_def_item [];			/* defined in na-object-item-factory.c */
+extern FMADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
 
 /*
  * As of 3.2 non copyables data are:
  * - n/a
  */
 
-static NADataDef data_def_menu [] = {
+static FMADataDef data_def_menu [] = {
 	{ NULL },
 };
 
-NADataGroup menu_data_groups [] = {
+FMADataGroup menu_data_groups [] = {
 	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
 	{ NA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
 	{ NA_FACTORY_OBJECT_MENU_GROUP,       data_def_menu },

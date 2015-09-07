@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <api/fma-boxed.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-types.h>
 #include <api/fma-core-utils.h>
 
 /* private class data
@@ -485,7 +485,7 @@ string_to_array( const gchar *string )
 /**
  * fma_boxed_set_type:
  * @boxed: this #FMABoxed object.
- * @type: the required type as defined in na-data-types.h
+ * @type: the required type as defined in fma-data-types.h
  *
  * Set the type of the just-allocated @boxed object.
  *

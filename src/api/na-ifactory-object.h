@@ -76,7 +76,7 @@
  * </refsect2>
  */
 
-#include "na-data-def.h"
+#include "fma-data-def.h"
 #include "fma-data-boxed.h"
 #include "na-ifactory-provider-provider.h"
 
@@ -93,7 +93,7 @@ typedef struct _NAIFactoryObjectInterfacePrivate     NAIFactoryObjectInterfacePr
 /**
  * NAIFactoryObjectInterface:
  * @get_version: returns the version of this interface the NAObjectItem implements.
- * @get_groups:  returns a pointer to the NADataGroup which defines this object.
+ * @get_groups:  returns a pointer to the FMADataGroup which defines this object.
  * @copy:        post copy callback.
  * @are_equal:   tests if two NAObjectItem are equals.
  * @is_valid:    tests if one NAObjectItem is valid.
@@ -128,11 +128,11 @@ typedef struct {
 	 * get_groups:
 	 * @instance: this #NAIFactoryObject instance.
 	 *
-	 * Returns: a pointer to the NADataGroup which defines this object.
+	 * Returns: a pointer to the FMADataGroup which defines this object.
 	 *
 	 * Since: 2.30
 	 */
-	NADataGroup * ( *get_groups ) ( const NAIFactoryObject *instance );
+	FMADataGroup * ( *get_groups ) ( const NAIFactoryObject *instance );
 
 	/**
 	 * copy:
@@ -239,7 +239,7 @@ typedef struct {
 GType        na_ifactory_object_get_type( void );
 
 FMADataBoxed *na_ifactory_object_get_data_boxed ( const NAIFactoryObject *object, const gchar *name );
-NADataGroup *na_ifactory_object_get_data_groups( const NAIFactoryObject *object );
+FMADataGroup *na_ifactory_object_get_data_groups( const NAIFactoryObject *object );
 void        *na_ifactory_object_get_as_void    ( const NAIFactoryObject *object, const gchar *name );
 void         na_ifactory_object_set_from_void  ( NAIFactoryObject *object, const gchar *name, const void *data );
 

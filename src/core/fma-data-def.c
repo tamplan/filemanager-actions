@@ -33,25 +33,25 @@
 
 #include <string.h>
 
-#include <api/na-data-def.h>
+#include <api/fma-data-def.h>
 
 /**
- * na_data_def_get_data_def:
- * @group: a #NADataGroup structure array.
+ * fma_data_def_get_data_def:
+ * @group: a #FMADataGroup structure array.
  * @group_name: the searched group name.
  * @name: the searched data name.
  *
- * Returns: a pointer to the #NADataDef structure, or %NULL if not found.
+ * Returns: a pointer to the #FMADataDef structure, or %NULL if not found.
  *
  * Since: 2.30
  */
-const NADataDef *
-na_data_def_get_data_def( const NADataGroup *group, const gchar *group_name, const gchar *name )
+const FMADataDef *
+fma_data_def_get_data_def( const FMADataGroup *group, const gchar *group_name, const gchar *name )
 {
-	NADataGroup *igroup;
-	NADataDef *idef;
+	FMADataGroup *igroup;
+	FMADataDef *idef;
 
-	igroup = ( NADataGroup * ) group;
+	igroup = ( FMADataGroup * ) group;
 	while( igroup->group ){
 		if( !strcmp( igroup->group, group_name )){
 			idef = igroup->def;

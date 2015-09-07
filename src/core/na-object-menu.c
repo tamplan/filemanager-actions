@@ -56,7 +56,7 @@ struct _NAObjectMenuPrivate {
 /* i18n: default label for a new menu */
 #define NEW_NAUTILUS_MENU				N_( "New Nautilus menu" )
 
-extern NADataGroup menu_data_groups [];			/* defined in na-item-menu-factory.c */
+extern FMADataGroup menu_data_groups [];			/* defined in na-item-menu-factory.c */
 
 static NAObjectItemClass *st_parent_class = NULL;
 
@@ -72,7 +72,7 @@ static void         object_dump( const NAObject *object );
 
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
-static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
+static FMADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
@@ -285,7 +285,7 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
 	return( 1 );
 }
 
-static NADataGroup *
+static FMADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( menu_data_groups );

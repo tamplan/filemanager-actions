@@ -36,7 +36,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-data-types.h>
+#include <api/fma-data-types.h>
 #include <api/na-ifactory-object-data.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
@@ -483,7 +483,7 @@ read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectP
  * letting the caller deal with default values
  */
 FMADataBoxed *
-nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
+nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_data";
 	FMADataBoxed *boxed;

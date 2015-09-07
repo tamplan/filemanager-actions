@@ -37,7 +37,7 @@
 #include <strings.h>
 
 #include "api/fma-boxed.h"
-#include "api/na-data-types.h"
+#include "api/fma-data-types.h"
 #include "api/fma-core-utils.h"
 #include "api/na-timeout.h"
 
