@@ -45,7 +45,7 @@ BUILT_SOURCES += \
 
 na-tracker-gdbus.c na-tracker-gdbus.h: na-tracker-gdbus.xml
 	gdbus-codegen \
-		--interface-prefix org.nautilus_actions.DBus.Tracker.	\
+		--interface-prefix org.file_manager_actions.DBus.Tracker.	\
 		--generate-c-code na-tracker-gdbus						\
 		--c-namespace NA_Tracker								\
 		--c-generate-object-manager								\
@@ -53,7 +53,7 @@ na-tracker-gdbus.c na-tracker-gdbus.h: na-tracker-gdbus.xml
 		$<
 
 DISTCLEANFILES = \
-	na-tracker-gdbus-docs-org.nautilus_actions.DBus.Tracker.Properties1.xml
+	na-tracker-gdbus-docs-org.file_manager_actions.DBus.Tracker.Properties1.xml
 
 nodist_libnautilus_actions_tracker_la_SOURCES = \
 	$(BUILT_SOURCES)											\

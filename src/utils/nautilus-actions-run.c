@@ -39,7 +39,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/na-object-api.h>
-#include <api/na-dbus.h>
+#include <api/fma-dbus.h>
 
 #include <core/na-gconf-migration.h>
 #include <core/na-pivot.h>
@@ -279,8 +279,8 @@ targets_from_selection( void )
 	manager = na_tracker_object_manager_client_new_for_bus_sync(
 			G_BUS_TYPE_SESSION,
 			G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_NONE,
-			NAUTILUS_ACTIONS_DBUS_SERVICE,
-			NAUTILUS_ACTIONS_DBUS_TRACKER_PATH,
+			FILE_MANAGER_ACTIONS_DBUS_SERVICE,
+			FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH,
 			NULL,
 			&error );
 
@@ -294,16 +294,16 @@ targets_from_selection( void )
 	g_debug( "%s: name_owner=%s", thisfn, name_owner );
 	g_free( name_owner );
 
-	object = g_dbus_object_manager_get_object( manager, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH "/0" );
+	object = g_dbus_object_manager_get_object( manager, FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH "/0" );
 	if( !object ){
-		g_printerr( "%s: unable to get object at %s path\n", thisfn, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH "/0" );
+		g_printerr( "%s: unable to get object at %s path\n", thisfn, FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH "/0" );
 		g_object_unref( manager );
 		return( NULL );
 	}
 
-	iface = g_dbus_object_get_interface( object, NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
+	iface = g_dbus_object_get_interface( object, FILE_MANAGER_ACTIONS_DBUS_TRACKER_IFACE );
 	if( !iface ){
-		g_printerr( "%s: unable to get %s interface\n", thisfn, NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
+		g_printerr( "%s: unable to get %s interface\n", thisfn, FILE_MANAGER_ACTIONS_DBUS_TRACKER_IFACE );
 		g_object_unref( object );
 		g_object_unref( manager );
 		return( NULL );

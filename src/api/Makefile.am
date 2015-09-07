@@ -30,7 +30,7 @@ api_includedir = $(pkgincludedir)
 api_include_HEADERS = \
 	na-extension.h										\
 	\
-	na-dbus.h											\
+	fma-dbus.h											\
 	na-iexporter.h										\
 	na-iimporter.h										\
 	na-ifactory-provider.h								\

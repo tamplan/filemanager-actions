@@ -78,7 +78,7 @@ BUILT_SOURCES += \
 
 nautilus-actions-run-bindings.c nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-gdbus.xml
 	gdbus-codegen \
-		--interface-prefix org.nautilus_actions.DBus.Tracker.	\
+		--interface-prefix org.file_manager_actions.DBus.Tracker.	\
 		--generate-c-code nautilus-actions-run-bindings			\
 		--c-namespace NA_Tracker								\
 		--c-generate-object-manager								\

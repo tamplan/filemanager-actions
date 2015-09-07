@@ -38,7 +38,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
-#include <api/na-dbus.h>
+#include <api/fma-dbus.h>
 
 #include "na-tracker.h"
 
@@ -161,7 +161,7 @@ initialize_dbus_connection( NATracker *tracker )
 
 	priv->owner_id = g_bus_own_name(
 			G_BUS_TYPE_SESSION,
-			NAUTILUS_ACTIONS_DBUS_SERVICE,
+			FILE_MANAGER_ACTIONS_DBUS_SERVICE,
 			G_BUS_NAME_OWNER_FLAGS_REPLACE,
 			( GBusAcquiredCallback ) on_bus_acquired,
 			( GBusNameAcquiredCallback ) on_name_acquired,
@@ -186,18 +186,18 @@ on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *trac
 			( void * ) tracker );
 
 	/* create a new org.freedesktop.DBus.ObjectManager rooted at
-	 *  /org/nautilus_actions/DBus/Tracker
+	 *  /org/file_manager_actions/DBus/Tracker
 	 */
-	tracker->private->manager = g_dbus_object_manager_server_new( NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
+	tracker->private->manager = g_dbus_object_manager_server_new( FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH );
 
 	/* create a new D-Bus object at the path
-	 *  /org/nautilus_actions/DBus/Tracker
+	 *  /org/file_manager_actions/DBus/Tracker
 	 *  (which must be same or below than that of object manager server)
 	 */
-	tracker_object = na_tracker_object_skeleton_new( NAUTILUS_ACTIONS_DBUS_TRACKER_PATH "/0" );
+	tracker_object = na_tracker_object_skeleton_new( FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH "/0" );
 
 	/* make a newly created object export the interface
-	 *  org.nautilus_actions.DBus.Tracker.Properties1
+	 *  org.file_manager_actions.DBus.Tracker.Properties1
 	 *  and attach it to the D-Bus object, which takes its own reference on it
 	 */
 	tracker_properties1 = na_tracker_properties1_skeleton_new();

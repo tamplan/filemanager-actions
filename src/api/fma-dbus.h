@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_DBUS_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_DBUS_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_DBUS_H__
+#define __FILE_MANAGER_ACTIONS_API_DBUS_H__
 
 /**
  * SECTION: dbus
  * @title: D-Bus
  * @short_description: The D-Bus Services
- * @include: file-manager-actions/na-dbus.h
+ * @include: file-manager-actions/fma-dbus.h
  *
  * &prodname;, through its <emphasis>tracker</emphasis> plugin, exposes
  * several D-Bus interfaces. These interfaces may be queried in order to get
@@ -59,15 +59,15 @@
 G_BEGIN_DECLS
 
 /**
- * NAUTILUS_ACTIONS_DBUS_SERVICE:
+ * FILE_MANAGER_ACTIONS_DBUS_SERVICE:
  *
  * This is the &laquo;&nbsp;well-known&nbsp;&raquo; name that
  * &prodname; reserves on D-Bus session bus.
  */
-#define NAUTILUS_ACTIONS_DBUS_SERVICE            "org.file-manager-actions.DBus"
+#define FILE_MANAGER_ACTIONS_DBUS_SERVICE            "org.file-manager-actions.DBus"
 
 /**
- * NAUTILUS_ACTIONS_DBUS_TRACKER_PATH:
+ * FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH:
  *
  * The D-Bus path of the <emphasis>tracker</emphasis> object.
  *
@@ -82,7 +82,7 @@ G_BEGIN_DECLS
  *       --type=method_call \
  *       --print-reply \
  *       --dest=org.file-manager-actions.DBus \
- *         /org/nautilus_actions/DBus/Tracker \
+ *         /org/file_manager_actions/DBus/Tracker \
  *           org.freedesktop.DBus.Introspectable.Introspect
  *   </command>
  *   <computeroutput>
@@ -112,7 +112,7 @@ G_BEGIN_DECLS
  *           <arg name="props" direction="out" type="a{sv}"/>
  *         </method>
  *       </interface>
- *       <interface name="org.nautilus_actions.DBus.Tracker.Status">
+ *       <interface name="org.file_manager_actions.DBus.Tracker.Status">
  *         <method name="GetSelectedPaths">
  *           <arg name="paths" type="as" direction="out"/>
  *         </method>
@@ -122,16 +122,16 @@ G_BEGIN_DECLS
  *   </computeroutput>
  * </programlisting>
  */
-#define NAUTILUS_ACTIONS_DBUS_TRACKER_PATH       "/org/nautilus_actions/DBus/Tracker"
+#define FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH       "/org/file_manager_actions/DBus/Tracker"
 
 /**
- * NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE:
+ * FILE_MANAGER_ACTIONS_DBUS_TRACKER_IFACE:
  *
  * An interface defined on the <emphasis>tracker</emphasis> object,
- * identified by its %NAUTILUS_ACTIONS_DBUS_TRACKER_PATH D-Bus path.
+ * identified by its %FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH D-Bus path.
  */
-#define NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE  	"org.nautilus_actions.DBus.Tracker.Properties1"
+#define FILE_MANAGER_ACTIONS_DBUS_TRACKER_IFACE  	"org.file_manager_actions.DBus.Tracker.Properties1"
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_DBUS_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_DBUS_H__ */
