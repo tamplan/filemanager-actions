@@ -333,9 +333,9 @@ on_module_load( GTypeModule *gmodule )
  * if ok, we ask the plugin to initialize itself
  *
  * As of API v 1:
- * - na_extension_startup, na_extension_list_types and na_extension_shutdown
+ * - fma_extension_startup, na_extension_list_types and na_extension_shutdown
  *   are mandatory, and MUST be implemented by the plugin
- * - na_extension_get_version is optional, and defaults to 1.
+ * - fma_extension_get_version is optional, and defaults to 1.
  */
 static gboolean
 is_a_na_plugin( NAModule *module )
@@ -344,9 +344,9 @@ is_a_na_plugin( NAModule *module )
 	gboolean ok;
 
 	ok =
-		plugin_check( module, "na_extension_startup"    , ( gpointer * ) &module->private->startup) &&
-		plugin_check( module, "na_extension_list_types" , ( gpointer * ) &module->private->list_types ) &&
-		plugin_check( module, "na_extension_shutdown"   , ( gpointer * ) &module->private->shutdown ) &&
+		plugin_check( module, "fma_extension_startup"    , ( gpointer * ) &module->private->startup) &&
+		plugin_check( module, "fma_extension_list_types" , ( gpointer * ) &module->private->list_types ) &&
+		plugin_check( module, "fma_extension_shutdown"   , ( gpointer * ) &module->private->shutdown ) &&
 		module->private->startup( G_TYPE_MODULE( module ));
 
 	if( ok ){
@@ -372,7 +372,7 @@ plugin_check( NAModule *module, const gchar *symbol, gpointer *pfn )
 }
 
 /*
- * The 'na_extension_startup' function of the plugin has been already
+ * The 'fma_extension_startup' function of the plugin has been already
  * called ; the GType types the plugin provides have so already been
  * registered in the GType system
  *

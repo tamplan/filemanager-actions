@@ -28,7 +28,7 @@
 api_includedir = $(pkgincludedir)
 
 api_include_HEADERS = \
-	na-extension.h										\
+	fma-extension.h										\
 	\
 	fma-dbus.h											\
 	na-iexporter.h										\

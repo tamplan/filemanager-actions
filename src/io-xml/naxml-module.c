@@ -31,26 +31,26 @@
 #include <config.h>
 #endif
 
-#include <api/na-extension.h>
+#include <api/fma-extension.h>
 
 #include "naxml-provider.h"
 
 /* the count of GType types provided by this extension
  * each new GType type must
- * - be registered in na_extension_startup()
- * - be addressed in na_extension_list_types().
+ * - be registered in fma_extension_startup()
+ * - be addressed in fma_extension_list_types().
  */
 #define NAXML_TYPES_COUNT	1
 
 /*
- * na_extension_startup:
+ * fma_extension_startup:
  *
  * mandatory starting with API v. 1.
  */
 gboolean
-na_extension_startup( GTypeModule *module )
+fma_extension_startup( GTypeModule *module )
 {
-	static const gchar *thisfn = "naxml_module_na_extension_startup";
+	static const gchar *thisfn = "naxml_module_fma_extension_startup";
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
@@ -60,14 +60,14 @@ na_extension_startup( GTypeModule *module )
 }
 
 /*
- * na_extension_get_version:
+ * fma_extension_get_version:
  *
  * optional, defaults to 1.
  */
 guint
-na_extension_get_version( void )
+fma_extension_get_version( void )
 {
-	static const gchar *thisfn = "naxml_module_na_extension_get_version";
+	static const gchar *thisfn = "naxml_module_fma_extension_get_version";
 	guint version;
 
 	version = 1;
@@ -78,14 +78,14 @@ na_extension_get_version( void )
 }
 
 /*
- * na_extension_list_types:
+ * fma_extension_list_types:
  *
  * mandatory starting with v. 1.
  */
 guint
-na_extension_list_types( const GType **types )
+fma_extension_list_types( const GType **types )
 {
-	static const gchar *thisfn = "naxml_module_na_extension_list_types";
+	static const gchar *thisfn = "naxml_module_fma_extension_list_types";
 	static GType types_list [1+NAXML_TYPES_COUNT];
 
 	g_debug( "%s: types=%p", thisfn, ( void * ) types );
@@ -99,14 +99,14 @@ na_extension_list_types( const GType **types )
 }
 
 /*
- * na_extension_shutdown:
+ * fma_extension_shutdown:
  *
  * mandatory starting with v. 1.
  */
 void
-na_extension_shutdown( void )
+fma_extension_shutdown( void )
 {
-	static const gchar *thisfn = "naxml_module_na_extension_shutdown";
+	static const gchar *thisfn = "naxml_module_fma_extension_shutdown";
 
 	g_debug( "%s", thisfn );
 }

@@ -3,7 +3,7 @@ src/api
 This is the FileManager-Actions extension interface.
 
 Each extension library should at least implement the interface defined
-in na-extension.h.
+in fma-extension.h.
 
 Headers are installed as part of a development environment of such an
 extension. They are to be included by the extension as

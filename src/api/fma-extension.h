@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_EXTENSION_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_EXTENSION_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_EXTENSION_H__
+#define __FILE_MANAGER_ACTIONS_API_EXTENSION_H__
 
 /**
  * SECTION: extension
  * @title: Plugins
  * @short_description: The FileManager-Actions Extension Interface Definition v 1
- * @include: file-manager-actions/na-extension.h
+ * @include: file-manager-actions/fma-extension.h
  *
  * &prodname; accepts extensions as dynamically loadable libraries
  * (aka plugins).
@@ -152,7 +152,7 @@
 G_BEGIN_DECLS
 
 /**
- * na_extension_startup:
+ * fma_extension_startup:
  * @module: the #GTypeModule of the plugin library being loaded.
  *
  * This function is called by the FileManager-Actions plugin manager when
@@ -168,7 +168,7 @@ G_BEGIN_DECLS
  *     static GType st_module_type = 0;
  *
  *     gboolean
- *     na_extension_startup( GTypeModule *plugin )
+ *     fma_extension_startup( GTypeModule *plugin )
  *     {
  *         static GTypeInfo info = {
  *             sizeof( NadpDesktopProviderClass ),
@@ -202,10 +202,10 @@ G_BEGIN_DECLS
  *
  * Since: 2.30
  */
-gboolean na_extension_startup    ( GTypeModule *module );
+gboolean fma_extension_startup    ( GTypeModule *module );
 
 /**
- * na_extension_get_version:
+ * fma_extension_get_version:
  *
  * This function is called by the &prodname; program each time
  * it needs to know which version of this API the plugin
@@ -219,15 +219,15 @@ gboolean na_extension_startup    ( GTypeModule *module );
  *
  * Since: 2.30
  */
-guint    na_extension_get_version( void );
+guint    fma_extension_get_version( void );
 
 /**
- * na_extension_list_types:
+ * fma_extension_list_types:
  * @types: the address where to store the zero-terminated array of
  *  instantiable #GType types this library implements.
  *
  * Returned #GType types must already have been registered in the
- * #GType system (e.g. at #na_extension_startup() time), and the objects
+ * #GType system (e.g. at #fma_extension_startup() time), and the objects
  * they describe may implement one or more of the interfaces defined in
  * this FileManager-Actions public API.
  *
@@ -242,18 +242,18 @@ guint    na_extension_get_version( void );
  *   <programlisting>
  *     &lcomment; the count of GType types provided by this extension
  *      * each new GType type must
- *      * - be registered in na_extension_startup()
- *      * - be addressed in na_extension_list_types().
+ *      * - be registered in fma_extension_startup()
+ *      * - be addressed in fma_extension_list_types().
  *      &rcomment;
  *     #define NADP_TYPES_COUNT    1
  *
  *     guint
- *     na_extension_list_types( const GType **types )
+ *     fma_extension_list_types( const GType **types )
  *     {
  *          static GType types_list [1+NADP_TYPES_COUNT];
  *
  *          &lcomment; NADP_TYPE_DESKTOP_PROVIDER has been previously
- *           * registered in na_extension_startup function
+ *           * registered in fma_extension_startup function
  *           &rcomment;
  *          types_list[0] = NADP_TYPE_DESKTOP_PROVIDER;
  *
@@ -270,10 +270,10 @@ guint    na_extension_get_version( void );
  *
  * Since: 2.30
  */
-guint    na_extension_list_types ( const GType **types );
+guint    fma_extension_list_types ( const GType **types );
 
 /**
- * na_extension_shutdown:
+ * fma_extension_shutdown:
  *
  * This function is called by FileManager-Actions when it is about to
  * shutdown itself.
@@ -287,8 +287,8 @@ guint    na_extension_list_types ( const GType **types );
  *
  * Since: 2.30
  */
-void     na_extension_shutdown   ( void );
+void     fma_extension_shutdown   ( void );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_EXTENSION_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_EXTENSION_H__ */
