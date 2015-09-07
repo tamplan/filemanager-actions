@@ -78,6 +78,8 @@ static void on_win_save( GSimpleAction *action, GVariant *parameter, gpointer us
 static void on_win_test_function( GSimpleAction *action, GVariant *parameter, gpointer user_data );
 static void on_win_toolbar_activate( GSimpleAction *action, GVariant *parameter, gpointer user_data );
 static void on_win_toolbar_changed_state( GSimpleAction *action, GVariant *parameter, gpointer user_data );
+static void on_win_notebook_tab_position_activate( GSimpleAction *action, GVariant *parameter, gpointer user_data );
+static void on_win_notebook_tab_position_changed_state( GSimpleAction *action, GVariant *parameter, gpointer user_data );
 
 /* since the deprecation of GtkAction, I no more know how to display
  * menu item tooltips - but they have been translated and I don't want
@@ -90,58 +92,58 @@ typedef struct {
 	sActionEntry;
 
 static sActionEntry st_app_entries[] = {
-		{{ "about", on_app_about, NULL, NULL, NULL },
+		{{ "about", on_app_about },
 				/* i18n: status bar tooltip displayed on 'About' item navigation */
 				N_( "Display informations about this program" )},
-		{{ "help", on_app_help, NULL, NULL, NULL },
+		{{ "help", on_app_help },
 				/* i18n: status bar tooltip displayed on 'Help' item navigation */
 				N_( "Display help about this program" )},
-		{{ "preferences", on_app_preferences, NULL, NULL, NULL },
+		{{ "preferences", on_app_preferences },
 				/* i18n: status bar tooltip displayed on 'Preferences' item navigation */
 				N_( "Edit your preferences" )},
-		{{ "quit", on_app_quit, NULL, NULL, NULL },
+		{{ "quit", on_app_quit },
 				/* i18n: status bar tooltip displayed on 'Quit' item navigation */
 				N_( "Quit the application" )},
 };
 
 static sActionEntry st_menubar_entries[] = {
-		{{ "new-menu", on_win_new_menu, NULL, NULL, NULL },
+		{{ "new-menu", on_win_new_menu },
 				/* i18n: status bar tooltip displayed on 'New menu' item navigation */
 				N_( "Insert a new menu at the current position" )},
-		{{ "new-action", on_win_new_action, NULL, NULL, NULL },
+		{{ "new-action", on_win_new_action },
 				/* i18n: status bar tooltip displayed on 'New action' item navigation */
 				N_( "Define a new action" )},
-		{{ "new-profile", on_win_new_profile, NULL, NULL, NULL },
+		{{ "new-profile", on_win_new_profile },
 				/* i18n: status bar tooltip displayed on 'New profile' item navigation */
 				N_( "Define a new profile attached to the current action" )},
-		{{ "save", on_win_save, NULL, NULL, NULL },
+		{{ "save", on_win_save },
 				/* i18n: status bar tooltip displayed on 'Save' item navigation */
 				N_( "Record all the modified actions. Invalid actions will be silently ignored" )},
-		{{ "cut", on_win_cut, NULL, NULL, NULL },
+		{{ "cut", on_win_cut },
 				/* i18n: status bar tooltip displayed on 'Cut' item navigation */
 				N_( "Cut the selected item(s) to the clipboard" )},
-		{{ "copy", on_win_copy, NULL, NULL, NULL },
+		{{ "copy", on_win_copy },
 				/* i18n: status bar tooltip displayed on 'Copy' item navigation */
 				N_( "Copy the selected item(s) to the clipboard" )},
-		{{ "paste", on_win_paste, NULL, NULL, NULL },
+		{{ "paste", on_win_paste },
 				/* i18n: status bar tooltip displayed on 'Paste' item navigation */
 				N_( "Insert the content of the clipboard just before the current position" )},
-		{{ "paste-into", on_win_paste_into, NULL, NULL, NULL },
+		{{ "paste-into", on_win_paste_into },
 				/* i18n: status bar tooltip displayed on 'Paste into' item navigation */
 				N_( "Insert the content of the clipboard as first child of the current item" )},
-		{{ "duplicate", on_win_duplicate, NULL, NULL, NULL },
+		{{ "duplicate", on_win_duplicate },
 				/* i18n: status bar tooltip displayed on 'Duplicate' item navigation */
 				N_( "Duplicate the selected item(s)" )},
-		{{ "delete", on_win_delete, NULL, NULL, NULL },
+		{{ "delete", on_win_delete },
 				/* i18n: status bar tooltip displayed on 'Delete' item navigation */
 				N_( "Delete the selected item(s)" )},
-		{{ "reload", on_win_reload, NULL, NULL, NULL },
+		{{ "reload", on_win_reload },
 				/* i18n: status bar tooltip displayed on 'Reload items' item navigation */
 				N_( "Cancel your current modifications and reload the initial list of menus and actions" )},
-		{{ "expand", on_win_expand_all, NULL, NULL, NULL },
+		{{ "expand", on_win_expand_all },
 				/* i18n: status bar tooltip displayed on 'Expand all' item navigation */
 				N_( "Entirely expand the items hierarchy" )},
-		{{ "collapse", on_win_collapse_all, NULL, NULL, NULL },
+		{{ "collapse", on_win_collapse_all },
 				/* i18n: status bar tooltip displayed on 'Collapse all' item navigation */
 				N_( "Entirely collapse the items hierarchy" )},
 		{{ "toolbar-file", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
@@ -156,21 +158,24 @@ static sActionEntry st_menubar_entries[] = {
 		{{ "toolbar-help", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
 				/* i18n: status bar tooltip displayed on 'Toolbars/Help' item navigation */
 				N_( "Display the Help toolbar" )},
-		{{ "import", on_win_import, NULL, NULL, NULL },
+		{{ "tab-position", on_win_notebook_tab_position_activate, "s", "string 'left'", on_win_notebook_tab_position_changed_state },
+				/* i18n: status bar tooltip displayed on 'Notebook labels' items navigation */
+				N_( "Switch the position of the notebook tabs" )},
+		{{ "import", on_win_import },
 				/* i18n: status bar tooltip displayed on 'Import' item navigation */
 				N_( "Import one or more actions from external files into your configuration" )},
-		{{ "export", on_win_export, NULL, NULL, NULL },
+		{{ "export", on_win_export },
 				/* i18n: status bar tooltip displayed on 'Export' item navigation */
 				N_( "Export one or more actions from your configuration to external files" )},
-		{{ "dump-selection", on_win_dump_selection, NULL, NULL, NULL },
+		{{ "dump-selection", on_win_dump_selection },
 				"Recursively dump selected items" },
-		{{ "tree-store-dump", on_win_brief_tree_store_dump, NULL, NULL, NULL },
+		{{ "tree-store-dump", on_win_brief_tree_store_dump },
 				"Briefly dump the tree store" },
-		{{ "list-modified", on_win_list_modified_items, NULL, NULL, NULL },
+		{{ "list-modified", on_win_list_modified_items },
 				"List the modified item(s)" },
-		{{ "dump-clipboard", on_win_dump_clipboard, NULL, NULL, NULL },
+		{{ "dump-clipboard", on_win_dump_clipboard },
 				"Dump the content of the clipboard object" },
-		{{ "fntest", on_win_test_function, NULL, NULL, NULL },
+		{{ "fntest", on_win_test_function },
 				"Test a function (see nact-menubar-maintainer.c" },
 };
 
@@ -364,7 +369,8 @@ nact_menu_win( NactMainWindow *main_window )
 	/* install autosave */
 	nact_menu_file_init( main_window );
 
-	/* install toolbar submenu */
+	/* install toolbar submenu
+	 * + notebook labels position submenu */
 	nact_menu_view_init( main_window );
 }
 
@@ -833,6 +839,36 @@ on_win_toolbar_changed_state( GSimpleAction *action, GVariant *state, gpointer u
 			NACT_MAIN_WINDOW( user_data ),
 			g_action_get_name( G_ACTION( action )),
 			g_variant_get_boolean( state ));
+
+	g_simple_action_set_state( action, state );
+}
+
+/*
+ * the menu item is activated
+ * just toggle the state of the corresponding action
+ */
+static void
+on_win_notebook_tab_position_activate( GSimpleAction *action, GVariant *parameter, gpointer user_data )
+{
+	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+
+	g_action_change_state( G_ACTION( action ),
+			g_variant_new_string( g_variant_get_string( parameter, NULL )));
+}
+
+/*
+ * the state of the action has been toggled, either directly or by
+ * activating the menu item
+ */
+static void
+on_win_notebook_tab_position_changed_state( GSimpleAction *action, GVariant *state, gpointer user_data )
+{
+	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+
+	nact_menu_view_notebook_tab_display(
+			NACT_MAIN_WINDOW( user_data ),
+			g_action_get_name( G_ACTION( action )),
+			g_variant_get_string( state, NULL ));
 
 	g_simple_action_set_state( action, state );
 }

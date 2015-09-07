@@ -49,6 +49,10 @@ void nact_menu_view_toolbar_display     ( NactMainWindow *main_window,
 												const gchar *action_name,
 												gboolean visible );
 
+void nact_menu_view_notebook_tab_display( NactMainWindow *main_window,
+												const gchar *action_name,
+												const gchar *target );
+
 void nact_menu_view_set_notebook_label  ( NactMainWindow *main_window );
 
 G_END_DECLS

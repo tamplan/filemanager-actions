@@ -32,6 +32,7 @@
 #endif
 
 #include "core/na-gtk-utils.h"
+#include "core/na-iprefs.h"
 
 #include "nact-main-window.h"
 #include "nact-menu.h"
@@ -57,24 +58,45 @@ static sToolbarProps st_toolbar_props[] = {
 
 static const gchar *st_toolbar_ui       = PKGUIDIR "/nact-toolbar.ui";
 
-static void           setup_toolbars_submenu( NactMainWindow *window );
-static void           setup_toolbar( NactMainWindow *window, GtkBuilder *builder, guint toolbar_id );
-static sToolbarProps *get_toolbar_properties_by_id( guint toolbar_id );
-static sToolbarProps *get_toolbar_properties_by_name( const gchar *action_name );
+/* associates the target string (from the XML ui definition)
+ *  to the desired GTK_POS
+ */
+typedef struct {
+	const gchar *target;
+	guint        pos;
+}
+	sNotebookTabsProps;
+
+static sNotebookTabsProps st_notebook_tabs_props[] = {
+	{ "top",    GTK_POS_TOP },
+	{ "right",  GTK_POS_RIGHT },
+	{ "bottom", GTK_POS_BOTTOM },
+	{ "left",   GTK_POS_LEFT },
+};
+
+static void                setup_toolbars_submenu( NactMainWindow *window );
+static void                setup_toolbar( NactMainWindow *window, GtkBuilder *builder, guint toolbar_id );
+static sToolbarProps      *get_toolbar_properties_by_id( guint toolbar_id );
+static sToolbarProps      *get_toolbar_properties_by_name( const gchar *action_name );
 #if 0
-static void           reorder_toolbars( GtkWidget *hbox, sToolbarProps *props );
+static void                reorder_toolbars( GtkWidget *hbox, sToolbarProps *props );
 #endif
+static void                setup_notebook_tab_position_submenu( NactMainWindow *window );
+static sNotebookTabsProps *get_notebook_tabs_properties_by_target( const gchar *target );
+static sNotebookTabsProps *get_notebook_tabs_properties_by_pos( guint pos );
+void                       set_notebook_tabs_position( NactMainWindow *main_window, guint pos );
 
 /**
  * nact_menu_view_init:
  * @window: the #NactMainWindow main window.
  *
- * Update sensitivity of items of the View menu.
+ * Setup the toolbars menu at creation time.
  */
 void
 nact_menu_view_init( NactMainWindow *window )
 {
 	setup_toolbars_submenu( window );
+	setup_notebook_tab_position_submenu( window );
 }
 
 /**
@@ -245,6 +267,32 @@ reorder_toolbars( GtkWidget *hbox, sToolbarProps *props )
 #endif
 
 /*
+ * Setup the initial display of the notebook tabs labels.
+ *
+ * ***
+ * This actually only setup the initial state of the toggle options in
+ * View > Toolbars menu; when an option is activated, this will trigger
+ * the 'on_view_toolbar_activated()' which will actually display the
+ * toolbar.
+ * ***
+ */
+void
+setup_notebook_tab_position_submenu( NactMainWindow *window )
+{
+	guint pos;
+	sNotebookTabsProps *props;
+	GAction *action;
+
+	pos = na_iprefs_get_tabs_pos( NULL );
+	props = get_notebook_tabs_properties_by_pos( pos );
+	g_return_if_fail( props );
+
+	action = g_action_map_lookup_action( G_ACTION_MAP( window ), "tab-position" );
+	g_action_change_state( action, g_variant_new_string( props->target ));
+}
+
+#if 0
+/*
  * When activating one of the GtkRadioAction which handles the position
  * of the notebook tabs
  * @action: the first GtkRadioAction of the group
@@ -254,7 +302,6 @@ reorder_toolbars( GtkWidget *hbox, sToolbarProps *props )
  * the menu, after having set the "current_value" to the new value. All
  * GtkRadioButtons items share the same "current_value".
  */
-#if 0
 void
 nact_menu_view_on_tabs_pos_changed( GtkRadioAction *action, GtkRadioAction *current, BaseWindow *window )
 {
@@ -266,3 +313,71 @@ nact_menu_view_on_tabs_pos_changed( GtkRadioAction *action, GtkRadioAction *curr
 	gtk_notebook_set_tab_pos( notebook, new_pos );
 }
 #endif
+
+/**
+ * nact_menu_view_notebook_tab_display:
+ * @main_window: the #NactMainWindow main window.
+ * @action_name: the action name.
+ * @target: the targeted position.
+ */
+void
+nact_menu_view_notebook_tab_display( NactMainWindow *main_window, const gchar *action_name, const gchar *target )
+{
+	sNotebookTabsProps *props;
+
+	props = get_notebook_tabs_properties_by_target( target );
+	g_return_if_fail( props );
+	set_notebook_tabs_position( main_window, props->pos );
+}
+
+/*
+ * returns the sNotebookTabsProperties structure for the specified target
+ * which should be top, right, bottom or left
+ */
+static sNotebookTabsProps *
+get_notebook_tabs_properties_by_target( const gchar *target )
+{
+	static const gchar *thisfn = "nact_menu_view_get_notebook_tabs_properties_by_target";
+	guint i;
+
+	for( i=0 ; i<G_N_ELEMENTS( st_notebook_tabs_props ) ; ++i ){
+		if( g_utf8_collate( st_notebook_tabs_props[i].target, target ) == 0 ){
+			return( &st_notebook_tabs_props[i] );
+		}
+	}
+
+	g_warning( "%s: unable to find properties for target=%s", thisfn, target );
+	return( NULL );
+}
+
+/*
+ * returns the sNotebookTabsProperties structure for the specified position
+ */
+static sNotebookTabsProps *
+get_notebook_tabs_properties_by_pos( guint pos )
+{
+	static const gchar *thisfn = "nact_menu_view_get_notebook_tabs_properties_by_pos";
+	guint i;
+
+	for( i=0 ; i<G_N_ELEMENTS( st_notebook_tabs_props ) ; ++i ){
+		if( st_notebook_tabs_props[i].pos == pos ){
+			return( &st_notebook_tabs_props[i] );
+		}
+	}
+
+	g_warning( "%s: unable to find properties for pos=%u", thisfn, pos );
+	return( NULL );
+}
+
+/*
+ * Set the position of the main notebook tabs
+ */
+void
+set_notebook_tabs_position( NactMainWindow *main_window, guint pos )
+{
+	GtkNotebook *notebook;
+
+	notebook = GTK_NOTEBOOK( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "main-notebook" ));
+	gtk_notebook_set_tab_pos( notebook, pos );
+	na_iprefs_set_tabs_pos( pos );
+}
