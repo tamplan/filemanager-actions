@@ -39,7 +39,7 @@
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 #include <api/fma-core-utils.h>
-#include <api/na-gconf-utils.h>
+#include <api/fma-gconf-utils.h>
 
 #include "nagp-gconf-provider.h"
 #include "nagp-keys.h"
@@ -87,7 +87,7 @@ nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 
 	if( !self->private->dispose_has_run ){
 
-		listpath = na_gconf_utils_get_subdirs( self->private->gconf, NAGP_CONFIGURATIONS_PATH );
+		listpath = fma_gconf_utils_get_subdirs( self->private->gconf, NAGP_CONFIGURATIONS_PATH );
 
 		for( ip = listpath ; ip ; ip = ip->next ){
 
@@ -98,7 +98,7 @@ nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 			}
 		}
 
-		na_gconf_utils_free_subdirs( listpath );
+		fma_gconf_utils_free_subdirs( listpath );
 	}
 
 	g_debug( "%s: count=%d", thisfn, g_list_length( items_list ));
@@ -124,7 +124,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
 	full_path = gconf_concat_dir_and_key( path, NAGP_ENTRY_TYPE );
-	type = na_gconf_utils_read_string( provider->private->gconf, full_path, TRUE, NAGP_VALUE_TYPE_ACTION );
+	type = fma_gconf_utils_read_string( provider->private->gconf, full_path, TRUE, NAGP_VALUE_TYPE_ACTION );
 	g_free( full_path );
 	item = NULL;
 
@@ -149,8 +149,8 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 
 		data = g_new0( ReaderData, 1 );
 		data->path = ( gchar * ) path;
-		data->entries = na_gconf_utils_get_entries( provider->private->gconf, path );
-		na_gconf_utils_dump_entries( data->entries );
+		data->entries = fma_gconf_utils_get_entries( provider->private->gconf, path );
+		fma_gconf_utils_dump_entries( data->entries );
 
 		na_ifactory_provider_read_item(
 				NA_IFACTORY_PROVIDER( provider ),
@@ -158,7 +158,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 				NA_IFACTORY_OBJECT( item ),
 				messages );
 
-		na_gconf_utils_free_entries( data->entries );
+		fma_gconf_utils_free_entries( data->entries );
 		g_free( data );
 	}
 
@@ -289,7 +289,7 @@ read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectActi
 
 	data->parent = NA_OBJECT_ITEM( action );
 	order = na_object_get_items_slist( action );
-	list_profiles = na_gconf_utils_get_subdirs( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
+	list_profiles = fma_gconf_utils_get_subdirs( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
 
 	/* read profiles in the specified order
 	 * as a protection against bugs in NACT, we check that profile has not
@@ -343,7 +343,7 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 	profile_data = g_new0( ReaderData, 1 );
 	profile_data->parent = data->parent;
 	profile_data->path = ( gchar * ) path;
-	profile_data->entries = na_gconf_utils_get_entries( NAGP_GCONF_PROVIDER( provider )->private->gconf, path );
+	profile_data->entries = fma_gconf_utils_get_entries( NAGP_GCONF_PROVIDER( provider )->private->gconf, path );
 
 	na_ifactory_provider_read_item(
 			NA_IFACTORY_PROVIDER( provider ),
@@ -351,7 +351,7 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 			NA_IFACTORY_OBJECT( profile ),
 			messages );
 
-	na_gconf_utils_free_entries( profile_data->entries );
+	fma_gconf_utils_free_entries( profile_data->entries );
 	g_free( profile_data );
 }
 
@@ -367,7 +367,7 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 	gint int_value;
 
 	boxed = NULL;
-	have_entry = na_gconf_utils_has_entry( reader_data->entries, def->gconf_entry );
+	have_entry = fma_gconf_utils_has_entry( reader_data->entries, def->gconf_entry );
 	g_debug( "%s: entry=%s, have_entry=%s", thisfn, def->gconf_entry, have_entry ? "True":"False" );
 
 	if( have_entry ){
@@ -378,24 +378,24 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 
 			case NA_DATA_TYPE_STRING:
 			case NA_DATA_TYPE_LOCALE_STRING:
-				str_value = na_gconf_utils_read_string( provider->private->gconf, entry_path, TRUE, NULL );
+				str_value = fma_gconf_utils_read_string( provider->private->gconf, entry_path, TRUE, NULL );
 				fma_boxed_set_from_string( FMA_BOXED( boxed ), str_value );
 				g_free( str_value );
 				break;
 
 			case NA_DATA_TYPE_BOOLEAN:
-				bool_value = na_gconf_utils_read_bool( provider->private->gconf, entry_path, TRUE, FALSE );
+				bool_value = fma_gconf_utils_read_bool( provider->private->gconf, entry_path, TRUE, FALSE );
 				fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( bool_value ));
 				break;
 
 			case NA_DATA_TYPE_STRING_LIST:
-				slist_value = na_gconf_utils_read_string_list( provider->private->gconf, entry_path );
+				slist_value = fma_gconf_utils_read_string_list( provider->private->gconf, entry_path );
 				fma_boxed_set_from_void( FMA_BOXED( boxed ), slist_value );
 				fma_core_utils_slist_free( slist_value );
 				break;
 
 			case NA_DATA_TYPE_UINT:
-				int_value = na_gconf_utils_read_int( provider->private->gconf, entry_path, TRUE, 0 );
+				int_value = fma_gconf_utils_read_int( provider->private->gconf, entry_path, TRUE, 0 );
 				fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( int_value ));
 				break;
 

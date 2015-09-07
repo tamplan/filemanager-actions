@@ -71,7 +71,7 @@ libna_core_la_SOURCES = \
 	na-gconf-migration.c								\
 	na-gconf-migration.h								\
 	fma-gconf-monitor.c									\
-	na-gconf-utils.c									\
+	fma-gconf-utils.c									\
 	na-gnome-vfs-uri.c									\
 	na-gnome-vfs-uri.h									\
 	na-gtk-utils.c										\

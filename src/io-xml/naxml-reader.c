@@ -36,7 +36,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-gconf-utils.h>
+#include <api/fma-gconf-utils.h>
 #include <api/fma-data-types.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>

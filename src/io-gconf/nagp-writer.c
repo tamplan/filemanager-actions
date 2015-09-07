@@ -39,7 +39,7 @@
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
 #include <api/fma-core-utils.h>
-#include <api/na-gconf-utils.h>
+#include <api/fma-gconf-utils.h>
 
 #include "nagp-gconf-provider.h"
 #include "nagp-writer.h"
@@ -91,11 +91,11 @@ nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 
 	if( !self->private->dispose_has_run ){
 
-		if( !na_gconf_utils_write_string( self->private->gconf, path, "foo", NULL )){
+		if( !fma_gconf_utils_write_string( self->private->gconf, path, "foo", NULL )){
 			able_to = FALSE;
 
 		} else {
-			gchar *str = na_gconf_utils_read_string( self->private->gconf, path, FALSE, NULL );
+			gchar *str = fma_gconf_utils_read_string( self->private->gconf, path, FALSE, NULL );
 			if( strcmp( str, "foo" )){
 				able_to = FALSE;
 
@@ -252,7 +252,7 @@ write_start_write_type( NagpGConfProvider *provider, NAObjectItem *item )
 	id = na_object_get_id( item );
 	path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, id, NAGP_ENTRY_TYPE );
 
-	na_gconf_utils_write_string(
+	fma_gconf_utils_write_string(
 			provider->private->gconf,
 			path,
 			NA_IS_OBJECT_ACTION( item ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU,
@@ -272,7 +272,7 @@ write_start_write_version( NagpGConfProvider *provider, NAObjectItem *item )
 	path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, id, NAGP_ENTRY_IVERSION );
 
 	iversion = na_object_get_iversion( item );
-	na_gconf_utils_write_int( provider->private->gconf, path, iversion, NULL );
+	fma_gconf_utils_write_int( provider->private->gconf, path, iversion, NULL );
 
 	g_free( path );
 	g_free( id );
@@ -324,7 +324,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 			case NA_DATA_TYPE_STRING:
 				str_value = fma_boxed_get_string( FMA_BOXED( boxed ));
-				na_gconf_utils_write_string( gconf, path, str_value, &msg );
+				fma_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
 					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
@@ -334,7 +334,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 			case NA_DATA_TYPE_LOCALE_STRING:
 				str_value = fma_boxed_get_string( FMA_BOXED( boxed ));
-				na_gconf_utils_write_string( gconf, path, str_value, &msg );
+				fma_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
 					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
@@ -344,7 +344,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 			case NA_DATA_TYPE_BOOLEAN:
 				bool_value = GPOINTER_TO_UINT( fma_boxed_get_as_void( FMA_BOXED( boxed )));
-				na_gconf_utils_write_bool( gconf, path, bool_value, &msg );
+				fma_gconf_utils_write_bool( gconf, path, bool_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
 					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
@@ -353,7 +353,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 			case NA_DATA_TYPE_STRING_LIST:
 				slist_value = ( GSList * ) fma_boxed_get_as_void( FMA_BOXED( boxed ));
-				na_gconf_utils_write_string_list( gconf, path, slist_value, &msg );
+				fma_gconf_utils_write_string_list( gconf, path, slist_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
 					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
@@ -363,7 +363,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 			case NA_DATA_TYPE_UINT:
 				uint_value = GPOINTER_TO_UINT( fma_boxed_get_as_void( FMA_BOXED( boxed )));
-				na_gconf_utils_write_int( gconf, path, uint_value, &msg );
+				fma_gconf_utils_write_int( gconf, path, uint_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
 					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;

@@ -36,7 +36,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-gconf-utils.h>
+#include <api/fma-gconf-utils.h>
 
 static void        dump_entry( GConfEntry *entry, void *user_data );
 static GConfValue *read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfValueType type );
@@ -46,20 +46,20 @@ static gboolean    sync_gconf( GConfClient *gconf, gchar **message );
 #endif /* NA_ENABLE_DEPRECATED */
 
 /**
- * na_gconf_utils_get_subdirs:
+ * fma_gconf_utils_get_subdirs:
  * @gconf: a GConfClient instance.
  * @path: a full path to be read.
  *
  * Returns: a list of full path subdirectories.
  *
- * The returned list should be na_gconf_utils_free_subdirs() by the caller.
+ * The returned list should be fma_gconf_utils_free_subdirs() by the caller.
  *
  * Since: 2.30
  */
 GSList *
-na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
+fma_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
 {
-	static const gchar *thisfn = "na_gconf_utils_get_subdirs";
+	static const gchar *thisfn = "fma_gconf_utils_get_subdirs";
 	GError *error = NULL;
 	GSList *list_subdirs;
 
@@ -75,22 +75,22 @@ na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
 }
 
 /**
- * na_gconf_utils_free_subdirs:
- * @subdirs: the subdirectory list as returned from na_gconf_utils_get_subdirs().
+ * fma_gconf_utils_free_subdirs:
+ * @subdirs: the subdirectory list as returned from fma_gconf_utils_get_subdirs().
  *
  * Release the list.
  *
  * Since: 2.30
  */
 void
-na_gconf_utils_free_subdirs( GSList *subdirs )
+fma_gconf_utils_free_subdirs( GSList *subdirs )
 {
 	fma_core_utils_slist_free( subdirs );
 }
 
 /**
- * na_gconf_utils_has_entry:
- * @entries: the list of entries as returned by na_gconf_utils_get_entries().
+ * fma_gconf_utils_has_entry:
+ * @entries: the list of entries as returned by fma_gconf_utils_get_entries().
  * @entry: the entry to be tested.
  *
  * Returns: %TRUE if the given @entry exists in the specified @entries,
@@ -99,7 +99,7 @@ na_gconf_utils_free_subdirs( GSList *subdirs )
  * Since: 2.30
  */
 gboolean
-na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
+fma_gconf_utils_has_entry( GSList *entries, const gchar *entry )
 {
 	GSList *ie;
 
@@ -116,7 +116,7 @@ na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
 }
 
 /**
- * na_gconf_utils_get_entries:
+ * fma_gconf_utils_get_entries:
  * @gconf: a  GConfClient instance.
  * @path: a full path to be read.
  *
@@ -126,14 +126,14 @@ na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
  *
  * The returned list is not recursive : it contains only the immediate
  * children of @path. To free the returned list, call
- * na_gconf_utils_free_entries().
+ * fma_gconf_utils_free_entries().
  *
  * Since: 2.30
  */
 GSList *
-na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
+fma_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
 {
-	static const gchar *thisfn = "na_gconf_utils_get_entries";
+	static const gchar *thisfn = "fma_gconf_utils_get_entries";
 	GError *error = NULL;
 	GSList *list_entries;
 
@@ -149,8 +149,8 @@ na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
 }
 
 /**
- * na_gconf_utils_get_bool_from_entries:
- * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * fma_gconf_utils_get_bool_from_entries:
+ * @entries: a list of #GConfEntry as returned by fma_gconf_utils_get_entries().
  * @entry: the searched entry.
  * @value: a pointer to a gboolean to be set to the found value.
  *
@@ -162,7 +162,7 @@ na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
  * Since: 2.30
  */
 gboolean
-na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gboolean *value )
+fma_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gboolean *value )
 {
 	GSList *ip;
 	GConfEntry *gconf_entry;
@@ -196,8 +196,8 @@ na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gbool
 }
 
 /**
- * na_gconf_utils_get_string_from_entries:
- * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * fma_gconf_utils_get_string_from_entries:
+ * @entries: a list of #GConfEntry as returned by fma_gconf_utils_get_entries().
  * @entry: the searched entry.
  * @value: a pointer to a gchar * to be set to the found value.
  *
@@ -211,7 +211,7 @@ na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gbool
  * Since: 2.30
  */
 gboolean
-na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gchar **value )
+fma_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gchar **value )
 {
 	GSList *ip;
 	GConfEntry *gconf_entry;
@@ -245,8 +245,8 @@ na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gch
 }
 
 /**
- * na_gconf_utils_get_string_list_from_entries:
- * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * fma_gconf_utils_get_string_list_from_entries:
+ * @entries: a list of #GConfEntry as returned by fma_gconf_utils_get_entries().
  * @entry: the searched entry.
  * @value: a pointer to a GSList * to be set to the found value.
  *
@@ -261,7 +261,7 @@ na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gch
  * Since: 2.30
  */
 gboolean
-na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry, GSList **value )
+fma_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry, GSList **value )
 {
 	GSList *ip, *iv;
 	GConfEntry *gconf_entry;
@@ -299,15 +299,15 @@ na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry
 }
 
 /**
- * na_gconf_utils_dump_entries:
- * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * fma_gconf_utils_dump_entries:
+ * @entries: a list of #GConfEntry as returned by fma_gconf_utils_get_entries().
  *
  * Dumps the content of the entries.
  *
  * Since: 2.30
  */
 void
-na_gconf_utils_dump_entries( GSList *entries )
+fma_gconf_utils_dump_entries( GSList *entries )
 {
 	g_slist_foreach( entries, ( GFunc ) dump_entry, NULL );
 }
@@ -315,7 +315,7 @@ na_gconf_utils_dump_entries( GSList *entries )
 static void
 dump_entry( GConfEntry *entry, void *user_data )
 {
-	static const gchar *thisfn = "na_gconf_utils_dump_entry";
+	static const gchar *thisfn = "fma_gconf_utils_dump_entry";
 	gchar *str = NULL;
 	gboolean str_free = FALSE;
 	GSList *value_list, *it;
@@ -383,22 +383,22 @@ dump_entry( GConfEntry *entry, void *user_data )
 }
 
 /**
- * na_gconf_utils_free_entries:
- * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * fma_gconf_utils_free_entries:
+ * @entries: a list of #GConfEntry as returned by fma_gconf_utils_get_entries().
  *
  * Releases the provided list.
  *
  * Since: 2.30
  */
 void
-na_gconf_utils_free_entries( GSList *entries )
+fma_gconf_utils_free_entries( GSList *entries )
 {
 	g_slist_foreach( entries, ( GFunc ) gconf_entry_unref, NULL );
 	g_slist_free( entries );
 }
 
 /**
- * na_gconf_utils_read_bool:
+ * fma_gconf_utils_read_bool:
  * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @use_schema: whether to use the default value from schema, or not.
@@ -410,7 +410,7 @@ na_gconf_utils_free_entries( GSList *entries )
  * Since: 2.30
  */
 gboolean
-na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_schema, gboolean default_value )
+fma_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_schema, gboolean default_value )
 {
 	GConfValue *value;
 	gboolean ret;
@@ -429,7 +429,7 @@ na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_sc
 }
 
 /**
- * na_gconf_utils_read_int:
+ * fma_gconf_utils_read_int:
  * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @use_schema: whether to use the default value from schema, or not.
@@ -441,7 +441,7 @@ na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_sc
  * Since: 2.30
  */
 gint
-na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_schema, gint default_value )
+fma_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_schema, gint default_value )
 {
 	GConfValue *value = NULL;
 	gint ret;
@@ -461,7 +461,7 @@ na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_sch
 }
 
 /**
- * na_gconf_utils_read_string:
+ * fma_gconf_utils_read_string:
  * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @use_schema: whether to use the default value from schema, or not.
@@ -474,7 +474,7 @@ na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_sch
  * Since: 2.30
  */
 gchar *
-na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_schema, const gchar *default_value )
+fma_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_schema, const gchar *default_value )
 {
 	GConfValue *value = NULL;
 	gchar *result;
@@ -495,7 +495,7 @@ na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_
 }
 
 /**
- * na_gconf_utils_read_string_list:
+ * fma_gconf_utils_read_string_list:
  * @gconf: a GConfClient instance.
  * @path: the full path to the key to be read.
  *
@@ -507,9 +507,9 @@ na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_
  * Since: 2.30
  */
 GSList *
-na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
+fma_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
 {
-	static const gchar *thisfn = "na_gconf_utils_read_string_list";
+	static const gchar *thisfn = "fma_gconf_utils_read_string_list";
 	GError *error = NULL;
 	GSList *list_strings;
 
@@ -528,7 +528,7 @@ na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
- * na_gconf_utils_write_bool:
+ * fma_gconf_utils_write_bool:
  * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @value: the value to be written.
@@ -545,9 +545,9 @@ na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
  * Deprecated: 3.1
  */
 gboolean
-na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value, gchar **message )
+fma_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value, gchar **message )
 {
-	static const gchar *thisfn = "na_gconf_utils_write_bool";
+	static const gchar *thisfn = "fma_gconf_utils_write_bool";
 	gboolean ret = TRUE;
 	GError *error = NULL;
 
@@ -566,7 +566,7 @@ na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value
 }
 
 /**
- * na_gconf_utils_write_int:
+ * fma_gconf_utils_write_int:
  * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @value: the value to be written.
@@ -583,9 +583,9 @@ na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value
  * Deprecated: 3.1
  */
 gboolean
-na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gchar **message )
+fma_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gchar **message )
 {
-	static const gchar *thisfn = "na_gconf_utils_write_int";
+	static const gchar *thisfn = "fma_gconf_utils_write_int";
 	gboolean ret = TRUE;
 	GError *error = NULL;
 
@@ -604,7 +604,7 @@ na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gch
 }
 
 /**
- * na_gconf_utils_write_string:
+ * fma_gconf_utils_write_string:
  * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @value: the value to be written.
@@ -621,9 +621,9 @@ na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gch
  * Deprecated: 3.1
  */
 gboolean
-na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message )
+fma_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message )
 {
-	static const gchar *thisfn = "na_gconf_utils_write_string";
+	static const gchar *thisfn = "fma_gconf_utils_write_string";
 	gboolean ret = TRUE;
 	GError *error = NULL;
 
@@ -642,7 +642,7 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
 }
 
 /**
- * na_gconf_utils_write_string_list:
+ * fma_gconf_utils_write_string_list:
  * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @value: the list of values to be written.
@@ -659,9 +659,9 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
  * Deprecated: 3.1
  */
 gboolean
-na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList *value, gchar **message )
+fma_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList *value, gchar **message )
 {
-	static const gchar *thisfn = "na_gconf_utils_write_string_list";
+	static const gchar *thisfn = "fma_gconf_utils_write_string_list";
 	gboolean ret = TRUE;
 	GError *error = NULL;
 
@@ -685,7 +685,7 @@ na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList 
 }
 
 /**
- * na_gconf_utils_remove_entry:
+ * fma_gconf_utils_remove_entry:
  * @gconf: a GConfClient instance.
  * @path: the full path to the entry.
  * @message: a pointer to a gchar * which will be allocated if needed.
@@ -698,9 +698,9 @@ na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList 
  * Deprecated: 3.1
  */
 gboolean
-na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **message )
+fma_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **message )
 {
-	static const gchar *thisfn = "na_gconf_utils_remove_entry";
+	static const gchar *thisfn = "fma_gconf_utils_remove_entry";
 	gboolean ret;
 	GError *error = NULL;
 
@@ -723,7 +723,7 @@ na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **mess
 }
 
 /**
- * na_gconf_utils_slist_from_string:
+ * fma_gconf_utils_slist_from_string:
  * @value: a string of the form [xxx,yyy,...] as read from GConf.
  *
  * Converts a string representing a list of strings in a GConf format
@@ -737,7 +737,7 @@ na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **mess
  * Deprecated: 3.1
  */
 GSList *
-na_gconf_utils_slist_from_string( const gchar *value )
+fma_gconf_utils_slist_from_string( const gchar *value )
 {
 	GSList *slist;
 	gchar *tmp_string;
@@ -763,7 +763,7 @@ na_gconf_utils_slist_from_string( const gchar *value )
 }
 
 /**
- * na_gconf_utils_slist_to_string:
+ * fma_gconf_utils_slist_to_string:
  * @slist: a #GSList to be displayed.
  *
  * Returns: the content of @slist, with the GConf format, as a newly
@@ -773,7 +773,7 @@ na_gconf_utils_slist_from_string( const gchar *value )
  * Deprecated: 3.1
  */
 gchar *
-na_gconf_utils_slist_to_string( GSList *slist )
+fma_gconf_utils_slist_to_string( GSList *slist )
 {
 	GSList *is;
 	GString *str = g_string_new( "[" );
@@ -797,7 +797,7 @@ na_gconf_utils_slist_to_string( GSList *slist )
 static GConfValue *
 read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfValueType type )
 {
-	static const gchar *thisfn = "na_gconf_utils_read_value";
+	static const gchar *thisfn = "fma_gconf_utils_read_value";
 	GError *error = NULL;
 	GConfValue *value = NULL;
 
@@ -831,7 +831,7 @@ read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfVal
 static gboolean
 sync_gconf( GConfClient *gconf, gchar **message )
 {
-	static const gchar *thisfn = "na_gconf_utils_sync_gconf";
+	static const gchar *thisfn = "fma_gconf_utils_sync_gconf";
 	gboolean ret = TRUE;
 	GError *error = NULL;
 
