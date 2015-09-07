@@ -2,8 +2,8 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
   <!-- name and version of the application -->
-  <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
-  <!ENTITY appnamex "Nautilus-Actions Configuration Tool">
+  <!ENTITY prodname "<productname>FileManager-Actions</productname>">
+  <!ENTITY appnamex "FileManager-Actions Configuration Tool">
   <!ENTITY appname "<application>&appnamex;</application>">
   <!ENTITY appversion "3.2">
 

@@ -200,7 +200,7 @@ msgid "@@image: 'figures/nact-preferences-io-providers.png'; md5=edefe4c9d9cf5f5
 msgstr "@@image: 'figures/nact-preferences-io-providers.png'; md5=edefe4c9d9cf5f568d36b4c2ed3e044b"
 
 #: C/nautilus-actions-config-tool.xml:2(title)
-msgid "<application>Nautilus-Actions Configuration Tool</application> User's Manual"
+msgid "<application>FileManager-Actions Configuration Tool</application> User's Manual"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:5(year)
@@ -213,15 +213,15 @@ msgstr "Pierre Wieser"
 
 #: C/nautilus-actions-config-tool.xml:10(para)
 #: C/nautilus-actions-config-tool.xml:74(para)
-msgid "<productname>Nautilus-Actions</productname> is a <productname>Nautilus</productname> extension whose principal function is to allow the user to add arbitrary actions to the file manager context menus. These actions may be organized in menus and submenus, exported and shared with other desktop environments."
+msgid "<productname>FileManager-Actions</productname> is a <productname>Nautilus</productname> extension whose principal function is to allow the user to add arbitrary actions to the file manager context menus. These actions may be organized in menus and submenus, exported and shared with other desktop environments."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:16(para)
-msgid "This manual describes the <application>Nautilus-Actions Configuration Tool</application> user interface, and explains how you may configure your menus and actions, making them be displayed and applied depending on specific conditions."
+msgid "This manual describes the <application>FileManager-Actions Configuration Tool</application> user interface, and explains how you may configure your menus and actions, making them be displayed and applied depending on specific conditions."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:23(releaseinfo)
-msgid "This manual describes version 3.0 of Nautilus-Actions Configuration Tool."
+msgid "This manual describes version 3.0 of FileManager-Actions Configuration Tool."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:28(publishername)
@@ -241,7 +241,7 @@ msgid "pwieser@trychlos.org"
 msgstr "pwieser@trychlos.org"
 
 #: C/nautilus-actions-config-tool.xml:74(revnumber)
-msgid "Nautilus-Actions Configuration Tool User's Manual v 3.0"
+msgid "FileManager-Actions Configuration Tool User's Manual v 3.0"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:75(date)
@@ -281,7 +281,7 @@ msgid "Nautilus"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:0(productname)
-msgid "Nautilus-Actions"
+msgid "FileManager-Actions"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:73(title)
@@ -289,11 +289,11 @@ msgid "Introduction"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:80(para)
-msgid "The <application>Nautilus-Actions Configuration Tool</application> application is the user interface which lets you precisely configure how, where and when your actions should appear in <productname>Nautilus</productname> context menus, and how they will be executed."
+msgid "The <application>FileManager-Actions Configuration Tool</application> application is the user interface which lets you precisely configure how, where and when your actions should appear in <productname>Nautilus</productname> context menus, and how they will be executed."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:85(para)
-msgid "<application>Nautilus-Actions Configuration Tool</application> provides the following features:"
+msgid "<application>FileManager-Actions Configuration Tool</application> provides the following features:"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:90(para)
@@ -309,7 +309,7 @@ msgid "Import and export actions and menus from and to outside world."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:100(para)
-msgid "<productname>Nautilus-Actions</productname> also comes with additional features such as:"
+msgid "<productname>FileManager-Actions</productname> also comes with additional features such as:"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:105(para)
@@ -329,7 +329,7 @@ msgid "A command-line program which is able to create a new action."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:126(para)
-msgid "All these features are more thoroughly described in the global <productname>Nautilus-Actions</productname> documentation."
+msgid "All these features are more thoroughly described in the global <productname>FileManager-Actions</productname> documentation."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:143(title)
@@ -337,11 +337,11 @@ msgid "Getting Started"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:2(title)
-msgid "Starting <application>Nautilus-Actions Configuration Tool</application>"
+msgid "Starting <application>FileManager-Actions Configuration Tool</application>"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:3(para)
-msgid "You can start <application>Nautilus-Actions Configuration Tool</application> in the following ways:"
+msgid "You can start <application>FileManager-Actions Configuration Tool</application> in the following ways:"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:8(term)
@@ -349,7 +349,7 @@ msgid "<guimenu>System</guimenu> menu"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:10(para)
-msgid "Choose <menuchoice><guisubmenu>Preferences</guisubmenu><guisubmenu>Look and Feel</guisubmenu><guimenuitem>Nautilus-Actions Configuration Tool</guimenuitem></menuchoice>."
+msgid "Choose <menuchoice><guisubmenu>Preferences</guisubmenu><guisubmenu>Look and Feel</guisubmenu><guimenuitem>FileManager-Actions Configuration Tool</guimenuitem></menuchoice>."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:21(term)
@@ -357,7 +357,7 @@ msgid "Command line"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:23(para)
-msgid "To start <application>Nautilus-Actions Configuration Tool</application> from a command line, type the following command:"
+msgid "To start <application>FileManager-Actions Configuration Tool</application> from a command line, type the following command:"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:27(filename)
@@ -384,15 +384,15 @@ msgid "The first run"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:53(para)
-msgid "When you start <application>Nautilus-Actions Configuration Tool</application>, the following window is displayed."
+msgid "When you start <application>FileManager-Actions Configuration Tool</application>, the following window is displayed."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:57(title)
-msgid "<application>Nautilus-Actions Configuration Tool</application> Start Up Window"
+msgid "<application>FileManager-Actions Configuration Tool</application> Start Up Window"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:0(application)
-msgid "Nautilus-Actions Configuration Tool"
+msgid "FileManager-Actions Configuration Tool"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:64(phrase)
@@ -400,14 +400,14 @@ msgid "Shows <placeholder-1/> main window. Contains menubar, toolbar, display ar
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:72(para)
-msgid "The empty <application>Nautilus-Actions Configuration Tool</application> main window"
+msgid "The empty <application>FileManager-Actions Configuration Tool</application> main window"
 msgstr ""
 
 #. Include any descriptions of the GUI immediately after the screenshot
 #. of the main UI, for example, the items on the menubar and on the toolbar.
 #. This section is optional.
 #: C/nautilus-actions-config-tool.xml:82(para)
-msgid "The <application>Nautilus-Actions Configuration Tool</application> main window contains the following elements:"
+msgid "The <application>FileManager-Actions Configuration Tool</application> main window contains the following elements:"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:87(term)
@@ -415,7 +415,7 @@ msgid "Menubar."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:89(para)
-msgid "The menus on the menubar contain all of the commands you need to use in <application>Nautilus-Actions Configuration Tool</application>."
+msgid "The menus on the menubar contain all of the commands you need to use in <application>FileManager-Actions Configuration Tool</application>."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:93(para)
@@ -526,7 +526,7 @@ msgid "Items list."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:244(para)
-msgid "The list on the left of the main window contains all items, whether they are actions or menus, currently available for edition in <application>Nautilus-Actions Configuration Tool</application>."
+msgid "The list on the left of the main window contains all items, whether they are actions or menus, currently available for edition in <application>FileManager-Actions Configuration Tool</application>."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:249(para)
@@ -735,7 +735,7 @@ msgid "The <guilabel>Context label</guilabel> entry box contains the label of th
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:510(para)
-msgid "The label is a mandatory property of your action. If it happens to be empty, then your action will be considered as invalid by <productname>Nautilus-Actions</productname>: it will be displayed in red in <guilabel>Items list</guilabel> and will never be candidate to be displayed in the file manager context menus."
+msgid "The label is a mandatory property of your action. If it happens to be empty, then your action will be considered as invalid by <productname>FileManager-Actions</productname>: it will be displayed in red in <guilabel>Items list</guilabel> and will never be candidate to be displayed in the file manager context menus."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:519(para)
@@ -862,7 +862,7 @@ msgid "Shows the result of the execution of your first action. This is <placehol
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:152(title)
-msgid "Using <application>Nautilus-Actions Configuration Tool</application>"
+msgid "Using <application>FileManager-Actions Configuration Tool</application>"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:2(title)
@@ -878,7 +878,7 @@ msgid "Conditions may be put against the location the file manager currently poi
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:12(para)
-msgid "Each time the selection or the location change in the file manager, <productname>Nautilus-Actions</productname> checks all your actions, comparing the defined conditions against the new location and selection: all defined conditions must be satisfied in order your action be actually displayed."
+msgid "Each time the selection or the location change in the file manager, <productname>FileManager-Actions</productname> checks all your actions, comparing the defined conditions against the new location and selection: all defined conditions must be satisfied in order your action be actually displayed."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:20(title)
@@ -1717,7 +1717,7 @@ msgid "The <guibutton>Legend</guibutton> button has a toggling action: click onc
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:49(para)
-msgid "The word « <guilabel>first</guilabel> » may be misleading as it only refers to the list of selected items internally provided by the file manager to the <productname>Nautilus-Actions</productname> plugin."
+msgid "The word « <guilabel>first</guilabel> » may be misleading as it only refers to the list of selected items internally provided by the file manager to the <productname>FileManager-Actions</productname> plugin."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:54(para)
@@ -1758,7 +1758,7 @@ msgid "How the action should it be executed ?"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:105(para)
-msgid "Apart from configuring the conditions the selection must met in order your action be displayed in file manager menus, <productname>Nautilus-Actions</productname> allows you to configure how exactly your command will be executed."
+msgid "Apart from configuring the conditions the selection must met in order your action be displayed in file manager menus, <productname>FileManager-Actions</productname> allows you to configure how exactly your command will be executed."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:111(para)
@@ -1896,7 +1896,7 @@ msgid "Or you may prefer your command be repeated for each selected item, giving
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:298(para)
-msgid "Actually, <productname>Nautilus-Actions</productname> automatically handles these two behaviors, depending of the form and the order of the parameters in the comamnd arguments."
+msgid "Actually, <productname>FileManager-Actions</productname> automatically handles these two behaviors, depending of the form and the order of the parameters in the comamnd arguments."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:303(para)
@@ -1920,15 +1920,15 @@ msgid "When the selection contains more than one item:"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:333(para)
-msgid "if the first relevant parameter is of a singular form, then <productname>Nautilus-Actions</productname> will consider that the command is only able to deal with one item at a time, and thus that it has to be ran one time for each selected item;"
+msgid "if the first relevant parameter is of a singular form, then <productname>FileManager-Actions</productname> will consider that the command is only able to deal with one item at a time, and thus that it has to be ran one time for each selected item;"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:341(para)
-msgid "contrarily, if the first relevant parameter found is of the plural form, then <productname>Nautilus-Actions</productname> will consider that the command is able to deal with a list of items, and thus the command will be executed only once;"
+msgid "contrarily, if the first relevant parameter found is of the plural form, then <productname>FileManager-Actions</productname> will consider that the command is able to deal with a list of items, and thus the command will be executed only once;"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:348(para)
-msgid "if all found parameters are irrelevant, then <productname>Nautilus-Actions</productname> defaults to consider that the command should be executed only once."
+msgid "if all found parameters are irrelevant, then <productname>FileManager-Actions</productname> defaults to consider that the command should be executed only once."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:355(title)
@@ -2254,7 +2254,7 @@ msgid "One solution is to define a new profile to your action, configuring this 
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:28(para)
-msgid "At runtime, <productname>Nautilus-Actions</productname> will successively examine each profile attached to your action. If the first profile targets a file while you have selected a directory, then <productname>Nautilus-Actions</productname> will just try with your second profile."
+msgid "At runtime, <productname>FileManager-Actions</productname> will successively examine each profile attached to your action. If the first profile targets a file while you have selected a directory, then <productname>FileManager-Actions</productname> will just try with your second profile."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:35(para)
@@ -2274,11 +2274,11 @@ msgid "Ordering the profiles inside an action"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:53(para)
-msgid "At runtime, <productname>Nautilus-Actions</productname> will begin with examining the conditions set on your action."
+msgid "At runtime, <productname>FileManager-Actions</productname> will begin with examining the conditions set on your action."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:57(para)
-msgid "If these conditions (the action-conditions) are met, then <productname>Nautilus-Actions</productname> will examine in order each profile."
+msgid "If these conditions (the action-conditions) are met, then <productname>FileManager-Actions</productname> will examine in order each profile."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:61(para)
@@ -2358,7 +2358,7 @@ msgid "Sorting the items list"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:3(para)
-msgid "Your actions and menus will be displayed in file manager context menus in the same order that they are listed in the <guilabel>Items list</guilabel>, on the left pane of the main <application>Nautilus-Actions Configuration Tool</application> window."
+msgid "Your actions and menus will be displayed in file manager context menus in the same order that they are listed in the <guilabel>Items list</guilabel>, on the left pane of the main <application>FileManager-Actions Configuration Tool</application> window."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:8(para)
@@ -2424,7 +2424,7 @@ msgid "Editing"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:3(para)
-msgid "With <application>Nautilus-Actions Configuration Tool</application>, you may safely cut, copy, paste to and from the clipboard."
+msgid "With <application>FileManager-Actions Configuration Tool</application>, you may safely cut, copy, paste to and from the clipboard."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:8(title)
@@ -2440,11 +2440,11 @@ msgid "Multiple selection"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:19(para)
-msgid "Multiple selection is possible in <application>Nautilus-Actions Configuration Tool</application>. You can extend the current selection by pressing the touch <keycap>Ctrl</keycap> or <keycap>Shift</keycap> while selecting an item to add to the selection."
+msgid "Multiple selection is possible in <application>FileManager-Actions Configuration Tool</application>. You can extend the current selection by pressing the touch <keycap>Ctrl</keycap> or <keycap>Shift</keycap> while selecting an item to add to the selection."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:25(para)
-msgid "<application>Nautilus-Actions Configuration Tool</application> only accepts homogeneous multiple selections. That is, you may select one or more profiles, or one or more actions or menus. A multiple selection containing both profiles and actions or menus is not allowed. This is because <application>Nautilus-Actions Configuration Tool</application> would not know where to paste such a selection."
+msgid "<application>FileManager-Actions Configuration Tool</application> only accepts homogeneous multiple selections. That is, you may select one or more profiles, or one or more actions or menus. A multiple selection containing both profiles and actions or menus is not allowed. This is because <application>FileManager-Actions Configuration Tool</application> would not know where to paste such a selection."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:31(para)
@@ -2464,7 +2464,7 @@ msgid "All your pending modifications will be saved. New items will be created b
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:20(para)
-msgid "<productname>Nautilus-Actions</productname> also has an Auto-save feature which is configurable in <guimenuitem>Preferences</guimenuitem> dialog box."
+msgid "<productname>FileManager-Actions</productname> also has an Auto-save feature which is configurable in <guimenuitem>Preferences</guimenuitem> dialog box."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:2(title)
@@ -2551,7 +2551,7 @@ msgid "Miscellaneous informations"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:1(para)
-msgid "The new action is also displayed in red color in the items list. Red color is used as an indicator that the item is invalid, that is that the item cannot be candidate to be displayed in a <productname>Nautilus</productname> context menu because some of its informations are missing or erroneous. Here, and though this newly inserted action has some suitable defaults, it lacks a command to be executed to be considered valid by <application>Nautilus-Actions Configuration Tool</application>"
+msgid "The new action is also displayed in red color in the items list. Red color is used as an indicator that the item is invalid, that is that the item cannot be candidate to be displayed in a <productname>Nautilus</productname> context menu because some of its informations are missing or erroneous. Here, and though this newly inserted action has some suitable defaults, it lacks a command to be executed to be considered valid by <application>FileManager-Actions Configuration Tool</application>"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:181(title)
@@ -2567,7 +2567,7 @@ msgid "Known bugs are available on <ulink url=\"https://bugzilla.gnome.org/bugli
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:7(para)
-msgid "If you find some new bug in <productname>Nautilus-Actions</productname>, you are welcome to open it by pointing your favorite browser to <ulink url=\"https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions\" type=\"http\">Bugzilla web site</ulink>."
+msgid "If you find some new bug in <productname>FileManager-Actions</productname>, you are welcome to open it by pointing your favorite browser to <ulink url=\"https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions\" type=\"http\">Bugzilla web site</ulink>."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:14(title)
@@ -2575,7 +2575,7 @@ msgid "<ulink url=\"https://bugzilla.gnome.org/show_bug.cgi?id=616532\" type=\"h
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:15(para)
-msgid "When you're browsing the folder you want to export to in the <application>Nautilus-Actions Configuration Tool</application>'s export assistant you can't select it as the directory to export to. Instead you have to go to the directory a level up and select the directory you want to export to there."
+msgid "When you're browsing the folder you want to export to in the <application>FileManager-Actions Configuration Tool</application>'s export assistant you can't select it as the directory to export to. Instead you have to go to the directory a level up and select the directory you want to export to there."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:25(title)
@@ -2583,7 +2583,7 @@ msgid "Known limitations"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:29(para)
-msgid "As of version 3.0, execution mode may be configured in <application>Nautilus-Actions Configuration Tool</application> but is not yet honored by <productname>Nautilus</productname> plugin."
+msgid "As of version 3.0, execution mode may be configured in <application>FileManager-Actions Configuration Tool</application> but is not yet honored by <productname>Nautilus</productname> plugin."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:34(para)
@@ -2595,7 +2595,7 @@ msgid "Suggested shortcut"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:41(para)
-msgid "As of version 3.0, suggested shortcut, as described in <ulink url=\"http://www.nautilus-actions.org/?q=node/377\" type=\"http\">DES-EMA specification</ulink> cannot be configured in <application>Nautilus-Actions Configuration Tool</application>, and is not honored by <productname>Nautilus</productname> plugin."
+msgid "As of version 3.0, suggested shortcut, as described in <ulink url=\"http://www.nautilus-actions.org/?q=node/377\" type=\"http\">DES-EMA specification</ulink> cannot be configured in <application>FileManager-Actions Configuration Tool</application>, and is not honored by <productname>Nautilus</productname> plugin."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:48(title)
@@ -2603,7 +2603,7 @@ msgid "Menu separator"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:49(para)
-msgid "As of version 3.0, menu separators cannot be configured in <application>Nautilus-Actions Configuration Tool</application>, and are not honored by <productname>Nautilus</productname> plugin."
+msgid "As of version 3.0, menu separators cannot be configured in <application>FileManager-Actions Configuration Tool</application>, and are not honored by <productname>Nautilus</productname> plugin."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:54(para)
@@ -2611,11 +2611,11 @@ msgid "One has to note that, for now, <productname>Nautilus</productname> file m
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:195(title)
-msgid "About <application>Nautilus-Actions Configuration Tool</application>"
+msgid "About <application>FileManager-Actions Configuration Tool</application>"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:196(para)
-msgid "The first version of <productname>Nautilus-Actions</productname> was initially written by Frederic Ruaudel (<email>grumz@grumz.net</email>) and Rodrigo Moya (<email>rodrigo@gnome-db.org</email>). It has been thoroughly improved and is currently maintained by Pierre Wieser (<email>pwieser@trychlos.org</email>)."
+msgid "The first version of <productname>FileManager-Actions</productname> was initially written by Frederic Ruaudel (<email>grumz@grumz.net</email>) and Rodrigo Moya (<email>rodrigo@gnome-db.org</email>). It has been thoroughly improved and is currently maintained by Pierre Wieser (<email>pwieser@trychlos.org</email>)."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:203(para)
@@ -2623,11 +2623,11 @@ msgid "Artwork is due to courtesy of Ulisse Perusin (<email>uli.peru@gmail.com</
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:209(para)
-msgid "To find more information about <productname>Nautilus-Actions</productname>, please visit the <ulink url=\"http://www.nautilus-actions.org/\" type=\"http\"><productname>Nautilus-Actions</productname> website</ulink>."
+msgid "To find more information about <productname>FileManager-Actions</productname>, please visit the <ulink url=\"http://www.nautilus-actions.org/\" type=\"http\"><productname>FileManager-Actions</productname> website</ulink>."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:214(para)
-msgid "To report a bug or make a suggestion regarding the <productname>Nautilus-Actions</productname>, the <application>Nautilus-Actions Configuration Tool</application> or this manual, follow the directions in the <ulink url=\"ghelp:user-guide#feedback\" type=\"help\">GNOME Feedback Page</ulink>, or you may prefer, at your convenience, directly open a bug or a request for enhancement to <ulink url=\"https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions\" type=\"http\">Bugzilla website</ulink>."
+msgid "To report a bug or make a suggestion regarding the <productname>FileManager-Actions</productname>, the <application>FileManager-Actions Configuration Tool</application> or this manual, follow the directions in the <ulink url=\"ghelp:user-guide#feedback\" type=\"help\">GNOME Feedback Page</ulink>, or you may prefer, at your convenience, directly open a bug or a request for enhancement to <ulink url=\"https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions\" type=\"http\">Bugzilla website</ulink>."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:2(title)

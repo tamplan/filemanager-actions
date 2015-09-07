@@ -12,7 +12,7 @@
           <attribute name="accel">F1</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">_About Nautilus-Actions</attribute>
+          <attribute name="label" translatable="yes">_About FileManager-Actions</attribute>
           <attribute name="action">app.about</attribute>
         </item>
         <item>
@@ -176,7 +176,7 @@
           <attribute name="accel">F1</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">_About Nautilus-Actions</attribute>
+          <attribute name="label" translatable="yes">_About FileManager-Actions</attribute>
           <attribute name="action">app.about</attribute>
         </item>
       </section>

@@ -1,22 +1,22 @@
-# Nautilus-Actions
-# A Nautilus extension which offers configurable context menu actions.
+# FileManager-Actions
+# A file-manager extension which offers configurable context menu actions.
 #
 # Copyright (C) 2005 The GNOME Foundation
 # Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
 # Copyright (C) 2009-2014 Pierre Wieser and others (see AUTHORS)
 #
-# Nautilus-Actions is free software; you can redistribute it and/or
+# FileManager-Actions is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
 # published by the Free Software Foundation; either version 2 of
 # the License, or (at your option) any later version.
 #
-# Nautilus-Actions is distributed in the hope that it will be useful,
+# FileManager-Actions is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Nautilus-Actions; see the file COPYING. If not, see
+# along with FileManager-Actions; see the file COPYING. If not, see
 # <http://www.gnu.org/licenses/>.
 #
 # Authors:
@@ -27,7 +27,7 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([Nautilus-Actions],[3.4],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+AC_INIT([FileManager-Actions],[3.4],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CANONICAL_TARGET

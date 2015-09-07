@@ -3,26 +3,26 @@
                "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
 [
   <!ENTITY version_dir SYSTEM "version_dir.xml">
-  <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
+  <!ENTITY prodname "<productname>FileManager-Actions</productname>">
   <!ENTITY nautilus "<productname>Nautilus</productname>">
 ]>
 
 <refentry id="na-getting" revision="6 Dec 2010">
 
   <refmeta>
-    <refentrytitle>Getting Nautilus-Actions</refentrytitle>
-    <refmiscinfo>Nautilus-Actions</refmiscinfo>
+    <refentrytitle>Getting FileManager-Actions</refentrytitle>
+    <refmiscinfo>FileManager-Actions</refmiscinfo>
   </refmeta>
 
   <refnamediv>
-    <refname>Getting Nautilus-Actions</refname>
+    <refname>Getting FileManager-Actions</refname>
     <refpurpose>
       Where to find it ?
     </refpurpose>
   </refnamediv>
 
   <refsect1 id="getting">
-    <title>Getting Nautilus-Actions</title>
+    <title>Getting FileManager-Actions</title>
     <para>
       The latest release may always be found in
     </para>

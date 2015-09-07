@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
                "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
 [
-  <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
+  <!ENTITY prodname "<productname>FileManager-Actions</productname>">
   <!ENTITY nautilus "<productname>Nautilus</productname>">
 ]>
 
@@ -11,7 +11,7 @@
   <refmeta>
     <refentrytitle>Distribution content</refentrytitle>
     <manvolnum>3</manvolnum>
-    <refmiscinfo>Nautilus-Actions</refmiscinfo>
+    <refmiscinfo>FileManager-Actions</refmiscinfo>
   </refmeta>
 
   <refnamediv>
@@ -42,7 +42,7 @@
             which manages DBus services;
           </listitem>
           <listitem>
-            <application>Nautilus-Actions Configuration Tool</application>
+            <application>FileManager-Actions Configuration Tool</application>
             is the user interface application which lets the user edit,
             create, delete and organize his collection of menus and actions;
           </listitem>
@@ -59,7 +59,7 @@
             <application>nautilus-actions-schemas</application>
             is a command-line utility which outputs
             to stdout the GConf schemas of the
-            <application>Nautilus-Actions Configuration Tool</application>;
+            <application>FileManager-Actions Configuration Tool</application>;
             it rather targets packagers.
           </listitem>
         </itemizedlist>
@@ -76,7 +76,7 @@
           <listitem>
             the &prodname; Configuration Tool User's Manual is the user's
             manual of the
-            <application>Nautilus-Actions Configuration Tool</application>
+            <application>FileManager-Actions Configuration Tool</application>
             management user interface. The distribution contains all
             available translations, both as HTML and PDF documents.
           </listitem>

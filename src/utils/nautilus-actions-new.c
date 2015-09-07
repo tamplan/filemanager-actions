@@ -1,23 +1,23 @@
 /*
- * Nautilus-Actions
- * A Nautilus extension which offers configurable context menu actions.
+ * FileManager-Actions
+ * A file-manager extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
  * Copyright (C) 2009-2015 Pierre Wieser and others (see AUTHORS)
  *
- * Nautilus-Actions is free software; you can redistribute it and/or
+ * FileManager-Actions is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * Nautilus-Actions is distributed in the hope that it will be useful,
+ * FileManager-Actions is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Nautilus-Actions; see the file COPYING. If not, see
+ * along with FileManager-Actions; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * Authors:
@@ -354,7 +354,7 @@ init_options( void )
 	g_option_context_set_summary( context, _(
 			"The created action defaults to be written to stdout.\n"
 			"It can also be written to an output folder, in a file later suitable for an import in NACT.\n"
-			"Or you may choose to directly write the action into your Nautilus-Actions configuration." ));
+			"Or you may choose to directly write the action into your FileManager-Actions configuration." ));
 
 	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 

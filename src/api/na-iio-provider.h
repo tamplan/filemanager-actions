@@ -1,23 +1,23 @@
 /*
- * Nautilus-Actions
- * A Nautilus extension which offers configurable context menu actions.
+ * FileManager-Actions
+ * A file-manager extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
  * Copyright (C) 2009-2015 Pierre Wieser and others (see AUTHORS)
  *
- * Nautilus-Actions is free software; you can redistribute it and/or
+ * FileManager-Actions is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * Nautilus-Actions is distributed in the hope that it will be useful,
+ * FileManager-Actions is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Nautilus-Actions; see the file COPYING. If not, see
+ * along with FileManager-Actions; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * Authors:
@@ -231,11 +231,11 @@ typedef struct {
 	 * get_version:
 	 * @instance: the NAIIOProvider provider.
 	 *
-	 * Nautilus-Actions calls this method each time it needs to know
+	 * FileManager-Actions calls this method each time it needs to know
 	 * which version of this interface the plugin implements.
 	 *
 	 * If this method is not implemented by the plugin,
-	 * Nautilus-Actions considers that the plugin only implements
+	 * FileManager-Actions considers that the plugin only implements
 	 * the version 1 of the NAIIOProvider interface.
 	 *
 	 * Return value: if implemented, this method must return the version
@@ -315,7 +315,7 @@ typedef struct {
 	 * create new ones (see e.g. is_able_to_write() method below).
 	 *
 	 * Return value: if implemented, this method must return a boolean
-	 * value, whose purpose is to let know to Nautilus-Actions whether
+	 * value, whose purpose is to let know to FileManager-Actions whether
 	 * this I/O provider is, or not, willing to write.
 	 *
 	 * Defaults to FALSE.
@@ -348,7 +348,7 @@ typedef struct {
 	 * create new ones (see e.g. 'locked' user preference key).
 	 *
 	 * Return value: if implemented, this method must return a boolean
-	 * value, whose purpose is to let know to Nautilus-Actions whether
+	 * value, whose purpose is to let know to FileManager-Actions whether
 	 * this I/O provider is eventually able to write.
 	 *
 	 * Defaults to FALSE.
@@ -408,7 +408,7 @@ typedef struct {
 	 * @messages: a pointer to a GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * Nautilus-Actions typically calls this method while duplicating
+	 * FileManager-Actions typically calls this method while duplicating
 	 * a NAObjectItem-derived object, in order to let the I/O provider
 	 * duplicates itself specific data (if any) it may have set on
 	 * @source object.

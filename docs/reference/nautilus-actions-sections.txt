@@ -1,6 +1,6 @@
 
 # ---------------------------------------------------------------------
-# Plugins — The Nautilus-Actions extension interface definition v 1
+# Plugins — The FileManager-Actions extension interface definition v 1
 
 <SECTION>
 <FILE>extension</FILE>

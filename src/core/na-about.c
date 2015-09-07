@@ -1,23 +1,23 @@
 /*
- * Nautilus-Actions
- * A Nautilus extension which offers configurable context menu actions.
+ * FileManager-Actions
+ * A file-manager extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
  * Copyright (C) 2009-2015 Pierre Wieser and others (see AUTHORS)
  *
- * Nautilus-Actions is free software; you can redistribute it and/or
+ * FileManager-Actions is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * Nautilus-Actions is distributed in the hope that it will be useful,
+ * FileManager-Actions is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Nautilus-Actions; see the file COPYING. If not, see
+ * along with FileManager-Actions; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * Authors:
@@ -69,16 +69,16 @@ na_about_display( GtkWindow *toplevel )
 	};
 
 	static gchar *license[] = {
-		N_( "Nautilus-Actions Configuration Tool is free software; you can "
+		N_( "FileManager-Actions Configuration Tool is free software; you can "
 			"redistribute it and/or modify it under the terms of the GNU General "
 			"Public License as published by the Free Software Foundation; either "
 			"version 2 of the License, or (at your option) any later version." ),
-		N_( "Nautilus-Actions Configuration Tool is distributed in the hope that it "
+		N_( "FileManager-Actions Configuration Tool is distributed in the hope that it "
 			"will be useful, but WITHOUT ANY WARRANTY; without even the implied "
 			"warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See "
 			"the GNU General Public License for more details." ),
 		N_( "You should have received a copy of the GNU General Public License along "
-			"with Nautilus-Actions Configuration Tool ; if not, write to the Free "
+			"with FileManager-Actions Configuration Tool ; if not, write to the Free "
 			"Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
 			"MA 02110-1301, USA." ),
 		NULL
@@ -98,7 +98,7 @@ na_about_display( GtkWindow *toplevel )
 			"artists", artists,
 			"authors", authors,
 			/* i10n: "Nautilus actions" here is not a typo; this does not refer to the
-			 * Nautilus-Actions product, but to the actions which are to be added to Nautilus */
+			 * FileManager-Actions product, but to the actions which are to be added to Nautilus */
 			"comments", _( "A graphical interface to create and edit your Nautilus actions." ),
 			"copyright", copyright,
 			"documenters", documenters,
@@ -129,7 +129,7 @@ gchar *
 na_about_get_application_name( void )
 {
 	/* i18n: title of the About dialog box, when seen from Nautilus file manager */
-	return( g_strdup( _( "Nautilus-Actions" )));
+	return( g_strdup( _( "FileManager-Actions" )));
 }
 
 /*

@@ -1,23 +1,23 @@
 /*
- * Nautilus-Actions
- * A Nautilus extension which offers configurable context menu actions.
+ * FileManager-Actions
+ * A file-manager extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
  * Copyright (C) 2009-2015 Pierre Wieser and others (see AUTHORS)
  *
- * Nautilus-Actions is free software; you can redistribute it and/or
+ * FileManager-Actions is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * Nautilus-Actions is distributed in the hope that it will be useful,
+ * FileManager-Actions is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Nautilus-Actions; see the file COPYING. If not, see
+ * along with FileManager-Actions; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * Authors:
@@ -192,8 +192,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
  * - whether the items list has changed (we have to reload a new pivot)
  *   > registering for notifications against NAPivot
  *
- * - whether to add the 'About Nautilus-Actions' item
- * - whether to create a 'Nautilus-Actions actions' root menu
+ * - whether to add the 'About FileManager-Actions' item
+ * - whether to create a 'FileManager-Actions actions' root menu
  *   > registering for notifications against NASettings
  */
 static void
@@ -932,9 +932,9 @@ create_root_menu( NautilusActions *plugin, GList *menu )
 	root_item = nautilus_menu_item_new(
 			"NautilusActionsExtensions",
 			/* i18n: label of an automagic root submenu */
-			_( "Nautilus-Actions actions" ),
+			_( "FileManager-Actions actions" ),
 			/* i18n: tooltip of an automagic root submenu */
-			_( "A submenu which embeds the currently available Nautilus-Actions actions and menus" ),
+			_( "A submenu which embeds the currently available FileManager-Actions actions and menus" ),
 			na_about_get_icon_name());
 	attach_submenu_to_item( root_item, menu );
 	nautilus_menu = g_list_append( NULL, root_item );
@@ -978,8 +978,8 @@ add_about_item( NautilusActions *plugin, GList *menu )
 	if( have_root_menu ){
 		about_item = nautilus_menu_item_new(
 				"AboutNautilusActions",
-				_( "About Nautilus-Actions" ),
-				_( "Display some information about Nautilus-Actions" ),
+				_( "About FileManager-Actions" ),
+				_( "Display some information about FileManager-Actions" ),
 				na_about_get_icon_name());
 
 		g_signal_connect_data(

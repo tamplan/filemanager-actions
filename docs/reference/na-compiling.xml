@@ -2,22 +2,22 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
                "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
 [
-  <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
+  <!ENTITY prodname "<productname>FileManager-Actions</productname>">
   <!ENTITY nautilus "<productname>Nautilus</productname>">
 ]>
 
 <refentry id="na-compiling" revision="4 Dec 2010">
 
   <refmeta>
-    <refentrytitle>Compiling the Nautilus-Actions package</refentrytitle>
+    <refentrytitle>Compiling the FileManager-Actions package</refentrytitle>
     <manvolnum>3</manvolnum>
-    <refmiscinfo>Nautilus-Actions</refmiscinfo>
+    <refmiscinfo>FileManager-Actions</refmiscinfo>
   </refmeta>
 
   <refnamediv>
-    <refname>Compiling the Nautilus-Actions Package</refname>
+    <refname>Compiling the FileManager-Actions Package</refname>
     <refpurpose>
-      How to compile Nautilus-Actions
+      How to compile FileManager-Actions
     </refpurpose>
   </refnamediv>
 
@@ -137,7 +137,7 @@
       <listitem>
         <para>
           <ulink url="http://www.gnome.org/~ebassi/source/">libunique</ulink>
-          is required so that the Nautilus-Actions Configuration Tool only
+          is required so that the FileManager-Actions Configuration Tool only
           executes one instance.
         </para>
       </listitem>

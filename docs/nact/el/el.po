@@ -325,7 +325,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid ""
-"<application>Nautilus-Actions Configuration Tool</application> User's Manual"
+"<application>FileManager-Actions Configuration Tool</application> User's Manual"
 msgstr ""
 "Εγχειρίδιο χρήστη του <application>Εργαλείο ρύθμισης ενεργειών Ναυτίλου</"
 "application>"
@@ -357,7 +357,7 @@ msgstr "Pierre Wieser"
 #: C/nautilus-actions-config-tool.xml:14(para)
 #: C/nautilus-actions-config-tool.xml:75(para)
 msgid ""
-"<productname>Nautilus-Actions</productname> is a <productname>Nautilus</"
+"<productname>FileManager-Actions</productname> is a <productname>Nautilus</"
 "productname> extension whose principal function is to allow the user to add "
 "arbitrary actions to the file manager context menus. These actions may be "
 "organized in menus and submenus, exported and shared with other desktop "
@@ -372,7 +372,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:20(para)
 msgid ""
-"This manual describes the <application>Nautilus-Actions Configuration Tool</"
+"This manual describes the <application>FileManager-Actions Configuration Tool</"
 "application> user interface, and explains how you may configure your menus "
 "and actions, making them be displayed and applied depending on specific "
 "conditions."
@@ -384,7 +384,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:27(releaseinfo)
 msgid ""
-"This manual describes version 3.2 of Nautilus-Actions Configuration Tool."
+"This manual describes version 3.2 of FileManager-Actions Configuration Tool."
 msgstr ""
 "Αυτό το εγχειρίδιο περιγράφει την έκδοση 3.2 του εργαλείου ρύθμισης "
 "ενεργειών του Ναυτίλου"
@@ -406,7 +406,7 @@ msgid "pwieser@trychlos.org"
 msgstr "pwieser@trychlos.org"
 
 #: C/nautilus-actions-config-tool.xml:77(revnumber)
-msgid "Nautilus-Actions Configuration Tool User's Manual v 3.1"
+msgid "FileManager-Actions Configuration Tool User's Manual v 3.1"
 msgstr "Εγχειρίδιο χρήστη v 3.1 του εργαλείου ρύθμισης ενεργειών του Ναυτίλου"
 
 #: C/nautilus-actions-config-tool.xml:78(date)
@@ -419,7 +419,7 @@ msgid "Pierre Wieser <email>pwieser@trychlos.org</email>"
 msgstr "Pierre Wieser <email>pwieser@trychlos.org</email>"
 
 #: C/nautilus-actions-config-tool.xml:87(revnumber)
-msgid "Nautilus-Actions Configuration Tool User's Manual v 3.2"
+msgid "FileManager-Actions Configuration Tool User's Manual v 3.2"
 msgstr "Εγχειρίδιο χρήστη v 3.2 του εργαλείου ρύθμισης ενεργειών του Ναυτίλου"
 
 #: C/nautilus-actions-config-tool.xml:88(date)
@@ -538,7 +538,7 @@ msgid "Nautilus"
 msgstr "Ναυτίλος"
 
 #: C/nautilus-actions-config-tool.xml:0(productname)
-msgid "Nautilus-Actions"
+msgid "FileManager-Actions"
 msgstr "Ενέργειες του Ναυτίλου"
 
 #: C/nautilus-actions-config-tool.xml:74(title)
@@ -547,7 +547,7 @@ msgstr "Εισαγωγή"
 
 #: C/nautilus-actions-config-tool.xml:81(para)
 msgid ""
-"The <application>Nautilus-Actions Configuration Tool</application> "
+"The <application>FileManager-Actions Configuration Tool</application> "
 "application is the user interface which lets you precisely configure how, "
 "where and when your actions should appear in <productname>Nautilus</"
 "productname> context menus, and how they will be executed."
@@ -559,7 +559,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:86(para)
 msgid ""
-"<application>Nautilus-Actions Configuration Tool</application> provides the "
+"<application>FileManager-Actions Configuration Tool</application> provides the "
 "following features:"
 msgstr ""
 "Το <application>Εργαλείο ρύθμισης ενεργειών του Ναυτίλου</application> "
@@ -579,7 +579,7 @@ msgstr "Εισαγωγή και εξαγωγή ενεργειών και μεν�
 
 #: C/nautilus-actions-config-tool.xml:101(para)
 msgid ""
-"<productname>Nautilus-Actions</productname> also comes with additional "
+"<productname>FileManager-Actions</productname> also comes with additional "
 "features such as:"
 msgstr ""
 "Οι <productname>Ενέργειες Ναυτίλου</productname> έρχονται επίσης με πρόσθετα "
@@ -617,7 +617,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:127(para)
 msgid ""
 "All these features are more thoroughly described in the global "
-"<productname>Nautilus-Actions</productname> documentation."
+"<productname>FileManager-Actions</productname> documentation."
 msgstr ""
 "Όλα αυτά τα γνωρίσματα περιγράφονται διεξοδικά στη γενική τεκμηρίωση του "
 "<productname>Ενέργειες Ναυτίλου</productname>."
@@ -627,14 +627,14 @@ msgid "Getting Started"
 msgstr "Ξεκινώντας"
 
 #: C/nautilus-actions-config-tool.xml:2(title)
-msgid "Starting <application>Nautilus-Actions Configuration Tool</application>"
+msgid "Starting <application>FileManager-Actions Configuration Tool</application>"
 msgstr ""
 "Έναρξη του <application>Εργαλείο ρύθμισης ενεργειών του Ναυτίλου</"
 "application>"
 
 #: C/nautilus-actions-config-tool.xml:3(para)
 msgid ""
-"You can start <application>Nautilus-Actions Configuration Tool</application> "
+"You can start <application>FileManager-Actions Configuration Tool</application> "
 "in the following ways:"
 msgstr ""
 "Μπορείτε να εκκινήσετε το <application>Εργαλείο ρύθμισης ενεργειών του "
@@ -647,7 +647,7 @@ msgstr "Μενού <guimenu>Σύστημα</guimenu>"
 #: C/nautilus-actions-config-tool.xml:10(para)
 msgid ""
 "Choose <menuchoice><guisubmenu>Preferences</guisubmenu><guisubmenu>Look and "
-"Feel</guisubmenu><guimenuitem>Nautilus-Actions Configuration Tool</"
+"Feel</guisubmenu><guimenuitem>FileManager-Actions Configuration Tool</"
 "guimenuitem></menuchoice>."
 msgstr ""
 "Επιλέξτε <menuchoice><guisubmenu>Προτιμήσεις</"
@@ -661,7 +661,7 @@ msgstr "Γραμμή εντολών"
 
 #: C/nautilus-actions-config-tool.xml:23(para)
 msgid ""
-"To start <application>Nautilus-Actions Configuration Tool</application> from "
+"To start <application>FileManager-Actions Configuration Tool</application> from "
 "a command line, type the following command:"
 msgstr ""
 "Για να εκκινήσετε το <application>Εργαλείο ρύθμισης ενεργειών του Ναυτίλου</"
@@ -693,7 +693,7 @@ msgstr "Η πρώτη εκτέλεση"
 
 #: C/nautilus-actions-config-tool.xml:55(para)
 msgid ""
-"When you start <application>Nautilus-Actions Configuration Tool</"
+"When you start <application>FileManager-Actions Configuration Tool</"
 "application>, the following window is displayed."
 msgstr ""
 "Όταν εκκινεί το <application>Εργαλείο ρύθμισης ενεργειών του Ναυτίλου</"
@@ -701,14 +701,14 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:59(title)
 msgid ""
-"<application>Nautilus-Actions Configuration Tool</application> Start Up "
+"<application>FileManager-Actions Configuration Tool</application> Start Up "
 "Window"
 msgstr ""
 "Το παράθυρο εκκίνησης του <application>Εργαλείο ρύθμισης ενεργειών του "
 "Ναυτίλου</application>"
 
 #: C/nautilus-actions-config-tool.xml:0(application)
-msgid "Nautilus-Actions Configuration Tool"
+msgid "FileManager-Actions Configuration Tool"
 msgstr "Εργαλείο ρυθμίσεων ενεργειών του Ναυτίλου"
 
 #: C/nautilus-actions-config-tool.xml:66(phrase)
@@ -723,7 +723,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:74(para)
 msgid ""
-"The empty <application>Nautilus-Actions Configuration Tool</application> "
+"The empty <application>FileManager-Actions Configuration Tool</application> "
 "main window"
 msgstr ""
 "Το κενό κυρίως παράθυρο του <application>Εργαλείο ρύθμισης ενεργειών του "
@@ -734,7 +734,7 @@ msgstr ""
 #. This section is optional.
 #: C/nautilus-actions-config-tool.xml:84(para)
 msgid ""
-"The <application>Nautilus-Actions Configuration Tool</application> main "
+"The <application>FileManager-Actions Configuration Tool</application> main "
 "window contains the following elements:"
 msgstr ""
 "Το κυρίως παράθυρο του <application>Εργαλείο ρύθμισης ενεργειών του "
@@ -747,7 +747,7 @@ msgstr "Γραμμή μενού."
 #: C/nautilus-actions-config-tool.xml:91(para)
 msgid ""
 "The menus on the menubar contain all of the commands you need to use in "
-"<application>Nautilus-Actions Configuration Tool</application>."
+"<application>FileManager-Actions Configuration Tool</application>."
 msgstr ""
 "Τα μενού στη γραμμή μενού περιέχουν όλες τις απαραίτητες εντολές για χρήση "
 "στο <application>Εργαλείο ρύθμισης ενεργειών του Ναυτίλου</application>."
@@ -1428,7 +1428,7 @@ msgstr ""
 "στοιχείου."
 
 #: C/nautilus-actions-config-tool.xml:153(title)
-msgid "Using <application>Nautilus-Actions Configuration Tool</application>"
+msgid "Using <application>FileManager-Actions Configuration Tool</application>"
 msgstr ""
 "Χρήση του <application>Εργαλείο ρύθμισης ενεργειών του Ναυτίλου</application>"
 
@@ -1457,7 +1457,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:12(para)
 msgid ""
 "Each time the selection or the location change in the file manager, "
-"<productname>Nautilus-Actions</productname> checks all your actions, "
+"<productname>FileManager-Actions</productname> checks all your actions, "
 "comparing the defined conditions against the new location and selection: all "
 "defined conditions must be satisfied in order your action be actually "
 "displayed."
@@ -3054,7 +3054,7 @@ msgstr ""
 msgid ""
 "The word « <guilabel>first</guilabel> » may be misleading as it only refers "
 "to the list of selected items internally provided by the file manager to the "
-"<productname>Nautilus-Actions</productname> plugin."
+"<productname>FileManager-Actions</productname> plugin."
 msgstr ""
 "Η λέξη « <guilabel>πρώτα</guilabel> » μπορεί να παραπλανήσει καθώς "
 "αναφέρεται μόνο στον κατάλογο των επιλεγμένων στοιχείων που παρέχονται "
@@ -3343,7 +3343,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:316(para)
 msgid ""
-"Actually, <productname>Nautilus-Actions</productname> automatically handles "
+"Actually, <productname>FileManager-Actions</productname> automatically handles "
 "these two behaviors, depending of the form and the order of the parameters "
 "in the command arguments."
 msgstr ""
@@ -3392,7 +3392,7 @@ msgstr "Όταν η επιλογή περιέχει περισσότερα απ�
 #: C/nautilus-actions-config-tool.xml:352(para)
 msgid ""
 "if the first relevant parameter is of a singular form, then "
-"<productname>Nautilus-Actions</productname> will consider that the command "
+"<productname>FileManager-Actions</productname> will consider that the command "
 "is only able to deal with one item at a time, and thus that it has to be ran "
 "one time for each selected item;"
 msgstr ""
@@ -3404,7 +3404,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:360(para)
 msgid ""
 "contrarily, if the first relevant parameter found is of the plural form, "
-"then <productname>Nautilus-Actions</productname> will consider that the "
+"then <productname>FileManager-Actions</productname> will consider that the "
 "command is able to deal with a list of items, and thus the command will be "
 "executed only once;"
 msgstr ""
@@ -3415,7 +3415,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:368(para)
 msgid ""
-"if all found parameters are irrelevant, then <productname>Nautilus-Actions</"
+"if all found parameters are irrelevant, then <productname>FileManager-Actions</"
 "productname> defaults to consider that the command should be executed only "
 "once."
 msgstr ""
@@ -3833,7 +3833,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:29(para)
 msgid ""
-"At runtime, <productname>Nautilus-Actions</productname> will successively "
+"At runtime, <productname>FileManager-Actions</productname> will successively "
 "examine each profile attached to your action. If the first profile targets a "
 "file while you have selected a directory, then <productname>Nautilus-"
 "Actions</productname> will just try with your second profile."
@@ -3872,7 +3872,7 @@ msgstr "Διάταξη των προφίλ μέσα σε μια ενέργεια
 
 #: C/nautilus-actions-config-tool.xml:56(para)
 msgid ""
-"At runtime, <productname>Nautilus-Actions</productname> will begin with "
+"At runtime, <productname>FileManager-Actions</productname> will begin with "
 "examining the conditions set on your action."
 msgstr ""
 "Κατά τον χρόνο εκτέλεσης, οι <productname>Ενέργειες Ναυτίλου</productname> "
@@ -3881,7 +3881,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:60(para)
 msgid ""
 "If these conditions (the action-conditions) are met, then "
-"<productname>Nautilus-Actions</productname> will examine in order each "
+"<productname>FileManager-Actions</productname> will examine in order each "
 "profile."
 msgstr ""
 "Αν αυτές οι συνθήκες (οι συνθήκες ενέργειας) εκπληρώνονται, τότε οι "
@@ -4039,7 +4039,7 @@ msgstr "Ταξινόμηση του καταλόγου των στοιχείων
 msgid ""
 "Your actions and menus will be displayed in file manager context menus in "
 "the same order that they are listed in the <guilabel>Items list</guilabel>, "
-"on the left pane of the main <application>Nautilus-Actions Configuration "
+"on the left pane of the main <application>FileManager-Actions Configuration "
 "Tool</application> window."
 msgstr ""
 "Οι ενέργειές σας και τα μενού σας θα εμφανιστούν στα μενού περιεχομένων του "
@@ -4150,7 +4150,7 @@ msgstr "Επεξεργασία"
 
 #: C/nautilus-actions-config-tool.xml:3(para)
 msgid ""
-"With <application>Nautilus-Actions Configuration Tool</application>, you may "
+"With <application>FileManager-Actions Configuration Tool</application>, you may "
 "safely cut, copy, paste to and from the clipboard."
 msgstr ""
 "Με το <application>Εργαλείο ρύθμισης ενεργειών του Ναυτίλου</application>, "
@@ -4183,7 +4183,7 @@ msgstr "Πολλαπλές επιλογές"
 
 #: C/nautilus-actions-config-tool.xml:22(para)
 msgid ""
-"Multiple selection is possible in <application>Nautilus-Actions "
+"Multiple selection is possible in <application>FileManager-Actions "
 "Configuration Tool</application>. You can extend the current selection by "
 "pressing <keycap>Ctrl</keycap> or <keycap>Shift</keycap> while selecting an "
 "item to add to the selection."
@@ -4195,11 +4195,11 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:29(para)
 msgid ""
-"<application>Nautilus-Actions Configuration Tool</application> only accepts "
+"<application>FileManager-Actions Configuration Tool</application> only accepts "
 "homogeneous multiple selections. That is, you may select one or more "
 "profiles, or one or more actions or menus. A multiple selection containing "
 "both profiles and actions or menus is not allowed. This is because "
-"<application>Nautilus-Actions Configuration Tool</application> would not "
+"<application>FileManager-Actions Configuration Tool</application> would not "
 "know where to paste such a selection."
 msgstr ""
 "Το <application>Εργαλείο ρύθμισης ενεργειών του Ναυτίλου</application> "
@@ -4249,7 +4249,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:24(para)
 msgid ""
-"<productname>Nautilus-Actions</productname> also has an Auto-save feature "
+"<productname>FileManager-Actions</productname> also has an Auto-save feature "
 "which is configurable in <guimenuitem>Preferences</guimenuitem> dialog box."
 msgstr ""
 "Οι <productname>Ενέργειες Ναυτίλου</productname> έχουν επίσης ένα γνώρισμα "
@@ -4377,7 +4377,7 @@ msgid ""
 "context menu because some of its informations are missing or erroneous. "
 "Here, and though this newly inserted action has some suitable defaults, it "
 "lacks a command to be executed to be considered valid by "
-"<application>Nautilus-Actions Configuration Tool</application>"
+"<application>FileManager-Actions Configuration Tool</application>"
 msgstr ""
 "Η νέα ενέργεια εμφανίζεται επίσης με κόκκινο χρώμα στον κατάλογο στοιχείων. "
 "Το κόκκινο χρώμα χρησιμοποιείται ως ένδειξη ότι το στοιχείο δεν είναι "
@@ -4410,7 +4410,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:7(para)
 msgid ""
-"If you find some new bug in <productname>Nautilus-Actions</productname>, you "
+"If you find some new bug in <productname>FileManager-Actions</productname>, you "
 "are welcome to open it by pointing your favorite browser to <ulink url="
 "\"https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions\" type="
 "\"http\">Bugzilla web site</ulink>."
@@ -4431,7 +4431,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:15(para)
 msgid ""
 "When you're browsing the folder you want to export to in the "
-"<application>Nautilus-Actions Configuration Tool</application>'s export "
+"<application>FileManager-Actions Configuration Tool</application>'s export "
 "assistant you can't select it as the directory to export to. Instead you "
 "have to go to the directory a level up and select the directory you want to "
 "export to there."
@@ -4472,7 +4472,7 @@ msgstr "Προτεινόμενη συντόμευση"
 msgid ""
 "As of version 3.0, suggested shortcut, as described in <ulink url=\"http://"
 "www.nautilus-actions.org/?q=node/377\" type=\"http\">DES-EMA specification</"
-"ulink> cannot be configured in <application>Nautilus-Actions Configuration "
+"ulink> cannot be configured in <application>FileManager-Actions Configuration "
 "Tool</application>, and is not honored by <productname>Nautilus</"
 "productname> plugin."
 msgstr ""
@@ -4489,7 +4489,7 @@ msgstr "Διαχωριστικό μενού"
 #: C/nautilus-actions-config-tool.xml:49(para)
 msgid ""
 "As of version 3.0, menu separators cannot be configured in "
-"<application>Nautilus-Actions Configuration Tool</application>, and are not "
+"<application>FileManager-Actions Configuration Tool</application>, and are not "
 "honored by <productname>Nautilus</productname> plugin."
 msgstr ""
 "Από την έκδοση 3.0, τα διαχωριστικά μενού δεν μπορούν να ρυθμιστούν στο "
@@ -4506,13 +4506,13 @@ msgstr ""
 "ορίσουν διαχωριστικά στο μενού περιεχομένων."
 
 #: C/nautilus-actions-config-tool.xml:196(title)
-msgid "About <application>Nautilus-Actions Configuration Tool</application>"
+msgid "About <application>FileManager-Actions Configuration Tool</application>"
 msgstr ""
 "Περί του <application>Εργαλείου ρύθμισης ενεργειών του Ναυτίλου</application>"
 
 #: C/nautilus-actions-config-tool.xml:197(para)
 msgid ""
-"The first version of <productname>Nautilus-Actions</productname> was "
+"The first version of <productname>FileManager-Actions</productname> was "
 "initially written by Frederic Ruaudel (<email>grumz@grumz.net</email>) and "
 "Rodrigo Moya (<email>rodrigo@gnome-db.org</email>). It has been thoroughly "
 "improved and is currently maintained by Pierre Wieser "
@@ -4536,9 +4536,9 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:210(para)
 msgid ""
-"To find more information about <productname>Nautilus-Actions</productname>, "
+"To find more information about <productname>FileManager-Actions</productname>, "
 "please visit the <ulink url=\"http://www.nautilus-actions.org/\" type=\"http"
-"\"/><productname>Nautilus-Actions</productname> website."
+"\"/><productname>FileManager-Actions</productname> website."
 msgstr ""
 "Για να βρείτε περισσότερες πληροφορίες για τις <productname>Ενέργειες "
 "Ναυτίλου</productname>, επισκεφτείτε τον ιστότοπο <ulink url=\"http://www."
@@ -4548,7 +4548,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:215(para)
 msgid ""
 "To report a bug or make a suggestion regarding <productname>Nautilus-"
-"Actions</productname>, the <application>Nautilus-Actions Configuration Tool</"
+"Actions</productname>, the <application>FileManager-Actions Configuration Tool</"
 "application> or this manual, follow the directions in the <ulink url=\"ghelp:"
 "user-guide#feedback\" type=\"help\">GNOME Feedback Page</ulink>, or you may "
 "prefer, at your convenience, directly open a bug or a request for "

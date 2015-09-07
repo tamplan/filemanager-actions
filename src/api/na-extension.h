@@ -1,23 +1,23 @@
 /*
- * Nautilus-Actions
- * A Nautilus extension which offers configurable context menu actions.
+ * FileManager-Actions
+ * A file-manager extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
  * Copyright (C) 2009-2015 Pierre Wieser and others (see AUTHORS)
  *
- * Nautilus-Actions is free software; you can redistribute it and/or
+ * FileManager-Actions is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * Nautilus-Actions is distributed in the hope that it will be useful,
+ * FileManager-Actions is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Nautilus-Actions; see the file COPYING. If not, see
+ * along with FileManager-Actions; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * Authors:
@@ -33,7 +33,7 @@
 /**
  * SECTION: extension
  * @title: Plugins
- * @short_description: The Nautilus-Actions Extension Interface Definition v 1
+ * @short_description: The FileManager-Actions Extension Interface Definition v 1
  * @include: nautilus-actions/na-extension.h
  *
  * &prodname; accepts extensions as dynamically loadable libraries
@@ -155,12 +155,12 @@ G_BEGIN_DECLS
  * na_extension_startup:
  * @module: the #GTypeModule of the plugin library being loaded.
  *
- * This function is called by the Nautilus-Actions plugin manager when
+ * This function is called by the FileManager-Actions plugin manager when
  * the plugin library is first loaded in memory. The library may so take
  * advantage of this call by initializing itself, registering its
  * internal #GType types, etc.
  *
- * A Nautilus-Actions extension must implement this function in order
+ * A FileManager-Actions extension must implement this function in order
  * to be considered as a valid candidate to dynamic load.
  *
  * <example>
@@ -229,13 +229,13 @@ guint    na_extension_get_version( void );
  * Returned #GType types must already have been registered in the
  * #GType system (e.g. at #na_extension_startup() time), and the objects
  * they describe may implement one or more of the interfaces defined in
- * this Nautilus-Actions public API.
+ * this FileManager-Actions public API.
  *
- * The Nautilus-Actions plugin manager will instantiate one #GTypeInstance-
+ * The FileManager-Actions plugin manager will instantiate one #GTypeInstance-
  * derived object for each returned #GType type, and associate these objects
  * to this library.
  *
- * A Nautilus-Actions extension must implement this function in order
+ * A FileManager-Actions extension must implement this function in order
  * to be considered as a valid candidate to dynamic load.
  *
  * <example>
@@ -275,14 +275,14 @@ guint    na_extension_list_types ( const GType **types );
 /**
  * na_extension_shutdown:
  *
- * This function is called by Nautilus-Actions when it is about to
+ * This function is called by FileManager-Actions when it is about to
  * shutdown itself.
  *
  * The dynamically loaded library may take advantage of this call to
  * release any resource, handle, and so on, it may have previously
  * allocated.
  *
- * A Nautilus-Actions extension must implement this function in order
+ * A FileManager-Actions extension must implement this function in order
  * to be considered as a valid candidate to dynamic load.
  *
  * Since: 2.30

@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
                "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
 [
-  <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
+  <!ENTITY prodname "<productname>FileManager-Actions</productname>">
   <!ENTITY nautilus "<productname>Nautilus</productname>">
 ]>
 
@@ -10,18 +10,18 @@
 
   <refmeta>
     <refentrytitle>What is it ?</refentrytitle>
-    <refmiscinfo>Nautilus-Actions</refmiscinfo>
+    <refmiscinfo>FileManager-Actions</refmiscinfo>
   </refmeta>
 
   <refnamediv>
     <refname>What is it ?</refname>
     <refpurpose>
-      What is Nautilus-Actions ?
+      What is FileManager-Actions ?
     </refpurpose>
   </refnamediv>
 
   <refsect1 id="what-is-it">
-    <title>What is Nautilus-Actions ?</title>
+    <title>What is FileManager-Actions ?</title>
     <para>
       &prodname; is a &nautilus; extension whose principal function
       is to allow the user to add arbitrary actions to the file manager

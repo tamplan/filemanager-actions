@@ -1,23 +1,23 @@
 /*
- * Nautilus-Actions
- * A Nautilus extension which offers configurable context menu actions.
+ * FileManager-Actions
+ * A file-manager extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
  * Copyright (C) 2009-2015 Pierre Wieser and others (see AUTHORS)
  *
- * Nautilus-Actions is free software; you can redistribute it and/or
+ * FileManager-Actions is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * Nautilus-Actions is distributed in the hope that it will be useful,
+ * FileManager-Actions is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Nautilus-Actions; see the file COPYING. If not, see
+ * along with FileManager-Actions; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * Authors:
@@ -250,7 +250,7 @@ typedef struct {
  *               since structure version 1.
  * @provider:    the #NAIExporter provider for this format;
  *               since structure version 2.
- * @format:      format identifier (ascii, allocated by the Nautilus-Actions team);
+ * @format:      format identifier (ascii, allocated by the FileManager-Actions team);
  *               since structure version 2.
  * @label:       short label to be displayed in dialog (UTF-8 localized);
  *               since structure version 2.
@@ -403,11 +403,11 @@ typedef struct {
 	 * get_version:
 	 * @instance: this NAIExporter instance.
 	 *
-	 * Nautilus-Actions calls this method each time it needs to know
+	 * FileManager-Actions calls this method each time it needs to know
 	 * which version of this interface the plugin implements.
 	 *
 	 * If this method is not implemented by the plugin,
-	 * Nautilus-Actions considers that the plugin only implements
+	 * FileManager-Actions considers that the plugin only implements
 	 * the version 1 of the NAIImporter interface.
 	 *
 	 * Return value: if implemented, this method must return the version
@@ -440,12 +440,12 @@ typedef struct {
 	 * get_formats:
 	 * @instance: this NAIExporter instance.
 	 *
-	 * For its own internal needs, Nautilus-Actions requires each export
+	 * For its own internal needs, FileManager-Actions requires each export
 	 * format has its own unique identifier (in fact, just a small ASCII
 	 * string).
 	 *
 	 * To avoid any collision, the format identifier is allocated by the
-	 * Nautilus-Actions maintainers team. If you wish develop a new export
+	 * FileManager-Actions maintainers team. If you wish develop a new export
 	 * format, and so need a new format identifier, please contact the
 	 * maintainers (see nautilus-actions.doap).
 	 *

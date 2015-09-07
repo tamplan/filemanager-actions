@@ -1,23 +1,23 @@
 /*
- * Nautilus-Actions
- * A Nautilus extension which offers configurable context menu actions.
+ * FileManager-Actions
+ * A file-manager extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
  * Copyright (C) 2009-2015 Pierre Wieser and others (see AUTHORS)
  *
- * Nautilus-Actions is free software; you can redistribute it and/or
+ * FileManager-Actions is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * Nautilus-Actions is distributed in the hope that it will be useful,
+ * FileManager-Actions is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Nautilus-Actions; see the file COPYING. If not, see
+ * along with FileManager-Actions; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * Authors:
@@ -1208,10 +1208,10 @@ na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
  * Print a version message on the console
  *
  * <programlisting>
- *   nautilus-actions-new (Nautilus-Actions) v 2.29.1
+ *   nautilus-actions-new (FileManager-Actions) v 2.29.1
  *   Copyright (C) 2005-2007 Frederic Ruaudel
  *   Copyright (C) 2009, 2010, 2011, 2012 Pierre Wieser
- *   Nautilus-Actions is free software, licensed under GPLv2 or later.
+ *   FileManager-Actions is free software, licensed under GPLv2 or later.
  * </programlisting>
  *
  * Since: 2.30

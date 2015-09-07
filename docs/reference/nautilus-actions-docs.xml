@@ -4,9 +4,9 @@
 [
   <!ENTITY % local.common.attrib "xmlns:xi CDATA #FIXED 'http://www.w3.org/2003/XInclude'">
   <!ENTITY version SYSTEM "version.xml">
-  <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
+  <!ENTITY prodname "<productname>FileManager-Actions</productname>">
   <!ENTITY nautilus "<productname>Nautilus</productname>">
-  <!ENTITY nact     "<productname>Nautilus-Actions Configuration Tool</productname>">
+  <!ENTITY nact     "<productname>FileManager-Actions Configuration Tool</productname>">
   <!ENTITY lcomment "/*">
   <!ENTITY rcomment "*/">
 ]>

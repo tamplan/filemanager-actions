@@ -4,14 +4,14 @@
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
 
-  <name xml:lang="en">Nautilus-Actions</name>
+  <name xml:lang="en">FileManager-Actions</name>
 
   <category rdf:resource="http://api.gnome.org/doap-extensions#desktop" />
 
   <shortdesc xml:lang="en">Nautilus extension which offers user configurable context menu actions</shortdesc>
 
   <description xml:lang="en">
-    Nautilus-Actions is a Nautilus extension whose principal function
+    FileManager-Actions is a Nautilus extension whose principal function
     is to allow the user to add arbitrary actions to the file manager
     context menus. These actions may be organized in menus and submenus,
     exported and shared with other desktop environments. 

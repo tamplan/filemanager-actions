@@ -1,23 +1,23 @@
 /*
- * Nautilus-Actions
- * A Nautilus extension which offers configurable context menu actions.
+ * FileManager-Actions
+ * A file-manager extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
  * Copyright (C) 2009-2015 Pierre Wieser and others (see AUTHORS)
  *
- * Nautilus-Actions is free software; you can redistribute it and/or
+ * FileManager-Actions is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * Nautilus-Actions is distributed in the hope that it will be useful,
+ * FileManager-Actions is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Nautilus-Actions; see the file COPYING. If not, see
+ * along with FileManager-Actions; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  *
  * Authors:
@@ -55,8 +55,8 @@ static NaxmlExportFormat naxml_formats[] = {
 			N_( "Export as a _full GConf schema file" ),
 			N_( "This used to be the historical export format.\n" \
 				"The exported schema file may later be imported via :\n" \
-				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
-				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
+				"- Import assistant of the FileManager-Actions Configuration Tool,\n" \
+				"- drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ),
 			"export-schemas-v1.png" },
 
@@ -67,11 +67,11 @@ static NaxmlExportFormat naxml_formats[] = {
 			N_( "Export as a _light GConf schema (v2) file" ),
 			N_( "This format has been introduced in v 1.11 serie.\n" \
 				"This is the lightest schema still compatible with GConf command-line tools, " \
-				"while keeping backward compatibility with the Nautilus-Actions Configuration " \
+				"while keeping backward compatibility with the FileManager-Actions Configuration " \
 				"Tool oldest versions.\n"
 				"The exported schema file may later be imported via :\n" \
-				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
-				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
+				"- Import assistant of the FileManager-Actions Configuration Tool,\n" \
+				"- drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ),
 			"export-schemas-v2.png" },
 
@@ -81,12 +81,12 @@ static NaxmlExportFormat naxml_formats[] = {
 	{ NAXML_FORMAT_GCONF_ENTRY,
 			N_( "Export as a GConf _dump file" ),
 			N_( "This format has been introduced in v 1.11 serie.\n" \
-				"Tough not backward compatible with Nautilus-Actions " \
+				"Tough not backward compatible with FileManager-Actions " \
 				"Configuration Tool versions previous to 1.11, " \
 				"it may still be imported via standard GConf command-line tools.\n" \
 				"The exported dump file may later be imported via :\n" \
-				"- Import assistant of the Nautilus-Actions Configuration Tool (1.11 and above),\n" \
-				"- drag-n-drop into the Nautilus-Actions Configuration Tool (1.11 and above),\n" \
+				"- Import assistant of the FileManager-Actions Configuration Tool (1.11 and above),\n" \
+				"- drag-n-drop into the FileManager-Actions Configuration Tool (1.11 and above),\n" \
 				"- or via the gconftool-2 --load command-line tool." ),
 			"export-dump.png" },
 
