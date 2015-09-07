@@ -49,9 +49,9 @@ static FMADataDef data_def_menu [] = {
 };
 
 FMADataGroup menu_data_groups [] = {
-	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
-	{ NA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
-	{ NA_FACTORY_OBJECT_MENU_GROUP,       data_def_menu },
-	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, data_def_conditions },
+	{ FMA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
+	{ FMA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
+	{ FMA_FACTORY_OBJECT_MENU_GROUP,       data_def_menu },
+	{ FMA_FACTORY_OBJECT_CONDITIONS_GROUP, data_def_conditions },
 	{ NULL }
 };

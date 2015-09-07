@@ -60,9 +60,9 @@ struct _NAObjectProfilePrivate {
 
 #define PROFILE_NAME_PREFIX					"profile-"
 
-#define na_object_is_file( obj )			(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISFILE )))
-#define na_object_is_dir( obj )				(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISDIR )))
-#define na_object_is_multiple( obj )		(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), NAFO_DATA_MULTIPLE )))
+#define na_object_is_file( obj )			(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_ISFILE )))
+#define na_object_is_dir( obj )				(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_ISDIR )))
+#define na_object_is_multiple( obj )		(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_MULTIPLE )))
 
 extern FMADataGroup profile_data_groups [];	/* defined in na-item-profile-factory.c */
 
@@ -587,7 +587,7 @@ convert_pre_v3_isfiledir( NAObjectProfile *profile )
 		 * value when the data is not set (see #651911)
 		 */
 		isfile = TRUE;
-		if( na_factory_object_is_set( FMA_IFACTORY_OBJECT( profile ), NAFO_DATA_ISFILE )){
+		if( na_factory_object_is_set( FMA_IFACTORY_OBJECT( profile ), FMAFO_DATA_ISFILE )){
 			isfile = na_object_is_file( profile );
 		}
 		isdir = na_object_is_dir( profile );

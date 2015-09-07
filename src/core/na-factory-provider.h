@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_FACTORY_PROVIDER_H__
-#define __CORE_NA_FACTORY_PROVIDER_H__
+#ifndef __CORE_FMA_FACTORY_PROVIDER_H__
+#define __CORE_FMA_FACTORY_PROVIDER_H__
 
 /* @title: NAIFactoryProvider
  * @short_description: The #NAIFactoryProvider Internal Functions
@@ -52,4 +52,4 @@ guint        na_factory_provider_write_data( const NAIFactoryProvider *writer, v
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_FACTORY_PROVIDER_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_FMA_FACTORY_PROVIDER_H__ */

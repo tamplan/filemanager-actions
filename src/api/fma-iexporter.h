@@ -233,11 +233,11 @@ typedef struct {
  * Deprecated: 3.2
  */
 typedef struct {
-	guint         version;
+	guint          version;
 	NAObjectItem *exported;
-	GQuark        format;
-	gchar        *buffer;
-	GSList       *messages;
+	GQuark         format;
+	gchar         *buffer;
+	GSList        *messages;
 }
 	FMAIExporterBufferParms;
 
@@ -302,12 +302,12 @@ typedef struct {
  * Since: 3.2
  */
 typedef struct {
-	guint        version;
+	guint         version;
 	FMAIExporter *provider;
-	gchar       *format;
-	gchar       *label;
-	gchar       *description;
-	GdkPixbuf   *pixbuf;
+	gchar        *format;
+	gchar        *label;
+	gchar        *description;
+	GdkPixbuf    *pixbuf;
 }
 	FMAIExporterFormatv2;
 
@@ -338,13 +338,13 @@ typedef struct {
  * Since: 3.2
  */
 typedef struct {
-	guint         version;
-	guint         content;
+	guint          version;
+	guint          content;
 	NAObjectItem *exported;
-	gchar        *folder;
-	gchar        *format;
-	gchar        *basename;
-	GSList       *messages;
+	gchar         *folder;
+	gchar         *format;
+	gchar         *basename;
+	GSList        *messages;
 }
 	FMAIExporterFileParmsv2;
 
@@ -373,12 +373,12 @@ typedef struct {
  * Since: 3.2
  */
 typedef struct {
-	guint         version;
-	guint         content;
+	guint          version;
+	guint          content;
 	NAObjectItem *exported;
-	gchar        *format;
-	gchar        *buffer;
-	GSList       *messages;
+	gchar         *format;
+	gchar         *buffer;
+	GSList        *messages;
 }
 	FMAIExporterBufferParmsv2;
 
@@ -395,7 +395,7 @@ typedef struct {
  */
 typedef struct {
 	/*< private >*/
-	GTypeInterface               parent;
+	GTypeInterface                parent;
 	FMAIExporterInterfacePrivate *private;
 
 	/*< public >*/

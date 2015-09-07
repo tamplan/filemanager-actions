@@ -108,7 +108,7 @@ typedef struct _FMAIFactoryObjectInterfacePrivate     FMAIFactoryObjectInterface
  */
 typedef struct {
 	/*< private >*/
-	GTypeInterface                    parent;
+	GTypeInterface                     parent;
 	FMAIFactoryObjectInterfacePrivate *private;
 
 	/*< public >*/
@@ -236,12 +236,12 @@ typedef struct {
 }
 	FMAIFactoryObjectInterface;
 
-GType        fma_ifactory_object_get_type( void );
+GType         fma_ifactory_object_get_type       ( void );
 
 FMADataBoxed *fma_ifactory_object_get_data_boxed ( const FMAIFactoryObject *object, const gchar *name );
 FMADataGroup *fma_ifactory_object_get_data_groups( const FMAIFactoryObject *object );
-void        *fma_ifactory_object_get_as_void    ( const FMAIFactoryObject *object, const gchar *name );
-void         fma_ifactory_object_set_from_void  ( FMAIFactoryObject *object, const gchar *name, const void *data );
+void         *fma_ifactory_object_get_as_void    ( const FMAIFactoryObject *object, const gchar *name );
+void          fma_ifactory_object_set_from_void  ( FMAIFactoryObject *object, const gchar *name, const void *data );
 
 G_END_DECLS
 

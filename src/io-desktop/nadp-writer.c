@@ -539,7 +539,7 @@ nadp_writer_ifactory_provider_write_data(
 				case FMA_DATA_TYPE_STRING:
 					str_value = fma_boxed_get_string( FMA_BOXED( boxed ));
 
-					if( !strcmp( def->name, NAFO_DATA_PATH )){
+					if( !strcmp( def->name, FMAFO_DATA_PATH )){
 						parms = na_object_get_parameters( object );
 						tmp = g_strdup_printf( "%s %s", str_value, parms );
 						g_free( str_value );

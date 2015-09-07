@@ -51,7 +51,7 @@
  * - src/core/na-tokens.c::is_singular_exec() function
  * - src/core/na-tokens.c::parse_singular() function
  * - src/nact/file-manager-actions-config-tool.ui:LegendDialog labels
- * - src/core/na-object-profile-factory.c:NAFO_DATA_PARAMETERS comment
+ * - src/core/na-object-profile-factory.c:FMAFO_DATA_PARAMETERS comment
  *
  * Valid parameters are :
  *

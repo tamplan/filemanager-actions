@@ -44,7 +44,7 @@
 
 FMADataDef data_def_conditions [] = {
 
-	{ NAFO_DATA_BASENAMES,
+	{ FMAFO_DATA_BASENAMES,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -79,7 +79,7 @@ FMADataDef data_def_conditions [] = {
 					 *  so is tranlatable */
 				N_( "<EXPR>" ) },
 
-	{ NAFO_DATA_MATCHCASE,
+	{ FMAFO_DATA_MATCHCASE,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -107,7 +107,7 @@ FMADataDef data_def_conditions [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_MIMETYPES,
+	{ FMAFO_DATA_MIMETYPES,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -145,7 +145,7 @@ FMADataDef data_def_conditions [] = {
 	 * This value is set when loading a pre-v3 profile, and then reset each time
 	 * we update the list of mimetypes.
 	 */
-	{ NAFO_DATA_MIMETYPES_IS_ALL,
+	{ FMAFO_DATA_MIMETYPES_IS_ALL,
 				FALSE,
 				FALSE,
 				TRUE,
@@ -172,7 +172,7 @@ FMADataDef data_def_conditions [] = {
 	/* this is obsoleted starting with 2.30-newdata (released as 2.31.x serie)
 	 * and replaced by mimetypes
 	 */
-	{ NAFO_DATA_ISFILE,
+	{ FMAFO_DATA_ISFILE,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -203,7 +203,7 @@ FMADataDef data_def_conditions [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_ISDIR,
+	{ FMAFO_DATA_ISDIR,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -237,7 +237,7 @@ FMADataDef data_def_conditions [] = {
 	/* this is obsoleted starting with 2.30-newdata (released as 2.31.x serie)
 	 * and replaced by selection-count
 	 */
-	{ NAFO_DATA_MULTIPLE,
+	{ FMAFO_DATA_MULTIPLE,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -263,7 +263,7 @@ FMADataDef data_def_conditions [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_SCHEMES,
+	{ FMAFO_DATA_SCHEMES,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -305,7 +305,7 @@ FMADataDef data_def_conditions [] = {
 				/* i18n: "<STRING>" is just an abbreviation for "a string", so is tranlatable */
 				N_( "<STRING>" ) },
 
-	{ NAFO_DATA_FOLDERS,
+	{ FMAFO_DATA_FOLDERS,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -331,7 +331,7 @@ FMADataDef data_def_conditions [] = {
 				/* i18n: "<PATH>" is just an abbreviation for "a folder path", so is tranlatable */
 				N_( "<PATH>" ) },
 
-	{ NAFO_DATA_SELECTION_COUNT,
+	{ FMAFO_DATA_SELECTION_COUNT,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -357,7 +357,7 @@ FMADataDef data_def_conditions [] = {
 				/* i18n: "<EXPR>" is just an abbreviation for "an expression", so is tranlatable */
 				N_( "<EXPR>" ) },
 
-	{ NAFO_DATA_ONLY_SHOW,
+	{ FMAFO_DATA_ONLY_SHOW,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -381,7 +381,7 @@ FMADataDef data_def_conditions [] = {
 				/* i18n: "<DESKTOP>" is just a placeholder for "a desktop name", so is tranlatable */
 				N_( "<DESKTOP>" ) },
 
-	{ NAFO_DATA_NOT_SHOW,
+	{ FMAFO_DATA_NOT_SHOW,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -405,7 +405,7 @@ FMADataDef data_def_conditions [] = {
 				/* i18n: "<DESKTOP>" is just a placeholder for "a desktop name", so is tranlatable */
 				N_( "<DESKTOP>" ) },
 
-	{ NAFO_DATA_TRY_EXEC,
+	{ FMAFO_DATA_TRY_EXEC,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -432,7 +432,7 @@ FMADataDef data_def_conditions [] = {
 				/* i18n: "<PATH>" is the path to a binary, so may be tranlatable */
 				N_( "<PATH>" ) },
 
-	{ NAFO_DATA_SHOW_IF_REGISTERED,
+	{ FMAFO_DATA_SHOW_IF_REGISTERED,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -458,7 +458,7 @@ FMADataDef data_def_conditions [] = {
 				N_( "The name of a service which must be registered on session DBus" ),
 				N_( "<NAME>" ) },
 
-	{ NAFO_DATA_SHOW_IF_TRUE,
+	{ FMAFO_DATA_SHOW_IF_TRUE,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -485,7 +485,7 @@ FMADataDef data_def_conditions [] = {
 				N_( "The path to a command which will display the 'true' string" ),
 				N_( "<PATH>" ) },
 
-	{ NAFO_DATA_SHOW_IF_RUNNING,
+	{ FMAFO_DATA_SHOW_IF_RUNNING,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -511,7 +511,7 @@ FMADataDef data_def_conditions [] = {
 				N_( "The name of a binary which must be running" ),
 				N_( "<NAME>" ) },
 
-	{ NAFO_DATA_CAPABILITITES,
+	{ FMAFO_DATA_CAPABILITITES,
 				TRUE,
 				TRUE,
 				TRUE,

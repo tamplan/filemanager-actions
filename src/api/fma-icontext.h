@@ -42,7 +42,7 @@
  *
  * Implementors, typically #NAObjectAction, #NAObjectProfile and
  * #NAObjectMenu, host the required data as #FMADataBoxed in a dedicated
- * NA_FACTORY_CONDITIONS_GROUP data group.
+ * FMA_FACTORY_CONDITIONS_GROUP data group.
  */
 
 #include <glib-object.h>
@@ -67,7 +67,7 @@ typedef struct _FMAIContextInterfacePrivate    FMAIContextInterfacePrivate;
  */
 typedef struct {
 	/*< private >*/
-	GTypeInterface              parent;
+	GTypeInterface               parent;
 	FMAIContextInterfacePrivate *private;
 
 	/*< public >*/

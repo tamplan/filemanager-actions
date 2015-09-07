@@ -61,7 +61,7 @@ typedef struct _FMAGConfMonitorPrivate        FMAGConfMonitorPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObject                parent;
+	GObject                 parent;
 	FMAGConfMonitorPrivate *private;
 }
 	FMAGConfMonitor;
@@ -70,16 +70,16 @@ typedef struct _FMAGConfMonitorClassPrivate   FMAGConfMonitorClassPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass                parent;
+	GObjectClass                 parent;
 	FMAGConfMonitorClassPrivate *private;
 }
 	FMAGConfMonitorClass;
 
-GType           fma_gconf_monitor_get_type( void );
+GType            fma_gconf_monitor_get_type( void );
 
 FMAGConfMonitor *fma_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data );
 
-void            fma_gconf_monitor_release_monitors( GList *monitors );
+void             fma_gconf_monitor_release_monitors( GList *monitors );
 
 G_END_DECLS
 

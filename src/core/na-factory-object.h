@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_FACTORY_OBJECT_H__
-#define __CORE_NA_FACTORY_OBJECT_H__
+#ifndef __CORE_FMA_FACTORY_OBJECT_H__
+#define __CORE_FMA_FACTORY_OBJECT_H__
 
 /* @title: FMAIFactoryObject
  * @short_description: The #FMAIFactoryObject Internal Functions
@@ -74,4 +74,4 @@ void         na_factory_object_set_from_void    ( FMAIFactoryObject *object, con
 
 G_END_DECLS
 
-#endif /* __CORE_NA_FACTORY_OBJECT_H__ */
+#endif /* __CORE_FMA_FACTORY_OBJECT_H__ */

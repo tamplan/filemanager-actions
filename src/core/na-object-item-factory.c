@@ -58,7 +58,7 @@ FMADataDef data_def_item [] = {
 	 * it is just left here to be able to define the corresponding GConf schema
 	 * and to export it as XML
 	 */
-	{ NAFO_DATA_TYPE,
+	{ FMAFO_DATA_TYPE,
 				FALSE,
 				FALSE,
 				FALSE,
@@ -87,7 +87,7 @@ FMADataDef data_def_item [] = {
 	 * so default value is directly set in na_object_action_new_with_defaults()
 	 * and na_object_menu_new_with_defaults()
 	 */
-	{ NAFO_DATA_LABEL,
+	{ FMAFO_DATA_LABEL,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -111,7 +111,7 @@ FMADataDef data_def_item [] = {
 				NULL,
 				N_( "<STRING>" ) },
 
-	{ NAFO_DATA_TOOLTIP,
+	{ FMAFO_DATA_TOOLTIP,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -135,7 +135,7 @@ FMADataDef data_def_item [] = {
 				NULL,
 				N_( "<STRING>" ) },
 
-	{ NAFO_DATA_ICON,
+	{ FMAFO_DATA_ICON,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -162,7 +162,7 @@ FMADataDef data_def_item [] = {
 
 	/* icon used to be not localized up to and included 2.29.4
 	 */
-	{ NAFO_DATA_ICON_NOLOC,
+	{ FMAFO_DATA_ICON_NOLOC,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -184,7 +184,7 @@ FMADataDef data_def_item [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_DESCRIPTION,
+	{ FMAFO_DATA_DESCRIPTION,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -207,7 +207,7 @@ FMADataDef data_def_item [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_SHORTCUT,
+	{ FMAFO_DATA_SHORTCUT,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -236,7 +236,7 @@ FMADataDef data_def_item [] = {
 
 	/* dynamic data, so not readable / not writable
 	 */
-	{ NAFO_DATA_SUBITEMS,
+	{ FMAFO_DATA_SUBITEMS,
 				FALSE,			/* not serializable */
 				FALSE,
 				TRUE,
@@ -261,7 +261,7 @@ FMADataDef data_def_item [] = {
 	/* list of subitems as a string list
 	 * dynamically rebuilt on write_start()
 	 */
-	{ NAFO_DATA_SUBITEMS_SLIST,
+	{ FMAFO_DATA_SUBITEMS_SLIST,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -286,7 +286,7 @@ FMADataDef data_def_item [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_ENABLED,
+	{ FMAFO_DATA_ENABLED,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -313,7 +313,7 @@ FMADataDef data_def_item [] = {
 	/* dynamic data, so non readable / non writable
 	 * must be set by the NAIIOProvider when reading the item
 	 */
-	{ NAFO_DATA_READONLY,
+	{ FMAFO_DATA_READONLY,
 				FALSE,
 				FALSE,
 				TRUE,
@@ -342,7 +342,7 @@ FMADataDef data_def_item [] = {
 
 	/* dynamic data, so non readable / non writable
 	 */
-	{ NAFO_DATA_PROVIDER,
+	{ FMAFO_DATA_PROVIDER,
 				FALSE,
 				FALSE,
 				TRUE,
@@ -369,7 +369,7 @@ FMADataDef data_def_item [] = {
 	 * not copyable as directly duplicated by NAIIOProvider interface
 	 * (see NAObjectItem::object_copy)
 	 */
-	{ NAFO_DATA_PROVIDER_DATA,
+	{ FMAFO_DATA_PROVIDER_DATA,
 				FALSE,
 				FALSE,
 				TRUE,
@@ -402,7 +402,7 @@ FMADataDef data_def_item [] = {
 	 * is marked as not automatically writable: it has to be written specifically
 	 * by each i/o provider.
 	 */
-	{ NAFO_DATA_IVERSION,
+	{ FMAFO_DATA_IVERSION,
 				TRUE,
 				FALSE,
 				TRUE,

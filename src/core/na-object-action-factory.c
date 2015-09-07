@@ -51,7 +51,7 @@ static FMADataDef data_def_action [] = {
 	/* this version number, expressed as a string, is obsoleted starting with .desktop
 	 * files introduction ; it is replaced by an integer version number, at the item level
 	 */
-	{ NAFO_DATA_VERSION,
+	{ FMAFO_DATA_VERSION,
 				TRUE,
 				FALSE,
 				TRUE,
@@ -73,7 +73,7 @@ static FMADataDef data_def_action [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_TARGET_SELECTION,
+	{ FMAFO_DATA_TARGET_SELECTION,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -99,7 +99,7 @@ static FMADataDef data_def_action [] = {
 				N_( "Targets the selection context menu [true]" ),
 				NULL },
 
-	{ NAFO_DATA_TARGET_LOCATION,
+	{ FMAFO_DATA_TARGET_LOCATION,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -125,7 +125,7 @@ static FMADataDef data_def_action [] = {
 				N_( "Targets the location context menu [false]" ),
 				NULL },
 
-	{ NAFO_DATA_TARGET_TOOLBAR,
+	{ FMAFO_DATA_TARGET_TOOLBAR,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -150,7 +150,7 @@ static FMADataDef data_def_action [] = {
 				N_( "Targets the toolbar [false]" ),
 				NULL },
 
-	{ NAFO_DATA_TOOLBAR_LABEL,
+	{ FMAFO_DATA_TOOLBAR_LABEL,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -179,7 +179,7 @@ static FMADataDef data_def_action [] = {
 	 * it is now only used in the NACT user interface
 	 * it is so left readable, but no more writable (obsolete)
 	 */
-	{ NAFO_DATA_TOOLBAR_SAME_LABEL,
+	{ FMAFO_DATA_TOOLBAR_SAME_LABEL,
 				TRUE,
 				FALSE,
 				TRUE,
@@ -203,7 +203,7 @@ static FMADataDef data_def_action [] = {
 
 	/* dynamic data, so non readable / non writable
 	 */
-	{ NAFO_DATA_LAST_ALLOCATED,
+	{ FMAFO_DATA_LAST_ALLOCATED,
 				FALSE,
 				FALSE,
 				TRUE,
@@ -235,7 +235,7 @@ static FMADataDef data_def_action [] = {
  */
 FMADataDef data_def_action_v1 [] = {
 
-	{ NAFO_DATA_PATH,
+	{ FMAFO_DATA_PATH,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -257,7 +257,7 @@ FMADataDef data_def_action_v1 [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_PARAMETERS,
+	{ FMAFO_DATA_PARAMETERS,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -279,7 +279,7 @@ FMADataDef data_def_action_v1 [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_BASENAMES,
+	{ FMAFO_DATA_BASENAMES,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -301,7 +301,7 @@ FMADataDef data_def_action_v1 [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_MATCHCASE,
+	{ FMAFO_DATA_MATCHCASE,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -323,7 +323,7 @@ FMADataDef data_def_action_v1 [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_MIMETYPES,
+	{ FMAFO_DATA_MIMETYPES,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -345,7 +345,7 @@ FMADataDef data_def_action_v1 [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_ISFILE,
+	{ FMAFO_DATA_ISFILE,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -367,7 +367,7 @@ FMADataDef data_def_action_v1 [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_ISDIR,
+	{ FMAFO_DATA_ISDIR,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -389,7 +389,7 @@ FMADataDef data_def_action_v1 [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_MULTIPLE,
+	{ FMAFO_DATA_MULTIPLE,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -411,7 +411,7 @@ FMADataDef data_def_action_v1 [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_SCHEMES,
+	{ FMAFO_DATA_SCHEMES,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -437,10 +437,10 @@ FMADataDef data_def_action_v1 [] = {
 };
 
 FMADataGroup action_data_groups [] = {
-	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
-	{ NA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
-	{ NA_FACTORY_OBJECT_ACTION_GROUP,     data_def_action },
-	{ NA_FACTORY_ACTION_V1_GROUP,         data_def_action_v1 },
-	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, data_def_conditions },
+	{ FMA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
+	{ FMA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
+	{ FMA_FACTORY_OBJECT_ACTION_GROUP,     data_def_action },
+	{ FMA_FACTORY_ACTION_V1_GROUP,         data_def_action_v1 },
+	{ FMA_FACTORY_OBJECT_CONDITIONS_GROUP, data_def_conditions },
 	{ NULL }
 };

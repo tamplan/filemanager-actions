@@ -124,7 +124,7 @@ typedef struct _FMAIDuplicableInterfacePrivate    FMAIDuplicableInterfacePrivate
  */
 typedef struct {
 	/*< private >*/
-	GTypeInterface                 parent;
+	GTypeInterface                  parent;
 	FMAIDuplicableInterfacePrivate *private;
 
 	/*< public >*/
@@ -204,23 +204,23 @@ typedef enum {
 }
 	DuplicableMode;
 
-GType          fma_iduplicable_get_type         ( void );
+GType           fma_iduplicable_get_type         ( void );
 
-void           fma_iduplicable_dispose          ( const FMAIDuplicable *object );
-void           fma_iduplicable_dump             ( const FMAIDuplicable *object );
+void            fma_iduplicable_dispose          ( const FMAIDuplicable *object );
+void            fma_iduplicable_dump             ( const FMAIDuplicable *object );
 FMAIDuplicable *fma_iduplicable_duplicate        ( const FMAIDuplicable *object, guint mode );
-void           fma_iduplicable_check_status     ( const FMAIDuplicable *object );
+void            fma_iduplicable_check_status     ( const FMAIDuplicable *object );
 
 FMAIDuplicable *fma_iduplicable_get_origin       ( const FMAIDuplicable *object );
-gboolean       fma_iduplicable_is_valid         ( const FMAIDuplicable *object );
-gboolean       fma_iduplicable_is_modified      ( const FMAIDuplicable *object );
+gboolean        fma_iduplicable_is_valid         ( const FMAIDuplicable *object );
+gboolean        fma_iduplicable_is_modified      ( const FMAIDuplicable *object );
 
-void           fma_iduplicable_set_origin       ( FMAIDuplicable *object, const FMAIDuplicable *origin );
+void            fma_iduplicable_set_origin       ( FMAIDuplicable *object, const FMAIDuplicable *origin );
 
-void           fma_iduplicable_register_consumer( GObject *consumer );
+void            fma_iduplicable_register_consumer( GObject *consumer );
 
 #ifdef NA_ENABLE_DEPRECATED
-void           fma_iduplicable_set_modified( FMAIDuplicable *object, gboolean modified );
+void            fma_iduplicable_set_modified( FMAIDuplicable *object, gboolean modified );
 #endif
 
 G_END_DECLS

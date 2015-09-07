@@ -446,7 +446,7 @@ write_start_write_type( NAXMLWriter *writer, NAObjectItem *object, const FMAData
 
 	writer->private->schema_node = NULL;
 	writer->private->locale_node = NULL;
-	def = fma_data_def_get_data_def( groups, NA_FACTORY_OBJECT_ITEM_GROUP, NAFO_DATA_TYPE );
+	def = fma_data_def_get_data_def( groups, FMA_FACTORY_OBJECT_ITEM_GROUP, FMAFO_DATA_TYPE );
 	svalue = NA_IS_OBJECT_ACTION( object ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU;
 
 	( *writer->private->fn_str->write_type_fn )( writer, object, def, svalue );
@@ -461,7 +461,7 @@ write_start_write_version( NAXMLWriter *writer, NAObjectItem *object, const FMAD
 
 	writer->private->schema_node = NULL;
 	writer->private->locale_node = NULL;
-	def = fma_data_def_get_data_def( groups, NA_FACTORY_OBJECT_ITEM_GROUP, NAFO_DATA_IVERSION );
+	def = fma_data_def_get_data_def( groups, FMA_FACTORY_OBJECT_ITEM_GROUP, FMAFO_DATA_IVERSION );
 	iversion = na_object_get_iversion( object );
 	svalue = g_strdup_printf( "%d", iversion );
 

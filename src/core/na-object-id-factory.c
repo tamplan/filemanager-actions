@@ -45,7 +45,7 @@ FMADataDef data_def_id [] = {
 	/* this data is marked non readable / non writable as it has to be read
 	 * written specifically when serializing / deserializing items
 	 */
-	{ NAFO_DATA_ID,
+	{ FMAFO_DATA_ID,
 				FALSE,
 				FALSE,
 				TRUE,
@@ -71,7 +71,7 @@ FMADataDef data_def_id [] = {
 
 	/* dynamic data, so not readable / not writable
 	 */
-	{ NAFO_DATA_PARENT,
+	{ FMAFO_DATA_PARENT,
 				FALSE,
 				FALSE,
 				TRUE,

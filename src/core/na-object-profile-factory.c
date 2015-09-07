@@ -42,7 +42,7 @@ extern FMADataDef data_def_conditions [];	/* defined in fma-icontext-factory.c *
 
 static FMADataDef data_def_profile [] = {
 
-	{ NAFO_DATA_DESCNAME,
+	{ FMAFO_DATA_DESCNAME,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -67,7 +67,7 @@ static FMADataDef data_def_profile [] = {
 
 	/* label of the profile was unlocalized up to and included 1.11.0
 	 */
-	{ NAFO_DATA_DESCNAME_NOLOC,
+	{ FMAFO_DATA_DESCNAME_NOLOC,
 				TRUE,
 				FALSE,
 				FALSE,
@@ -93,7 +93,7 @@ static FMADataDef data_def_profile [] = {
 	 * export files and in NACT. Only in desktop files, they are merged as only
 	 * one 'Exec' data which is splitted at read time.
 	 */
-	{ NAFO_DATA_PATH,
+	{ FMAFO_DATA_PATH,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -120,7 +120,7 @@ static FMADataDef data_def_profile [] = {
 	 * but also slightly changed the meaning of some parameters. This is synchronized
 	 * with the change of version data (from "2.0" string to '1' integer)
 	 */
-	{ NAFO_DATA_PARAMETERS,
+	{ FMAFO_DATA_PARAMETERS,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -181,7 +181,7 @@ static FMADataDef data_def_profile [] = {
 				NULL,
 				N_( "<STRING>" ) },
 
-	{ NAFO_DATA_WORKING_DIR,
+	{ FMAFO_DATA_WORKING_DIR,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -204,7 +204,7 @@ static FMADataDef data_def_profile [] = {
 				NULL,
 				N_( "<PATH>" ) },
 
-	{ NAFO_DATA_EXECUTION_MODE,
+	{ FMAFO_DATA_EXECUTION_MODE,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -237,7 +237,7 @@ static FMADataDef data_def_profile [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_STARTUP_NOTIFY,
+	{ FMAFO_DATA_STARTUP_NOTIFY,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -260,7 +260,7 @@ static FMADataDef data_def_profile [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_STARTUP_WMCLASS,
+	{ FMAFO_DATA_STARTUP_WMCLASS,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -283,7 +283,7 @@ static FMADataDef data_def_profile [] = {
 				NULL,
 				NULL },
 
-	{ NAFO_DATA_EXECUTE_AS,
+	{ FMAFO_DATA_EXECUTE_AS,
 				TRUE,
 				TRUE,
 				TRUE,
@@ -312,8 +312,8 @@ static FMADataDef data_def_profile [] = {
 };
 
 FMADataGroup profile_data_groups [] = {
-	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
-	{ NA_FACTORY_OBJECT_PROFILE_GROUP,    data_def_profile },
-	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, data_def_conditions },
+	{ FMA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
+	{ FMA_FACTORY_OBJECT_PROFILE_GROUP,    data_def_profile },
+	{ FMA_FACTORY_OBJECT_CONDITIONS_GROUP, data_def_conditions },
 	{ NULL }
 };

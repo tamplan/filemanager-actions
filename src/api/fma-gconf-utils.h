@@ -45,11 +45,11 @@
 
 G_BEGIN_DECLS
 
-GSList  *fma_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path );
-void     fma_gconf_utils_free_subdirs( GSList *subdirs );
+GSList  *fma_gconf_utils_get_subdirs                 ( GConfClient *gconf, const gchar *path );
+void     fma_gconf_utils_free_subdirs                ( GSList *subdirs );
 
-gboolean fma_gconf_utils_has_entry  ( GSList *entries, const gchar *entry );
-GSList  *fma_gconf_utils_get_entries( GConfClient *gconf, const gchar *path );
+gboolean fma_gconf_utils_has_entry                   ( GSList *entries, const gchar *entry );
+GSList  *fma_gconf_utils_get_entries                 ( GConfClient *gconf, const gchar *path );
 gboolean fma_gconf_utils_get_bool_from_entries       ( GSList *entries, const gchar *entry, gboolean *value );
 gboolean fma_gconf_utils_get_string_from_entries     ( GSList *entries, const gchar *entry, gchar **value );
 gboolean fma_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry, GSList **value );
