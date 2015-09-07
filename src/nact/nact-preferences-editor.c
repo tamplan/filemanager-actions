@@ -40,7 +40,7 @@
 #include <core/fma-exporter.h>
 #include <core/fma-export-format.h>
 #include <core/fma-gtk-utils.h>
-#include <core/na-import-mode.h>
+#include <core/fma-import-mode.h>
 #include <core/fma-importer.h>
 #include <core/na-ioptions-list.h>
 #include <core/na-iprefs.h>
@@ -1245,7 +1245,7 @@ on_dialog_ok( BaseDialog *dialog )
 		if( !editor->private->import_mode_mandatory ){
 			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
 			option = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), container );
-			g_return_if_fail( NA_IS_IMPORT_MODE( option ));
+			g_return_if_fail( FMA_IS_IMPORT_MODE( option ));
 			import_mode = na_ioption_get_id( option );
 			na_settings_set_string( NA_IPREFS_IMPORT_PREFERRED_MODE, import_mode );
 			g_free( import_mode );

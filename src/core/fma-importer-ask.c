@@ -37,7 +37,7 @@
 #include <api/fma-object-api.h>
 
 #include "fma-gtk-utils.h"
-#include "na-import-mode.h"
+#include "fma-import-mode.h"
 #include "fma-importer.h"
 #include "fma-importer-ask.h"
 #include "na-ioptions-list.h"
@@ -440,7 +440,7 @@ get_selected_mode( FMAImporterAsk *editor )
 	na_settings_set_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, mode_id );
 	g_free( mode_id );
 
-	editor->private->mode = na_import_mode_get_id( NA_IMPORT_MODE( mode ));
+	editor->private->mode = fma_import_mode_get_id( FMA_IMPORT_MODE( mode ));
 
 	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));

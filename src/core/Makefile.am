@@ -84,8 +84,8 @@ libna_core_la_SOURCES = \
 	fma-ifactory-provider.c								\
 	fma-iimporter.c										\
 	fma-iio-provider.c									\
-	na-import-mode.c									\
-	na-import-mode.h									\
+	fma-import-mode.c									\
+	fma-import-mode.h									\
 	fma-importer.c										\
 	fma-importer.h										\
 	fma-importer-ask.c									\

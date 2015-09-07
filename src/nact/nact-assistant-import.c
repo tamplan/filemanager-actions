@@ -38,7 +38,7 @@
 #include <api/fma-object-api.h>
 #include <api/fma-core-utils.h>
 
-#include <core/na-import-mode.h>
+#include <core/fma-import-mode.h>
 #include <core/fma-importer.h>
 #include <core/na-ioptions-list.h>
 #include <core/fma-gtk-utils.h>
@@ -621,7 +621,7 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	g_return_if_fail( GTK_IS_LABEL( label ));
 	window->private->mode = na_ioptions_list_get_selected(
 			NA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ));
-	g_return_if_fail( NA_IS_IMPORT_MODE( window->private->mode ));
+	g_return_if_fail( FMA_IS_IMPORT_MODE( window->private->mode ));
 	mode_label = na_ioption_get_label( window->private->mode );
 	label2 = fma_core_utils_str_remove_char( mode_label, "_" );
 	mode_description = na_ioption_get_description( window->private->mode );
@@ -664,7 +664,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));
 	importer_parms.check_fn = ( FMAImporterCheckFn ) check_for_existence;
 	importer_parms.check_fn_data = main_window;
-	importer_parms.preferred_mode = na_import_mode_get_id( NA_IMPORT_MODE( window->private->mode ));
+	importer_parms.preferred_mode = fma_import_mode_get_id( FMA_IMPORT_MODE( window->private->mode ));
 	importer_parms.parent_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( wnd ));
 
 	import_results = fma_importer_import_from_uris( NA_PIVOT( updater ), &importer_parms );

@@ -33,18 +33,18 @@
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include "na-import-mode.h"
+#include "fma-import-mode.h"
 #include "na-ioption.h"
 
 /* private class data
  */
-struct _NAImportModeClassPrivate {
+struct _FMAImportModeClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAImportModePrivate {
+struct _FMAImportModePrivate {
 	gboolean   dispose_has_run;
 
 	/* properties
@@ -61,18 +61,18 @@ struct _NAImportModePrivate {
 enum {
 	MAIN_PROP_0 = 0,
 
-	NA_IMPORT_PROP_MODE_ID,
-	NA_IMPORT_PROP_LABEL_ID,
-	NA_IMPORT_PROP_DESCRIPTION_ID,
-	NA_IMPORT_PROP_IMAGE_ID,
+	FMA_IMPORT_PROP_MODE_ID,
+	FMA_IMPORT_PROP_LABEL_ID,
+	FMA_IMPORT_PROP_DESCRIPTION_ID,
+	FMA_IMPORT_PROP_IMAGE_ID,
 
-	NA_IMPORT_PROP_N_PROPERTIES
+	FMA_IMPORT_PROP_N_PROPERTIES
 };
 
 static GObjectClass *st_parent_class = NULL;
 
 static GType      register_type( void );
-static void       class_init( NAImportModeClass *klass );
+static void       class_init( FMAImportModeClass *klass );
 static void       ioption_iface_init( NAIOptionInterface *iface, void *user_data );
 static gchar     *ioption_get_id( const NAIOption *option );
 static gchar     *ioption_get_label( const NAIOption *option );
@@ -85,7 +85,7 @@ static void       instance_dispose( GObject *object );
 static void       instance_finalize( GObject *object );
 
 GType
-na_import_mode_get_type( void )
+fma_import_mode_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -99,17 +99,17 @@ na_import_mode_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_import_mode_register_type";
+	static const gchar *thisfn = "fma_import_mode_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAImportModeClass ),
+		sizeof( FMAImportModeClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAImportMode ),
+		sizeof( FMAImportMode ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -122,7 +122,7 @@ register_type( void )
 		NULL
 	};
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NAImportMode", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMAImportMode", &info, 0 );
 
 	g_type_add_interface_static( type, NA_TYPE_IOPTION, &ioption_iface_info );
 
@@ -130,9 +130,9 @@ register_type( void )
 }
 
 static void
-class_init( NAImportModeClass *klass )
+class_init( FMAImportModeClass *klass )
 {
-	static const gchar *thisfn = "na_import_mode_class_init";
+	static const gchar *thisfn = "fma_import_mode_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -145,35 +145,35 @@ class_init( NAImportModeClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAImportModeClassPrivate, 1 );
+	klass->private = g_new0( FMAImportModeClassPrivate, 1 );
 
-	g_object_class_install_property( object_class, NA_IMPORT_PROP_MODE_ID,
+	g_object_class_install_property( object_class, FMA_IMPORT_PROP_MODE_ID,
 			g_param_spec_string(
-					NA_IMPORT_PROP_MODE,
+					FMA_IMPORT_PROP_MODE,
 					"Import mode",
 					"The string identifier of the import mode, stored in user's preferences",
 					"",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	g_object_class_install_property( object_class, NA_IMPORT_PROP_LABEL_ID,
+	g_object_class_install_property( object_class, FMA_IMPORT_PROP_LABEL_ID,
 			g_param_spec_string(
-					NA_IMPORT_PROP_LABEL,
+					FMA_IMPORT_PROP_LABEL,
 					"Import label",
 					"The label associated to the import mode",
 					"",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	g_object_class_install_property( object_class, NA_IMPORT_PROP_DESCRIPTION_ID,
+	g_object_class_install_property( object_class, FMA_IMPORT_PROP_DESCRIPTION_ID,
 			g_param_spec_string(
-					NA_IMPORT_PROP_DESCRIPTION,
+					FMA_IMPORT_PROP_DESCRIPTION,
 					"Import mode description",
 					"The description associated to the import mode",
 					"",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	g_object_class_install_property( object_class, NA_IMPORT_PROP_IMAGE_ID,
+	g_object_class_install_property( object_class, FMA_IMPORT_PROP_IMAGE_ID,
 			g_param_spec_pointer(
-					NA_IMPORT_PROP_IMAGE,
+					FMA_IMPORT_PROP_IMAGE,
 					"Import mode image",
 					"The image associated to the import mode, as a GdkPixbuf",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
@@ -182,7 +182,7 @@ class_init( NAImportModeClass *klass )
 static void
 ioption_iface_init( NAIOptionInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "na_import_mode_ioption_iface_init";
+	static const gchar *thisfn = "fma_import_mode_ioption_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
@@ -203,10 +203,10 @@ static gchar *
 ioption_get_id( const NAIOption *option )
 {
 	gchar *id;
-	NAImportMode *mode;
+	FMAImportMode *mode;
 
-	g_return_val_if_fail( NA_IS_IMPORT_MODE( option ), NULL );
-	mode = NA_IMPORT_MODE( option );
+	g_return_val_if_fail( FMA_IS_IMPORT_MODE( option ), NULL );
+	mode = FMA_IMPORT_MODE( option );
 	id = NULL;
 
 	if( !mode->private->dispose_has_run ){
@@ -228,10 +228,10 @@ static gchar *
 ioption_get_label( const NAIOption *option )
 {
 	gchar *label;
-	NAImportMode *mode;
+	FMAImportMode *mode;
 
-	g_return_val_if_fail( NA_IS_IMPORT_MODE( option ), NULL );
-	mode = NA_IMPORT_MODE( option );
+	g_return_val_if_fail( FMA_IS_IMPORT_MODE( option ), NULL );
+	mode = FMA_IMPORT_MODE( option );
 	label = NULL;
 
 	if( !mode->private->dispose_has_run ){
@@ -253,10 +253,10 @@ static gchar *
 ioption_get_description( const NAIOption *option )
 {
 	gchar *description;
-	NAImportMode *mode;
+	FMAImportMode *mode;
 
-	g_return_val_if_fail( NA_IS_IMPORT_MODE( option ), NULL );
-	mode = NA_IMPORT_MODE( option );
+	g_return_val_if_fail( FMA_IS_IMPORT_MODE( option ), NULL );
+	mode = FMA_IMPORT_MODE( option );
 	description = NULL;
 
 	if( !mode->private->dispose_has_run ){
@@ -278,10 +278,10 @@ static GdkPixbuf *
 ioption_get_pixbuf( const NAIOption *option )
 {
 	GdkPixbuf *pixbuf;
-	NAImportMode *mode;
+	FMAImportMode *mode;
 
-	g_return_val_if_fail( NA_IS_IMPORT_MODE( option ), NULL );
-	mode = NA_IMPORT_MODE( option );
+	g_return_val_if_fail( FMA_IS_IMPORT_MODE( option ), NULL );
+	mode = FMA_IMPORT_MODE( option );
 	pixbuf = NULL;
 
 	if( !mode->private->dispose_has_run ){
@@ -295,16 +295,16 @@ ioption_get_pixbuf( const NAIOption *option )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_import_mode_instance_init";
-	NAImportMode *self;
+	static const gchar *thisfn = "fma_import_mode_instance_init";
+	FMAImportMode *self;
 
-	g_return_if_fail( NA_IS_IMPORT_MODE( instance ));
+	g_return_if_fail( FMA_IS_IMPORT_MODE( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	self = NA_IMPORT_MODE( instance );
+	self = FMA_IMPORT_MODE( instance );
 
-	self->private = g_new0( NAImportModePrivate, 1 );
+	self->private = g_new0( FMAImportModePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -312,27 +312,27 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	NAImportMode *self;
+	FMAImportMode *self;
 
-	g_return_if_fail( NA_IS_IMPORT_MODE( object ));
-	self = NA_IMPORT_MODE( object );
+	g_return_if_fail( FMA_IS_IMPORT_MODE( object ));
+	self = FMA_IMPORT_MODE( object );
 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NA_IMPORT_PROP_MODE_ID:
+			case FMA_IMPORT_PROP_MODE_ID:
 				g_value_set_string( value, self->private->mode );
 				break;
 
-			case NA_IMPORT_PROP_LABEL_ID:
+			case FMA_IMPORT_PROP_LABEL_ID:
 				g_value_set_string( value, self->private->label );
 				break;
 
-			case NA_IMPORT_PROP_DESCRIPTION_ID:
+			case FMA_IMPORT_PROP_DESCRIPTION_ID:
 				g_value_set_string( value, self->private->description );
 				break;
 
-			case NA_IMPORT_PROP_IMAGE_ID:
+			case FMA_IMPORT_PROP_IMAGE_ID:
 				g_value_set_pointer( value, self->private->image );
 				break;
 
@@ -346,30 +346,30 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	NAImportMode *self;
+	FMAImportMode *self;
 
-	g_return_if_fail( NA_IS_IMPORT_MODE( object ));
-	self = NA_IMPORT_MODE( object );
+	g_return_if_fail( FMA_IS_IMPORT_MODE( object ));
+	self = FMA_IMPORT_MODE( object );
 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NA_IMPORT_PROP_MODE_ID:
+			case FMA_IMPORT_PROP_MODE_ID:
 				g_free( self->private->mode );
 				self->private->mode = g_value_dup_string( value );
 				break;
 
-			case NA_IMPORT_PROP_LABEL_ID:
+			case FMA_IMPORT_PROP_LABEL_ID:
 				g_free( self->private->label );
 				self->private->label = g_value_dup_string( value );
 				break;
 
-			case NA_IMPORT_PROP_DESCRIPTION_ID:
+			case FMA_IMPORT_PROP_DESCRIPTION_ID:
 				g_free( self->private->description );
 				self->private->description = g_value_dup_string( value );
 				break;
 
-			case NA_IMPORT_PROP_IMAGE_ID:
+			case FMA_IMPORT_PROP_IMAGE_ID:
 				self->private->image = g_value_get_pointer( value );
 				break;
 
@@ -383,12 +383,12 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_import_mode_instance_dispose";
-	NAImportMode *self;
+	static const gchar *thisfn = "fma_import_mode_instance_dispose";
+	FMAImportMode *self;
 
-	g_return_if_fail( NA_IS_IMPORT_MODE( object ));
+	g_return_if_fail( FMA_IS_IMPORT_MODE( object ));
 
-	self = NA_IMPORT_MODE( object );
+	self = FMA_IMPORT_MODE( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -406,14 +406,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_import_mode_instance_finalize";
-	NAImportMode *self;
+	static const gchar *thisfn = "fma_import_mode_instance_finalize";
+	FMAImportMode *self;
 
-	g_return_if_fail( NA_IS_IMPORT_MODE( object ));
+	g_return_if_fail( FMA_IS_IMPORT_MODE( object ));
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
-	self = NA_IMPORT_MODE( object );
+	self = FMA_IMPORT_MODE( object );
 
 	g_free( self->private );
 
@@ -424,19 +424,19 @@ instance_finalize( GObject *object )
 }
 
 /*
- * na_import_mode_new:
+ * fma_import_mode_new:
  * @mode_id: the internal identifier of the import mode.
  *
- * Returns: a newly allocated #NAImportMode object.
+ * Returns: a newly allocated #FMAImportMode object.
  *
  * Since: 3.2
  */
-NAImportMode *
-na_import_mode_new( guint mode_id )
+FMAImportMode *
+fma_import_mode_new( guint mode_id )
 {
-	NAImportMode *mode;
+	FMAImportMode *mode;
 
-	mode = g_object_new( NA_TYPE_IMPORT_MODE, NULL );
+	mode = g_object_new( FMA_TYPE_IMPORT_MODE, NULL );
 
 	mode->private->id = mode_id;
 
@@ -444,19 +444,19 @@ na_import_mode_new( guint mode_id )
 }
 
 /*
- * na_import_mode_get_id:
- * @mode: a #NAImportMode object.
+ * fma_import_mode_get_id:
+ * @mode: a #FMAImportMode object.
  *
  * Returns: the internal identifier of the import mode.
  *
  * Since: 3.2
  */
 guint
-na_import_mode_get_id( const NAImportMode *mode )
+fma_import_mode_get_id( const FMAImportMode *mode )
 {
 	guint id;
 
-	g_return_val_if_fail( NA_IS_IMPORT_MODE( mode ), 0 );
+	g_return_val_if_fail( FMA_IS_IMPORT_MODE( mode ), 0 );
 
 	id = 0;
 

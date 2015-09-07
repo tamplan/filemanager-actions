@@ -38,7 +38,7 @@
 #include <api/fma-iimporter.h>
 #include <api/fma-object-api.h>
 
-#include "na-import-mode.h"
+#include "fma-import-mode.h"
 #include "fma-importer.h"
 #include "fma-importer-ask.h"
 
@@ -49,9 +49,9 @@ typedef struct {
 	const gchar *description;		/* full description */
 	gchar       *image;				/* associated image */
 }
-	NAImportModeStr;
+	FMAImportModeStr;
 
-static NAImportModeStr st_import_modes[] = {
+static FMAImportModeStr st_import_modes[] = {
 
 	{ IMPORTER_MODE_NO_IMPORT,
 			"NoImport",
@@ -80,7 +80,7 @@ static NAImportModeStr st_import_modes[] = {
 	{ 0 }
 };
 
-static NAImportModeStr st_import_ask_mode = {
+static FMAImportModeStr st_import_ask_mode = {
 
 	IMPORTER_MODE_ASK,
 			"Ask",
@@ -95,7 +95,7 @@ static FMAObjectItem     *is_importing_already_exists( FMAImporterParms *parms, 
 static void              renumber_label_item( FMAObjectItem *item );
 static guint             ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, FMAImporterAskUserParms *parms );
 static guint             get_id_from_string( const gchar *str );
-static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
+static NAIOption        *get_mode_from_struct( const FMAImportModeStr *str );
 
 /* i18n: '%s' stands for the file URI */
 #define ERR_NOT_LOADABLE	_( "%s is not loadable (empty or too big or not a regular file)" )
@@ -489,9 +489,9 @@ fma_importer_get_modes( void )
 }
 
 static NAIOption *
-get_mode_from_struct( const NAImportModeStr *str )
+get_mode_from_struct( const FMAImportModeStr *str )
 {
-	NAImportMode *mode;
+	FMAImportMode *mode;
 	gint width, height;
 	gchar *fname;
 	GdkPixbuf *pixbuf;
@@ -500,7 +500,7 @@ get_mode_from_struct( const NAImportModeStr *str )
 		width = height = 48;
 	}
 
-	mode = na_import_mode_new( str->id );
+	mode = fma_import_mode_new( str->id );
 	pixbuf = NULL;
 
 	if( str->image && g_utf8_strlen( str->image, -1 )){
@@ -509,10 +509,10 @@ get_mode_from_struct( const NAImportModeStr *str )
 		g_free( fname );
 	}
 	g_object_set( G_OBJECT( mode ),
-		NA_IMPORT_PROP_MODE,        str->mode,
-		NA_IMPORT_PROP_LABEL,       gettext( str->label ),
-		NA_IMPORT_PROP_DESCRIPTION, gettext( str->description ),
-		NA_IMPORT_PROP_IMAGE,       pixbuf,
+		FMA_IMPORT_PROP_MODE,        str->mode,
+		FMA_IMPORT_PROP_LABEL,       gettext( str->label ),
+		FMA_IMPORT_PROP_DESCRIPTION, gettext( str->description ),
+		FMA_IMPORT_PROP_IMAGE,       pixbuf,
 		NULL );
 
 	return( NA_IOPTION( mode ));
@@ -520,7 +520,7 @@ get_mode_from_struct( const NAImportModeStr *str )
 
 /*
  * fma_importer_free_modes:
- * @modes: a #GList of #NAImportMode items, as returned by fma_importer_get_modes().
+ * @modes: a #GList of #FMAImportMode items, as returned by fma_importer_get_modes().
  *
  * Releases the resources allocated to the @modes list.
  */
@@ -538,7 +538,7 @@ fma_importer_free_modes( GList *modes )
 /*
  * fma_importer_get_ask_mode:
  *
- * Returns: a #NAImportMode object which describes the 'Ask me' option.
+ * Returns: a #FMAImportMode object which describes the 'Ask me' option.
  */
 NAIOption *
 fma_importer_get_ask_mode( void )
