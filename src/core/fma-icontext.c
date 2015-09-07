@@ -50,7 +50,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-object-api.h>
 
-#include "na-desktop-environment.h"
+#include "fma-desktop-environment.h"
 #include "na-gnome-vfs-uri.h"
 #include "na-selected-info.h"
 #include "na-settings.h"
@@ -529,7 +529,7 @@ is_candidate_for_show_in( const FMAIContext *object, guint target, GList *files 
 	if( !environment ){
 		environment = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, NULL );
 		if( !environment || !strlen( environment )){
-			environment = ( gchar * ) na_desktop_environment_detect_running_desktop();
+			environment = ( gchar * ) fma_desktop_environment_detect_running_desktop();
 		}
 		g_debug( "%s: found %s desktop", thisfn, environment );
 	}

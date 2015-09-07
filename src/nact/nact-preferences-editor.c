@@ -36,7 +36,7 @@
 
 #include <api/fma-iimporter.h>
 
-#include <core/na-desktop-environment.h>
+#include <core/fma-desktop-environment.h>
 #include <core/na-exporter.h>
 #include <core/na-export-format.h>
 #include <core/na-gtk-utils.h>
@@ -116,7 +116,7 @@ enum {
 
 /* i18n: the user is not willing to identify his current desktop environment,
  *       and prefers rely on the runtime detection */
-static const NADesktopEnv st_no_desktop     = { "None", N_( "Rely on runtime detection" ) };
+static const FMADesktopEnv st_no_desktop     = { "None", N_( "Rely on runtime detection" ) };
 
 #define                   st_xmlui_filename   PKGUIDIR "/nact-preferences.ui"
 static const gchar       *st_toplevel_name  = "PreferencesDialog";
@@ -833,7 +833,7 @@ desktop_create_model( NactPreferencesEditor *editor )
 	GtkWidget *combo;
 	GtkListStore *model;
 	GtkCellRenderer *text_cell;
-	const NADesktopEnv *desktops;
+	const FMADesktopEnv *desktops;
 	guint i;
 	GtkTreeIter row;
 
@@ -865,7 +865,7 @@ desktop_create_model( NactPreferencesEditor *editor )
 
 	/* insert list of known desktops
 	 */
-	desktops = na_desktop_environment_get_known_list();
+	desktops = fma_desktop_environment_get_known_list();
 	for( i = 0 ; desktops[i].id ; ++i ){
 		gtk_list_store_append( model, &row );
 		gtk_list_store_set( model, &row,
@@ -879,7 +879,7 @@ static void
 desktop_setup( NactPreferencesEditor *editor )
 {
 	GtkWidget *combo;
-	const NADesktopEnv *desktops;
+	const FMADesktopEnv *desktops;
 	guint i;
 	gint found;
 	GtkWidget *widget;
@@ -890,7 +890,7 @@ desktop_setup( NactPreferencesEditor *editor )
 	editor->private->desktop = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
 
 	if( editor->private->desktop && strlen( editor->private->desktop )){
-		desktops = na_desktop_environment_get_known_list();
+		desktops = fma_desktop_environment_get_known_list();
 		for( i = 0 ; desktops[i].id && found == -1 ; ++i ){
 			if( !strcmp( desktops[i].id, editor->private->desktop )){
 				found = 1+i;
@@ -916,8 +916,8 @@ desktop_setup( NactPreferencesEditor *editor )
 	/* set the currently detected desktop
 	 */
 	widget = base_window_get_widget( BASE_WINDOW( editor ), "DesktopLabel" );
-	desktop_id = na_desktop_environment_detect_running_desktop();
-	desktop_label = na_desktop_environment_get_label( desktop_id );
+	desktop_id = fma_desktop_environment_detect_running_desktop();
+	desktop_label = fma_desktop_environment_get_label( desktop_id );
 	gtk_label_set_text( GTK_LABEL( widget ), desktop_label );
 }
 
@@ -926,7 +926,7 @@ desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor )
 {
 	gboolean editable;
 	gint active;
-	const NADesktopEnv *desktops;
+	const FMADesktopEnv *desktops;
 
 	editable = !editor->private->preferences_locked && !editor->private->desktop_mandatory;
 
@@ -936,7 +936,7 @@ desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor )
 
 		active = gtk_combo_box_get_active( combo );
 		if( active > 0 ){
-			desktops = na_desktop_environment_get_known_list();
+			desktops = fma_desktop_environment_get_known_list();
 			editor->private->desktop = g_strdup( desktops[active-1].id );
 		}
 	}

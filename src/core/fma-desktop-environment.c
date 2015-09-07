@@ -33,9 +33,9 @@
 
 #include <glib/gi18n.h>
 
-#include "na-desktop-environment.h"
+#include "fma-desktop-environment.h"
 
-static const NADesktopEnv st_desktops[] = {
+static const FMADesktopEnv st_desktops[] = {
 	{ DESKTOP_GNOME, N_( "GNOME desktop" ) },
 	{ DESKTOP_KDE,   N_( "KDE desktop" ) },
 	{ DESKTOP_LXDE,  N_( "LXDE desktop" ) },
@@ -46,28 +46,28 @@ static const NADesktopEnv st_desktops[] = {
 };
 
 /*
- * na_desktop_environment_get_known_list:
+ * fma_desktop_environment_get_known_list:
  *
  * Returns the list of known desktop environments as defined by the
  * corresponding XDG specification.
  */
-const NADesktopEnv *
-na_desktop_environment_get_known_list( void )
+const FMADesktopEnv *
+fma_desktop_environment_get_known_list( void )
 {
-	return(( const NADesktopEnv * ) st_desktops );
+	return(( const FMADesktopEnv * ) st_desktops );
 }
 
 /*
- * na_desktop_environment_detect_running_desktop:
+ * fma_desktop_environment_detect_running_desktop:
  *
  * Have asked on xdg-list how to identify the currently running desktop environment
  * (see http://standards.freedesktop.org/menu-spec/latest/apb.html)
  * For now, just reproduce the xdg-open algorythm from xdg-utils 1.0
  */
 const gchar *
-na_desktop_environment_detect_running_desktop( void )
+fma_desktop_environment_detect_running_desktop( void )
 {
-	static const gchar *thisfn = "na_desktop_environment_detect_running_desktop";
+	static const gchar *thisfn = "fma_desktop_environment_detect_running_desktop";
 	const gchar *value;
 	gchar *output_str, *error_str;
 	gint exit_status;
@@ -151,7 +151,7 @@ na_desktop_environment_detect_running_desktop( void )
 }
 
 /*
- * na_desktop_environment_get_label:
+ * fma_desktop_environment_get_label:
  * @id: desktop identifier.
  *
  * Returns: the label of the desktop environment.
@@ -162,9 +162,9 @@ na_desktop_environment_detect_running_desktop( void )
  * Since: 3.2
  */
 const gchar *
-na_desktop_environment_get_label( const gchar *id )
+fma_desktop_environment_get_label( const gchar *id )
 {
-	static const gchar *thisfn = "na_desktop_environment_get_label";
+	static const gchar *thisfn = "fma_desktop_environment_get_label";
 	int i;
 
 	g_return_val_if_fail( id && strlen( id ), NULL );

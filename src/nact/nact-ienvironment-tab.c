@@ -40,7 +40,7 @@
 #include "api/fma-object-api.h"
 
 #include "core/na-gtk-utils.h"
-#include "core/na-desktop-environment.h"
+#include "core/fma-desktop-environment.h"
 #include "core/na-settings.h"
 
 #include "base-gtk-utils.h"
@@ -261,7 +261,7 @@ initialize_window( NactIEnvironmentTab *instance )
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	guint i;
-	const NADesktopEnv *desktops;
+	const FMADesktopEnv *desktops;
 	NactTreeView *tview;
 
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
@@ -300,7 +300,7 @@ initialize_window( NactIEnvironmentTab *instance )
 					GTK_CONTAINER( instance ), "EnvironmentsDesktopTreeView" ));
 	model = gtk_tree_view_get_model( listview );
 
-	desktops = na_desktop_environment_get_known_list();
+	desktops = fma_desktop_environment_get_known_list();
 
 	for( i = 0 ; desktops[i].id ; ++i ){
 		gtk_list_store_append( GTK_LIST_STORE( model ), &iter );

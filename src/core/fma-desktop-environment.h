@@ -27,12 +27,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_API_NA_DESKTOP_ENVIRONMENT_H__
-#define __CORE_API_NA_DESKTOP_ENVIRONMENT_H__
+#ifndef __CORE_FMA_DESKTOP_ENVIRONMENT_H__
+#define __CORE_FMA_DESKTOP_ENVIRONMENT_H__
 
 /* @title: Desktop Environment
  * @short_description: Desktop Environment Utilities.
- * @include: core/na-desktop-environment.h
+ * @include: core/fma-desktop-environment.h
  *
  * The desktop environment is used with OnlyShowIn and NotShowIn keys of
  * our desktop files. Unfortunately, there is no consensus between desktops
@@ -65,14 +65,14 @@ typedef struct {
 	const gchar *id;
 	const gchar *label;
 }
-	NADesktopEnv;
+	FMADesktopEnv;
 
-const NADesktopEnv *na_desktop_environment_get_known_list        ( void );
+const FMADesktopEnv *fma_desktop_environment_get_known_list        ( void );
 
-const gchar        *na_desktop_environment_detect_running_desktop( void );
+const gchar         *fma_desktop_environment_detect_running_desktop( void );
 
-const gchar        *na_desktop_environment_get_label             ( const gchar *id );
+const gchar         *fma_desktop_environment_get_label             ( const gchar *id );
 
 G_END_DECLS
 
-#endif /* __CORE_API_NA_DESKTOP_ENVIRONMENT_H__ */
+#endif /* __CORE_FMA_DESKTOP_ENVIRONMENT_H__ */

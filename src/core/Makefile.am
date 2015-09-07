@@ -58,8 +58,8 @@ libna_core_la_SOURCES = \
 	fma-data-boxed.c										\
 	fma-data-def.c										\
 	fma-data-types.c										\
-	na-desktop-environment.c							\
-	na-desktop-environment.h							\
+	fma-desktop-environment.c							\
+	fma-desktop-environment.h							\
 	na-exporter.c										\
 	na-exporter.h										\
 	na-export-format.c									\
