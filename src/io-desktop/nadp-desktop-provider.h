@@ -40,7 +40,7 @@
  * should only be used through the FMAIIOProvider interface.
  */
 
-#include <api/na-object-item.h>
+#include <api/fma-object-item.h>
 #include <api/na-timeout.h>
 
 #include "nadp-desktop-file.h"

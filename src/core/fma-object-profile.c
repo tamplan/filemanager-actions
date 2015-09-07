@@ -39,7 +39,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-object.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-factory-provider.h"
 #include "na-factory-object.h"
@@ -48,36 +48,36 @@
 
 /* private class data
  */
-struct _NAObjectProfileClassPrivate {
+struct _FMAObjectProfileClassPrivate {
 	void *empty;							/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAObjectProfilePrivate {
+struct _FMAObjectProfilePrivate {
 	gboolean dispose_has_run;
 };
 
 #define PROFILE_NAME_PREFIX					"profile-"
 
-#define na_object_is_file( obj )			(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_ISFILE )))
-#define na_object_is_dir( obj )				(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_ISDIR )))
-#define na_object_is_multiple( obj )		(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_MULTIPLE )))
+#define fma_object_is_file( obj )			(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_ISFILE )))
+#define fma_object_is_dir( obj )				(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_ISDIR )))
+#define fma_object_is_multiple( obj )		(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_MULTIPLE )))
 
 extern FMADataGroup profile_data_groups [];	/* defined in na-item-profile-factory.c */
 
-static NAObjectIdClass *st_parent_class = NULL;
+static FMAObjectIdClass *st_parent_class = NULL;
 
 static GType        register_type( void );
-static void         class_init( NAObjectProfileClass *klass );
+static void         class_init( FMAObjectProfileClass *klass );
 static void         instance_init( GTypeInstance *instance, gpointer klass );
 static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
-static void         object_dump( const NAObject *object );
-static gboolean     object_is_valid( const NAObject *object );
+static void         object_dump( const FMAObject *object );
+static gboolean     object_is_valid( const FMAObject *object );
 
 static void         ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
 static guint        ifactory_object_get_version( const FMAIFactoryObject *instance );
@@ -88,18 +88,18 @@ static guint        ifactory_object_write_done( FMAIFactoryObject *instance, con
 static void         icontext_iface_init( FMAIContextInterface *iface, void *user_data );
 static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
 
-static gboolean     convert_pre_v3_parameters( NAObjectProfile *profile );
+static gboolean     convert_pre_v3_parameters( FMAObjectProfile *profile );
 static gboolean     convert_pre_v3_parameters_str( gchar *str );
-static gboolean     convert_pre_v3_multiple( NAObjectProfile *profile );
-static gboolean     convert_pre_v3_isfiledir( NAObjectProfile *profile );
-static void         read_done_ending( NAObjectProfile *profile );
-static void         split_path_parameters( NAObjectProfile *profile );
-static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
+static gboolean     convert_pre_v3_multiple( FMAObjectProfile *profile );
+static gboolean     convert_pre_v3_isfiledir( FMAObjectProfile *profile );
+static void         read_done_ending( FMAObjectProfile *profile );
+static void         split_path_parameters( FMAObjectProfile *profile );
+static gboolean     is_valid_path_parameters( const FMAObjectProfile *profile );
 
-static gchar       *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
+static gchar       *object_id_new_id( const FMAObjectId *item, const FMAObjectId *new_parent );
 
 GType
-na_object_profile_get_type( void )
+fma_object_profile_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -113,17 +113,17 @@ na_object_profile_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_object_profile_register_type";
+	static const gchar *thisfn = "fma_object_profile_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAObjectProfileClass ),
+		sizeof( FMAObjectProfileClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAObjectProfile ),
+		sizeof( FMAObjectProfile ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -142,7 +142,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_TYPE_OBJECT_ID, "NAObjectProfile", &info, 0 );
+	type = g_type_register_static( FMA_TYPE_OBJECT_ID, "FMAObjectProfile", &info, 0 );
 
 	g_type_add_interface_static( type, FMA_TYPE_ICONTEXT, &icontext_iface_info );
 
@@ -152,12 +152,12 @@ register_type( void )
 }
 
 static void
-class_init( NAObjectProfileClass *klass )
+class_init( FMAObjectProfileClass *klass )
 {
-	static const gchar *thisfn = "na_object_profile_class_init";
+	static const gchar *thisfn = "fma_object_profile_class_init";
 	GObjectClass *object_class;
-	NAObjectClass *naobject_class;
-	NAObjectIdClass *naobjectid_class;
+	FMAObjectClass *naobject_class;
+	FMAObjectIdClass *naobjectid_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -169,14 +169,14 @@ class_init( NAObjectProfileClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	naobject_class = NA_OBJECT_CLASS( klass );
+	naobject_class = FMA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
 	naobject_class->is_valid = object_is_valid;
 
-	naobjectid_class = NA_OBJECT_ID_CLASS( klass );
+	naobjectid_class = FMA_OBJECT_ID_CLASS( klass );
 	naobjectid_class->new_id = object_id_new_id;
 
-	klass->private = g_new0( NAObjectProfileClassPrivate, 1 );
+	klass->private = g_new0( FMAObjectProfileClassPrivate, 1 );
 
 	na_factory_object_define_properties( object_class, profile_data_groups );
 }
@@ -184,17 +184,17 @@ class_init( NAObjectProfileClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_object_profile_instance_init";
-	NAObjectProfile *self;
+	static const gchar *thisfn = "fma_object_profile_instance_init";
+	FMAObjectProfile *self;
 
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( instance ));
+	g_return_if_fail( FMA_IS_OBJECT_PROFILE( instance ));
 
-	self = NA_OBJECT_PROFILE( instance );
+	self = FMA_OBJECT_PROFILE( instance );
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self->private = g_new0( NAObjectProfilePrivate, 1 );
+	self->private = g_new0( FMAObjectProfilePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -202,10 +202,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
+	g_return_if_fail( FMA_IS_OBJECT_PROFILE( object ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	if( !NA_OBJECT_PROFILE( object )->private->dispose_has_run ){
+	if( !FMA_OBJECT_PROFILE( object )->private->dispose_has_run ){
 
 		na_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
@@ -214,10 +214,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
+	g_return_if_fail( FMA_IS_OBJECT_PROFILE( object ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	if( !NA_OBJECT_PROFILE( object )->private->dispose_has_run ){
+	if( !FMA_OBJECT_PROFILE( object )->private->dispose_has_run ){
 
 		na_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
@@ -226,12 +226,12 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_object_profile_instance_dispose";
-	NAObjectProfile *self;
+	static const gchar *thisfn = "fma_object_profile_instance_dispose";
+	FMAObjectProfile *self;
 
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
+	g_return_if_fail( FMA_IS_OBJECT_PROFILE( object ));
 
-	self = NA_OBJECT_PROFILE( object );
+	self = FMA_OBJECT_PROFILE( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -249,12 +249,12 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_object_profile_instance_finalize";
-	NAObjectProfile *self;
+	static const gchar *thisfn = "fma_object_profile_instance_finalize";
+	FMAObjectProfile *self;
 
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
+	g_return_if_fail( FMA_IS_OBJECT_PROFILE( object ));
 
-	self = NA_OBJECT_PROFILE( object );
+	self = FMA_OBJECT_PROFILE( object );
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -267,22 +267,22 @@ instance_finalize( GObject *object )
 }
 
 static void
-object_dump( const NAObject *object )
+object_dump( const FMAObject *object )
 {
-	static const char *thisfn = "na_object_profile_object_dump";
-	NAObjectProfile *self;
+	static const char *thisfn = "fma_object_profile_object_dump";
+	FMAObjectProfile *self;
 
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( object ));
+	g_return_if_fail( FMA_IS_OBJECT_PROFILE( object ));
 
-	self = NA_OBJECT_PROFILE( object );
+	self = FMA_OBJECT_PROFILE( object );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
 				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 		/* chain up to the parent class */
-		if( NA_OBJECT_CLASS( st_parent_class )->dump ){
-			NA_OBJECT_CLASS( st_parent_class )->dump( object );
+		if( FMA_OBJECT_CLASS( st_parent_class )->dump ){
+			FMA_OBJECT_CLASS( st_parent_class )->dump( object );
 		}
 
 		g_debug( "+- end of dump" );
@@ -290,16 +290,16 @@ object_dump( const NAObject *object )
 }
 
 static gboolean
-object_is_valid( const NAObject *object )
+object_is_valid( const FMAObject *object )
 {
-	static const gchar *thisfn = "na_object_profile_object_is_valid";
+	static const gchar *thisfn = "fma_object_profile_object_is_valid";
 	gboolean is_valid;
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 
-	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( object ), FALSE );
+	g_return_val_if_fail( FMA_IS_OBJECT_PROFILE( object ), FALSE );
 
 	is_valid = FALSE;
-	profile = NA_OBJECT_PROFILE( object );
+	profile = FMA_OBJECT_PROFILE( object );
 
 	if( !profile->private->dispose_has_run ){
 		g_debug( "%s: profile=%p (%s)", thisfn, ( void * ) profile, G_OBJECT_TYPE_NAME( profile ));
@@ -307,8 +307,8 @@ object_is_valid( const NAObject *object )
 		is_valid = is_valid_path_parameters( profile );
 
 		/* chain up to the parent class */
-		if( NA_OBJECT_CLASS( st_parent_class )->is_valid ){
-			is_valid &= NA_OBJECT_CLASS( st_parent_class )->is_valid( object );
+		if( FMA_OBJECT_CLASS( st_parent_class )->is_valid ){
+			is_valid &= FMA_OBJECT_CLASS( st_parent_class )->is_valid( object );
 		}
 	}
 
@@ -318,7 +318,7 @@ object_is_valid( const NAObject *object )
 static void
 ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "na_object_profile_ifactory_object_iface_init";
+	static const gchar *thisfn = "fma_object_profile_ifactory_object_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
@@ -343,25 +343,25 @@ ifactory_object_get_groups( const FMAIFactoryObject *instance )
 static void
 ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	static const gchar *thisfn = "na_object_profile_ifactory_object_read_done";
-	NAObjectAction *action;
+	static const gchar *thisfn = "fma_object_profile_ifactory_object_read_done";
+	FMAObjectAction *action;
 	guint iversion;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 	/* converts pre-v3 data
 	 */
-	action = NA_OBJECT_ACTION( na_object_get_parent( instance ));
-	iversion = na_object_get_iversion( action );
+	action = FMA_OBJECT_ACTION( fma_object_get_parent( instance ));
+	iversion = fma_object_get_iversion( action );
 	g_debug( "%s: iversion=%d", thisfn, iversion );
 
 	if( iversion < 3 ){
-		na_object_profile_convert_v2_to_last( NA_OBJECT_PROFILE( instance ));
+		fma_object_profile_convert_v2_to_last( FMA_OBJECT_PROFILE( instance ));
 
 	/* must be always called, but is called when converting profile, anyway
 	 */
 	} else {
-		read_done_ending( NA_OBJECT_PROFILE( instance ));
+		read_done_ending( FMA_OBJECT_PROFILE( instance ));
 	}
 }
 
@@ -374,7 +374,7 @@ ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvid
 static void
 icontext_iface_init( FMAIContextInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "na_object_profile_icontext_iface_init";
+	static const gchar *thisfn = "fma_object_profile_icontext_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
@@ -426,36 +426,36 @@ icontext_is_candidate( FMAIContext *object, guint target, GList *selection )
  * simultaneously introduced.
  *
  * As a recall of the dynamics of the reading when loading an action:
- *  - na_object_action_read_done: set action defaults
+ *  - fma_object_action_read_done: set action defaults
  *  - nagp_reader_read_done: read profiles
  *     > nagp_reader_read_start: attach profile to its parent
- *     >  na_object_profile_read_done: convert old parameters
+ *     >  fma_object_profile_read_done: convert old parameters
  *
  * So, when converting v2 to v3 parameters in a v2 profile,
  * action already has its default values (including iversion=3)
  */
 static gboolean
-convert_pre_v3_parameters( NAObjectProfile *profile )
+convert_pre_v3_parameters( FMAObjectProfile *profile )
 {
-	static const gchar *thisfn = "na_object_profile_convert_pre_v3_parameters";
+	static const gchar *thisfn = "fma_object_profile_convert_pre_v3_parameters";
 	gboolean path_changed, parms_changed;
 	gchar *before;
 
-	gchar *path = na_object_get_path( profile );
+	gchar *path = fma_object_get_path( profile );
 	before = g_strdup( path );
 	path_changed = convert_pre_v3_parameters_str( path );
 	if( path_changed ){
-		na_object_set_path( profile, path );
+		fma_object_set_path( profile, path );
 		g_debug( "%s: path=%s changed to %s", thisfn, before, path );
 	}
 	g_free( before );
 	g_free( path );
 
-	gchar *parms = na_object_get_parameters( profile );
+	gchar *parms = fma_object_get_parameters( profile );
 	before = g_strdup( parms );
 	parms_changed = convert_pre_v3_parameters_str( parms );
 	if( parms_changed ){
-		na_object_set_parameters( profile, parms );
+		fma_object_set_parameters( profile, parms );
 		g_debug( "%s: parameters=%s changed to %s", thisfn, before, parms );
 	}
 	g_free( before );
@@ -534,15 +534,15 @@ convert_pre_v3_parameters_str( gchar *str )
  *                   to selection_count>0
  */
 static gboolean
-convert_pre_v3_multiple( NAObjectProfile *profile )
+convert_pre_v3_multiple( FMAObjectProfile *profile )
 {
-	static const gchar *thisfn = "na_object_profile_convert_pre_v3_multiple";
+	static const gchar *thisfn = "fma_object_profile_convert_pre_v3_multiple";
 	gboolean accept_multiple;
 	gchar *selection_count;
 
-	accept_multiple = na_object_is_multiple( profile );
+	accept_multiple = fma_object_is_multiple( profile );
 	selection_count = g_strdup( accept_multiple ? ">0" : "=1" );
-	na_object_set_selection_count( profile, selection_count );
+	fma_object_set_selection_count( profile, selection_count );
 	g_debug( "%s: accept_multiple=%s changed to selection_count= %s",
 			thisfn, accept_multiple ? "True":"False", selection_count );
 	g_free( selection_count );
@@ -562,9 +562,9 @@ convert_pre_v3_multiple( NAObjectProfile *profile )
  * contrarily all/allfiles mimetype has to be checked separately.
  */
 static gboolean
-convert_pre_v3_isfiledir( NAObjectProfile *profile )
+convert_pre_v3_isfiledir( FMAObjectProfile *profile )
 {
-	static const gchar *thisfn = "na_object_profile_convert_pre_v3_isfiledir";
+	static const gchar *thisfn = "fma_object_profile_convert_pre_v3_isfiledir";
 	gboolean is_all_mimetypes;
 	gboolean converted;
 	gboolean isfile, isdir;
@@ -574,23 +574,23 @@ convert_pre_v3_isfiledir( NAObjectProfile *profile )
 
 	converted = FALSE;
 
-	na_object_check_mimetypes( profile );
-	is_all_mimetypes = na_object_get_all_mimetypes( profile );
+	fma_object_check_mimetypes( profile );
+	is_all_mimetypes = fma_object_get_all_mimetypes( profile );
 	g_debug( "%s: is_all_mimetypes=%s", thisfn, is_all_mimetypes ? "True":"False" );
 
 	if( is_all_mimetypes ){
 		converted = TRUE;
 		mimetypes = NULL;
-		before_list = na_object_get_mimetypes( profile );
+		before_list = fma_object_get_mimetypes( profile );
 
-		/* this is needed because na_object_is_file() does not return the default
+		/* this is needed because fma_object_is_file() does not return the default
 		 * value when the data is not set (see #651911)
 		 */
 		isfile = TRUE;
 		if( na_factory_object_is_set( FMA_IFACTORY_OBJECT( profile ), FMAFO_DATA_ISFILE )){
-			isfile = na_object_is_file( profile );
+			isfile = fma_object_is_file( profile );
 		}
-		isdir = na_object_is_dir( profile );
+		isdir = fma_object_is_dir( profile );
 
 		if( isfile ){
 			if( isdir ){
@@ -617,7 +617,7 @@ convert_pre_v3_isfiledir( NAObjectProfile *profile )
 		}
 
 		if( converted ){
-			na_object_set_mimetypes( profile, mimetypes );
+			fma_object_set_mimetypes( profile, mimetypes );
 
 			before_str = fma_core_utils_slist_join_at_end( before_list, ";" );
 			after_str = fma_core_utils_slist_join_at_end( mimetypes, ";" );
@@ -634,7 +634,7 @@ convert_pre_v3_isfiledir( NAObjectProfile *profile )
 }
 
 static void
-read_done_ending( NAObjectProfile *profile )
+read_done_ending( FMAObjectProfile *profile )
 {
 	/* split path+parameters
 	 * not done in io-desktop because some actions may have all arguments in path
@@ -657,13 +657,13 @@ read_done_ending( NAObjectProfile *profile )
  * => so we definitively keep them as separated boxed in our internal objects
  */
 static void
-split_path_parameters( NAObjectProfile *profile )
+split_path_parameters( FMAObjectProfile *profile )
 {
 	gchar *path, *parameters;
 	gchar *exec;
 
-	path = na_object_get_path( profile );
-	parameters = na_object_get_parameters( profile );
+	path = fma_object_get_path( profile );
+	parameters = fma_object_get_parameters( profile );
 	exec = g_strstrip( g_strdup_printf( "%s %s", path ? path : "", parameters ? parameters : "" ));
 	g_free( parameters );
 	g_free( path );
@@ -671,8 +671,8 @@ split_path_parameters( NAObjectProfile *profile )
 	fma_core_utils_str_split_first_word( exec, &path, &parameters );
 	g_free( exec );
 
-	na_object_set_path( profile, path );
-	na_object_set_parameters( profile, parameters );
+	fma_object_set_path( profile, path );
+	fma_object_set_parameters( profile, parameters );
 	g_free( parameters );
 	g_free( path );
 }
@@ -684,14 +684,14 @@ split_path_parameters( NAObjectProfile *profile )
  * so, starting with 2.30.1, we only check for non empty path+parameters
  */
 static gboolean
-is_valid_path_parameters( const NAObjectProfile *profile )
+is_valid_path_parameters( const FMAObjectProfile *profile )
 {
 	gboolean valid;
 	gchar *path, *parameters;
 	gchar *command;
 
-	path = na_object_get_path( profile );
-	parameters = na_object_get_parameters( profile );
+	path = fma_object_get_path( profile );
+	parameters = fma_object_get_parameters( profile );
 
 	command = g_strdup_printf( "%s %s", path, parameters );
 	g_strstrip( command );
@@ -703,7 +703,7 @@ is_valid_path_parameters( const NAObjectProfile *profile )
 	g_free( path );
 
 	if( !valid ){
-		na_object_debug_invalid( profile, "command" );
+		fma_object_debug_invalid( profile, "command" );
 	}
 
 	return( valid );
@@ -714,17 +714,17 @@ is_valid_path_parameters( const NAObjectProfile *profile )
  * the current profile into the target parent
  */
 static gchar *
-object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
+object_id_new_id( const FMAObjectId *item, const FMAObjectId *new_parent )
 {
 	gchar *id = NULL;
 
-	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( item ), NULL );
-	g_return_val_if_fail( !new_parent || NA_IS_OBJECT_ACTION( new_parent ), NULL );
+	g_return_val_if_fail( FMA_IS_OBJECT_PROFILE( item ), NULL );
+	g_return_val_if_fail( !new_parent || FMA_IS_OBJECT_ACTION( new_parent ), NULL );
 
-	if( !NA_OBJECT_PROFILE( item )->private->dispose_has_run ){
+	if( !FMA_OBJECT_PROFILE( item )->private->dispose_has_run ){
 
 		if( new_parent ){
-			id = na_object_action_get_new_profile_name( NA_OBJECT_ACTION( new_parent ));
+			id = fma_object_action_get_new_profile_name( FMA_OBJECT_ACTION( new_parent ));
 		}
 	}
 
@@ -732,48 +732,48 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
 }
 
 /**
- * na_object_profile_new:
+ * fma_object_profile_new:
  *
  * Allocates a new profile.
  *
- * Returns: the newly allocated #NAObjectProfile profile.
+ * Returns: the newly allocated #FMAObjectProfile profile.
  *
  * Since: 2.30
  */
-NAObjectProfile *
-na_object_profile_new( void )
+FMAObjectProfile *
+fma_object_profile_new( void )
 {
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 
-	profile = g_object_new( NA_TYPE_OBJECT_PROFILE, NULL );
+	profile = g_object_new( FMA_TYPE_OBJECT_PROFILE, NULL );
 
 	return( profile );
 }
 
 /**
- * na_object_profile_new_with_defaults:
+ * fma_object_profile_new_with_defaults:
  *
  * Allocates a new profile, and set default values.
  *
- * Returns: the newly allocated #NAObjectProfile profile.
+ * Returns: the newly allocated #FMAObjectProfile profile.
  *
  * Since: 2.30
  */
-NAObjectProfile *
-na_object_profile_new_with_defaults( void )
+FMAObjectProfile *
+fma_object_profile_new_with_defaults( void )
 {
-	NAObjectProfile *profile = na_object_profile_new();
-	na_object_set_id( profile, "profile-zero" );
+	FMAObjectProfile *profile = fma_object_profile_new();
+	fma_object_set_id( profile, "profile-zero" );
 	/* i18n: label for the default profile */
-	na_object_set_label( profile, _( "Default profile" ));
+	fma_object_set_label( profile, _( "Default profile" ));
 	na_factory_object_set_defaults( FMA_IFACTORY_OBJECT( profile ));
 
 	return( profile );
 }
 
 /**
- * na_object_profile_convert_v2_to_last:
- * @profile: the #NAObjectProfile profile to be converted.
+ * fma_object_profile_convert_v2_to_last:
+ * @profile: the #FMAObjectProfile profile to be converted.
  *
  * Converts a v2 profile to the last version, setting the defaults as needed.
  *
@@ -784,16 +784,16 @@ na_object_profile_new_with_defaults( void )
  * Since: 2.30
  */
 void
-na_object_profile_convert_v2_to_last( NAObjectProfile *profile )
+fma_object_profile_convert_v2_to_last( FMAObjectProfile *profile )
 {
-	NAObjectAction *action;
+	FMAObjectAction *action;
 	guint iversion;
 	gboolean parms_converted, multiple_converted, isfiledir_converted;
 
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
+	g_return_if_fail( FMA_IS_OBJECT_PROFILE( profile ));
 
-	action = NA_OBJECT_ACTION( na_object_get_parent( profile ));
-	iversion = na_object_get_iversion( action );
+	action = FMA_OBJECT_ACTION( fma_object_get_parent( profile ));
+	iversion = fma_object_get_iversion( action );
 	g_return_if_fail( iversion < 3 );
 
 	parms_converted = convert_pre_v3_parameters( profile );
@@ -801,7 +801,7 @@ na_object_profile_convert_v2_to_last( NAObjectProfile *profile )
 	isfiledir_converted = convert_pre_v3_isfiledir( profile );
 
 	if( parms_converted || multiple_converted || isfiledir_converted ){
-		na_object_set_iversion( action, 3 );
+		fma_object_set_iversion( action, 3 );
 	}
 
 	read_done_ending( profile );

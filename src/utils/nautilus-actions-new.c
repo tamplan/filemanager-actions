@@ -40,7 +40,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/fma-iio-provider.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include <core/na-gconf-migration.h>
 #include <core/na-io-provider.h>
@@ -95,8 +95,8 @@ static gboolean   output_desktop   = FALSE;
 /* misc entries */
 static gboolean   version          = FALSE;
 
-extern FMADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
-extern FMADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
+extern FMADataGroup action_data_groups[];			/* defined in fma-object-action-factory.c */
+extern FMADataGroup profile_data_groups[];			/* defined in fma-object-profile-factory.c */
 
 static const ArgFromDataDef st_arg_from_data_def[] = {
 		{ action_data_groups,  FMA_FACTORY_OBJECT_ITEM_GROUP,       FMAFO_DATA_LABEL,              &label },
@@ -163,9 +163,9 @@ static GOptionEntry misc_entries[] = {
 
 static GOptionEntry   *build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds );
 static GOptionContext *init_options( void );
-static NAObjectAction *get_action_from_cmdline( void );
-static gboolean        output_to_desktop( NAObjectAction *action, GSList **msgs );
-static gboolean        output_to_stdout( const NAObjectAction *action, GSList **msgs );
+static FMAObjectAction *get_action_from_cmdline( void );
+static gboolean        output_to_desktop( FMAObjectAction *action, GSList **msgs );
+static gboolean        output_to_stdout( const FMAObjectAction *action, GSList **msgs );
 static void            exit_with_usage( void );
 
 int
@@ -174,7 +174,7 @@ main( int argc, char** argv )
 	int status = EXIT_SUCCESS;
 	GOptionContext *context;
 	GError *error = NULL;
-	NAObjectAction *action;
+	FMAObjectAction *action;
 	GSList *msg = NULL;
 	GSList *im;
 	gchar *help;
@@ -395,11 +395,11 @@ init_options( void )
 /*
  * allocate a new action, and fill it with values read from command-line
  */
-static NAObjectAction *
+static FMAObjectAction *
 get_action_from_cmdline( void )
 {
-	NAObjectAction *action;
-	NAObjectProfile *profile;
+	FMAObjectAction *action;
+	FMAObjectProfile *profile;
 	int i;
 	GSList *basenames;
 	GSList *mimetypes;
@@ -411,32 +411,32 @@ get_action_from_cmdline( void )
 	GSList *not_show_in;
 	GSList *capabilities;
 
-	action = na_object_action_new_with_defaults();
-	profile = NA_OBJECT_PROFILE(( GList * ) na_object_get_items( action )->data );
+	action = fma_object_action_new_with_defaults();
+	profile = FMA_OBJECT_PROFILE(( GList * ) fma_object_get_items( action )->data );
 
-	na_object_set_label( action, label );
+	fma_object_set_label( action, label );
 	if( tooltip && g_utf8_strlen( tooltip, -1 )){
-		na_object_set_tooltip( action, tooltip );
+		fma_object_set_tooltip( action, tooltip );
 	}
 	if( icon && g_utf8_strlen( icon, -1 )){
-		na_object_set_icon( action, icon );
+		fma_object_set_icon( action, icon );
 	}
-	na_object_set_enabled( action, enabled );
-	na_object_set_target_selection( action, target_selection );
-	na_object_set_target_location( action, target_location );
-	na_object_set_target_toolbar( action, target_toolbar );
+	fma_object_set_enabled( action, enabled );
+	fma_object_set_target_selection( action, target_selection );
+	fma_object_set_target_location( action, target_location );
+	fma_object_set_target_toolbar( action, target_toolbar );
 
 	toolbar_same_label = FALSE;
 	if( !label_toolbar || !g_utf8_strlen( label_toolbar, -1 )){
 		label_toolbar = g_strdup( label );
 		toolbar_same_label = TRUE;
 	}
-	na_object_set_toolbar_same_label( action, toolbar_same_label );
-	na_object_set_toolbar_label( action, label_toolbar );
+	fma_object_set_toolbar_same_label( action, toolbar_same_label );
+	fma_object_set_toolbar_label( action, label_toolbar );
 
-	na_object_set_path( profile, command );
-	na_object_set_parameters( profile, parameters );
-	na_object_set_working_dir( profile, workingdir );
+	fma_object_set_path( profile, command );
+	fma_object_set_parameters( profile, parameters );
+	fma_object_set_working_dir( profile, workingdir );
 
 	i = 0;
 	basenames = NULL;
@@ -445,11 +445,11 @@ get_action_from_cmdline( void )
 		i++;
 	}
 	if( basenames && g_slist_length( basenames )){
-		na_object_set_basenames( profile, basenames );
+		fma_object_set_basenames( profile, basenames );
 		fma_core_utils_slist_free( basenames );
 	}
 
-	na_object_set_matchcase( profile, matchcase );
+	fma_object_set_matchcase( profile, matchcase );
 
 	mimetypes = NULL;
 	if( isfile ){
@@ -473,7 +473,7 @@ get_action_from_cmdline( void )
 		i++;
 	}
 	if( mimetypes && g_slist_length( mimetypes )){
-		na_object_set_mimetypes( profile, mimetypes );
+		fma_object_set_mimetypes( profile, mimetypes );
 		fma_core_utils_slist_free( mimetypes );
 	}
 
@@ -484,7 +484,7 @@ get_action_from_cmdline( void )
 		selection_count = g_strdup( ">0" );
 	}
 	if( strlen( selection_count )){
-		na_object_set_selection_count( profile, selection_count );
+		fma_object_set_selection_count( profile, selection_count );
 	}
 
 	i = 0;
@@ -494,7 +494,7 @@ get_action_from_cmdline( void )
 		i++;
 	}
 	if( schemes && g_slist_length( schemes )){
-		na_object_set_schemes( profile, schemes );
+		fma_object_set_schemes( profile, schemes );
 		fma_core_utils_slist_free( schemes );
 	}
 
@@ -505,7 +505,7 @@ get_action_from_cmdline( void )
 		i++;
 	}
 	if( folders && g_slist_length( folders )){
-		na_object_set_folders( profile, folders );
+		fma_object_set_folders( profile, folders );
 		fma_core_utils_slist_free( folders );
 	}
 
@@ -515,7 +515,7 @@ get_action_from_cmdline( void )
 			only_show_in = g_slist_append( only_show_in, g_strdup( onlyshow_array[i] ));
 		}
 		if( only_show_in && g_slist_length( only_show_in )){
-			na_object_set_only_show_in( profile, only_show_in );
+			fma_object_set_only_show_in( profile, only_show_in );
 			fma_core_utils_slist_free( only_show_in );
 		}
 	}
@@ -526,25 +526,25 @@ get_action_from_cmdline( void )
 			not_show_in = g_slist_append( not_show_in, g_strdup( notshow_array[i] ));
 		}
 		if( not_show_in && g_slist_length( not_show_in )){
-			na_object_set_not_show_in( profile, not_show_in );
+			fma_object_set_not_show_in( profile, not_show_in );
 			fma_core_utils_slist_free( not_show_in );
 		}
 	}
 
 	if( try_exec && strlen( try_exec )){
-		na_object_set_try_exec( profile, try_exec );
+		fma_object_set_try_exec( profile, try_exec );
 	}
 
 	if( show_registered && strlen( show_registered )){
-		na_object_set_show_if_registered( profile, show_registered );
+		fma_object_set_show_if_registered( profile, show_registered );
 	}
 
 	if( show_true && strlen( show_true )){
-		na_object_set_show_if_true( profile, show_true );
+		fma_object_set_show_if_true( profile, show_true );
 	}
 
 	if( show_running && strlen( show_running )){
-		na_object_set_show_if_running( profile, show_running );
+		fma_object_set_show_if_running( profile, show_running );
 	}
 
 	if( capability_array ){
@@ -563,7 +563,7 @@ get_action_from_cmdline( void )
 			}
 		}
 		if( capabilities && g_slist_length( capabilities )){
-			na_object_set_capabilities( profile, capabilities );
+			fma_object_set_capabilities( profile, capabilities );
 			fma_core_utils_slist_free( capabilities );
 		}
 	}
@@ -575,7 +575,7 @@ get_action_from_cmdline( void )
  * write the new item as a .desktop file
  */
 static gboolean
-output_to_desktop( NAObjectAction *action, GSList **msgs )
+output_to_desktop( FMAObjectAction *action, GSList **msgs )
 {
 	NAUpdater *updater;
 	NAIOProvider *provider;
@@ -586,8 +586,8 @@ output_to_desktop( NAObjectAction *action, GSList **msgs )
 	provider = na_io_provider_find_io_provider_by_id( NA_PIVOT( updater ), "na-desktop" );
 
 	if( provider ){
-		na_object_set_provider( action, provider );
-		ret = na_updater_write_item( updater, NA_OBJECT_ITEM( action ), msgs );
+		fma_object_set_provider( action, provider );
+		ret = na_updater_write_item( updater, FMA_OBJECT_ITEM( action ), msgs );
 		code = ( ret == FMA_IIO_PROVIDER_CODE_OK );
 
 	} else {
@@ -602,14 +602,14 @@ output_to_desktop( NAObjectAction *action, GSList **msgs )
 }
 
 static gboolean
-output_to_stdout( const NAObjectAction *action, GSList **msgs )
+output_to_stdout( const FMAObjectAction *action, GSList **msgs )
 {
 	gboolean ret;
 	NAUpdater *updater;
 	gchar *buffer;
 
 	updater = na_updater_new();
-	buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), "Desktop1", msgs );
+	buffer = na_exporter_to_buffer( NA_PIVOT( updater ), FMA_OBJECT_ITEM( action ), "Desktop1", msgs );
 	ret = ( buffer != NULL );
 
 	if( buffer ){

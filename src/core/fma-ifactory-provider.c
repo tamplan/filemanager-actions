@@ -166,7 +166,7 @@ ifactory_provider_get_version( const FMAIFactoryProvider *instance )
  *     &lcomment;
  *      * allocate the object to be read
  *      &rcomment;
- *     NAObjectItem *item = NA_OBJECT_ITEM( na_object_action_new());
+ *     FMAObjectItem *item = FMA_OBJECT_ITEM( fma_object_action_new());
  *     &lcomment;
  *      * some data we may need to have access to in callback methods
  *      &rcomment;

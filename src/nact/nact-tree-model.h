@@ -44,7 +44,7 @@
 #ifndef __NACT_TREE_MODEL_H__
 #define __NACT_TREE_MODEL_H__
 
-#include "api/na-object.h"
+#include "api/fma-object.h"
 
 #include "nact-main-window-def.h"
 
@@ -93,30 +93,30 @@ void           nact_tree_model_set_edition_mode( NactTreeModel *tmodel,
 														guint mode );
 
 GtkTreePath   *nact_tree_model_delete          ( NactTreeModel *model,
-														NAObject *object );
+														FMAObject *object );
 
 void           nact_tree_model_fill            ( NactTreeModel *model,
 														GList *items );
 
 GtkTreePath   *nact_tree_model_insert_before   ( NactTreeModel *model,
-														const NAObject *object,
+														const FMAObject *object,
 														GtkTreePath *path );
 
 GtkTreePath   *nact_tree_model_insert_into     ( NactTreeModel *model,
-														const NAObject *object,
+														const FMAObject *object,
 														GtkTreePath *path );
 
-NAObjectItem  *nact_tree_model_get_item_by_id  ( const NactTreeModel *model,
+FMAObjectItem  *nact_tree_model_get_item_by_id  ( const NactTreeModel *model,
 														const gchar *id );
 
 GList         *nact_tree_model_get_items       ( const NactTreeModel *model,
 														guint mode );
 
-NAObject      *nact_tree_model_object_at_path  ( const NactTreeModel *model,
+FMAObject      *nact_tree_model_object_at_path  ( const NactTreeModel *model,
 														GtkTreePath *path );
 
 GtkTreePath   *nact_tree_model_object_to_path  ( const NactTreeModel *model,
-														const NAObject *object );
+														const FMAObject *object );
 
 G_END_DECLS
 

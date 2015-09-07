@@ -39,7 +39,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include <core/na-exporter.h>
 #include <core/na-export-format.h>
@@ -74,8 +74,8 @@ static GOptionEntry misc_entries[] = {
 static NAPivot *pivot = NULL;
 
 static GOptionContext  *init_options( void );
-static NAObjectItem    *get_item( const gchar *id );
-static void             export_item( const NAObjectItem *item, const gchar *format );
+static FMAObjectItem    *get_item( const gchar *id );
+static void             export_item( const FMAObjectItem *item, const gchar *format );
 static void             exit_with_usage( void );
 
 int
@@ -86,7 +86,7 @@ main( int argc, char** argv )
 	GError *error = NULL;
 	gchar *help;
 	gint errors;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	FMAIExporter *exporter;
 
 #if !GLIB_CHECK_VERSION( 2,36, 0 )
@@ -191,10 +191,10 @@ init_options( void )
 /*
  * search for the action in the repository
  */
-static NAObjectItem *
+static FMAObjectItem *
 get_item( const gchar *id )
 {
-	NAObjectItem *item = NULL;
+	FMAObjectItem *item = NULL;
 
 	pivot = na_pivot_new();
 	na_pivot_set_loadable( pivot, PIVOT_LOAD_ALL );
@@ -213,7 +213,7 @@ get_item( const gchar *id )
  * displays the specified item on stdout, in the specified export format
  */
 static void
-export_item( const NAObjectItem *item, const gchar *format )
+export_item( const FMAObjectItem *item, const gchar *format )
 {
 	GSList *messages = NULL;
 	GSList *it;

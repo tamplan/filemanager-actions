@@ -49,8 +49,8 @@ FMADataDef data_def_id [] = {
 				FALSE,
 				FALSE,
 				TRUE,
-				"NAObjectId identifier",
-				"Internal identifier of the NAObjectId object. " \
+				"FMAObjectId identifier",
+				"Internal identifier of the FMAObjectId object. " \
 				"Historically a UUID used as a GConf directory (thus ASCII, case insensitive), " \
 				"it is also the basename of the .desktop file (thus UTF-8, case sensitive).",
 				FMA_DATA_TYPE_STRING,
@@ -75,8 +75,8 @@ FMADataDef data_def_id [] = {
 				FALSE,
 				FALSE,
 				TRUE,
-				"NAObjectId Parent",
-				"The NAObjectItem which is the parent of this object.",
+				"FMAObjectId Parent",
+				"The FMAObjectItem which is the parent of this object.",
 				FMA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,

@@ -47,7 +47,7 @@
  * construction time.
  */
 
-#include "api/na-object-item.h"
+#include "api/fma-object-item.h"
 
 #include "base-window.h"
 #include "nact-main-window-def.h"
@@ -123,7 +123,7 @@ void          nact_tree_view_set_notify_allowed( NactTreeView *view, gboolean al
 
 void          nact_tree_view_collapse_all      ( const NactTreeView *view );
 void          nact_tree_view_expand_all        ( const NactTreeView *view );
-NAObjectItem *nact_tree_view_get_item_by_id    ( const NactTreeView *view, const gchar *id );
+FMAObjectItem *nact_tree_view_get_item_by_id    ( const NactTreeView *view, const gchar *id );
 GList        *nact_tree_view_get_items         ( const NactTreeView *view );
 GList        *nact_tree_view_get_items_ex      ( const NactTreeView *view, guint mode );
 

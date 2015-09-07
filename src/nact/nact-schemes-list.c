@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "base-keysyms.h"
 #include "nact-application.h"
@@ -117,7 +117,7 @@ static SchemesListData *get_schemes_list_data( GtkTreeView *treeview );
  * Associates the SchemesListData structure to the widget.
  *
  * The default list of schemes is displayed in two cases:
- * - when adding a scheme to a NAObjectItem (cf. NactISchemesTab)
+ * - when adding a scheme to a FMAObjectItem (cf. NactISchemesTab)
  *   so the schemes list is opened for selection
  *
  *   we have chosen to not allow default schemes list edition in this mode

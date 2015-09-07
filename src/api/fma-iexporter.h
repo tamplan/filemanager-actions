@@ -144,7 +144,7 @@
  */
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include "na-object-item.h"
+#include "fma-object-item.h"
 
 G_BEGIN_DECLS
 
@@ -184,7 +184,7 @@ typedef struct {
  * FMAIExporterFileParms:
  * @version:  [in] version of this structure;
  *                 since structure version 1.
- * @exported: [in] exported NAObjectItem-derived object;
+ * @exported: [in] exported FMAObjectItem-derived object;
  *                 since structure version 1.
  * @folder:   [in] URI of the target folder;
  *                 since structure version 1.
@@ -204,7 +204,7 @@ typedef struct {
  */
 typedef struct {
 	guint         version;
-	NAObjectItem *exported;
+	FMAObjectItem *exported;
 	gchar        *folder;
 	GQuark        format;
 	gchar        *basename;
@@ -216,7 +216,7 @@ typedef struct {
  * FMAIExporterBufferParms:
  * @version:  [in] version of this structure;
  *                 since structure version 1.
- * @exported: [in] exported NAObjectItem-derived object;
+ * @exported: [in] exported FMAObjectItem-derived object;
  *                 since structure version 1.
  * @format:   [in] export format as a GQuark;
  *                 since structure version 1.
@@ -234,7 +234,7 @@ typedef struct {
  */
 typedef struct {
 	guint          version;
-	NAObjectItem *exported;
+	FMAObjectItem *exported;
 	GQuark         format;
 	gchar         *buffer;
 	GSList        *messages;
@@ -319,7 +319,7 @@ typedef struct {
  * @content:  [in] version of the content of this structure;
  *                 equals to 1;
  *                 since structure version 2.
- * @exported: [in] exported NAObjectItem-derived object;
+ * @exported: [in] exported FMAObjectItem-derived object;
  *                 since structure version 1.
  * @folder:   [in] URI of the target folder;
  *                 since structure version 1.
@@ -340,7 +340,7 @@ typedef struct {
 typedef struct {
 	guint          version;
 	guint          content;
-	NAObjectItem *exported;
+	FMAObjectItem *exported;
 	gchar         *folder;
 	gchar         *format;
 	gchar         *basename;
@@ -356,7 +356,7 @@ typedef struct {
  * @content:  [in] version of the content of this structure;
  *                 equals to 1;
  *                 since structure version 2.
- * @exported: [in] exported NAObjectItem-derived object;
+ * @exported: [in] exported FMAObjectItem-derived object;
  *                 since structure version 1.
  * @format:   [in] export format string identifier;
  *                 since structure version 2.
@@ -375,7 +375,7 @@ typedef struct {
 typedef struct {
 	guint          version;
 	guint          content;
-	NAObjectItem *exported;
+	FMAObjectItem *exported;
 	gchar         *format;
 	gchar         *buffer;
 	GSList        *messages;

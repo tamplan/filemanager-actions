@@ -46,10 +46,10 @@ gboolean nagp_iio_provider_is_able_to_write   ( const FMAIIOProvider *provider )
  */
 #ifdef NA_ENABLE_DEPRECATED
 guint    nagp_iio_provider_write_item         ( const FMAIIOProvider *provider,
-													const NAObjectItem *item, GSList **message );
+													const FMAObjectItem *item, GSList **message );
 
 guint    nagp_iio_provider_delete_item        ( const FMAIIOProvider *provider,
-													const NAObjectItem *item, GSList **message );
+													const FMAObjectItem *item, GSList **message );
 
 /* FMAIFactoryProvider interface
  */

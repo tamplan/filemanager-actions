@@ -33,13 +33,13 @@
 /**
  * SECTION: ifactory-object
  * @title: FMAIFactoryObject
- * @short_description: The #NAObjectItem Interface v 1
+ * @short_description: The #FMAObjectItem Interface v 1
  * @include: file-manager-actions/na-ifactory_object.h
  *
- * This interface is implemented by #NAObjectItem derived objects so that they
+ * This interface is implemented by #FMAObjectItem derived objects so that they
  * can take advantage of our data factory management system.
  *
- * A #NAObjectItem derived object which would implement this #FMAIFactoryObject
+ * A #FMAObjectItem derived object which would implement this #FMAIFactoryObject
  * interface must meet following conditions:
  * <itemizedlist>
  *   <listitem>
@@ -92,18 +92,18 @@ typedef struct _FMAIFactoryObjectInterfacePrivate     FMAIFactoryObjectInterface
 
 /**
  * FMAIFactoryObjectInterface:
- * @get_version: returns the version of this interface the NAObjectItem implements.
+ * @get_version: returns the version of this interface the FMAObjectItem implements.
  * @get_groups:  returns a pointer to the FMADataGroup which defines this object.
  * @copy:        post copy callback.
- * @are_equal:   tests if two NAObjectItem are equals.
- * @is_valid:    tests if one NAObjectItem is valid.
- * @read_start:  triggered before serializing a NAObjectItem.
- * @read_done:   triggered after a NAObjectItem has been serialized.
- * @write_start: triggered before unserializing a NAObjectItem.
- * @write_done:  triggered after a NAObjectItem has been unserialized.
+ * @are_equal:   tests if two FMAObjectItem are equals.
+ * @is_valid:    tests if one FMAObjectItem is valid.
+ * @read_start:  triggered before serializing a FMAObjectItem.
+ * @read_done:   triggered after a FMAObjectItem has been serialized.
+ * @write_start: triggered before unserializing a FMAObjectItem.
+ * @write_done:  triggered after a FMAObjectItem has been unserialized.
  *
  * In order to take full advantage of our data managament system,
- * NAObjectItem-derived objects all implement this #FMAIFactoryObject
+ * FMAObjectItem-derived objects all implement this #FMAIFactoryObject
  * interface.
  */
 typedef struct {

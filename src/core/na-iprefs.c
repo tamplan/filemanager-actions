@@ -192,7 +192,7 @@ na_iprefs_write_level_zero( const GList *items, GSList **messages )
 	content = NULL;
 
 	for( it = items ; it ; it = it->next ){
-		id = na_object_get_id( it->data );
+		id = fma_object_get_id( it->data );
 		content = g_slist_prepend( content, id );
 	}
 	content = g_slist_reverse( content );

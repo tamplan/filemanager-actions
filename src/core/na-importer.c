@@ -36,7 +36,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/fma-iimporter.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-import-mode.h"
 #include "na-importer.h"
@@ -91,9 +91,9 @@ static NAImportModeStr st_import_ask_mode = {
 
 static NAImporterResult *import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri );
 static void              manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserParms *ask_parms, NAImporterResult *result );
-static NAObjectItem     *is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterResult *result );
-static void              renumber_label_item( NAObjectItem *item );
-static guint             ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms );
+static FMAObjectItem     *is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterResult *result );
+static void              renumber_label_item( FMAObjectItem *item );
+static guint             ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, NAImporterAskUserParms *parms );
 static guint             get_id_from_string( const gchar *str );
 static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
 
@@ -117,7 +117,7 @@ static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
  * #NAImporterResult structure which will contain:
  * - the imported URI
  * - the #FMAIImporter provider if one has been found, or %NULL
- * - a #NAObjectItem item if import was successful, or %NULL
+ * - a #FMAObjectItem item if import was successful, or %NULL
  * - a list of error messages, or %NULL.
  *
  * Returns: a #GList of #NAImporterResult structures
@@ -176,7 +176,7 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 		import_result = ( NAImporterResult * ) ires->data;
 
 		if( import_result->imported ){
-			g_return_val_if_fail( NA_IS_OBJECT_ITEM( import_result->imported ), NULL );
+			g_return_val_if_fail( FMA_IS_OBJECT_ITEM( import_result->imported ), NULL );
 			g_return_val_if_fail( FMA_IS_IIMPORTER( import_result->importer ), NULL );
 
 			ask_parms.uri = import_result->uri;
@@ -273,7 +273,7 @@ static void
 manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserParms *ask_parms, NAImporterResult *result )
 {
 	static const gchar *thisfn = "na_importer_manage_import_mode";
-	NAObjectItem *exists;
+	FMAObjectItem *exists;
 	guint mode;
 	gchar *id;
 
@@ -338,7 +338,7 @@ manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserPar
 
 			case IMPORTER_MODE_NO_IMPORT:
 			default:
-				id = na_object_get_id( result->imported );
+				id = fma_object_get_id( result->imported );
 				fma_core_utils_slist_add_message(
 						&result->messages,
 						_( "Item %s already exists." ),
@@ -360,16 +360,16 @@ manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserPar
  * First check here for duplicates inside of imported population,
  * then delegates to the caller-provided check function the rest of work...
  */
-static NAObjectItem *
+static FMAObjectItem *
 is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterResult *result )
 {
 	static const gchar *thisfn = "na_importer_is_importing_already_exists";
-	NAObjectItem *exists;
+	FMAObjectItem *exists;
 	GList *ip;
 
 	exists = NULL;
 
-	gchar *importing_id = na_object_get_id( result->imported );
+	gchar *importing_id = fma_object_get_id( result->imported );
 	g_debug( "%s: importing=%p, id=%s", thisfn, ( void * ) result->imported, importing_id );
 
 	/* is the importing item already in the current importation list ?
@@ -379,11 +379,11 @@ is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterR
 		NAImporterResult *try_result = ( NAImporterResult * ) ip->data;
 
 		if( try_result->imported ){
-			g_return_val_if_fail( NA_IS_OBJECT_ITEM( try_result->imported ), NULL );
+			g_return_val_if_fail( FMA_IS_OBJECT_ITEM( try_result->imported ), NULL );
 
-			gchar *id = na_object_get_id( try_result->imported );
+			gchar *id = fma_object_get_id( try_result->imported );
 			if( !strcmp( importing_id, id )){
-				exists = NA_OBJECT_ITEM( try_result->imported );
+				exists = FMA_OBJECT_ITEM( try_result->imported );
 			}
 			g_free( id );
 		}
@@ -405,25 +405,25 @@ is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterR
  * renumber the item, and set a new label
  */
 static void
-renumber_label_item( NAObjectItem *item )
+renumber_label_item( FMAObjectItem *item )
 {
 	gchar *label, *tmp;
 
-	na_object_set_new_id( item, NULL );
+	fma_object_set_new_id( item, NULL );
 
-	label = na_object_get_label( item );
+	label = fma_object_get_label( item );
 
 	/* i18n: the action has been renumbered during import operation */
 	tmp = g_strdup_printf( "%s %s", label, _( "(renumbered)" ));
 
-	na_object_set_label( item, tmp );
+	fma_object_set_label( item, tmp );
 
 	g_free( tmp );
 	g_free( label );
 }
 
 static guint
-ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms )
+ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, NAImporterAskUserParms *parms )
 {
 	guint mode;
 	gchar *mode_str;

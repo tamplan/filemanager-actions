@@ -49,7 +49,7 @@
 static GList  *prepare_for_paste( NactMainWindow *window, sMenuData *sdata );
 static GList  *get_deletables( NAUpdater *updater, GList *tree, GSList **not_deletable );
 static GSList *get_deletables_rec( NAUpdater *updater, GList *tree );
-static gchar  *add_ndeletable_msg( const NAObjectItem *item, gint reason );
+static gchar  *add_ndeletable_msg( const FMAObjectItem *item, gint reason );
 static void    update_clipboard_counters( NactMainWindow *window, sMenuData *sdata );
 
 /**
@@ -73,9 +73,9 @@ nact_menu_edit_update_sensitivities( NactMainWindow *main_window )
 	gboolean paste_into_enabled;
 	gboolean duplicate_enabled;
 	gboolean delete_enabled;
-	NAObject *parent_item;
-	NAObject *selected_action;
-	NAObject *selected_item;
+	FMAObject *parent_item;
+	FMAObject *selected_action;
+	FMAObject *selected_item;
 	gboolean is_clipboard_empty;
 
 	sdata = nact_menu_get_data( main_window );
@@ -139,21 +139,21 @@ nact_menu_edit_update_sensitivities( NactMainWindow *main_window )
 	if( sdata->clipboard_profiles ){
 		paste_into_enabled &= sdata->count_selected == 1;
 		if( paste_into_enabled ){
-			selected_action = NA_OBJECT( sdata->selected_items->data );
-			paste_into_enabled &= NA_IS_OBJECT_ACTION( selected_action );
+			selected_action = FMA_OBJECT( sdata->selected_items->data );
+			paste_into_enabled &= FMA_IS_OBJECT_ACTION( selected_action );
 			if( paste_into_enabled ){
-				paste_into_enabled &= na_object_is_finally_writable( selected_action, NULL );
+				paste_into_enabled &= fma_object_is_finally_writable( selected_action, NULL );
 			}
 		}
 	} else {
 		paste_into_enabled &= sdata->has_writable_providers;
 		if( sdata->count_selected ){
-			selected_item = NA_OBJECT( sdata->selected_items->data );
-			paste_into_enabled &= NA_IS_OBJECT_MENU( selected_item );
+			selected_item = FMA_OBJECT( sdata->selected_items->data );
+			paste_into_enabled &= FMA_IS_OBJECT_MENU( selected_item );
 			if( paste_into_enabled ){
-				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
+				parent_item = ( FMAObject * ) fma_object_get_parent( selected_item );
 				paste_into_enabled &= parent_item
-						? na_object_is_finally_writable( parent_item, NULL )
+						? fma_object_is_finally_writable( parent_item, NULL )
 						: sdata->is_level_zero_writable;
 			}
 		} else {
@@ -213,7 +213,7 @@ nact_menu_edit_cut( NactMainWindow *main_window )
 	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
 
 	sdata = nact_menu_get_data( main_window );
-	items = na_object_copyref_items( sdata->selected_items );
+	items = fma_object_copyref_items( sdata->selected_items );
 	ndeletables = NULL;
 	to_delete = get_deletables( sdata->updater, items, &ndeletables );
 
@@ -235,7 +235,7 @@ nact_menu_edit_cut( NactMainWindow *main_window )
 		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
 	}
 
-	na_object_free_items( items );
+	fma_object_free_items( items );
 }
 
 /**
@@ -300,7 +300,7 @@ nact_menu_edit_paste( NactMainWindow *main_window )
 	if( items ){
 		view = nact_main_window_get_items_view( main_window );
 		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( view ), items, NULL );
-		na_object_free_items( items );
+		fma_object_free_items( items );
 	}
 }
 
@@ -336,7 +336,7 @@ nact_menu_edit_paste_into( NactMainWindow *main_window )
 	if( items ){
 		view = nact_main_window_get_items_view( main_window );
 		nact_tree_ieditable_insert_into( NACT_TREE_IEDITABLE( view ), items );
-		na_object_free_items( items );
+		fma_object_free_items( items );
 	}
 }
 
@@ -346,7 +346,7 @@ prepare_for_paste( NactMainWindow *window, sMenuData *sdata )
 	static const gchar *thisfn = "nact_menu_edit_prepare_for_paste";
 	GList *items, *it;
 	NactClipboard *clipboard;
-	NAObjectAction *action;
+	FMAObjectAction *action;
 	gboolean relabel;
 	gboolean renumber;
 
@@ -358,16 +358,16 @@ prepare_for_paste( NactMainWindow *window, sMenuData *sdata )
 	 */
 	for( it = items ; it ; it = it->next ){
 
-		if( NA_IS_OBJECT_PROFILE( it->data )){
+		if( FMA_IS_OBJECT_PROFILE( it->data )){
 			if( !action ){
 				g_object_get( G_OBJECT( window ), MAIN_PROP_ITEM, &action, NULL );
-				g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
+				g_return_val_if_fail( FMA_IS_OBJECT_ACTION( action ), NULL );
 			}
 		}
 
-		relabel = na_updater_should_pasted_be_relabeled( sdata->updater, NA_OBJECT( it->data ));
-		na_object_prepare_for_paste( it->data, relabel, renumber, action );
-		na_object_check_status( it->data );
+		relabel = na_updater_should_pasted_be_relabeled( sdata->updater, FMA_OBJECT( it->data ));
+		fma_object_prepare_for_paste( it->data, relabel, renumber, action );
+		fma_object_check_status( it->data );
 	}
 
 	g_debug( "%s: action=%p (%s)",
@@ -392,10 +392,10 @@ nact_menu_edit_duplicate( NactMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_menu_edit_duplicate";
 	sMenuData *sdata;
-	NAObjectAction *action;
+	FMAObjectAction *action;
 	GList *items, *it;
 	GList *dup;
-	NAObject *obj;
+	FMAObject *obj;
 	gboolean relabel;
 	NactTreeView *view;
 
@@ -403,30 +403,30 @@ nact_menu_edit_duplicate( NactMainWindow *main_window )
 	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
 
 	sdata = nact_menu_get_data( main_window );
-	items = na_object_copyref_items( sdata->selected_items );
+	items = fma_object_copyref_items( sdata->selected_items );
 
 	for( it = items ; it ; it = it->next ){
-		obj = NA_OBJECT( na_object_duplicate( it->data, DUPLICATE_REC ));
+		obj = FMA_OBJECT( fma_object_duplicate( it->data, DUPLICATE_REC ));
 		action = NULL;
 
 		/* duplicating a profile
 		 * as we insert in sibling mode, the parent doesn't change
 		 */
-		if( NA_IS_OBJECT_PROFILE( obj )){
-			action = NA_OBJECT_ACTION( na_object_get_parent( it->data ));
+		if( FMA_IS_OBJECT_PROFILE( obj )){
+			action = FMA_OBJECT_ACTION( fma_object_get_parent( it->data ));
 		}
 
 		relabel = na_updater_should_pasted_be_relabeled( sdata->updater, obj );
-		na_object_prepare_for_paste( obj, relabel, TRUE, action );
-		na_object_set_origin( obj, NULL );
-		na_object_check_status( obj );
+		fma_object_prepare_for_paste( obj, relabel, TRUE, action );
+		fma_object_set_origin( obj, NULL );
+		fma_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );
 		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
 		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( view ), dup, it->data );
-		na_object_free_items( dup );
+		fma_object_free_items( dup );
 	}
 
-	na_object_free_items( items );
+	fma_object_free_items( items );
 }
 
 /**
@@ -459,7 +459,7 @@ nact_menu_edit_delete( NactMainWindow *main_window )
 	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
 
 	sdata = nact_menu_get_data( main_window );
-	items = na_object_copyref_items( sdata->selected_items );
+	items = fma_object_copyref_items( sdata->selected_items );
 	ndeletables = NULL;
 	to_delete = get_deletables( sdata->updater, items, &ndeletables );
 
@@ -478,7 +478,7 @@ nact_menu_edit_delete( NactMainWindow *main_window )
 		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
 	}
 
-	na_object_free_items( items );
+	fma_object_free_items( items );
 }
 
 static GList *
@@ -489,25 +489,25 @@ get_deletables( NAUpdater *updater, GList *selected, GSList **ndeletables )
 	GList *subitems;
 	GSList *sub_deletables;
 	guint reason;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 
 	to_delete = NULL;
 	for( it = selected ; it ; it = it->next ){
 
-		if( NA_IS_OBJECT_PROFILE( it->data )){
-			item = na_object_get_parent( it->data );
+		if( FMA_IS_OBJECT_PROFILE( it->data )){
+			item = fma_object_get_parent( it->data );
 		} else {
-			item = NA_OBJECT_ITEM( it->data );
+			item = FMA_OBJECT_ITEM( it->data );
 		}
 
-		if( !na_object_is_finally_writable( item, &reason )){
+		if( !fma_object_is_finally_writable( item, &reason )){
 			*ndeletables = g_slist_prepend(
-					*ndeletables, add_ndeletable_msg( NA_OBJECT_ITEM( it->data ), reason ));
+					*ndeletables, add_ndeletable_msg( FMA_OBJECT_ITEM( it->data ), reason ));
 			continue;
 		}
 
-		if( NA_IS_OBJECT_MENU( it->data )){
-			subitems = na_object_get_items( it->data );
+		if( FMA_IS_OBJECT_MENU( it->data )){
+			subitems = fma_object_get_items( it->data );
 			sub_deletables = get_deletables_rec( updater, subitems );
 
 			if( sub_deletables ){
@@ -516,7 +516,7 @@ get_deletables( NAUpdater *updater, GList *selected, GSList **ndeletables )
 			}
 		}
 
-		to_delete = g_list_prepend( to_delete, na_object_ref( it->data ));
+		to_delete = g_list_prepend( to_delete, fma_object_ref( it->data ));
 	}
 
 	return( to_delete );
@@ -533,14 +533,14 @@ get_deletables_rec( NAUpdater *updater, GList *tree )
 	msgs = NULL;
 	for( it = tree ; it ; it = it->next ){
 
-		if( !na_object_is_finally_writable( it->data, &reason )){
+		if( !fma_object_is_finally_writable( it->data, &reason )){
 			msgs = g_slist_prepend(
-					msgs, add_ndeletable_msg( NA_OBJECT_ITEM( it->data ), reason ));
+					msgs, add_ndeletable_msg( FMA_OBJECT_ITEM( it->data ), reason ));
 			continue;
 		}
 
-		if( NA_IS_OBJECT_MENU( it->data )){
-			subitems = na_object_get_items( it->data );
+		if( FMA_IS_OBJECT_MENU( it->data )){
+			subitems = fma_object_get_items( it->data );
 			msgs = g_slist_concat( msgs, get_deletables_rec( updater, subitems ));
 		}
 	}
@@ -549,13 +549,13 @@ get_deletables_rec( NAUpdater *updater, GList *tree )
 }
 
 static gchar *
-add_ndeletable_msg( const NAObjectItem *item, gint reason )
+add_ndeletable_msg( const FMAObjectItem *item, gint reason )
 {
 	gchar *msg;
 	gchar *label;
 	gchar *reasstr;
 
-	label = na_object_get_label( item );
+	label = fma_object_get_label( item );
 	reasstr = na_io_provider_get_readonly_tooltip( reason );
 
 	msg = g_strdup_printf( "%s: %s", label, reasstr );

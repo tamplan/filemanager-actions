@@ -56,7 +56,7 @@ static gchar *st_save_warning     = N_( "Some items may not have been saved" );
 static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items list" );
 static gchar *st_delete_error     = N_( "Some items have not been deleted" );
 
-static gboolean save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages );
+static gboolean save_item( NactMainWindow *window, NAUpdater *updater, FMAObjectItem *item, GSList **messages );
 static void     install_autosave( NactMainWindow *main_window );
 static void     on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer new_value, gpointer user_data );
 static void     on_autosave_prefs_timeout( NactMainWindow *main_window );
@@ -125,18 +125,18 @@ void
 nact_menu_file_new_menu( NactMainWindow *main_window )
 {
 	sMenuData *sdata;
-	NAObjectMenu *menu;
+	FMAObjectMenu *menu;
 	NactTreeView *items_view;
 	GList *items;
 
 	sdata = nact_menu_get_data( main_window );
-	menu = na_object_menu_new_with_defaults();
-	na_object_check_status( menu );
-	na_updater_check_item_writability_status( sdata->updater, NA_OBJECT_ITEM( menu ));
+	menu = fma_object_menu_new_with_defaults();
+	fma_object_check_status( menu );
+	na_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( menu ));
 	items = g_list_prepend( NULL, menu );
 	items_view = nact_main_window_get_items_view( main_window );
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
-	na_object_free_items( items );
+	fma_object_free_items( items );
 }
 
 /**
@@ -149,18 +149,18 @@ void
 nact_menu_file_new_action( NactMainWindow *main_window )
 {
 	sMenuData *sdata;
-	NAObjectAction *action;
+	FMAObjectAction *action;
 	NactTreeView *items_view;
 	GList *items;
 
 	sdata = nact_menu_get_data( main_window );
-	action = na_object_action_new_with_defaults();
-	na_object_check_status( action );
-	na_updater_check_item_writability_status( sdata->updater, NA_OBJECT_ITEM( action ));
+	action = fma_object_action_new_with_defaults();
+	fma_object_check_status( action );
+	na_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( action ));
 	items = g_list_prepend( NULL, action );
 	items_view = nact_main_window_get_items_view( main_window );
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
-	na_object_free_items( items );
+	fma_object_free_items( items );
 }
 
 /**
@@ -172,8 +172,8 @@ nact_menu_file_new_action( NactMainWindow *main_window )
 void
 nact_menu_file_new_profile( NactMainWindow *main_window )
 {
-	NAObjectAction *action;
-	NAObjectProfile *profile;
+	FMAObjectAction *action;
+	FMAObjectProfile *profile;
 	NactTreeView *items_view;
 	GList *items;
 
@@ -182,18 +182,18 @@ nact_menu_file_new_profile( NactMainWindow *main_window )
 			MAIN_PROP_ITEM, &action,
 			NULL );
 
-	profile = na_object_profile_new_with_defaults();
-	na_object_attach_profile( action, profile );
+	profile = fma_object_profile_new_with_defaults();
+	fma_object_attach_profile( action, profile );
 
-	na_object_set_label( profile, _( "New profile" ));
-	na_object_set_new_id( profile, action );
+	fma_object_set_label( profile, _( "New profile" ));
+	fma_object_set_new_id( profile, action );
 
-	na_object_check_status( profile );
+	fma_object_check_status( profile );
 
 	items = g_list_prepend( NULL, profile );
 	items_view = nact_main_window_get_items_view( main_window );
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
-	na_object_free_items( items );
+	fma_object_free_items( items );
 }
 
 /**
@@ -233,7 +233,7 @@ nact_menu_file_save_items( NactMainWindow *window )
 	NactTreeView *items_view;
 	GList *items, *it;
 	GList *new_pivot;
-	NAObjectItem *duplicate;
+	FMAObjectItem *duplicate;
 	GSList *messages;
 	gchar *msg;
 
@@ -246,7 +246,7 @@ nact_menu_file_save_items( NactMainWindow *window )
 	 */
 	items_view = nact_main_window_get_items_view( window );
 	items = nact_tree_view_get_items( items_view );
-	na_object_dump_tree( items );
+	fma_object_dump_tree( items );
 	messages = NULL;
 
 	if( nact_tree_ieditable_is_level_zero_modified( NACT_TREE_IEDITABLE( items_view ))){
@@ -282,7 +282,7 @@ nact_menu_file_save_items( NactMainWindow *window )
 		messages = NULL;
 
 	} else {
-		na_object_free_items( items );
+		fma_object_free_items( items );
 		items = nact_tree_view_get_items( items_view );
 	}
 
@@ -294,10 +294,10 @@ nact_menu_file_save_items( NactMainWindow *window )
 	new_pivot = NULL;
 
 	for( it = items ; it ; it = it->next ){
-		save_item( window, sdata->updater, NA_OBJECT_ITEM( it->data ), &messages );
-		duplicate = NA_OBJECT_ITEM( na_object_duplicate( it->data, DUPLICATE_REC ));
-		na_object_reset_origin( it->data, duplicate );
-		na_object_check_status( it->data );
+		save_item( window, sdata->updater, FMA_OBJECT_ITEM( it->data ), &messages );
+		duplicate = FMA_OBJECT_ITEM( fma_object_duplicate( it->data, DUPLICATE_REC ));
+		fma_object_reset_origin( it->data, duplicate );
+		fma_object_check_status( it->data );
 		new_pivot = g_list_prepend( new_pivot, duplicate );
 	}
 
@@ -310,16 +310,16 @@ nact_menu_file_save_items( NactMainWindow *window )
 	}
 
 	na_pivot_set_new_items( NA_PIVOT( sdata->updater ), g_list_reverse( new_pivot ));
-	na_object_free_items( items );
+	fma_object_free_items( items );
 	nact_main_window_block_reload( window );
 	g_signal_emit_by_name( items_view, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, FALSE );
 }
 
 /*
- * iterates here on each and every NAObjectItem row stored in the tree
+ * iterates here on each and every FMAObjectItem row stored in the tree
  */
 static gboolean
-save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages )
+save_item( NactMainWindow *window, NAUpdater *updater, FMAObjectItem *item, GSList **messages )
 {
 	static const gchar *thisfn = "nact_menu_file_save_item";
 	gboolean ret;
@@ -331,21 +331,21 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSLis
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
 	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), FALSE );
 
 	ret = TRUE;
 
-	if( NA_IS_OBJECT_MENU( item )){
-		subitems = na_object_get_items( item );
+	if( FMA_IS_OBJECT_MENU( item )){
+		subitems = fma_object_get_items( item );
 		for( it = subitems ; it ; it = it->next ){
-			ret &= save_item( window, updater, NA_OBJECT_ITEM( it->data ), messages );
+			ret &= save_item( window, updater, FMA_OBJECT_ITEM( it->data ), messages );
 		}
 	}
 
-	provider_before = na_object_get_provider( item );
+	provider_before = fma_object_get_provider( item );
 
-	if( na_object_is_modified( item )){
-		label = na_object_get_label( item );
+	if( fma_object_is_modified( item )){
+		label = fma_object_get_label( item );
 		g_debug( "%s: saving %p (%s) '%s'", thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ), label );
 		g_free( label );
 
@@ -353,11 +353,11 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSLis
 		ret = ( save_ret == FMA_IIO_PROVIDER_CODE_OK );
 
 		if( ret ){
-			if( NA_IS_OBJECT_ACTION( item )){
-				na_object_reset_last_allocated( item );
+			if( FMA_IS_OBJECT_ACTION( item )){
+				fma_object_reset_last_allocated( item );
 			}
 
-			provider_after = na_object_get_provider( item );
+			provider_after = fma_object_get_provider( item );
 			if( provider_after != provider_before ){
 				g_signal_emit_by_name( window, MAIN_SIGNAL_ITEM_UPDATED, item, MAIN_DATA_PROVIDER );
 			}

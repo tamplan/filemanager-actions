@@ -248,7 +248,7 @@ on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
 /*
  * na_exporter_to_buffer:
  * @pivot: the #NAPivot pivot for the running application.
- * @item: a #NAObjectItem-derived object.
+ * @item: a #FMAObjectItem-derived object.
  * @format: the target format identifier.
  * @messages: a pointer to a #GSList list of strings; the provider
  *  may append messages to this list, but shouldn't reinitialize it.
@@ -260,7 +260,7 @@ on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
  */
 gchar *
 na_exporter_to_buffer( const NAPivot *pivot,
-		const NAObjectItem *item, const gchar *format, GSList **messages )
+		const FMAObjectItem *item, const gchar *format, GSList **messages )
 {
 	static const gchar *thisfn = "na_exporter_to_buffer";
 	gchar *buffer;
@@ -270,7 +270,7 @@ na_exporter_to_buffer( const NAPivot *pivot,
 	gchar *msg;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), NULL );
 
 	buffer = NULL;
 
@@ -286,7 +286,7 @@ na_exporter_to_buffer( const NAPivot *pivot,
 
 	if( exporter ){
 		parms.version = 2;
-		parms.exported = ( NAObjectItem * ) item;
+		parms.exported = ( FMAObjectItem * ) item;
 		parms.format = g_strdup( format );
 		parms.buffer = NULL;
 		parms.messages = messages ? *messages : NULL;
@@ -319,7 +319,7 @@ na_exporter_to_buffer( const NAPivot *pivot,
 /*
  * na_exporter_to_file:
  * @pivot: the #NAPivot pivot for the running application.
- * @item: a #NAObjectItem-derived object.
+ * @item: a #FMAObjectItem-derived object.
  * @folder_uri: the URI of the target folder.
  * @format: the target format identifier.
  * @messages: a pointer to a #GSList list of strings; the provider
@@ -332,7 +332,7 @@ na_exporter_to_buffer( const NAPivot *pivot,
  */
 gchar *
 na_exporter_to_file( const NAPivot *pivot,
-		const NAObjectItem *item, const gchar *folder_uri, const gchar *format, GSList **messages )
+		const FMAObjectItem *item, const gchar *folder_uri, const gchar *format, GSList **messages )
 {
 	static const gchar *thisfn = "na_exporter_to_file";
 	gchar *export_uri;
@@ -342,7 +342,7 @@ na_exporter_to_file( const NAPivot *pivot,
 	gchar *name;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), NULL );
 
 	export_uri = NULL;
 
@@ -358,7 +358,7 @@ na_exporter_to_file( const NAPivot *pivot,
 
 	if( exporter ){
 		parms.version = 2;
-		parms.exported = ( NAObjectItem * ) item;
+		parms.exported = ( FMAObjectItem * ) item;
 		parms.folder = ( gchar * ) folder_uri;
 		parms.format = g_strdup( format );
 		parms.basename = NULL;

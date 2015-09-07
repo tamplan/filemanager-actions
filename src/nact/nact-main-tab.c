@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include "api/na-object-profile.h"
+#include "api/fma-object-profile.h"
 
 #include "core/na-gtk-utils.h"
 

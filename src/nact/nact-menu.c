@@ -499,7 +499,7 @@ on_tree_view_focus_out( NactTreeView *treeview, NactMainWindow *window )
 }
 
 /*
- * the count of modified NAObjectItem has changed
+ * the count of modified FMAObjectItem has changed
  */
 static void
 on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, NactMainWindow *window )
@@ -533,9 +533,9 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, NactMai
 {
 	static const gchar *thisfn = "nact_menu_on_tree_view_selection_changed";
 	sMenuData *sdata;
-	NAObject *first;
-	NAObject *selected_action;
-	NAObject *row, *parent;
+	FMAObject *first;
+	FMAObject *selected_action;
+	FMAObject *row, *parent;
 	GList *is;
 
 	g_debug( "%s: treeview=%p, selected_items=%p (count=%d), window=%p",
@@ -549,7 +549,7 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, NactMai
 	sdata->count_selected = g_list_length( selected );
 
 	if( selected ){
-		na_object_item_count_items( selected, &sdata->selected_menus, &sdata->selected_actions, &sdata->selected_profiles, FALSE );
+		fma_object_item_count_items( selected, &sdata->selected_menus, &sdata->selected_actions, &sdata->selected_profiles, FALSE );
 		g_debug( "%s: selected_menus=%d, selected_actions=%d, selected_profiles=%d",
 				thisfn,
 				sdata->selected_menus, sdata->selected_actions, sdata->selected_profiles );
@@ -568,14 +568,14 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, NactMai
 	 */
 	first = NULL;
 	if( selected ){
-		first = ( NAObject *) selected->data;
-		if( NA_IS_OBJECT_PROFILE( first )){
-			first = NA_OBJECT( na_object_get_parent( first ));
+		first = ( FMAObject *) selected->data;
+		if( FMA_IS_OBJECT_PROFILE( first )){
+			first = FMA_OBJECT( fma_object_get_parent( first ));
 		}
-		first = ( NAObject * ) na_object_get_parent( first );
+		first = ( FMAObject * ) fma_object_get_parent( first );
 	}
 	if( first ){
-		sdata->is_parent_writable = na_object_is_finally_writable( first, NULL );
+		sdata->is_parent_writable = fma_object_is_finally_writable( first, NULL );
 		g_debug( "%s: parent of first selected is not null: is_parent_writable=%s",
 				thisfn, sdata->is_parent_writable ? "True":"False" );
 	} else {
@@ -592,20 +592,20 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, NactMai
 	selected_action = NULL;
 	for( is = selected ; is ; is = is->next ){
 
-		if( NA_IS_OBJECT_MENU( is->data )){
+		if( FMA_IS_OBJECT_MENU( is->data )){
 			sdata->enable_new_profile = FALSE;
 			break;
 
-		} else if( NA_IS_OBJECT_ACTION( is->data )){
+		} else if( FMA_IS_OBJECT_ACTION( is->data )){
 			if( !selected_action ){
-				selected_action = NA_OBJECT( is->data );
+				selected_action = FMA_OBJECT( is->data );
 			} else {
 				sdata->enable_new_profile = FALSE;
 				break;
 			}
 
-		} else if( NA_IS_OBJECT_PROFILE( is->data )){
-			first = NA_OBJECT( na_object_get_parent( is->data ));
+		} else if( FMA_IS_OBJECT_PROFILE( is->data )){
+			first = FMA_OBJECT( fma_object_get_parent( is->data ));
 			if( !selected_action ){
 				selected_action = first;
 			} else if( selected_action != first ){
@@ -615,7 +615,7 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, NactMai
 		}
 	}
 	if( selected_action ){
-		sdata->is_action_writable = na_object_is_finally_writable( selected_action, NULL );
+		sdata->is_action_writable = fma_object_is_finally_writable( selected_action, NULL );
 	} else {
 		sdata->enable_new_profile = FALSE;
 	}
@@ -629,18 +629,18 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, NactMai
 		sdata->are_parents_writable = TRUE;
 		sdata->are_items_writable = TRUE;
 		for( is = selected ; is ; is = is->next ){
-			row = ( NAObject * ) is->data;
-			if( NA_IS_OBJECT_PROFILE( row )){
-				row = NA_OBJECT( na_object_get_parent( row ));
+			row = ( FMAObject * ) is->data;
+			if( FMA_IS_OBJECT_PROFILE( row )){
+				row = FMA_OBJECT( fma_object_get_parent( row ));
 			}
-			gchar *label = na_object_get_label( row );
-			gboolean writable = na_object_is_finally_writable( row, NULL );
+			gchar *label = fma_object_get_label( row );
+			gboolean writable = fma_object_is_finally_writable( row, NULL );
 			g_debug( "%s: label=%s, writable=%s", thisfn, label, writable ? "True":"False" );
 			g_free( label );
 			sdata->are_items_writable &= writable;
-			parent = ( NAObject * ) na_object_get_parent( row );
+			parent = ( FMAObject * ) fma_object_get_parent( row );
 			if( parent ){
-				sdata->are_parents_writable &= na_object_is_finally_writable( parent, NULL );
+				sdata->are_parents_writable &= fma_object_is_finally_writable( parent, NULL );
 			} else {
 				sdata->are_parents_writable &= sdata->is_level_zero_writable;
 			}

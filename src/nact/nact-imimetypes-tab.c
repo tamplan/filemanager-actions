@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-gtk-utils.h"
 
@@ -233,13 +233,13 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIMime
 static GSList *
 get_mimetypes( void *context )
 {
-	return( na_object_get_mimetypes( context ));
+	return( fma_object_get_mimetypes( context ));
 }
 
 static void
 set_mimetypes( void *context, GSList *filters )
 {
-	na_object_set_mimetypes( context, filters );
+	fma_object_set_mimetypes( context, filters );
 }
 
 static void

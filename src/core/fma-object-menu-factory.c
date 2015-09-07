@@ -35,8 +35,8 @@
 #include <api/fma-data-def.h>
 #include <api/fma-data-types.h>
 
-extern FMADataDef data_def_id [];			/* defined in na-object-id-factory.c */
-extern FMADataDef data_def_item [];			/* defined in na-object-item-factory.c */
+extern FMADataDef data_def_id [];			/* defined in fma-object-id-factory.c */
+extern FMADataDef data_def_item [];			/* defined in fma-object-item-factory.c */
 extern FMADataDef data_def_conditions [];	/* defined in fma-icontext-factory.c */
 
 /*

@@ -36,8 +36,8 @@
  * @short_description: The Duplication Interface
  * @include: file-manager-actions/private/fma-iduplicable.h
  *
- * This interface is implemented by #NAObject in order to let
- * #NAObject -derived instance duplication be easily tracked. This works
+ * This interface is implemented by #FMAObject in order to let
+ * #FMAObject -derived instance duplication be easily tracked. This works
  * by keeping a pointer on the original object at duplication time, and
  * then only checking edition status when explicitely required.
  *
@@ -119,7 +119,7 @@ typedef struct _FMAIDuplicableInterfacePrivate    FMAIDuplicableInterfacePrivate
  * @are_equal: tests if two objects are equals.
  * @is_valid:  tests if one object is valid.
  *
- * This interface is implemented by #NAObject objects, in order to be able
+ * This interface is implemented by #FMAObject objects, in order to be able
  * to keep the trace of all duplicated objects.
  */
 typedef struct {

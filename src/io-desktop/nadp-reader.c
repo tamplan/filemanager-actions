@@ -39,7 +39,7 @@
 #include <api/fma-data-types.h>
 #include <api/fma-ifactory-object-data.h>
 #include <api/fma-ifactory-provider.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "nadp-desktop-provider.h"
 #include "nadp-keys.h"
@@ -57,7 +57,7 @@ typedef struct {
  */
 typedef struct {
 	NadpDesktopFile *ndf;
-	NAObjectAction  *action;
+	FMAObjectAction  *action;
 }
 	NadpReaderData;
 
@@ -72,11 +72,11 @@ static FMAIFactoryObject *item_from_desktop_file( const NadpDesktopProvider *pro
 static void              desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
 static void              free_desktop_paths( GList *paths );
 
-static void              read_start_read_subitems_key( const FMAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
-static void              read_start_profile_attach_profile( const FMAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages );
+static void              read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
+static void              read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages );
 
-static gboolean          read_done_item_is_writable( const FMAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
-static void              read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *data, GSList **messages );
+static gboolean          read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
+static void              read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, NadpReaderData *data, GSList **messages );
 static void              read_done_action_load_profile( const FMAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages );
 
 /*
@@ -107,7 +107,7 @@ nadp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages 
 
 		if( item ){
 			items = g_list_prepend( items, item );
-			na_object_dump( item );
+			fma_object_dump( item );
 		}
 	}
 
@@ -282,10 +282,10 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 	type = nadp_desktop_file_get_file_type( ndf );
 
 	if( !strcmp( type, NADP_VALUE_TYPE_ACTION )){
-		item = FMA_IFACTORY_OBJECT( na_object_action_new());
+		item = FMA_IFACTORY_OBJECT( fma_object_action_new());
 
 	} else if( !strcmp( type, NADP_VALUE_TYPE_MENU )){
-		item = FMA_IFACTORY_OBJECT( na_object_menu_new());
+		item = FMA_IFACTORY_OBJECT( fma_object_menu_new());
 
 	} else {
 		/* i18n: 'type' is the nature of the item: Action or Menu */
@@ -294,7 +294,7 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 
 	if( item ){
 		id = nadp_desktop_file_get_id( ndf );
-		na_object_set_id( item, id );
+		fma_object_set_id( item, id );
 		g_free( id );
 
 		reader_data = g_new0( NadpReaderData, 1 );
@@ -302,7 +302,7 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 
 		fma_ifactory_provider_read_item( FMA_IFACTORY_PROVIDER( provider ), reader_data, item, messages );
 
-		na_object_set_provider_data( item, ndf );
+		fma_object_set_provider_data( item, ndf );
 		g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) desktop_weak_notify, ndf );
 
 		g_free( reader_data );
@@ -384,23 +384,23 @@ nadp_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms
 
 	ndf = nadp_desktop_file_new_from_uri( parms->uri );
 	if( ndf ){
-		parms->imported = ( NAObjectItem * ) item_from_desktop_file(
+		parms->imported = ( FMAObjectItem * ) item_from_desktop_file(
 				( const NadpDesktopProvider * ) NADP_DESKTOP_PROVIDER( instance ),
 				ndf, &parms->messages );
 
 		if( parms->imported ){
-			g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms->imported ), IMPORTER_CODE_NOT_WILLING_TO );
+			g_return_val_if_fail( FMA_IS_OBJECT_ITEM( parms->imported ), IMPORTER_CODE_NOT_WILLING_TO );
 
 			/* remove the weak reference on desktop file set by 'item_from_desktop_file'
-			 * as we must consider this #NAObjectItem as a new one
+			 * as we must consider this #FMAObjectItem as a new one
 			 */
-			na_object_set_provider_data( parms->imported, NULL );
+			fma_object_set_provider_data( parms->imported, NULL );
 			g_object_weak_unref( G_OBJECT( parms->imported ), ( GWeakNotify ) desktop_weak_notify, ndf );
 			g_object_unref( ndf );
 
 			/* also remove the 'writable' status'
 			 */
-			na_object_set_readonly( parms->imported, FALSE );
+			fma_object_set_readonly( parms->imported, FALSE );
 
 			code = IMPORTER_CODE_OK;
 		}
@@ -416,7 +416,7 @@ nadp_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms
 /*
  * at this time, the object has been allocated and its id has been set
  * read here the subitems key, which may be 'Profiles' or 'ItemsList'
- * depending of the exact class of the NAObjectItem
+ * depending of the exact class of the FMAObjectItem
  */
 void
 nadp_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
@@ -436,46 +436,46 @@ nadp_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, voi
 				( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
 				( void * ) messages );
 
-		if( NA_IS_OBJECT_ITEM( serializable )){
-			read_start_read_subitems_key( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
-			na_object_set_iversion( serializable, 3 );
+		if( FMA_IS_OBJECT_ITEM( serializable )){
+			read_start_read_subitems_key( reader, FMA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
+			fma_object_set_iversion( serializable, 3 );
 		}
 
-		if( NA_IS_OBJECT_PROFILE( serializable )){
-			read_start_profile_attach_profile( reader, NA_OBJECT_PROFILE( serializable ), ( NadpReaderData * ) reader_data, messages );
+		if( FMA_IS_OBJECT_PROFILE( serializable )){
+			read_start_profile_attach_profile( reader, FMA_OBJECT_PROFILE( serializable ), ( NadpReaderData * ) reader_data, messages );
 		}
 	}
 }
 
 static void
-read_start_read_subitems_key( const FMAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
+read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
 {
 	GSList *subitems;
 	gboolean key_found;
 
 	subitems = nadp_desktop_file_get_string_list( reader_data->ndf,
 			NADP_GROUP_DESKTOP,
-			NA_IS_OBJECT_ACTION( item ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
+			FMA_IS_OBJECT_ACTION( item ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
 			&key_found,
 			NULL );
 
 	if( key_found ){
-		na_object_set_items_slist( item, subitems );
+		fma_object_set_items_slist( item, subitems );
 	}
 
 	fma_core_utils_slist_free( subitems );
 }
 
 static void
-read_start_profile_attach_profile( const FMAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages )
+read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages )
 {
-	na_object_attach_profile( reader_data->action, profile );
+	fma_object_attach_profile( reader_data->action, profile );
 }
 
 /*
  * reading any data from a desktop file requires:
  * - a NadpDesktopFile object which has been initialized with the .desktop file
- *   -> has been attached to the NAObjectItem in get_item() above
+ *   -> has been attached to the FMAObjectItem in get_item() above
  * - the data type (+ reading default value)
  * - group and key names
  *
@@ -509,12 +509,12 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 
 		if( def->desktop_entry ){
 
-			if( NA_IS_OBJECT_ITEM( object )){
+			if( FMA_IS_OBJECT_ITEM( object )){
 				group = g_strdup( NADP_GROUP_DESKTOP );
 
 			} else {
-				g_return_val_if_fail( NA_IS_OBJECT_PROFILE( object ), NULL );
-				id = na_object_get_id( object );
+				g_return_val_if_fail( FMA_IS_OBJECT_PROFILE( object ), NULL );
+				id = fma_object_get_id( object );
 				group = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, id );
 				g_free( id );
 			}
@@ -599,13 +599,13 @@ nadp_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void
 				( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
 				( void * ) messages );
 
-		if( NA_IS_OBJECT_ITEM( serializable )){
-			writable = read_done_item_is_writable( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
-			na_object_set_readonly( serializable, !writable );
+		if( FMA_IS_OBJECT_ITEM( serializable )){
+			writable = read_done_item_is_writable( reader, FMA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
+			fma_object_set_readonly( serializable, !writable );
 		}
 
-		if( NA_IS_OBJECT_ACTION( serializable )){
-			read_done_action_read_profiles( reader, NA_OBJECT_ACTION( serializable ), ( NadpReaderData * ) reader_data, messages );
+		if( FMA_IS_OBJECT_ACTION( serializable )){
+			read_done_action_read_profiles( reader, FMA_OBJECT_ACTION( serializable ), ( NadpReaderData * ) reader_data, messages );
 		}
 
 		g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( serializable ), ( void * ) serializable );
@@ -613,7 +613,7 @@ nadp_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void
 }
 
 static gboolean
-read_done_item_is_writable( const FMAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
+read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
 {
 	NadpDesktopFile *ndf;
 	gchar *uri;
@@ -636,21 +636,21 @@ read_done_item_is_writable( const FMAIFactoryProvider *provider, NAObjectItem *i
  * - ensure that there is at least one profile attached to the action
  */
 static void
-read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *reader_data, GSList **messages )
+read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, NadpReaderData *reader_data, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_read_done_action_read_profiles";
 	GSList *order;
 	GSList *ip;
 	gchar *profile_id;
-	NAObjectId *found;
-	NAObjectProfile *profile;
+	FMAObjectId *found;
+	FMAObjectProfile *profile;
 
 	reader_data->action = action;
-	order = na_object_get_items_slist( action );
+	order = fma_object_get_items_slist( action );
 
 	for( ip = order ; ip ; ip = ip->next ){
 		profile_id = ( gchar * ) ip->data;
-		found = na_object_get_item( action, profile_id );
+		found = fma_object_get_item( action, profile_id );
 		if( !found ){
 			read_done_action_load_profile( provider, reader_data, profile_id, messages );
 		}
@@ -658,10 +658,10 @@ read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAct
 
 	fma_core_utils_slist_free( order );
 
-	if( !na_object_get_items_count( action )){
+	if( !fma_object_get_items_count( action )){
 		g_warning( "%s: no profile found in .desktop file", thisfn );
-		profile = na_object_profile_new_with_defaults();
-		na_object_attach_profile( action, profile );
+		profile = fma_object_profile_new_with_defaults();
+		fma_object_attach_profile( action, profile );
 	}
 }
 
@@ -669,12 +669,12 @@ static void
 read_done_action_load_profile( const FMAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_read_done_action_load_profile";
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 
 	g_debug( "%s: loading profile=%s", thisfn, profile_id );
 
-	profile = na_object_profile_new_with_defaults();
-	na_object_set_id( profile, profile_id );
+	profile = fma_object_profile_new_with_defaults();
+	fma_object_set_id( profile, profile_id );
 
 	if( nadp_desktop_file_has_profile( reader_data->ndf, profile_id )){
 		fma_ifactory_provider_read_item(
@@ -685,6 +685,6 @@ read_done_action_load_profile( const FMAIFactoryProvider *provider, NadpReaderDa
 
 	} else {
 		g_warning( "%s: profile '%s' not found in .desktop file", thisfn, profile_id );
-		na_object_attach_profile( reader_data->action, profile );
+		fma_object_attach_profile( reader_data->action, profile );
 	}
 }

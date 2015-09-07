@@ -37,7 +37,7 @@
 #include <api/fma-data-types.h>
 #include <api/fma-ifactory-provider.h>
 #include <api/fma-iio-provider.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 #include <api/fma-core-utils.h>
 #include <api/fma-gconf-utils.h>
 
@@ -48,16 +48,16 @@
 typedef struct {
 	gchar        *path;
 	GSList       *entries;
-	NAObjectItem *parent;
+	FMAObjectItem *parent;
 }
 	ReaderData;
 
-static NAObjectItem *read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages );
+static FMAObjectItem *read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages );
 
-static void          read_start_profile_attach_profile( const FMAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
+static void          read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, ReaderData *data, GSList **messages );
 
-static gboolean      read_done_item_is_writable( const FMAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
-static void          read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
+static gboolean      read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, ReaderData *data, GSList **messages );
+static void          read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, ReaderData *data, GSList **messages );
 static void          read_done_action_load_profile( const FMAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
 
 static FMADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const FMADataDef *def );
@@ -67,7 +67,7 @@ static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key
  * nagp_iio_provider_read_items:
  *
  * Note that whatever be the version of the read action, it will be
- * stored as a #NAObjectAction and its set of #NAObjectProfile of the same,
+ * stored as a #FMAObjectAction and its set of #FMAObjectProfile of the same,
  * latest, version of these classes.
  */
 GList *
@@ -77,7 +77,7 @@ nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages 
 	NagpGConfProvider *self;
 	GList *items_list = NULL;
 	GSList *listpath, *ip;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 
 	g_debug( "%s: provider=%p, messages=%p", thisfn, ( void * ) provider, ( void * ) messages );
 
@@ -94,7 +94,7 @@ nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages 
 			item = read_item( self, ( const gchar * ) ip->data, messages );
 			if( item ){
 				items_list = g_list_prepend( items_list, item );
-				na_object_dump( item );
+				fma_object_dump( item );
 			}
 		}
 
@@ -108,11 +108,11 @@ nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages 
 /*
  * path is here the full path to an item
  */
-static NAObjectItem *
+static FMAObjectItem *
 read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_read_item";
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	gchar *full_path;
 	gchar *type;
 	gchar *id;
@@ -131,10 +131,10 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 	/* an item may have 'Action' or 'Menu' type; defaults to Action
 	 */
 	if( !type || !strlen( type ) || !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
-		item = NA_OBJECT_ITEM( na_object_action_new());
+		item = FMA_OBJECT_ITEM( fma_object_action_new());
 
 	} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
-		item = NA_OBJECT_ITEM( na_object_menu_new());
+		item = FMA_OBJECT_ITEM( fma_object_menu_new());
 
 	} else {
 		g_warning( "%s: unknown type '%s' at %s", thisfn, type, path );
@@ -144,7 +144,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 
 	if( item ){
 		id = g_path_get_basename( path );
-		na_object_set_id( item, id );
+		fma_object_set_id( item, id );
 		g_free( id );
 
 		data = g_new0( ReaderData, 1 );
@@ -183,16 +183,16 @@ nagp_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, 
 				( void * ) object, G_OBJECT_TYPE_NAME( object ),
 				( void * ) messages );
 
-		if( NA_IS_OBJECT_PROFILE( object )){
-			read_start_profile_attach_profile( provider, NA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, messages );
+		if( FMA_IS_OBJECT_PROFILE( object )){
+			read_start_profile_attach_profile( provider, FMA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, messages );
 		}
 	}
 }
 
 static void
-read_start_profile_attach_profile( const FMAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages )
+read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, ReaderData *data, GSList **messages )
 {
-	na_object_attach_profile( data->parent, profile );
+	fma_object_attach_profile( data->parent, profile );
 }
 
 FMADataBoxed *
@@ -240,13 +240,13 @@ nagp_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, c
 				( void * ) object, G_OBJECT_TYPE_NAME( object ),
 				( void * ) messages );
 
-		if( NA_IS_OBJECT_ITEM( object )){
-			writable = read_done_item_is_writable( provider, NA_OBJECT_ITEM( object ), ( ReaderData * ) reader_data, messages );
-			na_object_set_readonly( object, !writable );
+		if( FMA_IS_OBJECT_ITEM( object )){
+			writable = read_done_item_is_writable( provider, FMA_OBJECT_ITEM( object ), ( ReaderData * ) reader_data, messages );
+			fma_object_set_readonly( object, !writable );
 		}
 
-		if( NA_IS_OBJECT_ACTION( object )){
-			read_done_action_read_profiles( provider, NA_OBJECT_ACTION( object ), ( ReaderData * ) reader_data, messages );
+		if( FMA_IS_OBJECT_ACTION( object )){
+			read_done_action_read_profiles( provider, FMA_OBJECT_ACTION( object ), ( ReaderData * ) reader_data, messages );
 		}
 
 		g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
@@ -254,7 +254,7 @@ nagp_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, c
 }
 
 static gboolean
-read_done_item_is_writable( const FMAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages )
+read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, ReaderData *data, GSList **messages )
 {
 	GSList *ie;
 	gboolean writable;
@@ -276,7 +276,7 @@ read_done_item_is_writable( const FMAIFactoryProvider *provider, NAObjectItem *i
 }
 
 static void
-read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages )
+read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, ReaderData *data, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_read_done_action_read_profiles";
 	GSList *order;
@@ -284,11 +284,11 @@ read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAct
 	GSList *ip;
 	gchar *profile_id;
 	gchar *profile_path;
-	NAObjectId *found;
-	NAObjectProfile *profile;
+	FMAObjectId *found;
+	FMAObjectProfile *profile;
 
-	data->parent = NA_OBJECT_ITEM( action );
-	order = na_object_get_items_slist( action );
+	data->parent = FMA_OBJECT_ITEM( action );
+	order = fma_object_get_items_slist( action );
 	list_profiles = fma_gconf_utils_get_subdirs( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
 
 	/* read profiles in the specified order
@@ -297,7 +297,7 @@ read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAct
 	 */
 	for( ip = order ; ip ; ip = ip->next ){
 		profile_id = ( gchar * ) ip->data;
-		found = na_object_get_item( action, profile_id );
+		found = fma_object_get_item( action, profile_id );
 		if( !found ){
 			g_debug( "nagp_reader_read_done_action: loading profile=%s", profile_id );
 			profile_path = gconf_concat_dir_and_key( data->path, profile_id );
@@ -311,7 +311,7 @@ read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAct
 	 */
 	for( ip = list_profiles ; ip ; ip = ip->next ){
 		profile_id = g_path_get_basename(( const gchar * ) ip->data );
-		found = na_object_get_item( action, profile_id );
+		found = fma_object_get_item( action, profile_id );
 		if( !found ){
 			g_debug( "nagp_reader_read_done_action: loading profile=%s", profile_id );
 			read_done_action_load_profile( provider, data, ( const gchar * ) ip->data, messages );
@@ -321,10 +321,10 @@ read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAct
 
 	/* make sure we have at least one profile
 	 */
-	if( !na_object_get_items_count( action )){
+	if( !fma_object_get_items_count( action )){
 		g_warning( "%s: no profile found in GConf backend", thisfn );
-		profile = na_object_profile_new_with_defaults();
-		na_object_attach_profile( action, profile );
+		profile = fma_object_profile_new_with_defaults();
+		fma_object_attach_profile( action, profile );
 	}
 }
 
@@ -334,10 +334,10 @@ read_done_action_load_profile( const FMAIFactoryProvider *provider, ReaderData *
 	gchar *id;
 	ReaderData *profile_data;
 
-	NAObjectProfile *profile = na_object_profile_new();
+	FMAObjectProfile *profile = fma_object_profile_new();
 
 	id = g_path_get_basename( path );
-	na_object_set_id( profile, id );
+	fma_object_set_id( profile, id );
 	g_free( id );
 
 	profile_data = g_new0( ReaderData, 1 );

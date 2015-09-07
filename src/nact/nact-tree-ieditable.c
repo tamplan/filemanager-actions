@@ -32,7 +32,7 @@
 #endif
 
 #include <api/fma-core-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include <core/na-factory-object.h>
 #include <core/na-updater.h>
@@ -76,11 +76,11 @@ static void           interface_base_finalize( NactTreeIEditableInterface *klass
 static gboolean       on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactTreeIEditable *instance );
 static void           on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, NactTreeView *items_view );
 static void           on_tree_view_selection_changed( NactTreeIEditable *view, GList *selected_items, void *empty );
-static void           on_object_modified_status_changed( NactTreeIEditable *view, NAObject *object, gboolean new_status, void *empty );
-static void           on_object_valid_status_changed( NactTreeIEditable *view, NAObject *object, gboolean new_status, void *empty );
+static void           on_object_modified_status_changed( NactTreeIEditable *view, FMAObject *object, gboolean new_status, void *empty );
+static void           on_object_valid_status_changed( NactTreeIEditable *view, FMAObject *object, gboolean new_status, void *empty );
 static void           on_tree_view_level_zero_changed( NactTreeIEditable *view, gboolean is_modified, void *empty );
 static void           on_tree_view_modified_status_changed( NactTreeIEditable *view, gboolean is_modified, void *empty );
-static void           add_to_deleted_rec( IEditableData *ied, NAObject *object );
+static void           add_to_deleted_rec( IEditableData *ied, FMAObject *object );
 static void           decrement_counters( NactTreeIEditable *view, IEditableData *ialid, GList *items );
 static GtkTreePath   *do_insert_before( IEditableData *ied, GList *items, GtkTreePath *insert_path );
 static GtkTreePath   *do_insert_into( IEditableData *ied, GList *items, GtkTreePath *insert_path );
@@ -247,7 +247,7 @@ nact_tree_ieditable_terminate( NactTreeIEditable *instance )
 
 	ied = get_instance_data( instance );
 
-	na_object_free_items( ied->deleted );
+	fma_object_free_items( ied->deleted );
 
 	g_signal_handler_disconnect( instance, ied->modified_handler_id );
 	g_signal_handler_disconnect( instance, ied->valid_handler_id );
@@ -280,14 +280,14 @@ static void
 on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, NactTreeView *items_view )
 {
 	IEditableData *ied;
-	NAObject *object;
+	FMAObject *object;
 	GtkTreePath *path;
 
 	if( nact_tree_view_are_notify_allowed( items_view )){
 		ied = ( IEditableData * ) g_object_get_data( G_OBJECT( items_view ), VIEW_DATA_IEDITABLE );
 		path = gtk_tree_path_new_from_string( path_str );
 		object = nact_tree_model_object_at_path( ied->model, path );
-		na_object_set_label( object, text );
+		fma_object_set_label( object, text );
 
 		g_signal_emit_by_name( ied->main_window, MAIN_SIGNAL_ITEM_UPDATED, object );
 	}
@@ -297,7 +297,7 @@ static void
 on_tree_view_selection_changed( NactTreeIEditable *instance, GList *selected_items, void *empty )
 {
 	IEditableData *ied;
-	NAObject *object;
+	FMAObject *object;
 	gboolean object_editable;
 	GtkTreeViewColumn *column;
 	GList *renderers;
@@ -305,7 +305,7 @@ on_tree_view_selection_changed( NactTreeIEditable *instance, GList *selected_ite
 
 	ied = ( IEditableData * ) g_object_get_data( G_OBJECT( instance ), VIEW_DATA_IEDITABLE );
 	g_object_get( ied->main_window, MAIN_PROP_ITEM, &object, MAIN_PROP_EDITABLE, &object_editable, NULL );
-	editable = NA_IS_OBJECT( object ) && object_editable;
+	editable = FMA_IS_OBJECT( object ) && object_editable;
 	column = gtk_tree_view_get_column( ied->treeview, TREE_COLUMN_LABEL );
 	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 	g_object_set( G_OBJECT( renderers->data ), "editable", editable, "editable-set", TRUE, NULL );
@@ -316,7 +316,7 @@ on_tree_view_selection_changed( NactTreeIEditable *instance, GList *selected_ite
  * - refresh the display
  */
 static void
-on_object_modified_status_changed( NactTreeIEditable *instance, NAObject *object, gboolean is_modified, void *empty )
+on_object_modified_status_changed( NactTreeIEditable *instance, FMAObject *object, gboolean is_modified, void *empty )
 {
 	static const gchar *thisfn = "nact_tree_ieditable_on_object_modified_status_changed";
 	IEditableData *ied;
@@ -331,7 +331,7 @@ on_object_modified_status_changed( NactTreeIEditable *instance, NAObject *object
 	prev_status = get_modification_status( ied );
 	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( ied->model ));
 
-	if( NA_IS_OBJECT_ITEM( object )){
+	if( FMA_IS_OBJECT_ITEM( object )){
 		if( is_modified ){
 			ied->count_modified += 1;
 		} else {
@@ -352,7 +352,7 @@ on_object_modified_status_changed( NactTreeIEditable *instance, NAObject *object
  * - refresh the display
  */
 static void
-on_object_valid_status_changed( NactTreeIEditable *instance, NAObject *object, gboolean new_status, void *empty )
+on_object_valid_status_changed( NactTreeIEditable *instance, FMAObject *object, gboolean new_status, void *empty )
 {
 	static const gchar *thisfn = "nact_tree_ieditable_on_object_valid_status_changed";
 	IEditableData *ied;
@@ -396,7 +396,7 @@ on_tree_view_modified_status_changed( NactTreeIEditable *view, gboolean is_modif
 	if( !is_modified ){
 		ied = get_instance_data( view );
 		ied->count_modified = 0;
-		ied->deleted = na_object_free_items( ied->deleted );
+		ied->deleted = fma_object_free_items( ied->deleted );
 		ied->level_zero_changed = FALSE;
 	}
 }
@@ -404,7 +404,7 @@ on_tree_view_modified_status_changed( NactTreeIEditable *view, gboolean is_modif
 /**
  * nact_tree_ieditable_delete:
  * @instance: this #NactTreeIEditable instance.
- * @list: list of #NAObject to be deleted.
+ * @list: list of #FMAObject to be deleted.
  * @ope: whether the objects are actually to be deleted, or just moved
  *  to another path of the tree.
  *
@@ -413,10 +413,10 @@ on_tree_view_modified_status_changed( NactTreeIEditable *view, gboolean is_modif
  * If the items are to be actually deleted, then this function takes care
  * of repositionning a new selection if possible, and refilter the display
  * model.
- * Deleted NAObjectItems are added to the 'deleted' list attached to the
+ * Deleted FMAObjectItems are added to the 'deleted' list attached to the
  * view, so that they will be actually deleted from the storage subsystem
  * on save.
- * Deleted NAObjectProfiles are not added to the list, because the deletion
+ * Deleted FMAObjectProfiles are not added to the list, because the deletion
  * will be recorded when saving the action.
  *
  * If the items are to be actually moved to another path of the tree, then
@@ -430,7 +430,7 @@ nact_tree_ieditable_delete( NactTreeIEditable *instance, GList *items, TreeIEdit
 	gboolean prev_status, status;
 	GtkTreePath *path;
 	GList *it;
-	NAObjectItem *parent;
+	FMAObjectItem *parent;
 
 	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
 
@@ -452,10 +452,10 @@ nact_tree_ieditable_delete( NactTreeIEditable *instance, GList *items, TreeIEdit
 		/* check the status of the parent of the deleted object
 		 * so potentially update the modification status
 		 */
-		parent = na_object_get_parent( it->data );
-		path = nact_tree_model_delete( ied->model, NA_OBJECT( it->data ));
+		parent = fma_object_get_parent( it->data );
+		path = nact_tree_model_delete( ied->model, FMA_OBJECT( it->data ));
 		if( parent ){
-			na_object_check_status( parent );
+			fma_object_check_status( parent );
 		} else {
 			check_level_zero_status( instance );
 		}
@@ -464,7 +464,7 @@ nact_tree_ieditable_delete( NactTreeIEditable *instance, GList *items, TreeIEdit
 		 * incrementing the 'modified' count if the deleted item was not yet modified
 		 */
 		if( ope == TREE_OPE_DELETE ){
-			add_to_deleted_rec( ied, NA_OBJECT( it->data ));
+			add_to_deleted_rec( ied, FMA_OBJECT( it->data ));
 		}
 
 		g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
@@ -494,7 +494,7 @@ nact_tree_ieditable_delete( NactTreeIEditable *instance, GList *items, TreeIEdit
  * @list: list of deleted objects.
  * @object: the object to be added from the list.
  *
- * Recursively adds to the 'deleted' list the NAObjectItem object currently being deleted.
+ * Recursively adds to the 'deleted' list the FMAObjectItem object currently being deleted.
  *
  * Increments the 'modified' count with the deleted items which were not modified.
  *
@@ -502,26 +502,26 @@ nact_tree_ieditable_delete( NactTreeIEditable *instance, GList *items, TreeIEdit
  * from the backend, i.e. those who have a non-null provider.
  */
 static void
-add_to_deleted_rec( IEditableData *ied, NAObject *object )
+add_to_deleted_rec( IEditableData *ied, FMAObject *object )
 {
 	GList *subitems, *it;
 
-	if( NA_IS_OBJECT_ITEM( object )){
+	if( FMA_IS_OBJECT_ITEM( object )){
 
 		if( !g_list_find( ied->deleted, object )){
 			ied->deleted = g_list_prepend( ied->deleted, object );
 
-			if( na_object_is_modified( object )){
+			if( fma_object_is_modified( object )){
 				ied->count_modified -= 1;
 			}
 
-			if( na_object_get_provider( object )){
+			if( fma_object_get_provider( object )){
 				ied->count_deleted += 1;
 			}
 		}
 
-		if( NA_IS_OBJECT_MENU( object )){
-			subitems = na_object_get_items( object );
+		if( FMA_IS_OBJECT_MENU( object )){
+			subitems = fma_object_get_items( object );
 			for( it = subitems ; it ; it = it->next ){
 				add_to_deleted_rec( ied, it->data );
 			}
@@ -541,7 +541,7 @@ decrement_counters( NactTreeIEditable *view, IEditableData *ied, GList *items )
 	g_debug( "%s: view=%p, ied=%p, items=%p (count=%u)",
 			thisfn, ( void * ) view, ( void * ) ied, ( void * ) items, g_list_length( items ));
 
-	na_object_count_items( items, &menus, &actions, &profiles );
+	fma_object_count_items( items, &menus, &actions, &profiles );
 	menus *= -1;
 	actions *= -1;
 	profiles *= -1;
@@ -570,7 +570,7 @@ nact_tree_ieditable_remove_deleted( NactTreeIEditable *instance, GSList **messag
 	gboolean delete_ok;
 	IEditableData *ied;
 	GList *it;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	GList *not_deleted;
 
 	g_return_val_if_fail( NACT_IS_TREE_IEDITABLE( instance ), TRUE );
@@ -580,17 +580,17 @@ nact_tree_ieditable_remove_deleted( NactTreeIEditable *instance, GSList **messag
 	not_deleted = NULL;
 
 	for( it = ied->deleted ; it ; it = it->next ){
-		item = NA_OBJECT_ITEM( it->data );
+		item = FMA_OBJECT_ITEM( it->data );
 		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
-		na_object_dump_norec( item );
+		fma_object_dump_norec( item );
 
 		if( na_updater_delete_item( ied->updater, item, messages ) != FMA_IIO_PROVIDER_CODE_OK ){
-			not_deleted = g_list_prepend( not_deleted, na_object_ref( item ));
+			not_deleted = g_list_prepend( not_deleted, fma_object_ref( item ));
 			delete_ok = FALSE;
 		}
 	}
 
-	ied->deleted = na_object_free_items( ied->deleted );
+	ied->deleted = fma_object_free_items( ied->deleted );
 
 	/* items that we cannot delete are reinserted in the tree view
 	 * in the state they were when they were deleted
@@ -598,7 +598,7 @@ nact_tree_ieditable_remove_deleted( NactTreeIEditable *instance, GSList **messag
 	 */
 	if( not_deleted ){
 		nact_tree_ieditable_insert_items( instance, not_deleted, NULL );
-		na_object_free_items( not_deleted );
+		fma_object_free_items( not_deleted );
 	}
 
 	return( delete_ok );
@@ -608,7 +608,7 @@ nact_tree_ieditable_remove_deleted( NactTreeIEditable *instance, GSList **messag
  * nact_tree_ieditable_get_deleted:
  * @instance: this #NactTreeIEditable *instance.
  *
- * Returns: a copy of the 'deleted' list, which should be na_object_free_items()
+ * Returns: a copy of the 'deleted' list, which should be fma_object_free_items()
  * by the caller.
  */
 GList *
@@ -620,7 +620,7 @@ nact_tree_ieditable_get_deleted( NactTreeIEditable *instance )
 	g_return_val_if_fail( NACT_IS_TREE_IEDITABLE( instance ), NULL );
 
 	ied = get_instance_data( instance );
-	deleted = na_object_copyref_items( ied->deleted );
+	deleted = fma_object_copyref_items( ied->deleted );
 
 	return( deleted );
 }
@@ -629,7 +629,7 @@ nact_tree_ieditable_get_deleted( NactTreeIEditable *instance )
  * nact_tree_ieditable_insert_items:
  * @instance: this #NactTreeIEditable instance.
  * @items: a list of items to be inserted (e.g. from a paste).
- * @sibling: the #NAObject besides which the insertion should occurs;
+ * @sibling: the #FMAObject besides which the insertion should occurs;
  *  this is mainly used for inserting duplicated items besides each of
  *  original ones; may be %NULL.
  *
@@ -642,19 +642,19 @@ nact_tree_ieditable_get_deleted( NactTreeIEditable *instance )
  * If the @items list contains profiles, they can only be inserted
  * into an action, or before another profile.
  *
- * If new item is a #NAObjectMenu or a #NAObjectAction, it will be inserted
+ * If new item is a #FMAObjectMenu or a #FMAObjectAction, it will be inserted
  * before the current action or menu.
  *
  * This function takes care of repositionning a new selection (if possible)
  * on the lastly inserted item, and to refresh the display.
  */
 void
-nact_tree_ieditable_insert_items( NactTreeIEditable *instance, GList *items, NAObject *sibling )
+nact_tree_ieditable_insert_items( NactTreeIEditable *instance, GList *items, FMAObject *sibling )
 {
 	static const gchar *thisfn = "nact_tree_ieditable_insert_items";
 	IEditableData *ied;
 	GtkTreePath *insert_path;
-	NAObject *object, *parent;
+	FMAObject *object, *parent;
 
 	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
 	g_return_if_fail( items );
@@ -675,16 +675,16 @@ nact_tree_ieditable_insert_items( NactTreeIEditable *instance, GList *items, NAO
 
 		/* as a particular case, insert a new profile _into_ current action
 		 */
-		if( NA_IS_OBJECT_ACTION( object ) && NA_IS_OBJECT_PROFILE( items->data )){
+		if( FMA_IS_OBJECT_ACTION( object ) && FMA_IS_OBJECT_PROFILE( items->data )){
 			nact_tree_ieditable_insert_into( instance, items );
 			gtk_tree_path_free( insert_path );
 			return;
 		}
 
-		/* insert a new NAObjectItem before current NAObjectItem
+		/* insert a new FMAObjectItem before current FMAObjectItem
 		 */
-		if( NA_IS_OBJECT_PROFILE( object ) && NA_IS_OBJECT_ITEM( items->data )){
-			parent = ( NAObject * ) na_object_get_parent( object );
+		if( FMA_IS_OBJECT_PROFILE( object ) && FMA_IS_OBJECT_ITEM( items->data )){
+			parent = ( FMAObject * ) fma_object_get_parent( object );
 			gtk_tree_path_free( insert_path );
 			insert_path = nact_tree_model_object_to_path( ied->model, parent );
 		}
@@ -712,7 +712,7 @@ nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, G
 	IEditableData *ied;
 	GtkTreePath *actual_path;
 	gboolean prev_status, status;
-	NAObjectItem *parent;
+	FMAObjectItem *parent;
 	GList *it;
 
 	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
@@ -726,12 +726,12 @@ nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, G
 
 	actual_path = do_insert_before( ied, items, insert_path );
 
-	parent = na_object_get_parent( items->data );
+	parent = fma_object_get_parent( items->data );
 	if( parent ){
-		na_object_check_status( parent );
+		fma_object_check_status( parent );
 	} else {
 		for( it = items ; it ; it = it->next ){
-			na_object_check_status( it->data );
+			fma_object_check_status( it->data );
 		}
 		g_signal_emit_by_name( instance, TREE_SIGNAL_LEVEL_ZERO_CHANGED, TRUE );
 	}
@@ -763,7 +763,7 @@ nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, G
  * If the @items list contains only profiles, they can only be inserted
  * into an action, and the profiles will eventually be renumbered.
  *
- * If new item is a #NAObjectMenu or a #NAObjectAction, it will be inserted
+ * If new item is a #FMAObjectMenu or a #FMAObjectAction, it will be inserted
  * as first children of the current menu.
  *
  * This function takes care of repositionning a new selection as the
@@ -776,7 +776,7 @@ nact_tree_ieditable_insert_into( NactTreeIEditable *instance, GList *items )
 	IEditableData *ied;
 	GtkTreePath *insert_path;
 	GtkTreePath *new_path;
-	NAObjectItem *parent;
+	FMAObjectItem *parent;
 
 	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
 
@@ -788,8 +788,8 @@ nact_tree_ieditable_insert_into( NactTreeIEditable *instance, GList *items )
 
 	new_path = do_insert_into( ied, items, insert_path );
 
-	parent = na_object_get_parent( items->data );
-	na_object_check_status( parent );
+	parent = fma_object_get_parent( items->data );
+	fma_object_check_status( parent );
 
 	/* post insertion
 	 */
@@ -828,15 +828,15 @@ do_insert_before( IEditableData *ied, GList *items, GtkTreePath *asked_path )
 		} else {
 			path = gtk_tree_path_copy( asked_path );
 		}
-		actual_path = nact_tree_model_insert_before( ied->model, NA_OBJECT( it->data ), path );
+		actual_path = nact_tree_model_insert_before( ied->model, FMA_OBJECT( it->data ), path );
 		gtk_tree_path_free( path );
 		g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
 				( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
 
 		/* recursively insert subitems
 		 */
-		if( NA_IS_OBJECT_ITEM( it->data )){
-			path = do_insert_into( ied, na_object_get_items( it->data ), actual_path );
+		if( FMA_IS_OBJECT_ITEM( it->data )){
+			path = do_insert_into( ied, fma_object_get_items( it->data ), actual_path );
 			gtk_tree_path_free( path );
 		}
 	}
@@ -873,11 +873,11 @@ do_insert_into( IEditableData *ied, GList *items, GtkTreePath *asked_path )
 		/* insert the last child into the wished path
 		 * and recursively all its children
 		 */
-		actual_path = nact_tree_model_insert_into( ied->model, NA_OBJECT( last->data ), asked_path );
+		actual_path = nact_tree_model_insert_into( ied->model, FMA_OBJECT( last->data ), asked_path );
 		gtk_tree_view_expand_to_path( ied->treeview, actual_path );
 
-		if( NA_IS_OBJECT_ITEM( last->data )){
-			insertion_path = do_insert_into( ied, na_object_get_items( last->data ), actual_path );
+		if( FMA_IS_OBJECT_ITEM( last->data )){
+			insertion_path = do_insert_into( ied, fma_object_get_items( last->data ), actual_path );
 			gtk_tree_path_free( insertion_path );
 		}
 
@@ -906,7 +906,7 @@ increment_counters( NactTreeIEditable *view, IEditableData *ied, GList *items )
 	g_debug( "%s: view=%p, ied=%p, items=%p (count=%d)",
 			thisfn, ( void * ) view, ( void * ) ied, ( void * ) items, items ? g_list_length( items ) : 0 );
 
-	na_object_count_items( items, &menus, &actions, &profiles );
+	fma_object_count_items( items, &menus, &actions, &profiles );
 	g_signal_emit_by_name( view, TREE_SIGNAL_COUNT_CHANGED, FALSE, menus, actions, profiles );
 }
 
@@ -933,7 +933,7 @@ nact_tree_ieditable_set_items( NactTreeIEditable *instance, GList *items )
 	static const gchar *thisfn = "nact_tree_ieditable_set_items";
 	IEditableData *ied;
 	GList *it;
-	NAObjectItem *new_item, *old_item;
+	FMAObjectItem *new_item, *old_item;
 	gchar *id;
 	GtkTreePath *path, *insert_path;
 
@@ -945,9 +945,9 @@ nact_tree_ieditable_set_items( NactTreeIEditable *instance, GList *items )
 	ied = get_instance_data( instance );
 
 	for( it = items ; it ; it = it->next ){
-		new_item = NA_OBJECT_ITEM( it->data );
+		new_item = FMA_OBJECT_ITEM( it->data );
 
-		id = na_object_get_id( new_item );
+		id = fma_object_get_id( new_item );
 		old_item = nact_tree_view_get_item_by_id( NACT_TREE_VIEW( instance ), id );
 
 		if( !old_item ){
@@ -957,7 +957,7 @@ nact_tree_ieditable_set_items( NactTreeIEditable *instance, GList *items )
 			g_warning( "%s: id=%s: old is a %s while new is a %s - ignored", thisfn, id,
 					G_OBJECT_TYPE_NAME( old_item ), G_OBJECT_TYPE_NAME( new_item ));
 
-		} else if( NA_IS_OBJECT_MENU( old_item )){
+		} else if( FMA_IS_OBJECT_MENU( old_item )){
 			/* hopefully, na_factory_object_copy only copy valuable properties
 			 * keeping dynamic variables as parent pointer, provider and provider
 			 * data, read-only status - notably children are not impacted by this
@@ -965,7 +965,7 @@ nact_tree_ieditable_set_items( NactTreeIEditable *instance, GList *items )
 			 */
 			na_factory_object_copy( FMA_IFACTORY_OBJECT( old_item ), FMA_IFACTORY_OBJECT( new_item ));
 
-		} else if( NA_IS_OBJECT_ACTION( old_item )){
+		} else if( FMA_IS_OBJECT_ACTION( old_item )){
 			/* na_factory_object is not a deep copy, which is fine for the menu
 			 * but not for the action - it appears more easier to just substitute
 			 * the old item with the new one
@@ -973,8 +973,8 @@ nact_tree_ieditable_set_items( NactTreeIEditable *instance, GList *items )
 			 * only children of the old item are its own profiles, which are to be
 			 * replaced with the profiles provided by the new item
 			 */
-			path = nact_tree_model_delete( ied->model, NA_OBJECT( old_item ));
-			insert_path = nact_tree_model_insert_before( ied->model, NA_OBJECT( new_item ), path );
+			path = nact_tree_model_delete( ied->model, FMA_OBJECT( old_item ));
+			insert_path = nact_tree_model_insert_before( ied->model, FMA_OBJECT( new_item ), path );
 			gtk_tree_path_free( path );
 			gtk_tree_path_free( insert_path );
 
@@ -1042,7 +1042,7 @@ check_level_zero_status( NactTreeIEditable *instance )
 
 	items = nact_tree_view_get_items( NACT_TREE_VIEW( instance ));
 	view_str = get_items_id_list_str( items );
-	na_object_free_items( items );
+	fma_object_free_items( items );
 
 	status = ( g_utf8_collate( pivot_str, view_str ) != 0 );
 	g_debug( "%s: pivot_str='%s', view_str='%s', status=%s", thisfn, pivot_str, view_str, status ? "True":"False" );
@@ -1064,7 +1064,7 @@ get_items_id_list_str( GList *items_list )
 	slist = NULL;
 
 	for( it = items_list ; it ; it = it->next ){
-		id = na_object_get_id( it->data );
+		id = fma_object_get_id( it->data );
 		slist = g_slist_prepend( slist, id );
 	}
 

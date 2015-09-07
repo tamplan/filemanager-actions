@@ -35,7 +35,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/fma-gconf-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include <core/na-io-provider.h>
 

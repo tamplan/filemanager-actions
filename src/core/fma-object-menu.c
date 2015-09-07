@@ -36,20 +36,20 @@
 
 #include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-object.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-factory-provider.h"
 #include "na-factory-object.h"
 
 /* private class data
  */
-struct _NAObjectMenuClassPrivate {
+struct _FMAObjectMenuClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAObjectMenuPrivate {
+struct _FMAObjectMenuPrivate {
 	gboolean dispose_has_run;
 };
 
@@ -58,17 +58,17 @@ struct _NAObjectMenuPrivate {
 
 extern FMADataGroup menu_data_groups [];			/* defined in na-item-menu-factory.c */
 
-static NAObjectItemClass *st_parent_class = NULL;
+static FMAObjectItemClass *st_parent_class = NULL;
 
 static GType        register_type( void );
-static void         class_init( NAObjectMenuClass *klass );
+static void         class_init( FMAObjectMenuClass *klass );
 static void         instance_init( GTypeInstance *instance, gpointer klass );
 static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
-static void         object_dump( const NAObject *object );
+static void         object_dump( const FMAObject *object );
 
 static void         ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
 static guint        ifactory_object_get_version( const FMAIFactoryObject *instance );
@@ -81,7 +81,7 @@ static void         icontext_iface_init( FMAIContextInterface *iface, void *user
 static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
 
 GType
-na_object_menu_get_type( void )
+fma_object_menu_get_type( void )
 {
 	static GType menu_type = 0;
 
@@ -96,17 +96,17 @@ na_object_menu_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_object_menu_register_type";
+	static const gchar *thisfn = "fma_object_menu_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAObjectMenuClass ),
+		sizeof( FMAObjectMenuClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAObjectMenu ),
+		sizeof( FMAObjectMenu ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -125,7 +125,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_TYPE_OBJECT_ITEM, "NAObjectMenu", &info, 0 );
+	type = g_type_register_static( FMA_TYPE_OBJECT_ITEM, "FMAObjectMenu", &info, 0 );
 
 	g_type_add_interface_static( type, FMA_TYPE_ICONTEXT, &icontext_iface_info );
 
@@ -135,11 +135,11 @@ register_type( void )
 }
 
 static void
-class_init( NAObjectMenuClass *klass )
+class_init( FMAObjectMenuClass *klass )
 {
-	static const gchar *thisfn = "na_object_menu_class_init";
+	static const gchar *thisfn = "fma_object_menu_class_init";
 	GObjectClass *object_class;
-	NAObjectClass *naobject_class;
+	FMAObjectClass *naobject_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -151,10 +151,10 @@ class_init( NAObjectMenuClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	naobject_class = NA_OBJECT_CLASS( klass );
+	naobject_class = FMA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
 
-	klass->private = g_new0( NAObjectMenuClassPrivate, 1 );
+	klass->private = g_new0( FMAObjectMenuClassPrivate, 1 );
 
 	na_factory_object_define_properties( object_class, menu_data_groups );
 }
@@ -162,26 +162,26 @@ class_init( NAObjectMenuClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_object_menu_instance_init";
-	NAObjectMenu *self;
+	static const gchar *thisfn = "fma_object_menu_instance_init";
+	FMAObjectMenu *self;
 
-	g_return_if_fail( NA_IS_OBJECT_MENU( instance ));
+	g_return_if_fail( FMA_IS_OBJECT_MENU( instance ));
 
-	self = NA_OBJECT_MENU( instance );
+	self = FMA_OBJECT_MENU( instance );
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self->private = g_new0( NAObjectMenuPrivate, 1 );
+	self->private = g_new0( FMAObjectMenuPrivate, 1 );
 }
 
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+	g_return_if_fail( FMA_IS_OBJECT_MENU( object ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	if( !NA_OBJECT_MENU( object )->private->dispose_has_run ){
+	if( !FMA_OBJECT_MENU( object )->private->dispose_has_run ){
 
 		na_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
@@ -190,10 +190,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+	g_return_if_fail( FMA_IS_OBJECT_MENU( object ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	if( !NA_OBJECT_MENU( object )->private->dispose_has_run ){
+	if( !FMA_OBJECT_MENU( object )->private->dispose_has_run ){
 
 		na_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
@@ -202,12 +202,12 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_object_menu_instance_dispose";
-	NAObjectMenu *self;
+	static const gchar *thisfn = "fma_object_menu_instance_dispose";
+	FMAObjectMenu *self;
 
-	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+	g_return_if_fail( FMA_IS_OBJECT_MENU( object ));
 
-	self = NA_OBJECT_MENU( object );
+	self = FMA_OBJECT_MENU( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -225,12 +225,12 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_object_menu_instance_finalize";
-	NAObjectMenu *self;
+	static const gchar *thisfn = "fma_object_menu_instance_finalize";
+	FMAObjectMenu *self;
 
-	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+	g_return_if_fail( FMA_IS_OBJECT_MENU( object ));
 
-	self = NA_OBJECT_MENU( object );
+	self = FMA_OBJECT_MENU( object );
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -243,22 +243,22 @@ instance_finalize( GObject *object )
 }
 
 static void
-object_dump( const NAObject *object )
+object_dump( const FMAObject *object )
 {
-	static const char *thisfn = "na_object_menu_object_dump";
-	NAObjectMenu *self;
+	static const char *thisfn = "fma_object_menu_object_dump";
+	FMAObjectMenu *self;
 
-	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+	g_return_if_fail( FMA_IS_OBJECT_MENU( object ));
 
-	self = NA_OBJECT_MENU( object );
+	self = FMA_OBJECT_MENU( object );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
 				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 		/* chain up to the parent class */
-		if( NA_OBJECT_CLASS( st_parent_class )->dump ){
-			NA_OBJECT_CLASS( st_parent_class )->dump( object );
+		if( FMA_OBJECT_CLASS( st_parent_class )->dump ){
+			FMA_OBJECT_CLASS( st_parent_class )->dump( object );
 		}
 
 		g_debug( "+- end of dump" );
@@ -268,7 +268,7 @@ object_dump( const NAObject *object )
 static void
 ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "na_object_menu_ifactory_object_iface_init";
+	static const gchar *thisfn = "fma_object_menu_ifactory_object_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
@@ -294,9 +294,9 @@ ifactory_object_get_groups( const FMAIFactoryObject *instance )
 static void
 ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	g_debug( "na_object_menu_ifactory_object_read_done: instance=%p", ( void * ) instance );
+	g_debug( "fma_object_menu_ifactory_object_read_done: instance=%p", ( void * ) instance );
 
-	na_object_item_deals_with_version( NA_OBJECT_ITEM( instance ));
+	fma_object_item_deals_with_version( FMA_OBJECT_ITEM( instance ));
 
 	/* prepare the context after the reading
 	 */
@@ -310,7 +310,7 @@ ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvide
 static guint
 ifactory_object_write_start( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	na_object_item_rebuild_children_slist( NA_OBJECT_ITEM( instance ));
+	fma_object_item_rebuild_children_slist( FMA_OBJECT_ITEM( instance ));
 
 	return( FMA_IIO_PROVIDER_CODE_OK );
 }
@@ -324,7 +324,7 @@ ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvid
 static void
 icontext_iface_init( FMAIContextInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "na_object_menu_icontext_iface_init";
+	static const gchar *thisfn = "fma_object_menu_icontext_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
@@ -338,39 +338,39 @@ icontext_is_candidate( FMAIContext *object, guint target, GList *selection )
 }
 
 /**
- * na_object_menu_new:
+ * fma_object_menu_new:
  *
- * Allocates a new #NAObjectMenu object.
+ * Allocates a new #FMAObjectMenu object.
  *
- * Returns: the newly allocated #NAObjectMenu object.
+ * Returns: the newly allocated #FMAObjectMenu object.
  *
  * Since: 2.30
  */
-NAObjectMenu *
-na_object_menu_new( void )
+FMAObjectMenu *
+fma_object_menu_new( void )
 {
-	NAObjectMenu *menu;
+	FMAObjectMenu *menu;
 
-	menu = g_object_new( NA_TYPE_OBJECT_MENU, NULL );
+	menu = g_object_new( FMA_TYPE_OBJECT_MENU, NULL );
 
 	return( menu );
 }
 
 /**
- * na_object_menu_new_with_defaults:
+ * fma_object_menu_new_with_defaults:
  *
- * Allocates a new #NAObjectMenu object, and setup default values.
+ * Allocates a new #FMAObjectMenu object, and setup default values.
  *
- * Returns: the newly allocated #NAObjectMenu object.
+ * Returns: the newly allocated #FMAObjectMenu object.
  *
  * Since: 2.30
  */
-NAObjectMenu *
-na_object_menu_new_with_defaults( void )
+FMAObjectMenu *
+fma_object_menu_new_with_defaults( void )
 {
-	NAObjectMenu *menu = na_object_menu_new();
-	na_object_set_new_id( menu, NULL );
-	na_object_set_label( menu, gettext( NEW_NAUTILUS_MENU ));
+	FMAObjectMenu *menu = fma_object_menu_new();
+	fma_object_set_new_id( menu, NULL );
+	fma_object_set_label( menu, gettext( NEW_NAUTILUS_MENU ));
 	na_factory_object_set_defaults( FMA_IFACTORY_OBJECT( menu ));
 
 	return( menu );

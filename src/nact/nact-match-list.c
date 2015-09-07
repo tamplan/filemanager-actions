@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <libintl.h>
 
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 #include "api/fma-core-utils.h"
 
 #include "base-keysyms.h"

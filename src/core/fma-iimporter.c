@@ -35,7 +35,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/fma-iimporter.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 /* private interface data
  */
@@ -147,7 +147,7 @@ iimporter_get_version( const FMAIImporter *instance )
  * @importer: this #FMAIImporter instance.
  * @parms: a #FMAIImporterImportFromUriParmsv2 structure.
  *
- * Tries to import a #NAObjectItem from the URI specified in @parms, returning
+ * Tries to import a #FMAObjectItem from the URI specified in @parms, returning
  * the result in <structfield>@parms->imported</structfield>.
  *
  * Note that, starting with &prodname; 3.2, the @parms argument is no more a
@@ -219,7 +219,7 @@ fma_iimporter_manage_import_mode( FMAIImporterManageImportModeParms *parms )
 {
 	static const gchar *thisfn = "fma_iimporter_manage_import_mode";
 	guint code;
-	NAObjectItem *exists;
+	FMAObjectItem *exists;
 	guint mode;
 	gchar *id;
 
@@ -282,7 +282,7 @@ fma_iimporter_manage_import_mode( FMAIImporterManageImportModeParms *parms )
 
 			case IMPORTER_MODE_NO_IMPORT:
 			default:
-				id = na_object_get_id( parms->imported );
+				id = fma_object_get_id( parms->imported );
 				fma_core_utils_slist_add_message( &parms->messages, _( "Item %s already exists." ), id );
 				if( parms->asked_mode == IMPORTER_MODE_ASK ){
 					fma_core_utils_slist_add_message( &parms->messages, "%s", _( "Import was canceled due to user request." ));
@@ -303,14 +303,14 @@ renumber_label_item( FMAIImporterManageImportModeParms *parms )
 {
 	gchar *label, *tmp;
 
-	na_object_set_new_id( parms->imported, NULL );
+	fma_object_set_new_id( parms->imported, NULL );
 
-	label = na_object_get_label( parms->imported );
+	label = fma_object_get_label( parms->imported );
 
 	/* i18n: the action has been renumbered during import operation */
 	tmp = g_strdup_printf( "%s %s", label, _( "(renumbered)" ));
 
-	na_object_set_label( parms->imported, tmp );
+	fma_object_set_label( parms->imported, tmp );
 
 	g_free( tmp );
 	g_free( label );

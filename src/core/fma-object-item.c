@@ -36,19 +36,19 @@
 #include <uuid/uuid.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-io-provider.h"
 
 /* private class data
  */
-struct _NAObjectItemClassPrivate {
+struct _FMAObjectItemClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAObjectItemPrivate {
+struct _FMAObjectItemPrivate {
 	gboolean   dispose_has_run;
 
 	/* set at load time
@@ -59,27 +59,27 @@ struct _NAObjectItemPrivate {
 	guint      reason;
 };
 
-static NAObjectIdClass *st_parent_class = NULL;
+static FMAObjectIdClass *st_parent_class = NULL;
 
 static GType    register_type( void );
-static void     class_init( NAObjectItemClass *klass );
+static void     class_init( FMAObjectItemClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
-static void     object_dump( const NAObject *object );
-static void     object_copy( NAObject*target, const NAObject *source, guint mode );
-static gboolean object_are_equal( const NAObject *a, const NAObject *b );
-static gboolean object_is_valid( const NAObject *object );
+static void     object_dump( const FMAObject *object );
+static void     object_copy( FMAObject*target, const FMAObject *source, guint mode );
+static gboolean object_are_equal( const FMAObject *a, const FMAObject *b );
+static gboolean object_is_valid( const FMAObject *object );
 
-static gchar   *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
+static gchar   *object_id_new_id( const FMAObjectId *item, const FMAObjectId *new_parent );
 
 static void     count_items_rec( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
-static GSList  *get_children_slist( const NAObjectItem *item );
-static void     copy_children( NAObjectItem *target, const NAObjectItem *source, guint mode );
+static GSList  *get_children_slist( const FMAObjectItem *item );
+static void     copy_children( FMAObjectItem *target, const FMAObjectItem *source, guint mode );
 
 GType
-na_object_item_get_type( void )
+fma_object_item_get_type( void )
 {
 	static GType item_type = 0;
 
@@ -93,35 +93,35 @@ na_object_item_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_object_item_register_type";
+	static const gchar *thisfn = "fma_object_item_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAObjectItemClass ),
+		sizeof( FMAObjectItemClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAObjectItem ),
+		sizeof( FMAObjectItem ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_TYPE_OBJECT_ID, "NAObjectItem", &info, 0 );
+	type = g_type_register_static( FMA_TYPE_OBJECT_ID, "FMAObjectItem", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAObjectItemClass *klass )
+class_init( FMAObjectItemClass *klass )
 {
-	static const gchar *thisfn = "na_object_item_class_init";
+	static const gchar *thisfn = "fma_object_item_class_init";
 	GObjectClass *object_class;
-	NAObjectClass *naobject_class;
-	NAObjectIdClass *naobjectid_class;
+	FMAObjectClass *naobject_class;
+	FMAObjectIdClass *naobjectid_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -131,28 +131,28 @@ class_init( NAObjectItemClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	naobject_class = NA_OBJECT_CLASS( klass );
+	naobject_class = FMA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
 
-	naobjectid_class = NA_OBJECT_ID_CLASS( klass );
+	naobjectid_class = FMA_OBJECT_ID_CLASS( klass );
 	naobjectid_class->new_id = object_id_new_id;
 
-	klass->private = g_new0( NAObjectItemClassPrivate, 1 );
+	klass->private = g_new0( FMAObjectItemClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	NAObjectItem *self;
+	FMAObjectItem *self;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( instance ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( instance ));
 
-	self = NA_OBJECT_ITEM( instance );
+	self = FMA_OBJECT_ITEM( instance );
 
-	self->private = g_new0( NAObjectItemPrivate, 1 );
+	self->private = g_new0( FMAObjectItemPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->writable = TRUE;
@@ -162,20 +162,20 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	NAObjectItem *self;
+	FMAObjectItem *self;
 	GList *children;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( object ));
 
-	self = NA_OBJECT_ITEM( object );
+	self = FMA_OBJECT_ITEM( object );
 
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
 
-		children = na_object_get_items( self );
-		na_object_set_items( self, NULL );
-		na_object_free_items( children );
+		children = fma_object_get_items( self );
+		fma_object_set_items( self, NULL );
+		fma_object_free_items( children );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -187,11 +187,11 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	NAObjectItem *self;
+	FMAObjectItem *self;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( object ));
 
-	self = NA_OBJECT_ITEM( object );
+	self = FMA_OBJECT_ITEM( object );
 
 	g_free( self->private );
 
@@ -202,14 +202,14 @@ instance_finalize( GObject *object )
 }
 
 static void
-object_dump( const NAObject *object )
+object_dump( const FMAObject *object )
 {
-	static const gchar *thisfn = "na_object_item_object_dump";
-	NAObjectItem *item;
+	static const gchar *thisfn = "fma_object_item_object_dump";
+	FMAObjectItem *item;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( object ));
 
-	item = NA_OBJECT_ITEM( object );
+	item = FMA_OBJECT_ITEM( object );
 
 	if( !item->private->dispose_has_run ){
 
@@ -217,34 +217,34 @@ object_dump( const NAObject *object )
 		g_debug( "| %s:        reason=%u", thisfn, item->private->reason );
 
 		/* chain up to the parent class */
-		if( NA_OBJECT_CLASS( st_parent_class )->dump ){
-			NA_OBJECT_CLASS( st_parent_class )->dump( object );
+		if( FMA_OBJECT_CLASS( st_parent_class )->dump ){
+			FMA_OBJECT_CLASS( st_parent_class )->dump( object );
 		}
 	}
 }
 
 static void
-object_copy( NAObject *target, const NAObject *source, guint mode )
+object_copy( FMAObject *target, const FMAObject *source, guint mode )
 {
-	static const gchar *thisfn = "na_object_item_object_copy";
+	static const gchar *thisfn = "fma_object_item_object_copy";
 	void *provider;
-	NAObjectItem *dest, *src;
+	FMAObjectItem *dest, *src;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( target ));
-	g_return_if_fail( NA_IS_OBJECT_ITEM( source ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( target ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( source ));
 
-	dest = NA_OBJECT_ITEM( target );
-	src = NA_OBJECT_ITEM( source );
+	dest = FMA_OBJECT_ITEM( target );
+	src = FMA_OBJECT_ITEM( source );
 
 	if( !dest->private->dispose_has_run && !src->private->dispose_has_run ){
 
 		if( mode == DUPLICATE_REC ||
-			( mode == DUPLICATE_OBJECT && G_OBJECT_TYPE( source ) == NA_TYPE_OBJECT_ACTION )){
+			( mode == DUPLICATE_OBJECT && G_OBJECT_TYPE( source ) == FMA_TYPE_OBJECT_ACTION )){
 
 				copy_children( dest, src, mode );
 		}
 
-		provider = na_object_get_provider( source );
+		provider = fma_object_get_provider( source );
 
 		if( provider ){
 			if( !NA_IS_IO_PROVIDER( provider )){
@@ -254,7 +254,7 @@ object_copy( NAObject *target, const NAObject *source, guint mode )
 						( void * ) provider );
 
 			} else {
-				na_io_provider_duplicate_data( NA_IO_PROVIDER( provider ), NA_OBJECT_ITEM( target ), NA_OBJECT_ITEM( source ), NULL );
+				na_io_provider_duplicate_data( NA_IO_PROVIDER( provider ), FMA_OBJECT_ITEM( target ), FMA_OBJECT_ITEM( source ), NULL );
 			}
 		}
 
@@ -262,16 +262,16 @@ object_copy( NAObject *target, const NAObject *source, guint mode )
 		dest->private->reason = src->private->reason;
 
 		/* chain up to the parent class */
-		if( NA_OBJECT_CLASS( st_parent_class )->copy ){
-			NA_OBJECT_CLASS( st_parent_class )->copy( target, source, mode );
+		if( FMA_OBJECT_CLASS( st_parent_class )->copy ){
+			FMA_OBJECT_CLASS( st_parent_class )->copy( target, source, mode );
 		}
 	}
 }
 
 /*
  * object_are_equal:
- * @a: the first (original) #NAObjectItem instance.
- * @b: the second #NAObjectItem instance.
+ * @a: the first (original) #FMAObjectItem instance.
+ * @b: the second #FMAObjectItem instance.
  *
  * This function participates to the #fma_iduplicable_check_status() stack,
  * and is triggered after all comparable elementary data (in #FMAIFactoryObject
@@ -283,20 +283,20 @@ object_copy( NAObject *target, const NAObject *source, guint mode )
  * Returns: %TRUE if @a is equal to @b.
  */
 static gboolean
-object_are_equal( const NAObject *a, const NAObject *b )
+object_are_equal( const FMAObject *a, const FMAObject *b )
 {
-	static const gchar *thisfn = "na_object_item_object_are_equal";
+	static const gchar *thisfn = "fma_object_item_object_are_equal";
 	gboolean are_equal;
-	NAObjectItem *origin, *duplicate;
+	FMAObjectItem *origin, *duplicate;
 	GSList *a_slist, *b_slist;
 	gchar *a_list, *b_list;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( a ), FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( b ), FALSE );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( a ), FALSE );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( b ), FALSE );
 
 	are_equal = FALSE;
-	origin = NA_OBJECT_ITEM( a );
-	duplicate = NA_OBJECT_ITEM( b );
+	origin = FMA_OBJECT_ITEM( a );
+	duplicate = FMA_OBJECT_ITEM( b );
 
 	if( !origin->private->dispose_has_run &&
 		!duplicate->private->dispose_has_run ){
@@ -318,8 +318,8 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	}
 
 	/* chain call to parent class */
-	if( NA_OBJECT_CLASS( st_parent_class )->are_equal ){
-		are_equal &= NA_OBJECT_CLASS( st_parent_class )->are_equal( a, b );
+	if( FMA_OBJECT_CLASS( st_parent_class )->are_equal ){
+		are_equal &= FMA_OBJECT_CLASS( st_parent_class )->are_equal( a, b );
 	}
 
 	return( are_equal );
@@ -329,18 +329,18 @@ object_are_equal( const NAObject *a, const NAObject *b )
  * must have at least one valid subitem
  */
 static gboolean
-object_is_valid( const NAObject *object )
+object_is_valid( const FMAObject *object )
 {
-	static const gchar *thisfn = "na_object_item_object_is_valid";
+	static const gchar *thisfn = "fma_object_item_object_is_valid";
 	gboolean is_valid;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	GList *children, *ic;
 	gint valid_children;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), FALSE );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( object ), FALSE );
 
 	is_valid = FALSE;
-	item = NA_OBJECT_ITEM( object );
+	item = FMA_OBJECT_ITEM( object );
 
 	if( !item->private->dispose_has_run ){
 		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
@@ -348,9 +348,9 @@ object_is_valid( const NAObject *object )
 		is_valid = TRUE;
 
 		valid_children = 0;
-		children = na_object_get_items( item );
+		children = fma_object_get_items( item );
 		for( ic = children ; ic && !valid_children ; ic = ic->next ){
-			if( na_object_is_valid( ic->data )){
+			if( fma_object_is_valid( ic->data )){
 				valid_children += 1;
 			}
 		}
@@ -358,13 +358,13 @@ object_is_valid( const NAObject *object )
 		is_valid &= ( valid_children > 0 );
 
 		if( !is_valid ){
-			na_object_debug_invalid( item, "no valid child" );
+			fma_object_debug_invalid( item, "no valid child" );
 		}
 	}
 
 	/* chain up to the parent class */
-	if( NA_OBJECT_CLASS( st_parent_class )->is_valid ){
-		is_valid &= NA_OBJECT_CLASS( st_parent_class )->is_valid( object );
+	if( FMA_OBJECT_CLASS( st_parent_class )->is_valid ){
+		is_valid &= FMA_OBJECT_CLASS( st_parent_class )->is_valid( object );
 	}
 
 	return( is_valid );
@@ -376,23 +376,23 @@ object_is_valid( const NAObject *object )
  * gain to check this
  */
 static gchar *
-object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
+object_id_new_id( const FMAObjectId *item, const FMAObjectId *new_parent )
 {
 	GList *children, *it;
 	uuid_t uuid;
 	gchar uuid_str[64];
 	gchar *new_uuid = NULL;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), NULL );
 
-	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
+	if( !FMA_OBJECT_ITEM( item )->private->dispose_has_run ){
 
-		/* recurse into NAObjectItems children
+		/* recurse into FMAObjectItems children
 		 * i.e., if a menu, recurse into embedded actions
 		 */
-		children = na_object_get_items( item );
+		children = fma_object_get_items( item );
 		for( it = children ; it ; it = it->next ){
-			na_object_set_new_id( it->data, new_parent );
+			fma_object_set_new_id( it->data, new_parent );
 		}
 
 		uuid_generate( uuid );
@@ -404,33 +404,33 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
 }
 
 /**
- * na_object_item_get_item:
- * @item: the #NAObjectItem from which we want retrieve a subitem.
+ * fma_object_item_get_item:
+ * @item: the #FMAObjectItem from which we want retrieve a subitem.
  * @id: the id of the searched subitem.
  *
- * Returns: a pointer to the #NAObjectId -derived child with the required id.
+ * Returns: a pointer to the #FMAObjectId -derived child with the required id.
  *
- * The returned #NAObjectId is owned by the @item object ; the
+ * The returned #FMAObjectId is owned by the @item object ; the
  * caller should not try to g_free() nor g_object_unref() it.
  *
  * Since: 2.30
  */
-NAObjectId *
-na_object_item_get_item( const NAObjectItem *item, const gchar *id )
+FMAObjectId *
+fma_object_item_get_item( const FMAObjectItem *item, const gchar *id )
 {
 	GList *children, *it;
-	NAObjectId *found = NULL;
-	NAObjectId *isub;
+	FMAObjectId *found = NULL;
+	FMAObjectId *isub;
 	gchar *isubid;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), NULL );
 
 	if( !item->private->dispose_has_run ){
 
-		children = na_object_get_items( item );
+		children = fma_object_get_items( item );
 		for( it = children ; it && !found ; it = it->next ){
-			isub = NA_OBJECT_ID( it->data );
-			isubid = na_object_get_id( isub );
+			isub = FMA_OBJECT_ID( it->data );
+			isubid = fma_object_get_id( isub );
 			if( !strcmp( id, isubid )){
 				found = isub;
 			}
@@ -442,9 +442,9 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
 }
 
 /**
- * na_object_item_get_position:
- * @item: this #NAObjectItem object.
- * @child: a #NAObjectId -derived child.
+ * fma_object_item_get_position:
+ * @item: this #FMAObjectItem object.
+ * @child: a #FMAObjectId -derived child.
  *
  * Returns: the position of @child in the subitems list of @item,
  * starting from zero, or -1 if not found.
@@ -452,13 +452,13 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
  * Since: 2.30
  */
 gint
-na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child )
+fma_object_item_get_position( const FMAObjectItem *item, const FMAObjectId *child )
 {
 	gint pos = -1;
 	GList *children;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), pos );
-	g_return_val_if_fail( NA_IS_OBJECT_ID( child ), pos );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), pos );
+	g_return_val_if_fail( FMA_IS_OBJECT_ID( child ), pos );
 
 	if( !child ){
 		return( pos );
@@ -466,7 +466,7 @@ na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child )
 
 	if( !item->private->dispose_has_run ){
 
-		children = na_object_get_items( item );
+		children = fma_object_get_items( item );
 		pos = g_list_index( children, ( gconstpointer ) child );
 	}
 
@@ -474,9 +474,9 @@ na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child )
 }
 
 /**
- * na_object_item_append_item:
- * @item: the #NAObjectItem to which add the subitem.
- * @child: a #NAObjectId to be added to list of subitems.
+ * fma_object_item_append_item:
+ * @item: the #FMAObjectItem to which add the subitem.
+ * @child: a #FMAObjectId to be added to list of subitems.
  *
  * Appends a new @child to the list of subitems of @item,
  * and setup the parent pointer of the child to its new parent.
@@ -486,30 +486,30 @@ na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child )
  * Since: 2.30
  */
 void
-na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
+fma_object_item_append_item( FMAObjectItem *item, const FMAObjectId *child )
 {
 	GList *children;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT_ID( child ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( child ));
 
 	if( !item->private->dispose_has_run ){
 
-		children = na_object_get_items( item );
+		children = fma_object_get_items( item );
 
 		if( !g_list_find( children, ( gpointer ) child )){
 
 			children = g_list_append( children, ( gpointer ) child );
-			na_object_set_parent( child, item );
-			na_object_set_items( item, children );
+			fma_object_set_parent( child, item );
+			fma_object_set_items( item, children );
 		}
 	}
 }
 
 /**
- * na_object_item_insert_at:
- * @item: the #NAObjectItem in which add the subitem.
- * @child: a #NAObjectId -derived to be inserted in the list of subitems.
+ * fma_object_item_insert_at:
+ * @item: the #FMAObjectItem in which add the subitem.
+ * @child: a #FMAObjectId -derived to be inserted in the list of subitems.
  * @pos: the position at which the @child should be inserted.
  *
  * Inserts a new @child in the list of subitems of @item.
@@ -519,19 +519,19 @@ na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
  * Since: 2.30
  */
 void
-na_object_item_insert_at( NAObjectItem *item, const NAObjectId *child, gint pos )
+fma_object_item_insert_at( FMAObjectItem *item, const FMAObjectId *child, gint pos )
 {
 	GList *children, *it;
 	gint i;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT_ID( child ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( child ));
 
 	if( !item->private->dispose_has_run ){
 
-		children = na_object_get_items( item );
+		children = fma_object_get_items( item );
 		if( pos == -1 || pos >= g_list_length( children )){
-			na_object_append_item( item, child );
+			fma_object_append_item( item, child );
 
 		} else {
 			i = 0;
@@ -541,16 +541,16 @@ na_object_item_insert_at( NAObjectItem *item, const NAObjectId *child, gint pos 
 				}
 				i += 1;
 			}
-			na_object_set_items( item, children );
+			fma_object_set_items( item, children );
 		}
 	}
 }
 
 /**
- * na_object_item_insert_item:
- * @item: the #NAObjectItem to which add the subitem.
- * @child: a #NAObjectId to be inserted in the list of subitems.
- * @before: the #NAObjectId before which the @child should be inserted.
+ * fma_object_item_insert_item:
+ * @item: the #FMAObjectItem to which add the subitem.
+ * @child: a #FMAObjectId to be inserted in the list of subitems.
+ * @before: the #FMAObjectId before which the @child should be inserted.
  *
  * Inserts a new @child in the list of subitems of @item.
  *
@@ -559,18 +559,18 @@ na_object_item_insert_at( NAObjectItem *item, const NAObjectId *child, gint pos 
  * Since: 2.30
  */
 void
-na_object_item_insert_item( NAObjectItem *item, const NAObjectId *child, const NAObjectId *before )
+fma_object_item_insert_item( FMAObjectItem *item, const FMAObjectId *child, const FMAObjectId *before )
 {
 	GList *children;
 	GList *before_list;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT_ID( child ));
-	g_return_if_fail( !before || NA_IS_OBJECT_ID( before ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( child ));
+	g_return_if_fail( !before || FMA_IS_OBJECT_ID( before ));
 
 	if( !item->private->dispose_has_run ){
 
-		children = na_object_get_items( item );
+		children = fma_object_get_items( item );
 		if( !g_list_find( children, ( gpointer ) child )){
 
 			before_list = NULL;
@@ -585,15 +585,15 @@ na_object_item_insert_item( NAObjectItem *item, const NAObjectId *child, const N
 				children = g_list_prepend( children, ( gpointer ) child );
 			}
 
-			na_object_set_items( item, children );
+			fma_object_set_items( item, children );
 		}
 	}
 }
 
 /**
- * na_object_item_remove_item:
- * @item: the #NAObjectItem from which the subitem must be removed.
- * @child: a #NAObjectId -derived to be removed from the list of subitems.
+ * fma_object_item_remove_item:
+ * @item: the #FMAObjectItem from which the subitem must be removed.
+ * @child: a #FMAObjectId -derived to be removed from the list of subitems.
  *
  * Removes a @child from the list of subitems of @item.
  *
@@ -602,49 +602,49 @@ na_object_item_insert_item( NAObjectItem *item, const NAObjectId *child, const N
  * Since: 2.30
  */
 void
-na_object_item_remove_item( NAObjectItem *item, const NAObjectId *child )
+fma_object_item_remove_item( FMAObjectItem *item, const FMAObjectId *child )
 {
 	GList *children;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT_ID( child ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( child ));
 
 	if( !item->private->dispose_has_run ){
 
-		children = na_object_get_items( item );
+		children = fma_object_get_items( item );
 
 		if( children ){
-			g_debug( "na_object_item_remove_item: removing %p (%s) from %p (%s)",
+			g_debug( "fma_object_item_remove_item: removing %p (%s) from %p (%s)",
 					( void * ) child, G_OBJECT_TYPE_NAME( child ),
 					( void * ) item, G_OBJECT_TYPE_NAME( item ));
 
 			children = g_list_remove( children, ( gconstpointer ) child );
-			g_debug( "na_object_item_remove_item: after: children=%p, count=%u", ( void * ) children, g_list_length( children ));
-			na_object_set_items( item, children );
+			g_debug( "fma_object_item_remove_item: after: children=%p, count=%u", ( void * ) children, g_list_length( children ));
+			fma_object_set_items( item, children );
 		}
 	}
 }
 
 /**
- * na_object_item_get_items_count:
- * @item: the #NAObjectItem from which we want a count of subitems.
+ * fma_object_item_get_items_count:
+ * @item: the #FMAObjectItem from which we want a count of subitems.
  *
  * Returns: the count of subitems of @item.
  *
  * Since: 2.30
  */
 guint
-na_object_item_get_items_count( const NAObjectItem *item )
+fma_object_item_get_items_count( const FMAObjectItem *item )
 {
 	guint count = 0;
 	GList *children;
 
-	/*g_debug( "na_object_item_get_items_count: item=%p (%s)", ( void * ) item, G_OBJECT_TYPE_NAME( item ));*/
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), 0 );
+	/*g_debug( "fma_object_item_get_items_count: item=%p (%s)", ( void * ) item, G_OBJECT_TYPE_NAME( item ));*/
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), 0 );
 
 	if( !item->private->dispose_has_run ){
 
-		children = na_object_get_items( item );
+		children = fma_object_get_items( item );
 		count = children ? g_list_length( children ) : 0;
 	}
 
@@ -652,8 +652,8 @@ na_object_item_get_items_count( const NAObjectItem *item )
 }
 
 /**
- * na_object_item_count_items:
- * @items: a list if #NAObject -derived to be counted.
+ * fma_object_item_count_items:
+ * @items: a list if #FMAObject -derived to be counted.
  * @menus: will be set to the count of menus.
  * @actions: will be set to the count of actions.
  * @profiles: will be set to the count of profiles.
@@ -668,7 +668,7 @@ na_object_item_get_items_count( const NAObjectItem *item )
  * Since: 2.30
  */
 void
-na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse )
+fma_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse )
 {
 	*menus = 0;
 	*actions = 0;
@@ -685,45 +685,45 @@ count_items_rec( GList *items, gint *menus, gint *actions, gint *profiles, gbool
 	for( it = items ; it ; it = it->next ){
 
 		if( recurse ){
-			if( NA_IS_OBJECT_ITEM( it->data )){
-				GList *subitems = na_object_get_items( it->data );
+			if( FMA_IS_OBJECT_ITEM( it->data )){
+				GList *subitems = fma_object_get_items( it->data );
 				count_items_rec( subitems, menus, actions, profiles, recurse );
 			}
 		}
 
-		if( NA_IS_OBJECT_MENU( it->data )){
+		if( FMA_IS_OBJECT_MENU( it->data )){
 			*menus += 1;
 
-		} else if( NA_IS_OBJECT_ACTION( it->data )){
+		} else if( FMA_IS_OBJECT_ACTION( it->data )){
 			*actions += 1;
 
-		} else if( NA_IS_OBJECT_PROFILE( it->data )){
+		} else if( FMA_IS_OBJECT_PROFILE( it->data )){
 			*profiles += 1;
 		}
 	}
 }
 
 /**
- * na_object_item_copyref_items:
- * @items: a list of #NAObject -derived items.
+ * fma_object_item_copyref_items:
+ * @items: a list of #FMAObject -derived items.
  *
  * Creates a copy of the provided list, recursively incrementing the
- * reference count of NAObjects.
+ * reference count of FMAObjects.
  *
- * Returns: the new list, which should be na_object_free_items() by the
+ * Returns: the new list, which should be fma_object_free_items() by the
  * caller.
  *
  * Since: 3.1
  */
 GList *
-na_object_item_copyref_items( GList *items )
+fma_object_item_copyref_items( GList *items )
 {
 	GList *copy = NULL;
 
 	if( items ){
 		copy = g_list_copy( items );
-		g_list_foreach( copy, ( GFunc ) na_object_object_ref, NULL );
-		g_debug( "na_object_item_copyref_items: list at %p contains %s at %p (ref_count=%d)",
+		g_list_foreach( copy, ( GFunc ) fma_object_object_ref, NULL );
+		g_debug( "fma_object_item_copyref_items: list at %p contains %s at %p (ref_count=%d)",
 				( void * ) copy,
 				G_OBJECT_TYPE_NAME( copy->data ), ( void * ) copy->data, G_OBJECT( copy->data )->ref_count );
 	}
@@ -732,8 +732,8 @@ na_object_item_copyref_items( GList *items )
 }
 
 /**
- * na_object_item_free_items:
- * @items: a list of #NAObject -derived items.
+ * fma_object_item_free_items:
+ * @items: a list of #FMAObject -derived items.
  *
  * Free the items list.
  *
@@ -742,21 +742,21 @@ na_object_item_copyref_items( GList *items )
  * Since: 3.1
  */
 GList *
-na_object_item_free_items( GList *items )
+fma_object_item_free_items( GList *items )
 {
 	if( items ){
-		g_debug( "na_object_item_free_items: freeing list at %p which contains %s at %p (ref_count=%d)",
+		g_debug( "fma_object_item_free_items: freeing list at %p which contains %s at %p (ref_count=%d)",
 				( void * ) items,
 				G_OBJECT_TYPE_NAME( items->data ), ( void * ) items->data, G_OBJECT( items->data )->ref_count );
-		g_list_foreach( items, ( GFunc ) na_object_object_unref, NULL );
+		g_list_foreach( items, ( GFunc ) fma_object_object_unref, NULL );
 		g_list_free( items );
 	}
 	return( NULL );
 }
 
 /**
- * na_object_item_deals_with_version:
- * @item: this #NAObjectItem -derived object.
+ * fma_object_item_deals_with_version:
+ * @item: this #FMAObjectItem -derived object.
  *
  * Just after the @item has been read from FMAIFactoryProvider, setup
  * the version. This is needed because some conversions may occur in
@@ -769,19 +769,19 @@ na_object_item_free_items( GList *items )
  * Since: 2.30
  */
 void
-na_object_item_deals_with_version( NAObjectItem *item )
+fma_object_item_deals_with_version( FMAObjectItem *item )
 {
 	guint version_uint;
 	gchar *version_str;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
 
 	if( !item->private->dispose_has_run ){
 
-		version_uint = na_object_get_iversion( item );
+		version_uint = fma_object_get_iversion( item );
 
 		if( !version_uint ){
-			version_str = na_object_get_version( item );
+			version_str = fma_object_get_version( item );
 
 			if( !version_str || !strlen( version_str )){
 				g_free( version_str );
@@ -789,7 +789,7 @@ na_object_item_deals_with_version( NAObjectItem *item )
 			}
 
 			version_uint = atoi( version_str );
-			na_object_set_iversion( item, version_uint );
+			fma_object_set_iversion( item, version_uint );
 
 			g_free( version_str );
 		}
@@ -797,24 +797,24 @@ na_object_item_deals_with_version( NAObjectItem *item )
 }
 
 /**
- * na_object_item_rebuild_children_slist:
- * @item: this #NAObjectItem -derived object.
+ * fma_object_item_rebuild_children_slist:
+ * @item: this #FMAObjectItem -derived object.
  *
  * Rebuild the string list of children.
  *
  * Since: 2.30
  */
 void
-na_object_item_rebuild_children_slist( NAObjectItem *item )
+fma_object_item_rebuild_children_slist( FMAObjectItem *item )
 {
 	GSList *slist;
 
-	na_object_set_items_slist( item, NULL );
+	fma_object_set_items_slist( item, NULL );
 
 	if( !item->private->dispose_has_run ){
 
 		slist = get_children_slist( item );
-		na_object_set_items_slist( item, slist );
+		fma_object_set_items_slist( item, slist );
 		fma_core_utils_slist_free( slist );
 	}
 }
@@ -822,17 +822,17 @@ na_object_item_rebuild_children_slist( NAObjectItem *item )
 /*
  */
 static GSList *
-get_children_slist( const NAObjectItem *item )
+get_children_slist( const FMAObjectItem *item )
 {
 	GSList *slist;
 	GList *subitems, *it;
 	gchar *id;
 
 	slist = NULL;
-	subitems = na_object_get_items( item );
+	subitems = fma_object_get_items( item );
 
 	for( it = subitems ; it ; it = it->next ){
-		id = na_object_get_id( it->data );
+		id = fma_object_get_id( it->data );
 		slist = g_slist_prepend( slist, id );
 	}
 
@@ -844,13 +844,13 @@ get_children_slist( const NAObjectItem *item )
  * or mode is 'duplicate object' and this is an action with profiles
  */
 static void
-copy_children( NAObjectItem *target, const NAObjectItem *source, guint mode )
+copy_children( FMAObjectItem *target, const FMAObjectItem *source, guint mode )
 {
-	static const gchar *thisfn = "na_object_item_copy_children";
+	static const gchar *thisfn = "fma_object_item_copy_children";
 	GList *tgt_children, *src_children, *ic;
-	NAObject *dup;
+	FMAObject *dup;
 
-	tgt_children = na_object_get_items( target );
+	tgt_children = fma_object_get_items( target );
 	if( tgt_children ){
 		g_warning( "%s: target_children=%p (count=%d)",
 				thisfn,
@@ -858,21 +858,21 @@ copy_children( NAObjectItem *target, const NAObjectItem *source, guint mode )
 		g_return_if_fail( tgt_children == NULL );
 	}
 
-	src_children = na_object_get_items( source );
+	src_children = fma_object_get_items( source );
 	for( ic = src_children ; ic ; ic = ic->next ){
 
-		dup = ( NAObject * ) na_object_duplicate( ic->data, mode );
-		na_object_set_parent( dup, target );
+		dup = ( FMAObject * ) fma_object_duplicate( ic->data, mode );
+		fma_object_set_parent( dup, target );
 		tgt_children = g_list_prepend( tgt_children, dup );
 	}
 
 	tgt_children = g_list_reverse( tgt_children );
-	na_object_set_items( target, tgt_children );
+	fma_object_set_items( target, tgt_children );
 }
 
 /**
- * na_object_item_is_finally_writable:
- * @item: this #NAObjectItem -derived object.
+ * fma_object_item_is_finally_writable:
+ * @item: this #FMAObjectItem -derived object.
  * @reason: if not %NULL, a pointer to a guint which will hold the reason code.
  *
  * Returns: the writability status of the @item.
@@ -880,14 +880,14 @@ copy_children( NAObjectItem *target, const NAObjectItem *source, guint mode )
  * Since: 3.1
  */
 gboolean
-na_object_item_is_finally_writable( const NAObjectItem *item, guint *reason )
+fma_object_item_is_finally_writable( const FMAObjectItem *item, guint *reason )
 {
 	gboolean writable;
 
 	if( reason ){
 		*reason = FMA_IIO_PROVIDER_STATUS_UNDETERMINED;
 	}
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), FALSE );
 
 	writable = FALSE;
 
@@ -903,8 +903,8 @@ na_object_item_is_finally_writable( const NAObjectItem *item, guint *reason )
 }
 
 /**
- * na_object_item_set_writability_status:
- * @item: this #NAObjectItem -derived object.
+ * fma_object_item_set_writability_status:
+ * @item: this #FMAObjectItem -derived object.
  * @writable: whether the item is finally writable.
  * @reason: the reason code.
  *
@@ -913,9 +913,9 @@ na_object_item_is_finally_writable( const NAObjectItem *item, guint *reason )
  * Since: 3.1
  */
 void
-na_object_item_set_writability_status( NAObjectItem *item, gboolean writable, guint reason )
+fma_object_item_set_writability_status( FMAObjectItem *item, gboolean writable, guint reason )
 {
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
 
 	if( !item->private->dispose_has_run ){
 

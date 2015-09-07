@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 
 #include "api/fma-core-utils.h"
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-gtk-utils.h"
 
@@ -252,13 +252,13 @@ on_add_from_defaults( GtkButton *button, NactISchemesTab *instance )
 static GSList *
 get_schemes( void *context )
 {
-	return( na_object_get_schemes( context ));
+	return( fma_object_get_schemes( context ));
 }
 
 static void
 set_schemes( void *context, GSList *filters )
 {
-	na_object_set_schemes( context, filters );
+	fma_object_set_schemes( context, filters );
 }
 
 static void

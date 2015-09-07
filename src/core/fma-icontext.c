@@ -48,7 +48,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-desktop-environment.h"
 #include "na-gnome-vfs-uri.h"
@@ -301,7 +301,7 @@ fma_icontext_check_mimetypes( const FMAIContext *context )
 	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
 	is_all = TRUE;
-	mimetypes = na_object_get_mimetypes( context );
+	mimetypes = fma_object_get_mimetypes( context );
 
 	for( im = mimetypes ; im ; im = im->next ){
 		if( !im->data || !strlen( im->data )){
@@ -316,7 +316,7 @@ fma_icontext_check_mimetypes( const FMAIContext *context )
 		/* do not break here so that we are able to check all mimetypes */
 	}
 
-	na_object_set_all_mimetypes( context, is_all );
+	fma_object_set_all_mimetypes( context, is_all );
 
 	fma_core_utils_slist_free( mimetypes );
 }
@@ -356,7 +356,7 @@ fma_icontext_copy( FMAIContext *context, const FMAIContext *source )
 void
 fma_icontext_read_done( FMAIContext *context )
 {
-	na_object_check_mimetypes( context );
+	fma_object_check_mimetypes( context );
 }
 
 /**
@@ -376,9 +376,9 @@ fma_icontext_set_scheme( FMAIContext *context, const gchar *scheme, gboolean sel
 
 	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
-	schemes = na_object_get_schemes( context );
+	schemes = fma_object_get_schemes( context );
 	schemes = fma_core_utils_slist_setup_element( schemes, scheme, selected );
-	na_object_set_schemes( context, schemes );
+	fma_object_set_schemes( context, schemes );
 	fma_core_utils_slist_free( schemes );
 }
 
@@ -399,9 +399,9 @@ fma_icontext_set_only_desktop( FMAIContext *context, const gchar *desktop, gbool
 
 	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
-	desktops = na_object_get_only_show_in( context );
+	desktops = fma_object_get_only_show_in( context );
 	desktops = fma_core_utils_slist_setup_element( desktops, desktop, selected );
-	na_object_set_only_show_in( context, desktops );
+	fma_object_set_only_show_in( context, desktops );
 	fma_core_utils_slist_free( desktops );
 }
 
@@ -422,9 +422,9 @@ fma_icontext_set_not_desktop( FMAIContext *context, const gchar *desktop, gboole
 
 	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
-	desktops = na_object_get_not_show_in( context );
+	desktops = fma_object_get_not_show_in( context );
 	desktops = fma_core_utils_slist_setup_element( desktops, desktop, selected );
-	na_object_set_not_show_in( context, desktops );
+	fma_object_set_not_show_in( context, desktops );
 	fma_core_utils_slist_free( desktops );
 }
 
@@ -445,10 +445,10 @@ fma_icontext_replace_folder( FMAIContext *context, const gchar *old, const gchar
 
 	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
-	folders = na_object_get_folders( context );
+	folders = fma_object_get_folders( context );
 	folders = fma_core_utils_slist_remove_utf8( folders, old );
 	folders = g_slist_append( folders, ( gpointer ) g_strdup( new ));
-	na_object_set_folders( context, folders );
+	fma_object_set_folders( context, folders );
 	fma_core_utils_slist_free( folders );
 }
 
@@ -477,18 +477,18 @@ is_candidate_for_target( const FMAIContext *object, guint target, GList *files )
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_target";
 	gboolean ok = TRUE;
 
-	if( NA_IS_OBJECT_ACTION( object )){
+	if( FMA_IS_OBJECT_ACTION( object )){
 		switch( target ){
 			case ITEM_TARGET_LOCATION:
-				ok = na_object_is_target_location( object );
+				ok = fma_object_is_target_location( object );
 				break;
 
 			case ITEM_TARGET_TOOLBAR:
-				ok = na_object_is_target_toolbar( object );
+				ok = fma_object_is_target_toolbar( object );
 				break;
 
 			case ITEM_TARGET_SELECTION:
-				ok = na_object_is_target_selection( object );
+				ok = fma_object_is_target_selection( object );
 				break;
 
 			case ITEM_TARGET_ANY:
@@ -503,7 +503,7 @@ is_candidate_for_target( const FMAIContext *object, guint target, GList *files )
 
 	if( !ok ){
 		g_debug( "%s: object is not candidate because target doesn't match (asked=%d)", thisfn, target );
-		/*na_object_dump( object );*/
+		/*fma_object_dump( object );*/
 	}
 
 	return( ok );
@@ -518,8 +518,8 @@ is_candidate_for_show_in( const FMAIContext *object, guint target, GList *files 
 {
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_show_in";
 	gboolean ok = TRUE;
-	GSList *only_in = na_object_get_only_show_in( object );
-	GSList *not_in = na_object_get_not_show_in( object );
+	GSList *only_in = fma_object_get_only_show_in( object );
+	GSList *not_in = fma_object_get_not_show_in( object );
 	static gchar *environment = NULL;
 
 	/* there is a memory leak here when desktop comes from user preferences
@@ -563,7 +563,7 @@ is_candidate_for_try_exec( const FMAIContext *object, guint target, GList *files
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_try_exec";
 	gboolean ok = TRUE;
 	GError *error = NULL;
-	gchar *tryexec = na_object_get_try_exec( object );
+	gchar *tryexec = fma_object_get_try_exec( object );
 
 	if( tryexec && strlen( tryexec )){
 		ok = FALSE;
@@ -598,7 +598,7 @@ is_candidate_for_show_if_registered( const FMAIContext *object, guint target, GL
 {
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_show_if_registered";
 	gboolean ok = TRUE;
-	gchar *name = na_object_get_show_if_registered( object );
+	gchar *name = fma_object_get_show_if_registered( object );
 
 	if( name && strlen( name )){
 		ok = FALSE;
@@ -637,7 +637,7 @@ is_candidate_for_show_if_true( const FMAIContext *object, guint target, GList *f
 {
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_show_if_true";
 	gboolean ok = TRUE;
-	gchar *command = na_object_get_show_if_true( object );
+	gchar *command = fma_object_get_show_if_true( object );
 
 	if( command && strlen( command )){
 		ok = FALSE;
@@ -670,7 +670,7 @@ is_candidate_for_show_if_running( const FMAIContext *object, guint target, GList
 	glibtop_proc_state procstate;
 	pid_t *pid_list;
 	guint i;
-	gchar *running = na_object_get_show_if_running( object );
+	gchar *running = fma_object_get_show_if_running( object );
 
 	if( running && strlen( running )){
 		ok = FALSE;
@@ -725,12 +725,12 @@ is_candidate_for_mimetypes( const FMAIContext *object, guint target, GList *file
 {
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_mimetypes";
 	gboolean ok = TRUE;
-	gboolean all = na_object_get_all_mimetypes( object );
+	gboolean all = fma_object_get_all_mimetypes( object );
 
 	g_debug( "%s: all=%s", thisfn, all ? "True":"False" );
 
 	if( !all ){
-		GSList *mimetypes = na_object_get_mimetypes( object );
+		GSList *mimetypes = fma_object_get_mimetypes( object );
 		GSList *im;
 		GList *it;
 
@@ -849,11 +849,11 @@ is_candidate_for_basenames( const FMAIContext *object, guint target, GList *file
 {
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_basenames";
 	gboolean ok = TRUE;
-	GSList *basenames = na_object_get_basenames( object );
+	GSList *basenames = fma_object_get_basenames( object );
 
 	if( basenames ){
 		if( strcmp( basenames->data, "*" ) != 0 || g_slist_length( basenames ) > 1 ){
-			gboolean matchcase = na_object_get_matchcase( object );
+			gboolean matchcase = fma_object_get_matchcase( object );
 			GSList *ib;
 			GList *it;
 			gchar *tmp;
@@ -920,7 +920,7 @@ is_candidate_for_selection_count( const FMAIContext *object, guint target, GList
 	gboolean ok = TRUE;
 	gint limit;
 	guint count;
-	gchar *selection_count = na_object_get_selection_count( object );
+	gchar *selection_count = fma_object_get_selection_count( object );
 
 	if( selection_count && strlen( selection_count )){
 		limit = atoi( selection_count+1 );
@@ -966,7 +966,7 @@ is_candidate_for_schemes( const FMAIContext *object, guint target, GList *files 
 {
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_schemes";
 	gboolean ok = TRUE;
-	GSList *schemes = na_object_get_schemes( object );
+	GSList *schemes = fma_object_get_schemes( object );
 
 	if( schemes ){
 		if( strcmp( schemes->data, "*" ) != 0 || g_slist_length( schemes ) > 1 ){
@@ -1049,7 +1049,7 @@ is_candidate_for_folders( const FMAIContext *object, guint target, GList *files 
 {
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_folders";
 	gboolean ok = TRUE;
-	GSList *folders = na_object_get_folders( object );
+	GSList *folders = fma_object_get_folders( object );
 
 	if( folders ){
 		if( strcmp( folders->data, "/" ) != 0 || g_slist_length( folders ) > 1 ){
@@ -1112,7 +1112,7 @@ is_candidate_for_capabilities( const FMAIContext *object, guint target, GList *f
 {
 	static const gchar *thisfn = "fma_icontext_is_candidate_for_capabilities";
 	gboolean ok = TRUE;
-	GSList *capabilities = na_object_get_capabilities( object );
+	GSList *capabilities = fma_object_get_capabilities( object );
 
 	if( capabilities ){
 		GSList *ic;
@@ -1167,12 +1167,12 @@ is_valid_basenames( const FMAIContext *object )
 	gboolean valid;
 	GSList *basenames;
 
-	basenames = na_object_get_basenames( object );
+	basenames = fma_object_get_basenames( object );
 	valid = basenames && g_slist_length( basenames ) > 0;
 	fma_core_utils_slist_free( basenames );
 
 	if( !valid ){
-		na_object_debug_invalid( object, "basenames" );
+		fma_object_debug_invalid( object, "basenames" );
 	}
 
 	return( valid );
@@ -1193,7 +1193,7 @@ is_valid_mimetypes( const FMAIContext *object )
 	guint count_ok, count_errs;
 	const gchar *imtype;
 
-	mimetypes = na_object_get_mimetypes( object );
+	mimetypes = fma_object_get_mimetypes( object );
 	count_ok = 0;
 	count_errs = 0;
 
@@ -1226,7 +1226,7 @@ is_valid_mimetypes( const FMAIContext *object )
 	valid = ( count_ok > 0 && count_errs == 0 );
 
 	if( !valid ){
-		na_object_debug_invalid( object, "mimetypes" );
+		fma_object_debug_invalid( object, "mimetypes" );
 	}
 
 	fma_core_utils_slist_free( mimetypes );
@@ -1240,12 +1240,12 @@ is_valid_schemes( const FMAIContext *object )
 	gboolean valid;
 	GSList *schemes;
 
-	schemes = na_object_get_schemes( object );
+	schemes = fma_object_get_schemes( object );
 	valid = schemes && g_slist_length( schemes ) > 0;
 	fma_core_utils_slist_free( schemes );
 
 	if( !valid ){
-		na_object_debug_invalid( object, "schemes" );
+		fma_object_debug_invalid( object, "schemes" );
 	}
 
 	return( valid );
@@ -1257,12 +1257,12 @@ is_valid_folders( const FMAIContext *object )
 	gboolean valid;
 	GSList *folders;
 
-	folders = na_object_get_folders( object );
+	folders = fma_object_get_folders( object );
 	valid = folders && g_slist_length( folders ) > 0;
 	fma_core_utils_slist_free( folders );
 
 	if( !valid ){
-		na_object_debug_invalid( object, "folders" );
+		fma_object_debug_invalid( object, "folders" );
 	}
 
 	return( valid );

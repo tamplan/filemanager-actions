@@ -38,7 +38,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 #include <api/fma-dbus.h>
 
 #include <core/na-gconf-migration.h>
@@ -70,12 +70,12 @@ static GOptionEntry misc_entries[] = {
 };
 
 static GOptionContext  *init_options( void );
-static NAObjectAction  *get_action( const gchar *id );
+static FMAObjectAction  *get_action( const gchar *id );
 static GList           *targets_from_selection( void );
 static GList           *targets_from_commandline( void );
 static GList           *get_selection_from_strv( const gchar **strv, gboolean has_mimetype );
-static NAObjectProfile *get_profile_for_targets( NAObjectAction *action, GList *targets );
-static void             execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets );
+static FMAObjectProfile *get_profile_for_targets( FMAObjectAction *action, GList *targets );
+static void             execute_action( FMAObjectAction *action, FMAObjectProfile *profile, GList *targets );
 static void             dump_targets( GList *targets );
 static void             exit_with_usage( void );
 
@@ -88,8 +88,8 @@ main( int argc, char** argv )
 	GError *error = NULL;
 	gchar *help;
 	gint errors;
-	NAObjectAction *action;
-	NAObjectProfile *profile;
+	FMAObjectAction *action;
+	FMAObjectProfile *profile;
 	GList *targets;
 
 #if !GLIB_CHECK_VERSION( 2,36, 0 )
@@ -218,11 +218,11 @@ init_options( void )
 /*
  * search for the action in the repository
  */
-static NAObjectAction *
+static FMAObjectAction *
 get_action( const gchar *id )
 {
 	NAPivot *pivot;
-	NAObjectAction *action;
+	FMAObjectAction *action;
 
 	action = NULL;
 
@@ -230,18 +230,18 @@ get_action( const gchar *id )
 	na_pivot_set_loadable( pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
 	na_pivot_load_items( pivot );
 
-	action = ( NAObjectAction * ) na_pivot_get_item( pivot, id );
+	action = ( FMAObjectAction * ) na_pivot_get_item( pivot, id );
 
 	if( !action ){
 		g_printerr( _( "Error: action '%s' doesn't exist.\n" ), id );
 
 	} else {
-		if( !na_object_is_enabled( action )){
+		if( !fma_object_is_enabled( action )){
 			g_printerr( _( "Error: action '%s' is disabled.\n" ), id );
 			g_object_unref( action );
 			action = NULL;
 		}
-		if( !na_object_is_valid( action )){
+		if( !fma_object_is_valid( action )){
 			g_printerr( _( "Error: action '%s' is not valid.\n" ), id );
 			g_object_unref( action );
 			action = NULL;
@@ -381,19 +381,19 @@ get_selection_from_strv( const gchar **strv, gboolean has_mimetype )
 /*
  * find a profile candidate to be executed for the given uris
  */
-static NAObjectProfile *
-get_profile_for_targets( NAObjectAction *action, GList *targets )
+static FMAObjectProfile *
+get_profile_for_targets( FMAObjectAction *action, GList *targets )
 {
 	/*static const gchar *thisfn = "nautilus_actions_run_get_profile_for_targets";*/
 	GList *profiles, *ip;
-	NAObjectProfile *candidate;
+	FMAObjectProfile *candidate;
 
 	candidate = NULL;
-	profiles = na_object_get_items( action );
+	profiles = fma_object_get_items( action );
 
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 		if( fma_icontext_is_candidate( FMA_ICONTEXT( ip->data ), ITEM_TARGET_ANY, targets )){
-			candidate = NA_OBJECT_PROFILE( ip->data );
+			candidate = FMA_OBJECT_PROFILE( ip->data );
 		}
 	}
 
@@ -401,7 +401,7 @@ get_profile_for_targets( NAObjectAction *action, GList *targets )
 }
 
 static void
-execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets )
+execute_action( FMAObjectAction *action, FMAObjectProfile *profile, GList *targets )
 {
 	/*static const gchar *thisfn = "nautilus_action_run_execute_action";*/
 	NATokens *tokens;

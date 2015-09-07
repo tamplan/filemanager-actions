@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <stdlib.h>
 
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 #include "api/na-timeout.h"
 
 #include "core/na-about.h"
@@ -80,7 +80,7 @@ struct _NactMainWindowPrivate {
 	 * 'editable' property is set on selection change;
 	 * This is the actual current writability status of the item at this time.
 	 */
-	NAObjectItem    *current_item;
+	FMAObjectItem    *current_item;
 	gboolean         editable;
 	guint            reason;
 
@@ -99,7 +99,7 @@ struct _NactMainWindowPrivate {
 	 * a) a profile is selected,
 	 * b) an action is selected and it has exactly one profile.
 	 */
-	NAObjectProfile *current_profile;
+	FMAObjectProfile *current_profile;
 
 	/**
 	 * Current context.
@@ -178,7 +178,7 @@ static void       on_tree_view_modified_status_changed( NactTreeView *treeview, 
 static void       on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, NactMainWindow *window );
 static void       on_tab_item_updated( NactMainWindow *window, FMAIContext *context, guint data, void *empty );
 static void       raz_selection_properties( NactMainWindow *window );
-static void       setup_current_selection( NactMainWindow *window, NAObjectId *selected_row );
+static void       setup_current_selection( NactMainWindow *window, FMAObjectId *selected_row );
 static void       setup_dialog_title( NactMainWindow *window );
 static void       setup_writability_status( NactMainWindow *window );
 
@@ -328,15 +328,15 @@ class_init( NactMainWindowClass *klass )
 	g_object_class_install_property( object_class, MAIN_PROP_ITEM_ID,
 			g_param_spec_pointer(
 					MAIN_PROP_ITEM,
-					_( "Current NAObjectItem" ),
-					_( "A pointer to the currently edited NAObjectItem, an action or a menu" ),
+					_( "Current FMAObjectItem" ),
+					_( "A pointer to the currently edited FMAObjectItem, an action or a menu" ),
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_PROFILE_ID,
 			g_param_spec_pointer(
 					MAIN_PROP_PROFILE,
-					_( "Current NAObjectProfile" ),
-					_( "A pointer to the currently edited NAObjectProfile" ),
+					_( "Current FMAObjectProfile" ),
+					_( "A pointer to the currently edited FMAObjectProfile" ),
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_CONTEXT_ID,
@@ -994,8 +994,8 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, N
 		raz_selection_properties( window );
 
 		if( count == 1 ){
-			g_return_if_fail( NA_IS_OBJECT_ID( selected_items->data ));
-			setup_current_selection( window, NA_OBJECT_ID( selected_items->data ));
+			g_return_if_fail( FMA_IS_OBJECT_ID( selected_items->data ));
+			setup_current_selection( window, FMA_OBJECT_ID( selected_items->data ));
 			setup_writability_status( window );
 		}
 
@@ -1016,7 +1016,7 @@ on_tab_item_updated( NactMainWindow *window, FMAIContext *context, guint data, v
 				data, ( void * ) empty );
 
 		if( context ){
-			na_object_check_status( context );
+			fma_object_check_status( context );
 		}
 	}
 }
@@ -1038,27 +1038,27 @@ raz_selection_properties( NactMainWindow *window )
  * only called when only one selected row
  */
 static void
-setup_current_selection( NactMainWindow *window, NAObjectId *selected_row )
+setup_current_selection( NactMainWindow *window, FMAObjectId *selected_row )
 {
 	guint nb_profiles;
 	GList *profiles;
 
-	if( NA_IS_OBJECT_PROFILE( selected_row )){
-		window->private->current_profile = NA_OBJECT_PROFILE( selected_row );
+	if( FMA_IS_OBJECT_PROFILE( selected_row )){
+		window->private->current_profile = FMA_OBJECT_PROFILE( selected_row );
 		window->private->current_context = FMA_ICONTEXT( selected_row );
-		window->private->current_item = NA_OBJECT_ITEM( na_object_get_parent( selected_row ));
+		window->private->current_item = FMA_OBJECT_ITEM( fma_object_get_parent( selected_row ));
 
 	} else {
-		g_return_if_fail( NA_IS_OBJECT_ITEM( selected_row ));
-		window->private->current_item = NA_OBJECT_ITEM( selected_row );
+		g_return_if_fail( FMA_IS_OBJECT_ITEM( selected_row ));
+		window->private->current_item = FMA_OBJECT_ITEM( selected_row );
 		window->private->current_context = FMA_ICONTEXT( selected_row );
 
-		if( NA_IS_OBJECT_ACTION( selected_row )){
-			nb_profiles = na_object_get_items_count( selected_row );
+		if( FMA_IS_OBJECT_ACTION( selected_row )){
+			nb_profiles = fma_object_get_items_count( selected_row );
 
 			if( nb_profiles == 1 ){
-				profiles = na_object_get_items( selected_row );
-				window->private->current_profile = NA_OBJECT_PROFILE( profiles->data );
+				profiles = fma_object_get_items( selected_row );
+				window->private->current_profile = FMA_OBJECT_PROFILE( profiles->data );
 				window->private->current_context = FMA_ICONTEXT( profiles->data );
 			}
 		}
@@ -1090,8 +1090,8 @@ setup_dialog_title( NactMainWindow *window )
 	title = nact_application_get_application_name( NACT_APPLICATION( application ));
 
 	if( priv->current_item ){
-		label = na_object_get_label( priv->current_item );
-		is_modified = na_object_is_modified( priv->current_item );
+		label = fma_object_get_label( priv->current_item );
+		is_modified = fma_object_is_modified( priv->current_item );
 		tmp = g_strdup_printf( "%s%s - %s", is_modified ? "*" : "", label, title );
 		g_free( label );
 		g_free( title );
@@ -1105,9 +1105,9 @@ setup_dialog_title( NactMainWindow *window )
 static void
 setup_writability_status( NactMainWindow *window )
 {
-	g_return_if_fail( NA_IS_OBJECT_ITEM( window->private->current_item ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( window->private->current_item ));
 
-	window->private->editable = na_object_is_finally_writable( window->private->current_item, &window->private->reason );
+	window->private->editable = fma_object_is_finally_writable( window->private->current_item, &window->private->reason );
 	nact_statusbar_set_locked( window->private->statusbar, !window->private->editable, window->private->reason );
 }
 

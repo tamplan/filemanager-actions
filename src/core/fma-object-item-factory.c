@@ -48,7 +48,7 @@
 FMADataDef data_def_item [] = {
 
 	/* this data is marked as non readable as it has to be read specifically
-	 * in order to be able to create the corresponding NAObjectItem-derived
+	 * in order to be able to create the corresponding FMAObjectItem-derived
 	 * object
 	 * it is not writable as different I/O providers may have different values
 	 * for it, and thus it must be written specifically
@@ -84,8 +84,8 @@ FMADataDef data_def_item [] = {
 				NULL },
 
 	/* this data is common between actions and menus
-	 * so default value is directly set in na_object_action_new_with_defaults()
-	 * and na_object_menu_new_with_defaults()
+	 * so default value is directly set in fma_object_action_new_with_defaults()
+	 * and fma_object_menu_new_with_defaults()
 	 */
 	{ FMAFO_DATA_LABEL,
 				TRUE,
@@ -367,7 +367,7 @@ FMADataDef data_def_item [] = {
 	/* dynamic data, so non readable / non writable (but has property)
 	 * is left at the FMAIIOProvider disposition
 	 * not copyable as directly duplicated by FMAIIOProvider interface
-	 * (see NAObjectItem::object_copy)
+	 * (see FMAObjectItem::object_copy)
 	 */
 	{ FMAFO_DATA_PROVIDER_DATA,
 				FALSE,

@@ -35,7 +35,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 #include <api/fma-core-utils.h>
 
 #include <core/na-import-mode.h>
@@ -117,7 +117,7 @@ static void          runtime_init_duplicates( NactAssistantImport *window, GtkAs
 static void          assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 static void          prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void          assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
-static NAObjectItem *check_for_existence( const NAObjectItem *, NactMainWindow *window );
+static FMAObjectItem *check_for_existence( const FMAObjectItem *, NactMainWindow *window );
 static void          prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void          free_results( GList *list );
 
@@ -699,7 +699,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		insertable_items = g_list_reverse( insertable_items );
 		items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
 		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), insertable_items, NULL );
-		na_object_free_items( insertable_items );
+		fma_object_free_items( insertable_items );
 	}
 
 	/* contrarily, the tree store may or not take a new reference on overriding
@@ -712,15 +712,15 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	}
 }
 
-static NAObjectItem *
-check_for_existence( const NAObjectItem *item, NactMainWindow *window )
+static FMAObjectItem *
+check_for_existence( const FMAObjectItem *item, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_assistant_import_check_for_existence";
 	NactTreeView *items_view;
-	NAObjectItem *exists;
+	FMAObjectItem *exists;
 	gchar *importing_id;
 
-	importing_id = na_object_get_id( item );
+	importing_id = fma_object_get_id( item );
 	g_debug( "%s: item=%p (%s), importing_id=%s",
 			thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ), importing_id );
 
@@ -799,8 +799,8 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		if( result->imported ){
 			/* i18n: indicate that the file has been successfully imported */
 			text = g_strdup( _( "Import OK" ));
-			id = na_object_get_id( result->imported );
-			item_label = na_object_get_label( result->imported );
+			id = fma_object_get_id( result->imported );
+			item_label = fma_object_get_label( result->imported );
 			/* i18n: this is the globally unique identifier and the label of the newly imported action */
 			text2 = g_strdup_printf( _( "Id.: %s\t%s" ), id, item_label);
 			g_free( item_label );
@@ -838,7 +838,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	/* release here our reference on overriding items
 	 */
 	if( window->private->overriden ){
-		na_object_free_items( window->private->overriden );
+		fma_object_free_items( window->private->overriden );
 	}
 
 	g_object_set( G_OBJECT( window ), BASE_PROP_WARN_ON_ESCAPE, FALSE, NULL );

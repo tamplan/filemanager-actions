@@ -39,7 +39,7 @@
 #include <api/fma-gconf-utils.h>
 #include <api/fma-data-types.h>
 #include <api/fma-ifactory-provider.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include <io-gconf/nagp-keys.h>
 
@@ -153,14 +153,14 @@ static RootNodeStr st_root_node_str[] = {
 #define ERR_NODE_UNKNOWN_TYPE		_( "Unknown type %s found at line %d, while waiting for Action or Menu." )
 #define ERR_NOT_IOXML				_( "The XML I/O Provider is not able to handle the URI" )
 
-static void          read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile );
+static void          read_start_profile_attach_profile( NAXMLReader *reader, FMAObjectProfile *profile );
 static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const FMAIFactoryObject *object, xmlChar *text );
 static FMADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const FMADataDef *def );
-static void          read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item );
-static void          read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action );
+static void          read_done_item_set_localized_icon( NAXMLReader *reader, FMAObjectItem *item );
+static void          read_done_action_read_profiles( NAXMLReader *reader, FMAObjectAction *action );
 static gchar        *read_done_action_get_next_profile_id( NAXMLReader *reader );
 static void          read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id );
-static void          read_done_profile_set_localized_label( NAXMLReader *reader, NAObjectProfile *profile );
+static void          read_done_profile_set_localized_label( NAXMLReader *reader, FMAObjectProfile *profile );
 
 static guint         reader_parse_xmldoc( NAXMLReader *reader );
 static guint         iter_on_root_children( NAXMLReader *reader, xmlNode *root );
@@ -351,7 +351,7 @@ naxml_reader_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
 	g_object_unref( reader );
 
 	if( code == IMPORTER_CODE_OK ){
-		na_object_dump( parms->imported );
+		fma_object_dump( parms->imported );
 
 	} else if( parms->imported ){
 		g_object_unref( parms->imported );
@@ -575,7 +575,7 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 	if( code == IMPORTER_CODE_OK ){
 
 		if( !reader->private->type_found ){
-			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_action_new());
+			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_action_new());
 		}
 	}
 
@@ -583,7 +583,7 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 	 */
 	if( code == IMPORTER_CODE_OK ){
 
-		na_object_set_id( reader->private->parms->imported, reader->private->item_id );
+		fma_object_set_id( reader->private->parms->imported, reader->private->item_id );
 
 		fma_ifactory_provider_read_item(
 				FMA_IFACTORY_PROVIDER( reader->private->importer ),
@@ -610,15 +610,15 @@ naxml_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data,
 			( void * ) object, G_OBJECT_TYPE_NAME( object ),
 			( void * ) messages );
 
-	if( NA_IS_OBJECT_PROFILE( object )){
-		read_start_profile_attach_profile( NAXML_READER( reader_data ), NA_OBJECT_PROFILE( object ));
+	if( FMA_IS_OBJECT_PROFILE( object )){
+		read_start_profile_attach_profile( NAXML_READER( reader_data ), FMA_OBJECT_PROFILE( object ));
 	}
 }
 
 static void
-read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile )
+read_start_profile_attach_profile( NAXMLReader *reader, FMAObjectProfile *profile )
 {
-	na_object_attach_profile( reader->private->parms->imported, profile );
+	fma_object_attach_profile( reader->private->parms->imported, profile );
 }
 
 /*
@@ -692,7 +692,7 @@ read_data_is_path_adhoc_for_object( NAXMLReader *reader, const FMAIFactoryObject
 	path_slist = fma_core_utils_slist_from_split(( const gchar * ) text, "/" );
 	path_length = g_slist_length( path_slist );
 
-	if( NA_IS_OBJECT_ITEM( object )){
+	if( FMA_IS_OBJECT_ITEM( object )){
 		if( path_length != reader->private->root_node_str->key_length ){
 			adhoc = FALSE;
 		}
@@ -706,7 +706,7 @@ read_data_is_path_adhoc_for_object( NAXMLReader *reader, const FMAIFactoryObject
 		node_profile_id = g_path_get_basename( key_dirname );
 		g_free( key_dirname );
 
-		factory_profile_id = na_object_get_id( object );
+		factory_profile_id = fma_object_get_id( object );
 
 		if( strcmp( node_profile_id, factory_profile_id ) != 0 ){
 			adhoc = FALSE;
@@ -771,40 +771,40 @@ naxml_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, 
 			( void * ) object, G_OBJECT_TYPE_NAME( object ),
 			( void * ) messages );
 
-	if( NA_IS_OBJECT_ITEM( object )){
-		read_done_item_set_localized_icon( NAXML_READER( reader_data ), NA_OBJECT_ITEM( object ));
+	if( FMA_IS_OBJECT_ITEM( object )){
+		read_done_item_set_localized_icon( NAXML_READER( reader_data ), FMA_OBJECT_ITEM( object ));
 	}
 
-	if( NA_IS_OBJECT_ACTION( object )){
-		read_done_action_read_profiles( NAXML_READER( reader_data ), NA_OBJECT_ACTION( object ));
+	if( FMA_IS_OBJECT_ACTION( object )){
+		read_done_action_read_profiles( NAXML_READER( reader_data ), FMA_OBJECT_ACTION( object ));
 	}
 
-	if( NA_IS_OBJECT_PROFILE( object )){
-		read_done_profile_set_localized_label( NAXML_READER( reader_data ), NA_OBJECT_PROFILE( object ));
+	if( FMA_IS_OBJECT_PROFILE( object )){
+		read_done_profile_set_localized_label( NAXML_READER( reader_data ), FMA_OBJECT_PROFILE( object ));
 	}
 
 	g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
 }
 
 /*
- * just having read this NAObjectItem
+ * just having read this FMAObjectItem
  * so deals with unlocalized/localized icon name/path
  */
 static void
-read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item )
+read_done_item_set_localized_icon( NAXMLReader *reader, FMAObjectItem *item )
 {
 	gchar *icon, *unloc_icon;
 
 	/* deals with localized/unlocalized icon name
 	 * it used to be unlocalized up to 2.29.4 included
 	 */
-	icon = na_object_get_icon( item );
+	icon = fma_object_get_icon( item );
 
 	if( !icon || !strlen( icon )){
-		unloc_icon = na_object_get_icon_noloc( item );
+		unloc_icon = fma_object_get_icon_noloc( item );
 
 		if( unloc_icon && strlen( unloc_icon )){
-			na_object_set_icon( item, unloc_icon );
+			fma_object_set_icon( item, unloc_icon );
 		}
 
 		g_free( unloc_icon );
@@ -821,18 +821,18 @@ read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item )
  * Also note that profiles order has been introduced in 2.29 serie
  */
 static void
-read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action )
+read_done_action_read_profiles( NAXMLReader *reader, FMAObjectAction *action )
 {
 	static const gchar *thisfn = "naxml_reader_read_done_action_read_profiles";
 	GSList *order, *ip;
 	gchar *profile_id;
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 
-	if( !na_object_get_items_count( reader->private->parms->imported )){
+	if( !fma_object_get_items_count( reader->private->parms->imported )){
 
 		/* first attach potential ordered profiles
 		 */
-		order = na_object_get_items_slist( reader->private->parms->imported );
+		order = fma_object_get_items_slist( reader->private->parms->imported );
 		for( ip = order ; ip ; ip = ip->next ){
 			read_done_action_load_profile( reader, ( const gchar * ) ip->data );
 		}
@@ -854,10 +854,10 @@ read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action )
 
 	/* make sure we have at least one profile attached to the action
 	 */
-	if( !na_object_get_items_count( action )){
+	if( !fma_object_get_items_count( action )){
 		g_warning( "%s: no profile found in .xml file", thisfn );
-		profile = na_object_profile_new_with_defaults();
-		na_object_attach_profile( action, profile );
+		profile = fma_object_profile_new_with_defaults();
+		fma_object_attach_profile( action, profile );
 	}
 }
 
@@ -888,7 +888,7 @@ read_done_action_get_next_profile_id( NAXMLReader *reader )
 			profile_id = g_path_get_basename( name );
 			g_free( name );
 
-			if( na_object_get_item( reader->private->parms->imported, profile_id )){
+			if( fma_object_get_item( reader->private->parms->imported, profile_id )){
 				g_free( profile_id );
 				profile_id = NULL;
 			}
@@ -905,9 +905,9 @@ read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
 {
 	/*g_debug( "naxml_reader_read_done_action_load_profile: profile_id=%s", profile_id );*/
 
-	NAObjectProfile *profile = na_object_profile_new_with_defaults();
+	FMAObjectProfile *profile = fma_object_profile_new_with_defaults();
 
-	na_object_set_id( profile, profile_id );
+	fma_object_set_id( profile, profile_id );
 
 	fma_ifactory_provider_read_item(
 			FMA_IFACTORY_PROVIDER( reader->private->importer ),
@@ -917,24 +917,24 @@ read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
 }
 
 /*
- * just having read this NAObjectProfile
+ * just having read this FMAObjectProfile
  * so deals with unlocalized/localized desc-name
  */
 static void
-read_done_profile_set_localized_label( NAXMLReader *reader, NAObjectProfile *profile )
+read_done_profile_set_localized_label( NAXMLReader *reader, FMAObjectProfile *profile )
 {
 	gchar *descname, *unloc_descname;
 
 	/* deals with localized/unlocalized descname name
 	 * it used to be unlocalized up to 2.29.4 included
 	 */
-	descname = na_object_get_label( profile );
+	descname = fma_object_get_label( profile );
 
 	if( !descname || !strlen( descname )){
-		unloc_descname = na_object_get_label_noloc( profile );
+		unloc_descname = fma_object_get_label_noloc( profile );
 
 		if( unloc_descname && strlen( unloc_descname )){
-			na_object_set_label( profile, unloc_descname );
+			fma_object_set_label( profile, unloc_descname );
 		}
 
 		g_free( unloc_descname );
@@ -1066,10 +1066,10 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 		gchar *type = get_value_from_child_node( iter->parent, NAXML_KEY_SCHEMA_NODE_DEFAULT );
 
 		if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
-			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_action_new());
+			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_action_new());
 
 		} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
-			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_menu_new());
+			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_menu_new());
 
 		} else {
 			fma_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_UNKNOWN_TYPE, type, iter->line );
@@ -1191,10 +1191,10 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
 		gchar *type = get_value_from_child_child_node( key_node->parent, NAXML_KEY_DUMP_NODE_VALUE, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
 
 		if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
-			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_action_new());
+			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_action_new());
 
 		} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
-			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_menu_new());
+			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_menu_new());
 
 		} else {
 			fma_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_UNKNOWN_TYPE, type, key_node->line );

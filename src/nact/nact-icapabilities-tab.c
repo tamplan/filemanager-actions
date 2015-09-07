@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 
 #include "api/fma-core-utils.h"
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-gtk-utils.h"
 
@@ -243,13 +243,13 @@ on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance )
 static GSList *
 get_capabilities( FMAIContext *context )
 {
-	return( na_object_get_capabilities( context ));
+	return( fma_object_get_capabilities( context ));
 }
 
 static void
 set_capabilities( FMAIContext *context, GSList *list )
 {
-	na_object_set_capabilities( context, list );
+	fma_object_set_capabilities( context, list );
 }
 
 static void

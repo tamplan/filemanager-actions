@@ -37,7 +37,7 @@
  * @include: file-manager-actions/fma-data-def.h
  *
  * #FMADataDef and #FMADataGroup are structures which handle the list of
- * elementary datas for each and every #NAObjectItem which happens to
+ * elementary datas for each and every #FMAObjectItem which happens to
  * implement the #FMAIFactoryObject interface.
  */
 

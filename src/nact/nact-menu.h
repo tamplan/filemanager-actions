@@ -68,7 +68,7 @@ typedef struct {
 	gboolean    are_parents_writable;	/* duplicate */
 	gboolean    are_items_writable;		/* cut/delete */
 
-	/* set when the count of modified or deleted NAObjectItem changes
+	/* set when the count of modified or deleted FMAObjectItem changes
 	 * or when the level zero is changed
 	 */
 	gboolean    is_tree_modified;

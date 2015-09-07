@@ -36,7 +36,7 @@
  */
 
 #include <api/fma-iexporter.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-ioption.h"
 #include "na-pivot.h"
@@ -51,12 +51,12 @@ void         na_exporter_free_formats   ( GList *formats );
 NAIOption   *na_exporter_get_ask_option ( void );
 
 gchar       *na_exporter_to_buffer      ( const NAPivot *pivot,
-                                          const NAObjectItem *item,
+                                          const FMAObjectItem *item,
                                           const gchar *format,
                                           GSList **messages );
 
 gchar       *na_exporter_to_file        ( const NAPivot *pivot,
-                                          const NAObjectItem *item,
+                                          const FMAObjectItem *item,
                                           const gchar *folder_uri,
                                           const gchar *format,
                                           GSList **messages );

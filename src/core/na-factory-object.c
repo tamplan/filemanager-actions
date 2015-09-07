@@ -40,7 +40,7 @@
 #include <api/fma-data-types.h>
 #include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-provider.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-factory-object.h"
 #include "na-factory-provider.h"
@@ -374,8 +374,8 @@ na_factory_object_copy( FMAIFactoryObject *target, const FMAIFactoryObject *sour
 
 	/* first remove copyable data from target
 	 */
-	provider = na_object_get_provider( target );
-	provider_data = na_object_get_provider_data( target );
+	provider = fma_object_get_provider( target );
+	provider_data = fma_object_get_provider_data( target );
 
 	idest = dest_list = g_object_get_data( G_OBJECT( target ), FMA_IFACTORY_OBJECT_PROP_DATA );
 	while( idest ){
@@ -407,9 +407,9 @@ na_factory_object_copy( FMAIFactoryObject *target, const FMAIFactoryObject *sour
 	}
 
 	if( provider ){
-		na_object_set_provider( target, provider );
+		fma_object_set_provider( target, provider );
 		if( provider_data ){
-			na_object_set_provider_data( target, provider_data );
+			fma_object_set_provider_data( target, provider_data );
 		}
 	}
 

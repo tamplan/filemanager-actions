@@ -191,7 +191,7 @@ do_is_able_to_write( const FMAIIOProvider *instance )
  * or action).
  *
  * This function may be triggered for each and every
- * #NAObjectItem -derived modified object, and should, at least, be
+ * #FMAObjectItem -derived modified object, and should, at least, be
  * triggered once for a coherent set of updates.
  *
  * When receiving this signal, the currently running program may just

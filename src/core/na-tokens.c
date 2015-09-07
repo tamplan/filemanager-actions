@@ -37,7 +37,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-gnome-vfs-uri.h"
 #include "na-selected-info.h"
@@ -89,7 +89,7 @@ static void      instance_finalize( GObject *object );
 static void      child_watch_fn( GPid pid, gint status, ChildStr *child_str );
 static void      display_output( const gchar *command, int fd_stdout, int fd_stderr );
 static gchar    *display_output_get_content( int fd );
-static void      execute_action_command( gchar *command, const NAObjectProfile *profile, const NATokens *tokens );
+static void      execute_action_command( gchar *command, const FMAObjectProfile *profile, const NATokens *tokens );
 static gchar    *get_command_execution_display_output( const gchar *command );
 static gchar    *get_command_execution_embedded( const gchar *command );
 static gchar    *get_command_execution_normal( const gchar *command );
@@ -374,20 +374,20 @@ na_tokens_parse_for_display( const NATokens *tokens, const gchar *string, gboole
 /*
  * na_tokens_execute_action:
  * @tokens: a #NATokens object.
- * @profile: the #NAObjectProfile to be executed.
+ * @profile: the #FMAObjectProfile to be executed.
  *
  * Execute the given action, regarding the context described by @tokens.
  */
 void
-na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile )
+na_tokens_execute_action( const NATokens *tokens, const FMAObjectProfile *profile )
 {
 	gchar *path, *parameters, *exec;
 	gboolean singular;
 	guint i;
 	gchar *command;
 
-	path = na_object_get_path( profile );
-	parameters = na_object_get_parameters( profile );
+	path = fma_object_get_path( profile );
+	parameters = fma_object_get_parameters( profile );
 	exec = g_strdup_printf( "%s %s", path, parameters );
 	g_free( parameters );
 	g_free( path );
@@ -492,7 +492,7 @@ display_output_get_content( int fd )
  * - DisplayOutput: execute in a shell
  */
 static void
-execute_action_command( gchar *command, const NAObjectProfile *profile, const NATokens *tokens )
+execute_action_command( gchar *command, const FMAObjectProfile *profile, const NATokens *tokens )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action_command";
 	GError *error;
@@ -509,7 +509,7 @@ execute_action_command( gchar *command, const NAObjectProfile *profile, const NA
 	run_command = NULL;
 	child_str = g_new0( ChildStr, 1 );
 	child_pid = ( GPid ) 0;
-	execution_mode = na_object_get_execution_mode( profile );
+	execution_mode = fma_object_get_execution_mode( profile );
 
 	if( !strcmp( execution_mode, "Normal" )){
 		run_command = get_command_execution_normal( command );
@@ -536,7 +536,7 @@ execute_action_command( gchar *command, const NAObjectProfile *profile, const NA
 			g_error_free( error );
 
 		} else {
-			wdir = na_object_get_working_dir( profile );
+			wdir = fma_object_get_working_dir( profile );
 			wdir_nq = parse_singular( tokens, wdir, 0, FALSE, FALSE );
 			g_debug( "%s: run_command=%s, wdir=%s", thisfn, run_command, wdir_nq );
 

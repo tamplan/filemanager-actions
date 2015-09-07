@@ -37,7 +37,7 @@
  *
  * This class encapŝulates the EggDesktopFile structure, adding some
  * private properties. An instance of this class is associated with
- * every #NAObjectItem for this provider.
+ * every #FMAObjectItem for this provider.
  */
 
 #include <glib-object.h>

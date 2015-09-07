@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-gtk-utils.h"
 
@@ -89,7 +89,7 @@ enum {
 
 /* iter on selection prototype
  */
-typedef gboolean ( *FnIterOnSelection )( NactTreeView *, GtkTreeModel *, GtkTreeIter *, NAObject *, gpointer );
+typedef gboolean ( *FnIterOnSelection )( NactTreeView *, GtkTreeModel *, GtkTreeIter *, FMAObject *, gpointer );
 
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 static GObjectClass *st_parent_class           = NULL;
@@ -119,7 +119,7 @@ static void       navigate_to_parent( NactTreeView *view );
 static void       do_open_popup( NactTreeView *view, GdkEventButton *event );
 static void       select_row_at_path_by_string( NactTreeView *view, const gchar *path );
 static void       toggle_collapse( NactTreeView *view );
-static gboolean   toggle_collapse_iter( NactTreeView *view, GtkTreeModel *model, GtkTreeIter *iter, NAObject *object, gpointer user_data );
+static gboolean   toggle_collapse_iter( NactTreeView *view, GtkTreeModel *model, GtkTreeIter *iter, FMAObject *object, gpointer user_data );
 static void       toggle_collapse_row( GtkTreeView *treeview, GtkTreePath *path, guint *toggle );
 
 GType
@@ -292,7 +292,7 @@ class_init( NactTreeViewClass *klass )
 	 * NactTreeView::tree-signal-modified-status-changed:
 	 *
 	 * This signal is emitted on the BaseWindow when the view detects that
-	 * the count of modified NAObjectItems has changed, when an item is
+	 * the count of modified FMAObjectItems has changed, when an item is
 	 * deleted, or when the level zero is changed.
 	 *
 	 * The signal is actually emitted by the NactTreeIEditable interface
@@ -328,7 +328,7 @@ class_init( NactTreeViewClass *klass )
 	 * they have connected to this 'selection-changed' signal.
 	 *
 	 * Signal args:
-	 * - a #GList of currently selected #NAObjectItems.
+	 * - a #GList of currently selected #FMAObjectItems.
 	 *
 	 * Handler prototype:
 	 *   void handler( NactTreeView *tview,
@@ -750,7 +750,7 @@ nact_tree_view_fill( NactTreeView *view, GList *items )
 		g_debug( "%s: nact_tree_model_ref_count=%d", thisfn, G_OBJECT( model )->ref_count );
 
 		view->private->notify_allowed = TRUE;
-		na_object_count_items( items, &nb_menus, &nb_actions, &nb_profiles );
+		fma_object_count_items( items, &nb_menus, &nb_actions, &nb_profiles );
 		g_signal_emit_by_name( view, TREE_SIGNAL_COUNT_CHANGED, TRUE, nb_menus, nb_actions, nb_profiles );
 		g_signal_emit_by_name( view, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, FALSE );
 
@@ -834,17 +834,17 @@ nact_tree_view_expand_all( const NactTreeView *view )
 /**
  * nact_tree_view_get_item_by_id:
  * @view: this #NactTreeView instance.
- * @id: the searched #NAObjectItem.
+ * @id: the searched #FMAObjectItem.
  *
- * Returns: a pointer on the searched #NAObjectItem if it exists, or %NULL.
+ * Returns: a pointer on the searched #FMAObjectItem if it exists, or %NULL.
  *
  * The returned pointer is owned by the underlying tree store, and should
  * not be released by the caller.
  */
-NAObjectItem *
+FMAObjectItem *
 nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id )
 {
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	NactTreeModel *model;
 
 	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), NULL );
@@ -865,7 +865,7 @@ nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id )
  * @view: this #NactTreeView instance.
  *
  * Returns: the content of the current tree as a newly allocated list
- * which should be na_object_free_items() by the caller.
+ * which should be fma_object_free_items() by the caller.
  */
 GList *
 nact_tree_view_get_items( const NactTreeView *view )
@@ -879,7 +879,7 @@ nact_tree_view_get_items( const NactTreeView *view )
  * @mode: the list content
  *
  * Returns: the content of the current tree as a newly allocated list
- * which should be na_object_free_items() by the caller.
+ * which should be fma_object_free_items() by the caller.
  */
 GList *
 nact_tree_view_get_items_ex( const NactTreeView *view, guint mode )
@@ -996,7 +996,7 @@ on_selection_changed_cleanup_handler( NactTreeView *tview, GList *selected_items
 			thisfn, ( void * ) tview,
 			( void * ) selected_items, g_list_length( selected_items ));
 
-	na_object_free_items( selected_items );
+	fma_object_free_items( selected_items );
 }
 
 /*
@@ -1006,7 +1006,7 @@ on_selection_changed_cleanup_handler( NactTreeView *tview, GList *selected_items
 static void
 display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactTreeView *view )
 {
-	NAObject *object;
+	FMAObject *object;
 	gchar *label;
 
 	g_return_if_fail( view->private->mode == TREE_MODE_EDITION );
@@ -1015,17 +1015,17 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 
 	if( object ){
 		g_object_unref( object );
-		g_return_if_fail( NA_IS_OBJECT( object ));
+		g_return_if_fail( FMA_IS_OBJECT( object ));
 
-		label = na_object_get_label( object );
+		label = fma_object_get_label( object );
 		g_object_set( cell, "style-set", FALSE, NULL );
 		g_object_set( cell, "foreground-set", FALSE, NULL );
 
-		if( na_object_is_modified( object )){
+		if( fma_object_is_modified( object )){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 		}
 
-		if( !na_object_is_valid( object )){
+		if( !fma_object_is_valid( object )){
 			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
 		}
 
@@ -1062,8 +1062,8 @@ extend_selection_to_children( NactTreeView *view, GtkTreeModel *model, GtkTreeIt
  * We acquire here a new reference on objects corresponding to actually
  * selected rows, and their children.
  *
- * Returns: the currently selected rows as a #GList of #NAObjectItems
- * which should be na_object_free_items() by the caller.
+ * Returns: the currently selected rows as a #GList of #FMAObjectItems
+ * which should be fma_object_free_items() by the caller.
  */
 static GList *
 get_selected_items( NactTreeView *view )
@@ -1075,7 +1075,7 @@ get_selected_items( NactTreeView *view )
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	GList *it, *listrows;
-	NAObjectId *object;
+	FMAObjectId *object;
 
 	items = NULL;
 	selection = gtk_tree_view_get_selection( view->private->tree_view );
@@ -1085,7 +1085,7 @@ get_selected_items( NactTreeView *view )
 		path = ( GtkTreePath * ) it->data;
 		gtk_tree_model_get_iter( model, &iter, path );
 		gtk_tree_model_get( model, &iter, TREE_COLUMN_NAOBJECT, &object, -1 );
-		items = g_list_prepend( items, na_object_ref( object ));
+		items = g_list_prepend( items, fma_object_ref( object ));
 		g_object_unref( object );
 		g_debug( "%s: object=%p (%s) ref_count=%d",
 				thisfn,
@@ -1106,7 +1106,7 @@ iter_on_selection( NactTreeView *view, FnIterOnSelection fn_iter, gpointer user_
 	GList *listrows, *ipath;
 	GtkTreePath *path;
 	GtkTreeIter iter;
-	NAObject *object;
+	FMAObject *object;
 	gboolean stop;
 
 	stop = FALSE;
@@ -1263,19 +1263,19 @@ toggle_collapse( NactTreeView *view )
 
 static gboolean
 toggle_collapse_iter( NactTreeView *view, GtkTreeModel *model,
-						GtkTreeIter *iter, NAObject *object, gpointer user_data )
+						GtkTreeIter *iter, FMAObject *object, gpointer user_data )
 {
 	guint count;
 	guint *toggle;
 
 	toggle = ( guint * ) user_data;
 
-	if( NA_IS_OBJECT_ITEM( object )){
+	if( FMA_IS_OBJECT_ITEM( object )){
 		GtkTreePath *path = gtk_tree_model_get_path( model, iter );
-		count = na_object_get_items_count( object );
+		count = fma_object_get_items_count( object );
 
-		if(( count > 1 && NA_IS_OBJECT_ACTION( object )) ||
-			( count > 0 && NA_IS_OBJECT_MENU( object ))){
+		if(( count > 1 && FMA_IS_OBJECT_ACTION( object )) ||
+			( count > 0 && FMA_IS_OBJECT_MENU( object ))){
 
 			toggle_collapse_row( view->private->tree_view, path, toggle );
 		}

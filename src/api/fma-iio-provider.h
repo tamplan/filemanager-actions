@@ -193,7 +193,7 @@
  * </refsect2>
  */
 
-#include "na-object-item.h"
+#include "fma-object-item.h"
 
 G_BEGIN_DECLS
 
@@ -290,7 +290,7 @@ typedef struct {
 	 * then this greatly lowerize the interest of this I/O provider (!).
 	 *
 	 * Return value: if implemented, this method must return a unordered
-	 * flat GList of NAObjectItem-derived objects (menus or actions);
+	 * flat GList of FMAObjectItem-derived objects (menus or actions);
 	 * the actions embed their own profiles.
 	 *
 	 * Defaults to NULL list.
@@ -307,7 +307,7 @@ typedef struct {
 	 * It is not supposed to make any assumption on the environment it is
 	 * currently running on.
 	 * This property just says that the developer/maintainer has released
-	 * the needed code in order to update/create/delete NAObjectItem-derived
+	 * the needed code in order to update/create/delete FMAObjectItem-derived
 	 * objects.
 	 *
 	 * Note that even if this property is TRUE, there is yet many
@@ -360,7 +360,7 @@ typedef struct {
 	/**
 	 * write_item:
 	 * @instance: the FMAIIOProvider provider.
-	 * @item: a NAObjectItem-derived item, menu or action.
+	 * @item: a FMAObjectItem-derived item, menu or action.
 	 * @messages: a pointer to a GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
@@ -379,12 +379,12 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *write_item )         ( const FMAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
+	guint    ( *write_item )         ( const FMAIIOProvider *instance, const FMAObjectItem *item, GSList **messages );
 
 	/**
 	 * delete_item:
 	 * @instance: the FMAIIOProvider provider.
-	 * @item: a NAObjectItem-derived item, menu or action.
+	 * @item: a FMAObjectItem-derived item, menu or action.
 	 * @messages: a pointer to a GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
@@ -398,32 +398,32 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *delete_item )        ( const FMAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
+	guint    ( *delete_item )        ( const FMAIIOProvider *instance, const FMAObjectItem *item, GSList **messages );
 
 	/**
 	 * duplicate_data:
 	 * @instance: the FMAIIOProvider provider.
-	 * @dest: a NAObjectItem-derived item, menu or action.
-	 * @source: a NAObjectItem-derived item, menu or action.
+	 * @dest: a FMAObjectItem-derived item, menu or action.
+	 * @source: a FMAObjectItem-derived item, menu or action.
 	 * @messages: a pointer to a GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * FileManager-Actions typically calls this method while duplicating
-	 * a NAObjectItem-derived object, in order to let the I/O provider
+	 * a FMAObjectItem-derived object, in order to let the I/O provider
 	 * duplicates itself specific data (if any) it may have set on
 	 * @source object.
 	 *
 	 * Note that this does not duplicate in any way any
-	 * NAObjectItem-derived object. We are just dealing here with
+	 * FMAObjectItem-derived object. We are just dealing here with
 	 * the provider-specific data which may have been attached to
-	 * the NAObjectItem-derived object.
+	 * the FMAObjectItem-derived object.
 	 *
 	 * Return value: FMA_IIO_PROVIDER_CODE_OK if the duplicate operation
 	 * was successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *duplicate_data )     ( const FMAIIOProvider *instance, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
+	guint    ( *duplicate_data )     ( const FMAIIOProvider *instance, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages );
 }
 	FMAIIOProviderInterface;
 

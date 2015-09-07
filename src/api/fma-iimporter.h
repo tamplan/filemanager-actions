@@ -97,7 +97,7 @@
  * </refsect2>
  */
 
-#include "na-object-item.h"
+#include "fma-object-item.h"
 
 G_BEGIN_DECLS
 
@@ -168,7 +168,7 @@ typedef struct {
 #ifdef NA_ENABLE_DEPRECATED
 /**
  * FMAIImporterCheckFn:
- * @imported: the currently imported #NAObjectItem -derived object.
+ * @imported: the currently imported #FMAObjectItem -derived object.
  * @fn_data: some data to be passed to the function.
  *
  * In version 1 of the interface, this function may be provided by
@@ -200,17 +200,17 @@ typedef struct {
  * Items which may have been loaded by NAPivot at the start of the
  * application, and deleted meanwhile, are just ignored.
  *
- * Returns: the already existing #NAObjectItem with same id, or %NULL.
+ * Returns: the already existing #FMAObjectItem with same id, or %NULL.
  *
  * Since: 2.30
  * Deprecated: 3.2
  */
-typedef NAObjectItem * ( *FMAIImporterCheckFn )( const NAObjectItem *, void * );
+typedef FMAObjectItem * ( *FMAIImporterCheckFn )( const FMAObjectItem *, void * );
 
 /**
  * FMAIImporterAskUserFn:
- * @imported: the currently imported #NAObjectItem.
- * @existing: an already existing #NAObjectItem with same id.
+ * @imported: the currently imported #FMAObjectItem.
+ * @existing: an already existing #FMAObjectItem with same id.
  * @fn_data: some data to be passed to the function.
  *
  * In version 1 of the interface, this function may be provided by the
@@ -227,13 +227,13 @@ typedef NAObjectItem * ( *FMAIImporterCheckFn )( const NAObjectItem *, void * );
  * Since: 2.30
  * Deprecated: 3.2
  */
-typedef guint ( *FMAIImporterAskUserFn )( const NAObjectItem *, const NAObjectItem *, void * );
+typedef guint ( *FMAIImporterAskUserFn )( const FMAObjectItem *, const FMAObjectItem *, void * );
 
 /**
  * FMAIImporterManageImportModeParms:
  * @version:       [in] the version of the structure content, equals to 1;
  *                      since structure version 1.
- * @imported:      [in] the imported #NAObjectItem -derived object;
+ * @imported:      [in] the imported #FMAObjectItem -derived object;
  *                      since structure version 1.
  * @asked_mode:    [in] asked import mode;
  *                      since structure version 1.
@@ -261,7 +261,7 @@ typedef guint ( *FMAIImporterAskUserFn )( const NAObjectItem *, const NAObjectIt
  */
 typedef struct {
 	guint                 version;
-	NAObjectItem        *imported;
+	FMAObjectItem        *imported;
 	guint                 asked_mode;
 	FMAIImporterCheckFn   check_fn;
 	void                 *check_fn_data;
@@ -306,7 +306,7 @@ guint fma_iimporter_manage_import_mode( FMAIImporterManageImportModeParms *parms
  *                      since structure version 1.
  * @import_mode:   [out] actually used import mode;
  *                      since structure version 1.
- * @imported:      [out] the imported #NAObjectItem -derived object, or %NULL;
+ * @imported:      [out] the imported #FMAObjectItem -derived object, or %NULL;
  *                      since structure version 1.
  * @check_fn:      [in] a FMAIImporterCheckFn() function to check the existence
  *                      of the imported id;
@@ -335,7 +335,7 @@ typedef struct {
 	guint                 asked_mode;
 	gboolean              exist;
 	guint                 import_mode;
-	NAObjectItem        *imported;
+	FMAObjectItem        *imported;
 	FMAIImporterCheckFn   check_fn;
 	void                 *check_fn_data;
 	FMAIImporterAskUserFn ask_fn;
@@ -384,7 +384,7 @@ typedef enum {
  *                      since structure version 2.
  * @uri:           [in] uri of the file to be imported;
  *                      since structure version 1.
- * @imported:      [out] the imported #NAObjectItem -derived object, or %NULL;
+ * @imported:      [out] the imported #FMAObjectItem -derived object, or %NULL;
  *                      since structure version 1.
  * @messages:      [in/out] a #GSList list of localized strings;
  *                      the provider may append messages to this list, but
@@ -400,7 +400,7 @@ typedef struct {
 	guint          version;
 	guint          content;
 	const gchar   *uri;
-	NAObjectItem *imported;
+	FMAObjectItem *imported;
 	GSList        *messages;
 }
 	FMAIImporterImportFromUriParmsv2;

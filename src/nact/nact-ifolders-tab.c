@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include "api/fma-core-utils.h"
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-gtk-utils.h"
 
@@ -273,13 +273,13 @@ on_browse_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 static GSList *
 get_folders( void *context )
 {
-	return( na_object_get_folders( context ));
+	return( fma_object_get_folders( context ));
 }
 
 static void
 set_folders( void *context, GSList *filters )
 {
-	na_object_set_folders( context, filters );
+	fma_object_set_folders( context, filters );
 }
 
 static void

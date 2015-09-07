@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-exporter.h"
 #include "core/na-export-format.h"
@@ -50,7 +50,7 @@
 struct _NactExportAskPrivate {
 	gboolean      dispose_has_run;
 	gboolean      preferences_locked;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	gchar        *format;
 	gboolean      format_mandatory;
 	gboolean      keep_last_choice;
@@ -273,7 +273,7 @@ instance_finalize( GObject *dialog )
 
 /**
  * nact_export_ask_user:
- * @item: the NAObjectItem to be exported.
+ * @item: the FMAObjectItem to be exported.
  * @first: whether this is the first call of a serie.
  *  On a first call, the user is really asked for his choice.
  *  The next times, the 'keep-last-choice' flag will be considered.
@@ -292,7 +292,7 @@ instance_finalize( GObject *dialog )
  * becomes his new preferred export format.
  */
 gchar *
-nact_export_ask_user( NAObjectItem *item, gboolean first )
+nact_export_ask_user( FMAObjectItem *item, gboolean first )
 {
 	static const gchar *thisfn = "nact_export_ask_user";
 	NactExportAsk *editor;
@@ -380,9 +380,9 @@ on_base_initialize_window( NactExportAsk *editor, gpointer user_data )
 
 		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
-		item_label = na_object_get_label( priv->item );
+		item_label = fma_object_get_label( priv->item );
 
-		if( NA_IS_OBJECT_ACTION( priv->item )){
+		if( FMA_IS_OBJECT_ACTION( priv->item )){
 			/* i18n: The action <label> is about to be exported */
 			label = g_strdup_printf( _( "The action \"%s\" is about to be exported." ), item_label );
 		} else {

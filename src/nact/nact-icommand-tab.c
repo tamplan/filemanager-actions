@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include "api/fma-core-utils.h"
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-factory-object.h"
 #include "core/na-gtk-utils.h"
@@ -98,7 +98,7 @@ static void          on_path_changed( GtkEntry *entry, NactICommandTab *instance
 static void          on_wdir_browse( GtkButton *button, NactICommandTab *instance );
 static void          on_wdir_changed( GtkEntry *entry, NactICommandTab *instance );
 static gchar        *parse_parameters( NactICommandTab *instance );
-static void          update_example_label( NactICommandTab *instance, NAObjectProfile *profile );
+static void          update_example_label( NactICommandTab *instance, FMAObjectProfile *profile );
 static ICommandData *get_icommand_data( NactICommandTab *instance );
 static void          on_instance_finalized( gpointer user_data, NactICommandTab *instance );
 
@@ -296,9 +296,9 @@ on_main_item_updated( NactICommandTab *instance, FMAIContext *context, guint dat
 
 	g_return_if_fail( instance && NACT_IS_ICOMMAND_TAB( instance ));
 
-	if( NA_IS_OBJECT_PROFILE( context )){
+	if( FMA_IS_OBJECT_PROFILE( context )){
 		label_widget = get_label_entry( instance );
-		label = na_object_get_label( context );
+		label = fma_object_get_label( context );
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		g_free( label );
 	}
@@ -308,7 +308,7 @@ static void
 on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICommandTab *instance )
 {
 	static const gchar *thisfn = "nact_icommand_tab_on_tree_selection_changed";
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 	gboolean editable;
 	gboolean enable_tab;
 	GtkWidget *label_entry, *path_entry, *parameters_entry, *wdir_entry;
@@ -339,7 +339,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 	data->on_selection_change = TRUE;
 
 	label_entry = get_label_entry( instance );
-	label = profile ? na_object_get_label( profile ) : g_strdup( "" );
+	label = profile ? fma_object_get_label( profile ) : g_strdup( "" );
 	label = label ? label : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
 	g_free( label );
@@ -347,7 +347,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 	base_gtk_utils_set_editable( G_OBJECT( label_entry ), editable );
 
 	path_entry = get_path_entry( instance );
-	path = profile ? na_object_get_path( profile ) : g_strdup( "" );
+	path = profile ? fma_object_get_path( profile ) : g_strdup( "" );
 	path = path ? path : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
 	g_free( path );
@@ -359,7 +359,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 	base_gtk_utils_set_editable( G_OBJECT( path_button ), editable );
 
 	parameters_entry = get_parameters_entry( instance );
-	parameters = profile ? na_object_get_parameters( profile ) : g_strdup( "" );
+	parameters = profile ? fma_object_get_parameters( profile ) : g_strdup( "" );
 	parameters = parameters ? parameters : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
 	g_free( parameters );
@@ -372,7 +372,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 	update_example_label( instance, profile );
 
 	wdir_entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "WorkingDirectoryEntry" );
-	wdir = profile ? na_object_get_working_dir( profile ) : g_strdup( "" );
+	wdir = profile ? fma_object_get_working_dir( profile ) : g_strdup( "" );
 	wdir = wdir ? wdir : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir );
 	g_free( wdir );
@@ -472,7 +472,7 @@ legend_dialog_show( NactICommandTab *instance )
 static void
 on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 {
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 	const gchar *label;
 	ICommandData *data;
 
@@ -486,7 +486,7 @@ on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 
 		if( profile ){
 			label = gtk_entry_get_text( entry );
-			na_object_set_label( profile, label );
+			fma_object_set_label( profile, label );
 			g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, profile, MAIN_DATA_LABEL );
 		}
 	}
@@ -516,7 +516,7 @@ on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, NactICommandTab *i
 static void
 on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 {
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 	ICommandData *data;
 
 	data = get_icommand_data( instance );
@@ -528,7 +528,7 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 				NULL );
 
 		if( profile ){
-			na_object_set_parameters( profile, gtk_entry_get_text( entry ));
+			fma_object_set_parameters( profile, gtk_entry_get_text( entry ));
 			g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, profile, 0 );
 			update_example_label( instance, profile );
 		}
@@ -547,7 +547,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 static void
 on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 {
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 	ICommandData *data;
 
 	data = get_icommand_data( instance );
@@ -559,7 +559,7 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 				NULL );
 
 		if( profile ){
-			na_object_set_path( profile, gtk_entry_get_text( entry ));
+			fma_object_set_path( profile, gtk_entry_get_text( entry ));
 			g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, profile, 0 );
 			update_example_label( instance, profile );
 		}
@@ -570,7 +570,7 @@ static void
 on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 {
 	GtkWidget *wdir_entry;
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -592,7 +592,7 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 static void
 on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 {
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 	ICommandData *data;
 
 	data = get_icommand_data( instance );
@@ -604,7 +604,7 @@ on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 				NULL );
 
 		if( profile ){
-			na_object_set_working_dir( profile, gtk_entry_get_text( entry ));
+			fma_object_set_working_dir( profile, gtk_entry_get_text( entry ));
 			g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, profile, 0 );
 		}
 	}
@@ -634,7 +634,7 @@ parse_parameters( NactICommandTab *instance )
 }
 
 static void
-update_example_label( NactICommandTab *instance, NAObjectProfile *profile )
+update_example_label( NactICommandTab *instance, FMAObjectProfile *profile )
 {
 	/*static const char *thisfn = "nact_iconditions_update_example_label";*/
 	gchar *newlabel;

@@ -145,7 +145,7 @@ interface_base_init( FMAIDuplicableInterface *klass )
 		 * Signal args: New modification status
 		 *
 		 * Handler prototype:
-		 * void ( *handler )( FMAIDuplicable *duplicable, NAObject *object, gboolean is_modified, gpointer user_data );
+		 * void ( *handler )( FMAIDuplicable *duplicable, FMAObject *object, gboolean is_modified, gpointer user_data );
 		 *
 		 * When the signal is first emitted, thus on FMAIDuplicable, @duplicable
 		 * and @object are pointers to the same address. This duplication is
@@ -177,7 +177,7 @@ interface_base_init( FMAIDuplicableInterface *klass )
 		 * Signal args: New validity status
 		 *
 		 * Handler prototype:
-		 * void ( *handler )( FMAIDuplicable *duplicable, NAObject *object, gboolean is_valid, gpointer user_data );
+		 * void ( *handler )( FMAIDuplicable *duplicable, FMAObject *object, gboolean is_valid, gpointer user_data );
 		 *
 		 * When the signal is first emitted, thus on FMAIDuplicable, @duplicable
 		 * and @object are pointers to the same address. This duplication is
@@ -324,8 +324,8 @@ fma_iduplicable_duplicate( const FMAIDuplicable *object, guint mode )
  * fma_iduplicable_check_status() is not, as itself, recursive.
  * That is, the modification and validity status are only set on the
  * specified object.
- * #NAObject implementation has chosen to handle itself the recursivity:
- * na_object_check_status() so first check status for children, before
+ * #FMAObject implementation has chosen to handle itself the recursivity:
+ * fma_object_check_status() so first check status for children, before
  * calling this function.
  *
  * Since: 2.30

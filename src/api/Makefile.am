@@ -48,12 +48,12 @@ api_include_HEADERS = \
 	fma-iduplicable.h									\
 	fma-ifactory-object.h								\
 	fma-ifactory-object-data.h							\
-	na-object-api.h										\
-	na-object.h											\
-	na-object-id.h										\
-	na-object-item.h									\
-	na-object-action.h									\
-	na-object-profile.h									\
-	na-object-menu.h									\
+	fma-object-api.h										\
+	fma-object.h											\
+	fma-object-id.h										\
+	fma-object-item.h									\
+	fma-object-action.h									\
+	fma-object-profile.h									\
+	fma-object-menu.h									\
 	na-timeout.h										\
 	$(NULL)

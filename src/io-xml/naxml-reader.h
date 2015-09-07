@@ -41,7 +41,7 @@
  * then we returned IMPORTER_CODE_NOT_WILLING_TO.
  * In all other cases, errors or inconsistancies are signaled, but
  * we do our best to actually import the file and produce a valuable
- * #NAObjectItem-derived object.
+ * #FMAObjectItem-derived object.
  */
 
 #include <api/fma-data-boxed.h>

@@ -38,7 +38,7 @@
  *
  * Each elementary data get its own name here.
  *
- * Through #FMADataDef and #FMADataGroup definitions, each #NAObjectItem
+ * Through #FMADataDef and #FMADataGroup definitions, each #FMAObjectItem
  * derived object which implement the #FMAIFactoryObject interface will
  * dynamically define a property for each attached elementary data.
  */
@@ -50,7 +50,7 @@ G_BEGIN_DECLS
 /**
  * FMA_FACTORY_OBJECT_ID_GROUP:
  *
- * #NAObjectId common data.
+ * #FMAObjectId common data.
  */
 #define FMA_FACTORY_OBJECT_ID_GROUP          "na-factory-group-id"
 #define FMAFO_DATA_ID                        "na-factory-data-id"
@@ -61,7 +61,7 @@ G_BEGIN_DECLS
 /**
  * FMA_FACTORY_OBJECT_ITEM_GROUP:
  *
- * #NAObjectItem common data.
+ * #FMAObjectItem common data.
  */
 #define FMA_FACTORY_OBJECT_ITEM_GROUP        "na-factory-group-item"
 #define FMAFO_DATA_IVERSION                  "na-factory-data-iversion"
@@ -81,7 +81,7 @@ G_BEGIN_DECLS
 /**
  * FMA_FACTORY_OBJECT_ACTION_GROUP:
  *
- * #NAObjectAction specific datas.
+ * #FMAObjectAction specific datas.
  */
 #define FMA_FACTORY_OBJECT_ACTION_GROUP      "na-factory-group-action"
 #define FMAFO_DATA_VERSION                   "na-factory-data-version"
@@ -96,7 +96,7 @@ G_BEGIN_DECLS
  * FMA_FACTORY_ACTION_V1_GROUP:
  *
  * A group of datas which are specific to v 1 actions. It happens to be
- * empty as all these datas have been alter embedded in #NAObjectItem
+ * empty as all these datas have been alter embedded in #FMAObjectItem
  * data group.
  */
 #define FMA_FACTORY_ACTION_V1_GROUP          "na-factory-group-action-v1"
@@ -104,7 +104,7 @@ G_BEGIN_DECLS
 /**
  * FMA_FACTORY_OBJECT_MENU_GROUP:
  *
- * #NAObjectMenu specific datas. It happens to be empty as the definition
+ * #FMAObjectMenu specific datas. It happens to be empty as the definition
  * of a menu is very close of those of an action.
  */
 #define FMA_FACTORY_OBJECT_MENU_GROUP        "na-factory-group-menu"
@@ -112,7 +112,7 @@ G_BEGIN_DECLS
 /**
  * FMA_FACTORY_OBJECT_PROFILE_GROUP:
  *
- * #NAObjectProfile specific datas.
+ * #FMAObjectProfile specific datas.
  */
 #define FMA_FACTORY_OBJECT_PROFILE_GROUP     "na-factory-group-profile"
 #define FMAFO_DATA_DESCNAME                  "na-factory-data-descname"

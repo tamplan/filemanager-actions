@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include "api/fma-core-utils.h"
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-exporter.h"
 #include "core/na-export-format.h"
@@ -81,7 +81,7 @@ struct _NactAssistantExportPrivate {
 };
 
 typedef struct {
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	GSList       *msg;
 	gchar        *fname;
 	gchar        *format;
@@ -305,7 +305,7 @@ instance_dispose( GObject *window )
 		g_object_unref( self->private->items_view );
 
 		if( self->private->selected_items ){
-			self->private->selected_items = na_object_free_items( self->private->selected_items );
+			self->private->selected_items = fma_object_free_items( self->private->selected_items );
 		}
 
 		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
@@ -579,11 +579,11 @@ on_items_tree_view_selection_changed( NactAssistantExport *window, GList *select
 			( void * ) selected_items, g_list_length( selected_items ), ( void * ) user_data );
 
 		if( window->private->selected_items ){
-			window->private->selected_items = na_object_free_items( window->private->selected_items );
+			window->private->selected_items = fma_object_free_items( window->private->selected_items );
 		}
 
 		enabled = ( g_list_length( selected_items ) > 0 );
-		window->private->selected_items = na_object_copyref_items( selected_items );
+		window->private->selected_items = fma_object_copyref_items( selected_items );
 
 		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
@@ -687,7 +687,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	 */
 	text = NULL;
 	for( it = window->private->selected_items ; it ; it = it->next ){
-		label_item = na_object_get_label( it->data );
+		label_item = fma_object_get_label( it->data );
 		if( text ){
 			tmp = g_strdup_printf( "%s\n%s", text, label_item );
 			g_free( text );
@@ -774,7 +774,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		str = g_new0( ExportStruct, 1 );
 		window->private->results = g_list_append( window->private->results, str );
 
-		str->item = NA_OBJECT_ITEM( na_object_get_origin( FMA_IDUPLICABLE( ia->data )));
+		str->item = FMA_OBJECT_ITEM( fma_object_get_origin( FMA_IDUPLICABLE( ia->data )));
 		str->format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, NULL );
 		g_return_if_fail( str->format && strlen( str->format ));
 
@@ -834,7 +834,7 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 		 */
 		str = ( ExportStruct * ) ir->data;
 		color = str->fname ? "blue" : "red";
-		item_label = na_object_get_label( str->item );
+		item_label = fma_object_get_label( str->item );
 		text = g_markup_printf_escaped( "<span foreground=\"%s\">%s</span>", color, item_label );
 		label = gtk_label_new( NULL );
 		gtk_label_set_markup( GTK_LABEL( label ), text );

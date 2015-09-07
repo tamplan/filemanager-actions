@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 
 #include <api/fma-iimporter.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-gtk-utils.h"
 #include "na-import-mode.h"
@@ -54,8 +54,8 @@ struct _NAImporterAskClassPrivate {
 struct _NAImporterAskPrivate {
 	gboolean                dispose_has_run;
 	GtkWindow              *toplevel;
-	NAObjectItem           *importing;
-	NAObjectItem           *existing;
+	FMAObjectItem           *importing;
+	FMAObjectItem           *existing;
 	NAImporterAskUserParms *parms;
 	guint                   mode;
 };
@@ -300,8 +300,8 @@ import_ask_new( GtkWindow *parent )
 
 /*
  * na_importer_ask_user:
- * @importing: the #NAObjectItem-derived object being currently imported.
- * @existing: the #NAObjectItem-derived already existing object with the same ID.
+ * @importing: the #FMAObjectItem-derived object being currently imported.
+ * @existing: the #FMAObjectItem-derived already existing object with the same ID.
  * @parms: a #FMAIImporterUriParms structure.
  *
  * Ask the user for what to do when an imported item has the same ID
@@ -323,15 +323,15 @@ import_ask_new( GtkWindow *parent )
  * becomes his preference import mode.
  */
 guint
-na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms )
+na_importer_ask_user( const FMAObjectItem *importing, const FMAObjectItem *existing, NAImporterAskUserParms *parms )
 {
 	static const gchar *thisfn = "na_importer_ask_user";
 	NAImporterAsk *dialog;
 	guint mode;
 	gint code;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( importing ), IMPORTER_MODE_NO_IMPORT );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( existing ), IMPORTER_MODE_NO_IMPORT );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( importing ), IMPORTER_MODE_NO_IMPORT );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( existing ), IMPORTER_MODE_NO_IMPORT );
 
 	g_debug( "%s: importing=%p, existing=%p, parms=%p",
 			thisfn, ( void * ) importing, ( void * ) existing, ( void * ) parms );
@@ -341,8 +341,8 @@ na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existin
 
 	if( dialog ){
 
-		dialog->private->importing = ( NAObjectItem * ) importing;
-		dialog->private->existing = ( NAObjectItem * ) existing;
+		dialog->private->importing = ( FMAObjectItem * ) importing;
+		dialog->private->existing = ( FMAObjectItem * ) existing;
 		dialog->private->parms = parms;
 
 		initialize_window( dialog, dialog->private->toplevel );
@@ -392,10 +392,10 @@ initialize_window( NAImporterAsk *editor, GtkWindow *toplevel )
 
 	g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
 
-	imported_label = na_object_get_label( editor->private->importing );
-	existing_label = na_object_get_label( editor->private->existing );
+	imported_label = fma_object_get_label( editor->private->importing );
+	existing_label = fma_object_get_label( editor->private->existing );
 
-	if( NA_IS_OBJECT_ACTION( editor->private->importing )){
+	if( FMA_IS_OBJECT_ACTION( editor->private->importing )){
 		/* i18n: The action <action_label> imported from <file> has the same id than <existing_label> */
 		label = g_strdup_printf(
 				_( "The action \"%s\" imported from \"%s\" has the same identifier than the already existing \"%s\"." ),

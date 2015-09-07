@@ -49,9 +49,9 @@
 
 #include "console-utils.h"
 
-extern FMADataGroup menu_data_groups[];				/* defined in na-object-menu-factory.c */
-extern FMADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
-extern FMADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
+extern FMADataGroup menu_data_groups[];				/* defined in fma-object-menu-factory.c */
+extern FMADataGroup action_data_groups[];			/* defined in fma-object-action-factory.c */
+extern FMADataGroup profile_data_groups[];			/* defined in fma-object-profile-factory.c */
 
 static gboolean   output_action = FALSE;
 static gboolean   output_menu   = FALSE;

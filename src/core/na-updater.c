@@ -33,7 +33,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/fma-gconf-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 #include "na-io-provider.h"
 #include "na-settings.h"
@@ -63,7 +63,7 @@ static void     instance_finalize( GObject *object );
 
 static gboolean are_preferences_locked( const NAUpdater *updater );
 static gboolean is_level_zero_writable( const NAUpdater *updater );
-static void     set_writability_status( NAObjectItem *item, const NAUpdater *updater );
+static void     set_writability_status( FMAObjectItem *item, const NAUpdater *updater );
 
 GType
 na_updater_get_type( void )
@@ -235,7 +235,7 @@ is_level_zero_writable( const NAUpdater *updater )
 /*
  * na_updater_check_item_writability_status:
  * @updater: this #NAUpdater object.
- * @item: the #NAObjectItem to be written.
+ * @item: the #FMAObjectItem to be written.
  *
  * Compute and set the writability status of the @item.
  *
@@ -248,15 +248,15 @@ is_level_zero_writable( const NAUpdater *updater )
  * If the item does not have a parent, then the level zero must be writable.
  */
 void
-na_updater_check_item_writability_status( const NAUpdater *updater, const NAObjectItem *item )
+na_updater_check_item_writability_status( const NAUpdater *updater, const FMAObjectItem *item )
 {
 	gboolean writable;
 	NAIOProvider *provider;
-	NAObjectItem *parent;
+	FMAObjectItem *parent;
 	guint reason;
 
 	g_return_if_fail( NA_IS_UPDATER( updater ));
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
 
 	writable = FALSE;
 	reason = FMA_IIO_PROVIDER_STATUS_UNDETERMINED;
@@ -274,14 +274,14 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const NAObje
 		 * this status each time we need it, and enough for our needs..
 		 */
 		if( writable ){
-			if( na_object_is_readonly( item )){
+			if( fma_object_is_readonly( item )){
 				writable = FALSE;
 				reason = FMA_IIO_PROVIDER_STATUS_ITEM_READONLY;
 			}
 		}
 
 		if( writable ){
-			provider = na_object_get_provider( item );
+			provider = fma_object_get_provider( item );
 			if( provider ){
 				writable = na_io_provider_is_finally_writable( provider, &reason );
 
@@ -299,7 +299,7 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const NAObje
 		/* if needed, the level zero must be writable
 		 */
 		if( writable ){
-			parent = ( NAObjectItem * ) na_object_get_parent( item );
+			parent = ( FMAObjectItem * ) fma_object_get_parent( item );
 			if( !parent ){
 				if( updater->private->is_level_zero_writable ){
 					reason = FMA_IIO_PROVIDER_STATUS_LEVEL_ZERO;
@@ -308,7 +308,7 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const NAObje
 		}
 	}
 
-	na_object_set_writability_status( item, writable, reason );
+	fma_object_set_writability_status( item, writable, reason );
 }
 
 /*
@@ -374,17 +374,17 @@ na_updater_is_level_zero_writable( const NAUpdater *updater )
 /*
  * na_updater_append_item:
  * @updater: this #NAUpdater object.
- * @item: a #NAObjectItem-derived object to be appended to the tree.
+ * @item: a #FMAObjectItem-derived object to be appended to the tree.
  *
  * Append a new item at the end of the global tree.
  */
 void
-na_updater_append_item( NAUpdater *updater, NAObjectItem *item )
+na_updater_append_item( NAUpdater *updater, FMAObjectItem *item )
 {
 	GList *tree;
 
 	g_return_if_fail( NA_IS_UPDATER( updater ));
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
 
 	if( !updater->private->dispose_has_run ){
 
@@ -397,20 +397,20 @@ na_updater_append_item( NAUpdater *updater, NAObjectItem *item )
 /*
  * na_updater_insert_item:
  * @updater: this #NAUpdater object.
- * @item: a #NAObjectItem-derived object to be inserted in the tree.
+ * @item: a #FMAObjectItem-derived object to be inserted in the tree.
  * @parent_id: the id of the parent, or %NULL.
  * @pos: the position in the children of the parent, starting at zero, or -1.
  *
  * Insert a new item in the global tree.
  */
 void
-na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *parent_id, gint pos )
+na_updater_insert_item( NAUpdater *updater, FMAObjectItem *item, const gchar *parent_id, gint pos )
 {
 	GList *tree;
-	NAObjectItem *parent;
+	FMAObjectItem *parent;
 
 	g_return_if_fail( NA_IS_UPDATER( updater ));
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
 
 	if( !updater->private->dispose_has_run ){
 
@@ -422,7 +422,7 @@ na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *par
 		}
 
 		if( parent ){
-			na_object_insert_at( parent, item, pos );
+			fma_object_insert_at( parent, item, pos );
 
 		} else {
 			tree = g_list_append( tree, item );
@@ -434,15 +434,15 @@ na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *par
 /*
  * na_updater_remove_item:
  * @updater: this #NAPivot instance.
- * @item: the #NAObjectItem to be removed from the list.
+ * @item: the #FMAObjectItem to be removed from the list.
  *
- * Removes a #NAObjectItem from the hierarchical tree. Does not delete it.
+ * Removes a #FMAObjectItem from the hierarchical tree. Does not delete it.
  */
 void
-na_updater_remove_item( NAUpdater *updater, NAObject *item )
+na_updater_remove_item( NAUpdater *updater, FMAObject *item )
 {
 	GList *tree;
-	NAObjectItem *parent;
+	FMAObjectItem *parent;
 
 	g_return_if_fail( NA_IS_PIVOT( updater ));
 
@@ -452,11 +452,11 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 				( void * ) updater,
 				( void * ) item, G_IS_OBJECT( item ) ? G_OBJECT_TYPE_NAME( item ) : "(null)" );
 
-		parent = na_object_get_parent( item );
+		parent = fma_object_get_parent( item );
 		if( parent ){
-			tree = na_object_get_items( parent );
+			tree = fma_object_get_items( parent );
 			tree = g_list_remove( tree, ( gconstpointer ) item );
-			na_object_set_items( parent, tree );
+			fma_object_set_items( parent, tree );
 
 		} else {
 			g_object_get( G_OBJECT( updater ), PIVOT_PROP_TREE, &tree, NULL );
@@ -469,25 +469,25 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 /**
  * na_updater_should_pasted_be_relabeled:
  * @updater: this #NAUpdater instance.
- * @object: the considered #NAObject-derived object.
+ * @object: the considered #FMAObject-derived object.
  *
  * Whether the specified object should be relabeled when pasted ?
  *
  * Returns: %TRUE if the object should be relabeled, %FALSE else.
  */
 gboolean
-na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const NAObject *item )
+na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const FMAObject *item )
 {
 	static const gchar *thisfn = "na_updater_should_pasted_be_relabeled";
 	gboolean relabel;
 
-	if( NA_IS_OBJECT_MENU( item )){
+	if( FMA_IS_OBJECT_MENU( item )){
 		relabel = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, NULL );
 
-	} else if( NA_IS_OBJECT_ACTION( item )){
+	} else if( FMA_IS_OBJECT_ACTION( item )){
 		relabel = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, NULL );
 
-	} else if( NA_IS_OBJECT_PROFILE( item )){
+	} else if( FMA_IS_OBJECT_PROFILE( item )){
 		relabel = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, NULL );
 
 	} else {
@@ -530,14 +530,14 @@ na_updater_load_items( NAUpdater *updater )
 }
 
 static void
-set_writability_status( NAObjectItem *item, const NAUpdater *updater )
+set_writability_status( FMAObjectItem *item, const NAUpdater *updater )
 {
 	GList *children;
 
 	na_updater_check_item_writability_status( updater, item );
 
-	if( NA_IS_OBJECT_MENU( item )){
-		children = na_object_get_items( item );
+	if( FMA_IS_OBJECT_MENU( item )){
+		children = fma_object_get_items( item );
 		g_list_foreach( children, ( GFunc ) set_writability_status, ( gpointer ) updater );
 	}
 }
@@ -545,7 +545,7 @@ set_writability_status( NAObjectItem *item, const NAUpdater *updater )
 /*
  * na_updater_write_item:
  * @updater: this #NAUpdater instance.
- * @item: a #NAObjectItem to be written down to the storage subsystem.
+ * @item: a #FMAObjectItem to be written down to the storage subsystem.
  * @messages: the I/O provider can allocate and store here its error
  * messages.
  *
@@ -554,19 +554,19 @@ set_writability_status( NAObjectItem *item, const NAUpdater *updater )
  * Returns: the #FMAIIOProvider return code.
  */
 guint
-na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **messages )
+na_updater_write_item( const NAUpdater *updater, FMAObjectItem *item, GSList **messages )
 {
 	guint ret;
 
 	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NA_IS_UPDATER( updater ), ret );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( messages, ret );
 
 	if( !updater->private->dispose_has_run ){
 
-		NAIOProvider *provider = na_object_get_provider( item );
+		NAIOProvider *provider = fma_object_get_provider( item );
 
 		if( !provider ){
 			provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
@@ -584,7 +584,7 @@ na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **me
 /*
  * na_updater_delete_item:
  * @updater: this #NAUpdater instance.
- * @item: the #NAObjectItem to be deleted from the storage subsystem.
+ * @item: the #FMAObjectItem to be deleted from the storage subsystem.
  * @messages: the I/O provider can allocate and store here its error
  * messages.
  *
@@ -596,20 +596,20 @@ na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **me
  * doesn't have any attached provider. We so do nothing and return OK...
  */
 guint
-na_updater_delete_item( const NAUpdater *updater, const NAObjectItem *item, GSList **messages )
+na_updater_delete_item( const NAUpdater *updater, const FMAObjectItem *item, GSList **messages )
 {
 	guint ret;
 	NAIOProvider *provider;
 
 	g_return_val_if_fail( NA_IS_UPDATER( updater ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( messages, FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
 	ret = FMA_IIO_PROVIDER_CODE_OK;
 
 	if( !updater->private->dispose_has_run ){
 
-		provider = na_object_get_provider( item );
+		provider = fma_object_get_provider( item );
 
 		/* provider may be NULL if the item has been deleted from the UI
 		 * without having been ever saved

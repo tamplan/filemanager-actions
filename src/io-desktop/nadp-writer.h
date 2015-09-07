@@ -39,9 +39,9 @@ G_BEGIN_DECLS
 gboolean nadp_iio_provider_is_willing_to_write ( const FMAIIOProvider *provider );
 gboolean nadp_iio_provider_is_able_to_write    ( const FMAIIOProvider *provider );
 
-guint    nadp_iio_provider_write_item          ( const FMAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint    nadp_iio_provider_delete_item         ( const FMAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint    nadp_iio_provider_duplicate_data      ( const FMAIIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
+guint    nadp_iio_provider_write_item          ( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages );
+guint    nadp_iio_provider_delete_item         ( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages );
+guint    nadp_iio_provider_duplicate_data      ( const FMAIIOProvider *provider, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages );
 
 guint    nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms );
 guint    nadp_writer_iexporter_export_to_file  ( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms );

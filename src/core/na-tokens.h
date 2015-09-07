@@ -51,7 +51,7 @@
  * - src/core/na-tokens.c::is_singular_exec() function
  * - src/core/na-tokens.c::parse_singular() function
  * - src/nact/file-manager-actions-config-tool.ui:LegendDialog labels
- * - src/core/na-object-profile-factory.c:FMAFO_DATA_PARAMETERS comment
+ * - src/core/fma-object-profile-factory.c:FMAFO_DATA_PARAMETERS comment
  *
  * Valid parameters are :
  *
@@ -79,7 +79,7 @@
  * %%: the « % » character
  */
 
-#include <api/na-object-profile.h>
+#include <api/fma-object-profile.h>
 
 G_BEGIN_DECLS
 
@@ -114,7 +114,7 @@ NATokens *na_tokens_new_for_example     ( void );
 NATokens *na_tokens_new_from_selection  ( GList *selection );
 
 gchar    *na_tokens_parse_for_display   ( const NATokens *tokens, const gchar *string, gboolean utf8 );
-void      na_tokens_execute_action      ( const NATokens *tokens, const NAObjectProfile *profile );
+void      na_tokens_execute_action      ( const NATokens *tokens, const FMAObjectProfile *profile );
 
 gchar    *na_tokens_command_for_terminal( const gchar *pattern, const gchar *command );
 

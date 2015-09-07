@@ -73,24 +73,24 @@ NAUpdater *na_updater_new( void );
 
 /* writability status
  */
-void       na_updater_check_item_writability_status( const NAUpdater *updater, const NAObjectItem *item );
+void       na_updater_check_item_writability_status( const NAUpdater *updater, const FMAObjectItem *item );
 
 gboolean   na_updater_are_preferences_locked       ( const NAUpdater *updater );
 gboolean   na_updater_is_level_zero_writable       ( const NAUpdater *updater );
 
 /* update the tree in memory
  */
-void       na_updater_append_item( NAUpdater *updater, NAObjectItem *item );
-void       na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *parent_id, gint pos );
-void       na_updater_remove_item( NAUpdater *updater, NAObject *item );
+void       na_updater_append_item( NAUpdater *updater, FMAObjectItem *item );
+void       na_updater_insert_item( NAUpdater *updater, FMAObjectItem *item, const gchar *parent_id, gint pos );
+void       na_updater_remove_item( NAUpdater *updater, FMAObject *item );
 
-gboolean   na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const NAObject *item );
+gboolean   na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const FMAObject *item );
 
 /* read from / write to the physical storage subsystem
  */
 GList     *na_updater_load_items ( NAUpdater *updater );
-guint      na_updater_write_item ( const NAUpdater *updater, NAObjectItem *item, GSList **messages );
-guint      na_updater_delete_item( const NAUpdater *updater, const NAObjectItem *item, GSList **messages );
+guint      na_updater_write_item ( const NAUpdater *updater, FMAObjectItem *item, GSList **messages );
+guint      na_updater_delete_item( const NAUpdater *updater, const FMAObjectItem *item, GSList **messages );
 
 G_END_DECLS
 

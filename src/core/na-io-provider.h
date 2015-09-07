@@ -109,9 +109,9 @@ gboolean      na_io_provider_is_finally_writable( const NAIOProvider *provider, 
 
 GList        *na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **messages );
 
-guint         na_io_provider_write_item    ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint         na_io_provider_delete_item   ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint         na_io_provider_duplicate_data( const NAIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
+guint         na_io_provider_write_item    ( const NAIOProvider *provider, const FMAObjectItem *item, GSList **messages );
+guint         na_io_provider_delete_item   ( const NAIOProvider *provider, const FMAObjectItem *item, GSList **messages );
+guint         na_io_provider_duplicate_data( const NAIOProvider *provider, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages );
 
 gchar        *na_io_provider_get_readonly_tooltip ( guint reason );
 gchar        *na_io_provider_get_return_code_label( guint code );

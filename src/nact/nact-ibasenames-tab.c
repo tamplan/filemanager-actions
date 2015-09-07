@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-gtk-utils.h"
 
@@ -255,7 +255,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBase
 	data->on_selection_change = TRUE;
 
 	matchcase_button = GTK_TOGGLE_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "BasenamesMatchcaseButton" ));
-	matchcase = context ? na_object_get_matchcase( context ) : FALSE;
+	matchcase = context ? fma_object_get_matchcase( context ) : FALSE;
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
 	base_gtk_utils_set_editable( G_OBJECT( matchcase_button ), editable );
 
@@ -281,7 +281,7 @@ on_matchcase_toggled( GtkToggleButton *button, NactIBasenamesTab *instance )
 			matchcase = gtk_toggle_button_get_active( button );
 
 			if( editable ){
-				na_object_set_matchcase( context, matchcase );
+				fma_object_set_matchcase( context, matchcase );
 				g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 
 			} else {
@@ -296,13 +296,13 @@ on_matchcase_toggled( GtkToggleButton *button, NactIBasenamesTab *instance )
 static GSList *
 get_basenames( void *context )
 {
-	return( na_object_get_basenames( context ));
+	return( fma_object_get_basenames( context ));
 }
 
 static void
 set_basenames( void *context, GSList *filters )
 {
-	na_object_set_basenames( context, filters );
+	fma_object_set_basenames( context, filters );
 }
 
 static IBasenamesData *

@@ -37,7 +37,7 @@
 #include <string.h>
 
 #include "api/fma-core-utils.h"
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-gtk-utils.h"
 #include "core/na-desktop-environment.h"
@@ -382,7 +382,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIEnvi
 
 	/* selection count
 	 */
-	sel_count = context ? na_object_get_selection_count( context ) : g_strdup( "" );
+	sel_count = context ? fma_object_get_selection_count( context ) : g_strdup( "" );
 	fma_core_utils_selcount_get_ope_int( sel_count, &selcount_ope, &selcount_int );
 	set_selection_count_selection( instance, selcount_ope, selcount_int );
 	g_free( selcount_int );
@@ -403,7 +403,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIEnvi
 	show_button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "OnlyShowButton" );
 	notshow_button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "DoNotShowButton" );
 
-	desktops = context ? na_object_get_only_show_in( context ) : NULL;
+	desktops = context ? fma_object_get_only_show_in( context ) : NULL;
 	listview = GTK_TREE_VIEW( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "EnvironmentsDesktopTreeView" ));
 	gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( always_button ), context == NULL );
 
@@ -414,7 +414,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIEnvi
 		gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
 
 	} else {
-		desktops = context ? na_object_get_not_show_in( context ) : NULL;
+		desktops = context ? fma_object_get_not_show_in( context ) : NULL;
 
 		if( desktops && g_slist_length( desktops )){
 			base_gtk_utils_radio_set_initial_state(
@@ -436,7 +436,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIEnvi
 	/* execution environment
 	 */
 	entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "TryExecEntry" );
-	text = context ? na_object_get_try_exec( context ) : g_strdup( "" );
+	text = context ? fma_object_get_try_exec( context ) : g_strdup( "" );
 	text = text && strlen( text ) ? text : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( entry ), text );
 	g_free( text );
@@ -446,21 +446,21 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIEnvi
 	base_gtk_utils_set_editable( G_OBJECT( browse_button ), editable );
 
 	entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ShowIfRegisteredEntry" );
-	text = context ? na_object_get_show_if_registered( context ) : g_strdup( "" );
+	text = context ? fma_object_get_show_if_registered( context ) : g_strdup( "" );
 	text = text && strlen( text ) ? text : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( entry ), text );
 	g_free( text );
 	base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 
 	entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ShowIfTrueEntry" );
-	text = context ? na_object_get_show_if_true( context ) : g_strdup( "" );
+	text = context ? fma_object_get_show_if_true( context ) : g_strdup( "" );
 	text = text && strlen( text ) ? text : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( entry ), text );
 	g_free( text );
 	base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 
 	entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ShowIfRunningEntry" );
-	text = context ? na_object_get_show_if_running( context ) : g_strdup( "" );
+	text = context ? fma_object_get_show_if_running( context ) : g_strdup( "" );
 	text = text && strlen( text ) ? text : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( entry ), text );
 	g_free( text );
@@ -505,7 +505,7 @@ on_selection_count_changed( NactIEnvironmentTab *instance )
 
 		if( context ){
 			selcount = get_selection_count_selection( instance );
-			na_object_set_selection_count( context, selcount );
+			fma_object_set_selection_count( context, selcount );
 			g_free( selcount );
 
 			g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
@@ -554,8 +554,8 @@ on_show_always_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 
 			if( active ){
 				raz_desktop_listview( instance );
-				na_object_set_only_show_in( context, NULL );
-				na_object_set_not_show_in( context, NULL );
+				fma_object_set_only_show_in( context, NULL );
+				fma_object_set_not_show_in( context, NULL );
 				g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 			}
 
@@ -590,13 +590,13 @@ on_only_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *insta
 		if( editable ){
 			if( active ){
 				raz_desktop_listview( instance );
-				show = na_object_get_only_show_in( context );
+				show = fma_object_get_only_show_in( context );
 				if( show && g_slist_length( show )){
 					setup_desktop_listview( instance, show );
 				}
 
 			} else {
-				na_object_set_only_show_in( context, NULL );
+				fma_object_set_only_show_in( context, NULL );
 				g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 			}
 
@@ -631,13 +631,13 @@ on_do_not_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 		if( editable ){
 			if( active ){
 				raz_desktop_listview( instance );
-				show = na_object_get_not_show_in( context );
+				show = fma_object_get_not_show_in( context );
 				if( show && g_slist_length( show )){
 					setup_desktop_listview( instance, show );
 				}
 
 			} else {
-				na_object_set_not_show_in( context, NULL );
+				fma_object_set_not_show_in( context, NULL );
 				g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 			}
 
@@ -685,9 +685,9 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, NactIEnvironme
 
 				show_button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "OnlyShowButton" );
 				if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( show_button ))){
-					na_object_set_only_desktop( context, desktop, !state );
+					fma_object_set_only_desktop( context, desktop, !state );
 				} else {
-					na_object_set_not_desktop( context, desktop, !state );
+					fma_object_set_not_desktop( context, desktop, !state );
 				}
 
 				g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
@@ -713,7 +713,7 @@ on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 
 	if( context ){
 		text = gtk_entry_get_text( entry );
-		na_object_set_try_exec( context, text );
+		fma_object_set_try_exec( context, text );
 		g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }
@@ -741,7 +741,7 @@ on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 
 	if( context ){
 		text = gtk_entry_get_text( entry );
-		na_object_set_show_if_registered( context, text );
+		fma_object_set_show_if_registered( context, text );
 		g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }
@@ -756,7 +756,7 @@ on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 
 	if( context ){
 		text = gtk_entry_get_text( entry );
-		na_object_set_show_if_true( context, text );
+		fma_object_set_show_if_true( context, text );
 		g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }
@@ -771,7 +771,7 @@ on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 
 	if( context ){
 		text = gtk_entry_get_text( entry );
-		na_object_set_show_if_running( context, text );
+		fma_object_set_show_if_running( context, text );
 		g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }

@@ -45,7 +45,7 @@
  * - a 'NoImport' capability is provided by clicking on Cancel button.
  */
 
-#include "api/na-object-item.h"
+#include "api/fma-object-item.h"
 
 #include "base-dialog.h"
 
@@ -75,7 +75,7 @@ typedef struct {
 
 GType  nact_export_ask_get_type( void );
 
-gchar *nact_export_ask_user    ( NAObjectItem *item,
+gchar *nact_export_ask_user    ( FMAObjectItem *item,
 										gboolean first );
 
 G_END_DECLS

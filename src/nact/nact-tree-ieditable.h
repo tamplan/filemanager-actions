@@ -46,7 +46,7 @@
  * The modified count is fully recomputed after a save.
  */
 
-#include "api/na-object.h"
+#include "api/fma-object.h"
 
 #include "nact-main-window-def.h"
 
@@ -95,7 +95,7 @@ GList   *nact_tree_ieditable_get_deleted           ( NactTreeIEditable *instance
 
 void     nact_tree_ieditable_insert_items          ( NactTreeIEditable *instance,
 															GList *items,
-															NAObject *sibling );
+															FMAObject *sibling );
 
 void     nact_tree_ieditable_insert_at_path        ( NactTreeIEditable *instance,
 															GList *items,

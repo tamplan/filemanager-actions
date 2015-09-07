@@ -34,32 +34,32 @@
 #include <glib/gi18n.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 
 /* private class data
  */
-struct _NAObjectIdClassPrivate {
+struct _FMAObjectIdClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAObjectIdPrivate {
+struct _FMAObjectIdPrivate {
 	gboolean   dispose_has_run;
 };
 
-static NAObjectClass *st_parent_class = NULL;
+static FMAObjectClass *st_parent_class = NULL;
 
 static GType    register_type( void );
-static void     class_init( NAObjectIdClass *klass );
+static void     class_init( FMAObjectIdClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
-static gchar   *v_new_id( const NAObjectId *object, const NAObjectId *new_parent );
+static gchar   *v_new_id( const FMAObjectId *object, const FMAObjectId *new_parent );
 
 GType
-na_object_id_get_type( void )
+fma_object_id_get_type( void )
 {
 	static GType item_type = 0;
 
@@ -73,32 +73,32 @@ na_object_id_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_object_id_register_type";
+	static const gchar *thisfn = "fma_object_id_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAObjectIdClass ),
+		sizeof( FMAObjectIdClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAObjectId ),
+		sizeof( FMAObjectId ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_TYPE_OBJECT, "NAObjectId", &info, 0 );
+	type = g_type_register_static( FMA_TYPE_OBJECT, "FMAObjectId", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAObjectIdClass *klass )
+class_init( FMAObjectIdClass *klass )
 {
-	static const gchar *thisfn = "na_object_id_class_init";
+	static const gchar *thisfn = "fma_object_id_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -109,19 +109,19 @@ class_init( NAObjectIdClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAObjectIdClassPrivate, 1 );
+	klass->private = g_new0( FMAObjectIdClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	NAObjectId *self;
+	FMAObjectId *self;
 
-	g_return_if_fail( NA_IS_OBJECT_ID( instance ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( instance ));
 
-	self = NA_OBJECT_ID( instance );
+	self = FMA_OBJECT_ID( instance );
 
-	self->private = g_new0( NAObjectIdPrivate, 1 );
+	self->private = g_new0( FMAObjectIdPrivate, 1 );
 }
 
 /*
@@ -133,20 +133,20 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	NAObjectId *self;
-	NAObjectItem *parent;
+	FMAObjectId *self;
+	FMAObjectItem *parent;
 
-	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( object ));
 
-	self = NA_OBJECT_ID( object );
+	self = FMA_OBJECT_ID( object );
 
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
 
-		parent = na_object_get_parent( object );
+		parent = fma_object_get_parent( object );
 		if( parent ){
-			na_object_remove_item( parent, object );
+			fma_object_remove_item( parent, object );
 		}
 
 		self->private->dispose_has_run = TRUE;
@@ -161,11 +161,11 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	NAObjectId *self;
+	FMAObjectId *self;
 
-	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( object ));
 
-	self = NA_OBJECT_ID( object );
+	self = FMA_OBJECT_ID( object );
 
 	g_free( self->private );
 
@@ -176,9 +176,9 @@ instance_finalize( GObject *object )
 }
 
 /**
- * na_object_id_sort_alpha_asc:
- * @a: first #NAObjectId.
- * @b: second #NAObjectId.
+ * fma_object_id_sort_alpha_asc:
+ * @a: first #FMAObjectId.
+ * @b: second #FMAObjectId.
  *
  * Sort the objects in alphabetical ascending order of their label.
  *
@@ -199,13 +199,13 @@ instance_finalize( GObject *object )
  * Since: 2.30
  */
 gint
-na_object_id_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b )
+fma_object_id_sort_alpha_asc( const FMAObjectId *a, const FMAObjectId *b )
 {
 	gchar *label_a, *label_b;
 	gint compare;
 
-	label_a = na_object_get_label( a );
-	label_b = na_object_get_label( b );
+	label_a = fma_object_get_label( a );
+	label_b = fma_object_get_label( b );
 
 	compare = fma_core_utils_str_collate( label_a, label_b );
 
@@ -216,9 +216,9 @@ na_object_id_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b )
 }
 
 /**
- * na_object_id_sort_alpha_desc:
- * @a: first #NAObjectId.
- * @b: second #NAObjectId.
+ * fma_object_id_sort_alpha_desc:
+ * @a: first #FMAObjectId.
+ * @b: second #FMAObjectId.
  *
  * Sort the objects in alphabetical descending order of their label.
  *
@@ -239,25 +239,25 @@ na_object_id_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b )
  * Since: 2.30
  */
 gint
-na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
+fma_object_id_sort_alpha_desc( const FMAObjectId *a, const FMAObjectId *b )
 {
-	return( -1 * na_object_id_sort_alpha_asc( a, b ));
+	return( -1 * fma_object_id_sort_alpha_asc( a, b ));
 }
 
 /**
- * na_object_id_prepare_for_paste:
- * @object: the #NAObjectId object to be pasted.
+ * fma_object_id_prepare_for_paste:
+ * @object: the #FMAObjectId object to be pasted.
  * @relabel: whether this object should be relabeled when pasted.
  * @renumber: whether this item should be renumbered ?
  * @parent: the parent of @object, or %NULL.
  *
  * Prepares @object to be pasted.
  *
- * If a #NAObjectProfile, then @object is attached to the specified
- * #NAObjectAction @action. The identifier is always renumbered to be
+ * If a #FMAObjectProfile, then @object is attached to the specified
+ * #FMAObjectAction @action. The identifier is always renumbered to be
  * suitable with the already existing profiles.
  *
- * If a #NAObjectAction or a #NAObjectMenu, a new identifier is allocated
+ * If a #FMAObjectAction or a #FMAObjectMenu, a new identifier is allocated
  * if and only if @relabel is %TRUE.
  *
  * Actual relabeling takes place if @relabel is %TRUE, depending of the
@@ -266,40 +266,40 @@ na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
  * Since: 2.30
  */
 void
-na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *parent )
+fma_object_id_prepare_for_paste( FMAObjectId *object, gboolean relabel, gboolean renumber, FMAObjectId *parent )
 {
-	static const gchar *thisfn = "na_object_id_prepare_for_paste";
+	static const gchar *thisfn = "fma_object_id_prepare_for_paste";
 	GList *subitems, *it;
 
-	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !parent || NA_IS_OBJECT_ITEM( parent ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( object ));
+	g_return_if_fail( !parent || FMA_IS_OBJECT_ITEM( parent ));
 
 	if( !object->private->dispose_has_run ){
 
 		g_debug( "%s: object=%p, relabel=%s, renumber=%s, parent=%p",
 				thisfn, ( void * ) object, relabel ? "True":"False", renumber ? "True":"False", ( void * ) parent );
 
-		if( NA_IS_OBJECT_PROFILE( object )){
-			na_object_set_parent( object, parent );
-			na_object_set_new_id( object, parent );
+		if( FMA_IS_OBJECT_PROFILE( object )){
+			fma_object_set_parent( object, parent );
+			fma_object_set_new_id( object, parent );
 			if( renumber && relabel ){
-				na_object_set_copy_of_label( object );
+				fma_object_set_copy_of_label( object );
 			}
 
 		} else {
 			if( renumber ){
-				na_object_set_new_id( object, NULL );
+				fma_object_set_new_id( object, NULL );
 				if( relabel ){
-					na_object_set_copy_of_label( object );
+					fma_object_set_copy_of_label( object );
 				}
-				na_object_set_provider( object, NULL );
-				na_object_set_provider_data( object, NULL );
-				na_object_set_readonly( object, FALSE );
+				fma_object_set_provider( object, NULL );
+				fma_object_set_provider_data( object, NULL );
+				fma_object_set_readonly( object, FALSE );
 			}
-			if( NA_IS_OBJECT_MENU( object )){
-				subitems = na_object_get_items( object );
+			if( FMA_IS_OBJECT_MENU( object )){
+				subitems = fma_object_get_items( object );
 				for( it = subitems ; it ; it = it->next ){
-					na_object_prepare_for_paste( it->data, relabel, renumber, NULL );
+					fma_object_prepare_for_paste( it->data, relabel, renumber, NULL );
 				}
 			}
 		}
@@ -307,28 +307,28 @@ na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean r
 }
 
 /**
- * na_object_id_set_copy_of_label:
- * @object: the #NAObjectId object whose label is to be changed.
+ * fma_object_id_set_copy_of_label:
+ * @object: the #FMAObjectId object whose label is to be changed.
  *
  * Sets the 'Copy of' label.
  *
  * Since: 2.30
  */
 void
-na_object_id_set_copy_of_label( NAObjectId *object )
+fma_object_id_set_copy_of_label( FMAObjectId *object )
 {
 	gchar *label, *new_label;
 
-	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( object ));
 
 	if( !object->private->dispose_has_run ){
 
-		label = na_object_get_label( object );
+		label = fma_object_get_label( object );
 
 		/* i18n: copied items have a label as 'Copy of original label' */
 		new_label = g_strdup_printf( _( "Copy of %s" ), label );
 
-		na_object_set_label( object, new_label );
+		fma_object_set_label( object, new_label );
 
 		g_free( new_label );
 		g_free( label );
@@ -336,11 +336,11 @@ na_object_id_set_copy_of_label( NAObjectId *object )
 }
 
 /**
- * na_object_id_set_new_id:
- * @object: the #NAObjectId object whose internal identifier is to be
+ * fma_object_id_set_new_id:
+ * @object: the #FMAObjectId object whose internal identifier is to be
  * set.
- * @new_parent: if @object is a #NAObjectProfile, then @new_parent
- * should be set to the #NAObjectAction new parent. Else, it would not
+ * @new_parent: if @object is a #FMAObjectProfile, then @new_parent
+ * should be set to the #FMAObjectAction new parent. Else, it would not
  * be possible to allocate a new profile id compatible with already
  * existing ones.
  *
@@ -349,13 +349,13 @@ na_object_id_set_copy_of_label( NAObjectId *object )
  * Since: 2.30
  */
 void
-na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent )
+fma_object_id_set_new_id( FMAObjectId *object, const FMAObjectId *new_parent )
 {
-	static const gchar *thisfn = "na_object_id_set_new_id";
+	static const gchar *thisfn = "fma_object_id_set_new_id";
 	gchar *id;
 
-	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !new_parent || NA_IS_OBJECT_ITEM( new_parent ));
+	g_return_if_fail( FMA_IS_OBJECT_ID( object ));
+	g_return_if_fail( !new_parent || FMA_IS_OBJECT_ITEM( new_parent ));
 
 	if( !object->private->dispose_has_run ){
 
@@ -366,19 +366,19 @@ na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent )
 		id = v_new_id( object, new_parent );
 
 		if( id ){
-			na_object_set_id( object, id );
+			fma_object_set_id( object, id );
 			g_free( id );
 		}
 	}
 }
 
 static gchar *
-v_new_id( const NAObjectId *object, const NAObjectId *new_parent )
+v_new_id( const FMAObjectId *object, const FMAObjectId *new_parent )
 {
 	gchar *new_id = NULL;
 
-	if( NA_OBJECT_ID_GET_CLASS( object )->new_id ){
-		new_id = NA_OBJECT_ID_GET_CLASS( object )->new_id( object, new_parent );
+	if( FMA_OBJECT_ID_GET_CLASS( object )->new_id ){
+		new_id = FMA_OBJECT_ID_GET_CLASS( object )->new_id( object, new_parent );
 	}
 
 	return( new_id );

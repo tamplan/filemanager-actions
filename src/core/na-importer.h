@@ -58,7 +58,7 @@
 #include <gtk/gtk.h>
 
 #include <api/fma-iimporter.h>
-#include <api/na-object-item.h>
+#include <api/fma-object-item.h>
 
 #include "na-ioption.h"
 #include "na-pivot.h"
@@ -93,7 +93,7 @@ typedef enum {
 
 /*
  * NAImporterCheckFn:
- * @imported: the currently imported #NAObjectItem -derived object.
+ * @imported: the currently imported #FMAObjectItem -derived object.
  * @fn_data: some data to be passed to the function.
  *
  * The library takes care of checking for duplicates inside of the imported
@@ -110,11 +110,11 @@ typedef enum {
  * If the caller does not provide its own check function, then each imported
  * item will be systematically renumbered (allocated a new identifier).
  *
- * Returns: the already existing #NAObjectItem with same id, or %NULL.
+ * Returns: the already existing #FMAObjectItem with same id, or %NULL.
  *
  * Since: 3.2
  */
-typedef NAObjectItem * ( *NAImporterCheckFn )( const NAObjectItem *, void * );
+typedef FMAObjectItem * ( *NAImporterCheckFn )( const FMAObjectItem *, void * );
 
 typedef struct {
 	GSList             *uris;				/* the list of uris to import */
@@ -130,7 +130,7 @@ typedef struct {
 	/* phase 1: import into memory from i/o provider
 	 */
 	gchar        *uri;					/* the imported uri */
-	NAObjectItem *imported;				/* the imported NAObjectItem-derived object, or %NULL */
+	FMAObjectItem *imported;				/* the imported FMAObjectItem-derived object, or %NULL */
 	FMAIImporter  *importer;				/* the importer module, or %NULL */
 
 	/* phase 2: check for pre-existence

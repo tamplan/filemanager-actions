@@ -41,7 +41,7 @@
 
 #include <gtk/gtk.h>
 
-#include <api/na-object-item.h>
+#include <api/fma-object-item.h>
 
 #include "na-pivot.h"
 
@@ -83,7 +83,7 @@ typedef struct {
 
 GType na_importer_ask_get_type( void );
 
-guint na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms );
+guint na_importer_ask_user( const FMAObjectItem *importing, const FMAObjectItem *existing, NAImporterAskUserParms *parms );
 
 G_END_DECLS
 

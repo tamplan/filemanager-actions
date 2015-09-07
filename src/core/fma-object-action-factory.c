@@ -42,8 +42,8 @@
  * - n/a
  */
 
-extern FMADataDef data_def_id [];			/* defined in na-object-id-factory.c */
-extern FMADataDef data_def_item [];			/* defined in na-object-item-factory.c */
+extern FMADataDef data_def_id [];			/* defined in fma-object-id-factory.c */
+extern FMADataDef data_def_item [];			/* defined in fma-object-item-factory.c */
 extern FMADataDef data_def_conditions [];	/* defined in fma-icontext-factory.c */
 
 static FMADataDef data_def_action [] = {
@@ -208,7 +208,7 @@ static FMADataDef data_def_action [] = {
 				FALSE,
 				TRUE,
 				"Last allocated profile",
-				"Last allocated profile number in na_object_action_get_new_profile_name(), " \
+				"Last allocated profile number in fma_object_action_get_new_profile_name(), " \
 				"reset to zero when saving the action.",
 				FMA_DATA_TYPE_UINT,
 				"0",

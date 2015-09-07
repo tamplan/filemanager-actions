@@ -38,8 +38,8 @@
  * This interface implements the "Nautilus Menu Item" tab of the notebook.
  *
  * Entry fields are enabled, as soon as an edited item has been set as a
- * property of the main window, Fields are those of NAObjectItem (i.e.
- * not NAObjectProfile, not FMAIContext, but may be NAObjectAction specific).
+ * property of the main window, Fields are those of FMAObjectItem (i.e.
+ * not FMAObjectProfile, not FMAIContext, but may be FMAObjectAction specific).
  */
 
 #include <glib-object.h>

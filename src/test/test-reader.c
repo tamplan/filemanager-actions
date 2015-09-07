@@ -88,7 +88,7 @@ main( int argc, char **argv )
 
 	result = import_results->data;
 	if( result->imported ){
-		na_object_dump( result->imported );
+		fma_object_dump( result->imported );
 		g_object_unref( result->imported );
 	}
 

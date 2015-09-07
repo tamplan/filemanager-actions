@@ -40,7 +40,7 @@
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 #include <api/na-timeout.h>
 
 #include <core/na-pivot.h>
@@ -86,17 +86,17 @@ static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *
 
 static GList            *build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection );
 static GList            *build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *tokens );
-static NAObjectItem     *expand_tokens_item( const NAObjectItem *item, NATokens *tokens );
+static FMAObjectItem     *expand_tokens_item( const FMAObjectItem *item, NATokens *tokens );
 static void              expand_tokens_context( FMAIContext *context, NATokens *tokens );
-static NAObjectProfile  *get_candidate_profile( NAObjectAction *action, guint target, GList *files );
-static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, NATokens *tokens );
-static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems, guint target );
-static NautilusMenuItem *create_menu_item( const NAObjectItem *item, guint target );
+static FMAObjectProfile  *get_candidate_profile( FMAObjectAction *action, guint target, GList *files );
+static NautilusMenuItem *create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files, NATokens *tokens );
+static NautilusMenuItem *create_item_from_menu( FMAObjectMenu *menu, GList *subitems, guint target );
+static NautilusMenuItem *create_menu_item( const FMAObjectItem *item, guint target );
 static void              weak_notify_menu_item( void *user_data /* =NULL */, NautilusMenuItem *item );
 static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
-static void              weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item );
+static void              weak_notify_profile( FMAObjectProfile *profile, NautilusMenuItem *item );
 
-static void              execute_action( NautilusMenuItem *item, NAObjectProfile *profile );
+static void              execute_action( NautilusMenuItem *item, FMAObjectProfile *profile );
 
 static GList            *create_root_menu( NautilusActions *plugin, GList *nautilus_menu );
 static GList            *add_about_item( NautilusActions *plugin, GList *nautilus_menu );
@@ -533,9 +533,9 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 	GList *nautilus_menu;
 	GList *it;
 	GList *subitems;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	GList *submenu;
-	NAObjectProfile *profile;
+	FMAObjectProfile *profile;
 	NautilusMenuItem *menu_item;
 	gchar *label;
 
@@ -543,8 +543,8 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 
 	for( it=tree ; it ; it=it->next ){
 
-		g_return_val_if_fail( NA_IS_OBJECT_ITEM( it->data ), NULL );
-		label = na_object_get_label( it->data );
+		g_return_val_if_fail( FMA_IS_OBJECT_ITEM( it->data ), NULL );
+		label = fma_object_get_label( it->data );
 		g_debug( "%s: examining %s", thisfn, label );
 
 		if( !fma_icontext_is_candidate( FMA_ICONTEXT( it->data ), target, selection )){
@@ -553,12 +553,12 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 			continue;
 		}
 
-		item = expand_tokens_item( NA_OBJECT_ITEM( it->data ), tokens );
+		item = expand_tokens_item( FMA_OBJECT_ITEM( it->data ), tokens );
 
 		/* but we have to re-check for validity as a label may become
-		 * dynamically empty - thus the NAObjectItem invalid :(
+		 * dynamically empty - thus the FMAObjectItem invalid :(
 		 */
-		if( !na_object_is_valid( item )){
+		if( !fma_object_is_valid( item )){
 			g_debug( "%s: item %s becomes invalid after tokens expansion", thisfn, label );
 			g_object_unref( item );
 			g_free( label );
@@ -569,9 +569,9 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 		 * the 'submenu' menu of nautilusMenuItem's is attached to the returned
 		 * 'item'
 		 */
-		if( NA_IS_OBJECT_MENU( it->data )){
+		if( FMA_IS_OBJECT_MENU( it->data )){
 
-			subitems = na_object_get_items( NA_OBJECT( it->data ));
+			subitems = fma_object_get_items( FMA_OBJECT( it->data ));
 			g_debug( "%s: menu has %d items", thisfn, g_list_length( subitems ));
 
 			submenu = build_nautilus_menu_rec( subitems, target, selection, tokens );
@@ -582,7 +582,7 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 					nautilus_menu = g_list_concat( nautilus_menu, submenu );
 
 				} else {
-					menu_item = create_item_from_menu( NA_OBJECT_MENU( item ), submenu, target );
+					menu_item = create_item_from_menu( FMA_OBJECT_MENU( item ), submenu, target );
 					nautilus_menu = g_list_append( nautilus_menu, menu_item );
 				}
 			}
@@ -591,11 +591,11 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 			continue;
 		}
 
-		g_return_val_if_fail( NA_IS_OBJECT_ACTION( item ), NULL );
+		g_return_val_if_fail( FMA_IS_OBJECT_ACTION( item ), NULL );
 
 		/* if we have an action, searches for a candidate profile
 		 */
-		profile = get_candidate_profile( NA_OBJECT_ACTION( item ), target, selection );
+		profile = get_candidate_profile( FMA_OBJECT_ACTION( item ), target, selection );
 		if( profile ){
 			menu_item = create_item_from_profile( profile, target, selection, tokens );
 			nautilus_menu = g_list_append( nautilus_menu, menu_item );
@@ -613,7 +613,7 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 
 /*
  * expand_tokens_item:
- * @item: a NAObjectItem read from the NAPivot.
+ * @item: a FMAObjectItem read from the NAPivot.
  * @tokens: the NATokens object which holds current selection data
  *  (uris, basenames, mimetypes, etc.)
  *
@@ -625,46 +625,46 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
  *
  * Returns: a duplicated object which has to be g_object_unref() by the caller.
  */
-static NAObjectItem *
-expand_tokens_item( const NAObjectItem *src, NATokens *tokens )
+static FMAObjectItem *
+expand_tokens_item( const FMAObjectItem *src, NATokens *tokens )
 {
 	gchar *old, *new;
 	GSList *subitems_slist, *its, *new_slist;
 	GList *subitems, *it;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 
-	item = NA_OBJECT_ITEM( na_object_duplicate( src, DUPLICATE_OBJECT ));
+	item = FMA_OBJECT_ITEM( fma_object_duplicate( src, DUPLICATE_OBJECT ));
 
 	/* label, tooltip and icon name
 	 * plus the toolbar label if this is an action
 	 */
-	old = na_object_get_label( item );
+	old = fma_object_get_label( item );
 	new = na_tokens_parse_for_display( tokens, old, TRUE );
-	na_object_set_label( item, new );
+	fma_object_set_label( item, new );
 	g_free( old );
 	g_free( new );
 
-	old = na_object_get_tooltip( item );
+	old = fma_object_get_tooltip( item );
 	new = na_tokens_parse_for_display( tokens, old, TRUE );
-	na_object_set_tooltip( item, new );
+	fma_object_set_tooltip( item, new );
 	g_free( old );
 	g_free( new );
 
-	old = na_object_get_icon( item );
+	old = fma_object_get_icon( item );
 	new = na_tokens_parse_for_display( tokens, old, TRUE );
-	na_object_set_icon( item, new );
+	fma_object_set_icon( item, new );
 	g_free( old );
 	g_free( new );
 
-	if( NA_IS_OBJECT_ACTION( item )){
-		old = na_object_get_toolbar_label( item );
+	if( FMA_IS_OBJECT_ACTION( item )){
+		old = fma_object_get_toolbar_label( item );
 		new = na_tokens_parse_for_display( tokens, old, TRUE );
-		na_object_set_toolbar_label( item, new );
+		fma_object_set_toolbar_label( item, new );
 		g_free( old );
 		g_free( new );
 	}
 
-	/* A NAObjectItem, whether it is an action or a menu, is also a FMAIContext
+	/* A FMAObjectItem, whether it is an action or a menu, is also a FMAIContext
 	 */
 	expand_tokens_context( FMA_ICONTEXT( item ), tokens );
 
@@ -672,7 +672,7 @@ expand_tokens_item( const NAObjectItem *src, NATokens *tokens )
 	 * or the items list of a menu, may be dynamic and embed a command;
 	 * this command itself may embed parameters
 	 */
-	subitems_slist = na_object_get_items_slist( item );
+	subitems_slist = fma_object_get_items_slist( item );
 	new_slist = NULL;
 	for( its = subitems_slist ; its ; its = its->next ){
 		old = ( gchar * ) its->data;
@@ -683,28 +683,28 @@ expand_tokens_item( const NAObjectItem *src, NATokens *tokens )
 		}
 		new_slist = g_slist_prepend( new_slist, new );
 	}
-	na_object_set_items_slist( item, new_slist );
+	fma_object_set_items_slist( item, new_slist );
 	fma_core_utils_slist_free( subitems_slist );
 	fma_core_utils_slist_free( new_slist );
 
 	/* last, deal with profiles of an action
 	 */
-	if( NA_IS_OBJECT_ACTION( item )){
+	if( FMA_IS_OBJECT_ACTION( item )){
 
-		subitems = na_object_get_items( item );
+		subitems = fma_object_get_items( item );
 
 		for( it = subitems ; it ; it = it->next ){
 
 			/* desktop Exec key = GConf path+parameters
 			 * do not touch them here
 			 */
-			old = na_object_get_working_dir( it->data );
+			old = fma_object_get_working_dir( it->data );
 			new = na_tokens_parse_for_display( tokens, old, FALSE );
-			na_object_set_working_dir( it->data, new );
+			fma_object_set_working_dir( it->data, new );
 			g_free( old );
 			g_free( new );
 
-			/* a NAObjectProfile is also a FMAIContext
+			/* a FMAObjectProfile is also a FMAIContext
 			 */
 			expand_tokens_context( FMA_ICONTEXT( it->data ), tokens );
 		}
@@ -718,51 +718,51 @@ expand_tokens_context( FMAIContext *context, NATokens *tokens )
 {
 	gchar *old, *new;
 
-	old = na_object_get_try_exec( context );
+	old = fma_object_get_try_exec( context );
 	new = na_tokens_parse_for_display( tokens, old, FALSE );
-	na_object_set_try_exec( context, new );
+	fma_object_set_try_exec( context, new );
 	g_free( old );
 	g_free( new );
 
-	old = na_object_get_show_if_registered( context );
+	old = fma_object_get_show_if_registered( context );
 	new = na_tokens_parse_for_display( tokens, old, FALSE );
-	na_object_set_show_if_registered( context, new );
+	fma_object_set_show_if_registered( context, new );
 	g_free( old );
 	g_free( new );
 
-	old = na_object_get_show_if_true( context );
+	old = fma_object_get_show_if_true( context );
 	new = na_tokens_parse_for_display( tokens, old, FALSE );
-	na_object_set_show_if_true( context, new );
+	fma_object_set_show_if_true( context, new );
 	g_free( old );
 	g_free( new );
 
-	old = na_object_get_show_if_running( context );
+	old = fma_object_get_show_if_running( context );
 	new = na_tokens_parse_for_display( tokens, old, FALSE );
-	na_object_set_show_if_running( context, new );
+	fma_object_set_show_if_running( context, new );
 	g_free( old );
 	g_free( new );
 }
 
 /*
- * could also be a NAObjectAction method - but this is not used elsewhere
+ * could also be a FMAObjectAction method - but this is not used elsewhere
  */
-static NAObjectProfile *
-get_candidate_profile( NAObjectAction *action, guint target, GList *files )
+static FMAObjectProfile *
+get_candidate_profile( FMAObjectAction *action, guint target, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_get_candidate_profile";
-	NAObjectProfile *candidate = NULL;
+	FMAObjectProfile *candidate = NULL;
 	gchar *action_label;
 	gchar *profile_label;
 	GList *profiles, *ip;
 
-	action_label = na_object_get_label( action );
-	profiles = na_object_get_items( action );
+	action_label = fma_object_get_label( action );
+	profiles = fma_object_get_items( action );
 
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
-		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
+		FMAObjectProfile *profile = FMA_OBJECT_PROFILE( ip->data );
 
 		if( fma_icontext_is_candidate( FMA_ICONTEXT( profile ), target, files )){
-			profile_label = na_object_get_label( profile );
+			profile_label = fma_object_get_label( profile );
 			g_debug( "%s: selecting %s (profile=%p '%s')", thisfn, action_label, ( void * ) profile, profile_label );
 			g_free( profile_label );
 
@@ -776,17 +776,17 @@ get_candidate_profile( NAObjectAction *action, guint target, GList *files )
 }
 
 static NautilusMenuItem *
-create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, NATokens *tokens )
+create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files, NATokens *tokens )
 {
 	NautilusMenuItem *item;
-	NAObjectAction *action;
-	NAObjectProfile *duplicate;
+	FMAObjectAction *action;
+	FMAObjectProfile *duplicate;
 
-	action = NA_OBJECT_ACTION( na_object_get_parent( profile ));
-	duplicate = NA_OBJECT_PROFILE( na_object_duplicate( profile, DUPLICATE_ONLY ));
-	na_object_set_parent( duplicate, NULL );
+	action = FMA_OBJECT_ACTION( fma_object_get_parent( profile ));
+	duplicate = FMA_OBJECT_PROFILE( fma_object_duplicate( profile, DUPLICATE_ONLY ));
+	fma_object_set_parent( duplicate, NULL );
 
-	item = create_menu_item( NA_OBJECT_ITEM( action ), target );
+	item = create_menu_item( FMA_OBJECT_ITEM( action ), target );
 
 	g_signal_connect( item,
 				"activate",
@@ -809,7 +809,7 @@ create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, 
  * called _after_ the NautilusMenuItem has been finalized
  */
 static void
-weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item )
+weak_notify_profile( FMAObjectProfile *profile, NautilusMenuItem *item )
 {
 	g_debug( "nautilus_actions_weak_notify_profile: profile=%p (ref_count=%d)",
 			( void * ) profile, G_OBJECT( profile )->ref_count );
@@ -823,12 +823,12 @@ weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item )
  * the submenu
  */
 static NautilusMenuItem *
-create_item_from_menu( NAObjectMenu *menu, GList *subitems, guint target )
+create_item_from_menu( FMAObjectMenu *menu, GList *subitems, guint target )
 {
 	/*static const gchar *thisfn = "nautilus_actions_create_item_from_menu";*/
 	NautilusMenuItem *item;
 
-	item = create_menu_item( NA_OBJECT_ITEM( menu ), target );
+	item = create_menu_item( FMA_OBJECT_ITEM( menu ), target );
 
 	attach_submenu_to_item( item, subitems );
 
@@ -845,16 +845,16 @@ create_item_from_menu( NAObjectMenu *menu, GList *subitems, guint target )
  * to check for instanciation/finalization cycles
  */
 static NautilusMenuItem *
-create_menu_item( const NAObjectItem *item, guint target )
+create_menu_item( const FMAObjectItem *item, guint target )
 {
 	NautilusMenuItem *menu_item;
 	gchar *id, *name, *label, *tooltip, *icon;
 
-	id = na_object_get_id( item );
+	id = fma_object_get_id( item );
 	name = g_strdup_printf( "%s-%s-%s-%d", PACKAGE, G_OBJECT_TYPE_NAME( item ), id, target );
-	label = na_object_get_label( item );
-	tooltip = na_object_get_tooltip( item );
-	icon = na_object_get_icon( item );
+	label = fma_object_get_label( item );
+	tooltip = fma_object_get_tooltip( item );
+	icon = fma_object_get_icon( item );
 
 	menu_item = nautilus_menu_item_new( name, label, tooltip, icon );
 
@@ -901,7 +901,7 @@ attach_submenu_to_item( NautilusMenuItem *item, GList *subitems )
  * the current item of the selection
  */
 static void
-execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
+execute_action( NautilusMenuItem *item, FMAObjectProfile *profile )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action";
 	NATokens *tokens;

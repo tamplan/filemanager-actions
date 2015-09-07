@@ -100,17 +100,17 @@ libna_core_la_SOURCES = \
 	na-iprefs.h											\
 	na-module.c											\
 	na-module.h											\
-	na-object.c											\
-	na-object-id.c										\
-	na-object-id-factory.c								\
-	na-object-item.c									\
-	na-object-item-factory.c							\
-	na-object-action.c									\
-	na-object-action-factory.c							\
-	na-object-profile.c									\
-	na-object-profile-factory.c							\
-	na-object-menu.c									\
-	na-object-menu-factory.c							\
+	fma-object.c											\
+	fma-object-id.c										\
+	fma-object-id-factory.c								\
+	fma-object-item.c									\
+	fma-object-item-factory.c							\
+	fma-object-action.c									\
+	fma-object-action-factory.c							\
+	fma-object-profile.c									\
+	fma-object-profile-factory.c							\
+	fma-object-menu.c									\
+	fma-object-menu-factory.c							\
 	na-pivot.c											\
 	na-pivot.h											\
 	na-selected-info.c									\

@@ -35,7 +35,7 @@
 #include <libintl.h>
 #include <string.h>
 
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-gtk-utils.h"
 #include "core/na-io-provider.h"
@@ -76,7 +76,7 @@ static void             on_enabled_toggled( GtkToggleButton *button, NactIProper
 static void             on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
 static void             on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance );
 static void             on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance );
-static void             display_provider_name( NactIPropertiesTab *instance, NAObjectItem *item );
+static void             display_provider_name( NactIPropertiesTab *instance, FMAObjectItem *item );
 static IPropertiesData *get_iproperties_data( NactIPropertiesTab *instance );
 static void             on_instance_finalized( gpointer user_data, NactIPropertiesTab *instance );
 
@@ -224,7 +224,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 {
 	static const gchar *thisfn = "nact_iproperties_tab_on_tree_selection_changed";
 	guint count_selected;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	gboolean editable;
 	gboolean enable_tab;
 	GtkNotebook *notebook;
@@ -249,7 +249,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
-	g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
+	g_return_if_fail( !item || FMA_IS_OBJECT_ITEM( item ));
 
 	enable_tab = ( count_selected == 1 );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES, enable_tab );
@@ -262,7 +262,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 	title_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionPropertiesTitle" );
 	label_widget = gtk_notebook_get_tab_label( notebook, page );
 
-	if( item && NA_IS_OBJECT_MENU( item )){
+	if( item && FMA_IS_OBJECT_MENU( item )){
 		gtk_label_set_label( GTK_LABEL( label_widget ), _( "Me_nu" ));
 		gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Menu editable properties</b>" ));
 	} else {
@@ -271,19 +271,19 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 	}
 
 	enabled_button = get_enabled_button( instance );
-	enabled_item = item ? na_object_is_enabled( NA_OBJECT_ITEM( item )) : FALSE;
+	enabled_item = item ? fma_object_is_enabled( FMA_OBJECT_ITEM( item )) : FALSE;
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( enabled_button ), enabled_item );
 	base_gtk_utils_set_editable( G_OBJECT( enabled_button ), editable );
 
 	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionDescriptionText" );
 	buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( label_widget ));
-	label = item ? na_object_get_description( item ) : g_strdup( "" );
+	label = item ? fma_object_get_description( item ) : g_strdup( "" );
 	gtk_text_buffer_set_text( buffer, label, -1 );
 	g_free( label );
 	base_gtk_utils_set_editable( G_OBJECT( label_widget ), editable );
 
 	shortcut_button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "SuggestedShortcutButton" );
-	shortcut = item ? na_object_get_shortcut( item ) : g_strdup( "" );
+	shortcut = item ? fma_object_get_shortcut( item ) : g_strdup( "" );
 	if( !shortcut || !strlen( shortcut )){
 		g_free( shortcut );
 		shortcut = g_strdup( gettext( NO_SHORTCUT ));
@@ -299,11 +299,11 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 	 * _not_ the writability status of the provider
 	 */
 	readonly_button = GTK_TOGGLE_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionReadonlyButton" ));
-	gtk_toggle_button_set_active( readonly_button, item ? na_object_is_readonly( item ) : FALSE );
+	gtk_toggle_button_set_active( readonly_button, item ? fma_object_is_readonly( item ) : FALSE );
 	base_gtk_utils_set_editable( G_OBJECT( readonly_button ), FALSE );
 
 	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionItemID" );
-	label = item ? na_object_get_id( item ) : g_strdup( "" );
+	label = item ? fma_object_get_id( item ) : g_strdup( "" );
 	gtk_label_set_text( GTK_LABEL( label_widget ), label );
 	g_free( label );
 
@@ -323,7 +323,7 @@ on_main_item_updated( NactIPropertiesTab *instance, FMAIContext *context, guint 
 				thisfn, ( void * ) instance,
 				( void * ) context, G_OBJECT_TYPE_NAME( context ), data, empty );
 
-		display_provider_name( instance, NA_OBJECT_ITEM( context ));
+		display_provider_name( instance, FMA_OBJECT_ITEM( context ));
 	}
 }
 
@@ -337,7 +337,7 @@ static void
 on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 {
 	static const gchar *thisfn = "nact_iproperties_tab_on_enabled_toggled";
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	gboolean enabled;
 	gboolean editable;
 	IPropertiesData *data;
@@ -354,11 +354,11 @@ on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 				MAIN_PROP_EDITABLE, &editable,
 				NULL );
 
-		if( item && NA_IS_OBJECT_ITEM( item )){
+		if( item && FMA_IS_OBJECT_ITEM( item )){
 			enabled = gtk_toggle_button_get_active( button );
 
 			if( editable ){
-				na_object_set_enabled( item, enabled );
+				fma_object_set_enabled( item, enabled );
 				g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, item, 0 );
 
 			} else {
@@ -453,7 +453,7 @@ static void
 on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
 {
 	static const gchar *thisfn = "nact_iproperties_tab_on_description_changed";
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	GtkTextIter start, end;
 	gchar *text;
 
@@ -468,7 +468,7 @@ on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
 		gtk_text_buffer_get_start_iter( buffer, &start );
 		gtk_text_buffer_get_end_iter( buffer, &end );
 		text = gtk_text_buffer_get_text( buffer, &start, &end, TRUE );
-		na_object_set_description( item, text );
+		fma_object_set_description( item, text );
 		g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, item, 0 );
 	}
 }
@@ -476,7 +476,7 @@ on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
 static void
 on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance )
 {
-	NAObjectItem *item;
+	FMAObjectItem *item;
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -489,7 +489,7 @@ on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance )
 }
 
 static void
-display_provider_name( NactIPropertiesTab *instance, NAObjectItem *item )
+display_provider_name( NactIPropertiesTab *instance, FMAObjectItem *item )
 {
 	GtkWidget *label_widget;
 	gchar *label;
@@ -498,7 +498,7 @@ display_provider_name( NactIPropertiesTab *instance, NAObjectItem *item )
 	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionItemProvider" );
 	label = NULL;
 	if( item ){
-		provider = na_object_get_provider( item );
+		provider = fma_object_get_provider( item );
 		if( provider ){
 			label = na_io_provider_get_name( provider );
 		}

@@ -98,7 +98,7 @@ static void          instance_set_property( GObject *object, guint property_id, 
 static void          instance_dispose( GObject *object );
 static void          instance_finalize( GObject *object );
 
-static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id );
+static FMAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id );
 
 /* FMAIIOProvider management */
 static void          on_items_changed_timeout( NAPivot *pivot );
@@ -245,8 +245,8 @@ instance_constructed( GObject *object )
 
 		/* force class initialization and io-factory registration
 		 */
-		g_object_unref( na_object_action_new_with_profile());
-		g_object_unref( na_object_menu_new());
+		g_object_unref( fma_object_action_new_with_profile());
+		g_object_unref( fma_object_menu_new());
 	}
 }
 
@@ -325,8 +325,8 @@ instance_dispose( GObject *object )
 		/* release item tree */
 		g_debug( "%s: tree=%p (count=%u)", thisfn,
 				( void * ) self->private->tree, g_list_length( self->private->tree ));
-		na_object_dump_tree( self->private->tree );
-		self->private->tree = na_object_free_items( self->private->tree );
+		fma_object_dump_tree( self->private->tree );
+		self->private->tree = fma_object_free_items( self->private->tree );
 
 		/* release the settings */
 		na_settings_free();
@@ -476,16 +476,16 @@ na_pivot_free_providers( GList *providers )
  *
  * Returns the specified item, action or menu.
  *
- * Returns: the required #NAObjectItem-derived object, or %NULL if not
+ * Returns: the required #FMAObjectItem-derived object, or %NULL if not
  * found.
  *
  * The returned pointer is owned by #NAPivot, and should not be
  * g_free() nor g_object_unref() by the caller.
  */
-NAObjectItem *
+FMAObjectItem *
 na_pivot_get_item( const NAPivot *pivot, const gchar *id )
 {
-	NAObjectItem *object = NULL;
+	FMAObjectItem *object = NULL;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
@@ -501,22 +501,22 @@ na_pivot_get_item( const NAPivot *pivot, const gchar *id )
 	return( object );
 }
 
-static NAObjectItem *
+static FMAObjectItem *
 get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id )
 {
 	GList *subitems, *ia;
-	NAObjectItem *found = NULL;
+	FMAObjectItem *found = NULL;
 
 	for( ia = tree ; ia && !found ; ia = ia->next ){
 
-		gchar *i_id = na_object_get_id( NA_OBJECT( ia->data ));
+		gchar *i_id = fma_object_get_id( FMA_OBJECT( ia->data ));
 
 		if( !g_ascii_strcasecmp( id, i_id )){
-			found = NA_OBJECT_ITEM( ia->data );
+			found = FMA_OBJECT_ITEM( ia->data );
 		}
 
-		if( !found && NA_IS_OBJECT_ITEM( ia->data )){
-			subitems = na_object_get_items( ia->data );
+		if( !found && FMA_IS_OBJECT_ITEM( ia->data )){
+			subitems = fma_object_get_items( ia->data );
 			found = get_item_from_tree( pivot, subitems, id );
 		}
 	}
@@ -569,7 +569,7 @@ na_pivot_load_items( NAPivot *pivot )
 		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
 		messages = NULL;
-		na_object_free_items( pivot->private->tree );
+		fma_object_free_items( pivot->private->tree );
 		pivot->private->tree = na_io_provider_load_items( pivot, pivot->private->loadable_set, &messages );
 
 		for( im = messages ; im ; im = im->next ){
@@ -600,7 +600,7 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
 		g_debug( "%s: pivot=%p, items=%p (count=%d)",
 				thisfn, ( void * ) pivot, ( void * ) items, items ? g_list_length( items ) : 0 );
 
-		na_object_free_items( pivot->private->tree );
+		fma_object_free_items( pivot->private->tree );
 		pivot->private->tree = items;
 	}
 }

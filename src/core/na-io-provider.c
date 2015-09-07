@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <api/fma-iio-provider.h>
-#include <api/na-object-api.h>
+#include <api/fma-object-api.h>
 #include <api/fma-core-utils.h>
 
 #include "na-iprefs.h"
@@ -97,9 +97,9 @@ static gboolean      is_finally_writable( const NAIOProvider *provider, const NA
 static GList        *load_items_filter_unwanted_items( const NAPivot *pivot, GList *merged, guint loadable_set );
 static GList        *load_items_filter_unwanted_items_rec( GList *merged, guint loadable_set );
 static GList        *load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **messages );
-static GList        *load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_empty, NAObjectItem *parent );
+static GList        *load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_empty, FMAObjectItem *parent );
 static GList        *load_items_hierarchy_sort( const NAPivot *pivot, GList *tree, GCompareFunc fn );
-static gint          peek_item_by_id_compare( const NAObject *obj, const gchar *id );
+static gint          peek_item_by_id_compare( const FMAObject *obj, const gchar *id );
 static NAIOProvider *peek_provider_by_id( const GList *providers, const gchar *id );
 
 GType
@@ -841,10 +841,10 @@ na_io_provider_is_finally_writable( const NAIOProvider *provider, guint *reason 
  * Loads the tree from I/O storage subsystems.
  *
  * Returns: a #GList of newly allocated objects as a hierarchical tree
- * in display order. This tree contains #NAObjectMenu menus, along with
- * #NAObjectAction actions and their #NAObjectProfile profiles.
+ * in display order. This tree contains #FMAObjectMenu menus, along with
+ * #FMAObjectAction actions and their #FMAObjectProfile profiles.
  *
- * The returned list should be na_object_free_items().
+ * The returned list should be fma_object_free_items().
  */
 GList *
 na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **messages )
@@ -892,11 +892,11 @@ na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **me
 	order_mode = na_iprefs_get_order_mode( NULL );
 	switch( order_mode ){
 		case IPREFS_ORDER_ALPHA_ASCENDING:
-			hierarchy = load_items_hierarchy_sort( pivot, hierarchy, ( GCompareFunc ) na_object_id_sort_alpha_asc );
+			hierarchy = load_items_hierarchy_sort( pivot, hierarchy, ( GCompareFunc ) fma_object_id_sort_alpha_asc );
 			break;
 
 		case IPREFS_ORDER_ALPHA_DESCENDING:
-			hierarchy = load_items_hierarchy_sort( pivot, hierarchy, ( GCompareFunc ) na_object_id_sort_alpha_desc );
+			hierarchy = load_items_hierarchy_sort( pivot, hierarchy, ( GCompareFunc ) fma_object_id_sort_alpha_desc );
 			break;
 
 		case IPREFS_ORDER_MANUAL:
@@ -910,7 +910,7 @@ na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **me
 	g_list_free( hierarchy );
 
 	g_debug( "%s: tree after filtering and reordering (if any)", thisfn );
-	na_object_dump_tree( filtered );
+	fma_object_dump_tree( filtered );
 	g_debug( "%s: end of tree", thisfn );
 
 	return( filtered );
@@ -1025,7 +1025,7 @@ load_items_filter_unwanted_items( const NAPivot *pivot, GList *hierarchy, guint 
 	GList *filtered;
 
 	for( it = hierarchy ; it ; it = it->next ){
-		na_object_check_status( it->data );
+		fma_object_check_status( it->data );
 	}
 
 	filtered = load_items_filter_unwanted_items_rec( hierarchy, loadable_set );
@@ -1059,34 +1059,34 @@ load_items_filter_unwanted_items_rec( GList *hierarchy, guint loadable_set )
 		itnext = it->next;
 		selected = FALSE;
 		is_enabled = FALSE;
-		is_valid = na_object_is_valid( it->data );
+		is_valid = fma_object_is_valid( it->data );
 
-		if( NA_IS_OBJECT_PROFILE( it->data )){
+		if( FMA_IS_OBJECT_PROFILE( it->data )){
 			if( is_valid || load_invalid ){
 				filtered = g_list_append( filtered, it->data );
 				selected = TRUE;
 			}
 		}
 
-		if( NA_IS_OBJECT_ITEM( it->data )){
-			is_enabled = na_object_is_enabled( it->data );
+		if( FMA_IS_OBJECT_ITEM( it->data )){
+			is_enabled = fma_object_is_enabled( it->data );
 
 			if(( is_enabled || load_disabled ) && ( is_valid || load_invalid )){
-				subitems = na_object_get_items( it->data );
+				subitems = fma_object_get_items( it->data );
 				subitems_f = load_items_filter_unwanted_items_rec( subitems, loadable_set );
-				na_object_set_items( it->data, subitems_f );
+				fma_object_set_items( it->data, subitems_f );
 				filtered = g_list_append( filtered, it->data );
 				selected = TRUE;
 			}
 		}
 
 		if( !selected ){
-			label = na_object_get_label( it->data );
+			label = fma_object_get_label( it->data );
 			g_debug( "%s: filtering %p (%s) '%s': valid=%s, enabled=%s",
 					thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), label,
 					is_valid ? "true":"false", is_enabled ? "true":"false" );
 			g_free( label );
-			na_object_unref( it->data );
+			fma_object_unref( it->data );
 		}
 	}
 
@@ -1123,8 +1123,8 @@ load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **m
 			items = FMA_IIO_PROVIDER_GET_INTERFACE( provider_module )->read_items( provider_module, messages );
 
 			for( it = items ; it ; it = it->next ){
-				na_object_set_provider( it->data, provider_object );
-				na_object_dump( it->data );
+				fma_object_set_provider( it->data, provider_object );
+				fma_object_dump( it->data );
 			}
 
 			merged = g_list_concat( merged, items );
@@ -1141,7 +1141,7 @@ load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **m
  * output list.
  */
 static GList *
-load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_empty, NAObjectItem *parent )
+load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_empty, FMAObjectItem *parent )
 {
 	static const gchar *thisfn = "na_io_provider_load_items_hierarchy_build";
 	GList *hierarchy, *it;
@@ -1157,17 +1157,17 @@ load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_e
 			it = g_list_find_custom( *tree, ilevel->data, ( GCompareFunc ) peek_item_by_id_compare );
 			if( it ){
 				hierarchy = g_list_append( hierarchy, it->data );
-				na_object_set_parent( it->data, parent );
+				fma_object_set_parent( it->data, parent );
 
 				g_debug( "%s: id=%s: %s (%p) appended to hierarchy %p",
 						thisfn, ( gchar * ) ilevel->data, G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data, ( void * ) hierarchy );
 
 				*tree = g_list_remove_link( *tree, it );
 
-				if( NA_IS_OBJECT_MENU( it->data )){
-					subitems_ids = na_object_get_items_slist( it->data );
-					subitems = load_items_hierarchy_build( tree, subitems_ids, FALSE, NA_OBJECT_ITEM( it->data ));
-					na_object_set_items( it->data, subitems );
+				if( FMA_IS_OBJECT_MENU( it->data )){
+					subitems_ids = fma_object_get_items_slist( it->data );
+					subitems = load_items_hierarchy_build( tree, subitems_ids, FALSE, FMA_OBJECT_ITEM( it->data ));
+					fma_object_set_items( it->data, subitems );
 					fma_core_utils_slist_free( subitems_ids );
 				}
 			}
@@ -1180,7 +1180,7 @@ load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_e
 	else if( list_if_empty ){
 		for( it = *tree ; it ; it = it->next ){
 			hierarchy = g_list_append( hierarchy, it->data );
-			na_object_set_parent( it->data, parent );
+			fma_object_set_parent( it->data, parent );
 		}
 		g_list_free( *tree );
 		*tree = NULL;
@@ -1200,10 +1200,10 @@ load_items_hierarchy_sort( const NAPivot *pivot, GList *tree, GCompareFunc fn )
 	/* recursively sort each level of the tree
 	 */
 	for( it = sorted ; it ; it = it->next ){
-		if( NA_IS_OBJECT_MENU( it->data )){
-			items = na_object_get_items( it->data );
+		if( FMA_IS_OBJECT_MENU( it->data )){
+			items = fma_object_get_items( it->data );
 			items = load_items_hierarchy_sort( pivot, items, fn );
-			na_object_set_items( it->data, items );
+			fma_object_set_items( it->data, items );
 		}
 	}
 
@@ -1214,13 +1214,13 @@ load_items_hierarchy_sort( const NAPivot *pivot, GList *tree, GCompareFunc fn )
  * returns zero when @obj has the required @id
  */
 static gint
-peek_item_by_id_compare( const NAObject *obj, const gchar *id )
+peek_item_by_id_compare( const FMAObject *obj, const gchar *id )
 {
 	gchar *obj_id;
 	gint ret = 1;
 
-	if( NA_IS_OBJECT_ITEM( obj )){
-		obj_id = na_object_get_id( obj );
+	if( FMA_IS_OBJECT_ITEM( obj )){
+		obj_id = fma_object_get_id( obj );
 		ret = strcmp( obj_id, id );
 		g_free( obj_id );
 	}
@@ -1231,7 +1231,7 @@ peek_item_by_id_compare( const NAObject *obj, const gchar *id )
 /*
  * na_io_provider_write_item:
  * @provider: this #NAIOProvider object.
- * @item: a #NAObjectItem to be written to the storage subsystem.
+ * @item: a #FMAObjectItem to be written to the storage subsystem.
  * @messages: error messages.
  *
  * Writes an @item to the storage subsystem.
@@ -1244,7 +1244,7 @@ peek_item_by_id_compare( const NAObject *obj, const gchar *id )
  * storage subsystem.
  */
 guint
-na_io_provider_write_item( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages )
+na_io_provider_write_item( const NAIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
 	static const gchar *thisfn = "na_io_provider_write_item";
 	guint ret;
@@ -1257,14 +1257,14 @@ na_io_provider_write_item( const NAIOProvider *provider, const NAObjectItem *ite
 	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider->private->provider ), ret );
 	g_return_val_if_fail( FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item, ret );
 
 	ret = FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item( provider->private->provider, item, messages );
 
 	if( ret == FMA_IIO_PROVIDER_CODE_OK ){
-		na_object_set_provider( item, provider );
+		fma_object_set_provider( item, provider );
 	}
 
 	return( ret );
@@ -1273,7 +1273,7 @@ na_io_provider_write_item( const NAIOProvider *provider, const NAObjectItem *ite
 /*
  * na_io_provider_delete_item:
  * @provider: this #NAIOProvider object.
- * @item: the #NAObjectItem item to be deleted.
+ * @item: the #FMAObjectItem item to be deleted.
  * @messages: error messages.
  *
  * Deletes an item (action or menu) from the storage subsystem.
@@ -1281,7 +1281,7 @@ na_io_provider_write_item( const NAIOProvider *provider, const NAObjectItem *ite
  * Returns: the FMAIIOProvider return code.
  */
 guint
-na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages )
+na_io_provider_delete_item( const NAIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
 	static const gchar *thisfn = "na_io_provider_delete_item";
 	guint ret;
@@ -1294,7 +1294,7 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
 	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider->private->provider ), ret );
 	g_return_val_if_fail( FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item, ret );
 
@@ -1306,8 +1306,8 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
 /*
  * na_io_provider_duplicate_data:
  * @provider: this #NAIOProvider object.
- * @dest: the target #NAObjectItem item.
- * @source: the source #NAObjectItem item.
+ * @dest: the target #FMAObjectItem item.
+ * @source: the source #FMAObjectItem item.
  * @messages: error messages.
  *
  * Duplicates provider data (if any) from @source to @dest.
@@ -1315,7 +1315,7 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
  * Returns: the FMAIIOProvider return code.
  */
 guint
-na_io_provider_duplicate_data( const NAIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages )
+na_io_provider_duplicate_data( const NAIOProvider *provider, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages )
 {
 	static const gchar *thisfn = "na_io_provider_duplicate_data";
 	guint ret;
@@ -1330,12 +1330,12 @@ na_io_provider_duplicate_data( const NAIOProvider *provider, NAObjectItem *dest,
 	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( dest ), ret );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( source ), ret );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( dest ), ret );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( source ), ret );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider->private->provider ), ret );
 
-	na_object_set_provider_data( dest, NULL );
-	provider_data = na_object_get_provider_data( source );
+	fma_object_set_provider_data( dest, NULL );
+	provider_data = fma_object_get_provider_data( source );
 
 	if( provider_data &&
 		FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->duplicate_data ){

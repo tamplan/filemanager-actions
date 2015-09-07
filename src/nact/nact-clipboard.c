@@ -34,7 +34,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include "api/na-object-api.h"
+#include "api/fma-object-api.h"
 
 #include "core/na-exporter.h"
 #include "core/na-export-format.h"
@@ -114,7 +114,7 @@ static void   get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelec
 static void   clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *data );
 static gchar *export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder );
 static gchar *export_objects( NactClipboard *clipboard, GList *objects );
-static gchar *export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported, gboolean first );
+static gchar *export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *dest_folder, GList **exported, gboolean first );
 
 static void   get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard );
 static void   clear_primary_clipboard( NactClipboard *clipboard );
@@ -492,7 +492,7 @@ export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 	GList *exported, *irow;
 	GtkTreePath *path;
 	GtkTreeIter iter;
-	NAObject *object;
+	FMAObject *object;
 	gchar *buffer;
 	gboolean first;
 
@@ -532,7 +532,7 @@ export_objects( NactClipboard *clipboard, GList *objects )
 	GString *data;
 	GList *exported;
 	GList *iobj;
-	NAObject *object;
+	FMAObject *object;
 	gboolean first;
 
 	first = TRUE;
@@ -541,7 +541,7 @@ export_objects( NactClipboard *clipboard, GList *objects )
 	data = g_string_new( "" );
 
 	for( iobj = objects ; iobj ; iobj = iobj->next ){
-		object = NA_OBJECT( iobj->data );
+		object = FMA_OBJECT( iobj->data );
 		buffer = export_row_object( clipboard, object, NULL, &exported, first );
 		if( buffer && strlen( buffer )){
 			data = g_string_append( data, buffer );
@@ -563,13 +563,13 @@ export_objects( NactClipboard *clipboard, GList *objects )
  * exported twice
  */
 static gchar *
-export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported, gboolean first )
+export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *dest_folder, GList **exported, gboolean first )
 {
 	static const gchar *thisfn = "nact_clipboard_export_row_object";
 	GList *subitems, *isub;
 	NactApplication *application;
 	NAUpdater *updater;
-	NAObjectItem *item;
+	FMAObjectItem *item;
 	gchar *item_label;
 	gint index;
 	GString *data;
@@ -582,8 +582,8 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 
 	/* if we have a menu, first export the subitems
 	 */
-	if( NA_IS_OBJECT_MENU( object )){
-		subitems = na_object_get_items( object );
+	if( FMA_IS_OBJECT_MENU( object )){
+		subitems = fma_object_get_items( object );
 
 		for( isub = subitems ; isub ; isub = isub->next ){
 			buffer = export_row_object( clipboard, isub->data, dest_folder, exported, first );
@@ -595,13 +595,13 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 		}
 	}
 
-	/* only export NAObjectItem type
+	/* only export FMAObjectItem type
 	 * here, object may be a menu, an action or a profile
 	 */
 	msgs = NULL;
-	item = ( NAObjectItem * ) object;
-	if( NA_IS_OBJECT_PROFILE( object )){
-		item = NA_OBJECT_ITEM( na_object_get_parent( object ));
+	item = ( FMAObjectItem * ) object;
+	if( FMA_IS_OBJECT_PROFILE( object )){
+		item = FMA_OBJECT_ITEM( fma_object_get_parent( object ));
 	}
 
 	application = NACT_APPLICATION(
@@ -611,7 +611,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	index = g_list_index( *exported, ( gconstpointer ) item );
 	if( index == -1 ){
 
-		item_label = na_object_get_label( item );
+		item_label = fma_object_get_label( item );
 		g_debug( "%s: exporting %s", thisfn, item_label );
 		g_free( item_label );
 
@@ -648,7 +648,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 /**
  * nact_clipboard_primary_set:
  * @clipboard: this #NactClipboard object.
- * @items: a list of #NAObject items
+ * @items: a list of #FMAObject items
  * @mode: where do these items come from ?
  *  Or what is the operation which has led the items to the clipboard?
  *
@@ -690,7 +690,7 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 			clear_primary_clipboard( clipboard );
 		}
 
-		na_object_item_count_items( items,
+		fma_object_item_count_items( items,
 				( gint * ) &user_data->nb_menus,
 				( gint * ) &user_data->nb_actions,
 				( gint * ) &user_data->nb_profiles,
@@ -698,7 +698,7 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 
 		for( it = items ; it ; it = it->next ){
 			user_data->items =
-					g_list_prepend( user_data->items, na_object_duplicate( it->data, DUPLICATE_REC ));
+					g_list_prepend( user_data->items, fma_object_duplicate( it->data, DUPLICATE_REC ));
 		}
 		user_data->items = g_list_reverse( user_data->items );
 
@@ -732,7 +732,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 	GtkSelectionData *selection;
 	PrimaryData *user_data;
 	GList *it;
-	NAObject *obj;
+	FMAObject *obj;
 
 	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
 	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
@@ -748,8 +748,8 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 
 			if( user_data ){
 				for( it = user_data->items ; it ; it = it->next ){
-					obj = NA_OBJECT( na_object_duplicate( it->data, DUPLICATE_REC ));
-					na_object_set_origin( obj, NULL );
+					obj = FMA_OBJECT( fma_object_duplicate( it->data, DUPLICATE_REC ));
+					fma_object_set_origin( obj, NULL );
 					items = g_list_prepend( items, obj );
 				}
 				items = g_list_reverse( items );
@@ -903,7 +903,7 @@ dump_primary_clipboard( NactClipboard *clipboard )
 			g_debug( "%s:                 user_data->mode=%d (%s)", thisfn, user_data->mode, mode );
 			g_free( mode );
 			for( it = user_data->items ; it ; it = it->next ){
-				na_object_object_dump( NA_OBJECT( it->data ));
+				fma_object_object_dump( FMA_OBJECT( it->data ));
 			}
 		}
 
