@@ -35,7 +35,7 @@
  * @include: core/na-export-format.h
  */
 
-#include <api/na-iexporter.h>
+#include <api/fma-iexporter.h>
 
 G_BEGIN_DECLS
 
@@ -64,9 +64,9 @@ typedef struct {
 
 GType           na_export_format_get_type    ( void );
 
-NAExportFormat *na_export_format_new         ( const NAIExporterFormatv2 *exporter_format );
+NAExportFormat *na_export_format_new         ( const FMAIExporterFormatv2 *exporter_format );
 
-NAIExporter    *na_export_format_get_provider( const NAExportFormat *format );
+FMAIExporter    *na_export_format_get_provider( const NAExportFormat *format );
 
 G_END_DECLS
 

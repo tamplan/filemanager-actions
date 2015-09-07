@@ -87,7 +87,7 @@ main( int argc, char** argv )
 	gchar *help;
 	gint errors;
 	NAObjectItem *item;
-	NAIExporter *exporter;
+	FMAIExporter *exporter;
 
 #if !GLIB_CHECK_VERSION( 2,36, 0 )
 	g_type_init();

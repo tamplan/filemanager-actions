@@ -31,7 +31,7 @@ api_include_HEADERS = \
 	fma-extension.h										\
 	\
 	fma-dbus.h											\
-	na-iexporter.h										\
+	fma-iexporter.h										\
 	na-iimporter.h										\
 	na-ifactory-provider.h								\
 	na-ifactory-provider-provider.h						\

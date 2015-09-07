@@ -94,27 +94,27 @@ static NaxmlExportFormat naxml_formats[] = {
 };
 
 #if 0
-static void on_pixbuf_finalized( const NAIExporter* exporter, GObject *pixbuf );
+static void on_pixbuf_finalized( const FMAIExporter* exporter, GObject *pixbuf );
 #endif
 
 /**
  * naxml_formats_get_formats:
- * @exporter: this #NAIExporter provider.
+ * @exporter: this #FMAIExporter provider.
  *
- * Returns: a #GList of the #NAIExporterFormatv2 supported export formats.
+ * Returns: a #GList of the #FMAIExporterFormatv2 supported export formats.
  *
  * This list should be naxml_formats_free_formats() by the caller.
  *
  * Since: 3.2
  */
 GList *
-naxml_formats_get_formats( const NAIExporter* exporter )
+naxml_formats_get_formats( const FMAIExporter* exporter )
 {
 #if 0
 	static const gchar *thisfn = "naxml_formats_get_formats";
 #endif
 	GList *str_list;
-	NAIExporterFormatv2 *str;
+	FMAIExporterFormatv2 *str;
 	guint i;
 	gint width, height;
 	gchar *fname;
@@ -126,9 +126,9 @@ naxml_formats_get_formats( const NAIExporter* exporter )
 	}
 
 	for( i = 0 ; naxml_formats[i].format ; ++i ){
-		str = g_new0( NAIExporterFormatv2, 1 );
+		str = g_new0( FMAIExporterFormatv2, 1 );
 		str->version = 2;
-		str->provider = NA_IEXPORTER( exporter );
+		str->provider = FMA_IEXPORTER( exporter );
 		str->format = g_strdup( naxml_formats[i].format );
 		str->label = g_strdup( gettext( naxml_formats[i].label ));
 		str->description = g_strdup( gettext( naxml_formats[i].description ));
@@ -156,7 +156,7 @@ naxml_formats_get_formats( const NAIExporter* exporter )
 
 #if 0
 static void
-on_pixbuf_finalized( const NAIExporter* exporter, GObject *pixbuf )
+on_pixbuf_finalized( const FMAIExporter* exporter, GObject *pixbuf )
 {
 	g_debug( "naxml_formats_on_pixbuf_finalized: exporter=%p, pixbuf=%p", ( void * ) exporter, ( void * ) pixbuf );
 }
@@ -174,10 +174,10 @@ void
 naxml_formats_free_formats( GList *formats )
 {
 	GList *is;
-	NAIExporterFormatv2 *str;
+	FMAIExporterFormatv2 *str;
 
 	for( is = formats ; is ; is = is->next ){
-		str = ( NAIExporterFormatv2 * ) is->data;
+		str = ( FMAIExporterFormatv2 * ) is->data;
 		g_free( str->format );
 		g_free( str->label );
 		g_free( str->description );

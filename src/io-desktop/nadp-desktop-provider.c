@@ -70,11 +70,11 @@ static guint  ifactory_provider_get_version( const NAIFactoryProvider *reader );
 static void   iimporter_iface_init( NAIImporterInterface *iface );
 static guint  iimporter_get_version( const NAIImporter *importer );
 
-static void   iexporter_iface_init( NAIExporterInterface *iface );
-static guint  iexporter_get_version( const NAIExporter *exporter );
-static gchar *iexporter_get_name( const NAIExporter *exporter );
-static void  *iexporter_get_formats( const NAIExporter *exporter );
-static void   iexporter_free_formats( const NAIExporter *exporter, GList *format_list );
+static void   iexporter_iface_init( FMAIExporterInterface *iface );
+static guint  iexporter_get_version( const FMAIExporter *exporter );
+static gchar *iexporter_get_name( const FMAIExporter *exporter );
+static void  *iexporter_get_formats( const FMAIExporter *exporter );
+static void   iexporter_free_formats( const FMAIExporter *exporter, GList *format_list );
 
 static void   on_monitor_timeout( NadpDesktopProvider *provider );
 
@@ -135,7 +135,7 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_module_type, NA_TYPE_IIMPORTER, &iimporter_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_TYPE_IEXPORTER, &iexporter_iface_info );
+	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IEXPORTER, &iexporter_iface_info );
 }
 
 static void
@@ -299,7 +299,7 @@ iimporter_get_version( const NAIImporter *importer )
 }
 
 static void
-iexporter_iface_init( NAIExporterInterface *iface )
+iexporter_iface_init( FMAIExporterInterface *iface )
 {
 	static const gchar *thisfn = "nadp_desktop_iexporter_iface_init";
 
@@ -314,25 +314,25 @@ iexporter_iface_init( NAIExporterInterface *iface )
 }
 
 static guint
-iexporter_get_version( const NAIExporter *exporter )
+iexporter_get_version( const FMAIExporter *exporter )
 {
 	return( 2 );
 }
 
 static gchar *
-iexporter_get_name( const NAIExporter *exporter )
+iexporter_get_name( const FMAIExporter *exporter )
 {
 	return( g_strdup( "NA Desktop Exporter" ));
 }
 
 static void *
-iexporter_get_formats( const NAIExporter *exporter )
+iexporter_get_formats( const FMAIExporter *exporter )
 {
 	return(( void * ) nadp_formats_get_formats( exporter ));
 }
 
 static void
-iexporter_free_formats( const NAIExporter *exporter, GList *format_list )
+iexporter_free_formats( const FMAIExporter *exporter, GList *format_list )
 {
 	nadp_formats_free_formats( format_list );
 }

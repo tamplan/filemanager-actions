@@ -27,16 +27,16 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_IEXPORTER_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_IEXPORTER_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_IEXPORTER_H__
+#define __FILE_MANAGER_ACTIONS_API_IEXPORTER_H__
 
 /**
  * SECTION: iexporter
- * @title: NAIExporter
+ * @title: FMAIExporter
  * @short_description: The Export Interface
- * @include: file-manager-actions/na-iexporter.h
+ * @include: file-manager-actions/fma-iexporter.h
  *
- * The #NAIExporter interface exports items to the outside world. Each
+ * The #FMAIExporter interface exports items to the outside world. Each
  * implementation may provide one or more formats.
  *
  * <refsect2>
@@ -110,7 +110,7 @@
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIExporter interface</title>
+ *    <title>Historic of the versions of the #FMAIExporter interface</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -119,7 +119,7 @@
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIExporter interface version</entry>
+ *          <entry>#FMAIExporter interface version</entry>
  *          <entry></entry>
  *          <entry></entry>
  *        </row>
@@ -148,24 +148,24 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_IEXPORTER                      ( na_iexporter_get_type())
-#define NA_IEXPORTER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IEXPORTER, NAIExporter ))
-#define NA_IS_IEXPORTER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IEXPORTER ))
-#define NA_IEXPORTER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IEXPORTER, NAIExporterInterface ))
+#define FMA_TYPE_IEXPORTER                      ( fma_iexporter_get_type())
+#define FMA_IEXPORTER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IEXPORTER, FMAIExporter ))
+#define FMA_IS_IEXPORTER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IEXPORTER ))
+#define FMA_IEXPORTER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IEXPORTER, FMAIExporterInterface ))
 
-typedef struct _NAIExporter                    NAIExporter;
-typedef struct _NAIExporterInterfacePrivate    NAIExporterInterfacePrivate;
+typedef struct _FMAIExporter                    FMAIExporter;
+typedef struct _FMAIExporterInterfacePrivate    FMAIExporterInterfacePrivate;
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
- * NAIExporterFormat:
+ * FMAIExporterFormat:
  * @format:      format identifier (ascii).
  * @label:       short label to be displayed in dialog (UTF-8 localized)
  * @description: full description of the format (UTF-8 localized);
  *               mainly used in the export assistant.
  *
  * This structure describes a supported output format.
- * It must be provided by each #NAIExporter implementation
+ * It must be provided by each #FMAIExporter implementation
  * (see e.g. <filename>src/io-xml/naxml-formats.c</filename>).
  *
  * When listing available export formats, the instance returns a #GList
@@ -178,10 +178,10 @@ typedef struct {
 	gchar     *label;
 	gchar     *description;
 }
-	NAIExporterFormat;
+	FMAIExporterFormat;
 
 /**
- * NAIExporterFileParms:
+ * FMAIExporterFileParms:
  * @version:  [in] version of this structure;
  *                 since structure version 1.
  * @exported: [in] exported NAObjectItem-derived object;
@@ -198,7 +198,7 @@ typedef struct {
  *                 since structure version 1.
  *
  * The structure that the implementation receives as a parameter of
- * #NAIExporterInterface.to_file () interface method.
+ * #FMAIExporterInterface.to_file () interface method.
  *
  * Deprecated: 3.2
  */
@@ -210,10 +210,10 @@ typedef struct {
 	gchar        *basename;
 	GSList       *messages;
 }
-	NAIExporterFileParms;
+	FMAIExporterFileParms;
 
 /**
- * NAIExporterBufferParms:
+ * FMAIExporterBufferParms:
  * @version:  [in] version of this structure;
  *                 since structure version 1.
  * @exported: [in] exported NAObjectItem-derived object;
@@ -228,7 +228,7 @@ typedef struct {
  *                 since structure version 1.
  *
  * The structure that the plugin receives as a parameter of
- * #NAIExporterInterface.to_buffer () interface method.
+ * #FMAIExporterInterface.to_buffer () interface method.
  *
  * Deprecated: 3.2
  */
@@ -239,16 +239,16 @@ typedef struct {
 	gchar        *buffer;
 	GSList       *messages;
 }
-	NAIExporterBufferParms;
+	FMAIExporterBufferParms;
 
 #endif /* NA_ENABLE_DEPRECATED */
 
 /**
- * NAIExporterFormatv2:
- * @version:     the version of this #NAIExporterFormatv2 structure;
+ * FMAIExporterFormatv2:
+ * @version:     the version of this #FMAIExporterFormatv2 structure;
  *               equals to 2;
  *               since structure version 1.
- * @provider:    the #NAIExporter provider for this format;
+ * @provider:    the #FMAIExporter provider for this format;
  *               since structure version 2.
  * @format:      format identifier (ascii, allocated by the FileManager-Actions team);
  *               since structure version 2.
@@ -262,7 +262,7 @@ typedef struct {
  *               since structure version 2.
  *
  * This structure describes a supported output format.
- * It must be provided by each #NAIExporter implementation
+ * It must be provided by each #FMAIExporter implementation
  * (see e.g. <filename>src/io-xml/naxml-formats.c</filename>).
  *
  * When listing available export formats, the @provider must return a #GList
@@ -271,7 +271,7 @@ typedef struct {
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIExporterFormatv2 structure</title>
+ *    <title>Historic of the versions of the #FMAIExporterFormatv2 structure</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -279,7 +279,7 @@ typedef struct {
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIExporterFormatv2 structure version</entry>
+ *          <entry>#FMAIExporterFormatv2 structure version</entry>
  *          <entry></entry>
  *        </row>
  *      </thead>
@@ -303,16 +303,16 @@ typedef struct {
  */
 typedef struct {
 	guint        version;
-	NAIExporter *provider;
+	FMAIExporter *provider;
 	gchar       *format;
 	gchar       *label;
 	gchar       *description;
 	GdkPixbuf   *pixbuf;
 }
-	NAIExporterFormatv2;
+	FMAIExporterFormatv2;
 
 /**
- * NAIExporterFileParmsv2:
+ * FMAIExporterFileParmsv2:
  * @version:  [in] version of this structure;
  *                 equals to 2;
  *                 since structure version 1.
@@ -333,7 +333,7 @@ typedef struct {
  *                 since structure version 1.
  *
  * The structure that the plugin receives as a parameter of
- * #NAIExporterInterface.to_file () interface method.
+ * #FMAIExporterInterface.to_file () interface method.
  *
  * Since: 3.2
  */
@@ -346,10 +346,10 @@ typedef struct {
 	gchar        *basename;
 	GSList       *messages;
 }
-	NAIExporterFileParmsv2;
+	FMAIExporterFileParmsv2;
 
 /**
- * NAIExporterBufferParmsv2:
+ * FMAIExporterBufferParmsv2:
  * @version:  [in] version of this structure;
  *                 equals to 2;
  *                 since structure version 1.
@@ -368,7 +368,7 @@ typedef struct {
  *                 since structure version 1.
  *
  * The structure that the plugin receives as a parameter of
- * #NAIExporterInterface.to_buffer () interface method.
+ * #FMAIExporterInterface.to_buffer () interface method.
  *
  * Since: 3.2
  */
@@ -380,10 +380,10 @@ typedef struct {
 	gchar        *buffer;
 	GSList       *messages;
 }
-	NAIExporterBufferParmsv2;
+	FMAIExporterBufferParmsv2;
 
 /**
- * NAIExporterInterface:
+ * FMAIExporterInterface:
  * @get_version:  [should] returns the version of this interface the plugin implements.
  * @get_name:     [should] returns the public plugin name.
  * @get_formats:  [should] returns the list of supported formats.
@@ -391,17 +391,17 @@ typedef struct {
  * @to_file:      [should] exports an item to a file.
  * @to_buffer:    [should] exports an item to a buffer.
  *
- * This defines the interface that a #NAIExporter should implement.
+ * This defines the interface that a #FMAIExporter should implement.
  */
 typedef struct {
 	/*< private >*/
 	GTypeInterface               parent;
-	NAIExporterInterfacePrivate *private;
+	FMAIExporterInterfacePrivate *private;
 
 	/*< public >*/
 	/**
 	 * get_version:
-	 * @instance: this NAIExporter instance.
+	 * @instance: this FMAIExporter instance.
 	 *
 	 * FileManager-Actions calls this method each time it needs to know
 	 * which version of this interface the plugin implements.
@@ -417,11 +417,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint   ( *get_version )( const NAIExporter *instance );
+	guint   ( *get_version )( const FMAIExporter *instance );
 
 	/**
 	 * get_name:
-	 * @instance: this NAIExporter instance.
+	 * @instance: this FMAIExporter instance.
 	 *
 	 * Return value: if implemented, the method should return the name to be
 	 * displayed, as a newly allocated string which will be g_free() by the
@@ -434,11 +434,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gchar * ( *get_name )   ( const NAIExporter *instance );
+	gchar * ( *get_name )   ( const FMAIExporter *instance );
 
 	/**
 	 * get_formats:
-	 * @instance: this NAIExporter instance.
+	 * @instance: this FMAIExporter instance.
 	 *
 	 * For its own internal needs, FileManager-Actions requires each export
 	 * format has its own unique identifier (in fact, just a small ASCII
@@ -451,15 +451,15 @@ typedef struct {
 	 *
 	 * Return value:
 	 * - Interface v1:
-	 *   a null-terminated list of NAIExporterFormat structures
-	 *   which describes the formats supported by this NAIExporter
+	 *   a null-terminated list of FMAIExporterFormat structures
+	 *   which describes the formats supported by this FMAIExporter
 	 *   provider.
-	 *   The returned list is owned by the NAIExporter provider,
+	 *   The returned list is owned by the FMAIExporter provider,
 	 *   and should not be freed nor released by the caller.
 	 *
 	 * - Interface v2:
-	 *   a GList of NAIExporterFormatv2 structures
-	 *   which describes the formats supported by this NAIExporter
+	 *   a GList of FMAIExporterFormatv2 structures
+	 *   which describes the formats supported by this FMAIExporter
 	 *   provider.
 	 *   The caller should then invoke the free_formats() method
 	 *   in order the provider be able to release the resources
@@ -469,74 +469,74 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void *  ( *get_formats )( const NAIExporter *instance );
+	void *  ( *get_formats )( const FMAIExporter *instance );
 
 	/**
 	 * free_formats:
-	 * @instance: this NAIExporter instance.
-	 * @formats: a null-terminated list of NAIExporterFormatv2 structures,
+	 * @instance: this FMAIExporter instance.
+	 * @formats: a null-terminated list of FMAIExporterFormatv2 structures,
 	 *  as returned by get_formats() method above.
 	 *
 	 * Free the resources allocated to the @formats list.
 	 *
 	 * Since: 3.2
 	 */
-	void    ( *free_formats )( const NAIExporter *instance, GList *formats );
+	void    ( *free_formats )( const FMAIExporter *instance, GList *formats );
 
 	/**
 	 * to_file:
-	 * @instance: this NAIExporter instance.
-	 * @parms: a NAIExporterFileParmsv2 structure.
+	 * @instance: this FMAIExporter instance.
+	 * @parms: a FMAIExporterFileParmsv2 structure.
 	 *
 	 * Exports the specified 'exported' to the target 'folder' in the required
 	 * 'format'.
 	 *
-	 * Return value: the NAIExporterExportStatus status of the operation.
+	 * Return value: the FMAIExporterExportStatus status of the operation.
 	 *
 	 * Since: 2.30
 	 */
-	guint   ( *to_file )    ( const NAIExporter *instance, NAIExporterFileParmsv2 *parms );
+	guint   ( *to_file )    ( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms );
 
 	/**
 	 * to_buffer:
-	 * @instance: this NAIExporter instance.
-	 * @parms: a NAIExporterFileParmsv2 structure.
+	 * @instance: this FMAIExporter instance.
+	 * @parms: a FMAIExporterFileParmsv2 structure.
 	 *
 	 * Exports the specified 'exported' to a newly allocated 'buffer' in
 	 * the required 'format'. The allocated 'buffer' will be g_free()
 	 * by the caller.
 	 *
-	 * Return value: the NAIExporterExportStatus status of the operation.
+	 * Return value: the FMAIExporterExportStatus status of the operation.
 	 *
 	 * Since: 2.30
 	 */
-	guint   ( *to_buffer )  ( const NAIExporter *instance, NAIExporterBufferParmsv2 *parms );
+	guint   ( *to_buffer )  ( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms );
 }
-	NAIExporterInterface;
+	FMAIExporterInterface;
 
 /**
- * NAIExporterExportStatus:
- * @NA_IEXPORTER_CODE_OK:              export OK.
- * @NA_IEXPORTER_CODE_INVALID_ITEM:    exported item was found invalid.
- * @NA_IEXPORTER_CODE_INVALID_TARGET:  selected target was found invalid.
- * @NA_IEXPORTER_CODE_INVALID_FORMAT:  asked format was found invalid.
- * @NA_IEXPORTER_CODE_UNABLE_TO_WRITE: unable to write the item.
- * @NA_IEXPORTER_CODE_ERROR:           other undetermined error.
+ * FMAIExporterExportStatus:
+ * @FMA_IEXPORTER_CODE_OK:              export OK.
+ * @FMA_IEXPORTER_CODE_INVALID_ITEM:    exported item was found invalid.
+ * @FMA_IEXPORTER_CODE_INVALID_TARGET:  selected target was found invalid.
+ * @FMA_IEXPORTER_CODE_INVALID_FORMAT:  asked format was found invalid.
+ * @FMA_IEXPORTER_CODE_UNABLE_TO_WRITE: unable to write the item.
+ * @FMA_IEXPORTER_CODE_ERROR:           other undetermined error.
  *
  * The reasons for which an item may not have been exported
  */
 typedef enum {
-	NA_IEXPORTER_CODE_OK = 0,
-	NA_IEXPORTER_CODE_INVALID_ITEM,
-	NA_IEXPORTER_CODE_INVALID_TARGET,
-	NA_IEXPORTER_CODE_INVALID_FORMAT,
-	NA_IEXPORTER_CODE_UNABLE_TO_WRITE,
-	NA_IEXPORTER_CODE_ERROR,
+	FMA_IEXPORTER_CODE_OK = 0,
+	FMA_IEXPORTER_CODE_INVALID_ITEM,
+	FMA_IEXPORTER_CODE_INVALID_TARGET,
+	FMA_IEXPORTER_CODE_INVALID_FORMAT,
+	FMA_IEXPORTER_CODE_UNABLE_TO_WRITE,
+	FMA_IEXPORTER_CODE_ERROR,
 }
-	NAIExporterExportStatus;
+	FMAIExporterExportStatus;
 
-GType na_iexporter_get_type( void );
+GType fma_iexporter_get_type( void );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_IEXPORTER_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_IEXPORTER_H__ */

@@ -48,7 +48,7 @@ struct _NAExportFormatPrivate {
 	gchar       *label;
 	gchar       *description;
 	GdkPixbuf   *pixbuf;
-	NAIExporter *provider;
+	FMAIExporter *provider;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -313,12 +313,12 @@ instance_finalize( GObject *object )
 
 /*
  * na_export_format_new:
- * @exporter_format: a #NAIExporterFormatv2 which describes an export format.
+ * @exporter_format: a #FMAIExporterFormatv2 which describes an export format.
  *
  * Returns: a newly allocated #NAExportFormat object.
  */
 NAExportFormat *
-na_export_format_new( const NAIExporterFormatv2 *exporter_format )
+na_export_format_new( const FMAIExporterFormatv2 *exporter_format )
 {
 	NAExportFormat *format;
 
@@ -337,15 +337,15 @@ na_export_format_new( const NAIExporterFormatv2 *exporter_format )
  * na_export_format_get_provider:
  * @format: this #NAExportFormat object.
  *
- * Returns: a pointer to the #NAIExporter which provides this format.
+ * Returns: a pointer to the #FMAIExporter which provides this format.
  *
  * The pointer is owned by NAEportFormat class, and should not be released
  * by the caller.
  */
-NAIExporter *
+FMAIExporter *
 na_export_format_get_provider( const NAExportFormat *format )
 {
-	NAIExporter *exporter;
+	FMAIExporter *exporter;
 
 	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), NULL );
 

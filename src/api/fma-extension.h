@@ -61,7 +61,7 @@
  *        </title>
  *        <para>
  *          This extension is provided via the public
- *          <link linkend="NAIExporter">NAIExporter</link>
+ *          <link linkend="FMAIExporter">FMAIExporter</link>
  *          interface; it takes care of exporting menus and actions
  *          to the filesystem from the &prodname; Configuration Tool
  *          user interface.

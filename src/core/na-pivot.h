@@ -138,7 +138,7 @@ NAPivot      *na_pivot_new ( void );
 void          na_pivot_dump( const NAPivot *pivot );
 
 /* Management of the plugins which claim to implement a FileManager-Actions interface.
- * As of 2.30, these may be NAIIOProvider, NAIImporter or NAIExporter
+ * As of 2.30, these may be NAIIOProvider, NAIImporter or FMAIExporter
  */
 GList        *na_pivot_get_providers ( const NAPivot *pivot, GType type );
 void          na_pivot_free_providers( GList *providers );

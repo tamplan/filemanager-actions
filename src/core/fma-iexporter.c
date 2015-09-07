@@ -31,29 +31,29 @@
 #include <config.h>
 #endif
 
-#include <api/na-iexporter.h>
+#include <api/fma-iexporter.h>
 
 /* private interface data
  */
-struct _NAIExporterInterfacePrivate {
+struct _FMAIExporterInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_base_init( NAIExporterInterface *klass );
-static void  interface_base_finalize( NAIExporterInterface *klass );
+static void  interface_base_init( FMAIExporterInterface *klass );
+static void  interface_base_finalize( FMAIExporterInterface *klass );
 
-static guint iexporter_get_version( const NAIExporter *instance );
+static guint iexporter_get_version( const FMAIExporter *instance );
 
 /**
- * na_iexporter_get_type:
+ * fma_iexporter_get_type:
  *
  * Returns: the #GType type of this interface.
  */
 GType
-na_iexporter_get_type( void )
+fma_iexporter_get_type( void )
 {
 	static GType type = 0;
 
@@ -65,18 +65,18 @@ na_iexporter_get_type( void )
 }
 
 /*
- * na_iexporter_register_type:
+ * fma_iexporter_register_type:
  *
  * Registers this interface.
  */
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_iexporter_register_type";
+	static const gchar *thisfn = "fma_iexporter_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIExporterInterface ),
+		sizeof( FMAIExporterInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -89,7 +89,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIExporter", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIExporter", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -97,15 +97,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIExporterInterface *klass )
+interface_base_init( FMAIExporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iexporter_interface_base_init";
+	static const gchar *thisfn = "fma_iexporter_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
-		klass->private = g_new0( NAIExporterInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIExporterInterfacePrivate, 1 );
 
 		klass->get_version = iexporter_get_version;
 		klass->get_name = NULL;
@@ -118,9 +118,9 @@ interface_base_init( NAIExporterInterface *klass )
 }
 
 static void
-interface_base_finalize( NAIExporterInterface *klass )
+interface_base_finalize( FMAIExporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iexporter_interface_base_finalize";
+	static const gchar *thisfn = "fma_iexporter_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -133,7 +133,7 @@ interface_base_finalize( NAIExporterInterface *klass )
 }
 
 static guint
-iexporter_get_version( const NAIExporter *instance )
+iexporter_get_version( const FMAIExporter *instance )
 {
 	return( 1 );
 }

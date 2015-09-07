@@ -346,13 +346,13 @@ nadp_iio_provider_duplicate_data( const NAIIOProvider *provider, NAObjectItem *d
 
 /**
  * nadp_writer_iexporter_export_to_buffer:
- * @instance: this #NAIExporter instance.
- * @parms: a #NAIExporterBufferParmsv2 structure.
+ * @instance: this #FMAIExporter instance.
+ * @parms: a #FMAIExporterBufferParmsv2 structure.
  *
  * Export the specified 'item' to a newly allocated buffer.
  */
 guint
-nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParmsv2 *parms )
+nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms )
 {
 	static const gchar *thisfn = "nadp_writer_iexporter_export_to_buffer";
 	guint code, write_code;
@@ -363,17 +363,17 @@ nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporter
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
 	parms->buffer = NULL;
-	code = NA_IEXPORTER_CODE_OK;
+	code = FMA_IEXPORTER_CODE_OK;
 
 	if( !parms->exported || !NA_IS_OBJECT_ITEM( parms->exported )){
-		code = NA_IEXPORTER_CODE_INVALID_ITEM;
+		code = FMA_IEXPORTER_CODE_INVALID_ITEM;
 	}
 
-	if( code == NA_IEXPORTER_CODE_OK ){
+	if( code == FMA_IEXPORTER_CODE_OK ){
 
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			fmt = find_export_format_fn_from_quark((( NAIExporterBufferParms * ) parms )->format );
+			fmt = find_export_format_fn_from_quark((( FMAIExporterBufferParms * ) parms )->format );
 		} else {
 			fmt = find_export_format_fn( parms->format );
 		}
@@ -382,14 +382,14 @@ nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporter
 #endif
 
 		if( !fmt ){
-			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
+			code = FMA_IEXPORTER_CODE_INVALID_FORMAT;
 
 		} else {
 			ndf = nadp_desktop_file_new();
 			write_code = na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( instance ), ndf, NA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
 
 			if( write_code != NA_IIO_PROVIDER_CODE_OK ){
-				code = NA_IEXPORTER_CODE_ERROR;
+				code = FMA_IEXPORTER_CODE_ERROR;
 
 			} else {
 				key_file = nadp_desktop_file_get_key_file( ndf );
@@ -406,13 +406,13 @@ nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporter
 
 /**
  * nadp_writer_iexporter_export_to_file:
- * @instance: this #NAIExporter instance.
- * @parms: a #NAIExporterFileParmsv2 structure.
+ * @instance: this #FMAIExporter instance.
+ * @parms: a #FMAIExporterFileParmsv2 structure.
  *
  * Export the specified 'item' to a newly created file.
  */
 guint
-nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFileParmsv2 *parms )
+nadp_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms )
 {
 	static const gchar *thisfn = "nadp_writer_iexporter_export_to_file";
 	guint code, write_code;
@@ -423,17 +423,17 @@ nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFi
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
 	parms->basename = NULL;
-	code = NA_IEXPORTER_CODE_OK;
+	code = FMA_IEXPORTER_CODE_OK;
 
 	if( !parms->exported || !NA_IS_OBJECT_ITEM( parms->exported )){
-		code = NA_IEXPORTER_CODE_INVALID_ITEM;
+		code = FMA_IEXPORTER_CODE_INVALID_ITEM;
 	}
 
-	if( code == NA_IEXPORTER_CODE_OK ){
+	if( code == FMA_IEXPORTER_CODE_OK ){
 
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			fmt = find_export_format_fn_from_quark((( NAIExporterFileParms * ) parms )->format );
+			fmt = find_export_format_fn_from_quark((( FMAIExporterFileParms * ) parms )->format );
 		} else {
 			fmt = find_export_format_fn( parms->format );
 		}
@@ -442,7 +442,7 @@ nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFi
 #endif
 
 		if( !fmt ){
-			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
+			code = FMA_IEXPORTER_CODE_INVALID_FORMAT;
 
 		} else {
 			id = na_object_get_id( parms->exported );
@@ -457,10 +457,10 @@ nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFi
 			write_code = na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( instance ), ndf, NA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
 
 			if( write_code != NA_IIO_PROVIDER_CODE_OK ){
-				code = NA_IEXPORTER_CODE_ERROR;
+				code = FMA_IEXPORTER_CODE_ERROR;
 
 			} else if( !nadp_desktop_file_write( ndf )){
-				code = NA_IEXPORTER_CODE_UNABLE_TO_WRITE;
+				code = FMA_IEXPORTER_CODE_UNABLE_TO_WRITE;
 			}
 
 			g_free( dest_path );

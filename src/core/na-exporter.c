@@ -56,12 +56,12 @@ static NAExporterFormatStr st_format_ask = {
 		"export-format-ask.png"
 };
 
-/* i18n: NAIExporter is an interface name, do not even try to translate */
-#define NO_IMPLEMENTATION_MSG			N_( "No NAIExporter implementation found for '%s' format." )
+/* i18n: FMAIExporter is an interface name, do not even try to translate */
+#define NO_IMPLEMENTATION_MSG			N_( "No FMAIExporter implementation found for '%s' format." )
 
-static GList *exporter_get_formats( const NAIExporter *exporter );
-static void   exporter_free_formats( const NAIExporter *exporter, GList * str_list );
-static gchar *exporter_get_name( const NAIExporter *exporter );
+static GList *exporter_get_formats( const FMAIExporter *exporter );
+static void   exporter_free_formats( const FMAIExporter *exporter, GList * str_list );
+static gchar *exporter_get_name( const FMAIExporter *exporter );
 static void   on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
 
 /*
@@ -70,7 +70,7 @@ static void   on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
  *
  * Returns: a list of #NAExportFormat objects, each of them addressing an
  * available export format, i.e. a format provided by a module which
- * implement the #NAIExporter interface.
+ * implement the #FMAIExporter interface.
  *
  * The returned list should later be na_exporter_free_formats() by the caller.
  */
@@ -85,17 +85,17 @@ na_exporter_get_formats( const NAPivot *pivot )
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	formats = NULL;
-	iexporters = na_pivot_get_providers( pivot, NA_TYPE_IEXPORTER );
+	iexporters = na_pivot_get_providers( pivot, FMA_TYPE_IEXPORTER );
 
 	for( imod = iexporters ; imod ; imod = imod->next ){
-		str_list = exporter_get_formats( NA_IEXPORTER( imod->data ));
+		str_list = exporter_get_formats( FMA_IEXPORTER( imod->data ));
 
 		for( is = str_list ; is ; is = is->next ){
-			format = na_export_format_new(( NAIExporterFormatv2 * ) is->data );
+			format = na_export_format_new(( FMAIExporterFormatv2 * ) is->data );
 			formats = g_list_prepend( formats, format );
 		}
 
-		exporter_free_formats( NA_IEXPORTER( imod->data ), str_list );
+		exporter_free_formats( FMA_IEXPORTER( imod->data ), str_list );
 	}
 
 	na_pivot_free_providers( iexporters );
@@ -104,13 +104,13 @@ na_exporter_get_formats( const NAPivot *pivot )
 }
 
 /*
- * Returns a GList of NAIExporterFormatv2 structures which describes
+ * Returns a GList of FMAIExporterFormatv2 structures which describes
  * the export formats provided by the exporter
  * If the provider only implements the v1 interface, we dynamically
  * allocate a new structure and convert the v1 to the v2.
  */
 static GList *
-exporter_get_formats( const NAIExporter *exporter )
+exporter_get_formats( const FMAIExporter *exporter )
 {
 	GList *str_list;
 	guint version;
@@ -118,19 +118,19 @@ exporter_get_formats( const NAIExporter *exporter )
 	str_list = NULL;
 
 	version = 1;
-	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
-		version = NA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
+	if( FMA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
+		version = FMA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
 	}
 
-	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
+	if( FMA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
 		if( version == 1 ){
 #ifdef NA_ENABLE_DEPRECATED
-			const NAIExporterFormat *strv1;
-			strv1 = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
+			const FMAIExporterFormat *strv1;
+			strv1 = FMA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
 			while( strv1->format ){
-				NAIExporterFormatv2 *strv2 = g_new0( NAIExporterFormatv2, 1 );
+				FMAIExporterFormatv2 *strv2 = g_new0( FMAIExporterFormatv2, 1 );
 				strv2->version = 2;
-				strv2->provider = ( NAIExporter * ) exporter;
+				strv2->provider = ( FMAIExporter * ) exporter;
 				strv2->format = strv1->format;
 				strv2->label = strv1->label;
 				strv2->description = strv1->description;
@@ -142,7 +142,7 @@ exporter_get_formats( const NAIExporter *exporter )
 			;
 #endif
 		} else {
-			str_list = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
+			str_list = FMA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
 		}
 	}
 
@@ -153,13 +153,13 @@ exporter_get_formats( const NAIExporter *exporter )
  * Free the list returned by exporter_get_formats() for this provider
  */
 static void
-exporter_free_formats( const NAIExporter *exporter, GList *str_list )
+exporter_free_formats( const FMAIExporter *exporter, GList *str_list )
 {
 	guint version;
 
 	version = 1;
-	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
-		version = NA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
+	if( FMA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
+		version = FMA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
 	}
 
 	if( version == 1 ){
@@ -167,8 +167,8 @@ exporter_free_formats( const NAIExporter *exporter, GList *str_list )
 		g_list_free( str_list );
 
 	} else {
-		g_return_if_fail( NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats );
-		NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats( exporter, str_list );
+		g_return_if_fail( FMA_IEXPORTER_GET_INTERFACE( exporter )->free_formats );
+		FMA_IEXPORTER_GET_INTERFACE( exporter )->free_formats( exporter, str_list );
 	}
 }
 
@@ -201,7 +201,7 @@ NAIOption *
 na_exporter_get_ask_option( void )
 {
 	static const gchar *thisfn = "na_exporter_get_ask_option";
-	NAIExporterFormatv2 *str;
+	FMAIExporterFormatv2 *str;
 	gint width, height;
 	gchar *fname;
 	NAExportFormat *format;
@@ -210,7 +210,7 @@ na_exporter_get_ask_option( void )
 		width = height = 48;
 	}
 
-	str = g_new0( NAIExporterFormatv2, 1 );
+	str = g_new0( FMAIExporterFormatv2, 1 );
 	str->version = 2;
 	str->provider = NULL;
 	str->format = g_strdup( st_format_ask.format );
@@ -264,8 +264,8 @@ na_exporter_to_buffer( const NAPivot *pivot,
 {
 	static const gchar *thisfn = "na_exporter_to_buffer";
 	gchar *buffer;
-	NAIExporterBufferParmsv2 parms;
-	NAIExporter *exporter;
+	FMAIExporterBufferParmsv2 parms;
+	FMAIExporter *exporter;
 	gchar *name;
 	gchar *msg;
 
@@ -291,8 +291,8 @@ na_exporter_to_buffer( const NAPivot *pivot,
 		parms.buffer = NULL;
 		parms.messages = messages ? *messages : NULL;
 
-		if( NA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer ){
-			NA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer( exporter, &parms );
+		if( FMA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer ){
+			FMA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer( exporter, &parms );
 
 			if( parms.buffer ){
 				buffer = parms.buffer;
@@ -300,8 +300,8 @@ na_exporter_to_buffer( const NAPivot *pivot,
 
 		} else {
 			name = exporter_get_name( exporter );
-			/* i18n: NAIExporter is an interface name, do not even try to translate */
-			msg = g_strdup_printf( _( "%s NAIExporter doesn't implement 'to_buffer' interface." ), name );
+			/* i18n: FMAIExporter is an interface name, do not even try to translate */
+			msg = g_strdup_printf( _( "%s FMAIExporter doesn't implement 'to_buffer' interface." ), name );
 			*messages = g_slist_append( *messages, msg );
 			g_free( name );
 		}
@@ -336,8 +336,8 @@ na_exporter_to_file( const NAPivot *pivot,
 {
 	static const gchar *thisfn = "na_exporter_to_file";
 	gchar *export_uri;
-	NAIExporterFileParmsv2 parms;
-	NAIExporter *exporter;
+	FMAIExporterFileParmsv2 parms;
+	FMAIExporter *exporter;
 	gchar *msg;
 	gchar *name;
 
@@ -364,8 +364,8 @@ na_exporter_to_file( const NAPivot *pivot,
 		parms.basename = NULL;
 		parms.messages = messages ? *messages : NULL;
 
-		if( NA_IEXPORTER_GET_INTERFACE( exporter )->to_file ){
-			NA_IEXPORTER_GET_INTERFACE( exporter )->to_file( exporter, &parms );
+		if( FMA_IEXPORTER_GET_INTERFACE( exporter )->to_file ){
+			FMA_IEXPORTER_GET_INTERFACE( exporter )->to_file( exporter, &parms );
 
 			if( parms.basename ){
 				export_uri = g_strdup_printf( "%s%s%s", folder_uri, G_DIR_SEPARATOR_S, parms.basename );
@@ -373,8 +373,8 @@ na_exporter_to_file( const NAPivot *pivot,
 
 		} else {
 			name = exporter_get_name( exporter );
-			/* i18n: NAIExporter is an interface name, do not even try to translate */
-			msg = g_strdup_printf( _( "%s NAIExporter doesn't implement 'to_file' interface." ), name );
+			/* i18n: FMAIExporter is an interface name, do not even try to translate */
+			msg = g_strdup_printf( _( "%s FMAIExporter doesn't implement 'to_file' interface." ), name );
 			*messages = g_slist_append( *messages, msg );
 			g_free( name );
 		}
@@ -390,14 +390,14 @@ na_exporter_to_file( const NAPivot *pivot,
 }
 
 static gchar *
-exporter_get_name( const NAIExporter *exporter )
+exporter_get_name( const FMAIExporter *exporter )
 {
 	gchar *name;
 
 	name = NULL;
 
-	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_name ){
-		name = NA_IEXPORTER_GET_INTERFACE( exporter )->get_name( exporter );
+	if( FMA_IEXPORTER_GET_INTERFACE( exporter )->get_name ){
+		name = FMA_IEXPORTER_GET_INTERFACE( exporter )->get_name( exporter );
 	}
 
 	return( name );
@@ -408,14 +408,14 @@ exporter_get_name( const NAIExporter *exporter )
  * @pivot: the #NAPivot instance.
  * @format: the string identifier of the searched format.
  *
- * Returns: the #NAIExporter instance which provides the @format export
+ * Returns: the #FMAIExporter instance which provides the @format export
  * format. The returned instance is owned by @pivot, and should not be
  * released by the caller.
  */
-NAIExporter *
+FMAIExporter *
 na_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
 {
-	NAIExporter *exporter;
+	FMAIExporter *exporter;
 	GList *formats, *ifmt;
 	gchar *id;
 	NAExportFormat *export_format;

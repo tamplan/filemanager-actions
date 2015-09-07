@@ -32,7 +32,7 @@
 
 #include <glib.h>
 
-#include <api/na-iexporter.h>
+#include <api/fma-iexporter.h>
 
 G_BEGIN_DECLS
 
@@ -40,7 +40,7 @@ G_BEGIN_DECLS
 #define NAXML_FORMAT_GCONF_SCHEMA_V2			"GConfSchemaV2"
 #define NAXML_FORMAT_GCONF_ENTRY				"GConfEntry"
 
-GList *naxml_formats_get_formats ( const NAIExporter *exporter );
+GList *naxml_formats_get_formats ( const FMAIExporter *exporter );
 void   naxml_formats_free_formats( GList *format_list );
 
 G_END_DECLS

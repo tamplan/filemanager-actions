@@ -60,7 +60,7 @@ struct _NAXMLWriterClassPrivate {
  */
 struct _NAXMLWriterPrivate {
 	gboolean         dispose_has_run;
-	NAIExporter     *provider;
+	FMAIExporter     *provider;
 	NAObjectItem    *exported;
 	GSList          *messages;
 
@@ -266,13 +266,13 @@ instance_finalize( GObject *object )
 
 /**
  * naxml_writer_export_to_buffer:
- * @instance: this #NAIExporter instance.
- * @parms: a #NAIExporterBufferParmsv2 structure.
+ * @instance: this #FMAIExporter instance.
+ * @parms: a #FMAIExporterBufferParmsv2 structure.
  *
  * Export the specified 'item' to a newly allocated buffer.
  */
 guint
-naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParmsv2 *parms )
+naxml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms )
 {
 	static const gchar *thisfn = "naxml_writer_export_to_buffer";
 	NAXMLWriter *writer;
@@ -280,21 +280,21 @@ naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferPar
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
-	code = NA_IEXPORTER_CODE_OK;
+	code = FMA_IEXPORTER_CODE_OK;
 
 	if( !parms->exported || !NA_IS_OBJECT_ITEM( parms->exported )){
-		code = NA_IEXPORTER_CODE_INVALID_ITEM;
+		code = FMA_IEXPORTER_CODE_INVALID_ITEM;
 	}
 
-	if( code == NA_IEXPORTER_CODE_OK ){
+	if( code == FMA_IEXPORTER_CODE_OK ){
 		writer = NAXML_WRITER( g_object_new( NAXML_WRITER_TYPE, NULL ));
 
-		writer->private->provider = ( NAIExporter * ) instance;
+		writer->private->provider = ( FMAIExporter * ) instance;
 		writer->private->exported = parms->exported;
 		writer->private->messages = parms->messages;
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			writer->private->fn_str = find_export_format_fn_from_quark((( NAIExporterBufferParms * ) parms )->format );
+			writer->private->fn_str = find_export_format_fn_from_quark((( FMAIExporterBufferParms * ) parms )->format );
 		} else {
 			writer->private->fn_str = find_export_format_fn( parms->format );
 		}
@@ -304,11 +304,11 @@ naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferPar
 		writer->private->buffer = NULL;
 
 		if( !writer->private->fn_str ){
-			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
+			code = FMA_IEXPORTER_CODE_INVALID_FORMAT;
 
 		} else {
 			code = writer_to_buffer( writer );
-			if( code == NA_IEXPORTER_CODE_OK ){
+			if( code == FMA_IEXPORTER_CODE_OK ){
 				parms->buffer = writer->private->buffer;
 			}
 		}
@@ -322,13 +322,13 @@ naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferPar
 
 /**
  * naxml_writer_export_to_file:
- * @instance: this #NAIExporter instance.
- * @parms: a #NAIExporterFileParmsv2 structure.
+ * @instance: this #FMAIExporter instance.
+ * @parms: a #FMAIExporterFileParmsv2 structure.
  *
  * Export the specified 'item' to a newly created file.
  */
 guint
-naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParmsv2 *parms )
+naxml_writer_export_to_file( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms )
 {
 	static const gchar *thisfn = "naxml_writer_export_to_file";
 	NAXMLWriter *writer;
@@ -338,22 +338,22 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParmsv2
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
-	code = NA_IEXPORTER_CODE_OK;
+	code = FMA_IEXPORTER_CODE_OK;
 
 	if( !parms->exported || !NA_IS_OBJECT_ITEM( parms->exported )){
-		code = NA_IEXPORTER_CODE_INVALID_ITEM;
+		code = FMA_IEXPORTER_CODE_INVALID_ITEM;
 	}
 
-	if( code == NA_IEXPORTER_CODE_OK ){
+	if( code == FMA_IEXPORTER_CODE_OK ){
 		writer = NAXML_WRITER( g_object_new( NAXML_WRITER_TYPE, NULL ));
 
-		writer->private->provider = ( NAIExporter * ) instance;
+		writer->private->provider = ( FMAIExporter * ) instance;
 		writer->private->exported = parms->exported;
 		writer->private->messages = parms->messages;
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			writer->private->fn_str = find_export_format_fn_from_quark((( NAIExporterFileParms * ) parms )->format );
-			format2 = g_quark_to_string((( NAIExporterFileParms * ) parms )->format );
+			writer->private->fn_str = find_export_format_fn_from_quark((( FMAIExporterFileParms * ) parms )->format );
+			format2 = g_quark_to_string((( FMAIExporterFileParms * ) parms )->format );
 		} else {
 			writer->private->fn_str = find_export_format_fn( parms->format );
 			format2 = parms->format;
@@ -365,12 +365,12 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParmsv2
 		writer->private->buffer = NULL;
 
 		if( !writer->private->fn_str ){
-			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
+			code = FMA_IEXPORTER_CODE_INVALID_FORMAT;
 
 		} else {
 			code = writer_to_buffer( writer );
 
-			if( code == NA_IEXPORTER_CODE_OK ){
+			if( code == FMA_IEXPORTER_CODE_OK ){
 				filename = get_output_fname( parms->exported, parms->folder, format2 );
 
 				if( filename ){
@@ -953,7 +953,7 @@ writer_to_buffer( NAXMLWriter *writer )
 	xmlChar *text;
 	int textlen;
 
-	code = NA_IEXPORTER_CODE_OK;
+	code = FMA_IEXPORTER_CODE_OK;
 	doc = build_xml_doc( writer );
 
 	xmlDocDumpFormatMemoryEnc( doc, &text, &textlen, "UTF-8", 1 );

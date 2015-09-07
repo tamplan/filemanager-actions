@@ -30,12 +30,12 @@
 #ifndef __CORE_NA_EXPORTER_H__
 #define __CORE_NA_EXPORTER_H__
 
-/* @title: NAIExporter
- * @short_description: The #NAIExporter Internal Functions
+/* @title: FMAIExporter
+ * @short_description: The #FMAIExporter Internal Functions
  * @include: core/na-exporter.h
  */
 
-#include <api/na-iexporter.h>
+#include <api/fma-iexporter.h>
 #include <api/na-object-api.h>
 
 #include "na-ioption.h"
@@ -61,7 +61,7 @@ gchar       *na_exporter_to_file        ( const NAPivot *pivot,
                                           const gchar *format,
                                           GSList **messages );
 
-NAIExporter *na_exporter_find_for_format( const NAPivot *pivot,
+FMAIExporter *na_exporter_find_for_format( const NAPivot *pivot,
 		                                  const gchar *format );
 
 G_END_DECLS
