@@ -34,7 +34,7 @@
  * SECTION: data-def
  * @title: NADataDef, NADataGroup
  * @short_description: The Data Factory Structure Definitions
- * @include: nautilus-actions/na-data-def.h
+ * @include: file-manager-actions/na-data-def.h
  *
  * #NADataDef and #NADataGroup are structures which handle the list of
  * elementary datas for each and every #NAObjectItem which happens to
@@ -70,7 +70,7 @@ G_BEGIN_DECLS
  * @type:             the elementary NA_DATA_TYPE_xxx data type.
  * @default_value:    the default to assign when creating a new object.
  *                    This default is also displayed in command-line help
- *                    of nautilus-actions-new utility.
+ *                    of file-manager-actions-new utility.
  * @write_if_default: write this value even if it is the default value ?
  *                    Should default to FALSE.
  * @copyable:         whether this data should be automatically copied when
@@ -84,13 +84,13 @@ G_BEGIN_DECLS
  * @localizable:      whether this is a localizable data when serializing or exporting.
  * @gconf_entry:      same entry is also used for GConf-based XML docs.
  * @desktop_entry:    entry in .desktop files.
- * @option_short:     the short version of a command-line parameter in nautilus-actions-new,
+ * @option_short:     the short version of a command-line parameter in file-manager-actions-new,
  *                    or 0.
- * @option_long:      the long version of the same command-line parameter in nautilus-actions-new,
+ * @option_long:      the long version of the same command-line parameter in file-manager-actions-new,
  *                    or NULL.
  * @option_flags:     #GOptionFlags for the command-line parameter, or 0.
  * @option_arg:       the type of the option, or 0.
- * @option_label:     the localizable description for the variable in nautilus-actions-new.
+ * @option_label:     the localizable description for the variable in file-manager-actions-new.
  *                    Defaults to @short_label if NULL.
  * @option_arg_label: the localizable description for the argument.
  *

@@ -300,9 +300,9 @@ if [ "${opt_version}" = "yes" ]; then
 	exit
 fi
 
-#if [ "${top_srcdir##*/}" != "nautilus-actions" ]; then
+#if [ "${top_srcdir##*/}" != "file-manager-actions" ]; then
 #	msgerr "current directory is $(pwd)"
-#	msg "you should change to nautilus-actions/"
+#	msg "you should change to file-manager-actions/"
 #	let errs+=1
 #fi
 

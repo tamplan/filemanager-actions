@@ -34,7 +34,7 @@
  * SECTION: iimporter
  * @title: NAIImporter
  * @short_description: The Import Interface
- * @include: nautilus-actions/na-iimporter.h
+ * @include: file-manager-actions/na-iimporter.h
  *
  * The #NAIImporter interface imports items from the outside world
  * into &prodname; repository (see #NAIIOProvider interface for how
@@ -351,7 +351,7 @@ typedef struct {
  * @IMPORTER_CODE_OK:                import ok.
  * @IMPORTER_CODE_PROGRAM_ERROR:     a program error has been detected.
  *                                   You should open a bug in
- *                                   <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions">Bugzilla</ulink>.
+ *                                   <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=file-manager-actions">Bugzilla</ulink>.
  * @IMPORTER_CODE_NOT_WILLING_TO:    the plugin is not willing to import the uri.
  * @IMPORTER_CODE_NO_ITEM_ID:        item id not found.
  * @IMPORTER_CODE_NO_ITEM_TYPE:      item type not found.

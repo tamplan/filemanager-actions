@@ -199,7 +199,7 @@ set -- ${my_parms}
 
 # interpreting command-line arguments
 # pck_name:  FileManager-Actions
-# product:   nautilus-actions
+# product:   file-manager-actions
 # version:   most recent found in builddir
 thisdir=$(cd ${0%/*}; pwd)
 rootdir=${thisdir%/*}

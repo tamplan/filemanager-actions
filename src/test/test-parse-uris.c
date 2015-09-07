@@ -41,8 +41,8 @@ static const gchar *uris[] = {
 		"http://robert:azerty01@mon.domain.com/path/to/a/document?query#anchor",
 		"ssh://pwi.dyndns.biz:2207",
 		"sftp://kde.org:1234/pub/kde",
-		"/usr/bin/nautilus-actions-config-tool",
-		"file:///home/pierre/data/eclipse/nautilus-actions/AUTHORS",
+		"/usr/bin/file-manager-actions-config-tool",
+		"file:///home/pierre/data/eclipse/file-manager-actions/AUTHORS",
 		NULL
 };
 

@@ -34,7 +34,7 @@
  * SECTION: iduplicable
  * @title: NAIDuplicable
  * @short_description: The Duplication Interface
- * @include: nautilus-actions/private/na-iduplicable.h
+ * @include: file-manager-actions/private/na-iduplicable.h
  *
  * This interface is implemented by #NAObject in order to let
  * #NAObject -derived instance duplication be easily tracked. This works

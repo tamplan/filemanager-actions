@@ -34,7 +34,7 @@
  * SECTION: iexporter
  * @title: NAIExporter
  * @short_description: The Export Interface
- * @include: nautilus-actions/na-iexporter.h
+ * @include: file-manager-actions/na-iexporter.h
  *
  * The #NAIExporter interface exports items to the outside world. Each
  * implementation may provide one or more formats.
@@ -49,7 +49,7 @@
  *   In order to avoid any collision, this export format identifier is
  *   allocated by the &prodname; maintainers team. If you wish provide
  *   yourself a new export format, and so need a new export format identifier,
- *   please contact the maintainers (see nautilus-actions.doap at the
+ *   please contact the maintainers (see file-manager-actions.doap at the
  *   root of the source tree).
  *  </para>
  *  <para>
@@ -447,7 +447,7 @@ typedef struct {
 	 * To avoid any collision, the format identifier is allocated by the
 	 * FileManager-Actions maintainers team. If you wish develop a new export
 	 * format, and so need a new format identifier, please contact the
-	 * maintainers (see nautilus-actions.doap).
+	 * maintainers (see file-manager-actions.doap).
 	 *
 	 * Return value:
 	 * - Interface v1:

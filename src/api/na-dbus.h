@@ -34,7 +34,7 @@
  * SECTION: dbus
  * @title: D-Bus
  * @short_description: The D-Bus Services
- * @include: nautilus-actions/na-dbus.h
+ * @include: file-manager-actions/na-dbus.h
  *
  * &prodname;, through its <emphasis>tracker</emphasis> plugin, exposes
  * several D-Bus interfaces. These interfaces may be queried in order to get
@@ -64,7 +64,7 @@ G_BEGIN_DECLS
  * This is the &laquo;&nbsp;well-known&nbsp;&raquo; name that
  * &prodname; reserves on D-Bus session bus.
  */
-#define NAUTILUS_ACTIONS_DBUS_SERVICE            "org.nautilus-actions.DBus"
+#define NAUTILUS_ACTIONS_DBUS_SERVICE            "org.file-manager-actions.DBus"
 
 /**
  * NAUTILUS_ACTIONS_DBUS_TRACKER_PATH:
@@ -81,7 +81,7 @@ G_BEGIN_DECLS
  *       --session \
  *       --type=method_call \
  *       --print-reply \
- *       --dest=org.nautilus-actions.DBus \
+ *       --dest=org.file-manager-actions.DBus \
  *         /org/nautilus_actions/DBus/Tracker \
  *           org.freedesktop.DBus.Introspectable.Introspect
  *   </command>

@@ -2,104 +2,104 @@
 <gconfschemafile>
   <schemalist>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/version</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/version</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/version</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/version</applyto>
       <type>string</type>
       <locale name="C"/>
       <default>2.0</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/label</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/label</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/label</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/label</applyto>
       <type>string</type>
       <locale name="C">
         <default>Import/Export test</default>
       </locale>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/tooltip</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/tooltip</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/tooltip</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/tooltip</applyto>
       <type>string</type>
       <locale name="C">
         <default>The tooltip for "import/export test" action</default>
       </locale>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/icon</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/icon</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/icon</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/icon</applyto>
       <type>string</type>
       <locale name="C"/>
       <default>gtk-justify-center</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/desc-name</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/desc-name</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/desc-name</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/desc-name</applyto>
       <type>string</type>
       <locale name="C">
         <default>Default profile</default>
       </locale>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/path</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/path</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/path</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/path</applyto>
       <type>string</type>
       <locale name="C"/>
       <default>/bin/ls</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/parameters</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/parameters</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/parameters</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/parameters</applyto>
       <type>string</type>
       <locale name="C"/>
       <default>%h %M</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/basenames</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/basenames</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/basenames</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/basenames</applyto>
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C"/>
       <default>[*,*.c]</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/matchcase</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/matchcase</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/matchcase</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/matchcase</applyto>
       <type>bool</type>
       <locale name="C"/>
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/mimetypes</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/mimetypes</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/mimetypes</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/mimetypes</applyto>
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C"/>
       <default>[*/*]</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/isfile</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/isfile</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/isfile</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/isfile</applyto>
       <type>bool</type>
       <locale name="C"/>
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/isdir</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/isdir</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/isdir</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/isdir</applyto>
       <type>bool</type>
       <locale name="C"/>
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/accept-multiple-files</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/accept-multiple-files</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/accept-multiple-files</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/accept-multiple-files</applyto>
       <type>bool</type>
       <locale name="C"/>
       <default>false</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/schemes</key>
-      <applyto>/apps/nautilus-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/schemes</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/schemes</key>
+      <applyto>/apps/file-manager-actions/configurations/4c4fa203-b5d0_post_v1.11_type_2/profile-zero/schemes</applyto>
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C"/>

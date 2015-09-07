@@ -34,14 +34,14 @@
  * SECTION: object
  * @title: NAObject
  * @short_description: The Deepest Base Class Definition
- * @include: nautilus-actions/na-object.h
+ * @include: file-manager-actions/na-object.h
  *
  * This is the base class of all our data object hierarchy. #NAObject is
  * supposed to be used as a pure virtual base class, i.e. should only be
  * derived.
  *
  * All the API described here is rather private. External code should
- * use the API described in <filename>nautilus-actions/na-object-api.h</filename>.
+ * use the API described in <filename>file-manager-actions/na-object-api.h</filename>.
  */
 
 #include <glib-object.h>

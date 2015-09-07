@@ -34,7 +34,7 @@
  * SECTION: object-menu
  * @title: NAObjectMenu
  * @short_description: The Menu Class Definition
- * @include: nautilus-actions/na-object-menu.h
+ * @include: file-manager-actions/na-object-menu.h
  */
 
 #include "na-object-item.h"

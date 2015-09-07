@@ -35,7 +35,7 @@
  * @short_description: #NactApplication class definition.
  * @include: nact/nact-application.h
  *
- * This is the main class for nautilus-actions-config-tool program.
+ * This is the main class for file-manager-actions-config-tool program.
  *
  * The #NactApplication object is instanciated from main() function,
  * then later #g_object_unref() after nact_application_run() has

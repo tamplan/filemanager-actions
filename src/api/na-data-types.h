@@ -34,7 +34,7 @@
  * SECTION: data-type
  * @title: NADataType
  * @short_description: The Data Factory Type Definitions
- * @include: nautilus-actions/na-data-types.h
+ * @include: file-manager-actions/na-data-types.h
  */
 
 #include <glib.h>

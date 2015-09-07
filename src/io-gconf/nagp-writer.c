@@ -79,7 +79,7 @@ nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 {
 #ifdef NA_ENABLE_DEPRECATED
 	static const gchar *thisfn = "nagp_iio_provider_is_able_to_write";
-	static const gchar *path = "/apps/nautilus-actions/foo";
+	static const gchar *path = "/apps/file-manager-actions/foo";
 	NagpGConfProvider *self;
 	gboolean able_to = FALSE;
 

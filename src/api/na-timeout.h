@@ -34,7 +34,7 @@
  * SECTION: timeout
  * @title: NATimeout
  * @short_description: The NATimeout Structure
- * @include: nautilus-actions/na-timeout.h
+ * @include: file-manager-actions/na-timeout.h
  *
  * The NATimeout structure is a convenience structure to manage timeout
  * functions.

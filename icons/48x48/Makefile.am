@@ -27,6 +27,6 @@
 
 icondir = $(datadir)/icons/hicolor/48x48/apps
 
-icon_DATA = nautilus-actions.png
+icon_DATA = file-manager-actions.png
 
 EXTRA_DIST = $(icon_DATA)

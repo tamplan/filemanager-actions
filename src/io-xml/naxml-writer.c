@@ -537,8 +537,8 @@ write_type_schema_v1( NAXMLWriter *writer, const NAObjectItem *object, const NAD
 
 /*
  * <schema>
- *  <key>/schemas/apps/nautilus-actions/configurations/entry</key>
- *  <applyto>/apps/nautilus-actions/configurations/item_id/profile_id/entry</applyto>
+ *  <key>/schemas/apps/file-manager-actions/configurations/entry</key>
+ *  <applyto>/apps/file-manager-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
 write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed, const NADataDef *def )
@@ -585,8 +585,8 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 
 /*
  * <schema>
- *  <key>/schemas/apps/nautilus-actions/configurations/entry</key>
- *  <applyto>/apps/nautilus-actions/configurations/item_id/profile_id/entry</applyto>
+ *  <key>/schemas/apps/file-manager-actions/configurations/entry</key>
+ *  <applyto>/apps/file-manager-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
 write_data_schema_v2_element( NAXMLWriter *writer, const NADataDef *def, const gchar *object_id, const gchar *value_str )
@@ -624,8 +624,8 @@ write_data_schema_v2_element( NAXMLWriter *writer, const NADataDef *def, const g
 
 /*
  * <schema>
- *  <key>/schemas/apps/nautilus-actions/configurations/entry</key>
- *  <applyto>/apps/nautilus-actions/configurations/item_id/profile_id/entry</applyto>
+ *  <key>/schemas/apps/file-manager-actions/configurations/entry</key>
+ *  <applyto>/apps/file-manager-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
 write_type_schema_v2( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value )

@@ -67,7 +67,7 @@ enum {
 #define IO_PROVIDER_PROP_ID				"na-io-provider-prop-id"
 
 static const gchar  *st_enter_bug    = N_( "Please, be kind enough to fill out a bug report on "
-											"https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions." );
+											"https://bugzilla.gnome.org/enter_bug.cgi?product=file-manager-actions." );
 
 static GObjectClass *st_parent_class = NULL;
 static GList        *st_io_providers = NULL;

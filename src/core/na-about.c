@@ -110,7 +110,7 @@ na_about_display( GtkWindow *toplevel )
 			"program-name", application_name,
 			"translator-credits", _( "The GNOME Translation Project <gnome-i18n@gnome.org>" ),
 			"version", PACKAGE_VERSION,
-			"website", "http://www.nautilus-actions.org",
+			"website", "http://www.file-manager-actions.org",
 			"wrap-license", TRUE,
 			NULL );
 
@@ -139,7 +139,7 @@ na_about_get_application_name( void )
  *
  * This name is owned by the package, and should not be released by the caller.
  *
- * cf. Makefile: PACKAGE = nautilus-actions
+ * cf. Makefile: PACKAGE = file-manager-actions
  * while st_icon_filename points to full path of the icon.
  */
 const gchar *

@@ -1,7 +1,7 @@
-nautilus-actions-new
-nautilus-actions-print
-nautilus-actions-run
-nautilus-actions-run-bindings.h
+file-manager-actions-new
+file-manager-actions-print
+file-manager-actions-run
+file-manager-actions-run-bindings.h
 na-delete-xmltree
 na-gconf2key.sh
 na-print-schemas

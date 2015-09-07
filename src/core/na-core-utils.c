@@ -1208,7 +1208,7 @@ na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
  * Print a version message on the console
  *
  * <programlisting>
- *   nautilus-actions-new (FileManager-Actions) v 2.29.1
+ *   file-manager-actions-new (FileManager-Actions) v 2.29.1
  *   Copyright (C) 2005-2007 Frederic Ruaudel
  *   Copyright (C) 2009, 2010, 2011, 2012 Pierre Wieser
  *   FileManager-Actions is free software, licensed under GPLv2 or later.

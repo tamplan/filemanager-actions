@@ -34,7 +34,7 @@
  * SECTION: boxed
  * @title: NABoxed
  * @short_description: The NABoxed Structure
- * @include: nautilus-actions/na-boxed.h
+ * @include: file-manager-actions/na-boxed.h
  *
  * The NABoxed structure is a way of handling various types of data in an
  * opaque structure.

@@ -31,7 +31,7 @@ exportformat_datadir = $(pkgdatadir)/export-format
 
 importmode_datadir = $(pkgdatadir)/import-mode
 
-icon_fname = $(datadir)/icons/hicolor/48x48/apps/nautilus-actions.png
+icon_fname = $(datadir)/icons/hicolor/48x48/apps/file-manager-actions.png
 
 ui_datadir = $(pkgdatadir)/ui
 

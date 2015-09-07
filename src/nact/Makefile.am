@@ -26,7 +26,7 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
-	nautilus-actions-config-tool						\
+	file-manager-actions-config-tool						\
 	$(NULL)
 
 ui_datadir = $(pkgdatadir)/ui
@@ -149,7 +149,7 @@ nautilus_actions_config_tool_LDADD = \
 	$(NULL)
 
 actions_files = \
-	nautilus-actions-config-tool.actions				\
+	file-manager-actions-config-tool.actions				\
 	$(NULL)
 
 ui_files = \

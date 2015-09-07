@@ -31,10 +31,10 @@
 #define __PLUGIN_MENU_NAUTILUS_ACTIONS_H__
 
 /**
- * SECTION: nautilus-actions
+ * SECTION: file-manager-actions
  * @title: NautilusActions
  * @short_description: The NautilusActions plugin class definition
- * @include: plugin-menu/nautilus-actions.h
+ * @include: plugin-menu/file-manager-actions.h
  *
  * This is the class which handles the file manager menu plugin.
  */

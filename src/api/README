@@ -5,4 +5,4 @@ in na-extension.h.
 
 Headers are installed as part of a development environment of such an
 extension. They are to be included by the extension as
-'#include <nautilus-actions/header.h>'.
+'#include <file-manager-actions/header.h>'.

@@ -51,7 +51,7 @@ static gchar     *id               = "";
 static gchar     *format           = "";
 static gboolean   version          = FALSE;
 
-/* i18n: nautilus-actions-print program summary */
+/* i18n: file-manager-actions-print program summary */
 static const gchar *program_summary = N_( "Print a menu or an action to stdout." );
 
 static GOptionEntry entries[] = {

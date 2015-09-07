@@ -34,7 +34,7 @@
  * SECTION: object-api
  * @title: API
  * @short_description: The Common Public #NAObject API
- * @include: nautilus-actions/na-object-api.h
+ * @include: file-manager-actions/na-object-api.h
  *
  * We define here a common API which makes easier to write (and read)
  * the code; all object functions are named na_object; all arguments

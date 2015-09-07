@@ -34,7 +34,7 @@
  * SECTION: extension
  * @title: Plugins
  * @short_description: The FileManager-Actions Extension Interface Definition v 1
- * @include: nautilus-actions/na-extension.h
+ * @include: file-manager-actions/na-extension.h
  *
  * &prodname; accepts extensions as dynamically loadable libraries
  * (aka plugins).
@@ -113,8 +113,8 @@
  *       <para>
  * At startup time, &prodname; searches for its candidate libraries in
  * <filename>PKGLIBDIR</filename> directory, which most often happens to
- * be <filename>/usr/lib/nautilus-actions/</filename> or
- * <filename>/usr/lib64/nautilus-actions/</filename>,
+ * be <filename>/usr/lib/file-manager-actions/</filename> or
+ * <filename>/usr/lib64/file-manager-actions/</filename>,
  * depending of your system.
  *       </para>
  *   </refsect3>

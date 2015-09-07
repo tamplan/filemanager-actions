@@ -60,7 +60,7 @@ struct _NactApplicationPrivate {
 
 static const gchar *st_application_name	= N_( "FileManager-Actions Configuration Tool" );
 static const gchar *st_description		= N_( "A user interface to edit your own contextual actions" );
-static const gchar *st_application_id   = "org.gnome.nautilus-actions.ConfigurationTool";
+static const gchar *st_application_id   = "org.gnome.file-manager-actions.ConfigurationTool";
 
 static gboolean     st_non_unique_opt = FALSE;
 static gboolean     st_version_opt    = FALSE;

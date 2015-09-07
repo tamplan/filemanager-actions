@@ -2,9 +2,9 @@
 <gconfschemafile>
   <schemalist>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/label</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/label</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/label</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/label</applyto>
+      <owner>file-manager-actions</owner>
       <type>string</type>
       <locale name="C">
         <default>Action from v1.4.1</default>
@@ -13,9 +13,9 @@
       </locale>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/tooltip</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/tooltip</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/tooltip</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/tooltip</applyto>
+      <owner>file-manager-actions</owner>
       <type>string</type>
       <locale name="C">
         <default>Action from v1.4.1</default>
@@ -24,9 +24,9 @@
       </locale>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/icon</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/icon</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/icon</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/icon</applyto>
+      <owner>file-manager-actions</owner>
       <type>string</type>
       <locale name="C">
         <short>The icon of the menu item</short>
@@ -35,9 +35,9 @@
       <default>gtk-about</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/path</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/path</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/path</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/path</applyto>
+      <owner>file-manager-actions</owner>
       <type>string</type>
       <locale name="C">
         <short>The path of the command</short>
@@ -46,9 +46,9 @@
       <default>/bin/ls</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/parameters</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/parameters</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/parameters</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/parameters</applyto>
+      <owner>file-manager-actions</owner>
       <type>string</type>
       <locale name="C">
         <short>The parameters of the command</short>
@@ -69,9 +69,9 @@ The parameters can contain some special tokens which are replaced by Nautilus in
       <default>%u</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/basenames</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/basenames</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/basenames</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/basenames</applyto>
+      <owner>file-manager-actions</owner>
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C">
@@ -81,9 +81,9 @@ The parameters can contain some special tokens which are replaced by Nautilus in
       <default>[*]</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/matchcase</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/matchcase</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/matchcase</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/matchcase</applyto>
+      <owner>file-manager-actions</owner>
       <type>bool</type>
       <locale name="C">
         <short>'true' if the filename patterns have to be case sensitive, 'false' otherwise</short>
@@ -92,9 +92,9 @@ The parameters can contain some special tokens which are replaced by Nautilus in
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/mimetypes</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/mimetypes</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/mimetypes</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/mimetypes</applyto>
+      <owner>file-manager-actions</owner>
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C">
@@ -104,9 +104,9 @@ The parameters can contain some special tokens which are replaced by Nautilus in
       <default>[*/*]</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/isfile</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/isfile</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/isfile</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/isfile</applyto>
+      <owner>file-manager-actions</owner>
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have files, 'false' otherwise</short>
@@ -120,9 +120,9 @@ isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/isdir</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/isdir</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/isdir</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/isdir</applyto>
+      <owner>file-manager-actions</owner>
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have folders, 'false' otherwise</short>
@@ -136,9 +136,9 @@ isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/accept-multiple-files</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/accept-multiple-files</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/accept-multiple-files</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/accept-multiple-files</applyto>
+      <owner>file-manager-actions</owner>
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have several items, 'false' otherwise</short>
@@ -147,9 +147,9 @@ isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration
       <default>true</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/schemes</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/schemes</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/schemes</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/schemes</applyto>
+      <owner>file-manager-actions</owner>
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C">
@@ -173,9 +173,9 @@ All GnomeVFS schemes used by Nautilus can be used here.</long>
       <default>[file,sftp,smb]</default>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/version</key>
-      <applyto>/apps/nautilus-actions/configurations/1af5a47e-96d9_v1.4/version</applyto>
-      <owner>nautilus-actions</owner>
+      <key>/schemas/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/version</key>
+      <applyto>/apps/file-manager-actions/configurations/1af5a47e-96d9_v1.4/version</applyto>
+      <owner>file-manager-actions</owner>
       <type>string</type>
       <locale name="C">
         <short>The version of the configuration format</short>

@@ -34,7 +34,7 @@
  * SECTION: object-action
  * @title: NAObjectAction
  * @short_description: The Action Class Definition
- * @include: nautilus-actions/na-object-action.h
+ * @include: file-manager-actions/na-object-action.h
  *
  * This is the class which maintains data and properties of a &prodname;
  * action.

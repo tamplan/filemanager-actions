@@ -34,7 +34,7 @@
  * SECTION: object-item
  * @title: NAObjectItem
  * @short_description: The Object Item Base Class Definition
- * @include: nautilus-actions/na-object-item.h
+ * @include: file-manager-actions/na-object-item.h
  *
  * This is a pure virtual class, i.e. not an instantiatable one, but
  * serves as the base class for #NAObjectAction and #NAObjectMenu.

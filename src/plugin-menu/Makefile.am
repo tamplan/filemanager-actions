@@ -34,12 +34,12 @@ AM_CPPFLAGS += \
 
 nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
 
-nautilus_extension_LTLIBRARIES = libnautilus-actions-menu.la
+nautilus_extension_LTLIBRARIES = libfile-manager-actions-menu.la
 
 libnautilus_actions_menu_la_SOURCES = \
 	nautilus-module.c											\
-	nautilus-actions.c											\
-	nautilus-actions.h											\
+	file-manager-actions.c											\
+	file-manager-actions.h											\
 	$(NULL)
 
 libnautilus_actions_menu_la_LIBADD = \

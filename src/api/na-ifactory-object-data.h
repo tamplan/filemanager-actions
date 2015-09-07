@@ -34,7 +34,7 @@
  * SECTION: data-name
  * @title: Constants
  * @short_description: The Data Factory Constant Definitions
- * @include: nautilus-actions/na-ifactory-object-data.h
+ * @include: file-manager-actions/na-ifactory-object-data.h
  *
  * Each elementary data get its own name here.
  *

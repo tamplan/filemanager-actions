@@ -34,7 +34,7 @@
  * SECTION: object-profile
  * @title: NAObjectProfile
  * @short_description: The Action Profile Class Definition
- * @include: nautilus-actions/na-object-item.h
+ * @include: file-manager-actions/na-object-item.h
  */
 
 #include "na-object-id.h"

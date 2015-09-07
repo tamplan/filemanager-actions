@@ -48,7 +48,7 @@
 #include <core/na-selected-info.h>
 #include <core/na-tokens.h>
 
-#include "nautilus-actions.h"
+#include "file-manager-actions.h"
 
 /* private class data
  */
@@ -798,7 +798,7 @@ create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, 
 	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_profile, duplicate );
 
 	g_object_set_data_full( G_OBJECT( item ),
-			"nautilus-actions-tokens",
+			"file-manager-actions-tokens",
 			g_object_ref( tokens ),
 			( GDestroyNotify ) g_object_unref );
 
@@ -908,7 +908,7 @@ execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 
 	g_debug( "%s: item=%p, profile=%p", thisfn, ( void * ) item, ( void * ) profile );
 
-	tokens = NA_TOKENS( g_object_get_data( G_OBJECT( item ), "nautilus-actions-tokens" ));
+	tokens = NA_TOKENS( g_object_get_data( G_OBJECT( item ), "file-manager-actions-tokens" ));
 	na_tokens_execute_action( tokens, profile );
 }
 

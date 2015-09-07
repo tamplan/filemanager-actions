@@ -36,7 +36,7 @@
  * SECTION: gconf-monitor
  * @title: NAGConfMonitor
  * @short_description: The GConf Monitoring Class Definition
- * @include: nautilus-actions/na-gconf-monitor.h
+ * @include: file-manager-actions/na-gconf-monitor.h
  *
  * This class manages the GConf monitoring.
  * It is used to monitor both the GConf provider and the GConf runtime

@@ -2,74 +2,74 @@
 <gconfschemafile>
   <schemalist>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/version</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/version</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/version</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/version</applyto>
       <type>string</type>
       <locale name="C">
         <short>The version of the configuration format</short>
         <long>The version of the configuration format that will be used to manage backward compatibility</long>
       </locale>
       <default>2.0</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/label</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/label</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/label</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/label</applyto>
       <type>string</type>
       <locale name="C">
         <default>Import/Export test</default>
         <short>The label of the menu item</short>
         <long>The label of the menu item that will appear in the Nautilus popup menu when the selection matches the appearance condition settings</long>
       </locale>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/tooltip</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/tooltip</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/tooltip</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/tooltip</applyto>
       <type>string</type>
       <locale name="C">
         <default>The tooltip for "import/export test" action</default>
         <short>The tooltip of the menu item</short>
         <long>The tooltip of the menu item that will appear in the Nautilus statusbar when the user points to the Nautilus popup menu item with his/her mouse</long>
       </locale>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/icon</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/icon</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/icon</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/icon</applyto>
       <type>string</type>
       <locale name="C">
         <short>The icon of the menu item</short>
         <long>The icon of the menu item that will appear next to the label in the Nautilus popup menu when the selection matches the appearance conditions settings</long>
       </locale>
       <default>gtk-justify-center</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/desc-name</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/desc-name</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/desc-name</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/desc-name</applyto>
       <type>string</type>
       <locale name="C">
         <default>Default profile</default>
         <short>A description name of the profile</short>
         <long>The field is here to give the user a human readable name for a profile in the Nact interface. If not set there will be a default auto generated string set by default</long>
       </locale>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/path</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/path</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/path</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/path</applyto>
       <type>string</type>
       <locale name="C">
         <short>The path of the command</short>
         <long>The path of the command to start when the user select the menu item in the Nautilus popup menu</long>
       </locale>
       <default>/bin/ls</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/parameters</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/parameters</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/parameters</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/parameters</applyto>
       <type>string</type>
       <locale name="C">
         <short>The parameters of the command</short>
@@ -88,11 +88,11 @@ The parameters can contain some special tokens which are replaced by Nautilus in
 %%: a percent sign</long>
       </locale>
       <default>%h %M</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/basenames</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/basenames</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/basenames</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/basenames</applyto>
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C">
@@ -100,22 +100,22 @@ The parameters can contain some special tokens which are replaced by Nautilus in
         <long>A list of strings with joker '*' or '?' to match the name of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action to appear</long>
       </locale>
       <default>[*.c]</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/matchcase</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/matchcase</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/matchcase</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/matchcase</applyto>
       <type>bool</type>
       <locale name="C">
         <short>'true' if the filename patterns have to be case sensitive, 'false' otherwise</short>
         <long>If you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set 'false'</long>
       </locale>
       <default>true</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/mimetypes</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/mimetypes</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/mimetypes</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/mimetypes</applyto>
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C">
@@ -123,11 +123,11 @@ The parameters can contain some special tokens which are replaced by Nautilus in
         <long>A list of strings with joker '*' or '?' to match the mimetypes of the selected file(s). Each selected items must match at least one of the mimetype patterns for the action to appear</long>
       </locale>
       <default>[*/*]</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/isfile</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/isfile</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/isfile</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/isfile</applyto>
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have files, 'false' otherwise</short>
@@ -139,11 +139,11 @@ isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
 isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)</long>
       </locale>
       <default>true</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/isdir</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/isdir</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/isdir</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/isdir</applyto>
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have folders, 'false' otherwise</short>
@@ -155,22 +155,22 @@ isfile=TRUE and isdir=TRUE: the selection may hold both files and folders
 isfile=FALSE and isdir=FALSE: this is an invalid combination (your configuration will never appear)</long>
       </locale>
       <default>false</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/accept-multiple-files</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/accept-multiple-files</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/accept-multiple-files</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/accept-multiple-files</applyto>
       <type>bool</type>
       <locale name="C">
         <short>'true' if the selection can have several items, 'false' otherwise</short>
         <long>If you need one or more files or folders to be selected, set this key to 'true'. If you want just one file or folder, set 'false'</long>
       </locale>
       <default>false</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/schemes</key>
-      <applyto>/apps/nautilus-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/schemes</applyto>
+      <key>/schemas/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/schemes</key>
+      <applyto>/apps/file-manager-actions/configurations/3c4fa203-b5d0_post_v1.11_type_1/profile-zero/schemes</applyto>
       <type>list</type>
       <list_type>string</list_type>
       <locale name="C">
@@ -192,7 +192,7 @@ The most common schemes are:
 All schemes used by Nautilus can be used here.</long>
       </locale>
       <default>[smb]</default>
-      <owner>nautilus-actions</owner>
+      <owner>file-manager-actions</owner>
     </schema>
   </schemalist>
 </gconfschemafile>

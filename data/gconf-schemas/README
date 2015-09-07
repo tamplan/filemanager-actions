@@ -2,6 +2,10 @@ data/gconf-schemas
 ------------------
 This directory contains schemas to be installed in GConf.
 
+None of these schemas has been translated to new FileManager-Actions
+naming scheme, as these are part of the GConf subsystemn, which we have
+chosen to no more use. 
+
 Note to translators.
 --------------------
 Only nautilus-actions-prefs-schemas.in may be translated in place.
@@ -16,4 +20,4 @@ Even if you choose to not actually install schemas in GConf at install
 time, we will find back them in prefix/share/nautilus-actions/gconf-schemas/
 subdirectory.
  
-P. Wieser, Aug. 2010.
+P. Wieser, last updated on sept. 2015

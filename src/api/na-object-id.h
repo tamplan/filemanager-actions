@@ -34,7 +34,7 @@
  * SECTION: object-id
  * @title: NAObjectId
  * @short_description: The Identified Object Base Class Definition
- * @include: nautilus-actions/na-object-id.h
+ * @include: file-manager-actions/na-object-id.h
  *
  * This is a pure virtual class, i.e. not an instantiatable one.
  * It serves as the base class for #NAObject -derived object which have

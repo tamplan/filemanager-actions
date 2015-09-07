@@ -34,7 +34,7 @@
  * SECTION: ifactory-object
  * @title: NAIFactoryObject
  * @short_description: The #NAObjectItem Interface v 1
- * @include: nautilus-actions/na-ifactory_object.h
+ * @include: file-manager-actions/na-ifactory_object.h
  *
  * This interface is implemented by #NAObjectItem derived objects so that they
  * can take advantage of our data factory management system.

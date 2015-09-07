@@ -120,7 +120,7 @@ init_options( void )
 
 	description = g_strdup_printf( "%s.\n%s", PACKAGE_STRING,
 			_( "Bug reports are welcomed at http://bugzilla.gnome.org,"
-				" or you may prefer to mail to <maintainer@nautilus-actions.org>.\n" ));
+				" or you may prefer to mail to <maintainer@file-manager-actions.org>.\n" ));
 
 	g_option_context_set_description( context, description );
 

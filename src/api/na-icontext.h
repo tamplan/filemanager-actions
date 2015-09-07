@@ -34,7 +34,7 @@
  * SECTION: icontext
  * @title: NAIContext
  * @short_description: The Contextual Interface
- * @include: nautilus-actions/na-icontext.h
+ * @include: file-manager-actions/na-icontext.h
  *
  * This interface is implemented by all #NAObject -derived objects
  * whose the display in the Nautilus context menu is subject to some
