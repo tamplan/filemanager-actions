@@ -37,17 +37,17 @@
  * Declare the function only accessed from core library (not published as API).
  */
 
-#include <api/na-data-boxed.h>
+#include <api/fma-data-boxed.h>
 #include <api/na-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
-NADataBoxed *na_factory_provider_read_data ( const NAIFactoryProvider *reader, void *reader_data,
+FMADataBoxed *na_factory_provider_read_data ( const NAIFactoryProvider *reader, void *reader_data,
 									const NAIFactoryObject *object, const NADataDef *def,
 									GSList **messages );
 
 guint        na_factory_provider_write_data( const NAIFactoryProvider *writer, void *writer_data,
-									const NAIFactoryObject *object, const NADataBoxed *boxed,
+									const NAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages );
 
 G_END_DECLS

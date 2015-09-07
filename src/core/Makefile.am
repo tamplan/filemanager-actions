@@ -55,7 +55,7 @@ libna_core_la_SOURCES = \
 	na-about.h											\
 	fma-boxed.c											\
 	fma-core-utils.c										\
-	na-data-boxed.c										\
+	fma-data-boxed.c										\
 	na-data-def.c										\
 	na-data-types.c										\
 	na-desktop-environment.c							\

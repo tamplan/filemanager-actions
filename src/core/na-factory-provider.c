@@ -46,14 +46,14 @@
  *
  * Reads the specified data and set it up into the @boxed.
  *
- * Returns: a new #NADataBoxed object which contains the data.
+ * Returns: a new #FMADataBoxed object which contains the data.
  */
-NADataBoxed *
+FMADataBoxed *
 na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data,
 								const NAIFactoryObject *object, const NADataDef *def,
 								GSList **messages )
 {
-	NADataBoxed *boxed;
+	FMADataBoxed *boxed;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
@@ -72,7 +72,7 @@ na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_da
  * @writer: the instance which implements this #NAIFactoryProvider interface.
  * @writer_data: instance data.
  * @object: the #NAIFactoryobject being serialized.
- * @boxed: the #NADataBoxed object which is to be serialized.
+ * @boxed: the #FMADataBoxed object which is to be serialized.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
  *
@@ -80,7 +80,7 @@ na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_da
  */
 guint
 na_factory_provider_write_data( const NAIFactoryProvider *writer, void *writer_data,
-								const NAIFactoryObject *object, const NADataBoxed *boxed,
+								const NAIFactoryObject *object, const FMADataBoxed *boxed,
 								GSList **messages )
 {
 	guint code;

@@ -38,7 +38,7 @@
  * This class exports FileManager-Actions actions and menus as XML files.
  */
 
-#include <api/na-data-boxed.h>
+#include <api/fma-data-boxed.h>
 #include <api/na-iexporter.h>
 #include <api/na-ifactory-provider.h>
 
@@ -75,7 +75,7 @@ guint  naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBu
 guint  naxml_writer_export_to_file  ( const NAIExporter *instance, NAIExporterFileParmsv2 *parms );
 
 guint  naxml_writer_write_start( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
-guint  naxml_writer_write_data ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages );
+guint  naxml_writer_write_data ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
 guint  naxml_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 
 G_END_DECLS

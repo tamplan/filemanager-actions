@@ -60,7 +60,7 @@ static gboolean      read_done_item_is_writable( const NAIFactoryProvider *provi
 static void          read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
 static void          read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
 
-static NADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
+static FMADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
 static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 
 /*
@@ -195,11 +195,11 @@ read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectP
 	na_object_attach_profile( data->parent, profile );
 }
 
-NADataBoxed *
+FMADataBoxed *
 nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_read_data";
-	NADataBoxed *boxed;
+	FMADataBoxed *boxed;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
@@ -355,11 +355,11 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 	g_free( profile_data );
 }
 
-static NADataBoxed *
+static FMADataBoxed *
 get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def )
 {
 	static const gchar *thisfn = "nagp_reader_get_boxed_from_path";
-	NADataBoxed *boxed;
+	FMADataBoxed *boxed;
 	gboolean have_entry;
 	gchar *str_value;
 	gboolean bool_value;
@@ -372,7 +372,7 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 
 	if( have_entry ){
 		gchar *entry_path = gconf_concat_dir_and_key( path, def->gconf_entry );
-		boxed = na_data_boxed_new( def );
+		boxed = fma_data_boxed_new( def );
 
 		switch( def->type ){
 

@@ -155,7 +155,7 @@ static RootNodeStr st_root_node_str[] = {
 
 static void          read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile );
 static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text );
-static NADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const NADataDef *def );
+static FMADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const NADataDef *def );
 static void          read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item );
 static void          read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action );
 static gchar        *read_done_action_get_next_profile_id( NAXMLReader *reader );
@@ -629,7 +629,7 @@ read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile
  * of the same data (e.g. icon which exists in localized and unlocalized
  * versions). So do not remove dealt-with nodes here
  */
-NADataBoxed *
+FMADataBoxed *
 naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "naxml_reader_read_data";
@@ -647,7 +647,7 @@ naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, c
 		return( NULL );
 	}
 
-	NADataBoxed *boxed = NULL;
+	FMADataBoxed *boxed = NULL;
 	NAXMLReader *reader = NAXML_READER( reader_data );
 
 	/*g_debug( "naxml_reader_read_data: nodes=%p (count=%d)",
@@ -723,10 +723,10 @@ read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject 
 	return( adhoc );
 }
 
-static NADataBoxed *
+static FMADataBoxed *
 read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, const NADataDef *def )
 {
-	NADataBoxed *boxed;
+	FMADataBoxed *boxed;
 	gchar *entry;
 	gchar *value;
 
@@ -742,7 +742,7 @@ read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, 
 
 		if( reader->private->root_node_str->fn_get_value ){
 			value = ( *reader->private->root_node_str->fn_get_value )( reader, parent, def );
-			boxed = na_data_boxed_new( def );
+			boxed = fma_data_boxed_new( def );
 			fma_boxed_set_from_string( FMA_BOXED( boxed ), value );
 			g_free( value );
 		}

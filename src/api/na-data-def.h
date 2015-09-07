@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_FACTORY_DATA_DEF_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_FACTORY_DATA_DEF_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_DATA_DEF_H__
+#define __FILE_MANAGER_ACTIONS_API_DATA_DEF_H__
 
 /**
  * SECTION: data-def
@@ -142,4 +142,4 @@ const NADataDef *na_data_def_get_data_def( const NADataGroup *group, const gchar
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_FACTORY_DATA_DEF_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_DATA_DEF_H__ */

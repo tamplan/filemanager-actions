@@ -482,11 +482,11 @@ read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectP
  * Returns: NULL if the key has not been found
  * letting the caller deal with default values
  */
-NADataBoxed *
+FMADataBoxed *
 nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_data";
-	NADataBoxed *boxed;
+	FMADataBoxed *boxed;
 	gboolean found;
 	NadpReaderData *nrd;
 	gchar *group, *id;
@@ -524,7 +524,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 				case NA_DATA_TYPE_LOCALE_STRING:
 					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( found ){
-						boxed = na_data_boxed_new( def );
+						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), str_value );
 					}
 					g_free( str_value );
@@ -533,7 +533,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 				case NA_DATA_TYPE_STRING:
 					str_value = nadp_desktop_file_get_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( found ){
-						boxed = na_data_boxed_new( def );
+						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), str_value );
 					}
 					g_free( str_value );
@@ -542,7 +542,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 				case NA_DATA_TYPE_BOOLEAN:
 					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, def->desktop_entry, &found, fma_core_utils_boolean_from_string( def->default_value ));
 					if( found ){
-						boxed = na_data_boxed_new( def );
+						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( bool_value ));
 					}
 					break;
@@ -550,7 +550,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 				case NA_DATA_TYPE_STRING_LIST:
 					slist_value = nadp_desktop_file_get_string_list( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( found ){
-						boxed = na_data_boxed_new( def );
+						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), slist_value );
 					}
 					fma_core_utils_slist_free( slist_value );
@@ -559,7 +559,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 				case NA_DATA_TYPE_UINT:
 					uint_value = nadp_desktop_file_get_uint( nrd->ndf, group, def->desktop_entry, &found, atoi( def->default_value ));
 					if( found ){
-						boxed = na_data_boxed_new( def );
+						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( uint_value ));
 					}
 					break;

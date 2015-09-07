@@ -39,11 +39,11 @@
 #include <api/na-gconf-utils.h>
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
-#include <api/na-data-boxed.h>
+#include <api/fma-data-boxed.h>
 
 /* private class data
  */
-struct _NADataBoxedClassPrivate {
+struct _FMADataBoxedClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -53,14 +53,14 @@ struct _NADataBoxedClassPrivate {
 typedef struct {
 	guint           type;
 	GParamSpec * ( *spec )      ( const NADataDef * );
-	gboolean     ( *is_default )( const NADataBoxed * );
-	gboolean     ( *is_valid )  ( const NADataBoxed * );
+	gboolean     ( *is_default )( const FMADataBoxed * );
+	gboolean     ( *is_valid )  ( const FMADataBoxed * );
 }
 	DataBoxedDef;
 
 /* private instance data
  */
-struct _NADataBoxedPrivate {
+struct _FMADataBoxedPrivate {
 	gboolean            dispose_has_run;
 	const NADataDef    *data_def ;
 	const DataBoxedDef *boxed_def;
@@ -69,7 +69,7 @@ struct _NADataBoxedPrivate {
 static GObjectClass *st_parent_class   = NULL;
 
 static GType               register_type( void );
-static void                class_init( NADataBoxedClass *klass );
+static void                class_init( FMADataBoxedClass *klass );
 static void                instance_init( GTypeInstance *instance, gpointer klass );
 static void                instance_dispose( GObject *object );
 static void                instance_finalize( GObject *object );
@@ -77,31 +77,31 @@ static void                instance_finalize( GObject *object );
 static const DataBoxedDef *get_data_boxed_def( guint type );
 
 static GParamSpec         *bool_spec( const NADataDef *idtype );
-static gboolean            bool_is_default( const NADataBoxed *boxed );
-static gboolean            bool_is_valid( const NADataBoxed *boxed );
+static gboolean            bool_is_default( const FMADataBoxed *boxed );
+static gboolean            bool_is_valid( const FMADataBoxed *boxed );
 
 static GParamSpec         *pointer_spec( const NADataDef *idtype );
-static gboolean            pointer_is_default( const NADataBoxed *boxed );
-static gboolean            pointer_is_valid( const NADataBoxed *boxed );
+static gboolean            pointer_is_default( const FMADataBoxed *boxed );
+static gboolean            pointer_is_valid( const FMADataBoxed *boxed );
 
 static GParamSpec         *string_spec( const NADataDef *idtype );
-static gboolean            string_is_default( const NADataBoxed *boxed );
-static gboolean            string_is_valid( const NADataBoxed *boxed );
+static gboolean            string_is_default( const FMADataBoxed *boxed );
+static gboolean            string_is_valid( const FMADataBoxed *boxed );
 
 static GParamSpec         *string_list_spec( const NADataDef *idtype );
-static gboolean            string_list_is_default( const NADataBoxed *boxed );
-static gboolean            string_list_is_valid( const NADataBoxed *boxed );
+static gboolean            string_list_is_default( const FMADataBoxed *boxed );
+static gboolean            string_list_is_valid( const FMADataBoxed *boxed );
 
-static gboolean            locale_is_default( const NADataBoxed *boxed );
-static gboolean            locale_is_valid( const NADataBoxed *boxed );
+static gboolean            locale_is_default( const FMADataBoxed *boxed );
+static gboolean            locale_is_valid( const FMADataBoxed *boxed );
 
 static GParamSpec         *uint_spec( const NADataDef *idtype );
-static gboolean            uint_is_default( const NADataBoxed *boxed );
-static gboolean            uint_is_valid( const NADataBoxed *boxed );
+static gboolean            uint_is_default( const FMADataBoxed *boxed );
+static gboolean            uint_is_valid( const FMADataBoxed *boxed );
 
 static GParamSpec         *uint_list_spec( const NADataDef *idtype );
-static gboolean            uint_list_is_default( const NADataBoxed *boxed );
-static gboolean            uint_list_is_valid( const NADataBoxed *boxed );
+static gboolean            uint_list_is_default( const FMADataBoxed *boxed );
+static gboolean            uint_list_is_valid( const FMADataBoxed *boxed );
 
 static DataBoxedDef st_data_boxed_def[] = {
 		{ NA_DATA_TYPE_BOOLEAN,
@@ -143,7 +143,7 @@ static DataBoxedDef st_data_boxed_def[] = {
 };
 
 GType
-na_data_boxed_get_type( void )
+fma_data_boxed_get_type( void )
 {
 	static GType item_type = 0;
 
@@ -157,32 +157,32 @@ na_data_boxed_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_data_boxed_register_type";
+	static const gchar *thisfn = "fma_data_boxed_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NADataBoxedClass ),
+		sizeof( FMADataBoxedClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NADataBoxed ),
+		sizeof( FMADataBoxed ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( FMA_TYPE_BOXED, "NADataBoxed", &info, 0 );
+	type = g_type_register_static( FMA_TYPE_BOXED, "FMADataBoxed", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NADataBoxedClass *klass )
+class_init( FMADataBoxedClass *klass )
 {
-	static const gchar *thisfn = "na_data_boxed_class_init";
+	static const gchar *thisfn = "fma_data_boxed_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -193,19 +193,19 @@ class_init( NADataBoxedClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NADataBoxedClassPrivate, 1 );
+	klass->private = g_new0( FMADataBoxedClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	NADataBoxed *self;
+	FMADataBoxed *self;
 
-	g_return_if_fail( NA_IS_DATA_BOXED( instance ));
+	g_return_if_fail( FMA_IS_DATA_BOXED( instance ));
 
-	self = NA_DATA_BOXED( instance );
+	self = FMA_DATA_BOXED( instance );
 
-	self->private = g_new0( NADataBoxedPrivate, 1 );
+	self->private = g_new0( FMADataBoxedPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->data_def = NULL;
@@ -215,11 +215,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	NADataBoxed *self;
+	FMADataBoxed *self;
 
-	g_return_if_fail( NA_IS_DATA_BOXED( object ));
+	g_return_if_fail( FMA_IS_DATA_BOXED( object ));
 
-	self = NA_DATA_BOXED( object );
+	self = FMA_DATA_BOXED( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -235,11 +235,11 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	NADataBoxed *self;
+	FMADataBoxed *self;
 
-	g_return_if_fail( NA_IS_DATA_BOXED( object ));
+	g_return_if_fail( FMA_IS_DATA_BOXED( object ));
 
-	self = NA_DATA_BOXED( object );
+	self = FMA_DATA_BOXED( object );
 
 	g_free( self->private );
 
@@ -252,7 +252,7 @@ instance_finalize( GObject *object )
 static const DataBoxedDef *
 get_data_boxed_def( guint type )
 {
-	static const gchar *thisfn = "na_data_boxed_get_data_boxed_def";
+	static const gchar *thisfn = "fma_data_boxed_get_data_boxed_def";
 	int i;
 
 	for( i = 0 ; st_data_boxed_def[i].type ; ++i ){
@@ -266,21 +266,21 @@ get_data_boxed_def( guint type )
 }
 
 /**
- * na_data_boxed_new:
+ * fma_data_boxed_new:
  * @def: the #NADataDef definition structure for this boxed.
  *
- * Returns: a newly allocated #NADataBoxed.
+ * Returns: a newly allocated #FMADataBoxed.
  *
  * Since: 2.30
  */
-NADataBoxed *
-na_data_boxed_new( const NADataDef *def )
+FMADataBoxed *
+fma_data_boxed_new( const NADataDef *def )
 {
-	NADataBoxed *boxed;
+	FMADataBoxed *boxed;
 
 	g_return_val_if_fail( def != NULL, NULL );
 
-	boxed = g_object_new( NA_TYPE_DATA_BOXED, NULL );
+	boxed = g_object_new( FMA_TYPE_DATA_BOXED, NULL );
 	fma_boxed_set_type( FMA_BOXED( boxed ), def->type );
 	boxed->private->data_def = def;
 	boxed->private->boxed_def = get_data_boxed_def( def->type );
@@ -289,8 +289,8 @@ na_data_boxed_new( const NADataDef *def )
 }
 
 /**
- * na_data_boxed_get_data_def:
- * @boxed: this #NADataBoxed object.
+ * fma_data_boxed_get_data_def:
+ * @boxed: this #FMADataBoxed object.
  *
  * Returns: a pointer to the #NADataDef structure attached to the object.
  * Should never be %NULL.
@@ -298,11 +298,11 @@ na_data_boxed_new( const NADataDef *def )
  * Since: 2.30
  */
 const NADataDef *
-na_data_boxed_get_data_def( const NADataBoxed *boxed )
+fma_data_boxed_get_data_def( const FMADataBoxed *boxed )
 {
 	const NADataDef *def;
 
-	g_return_val_if_fail( NA_IS_DATA_BOXED( boxed ), NULL );
+	g_return_val_if_fail( FMA_IS_DATA_BOXED( boxed ), NULL );
 
 	def = NULL;
 
@@ -315,8 +315,8 @@ na_data_boxed_get_data_def( const NADataBoxed *boxed )
 }
 
 /**
- * na_data_boxed_set_data_def:
- * @boxed: this #NADataBoxed object.
+ * fma_data_boxed_set_data_def:
+ * @boxed: this #FMADataBoxed object.
  * @def: the new #NADataDef to be set.
  *
  * Changes the #NADataDef a @boxed points to:
@@ -326,9 +326,9 @@ na_data_boxed_get_data_def( const NADataBoxed *boxed )
  * Since: 2.30
  */
 void
-na_data_boxed_set_data_def( NADataBoxed *boxed, const NADataDef *new_def )
+fma_data_boxed_set_data_def( FMADataBoxed *boxed, const NADataDef *new_def )
 {
-	g_return_if_fail( NA_IS_DATA_BOXED( boxed ));
+	g_return_if_fail( FMA_IS_DATA_BOXED( boxed ));
 	g_return_if_fail( boxed->private->data_def );
 	g_return_if_fail( new_def );
 	g_return_if_fail( new_def->type == boxed->private->data_def->type );
@@ -340,7 +340,7 @@ na_data_boxed_set_data_def( NADataBoxed *boxed, const NADataDef *new_def )
 }
 
 /**
- * na_data_boxed_get_param_spec:
+ * fma_data_boxed_get_param_spec:
  * @def: a #NADataDef definition structure.
  *
  * Returns: a #GParamSpec structure.
@@ -348,7 +348,7 @@ na_data_boxed_set_data_def( NADataBoxed *boxed, const NADataDef *new_def )
  * Since: 2.30
  */
 GParamSpec *
-na_data_boxed_get_param_spec( const NADataDef *def )
+fma_data_boxed_get_param_spec( const NADataDef *def )
 {
 	GParamSpec *spec;
 	const DataBoxedDef *fn;
@@ -369,9 +369,9 @@ na_data_boxed_get_param_spec( const NADataDef *def )
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
- * na_data_boxed_are_equal:
- * @a: the first #NADataBoxed object.
- * @b: the second #NADataBoxed object.
+ * fma_data_boxed_are_equal:
+ * @a: the first #FMADataBoxed object.
+ * @b: the second #FMADataBoxed object.
  *
  * Returns: %TRUE if the two boxeds are equal, %FALSE else.
  *
@@ -379,30 +379,30 @@ na_data_boxed_get_param_spec( const NADataDef *def )
  * Deprecated: 3.1: Use fma_boxed_are_equal() instead.
  */
 gboolean
-na_data_boxed_are_equal( const NADataBoxed *a, const NADataBoxed *b )
+fma_data_boxed_are_equal( const FMADataBoxed *a, const FMADataBoxed *b )
 {
-	g_return_val_if_fail( NA_IS_DATA_BOXED( a ), FALSE );
-	g_return_val_if_fail( NA_IS_DATA_BOXED( b ), FALSE );
+	g_return_val_if_fail( FMA_IS_DATA_BOXED( a ), FALSE );
+	g_return_val_if_fail( FMA_IS_DATA_BOXED( b ), FALSE );
 
 	return( fma_boxed_are_equal( FMA_BOXED( a ), FMA_BOXED( b )));
 }
 #endif /* NA_ENABLE_DEPRECATED */
 
 /**
- * na_data_boxed_is_default:
- * @boxed: this #NADataBoxed object.
+ * fma_data_boxed_is_default:
+ * @boxed: this #FMADataBoxed object.
  *
- * Returns: %TRUE if the #NADataBoxed holds its default value,
+ * Returns: %TRUE if the #FMADataBoxed holds its default value,
  * %FALSE else.
  *
  * Since: 2.30
  */
 gboolean
-na_data_boxed_is_default( const NADataBoxed *boxed )
+fma_data_boxed_is_default( const FMADataBoxed *boxed )
 {
 	gboolean is_default;
 
-	g_return_val_if_fail( NA_IS_DATA_BOXED( boxed ), FALSE );
+	g_return_val_if_fail( FMA_IS_DATA_BOXED( boxed ), FALSE );
 	g_return_val_if_fail( boxed->private->boxed_def, FALSE );
 	g_return_val_if_fail( boxed->private->boxed_def->is_default, FALSE );
 
@@ -417,19 +417,19 @@ na_data_boxed_is_default( const NADataBoxed *boxed )
 }
 
 /**
- * na_data_boxed_is_valid:
- * @boxed: the #NADataBoxed object whose validity is to be checked.
+ * fma_data_boxed_is_valid:
+ * @boxed: the #FMADataBoxed object whose validity is to be checked.
  *
  * Returns: %TRUE if the boxed is valid, %FALSE else.
  *
  * Since: 2.30
  */
 gboolean
-na_data_boxed_is_valid( const NADataBoxed *boxed )
+fma_data_boxed_is_valid( const FMADataBoxed *boxed )
 {
 	gboolean is_valid;
 
-	g_return_val_if_fail( NA_IS_DATA_BOXED( boxed ), FALSE );
+	g_return_val_if_fail( FMA_IS_DATA_BOXED( boxed ), FALSE );
 	g_return_val_if_fail( boxed->private->boxed_def, FALSE );
 	g_return_val_if_fail( boxed->private->boxed_def->is_valid, FALSE );
 
@@ -445,8 +445,8 @@ na_data_boxed_is_valid( const NADataBoxed *boxed )
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
- * na_data_boxed_dump:
- * @boxed: this #NADataBoxed object.
+ * fma_data_boxed_dump:
+ * @boxed: this #FMADataBoxed object.
  *
  * Dump the content of @boxed.
  *
@@ -454,14 +454,14 @@ na_data_boxed_is_valid( const NADataBoxed *boxed )
  * Deprecated: 3.1: Use fma_boxed_dump() instead.
  */
 void
-na_data_boxed_dump( const NADataBoxed *boxed )
+fma_data_boxed_dump( const FMADataBoxed *boxed )
 {
 	fma_boxed_dump( FMA_BOXED( boxed ));
 }
 
 /**
- * na_data_boxed_get_as_string:
- * @boxed: the #NADataBoxed whose value is to be set.
+ * fma_data_boxed_get_as_string:
+ * @boxed: the #FMADataBoxed whose value is to be set.
  *
  * Returns: the value of the @boxed, as a newly allocated string which
  * should be g_free() by the caller.
@@ -470,14 +470,14 @@ na_data_boxed_dump( const NADataBoxed *boxed )
  * Deprecated: 3.1: Use fma_boxed_get_string() instead.
  */
 gchar *
-na_data_boxed_get_as_string( const NADataBoxed *boxed )
+fma_data_boxed_get_as_string( const FMADataBoxed *boxed )
 {
 	return( fma_boxed_get_string( FMA_BOXED( boxed )));
 }
 
 /**
- * na_data_boxed_get_as_value:
- * @boxed: the #NADataBoxed whose value is to be set.
+ * fma_data_boxed_get_as_value:
+ * @boxed: the #FMADataBoxed whose value is to be set.
  * @value: the string to be set.
  *
  * Setup @value with the content of the @boxed.
@@ -486,14 +486,14 @@ na_data_boxed_get_as_string( const NADataBoxed *boxed )
  * Deprecated: 3.1: Use fma_boxed_get_as_value() instead.
  */
 void
-na_data_boxed_get_as_value( const NADataBoxed *boxed, GValue *value )
+fma_data_boxed_get_as_value( const FMADataBoxed *boxed, GValue *value )
 {
 	fma_boxed_get_as_value( FMA_BOXED( boxed ), value );
 }
 
 /**
- * na_data_boxed_get_as_void:
- * @boxed: the #NADataBoxed whose value is to be set.
+ * fma_data_boxed_get_as_void:
+ * @boxed: the #FMADataBoxed whose value is to be set.
  *
  * Returns: the content of the @boxed.
  *
@@ -505,15 +505,15 @@ na_data_boxed_get_as_value( const NADataBoxed *boxed, GValue *value )
  * Deprecated: 3.1: Use fma_boxed_get_as_void() instead.
  */
 void *
-na_data_boxed_get_as_void( const NADataBoxed *boxed )
+fma_data_boxed_get_as_void( const FMADataBoxed *boxed )
 {
 	return( fma_boxed_get_as_void( FMA_BOXED( boxed )));
 }
 
 /**
- * na_data_boxed_set_from_boxed:
- * @boxed: the #NADataBoxed whose value is to be set.
- * @value: the source #NADataBoxed.
+ * fma_data_boxed_set_from_boxed:
+ * @boxed: the #FMADataBoxed whose value is to be set.
+ * @value: the source #FMADataBoxed.
  *
  * Copy value from @value to @boxed.
  *
@@ -521,14 +521,14 @@ na_data_boxed_get_as_void( const NADataBoxed *boxed )
  * Deprecated: 3.1: Use fma_boxed_set_from_boxed() instead.
  */
 void
-na_data_boxed_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *value )
+fma_data_boxed_set_from_boxed( FMADataBoxed *boxed, const FMADataBoxed *value )
 {
 	fma_boxed_set_from_boxed( FMA_BOXED( boxed ), FMA_BOXED( value ));
 }
 
 /**
- * na_data_boxed_set_from_string:
- * @boxed: the #NADataBoxed whose value is to be set.
+ * fma_data_boxed_set_from_string:
+ * @boxed: the #FMADataBoxed whose value is to be set.
  * @value: the string to be set.
  *
  * Evaluates the @value and set it to the @boxed.
@@ -537,14 +537,14 @@ na_data_boxed_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *value )
  * Deprecated: 3.1: Use fma_boxed_set_from_string() instead.
  */
 void
-na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value )
+fma_data_boxed_set_from_string( FMADataBoxed *boxed, const gchar *value )
 {
 	fma_boxed_set_from_string( FMA_BOXED( boxed ), value );
 }
 
 /**
- * na_data_boxed_set_from_value:
- * @boxed: the #NADataBoxed whose value is to be set.
+ * fma_data_boxed_set_from_value:
+ * @boxed: the #FMADataBoxed whose value is to be set.
  * @value: the value whose content is to be got.
  *
  * Evaluates the @value and set it to the @boxed.
@@ -553,14 +553,14 @@ na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value )
  * Deprecated: 3.1: Use fma_boxed_set_from_value() instead.
  */
 void
-na_data_boxed_set_from_value( NADataBoxed *boxed, const GValue *value )
+fma_data_boxed_set_from_value( FMADataBoxed *boxed, const GValue *value )
 {
 	fma_boxed_set_from_value( FMA_BOXED( boxed ), value );
 }
 
 /**
- * na_data_boxed_set_from_void:
- * @boxed: the #NADataBoxed whose value is to be set.
+ * fma_data_boxed_set_from_void:
+ * @boxed: the #FMADataBoxed whose value is to be set.
  * @value: the value whose content is to be got.
  *
  * Evaluates the @value and set it to the @boxed.
@@ -569,7 +569,7 @@ na_data_boxed_set_from_value( NADataBoxed *boxed, const GValue *value )
  * Deprecated: 3.1: Use fma_boxed_set_from_void() instead.
  */
 void
-na_data_boxed_set_from_void( NADataBoxed *boxed, const void *value )
+fma_data_boxed_set_from_void( FMADataBoxed *boxed, const void *value )
 {
 	fma_boxed_set_from_void( FMA_BOXED( boxed ), value );
 }
@@ -587,7 +587,7 @@ bool_spec( const NADataDef *def )
 }
 
 static gboolean
-bool_is_default( const NADataBoxed *boxed )
+bool_is_default( const FMADataBoxed *boxed )
 {
 	gboolean is_default = FALSE;
 	gboolean default_value;
@@ -601,7 +601,7 @@ bool_is_default( const NADataBoxed *boxed )
 }
 
 static gboolean
-bool_is_valid( const NADataBoxed *boxed )
+bool_is_valid( const FMADataBoxed *boxed )
 {
 	return( TRUE );
 }
@@ -622,13 +622,13 @@ pointer_spec( const NADataDef *def )
  *  default value for a pointer)
  */
 static gboolean
-pointer_is_default( const NADataBoxed *boxed )
+pointer_is_default( const FMADataBoxed *boxed )
 {
 	return( FALSE );
 }
 
 static gboolean
-pointer_is_valid( const NADataBoxed *boxed )
+pointer_is_valid( const FMADataBoxed *boxed )
 {
 	gboolean is_valid = TRUE;
 	gconstpointer pointer;
@@ -636,7 +636,7 @@ pointer_is_valid( const NADataBoxed *boxed )
 	if( boxed->private->data_def->mandatory ){
 		pointer = fma_boxed_get_pointer( FMA_BOXED( boxed ));
 		if( !pointer ){
-			g_debug( "na_data_boxed_pointer_is_valid: invalid %s: mandatory but null", boxed->private->data_def->name );
+			g_debug( "fma_data_boxed_pointer_is_valid: invalid %s: mandatory but null", boxed->private->data_def->name );
 			is_valid = FALSE;
 		}
 	}
@@ -656,7 +656,7 @@ string_spec( const NADataDef *def )
 }
 
 static gboolean
-string_is_default( const NADataBoxed *boxed )
+string_is_default( const FMADataBoxed *boxed )
 {
 	gboolean is_default = FALSE;
 	gchar *value = fma_boxed_get_string( FMA_BOXED( boxed ));
@@ -685,14 +685,14 @@ string_is_default( const NADataBoxed *boxed )
 }
 
 static gboolean
-string_is_valid( const NADataBoxed *boxed )
+string_is_valid( const FMADataBoxed *boxed )
 {
 	gboolean is_valid = TRUE;
 
 	if( boxed->private->data_def->mandatory ){
 		gchar *value = fma_boxed_get_string( FMA_BOXED( boxed ));
 		if( !value || !strlen( value )){
-			g_debug( "na_data_boxed_string_is_valid: invalid %s: mandatory but empty or null", boxed->private->data_def->name );
+			g_debug( "fma_data_boxed_string_is_valid: invalid %s: mandatory but empty or null", boxed->private->data_def->name );
 			is_valid = FALSE;
 		}
 		g_free( value );
@@ -712,7 +712,7 @@ string_list_spec( const NADataDef *def )
 }
 
 static gboolean
-string_list_is_default( const NADataBoxed *boxed )
+string_list_is_default( const FMADataBoxed *boxed )
 {
 	gboolean is_default = FALSE;
 	gchar *value = fma_boxed_get_string( FMA_BOXED( boxed ));
@@ -734,14 +734,14 @@ string_list_is_default( const NADataBoxed *boxed )
 }
 
 static gboolean
-string_list_is_valid( const NADataBoxed *boxed )
+string_list_is_valid( const FMADataBoxed *boxed )
 {
 	gboolean is_valid = TRUE;
 
 	if( boxed->private->data_def->mandatory ){
 		gchar *value = fma_boxed_get_string( FMA_BOXED( boxed ));
 		if( !value || !strlen( value )){
-			g_debug( "na_data_boxed_string_list_is_valid: invalid %s: mandatory but empty or null", boxed->private->data_def->name );
+			g_debug( "fma_data_boxed_string_list_is_valid: invalid %s: mandatory but empty or null", boxed->private->data_def->name );
 			is_valid = FALSE;
 		}
 	}
@@ -750,7 +750,7 @@ string_list_is_valid( const NADataBoxed *boxed )
 }
 
 static gboolean
-locale_is_default( const NADataBoxed *boxed )
+locale_is_default( const FMADataBoxed *boxed )
 {
 	gboolean is_default = FALSE;
 	gchar *value = fma_boxed_get_string( FMA_BOXED( boxed ));
@@ -778,14 +778,14 @@ locale_is_default( const NADataBoxed *boxed )
 }
 
 static gboolean
-locale_is_valid( const NADataBoxed *boxed )
+locale_is_valid( const FMADataBoxed *boxed )
 {
 	gboolean is_valid = TRUE;
 
 	if( boxed->private->data_def->mandatory ){
 		gchar *value = fma_boxed_get_string( FMA_BOXED( boxed ));
 		if( !value || !g_utf8_strlen( value, -1 )){
-			g_debug( "na_data_boxed_locale_is_valid: invalid %s: mandatory but empty or null", boxed->private->data_def->name );
+			g_debug( "fma_data_boxed_locale_is_valid: invalid %s: mandatory but empty or null", boxed->private->data_def->name );
 			is_valid = FALSE;
 		}
 		g_free( value );
@@ -808,7 +808,7 @@ uint_spec( const NADataDef *def )
 }
 
 static gboolean
-uint_is_default( const NADataBoxed *boxed )
+uint_is_default( const FMADataBoxed *boxed )
 {
 	gboolean is_default = FALSE;
 	guint default_value;
@@ -822,7 +822,7 @@ uint_is_default( const NADataBoxed *boxed )
 }
 
 static gboolean
-uint_is_valid( const NADataBoxed *boxed )
+uint_is_valid( const FMADataBoxed *boxed )
 {
 	return( TRUE );
 }
@@ -841,20 +841,20 @@ uint_list_spec( const NADataDef *def )
  * we assume no default for uint list
  */
 static gboolean
-uint_list_is_default( const NADataBoxed *boxed )
+uint_list_is_default( const FMADataBoxed *boxed )
 {
 	return( FALSE );
 }
 
 static gboolean
-uint_list_is_valid( const NADataBoxed *boxed )
+uint_list_is_valid( const FMADataBoxed *boxed )
 {
 	gboolean is_valid = TRUE;
 
 	if( boxed->private->data_def->mandatory ){
 		gchar *value = fma_boxed_get_string( FMA_BOXED( boxed ));
 		if( !value || !strlen( value )){
-			g_debug( "na_data_boxed_uint_list_is_valid: invalid %s: mandatory but empty or null", boxed->private->data_def->name );
+			g_debug( "fma_data_boxed_uint_list_is_valid: invalid %s: mandatory but empty or null", boxed->private->data_def->name );
 			is_valid = FALSE;
 		}
 		g_free( value );

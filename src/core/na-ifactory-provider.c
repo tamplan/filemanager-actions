@@ -159,7 +159,7 @@ ifactory_provider_get_version( const NAIFactoryProvider *instance )
  * its items. The function takes care of collecting and structuring data,
  * while the callback interface methods #NAIFactoryProviderInterface.read_start(),
  * #NAIFactoryProviderInterface.read_data() and #NAIFactoryProviderInterface.read_done()
- * just have to fill a given #NADataBoxed with the ad-hoc data type.
+ * just have to fill a given #FMADataBoxed with the ad-hoc data type.
  *
  * <example>
  *   <programlisting>

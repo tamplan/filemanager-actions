@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_DATA_TYPES_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_DATA_TYPES_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_DATA_TYPES_H__
+#define __FILE_MANAGER_ACTIONS_API_DATA_TYPES_H__
 
 /**
  * SECTION: data-type
@@ -91,4 +91,4 @@ const gchar *na_data_types_get_gconf_dump_key( guint type );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_DATA_TYPES_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_DATA_TYPES_H__ */

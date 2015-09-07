@@ -500,7 +500,7 @@ write_start_write_type( NadpDesktopFile *ndp, NAObjectItem *item )
 guint
 nadp_writer_ifactory_provider_write_data(
 				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,
-				const NADataBoxed *boxed, GSList **messages )
+				const FMADataBoxed *boxed, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_writer_ifactory_provider_write_data";
 	NadpDesktopFile *ndf;
@@ -519,7 +519,7 @@ nadp_writer_ifactory_provider_write_data(
 
 	code = NA_IIO_PROVIDER_CODE_OK;
 	ndf = NADP_DESKTOP_FILE( writer_data );
-	def = na_data_boxed_get_data_def( boxed );
+	def = fma_data_boxed_get_data_def( boxed );
 
 	if( def->desktop_entry && strlen( def->desktop_entry )){
 
@@ -532,7 +532,7 @@ nadp_writer_ifactory_provider_write_data(
 			group_name = g_strdup( NADP_GROUP_DESKTOP );
 		}
 
-		if( !na_data_boxed_is_default( boxed ) || def->write_if_default ){
+		if( !fma_data_boxed_is_default( boxed ) || def->write_if_default ){
 
 			switch( def->type ){
 

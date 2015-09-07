@@ -144,15 +144,15 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
  * @object: a #NAIFactoryObject object.
  * @name: the name of the elementary data we are searching for.
  *
- * The returned #NADataBoxed is owned by #NAIFactoryObject @object, and
+ * The returned #FMADataBoxed is owned by #NAIFactoryObject @object, and
  * should not be released by the caller.
  *
- * Returns: The #NADataBoxed object which contains the specified data,
+ * Returns: The #FMADataBoxed object which contains the specified data,
  * or %NULL.
  *
  * Since: 2.30
  */
-NADataBoxed *
+FMADataBoxed *
 na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *name )
 {
 	GList *list, *ip;
@@ -163,8 +163,8 @@ na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *
 	/*g_debug( "list=%p (count=%u)", ( void * ) list, g_list_length( list ));*/
 
 	for( ip = list ; ip ; ip = ip->next ){
-		NADataBoxed *boxed = NA_DATA_BOXED( ip->data );
-		const NADataDef *def = na_data_boxed_get_data_def( boxed );
+		FMADataBoxed *boxed = FMA_DATA_BOXED( ip->data );
+		const NADataDef *def = fma_data_boxed_get_data_def( boxed );
 
 		if( !strcmp( def->name, name )){
 			return( boxed );

@@ -56,7 +56,7 @@
  *       <para>
  *         whether they are a string, an integer, a boolean, a simple
  *         or double-linked list, each elementary data is encapsuled
- *         into a #NADataBoxed, small sort of structure (incidentally,
+ *         into a #FMADataBoxed, small sort of structure (incidentally,
  *         which acts almost as the new GLib #GVariant, but too late,
  *         guys :)).
  *       </para>
@@ -67,7 +67,7 @@
  *       <title>Our objects are de-structured.</title>
  *       <para>
  *         Instead of organizing our elementary datas into structures,
- *         our objects are just flat lists of #NADataBoxed.
+ *         our objects are just flat lists of #FMADataBoxed.
  *       </para>
  *     </formalpara>
  *   </listitem>
@@ -134,7 +134,7 @@
  * </refsect2>
  */
 
-#include "na-data-boxed.h"
+#include "fma-data-boxed.h"
 #include "na-ifactory-object.h"
 #include "na-ifactory-provider-provider.h"
 
@@ -204,12 +204,12 @@ typedef struct {
 	 *
 	 * This method must be implemented in order any data be read.
 	 *
-	 * Returns: a newly allocated NADataBoxed which contains the read value.
+	 * Returns: a newly allocated FMADataBoxed which contains the read value.
 	 * Should return %NULL if data is not found.
 	 *
 	 * Since: 2.30
 	 */
-	NADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
+	FMADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
 
 	/**
 	 * read_done:
@@ -249,7 +249,7 @@ typedef struct {
 	 * @writer_data: the data associated to this instance.
 	 * @object: the #NAIFactoryObject object being written.
 	 * @def: the description of the data to be written.
-	 * @value: the #NADataBoxed to be written down.
+	 * @value: the #FMADataBoxed to be written down.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
@@ -261,7 +261,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages );
+	guint         ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
 
 	/**
 	 * write_done:

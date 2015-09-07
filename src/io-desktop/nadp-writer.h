@@ -52,7 +52,7 @@ guint    nadp_writer_ifactory_provider_write_start(
 
 guint    nadp_writer_ifactory_provider_write_data(
 				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,
-				const NADataBoxed *boxed, GSList **messages );
+				const FMADataBoxed *boxed, GSList **messages );
 
 guint    nadp_writer_ifactory_provider_write_done(
 				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,

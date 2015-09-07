@@ -42,7 +42,7 @@
 
 G_BEGIN_DECLS
 
-typedef gboolean ( *NAFactoryObjectIterBoxedFn )( const NAIFactoryObject *object, NADataBoxed *boxed, void *data );
+typedef gboolean ( *NAFactoryObjectIterBoxedFn )( const NAIFactoryObject *object, FMADataBoxed *boxed, void *data );
 
 #define NA_IFACTORY_OBJECT_PROP_DATA			"na-ifactory-object-prop-data"
 
@@ -54,7 +54,7 @@ void         na_factory_object_iter_on_boxed    ( const NAIFactoryObject *object
 gchar       *na_factory_object_get_default      ( NAIFactoryObject *object, const gchar *name );
 void         na_factory_object_set_defaults     ( NAIFactoryObject *object );
 
-void         na_factory_object_move_boxed       ( NAIFactoryObject *target, const NAIFactoryObject *source, NADataBoxed *boxed );
+void         na_factory_object_move_boxed       ( NAIFactoryObject *target, const NAIFactoryObject *source, FMADataBoxed *boxed );
 
 void         na_factory_object_copy             ( NAIFactoryObject *target, const NAIFactoryObject *source );
 gboolean     na_factory_object_are_equal        ( const NAIFactoryObject *a, const NAIFactoryObject *b );

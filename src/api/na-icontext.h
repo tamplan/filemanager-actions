@@ -41,7 +41,7 @@
  * conditions.
  *
  * Implementors, typically #NAObjectAction, #NAObjectProfile and
- * #NAObjectMenu, host the required data as #NADataBoxed in a dedicated
+ * #NAObjectMenu, host the required data as #FMADataBoxed in a dedicated
  * NA_FACTORY_CONDITIONS_GROUP data group.
  */
 

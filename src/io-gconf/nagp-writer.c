@@ -280,7 +280,7 @@ write_start_write_version( NagpGConfProvider *provider, NAObjectItem *item )
 
 guint
 nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
-									const NAIFactoryObject *object, const NADataBoxed *boxed,
+									const NAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages )
 {
 	static const gchar *thisfn = "nagp_writer_write_data";
@@ -299,9 +299,9 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 	msg = NULL;
 	code = NA_IIO_PROVIDER_CODE_OK;
-	def = na_data_boxed_get_data_def( boxed );
+	def = fma_data_boxed_get_data_def( boxed );
 
-	if( !na_data_boxed_is_default( boxed ) || def->write_if_default ){
+	if( !fma_data_boxed_is_default( boxed ) || def->write_if_default ){
 
 		if( NA_IS_OBJECT_PROFILE( object )){
 			NAObjectItem *parent = NA_OBJECT_ITEM( na_object_get_parent( object ));

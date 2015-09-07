@@ -30,7 +30,7 @@
 #ifndef __NAGP_WRITE_H__
 #define __NAGP_WRITE_H__
 
-#include <api/na-data-boxed.h>
+#include <api/fma-data-boxed.h>
 #include <api/na-iio-provider.h>
 #include <api/na-ifactory-provider.h>
 
@@ -58,7 +58,7 @@ guint    nagp_writer_write_start( const NAIFactoryProvider *writer, void *writer
 									GSList **messages  );
 
 guint    nagp_writer_write_data ( const NAIFactoryProvider *provider, void *writer_data,
-									const NAIFactoryObject *object, const NADataBoxed *boxed,
+									const NAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages );
 
 guint    nagp_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data,

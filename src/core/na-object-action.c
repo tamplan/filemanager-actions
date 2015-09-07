@@ -465,7 +465,7 @@ read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 	static const gchar *thisfn = "na_object_action_read_done_read_done_convert_v1_to_last";
 	GList *to_move;
 	NADataDef *def;
-	NADataBoxed *boxed;
+	FMADataBoxed *boxed;
 	GList *ibox;
 	NAObjectProfile *profile;
 
@@ -494,7 +494,7 @@ read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 
 	for( ibox = to_move ; ibox ; ibox = ibox->next ){
 		na_factory_object_move_boxed(
-				NA_IFACTORY_OBJECT( profile ), instance, NA_DATA_BOXED( ibox->data ));
+				NA_IFACTORY_OBJECT( profile ), instance, FMA_DATA_BOXED( ibox->data ));
 	}
 
 	return( profile );
