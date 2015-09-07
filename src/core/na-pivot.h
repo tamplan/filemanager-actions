@@ -62,7 +62,7 @@
  *
  * - The emitted signal is catched by na_pivot_on_item_changed_handler(),
  *   which was connected when the I/O provider plugin was associated with
- *   the NAIOProvider object.
+ *   the FMAIOProvider object.
  *
  * - The NAPivot object receives these notifications originating from all
  *   loaded I/O providers, itself summarizes them, and only then notify its

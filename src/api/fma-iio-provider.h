@@ -428,7 +428,7 @@ typedef struct {
 	FMAIIOProviderInterface;
 
 /* -- adding a new status here should imply also adding a new tooltip
- * -- in na_io_provider_get_readonly_tooltip().
+ * -- in fma_io_provider_get_readonly_tooltip().
  */
 /**
  * FMAIIOProviderWritabilityStatus:
@@ -467,7 +467,7 @@ typedef enum {
 	FMAIIOProviderWritabilityStatus;
 
 /* -- adding a new code here should imply also adding a new label
- * -- in #na_io_provider_get_return_code_label().
+ * -- in #fma_io_provider_get_return_code_label().
  */
 /**
  * FMAIIOProviderOperationStatus:

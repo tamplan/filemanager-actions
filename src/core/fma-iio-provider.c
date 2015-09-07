@@ -33,7 +33,7 @@
 
 #include <api/fma-iio-provider.h>
 
-#include "na-io-provider.h"
+#include "fma-io-provider.h"
 
 /* private interface data
  */

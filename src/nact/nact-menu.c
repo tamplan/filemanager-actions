@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 
 #include "core/fma-about.h"
-#include "core/na-io-provider.h"
+#include "core/fma-io-provider.h"
 
 #include "nact-main-window.h"
 #include "nact-menu.h"
@@ -326,9 +326,9 @@ nact_menu_win( NactMainWindow *main_window )
 	sdata->updater = nact_application_get_updater( NACT_APPLICATION( application ));
 	sdata->is_level_zero_writable = na_updater_is_level_zero_writable( sdata->updater );
 	sdata->has_writable_providers =
-			( na_io_provider_find_writable_io_provider( NA_PIVOT( sdata->updater )) != NULL );
+			( fma_io_provider_find_writable_io_provider( NA_PIVOT( sdata->updater )) != NULL );
 
-	g_debug( "%s: na_updater_is_level_zero_writable=%s, na_io_provider_find_writable_io_provider=%s",
+	g_debug( "%s: na_updater_is_level_zero_writable=%s, fma_io_provider_find_writable_io_provider=%s",
 			thisfn,
 			sdata->is_level_zero_writable ? "True":"False",
 			sdata->has_writable_providers ? "True":"False" );

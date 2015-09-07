@@ -38,7 +38,7 @@
 #include "api/fma-object-api.h"
 
 #include "core/fma-gtk-utils.h"
-#include "core/na-io-provider.h"
+#include "core/fma-io-provider.h"
 
 #include "base-gtk-utils.h"
 #include "nact-iproperties-tab.h"
@@ -493,14 +493,14 @@ display_provider_name( NactIPropertiesTab *instance, FMAObjectItem *item )
 {
 	GtkWidget *label_widget;
 	gchar *label;
-	NAIOProvider *provider;
+	FMAIOProvider *provider;
 
 	label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionItemProvider" );
 	label = NULL;
 	if( item ){
 		provider = fma_object_get_provider( item );
 		if( provider ){
-			label = na_io_provider_get_name( provider );
+			label = fma_io_provider_get_name( provider );
 		}
 	}
 	if( !label ){

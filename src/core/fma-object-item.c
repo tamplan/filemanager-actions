@@ -38,7 +38,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-object-api.h>
 
-#include "na-io-provider.h"
+#include "fma-io-provider.h"
 
 /* private class data
  */
@@ -247,14 +247,14 @@ object_copy( FMAObject *target, const FMAObject *source, guint mode )
 		provider = fma_object_get_provider( source );
 
 		if( provider ){
-			if( !NA_IS_IO_PROVIDER( provider )){
-				g_warning( "%s: source=%p (%s), provider=%p is not a NAIOProvider",
+			if( !FMA_IS_IO_PROVIDER( provider )){
+				g_warning( "%s: source=%p (%s), provider=%p is not a FMAIOProvider",
 						thisfn,
 						( void * ) source, G_OBJECT_TYPE_NAME( source ),
 						( void * ) provider );
 
 			} else {
-				na_io_provider_duplicate_data( NA_IO_PROVIDER( provider ), FMA_OBJECT_ITEM( target ), FMA_OBJECT_ITEM( source ), NULL );
+				fma_io_provider_duplicate_data( FMA_IO_PROVIDER( provider ), FMA_OBJECT_ITEM( target ), FMA_OBJECT_ITEM( source ), NULL );
 			}
 		}
 

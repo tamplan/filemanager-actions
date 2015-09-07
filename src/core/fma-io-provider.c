@@ -39,17 +39,17 @@
 #include <api/fma-core-utils.h>
 
 #include "na-iprefs.h"
-#include "na-io-provider.h"
+#include "fma-io-provider.h"
 
 /* private class data
  */
-struct _NAIOProviderClassPrivate {
+struct _FMAIOProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAIOProviderPrivate {
+struct _FMAIOProviderPrivate {
 	gboolean       dispose_has_run;
 	gchar         *id;
 	FMAIIOProvider *provider;
@@ -58,13 +58,13 @@ struct _NAIOProviderPrivate {
 	guint          reason;
 };
 
-/* NAIOProvider properties
+/* FMAIOProvider properties
  */
 enum {
 	IO_PROVIDER_PROP_ID_ID = 1,
 };
 
-#define IO_PROVIDER_PROP_ID				"na-io-provider-prop-id"
+#define IO_PROVIDER_PROP_ID				"fma-io-provider-prop-id"
 
 static const gchar  *st_enter_bug    = N_( "Please, be kind enough to fill out a bug report on "
 											"https://bugzilla.gnome.org/enter_bug.cgi?product=file-manager-actions." );
@@ -73,7 +73,7 @@ static GObjectClass *st_parent_class = NULL;
 static GList        *st_io_providers = NULL;
 
 static GType         register_type( void );
-static void          class_init( NAIOProviderClass *klass );
+static void          class_init( FMAIOProviderClass *klass );
 static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_constructed( GObject *object );
 static void          instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
@@ -82,28 +82,28 @@ static void          instance_dispose( GObject *object );
 static void          instance_finalize( GObject *object );
 
 #if 0
-static void          dump( const NAIOProvider *provider );
+static void          dump( const FMAIOProvider *provider );
 static void          dump_providers_list( GList *providers );
 #endif
-static NAIOProvider *io_provider_new( const NAPivot *pivot, FMAIIOProvider *module, const gchar *id );
+static FMAIOProvider *io_provider_new( const NAPivot *pivot, FMAIIOProvider *module, const gchar *id );
 static GList        *io_providers_list_add_from_plugins( const NAPivot *pivot, GList *list );
 static GList        *io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list );
 static GSList       *io_providers_get_from_prefs( void );
 static GList        *io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list );
 static GList        *io_providers_list_append_object( const NAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id );
-static void          io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, FMAIIOProvider *provider_module );
-static gboolean      is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory );
-static gboolean      is_finally_writable( const NAIOProvider *provider, const NAPivot *pivot, guint *reason );
+static void          io_providers_list_set_module( const NAPivot *pivot, FMAIOProvider *provider_object, FMAIIOProvider *provider_module );
+static gboolean      is_conf_writable( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory );
+static gboolean      is_finally_writable( const FMAIOProvider *provider, const NAPivot *pivot, guint *reason );
 static GList        *load_items_filter_unwanted_items( const NAPivot *pivot, GList *merged, guint loadable_set );
 static GList        *load_items_filter_unwanted_items_rec( GList *merged, guint loadable_set );
 static GList        *load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **messages );
 static GList        *load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_empty, FMAObjectItem *parent );
 static GList        *load_items_hierarchy_sort( const NAPivot *pivot, GList *tree, GCompareFunc fn );
 static gint          peek_item_by_id_compare( const FMAObject *obj, const gchar *id );
-static NAIOProvider *peek_provider_by_id( const GList *providers, const gchar *id );
+static FMAIOProvider *peek_provider_by_id( const GList *providers, const gchar *id );
 
 GType
-na_io_provider_get_type( void )
+fma_io_provider_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -117,32 +117,32 @@ na_io_provider_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_io_provider_register_type";
+	static const gchar *thisfn = "fma_io_provider_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAIOProviderClass ),
+		sizeof( FMAIOProviderClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAIOProvider ),
+		sizeof( FMAIOProvider ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NAIOProvider", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMAIOProvider", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAIOProviderClass *klass )
+class_init( FMAIOProviderClass *klass )
 {
-	static const gchar *thisfn = "na_io_provider_class_init";
+	static const gchar *thisfn = "fma_io_provider_class_init";
 	GObjectClass *object_class;
 	GParamSpec *spec;
 
@@ -164,23 +164,23 @@ class_init( NAIOProviderClass *klass )
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, IO_PROVIDER_PROP_ID_ID, spec );
 
-	klass->private = g_new0( NAIOProviderClassPrivate, 1 );
+	klass->private = g_new0( FMAIOProviderClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_io_provider_instance_init";
-	NAIOProvider *self;
+	static const gchar *thisfn = "fma_io_provider_instance_init";
+	FMAIOProvider *self;
 
-	g_return_if_fail( NA_IS_IO_PROVIDER( instance ));
+	g_return_if_fail( FMA_IS_IO_PROVIDER( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NA_IO_PROVIDER( instance );
+	self = FMA_IO_PROVIDER( instance );
 
-	self->private = g_new0( NAIOProviderPrivate, 1 );
+	self->private = g_new0( FMAIOProviderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->id = NULL;
@@ -193,12 +193,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *object )
 {
-	static const gchar *thisfn = "na_io_provider_instance_constructed";
-	NAIOProviderPrivate *priv;
+	static const gchar *thisfn = "fma_io_provider_instance_constructed";
+	FMAIOProviderPrivate *priv;
 
-	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
+	g_return_if_fail( FMA_IS_IO_PROVIDER( object ));
 
-	priv = NA_IO_PROVIDER( object )->private;
+	priv = FMA_IO_PROVIDER( object )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -217,10 +217,10 @@ instance_constructed( GObject *object )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	NAIOProvider *self;
+	FMAIOProvider *self;
 
-	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
-	self = NA_IO_PROVIDER( object );
+	g_return_if_fail( FMA_IS_IO_PROVIDER( object ));
+	self = FMA_IO_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -239,10 +239,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	NAIOProvider *self;
+	FMAIOProvider *self;
 
-	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
-	self = NA_IO_PROVIDER( object );
+	g_return_if_fail( FMA_IS_IO_PROVIDER( object ));
+	self = FMA_IO_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -258,12 +258,12 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_io_provider_instance_dispose";
-	NAIOProvider *self;
+	static const gchar *thisfn = "fma_io_provider_instance_dispose";
+	FMAIOProvider *self;
 
-	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
+	g_return_if_fail( FMA_IS_IO_PROVIDER( object ));
 
-	self = NA_IO_PROVIDER( object );
+	self = FMA_IO_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -288,14 +288,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_io_provider_instance_finalize";
-	NAIOProvider *self;
+	static const gchar *thisfn = "fma_io_provider_instance_finalize";
+	FMAIOProvider *self;
 
-	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
+	g_return_if_fail( FMA_IS_IO_PROVIDER( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NA_IO_PROVIDER( object );
+	self = FMA_IO_PROVIDER( object );
 
 	g_free( self->private->id );
 
@@ -308,25 +308,25 @@ instance_finalize( GObject *object )
 }
 
 /*
- * na_io_provider_find_writable_io_provider:
+ * fma_io_provider_find_writable_io_provider:
  * @pivot: the #NAPivot instance.
  *
  * Returns: the first willing and able to write I/O provider, or NULL.
  *
- * The returned provider is owned by NAIOProvider class, and should not
+ * The returned provider is owned by FMAIOProvider class, and should not
  * be released by the caller.
  */
-NAIOProvider *
-na_io_provider_find_writable_io_provider( const NAPivot *pivot )
+FMAIOProvider *
+fma_io_provider_find_writable_io_provider( const NAPivot *pivot )
 {
 	const GList *providers;
 	const GList *ip;
-	NAIOProvider *provider;
+	FMAIOProvider *provider;
 
-	providers = na_io_provider_get_io_providers_list( pivot );
+	providers = fma_io_provider_get_io_providers_list( pivot );
 
 	for( ip = providers ; ip ; ip = ip->next ){
-		provider = ( NAIOProvider * ) ip->data;
+		provider = ( FMAIOProvider * ) ip->data;
 		if( provider->private->writable ){
 			return( provider );
 		}
@@ -336,28 +336,28 @@ na_io_provider_find_writable_io_provider( const NAPivot *pivot )
 }
 
 /*
- * na_io_provider_find_io_provider_by_id:
+ * fma_io_provider_find_io_provider_by_id:
  * @pivot: the #NAPivot instance.
  * @id: the identifier of the searched I/O provider.
  *
  * Returns: the I/O provider, or NULL.
  *
- * The returned provider is owned by NAIOProvider class, and should not
+ * The returned provider is owned by FMAIOProvider class, and should not
  * be released by the caller.
  */
-NAIOProvider *
-na_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
+FMAIOProvider *
+fma_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
 {
 	const GList *providers;
 	const GList *ip;
-	NAIOProvider *provider;
-	NAIOProvider *found;
+	FMAIOProvider *provider;
+	FMAIOProvider *found;
 
-	providers = na_io_provider_get_io_providers_list( pivot );
+	providers = fma_io_provider_get_io_providers_list( pivot );
 	found = NULL;
 
 	for( ip = providers ; ip && !found ; ip = ip->next ){
-		provider = NA_IO_PROVIDER( ip->data );
+		provider = FMA_IO_PROVIDER( ip->data );
 		if( !strcmp( provider->private->id, id )){
 			found = provider;
 		}
@@ -367,13 +367,13 @@ na_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
 }
 
 /*
- * na_io_provider_get_io_providers_list:
+ * fma_io_provider_get_io_providers_list:
  * @pivot: the current #NAPivot instance.
  *
  * Build (if not already done) the write-ordered list of currently
- * available NAIOProvider objects.
+ * available FMAIOProvider objects.
  *
- * A NAIOProvider object may be created:
+ * A FMAIOProvider object may be created:
  * - either because we have loaded a plugin which claims to implement the
  *   FMAIIOProvider interface;
  * - or because an i/o provider identifier has been found in preferences.
@@ -385,11 +385,11 @@ na_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
  *
  * Returns: the list of I/O providers.
  *
- * The returned list is owned by #NAIOProvider class, and should not be
+ * The returned list is owned by #FMAIOProvider class, and should not be
  * released by the caller.
  */
 const GList *
-na_io_provider_get_io_providers_list( const NAPivot *pivot )
+fma_io_provider_get_io_providers_list( const NAPivot *pivot )
 {
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
@@ -403,7 +403,7 @@ na_io_provider_get_io_providers_list( const NAPivot *pivot )
 }
 
 /*
- * adding from write-order means we only create NAIOProvider objects
+ * adding from write-order means we only create FMAIOProvider objects
  * without having any pointer to the underlying FMAIIOProvider (if it exists)
  */
 static GList *
@@ -427,13 +427,13 @@ io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_lis
 }
 
 /*
- * add to the list a NAIOProvider object for each loaded plugin which claim
+ * add to the list a FMAIOProvider object for each loaded plugin which claim
  * to implement the FMAIIOProvider interface
  */
 static GList *
 io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
 {
-	static const gchar *thisfn = "na_io_provider_io_providers_list_add_from_plugins";
+	static const gchar *thisfn = "fma_io_provider_io_providers_list_add_from_plugins";
 	GList *merged;
 	GList *modules_list, *im;
 	gchar *id;
@@ -470,7 +470,7 @@ io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
 }
 
 /*
- * add to the list NAIOProvider objects for the identifiers we may find
+ * add to the list FMAIOProvider objects for the identifiers we may find
  * in preferences without having found the plugin itself
  *
  * preferences come from the io-providers status.
@@ -539,14 +539,14 @@ io_providers_get_from_prefs( void )
 }
 
 /*
- * add to the list a NAIOProvider object for the specified module and id
+ * add to the list a FMAIOProvider object for the specified module and id
  * if it does not have been already registered
  */
 static GList *
 io_providers_list_append_object( const NAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id )
 {
 	GList *merged;
-	NAIOProvider *object;
+	FMAIOProvider *object;
 
 	merged = list;
 	object = peek_provider_by_id( list, id );
@@ -562,15 +562,15 @@ io_providers_list_append_object( const NAPivot *pivot, GList *list, FMAIIOProvid
 	return( merged );
 }
 
-static NAIOProvider *
+static FMAIOProvider *
 peek_provider_by_id( const GList *providers, const gchar *id )
 {
-	NAIOProvider *provider = NULL;
+	FMAIOProvider *provider = NULL;
 	const GList *ip;
 
 	for( ip = providers ; ip && !provider ; ip = ip->next ){
-		if( !strcmp( NA_IO_PROVIDER( ip->data )->private->id, id )){
-			provider = NA_IO_PROVIDER( ip->data );
+		if( !strcmp( FMA_IO_PROVIDER( ip->data )->private->id, id )){
+			provider = FMA_IO_PROVIDER( ip->data );
 		}
 	}
 
@@ -578,19 +578,19 @@ peek_provider_by_id( const GList *providers, const gchar *id )
 }
 
 /*
- * allocate a new NAIOProvider object for the specified module and id
+ * allocate a new FMAIOProvider object for the specified module and id
  *
  * id is mandatory here
  * module may be NULL
  */
-static NAIOProvider *
+static FMAIOProvider *
 io_provider_new( const NAPivot *pivot, FMAIIOProvider *module, const gchar *id )
 {
-	NAIOProvider *object;
+	FMAIOProvider *object;
 
 	g_return_val_if_fail( id && strlen( id ), NULL );
 
-	object = g_object_new( NA_IO_PROVIDER_TYPE, IO_PROVIDER_PROP_ID, id, NULL );
+	object = g_object_new( FMA_IO_PROVIDER_TYPE, IO_PROVIDER_PROP_ID, id, NULL );
 
 	if( module ){
 		io_providers_list_set_module( pivot, object, module );
@@ -600,11 +600,11 @@ io_provider_new( const NAPivot *pivot, FMAIIOProvider *module, const gchar *id )
 }
 
 /*
- * when a IIOProvider plugin is associated with the NAIOProvider object,
+ * when a IIOProvider plugin is associated with the FMAIOProvider object,
  * we connect the NAPivot callback to the 'item-changed' signal
  */
 static void
-io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, FMAIIOProvider *provider_module )
+io_providers_list_set_module( const NAPivot *pivot, FMAIOProvider *provider_object, FMAIIOProvider *provider_module )
 {
 	provider_object->private->provider = g_object_ref( provider_module );
 
@@ -616,7 +616,7 @@ io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_objec
 	provider_object->private->writable =
 			is_finally_writable( provider_object, pivot, &provider_object->private->reason );
 
-	g_debug( "na_io_provider_list_set_module: provider_module=%p (%s), writable=%s, reason=%d",
+	g_debug( "fma_io_provider_list_set_module: provider_module=%p (%s), writable=%s, reason=%d",
 			( void * ) provider_module,
 			provider_object->private->id,
 			provider_object->private->writable ? "True":"False",
@@ -624,13 +624,13 @@ io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_objec
 }
 
 /*
- * na_io_provider_unref_io_providers_list:
+ * fma_io_provider_unref_io_providers_list:
  *
  * Called by on #NAPivot dispose(), free here resources allocated to
  * the I/O providers.
  */
 void
-na_io_provider_unref_io_providers_list( void )
+fma_io_provider_unref_io_providers_list( void )
 {
 	g_list_foreach( st_io_providers, ( GFunc ) g_object_unref, NULL );
 	g_list_free( st_io_providers );
@@ -638,18 +638,18 @@ na_io_provider_unref_io_providers_list( void )
 }
 
 /*
- * na_io_provider_get_id:
- * @provider: this #NAIOProvider.
+ * fma_io_provider_get_id:
+ * @provider: this #FMAIOProvider.
  *
  * Returns: the internal id of this #FMAIIOProvider, as a newly
  * allocated string which should be g_free() by the caller.
  */
 gchar *
-na_io_provider_get_id( const NAIOProvider *provider )
+fma_io_provider_get_id( const FMAIOProvider *provider )
 {
 	gchar *id;
 
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), NULL );
 
 	id = NULL;
 
@@ -662,8 +662,8 @@ na_io_provider_get_id( const NAIOProvider *provider )
 }
 
 /*
- * na_io_provider_get_name:
- * @provider: this #NAIOProvider.
+ * fma_io_provider_get_name:
+ * @provider: this #FMAIOProvider.
  *
  * Returns: the displayable name of this #FMAIIOProvider, as a newly
  * allocated string which should be g_free() by the caller.
@@ -674,17 +674,17 @@ na_io_provider_get_id( const NAIOProvider *provider )
  * or an empty string.
  */
 gchar *
-na_io_provider_get_name( const NAIOProvider *provider )
+fma_io_provider_get_name( const FMAIOProvider *provider )
 {
-	static const gchar *thisfn = "na_io_provider_get_name";
+	static const gchar *thisfn = "fma_io_provider_get_name";
 	gchar *name;
 
 	name = g_strdup( "" );
 
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), name );
+	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), name );
 
 	if( !provider->private->dispose_has_run ){
-		if( na_io_provider_is_available( provider ) &&
+		if( fma_io_provider_is_available( provider ) &&
 			FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name ){
 
 				g_free( name );
@@ -704,18 +704,18 @@ na_io_provider_get_name( const NAIOProvider *provider )
 }
 
 /*
- * na_io_provider_is_available:
- * @provider: the #NAIOProvider object.
+ * fma_io_provider_is_available:
+ * @provider: the #FMAIOProvider object.
  *
  * Returns: %TRUE if the corresponding #FMAIIOProvider module is available
  * at runtime, %FALSE else.
  */
 gboolean
-na_io_provider_is_available( const NAIOProvider *provider )
+fma_io_provider_is_available( const FMAIOProvider *provider )
 {
 	gboolean is_available;
 
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
+	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), FALSE );
 
 	is_available = FALSE;
 
@@ -728,8 +728,8 @@ na_io_provider_is_available( const NAIOProvider *provider )
 }
 
 /*
- * na_io_provider_is_conf_readable:
- * @provider: this #NAIOProvider.
+ * fma_io_provider_is_conf_readable:
+ * @provider: this #FMAIOProvider.
  * @pivot: the #NAPivot application object.
  * @mandatory: a pointer to a boolean which will be set to %TRUE if the
  *  preference is mandatory; may be %NULL.
@@ -744,12 +744,12 @@ na_io_provider_is_available( const NAIOProvider *provider )
  * - whether this flag has been set as mandatory by an admin.
  */
 gboolean
-na_io_provider_is_conf_readable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
+fma_io_provider_is_conf_readable( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
 {
 	gboolean readable;
 	gchar *group;
 
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
+	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
 
 	readable = FALSE;
@@ -765,8 +765,8 @@ na_io_provider_is_conf_readable( const NAIOProvider *provider, const NAPivot *pi
 }
 
 /*
- * na_io_provider_is_conf_writable:
- * @provider: this #NAIOProvider.
+ * fma_io_provider_is_conf_writable:
+ * @provider: this #FMAIOProvider.
  * @pivot: the #NAPivot application object.
  * @mandatory: a pointer to a boolean which will be set to %TRUE if the
  *  preference is mandatory; may be %NULL.
@@ -783,11 +783,11 @@ na_io_provider_is_conf_readable( const NAIOProvider *provider, const NAPivot *pi
  * FMAIIOProvider module. See also is_willing_to() and is_able_to().
  */
 gboolean
-na_io_provider_is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
+fma_io_provider_is_conf_writable( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
 {
 	gboolean is_writable;
 
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
+	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
 
 	is_writable = FALSE;
@@ -801,21 +801,21 @@ na_io_provider_is_conf_writable( const NAIOProvider *provider, const NAPivot *pi
 }
 
 /**
- * na_io_provider_is_finally_writable:
- * @provider: this #NAIOProvider.
+ * fma_io_provider_is_finally_writable:
+ * @provider: this #FMAIOProvider.
  * @reason: if not %NULL, a pointer to a guint which will hold the reason.
  *
  * Returns: the current writability status of this I/O provider.
  */
 gboolean
-na_io_provider_is_finally_writable( const NAIOProvider *provider, guint *reason )
+fma_io_provider_is_finally_writable( const FMAIOProvider *provider, guint *reason )
 {
 	gboolean is_writable;
 
 	if( reason ){
 		*reason = FMA_IIO_PROVIDER_STATUS_UNDETERMINED;
 	}
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
+	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), FALSE );
 
 	is_writable = FALSE;
 
@@ -831,7 +831,7 @@ na_io_provider_is_finally_writable( const NAIOProvider *provider, guint *reason 
 }
 
 /*
- * na_io_provider_load_items:
+ * fma_io_provider_load_items:
  * @pivot: the #NAPivot object which owns the list of registered I/O
  *  storage providers.
  * @loadable_set: the set of loadable items
@@ -847,9 +847,9 @@ na_io_provider_is_finally_writable( const NAIOProvider *provider, guint *reason 
  * The returned list should be fma_object_free_items().
  */
 GList *
-na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **messages )
+fma_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **messages )
 {
-	static const gchar *thisfn = "na_io_provider_load_items";
+	static const gchar *thisfn = "fma_io_provider_load_items";
 	GList *flat, *hierarchy, *filtered;
 	GSList *level_zero;
 	guint order_mode;
@@ -918,9 +918,9 @@ na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **me
 
 #if 0
 static void
-dump( const NAIOProvider *provider )
+dump( const FMAIOProvider *provider )
 {
-	static const gchar *thisfn = "na_io_provider_dump";
+	static const gchar *thisfn = "fma_io_provider_dump";
 
 	g_debug( "%s:                   id=%s", thisfn, provider->private->id );
 	g_debug( "%s:             provider=%p", thisfn, ( void * ) provider->private->provider );
@@ -930,19 +930,19 @@ dump( const NAIOProvider *provider )
 static void
 dump_providers_list( GList *providers )
 {
-	static const gchar *thisfn = "na_io_provider_dump_providers_list";
+	static const gchar *thisfn = "fma_io_provider_dump_providers_list";
 	GList *ip;
 
 	g_debug( "%s: providers=%p (count=%d)", thisfn, ( void * ) providers, g_list_length( providers ));
 
 	for( ip = providers ; ip ; ip = ip->next ){
-		dump( NA_IO_PROVIDER( ip->data ));
+		dump( FMA_IO_PROVIDER( ip->data ));
 	}
 }
 #endif
 
 static gboolean
-is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
+is_conf_writable( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
 {
 	gchar *group;
 	gboolean is_writable;
@@ -959,9 +959,9 @@ is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *
  * This same status may later be reevaluated on demand.
  */
 static gboolean
-is_finally_writable( const NAIOProvider *provider, const NAPivot *pivot, guint *reason )
+is_finally_writable( const FMAIOProvider *provider, const NAPivot *pivot, guint *reason )
 {
-	static const gchar *thisfn = "na_io_provider_is_finally_writable";
+	static const gchar *thisfn = "fma_io_provider_is_finally_writable";
 	gboolean writable;
 	gboolean is_writable, mandatory;
 
@@ -1041,7 +1041,7 @@ load_items_filter_unwanted_items( const NAPivot *pivot, GList *hierarchy, guint 
 static GList *
 load_items_filter_unwanted_items_rec( GList *hierarchy, guint loadable_set )
 {
-	static const gchar *thisfn = "na_io_provider_load_items_filter_unwanted_items_rec";
+	static const gchar *thisfn = "fma_io_provider_load_items_filter_unwanted_items_rec";
 	GList *subitems, *subitems_f;
 	GList *it, *itnext;
 	GList *filtered;
@@ -1106,19 +1106,19 @@ load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **m
 	const GList *providers;
 	const GList *ip;
 	GList *merged, *items, *it;
-	const NAIOProvider *provider_object;
+	const FMAIOProvider *provider_object;
 	const FMAIIOProvider *provider_module;
 
 	merged = NULL;
-	providers = na_io_provider_get_io_providers_list( pivot );
+	providers = fma_io_provider_get_io_providers_list( pivot );
 
 	for( ip = providers ; ip ; ip = ip->next ){
-		provider_object = NA_IO_PROVIDER( ip->data );
+		provider_object = FMA_IO_PROVIDER( ip->data );
 		provider_module = provider_object->private->provider;
 
 		if( provider_module &&
 			FMA_IIO_PROVIDER_GET_INTERFACE( provider_module )->read_items &&
-			na_io_provider_is_conf_readable( provider_object, pivot, NULL )){
+			fma_io_provider_is_conf_readable( provider_object, pivot, NULL )){
 
 			items = FMA_IIO_PROVIDER_GET_INTERFACE( provider_module )->read_items( provider_module, messages );
 
@@ -1143,7 +1143,7 @@ load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **m
 static GList *
 load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_empty, FMAObjectItem *parent )
 {
-	static const gchar *thisfn = "na_io_provider_load_items_hierarchy_build";
+	static const gchar *thisfn = "fma_io_provider_load_items_hierarchy_build";
 	GList *hierarchy, *it;
 	GSList *ilevel;
 	GSList *subitems_ids;
@@ -1229,8 +1229,8 @@ peek_item_by_id_compare( const FMAObject *obj, const gchar *id )
 }
 
 /*
- * na_io_provider_write_item:
- * @provider: this #NAIOProvider object.
+ * fma_io_provider_write_item:
+ * @provider: this #FMAIOProvider object.
  * @item: a #FMAObjectItem to be written to the storage subsystem.
  * @messages: error messages.
  *
@@ -1244,9 +1244,9 @@ peek_item_by_id_compare( const FMAObject *obj, const gchar *id )
  * storage subsystem.
  */
 guint
-na_io_provider_write_item( const NAIOProvider *provider, const FMAObjectItem *item, GSList **messages )
+fma_io_provider_write_item( const FMAIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "na_io_provider_write_item";
+	static const gchar *thisfn = "fma_io_provider_write_item";
 	guint ret;
 
 	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p", thisfn,
@@ -1256,7 +1256,7 @@ na_io_provider_write_item( const NAIOProvider *provider, const FMAObjectItem *it
 
 	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
+	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider->private->provider ), ret );
 	g_return_val_if_fail( FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item, ret );
@@ -1271,8 +1271,8 @@ na_io_provider_write_item( const NAIOProvider *provider, const FMAObjectItem *it
 }
 
 /*
- * na_io_provider_delete_item:
- * @provider: this #NAIOProvider object.
+ * fma_io_provider_delete_item:
+ * @provider: this #FMAIOProvider object.
  * @item: the #FMAObjectItem item to be deleted.
  * @messages: error messages.
  *
@@ -1281,9 +1281,9 @@ na_io_provider_write_item( const NAIOProvider *provider, const FMAObjectItem *it
  * Returns: the FMAIIOProvider return code.
  */
 guint
-na_io_provider_delete_item( const NAIOProvider *provider, const FMAObjectItem *item, GSList **messages )
+fma_io_provider_delete_item( const FMAIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "na_io_provider_delete_item";
+	static const gchar *thisfn = "fma_io_provider_delete_item";
 	guint ret;
 
 	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p", thisfn,
@@ -1293,7 +1293,7 @@ na_io_provider_delete_item( const NAIOProvider *provider, const FMAObjectItem *i
 
 	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
+	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider->private->provider ), ret );
 	g_return_val_if_fail( FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item, ret );
@@ -1304,8 +1304,8 @@ na_io_provider_delete_item( const NAIOProvider *provider, const FMAObjectItem *i
 }
 
 /*
- * na_io_provider_duplicate_data:
- * @provider: this #NAIOProvider object.
+ * fma_io_provider_duplicate_data:
+ * @provider: this #FMAIOProvider object.
  * @dest: the target #FMAObjectItem item.
  * @source: the source #FMAObjectItem item.
  * @messages: error messages.
@@ -1315,9 +1315,9 @@ na_io_provider_delete_item( const NAIOProvider *provider, const FMAObjectItem *i
  * Returns: the FMAIIOProvider return code.
  */
 guint
-na_io_provider_duplicate_data( const NAIOProvider *provider, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages )
+fma_io_provider_duplicate_data( const FMAIOProvider *provider, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages )
 {
-	static const gchar *thisfn = "na_io_provider_duplicate_data";
+	static const gchar *thisfn = "fma_io_provider_duplicate_data";
 	guint ret;
 	void *provider_data;
 
@@ -1329,7 +1329,7 @@ na_io_provider_duplicate_data( const NAIOProvider *provider, FMAObjectItem *dest
 
 	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
+	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( dest ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( source ), ret );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider->private->provider ), ret );
@@ -1346,14 +1346,14 @@ na_io_provider_duplicate_data( const NAIOProvider *provider, FMAObjectItem *dest
 }
 
 /*
- * na_io_provider_get_readonly_tooltip:
+ * fma_io_provider_get_readonly_tooltip:
  * @reason: the reason for why an item is not writable.
  *
  * Returns: the associated tooltip, as a newly allocated string which
  * should be g_free() by the caller.
  */
 gchar *
-na_io_provider_get_readonly_tooltip( guint reason )
+fma_io_provider_get_readonly_tooltip( guint reason )
 {
 	gchar *tooltip;
 
@@ -1407,14 +1407,14 @@ na_io_provider_get_readonly_tooltip( guint reason )
 }
 
 /*
- * na_io_provider_get_return_code_label:
+ * fma_io_provider_get_return_code_label:
  * @code: the return code of an operation.
  *
  * Returns: the associated label, as a newly allocated string which
  * should be g_free() by the caller.
  */
 gchar *
-na_io_provider_get_return_code_label( guint code )
+fma_io_provider_get_return_code_label( guint code )
 {
 	gchar *label;
 

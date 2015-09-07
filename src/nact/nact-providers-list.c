@@ -37,7 +37,7 @@
 #include <api/fma-gconf-utils.h>
 #include <api/fma-object-api.h>
 
-#include <core/na-io-provider.h>
+#include <core/fma-io-provider.h>
 
 #include "nact-application.h"
 #include "base-gtk-utils.h"
@@ -233,20 +233,20 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 	gchar *id, *libelle;
 	gboolean readable, readable_mandatory;
 	gboolean writable, writable_mandatory;
-	NAIOProvider *provider;
+	FMAIOProvider *provider;
 
 	model = GTK_LIST_STORE( gtk_tree_view_get_model( treeview ));
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	providers = na_io_provider_get_io_providers_list( NA_PIVOT( updater ));
+	providers = fma_io_provider_get_io_providers_list( NA_PIVOT( updater ));
 
 	for( iter = providers ; iter ; iter = iter->next ){
-		provider = NA_IO_PROVIDER( iter->data );
-		id = na_io_provider_get_id( provider );
-		libelle = na_io_provider_get_name( provider );
-		readable = na_io_provider_is_conf_readable( provider, NA_PIVOT( updater ), &readable_mandatory );
-		writable = na_io_provider_is_conf_writable( provider, NA_PIVOT( updater ), &writable_mandatory );
+		provider = FMA_IO_PROVIDER( iter->data );
+		id = fma_io_provider_get_id( provider );
+		libelle = fma_io_provider_get_name( provider );
+		readable = fma_io_provider_is_conf_readable( provider, NA_PIVOT( updater ), &readable_mandatory );
+		writable = fma_io_provider_is_conf_writable( provider, NA_PIVOT( updater ), &writable_mandatory );
 
 		g_debug( "%s: id=%s, readable=%s (mandatory=%s), writable=%s (mandatory=%s)",
 				thisfn, id,
@@ -256,7 +256,7 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 		if( !libelle || !g_utf8_strlen( libelle, -1 )){
 			g_free( libelle );
 
-			if( na_io_provider_is_available( provider )){
+			if( fma_io_provider_is_available( provider )){
 				/* i18n: default name when the I/O providers doesn't provide one */
 				libelle = g_strdup_printf( "<%s: %s>", id, _( "no name" ));
 
@@ -375,7 +375,7 @@ providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* i
 {
 	gchar *id;
 	gboolean readable, writable;
-	NAIOProvider *provider;
+	FMAIOProvider *provider;
 	gchar *group;
 
 	gtk_tree_model_get( model, iter,
@@ -619,7 +619,7 @@ on_down_clicked( GtkButton *button, BaseWindow *window )
 static void
 display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, ProvidersListData *data )
 {
-	NAIOProvider *provider;
+	FMAIOProvider *provider;
 	gchar *name;
 
 	gtk_tree_model_get( model, iter, PROVIDER_LIBELLE_COLUMN, &name, PROVIDER_PROVIDER_COLUMN, &provider, -1 );
@@ -627,7 +627,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	g_object_set( cell, "style-set", FALSE, NULL );
 	g_object_set( cell, "foreground-set", FALSE, NULL );
 
-	if( !na_io_provider_is_available( provider )){
+	if( !fma_io_provider_is_available( provider )){
 		g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 		g_object_set( cell, "foreground", "grey", "foreground-set", TRUE, NULL );
 	}

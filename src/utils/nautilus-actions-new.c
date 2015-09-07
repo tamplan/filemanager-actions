@@ -43,7 +43,7 @@
 #include <api/fma-object-api.h>
 
 #include <core/fma-gconf-migration.h>
-#include <core/na-io-provider.h>
+#include <core/fma-io-provider.h>
 #include <core/fma-exporter.h>
 #include <core/na-updater.h>
 
@@ -578,12 +578,12 @@ static gboolean
 output_to_desktop( FMAObjectAction *action, GSList **msgs )
 {
 	NAUpdater *updater;
-	NAIOProvider *provider;
+	FMAIOProvider *provider;
 	guint ret;
 	gboolean code;
 
 	updater = na_updater_new();
-	provider = na_io_provider_find_io_provider_by_id( NA_PIVOT( updater ), "na-desktop" );
+	provider = fma_io_provider_find_io_provider_by_id( NA_PIVOT( updater ), "na-desktop" );
 
 	if( provider ){
 		fma_object_set_provider( action, provider );

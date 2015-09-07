@@ -32,7 +32,7 @@
 #endif
 
 #include "core/fma-gtk-utils.h"
-#include "core/na-io-provider.h"
+#include "core/fma-io-provider.h"
 
 #include "base-gtk-utils.h"
 #include "nact-statusbar.h"
@@ -312,7 +312,7 @@ nact_statusbar_set_locked( NactStatusbar *bar, gboolean readonly, gint reason )
 			gtk_image_set_from_file( GTK_IMAGE( priv->image ), LOCKED_IMAGE );
 			set_pixbuf = FALSE;
 			g_free( tooltip );
-			tooltip = na_io_provider_get_readonly_tooltip( reason );
+			tooltip = fma_io_provider_get_readonly_tooltip( reason );
 		}
 
 		gtk_widget_set_tooltip_text( priv->image, tooltip );

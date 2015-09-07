@@ -35,7 +35,7 @@
 
 #include "api/fma-core-utils.h"
 
-#include "core/na-io-provider.h"
+#include "core/fma-io-provider.h"
 
 #include "nact-application.h"
 #include "nact-clipboard.h"
@@ -556,7 +556,7 @@ add_ndeletable_msg( const FMAObjectItem *item, gint reason )
 	gchar *reasstr;
 
 	label = fma_object_get_label( item );
-	reasstr = na_io_provider_get_readonly_tooltip( reason );
+	reasstr = fma_io_provider_get_readonly_tooltip( reason );
 
 	msg = g_strdup_printf( "%s: %s", label, reasstr );
 

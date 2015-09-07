@@ -37,7 +37,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-timeout.h>
 
-#include <core/na-io-provider.h>
+#include <core/fma-io-provider.h>
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
@@ -323,8 +323,8 @@ save_item( NactMainWindow *window, NAUpdater *updater, FMAObjectItem *item, GSLi
 {
 	static const gchar *thisfn = "nact_menu_file_save_item";
 	gboolean ret;
-	NAIOProvider *provider_before;
-	NAIOProvider *provider_after;
+	FMAIOProvider *provider_before;
+	FMAIOProvider *provider_after;
 	GList *subitems, *it;
 	gchar *label;
 	guint save_ret;

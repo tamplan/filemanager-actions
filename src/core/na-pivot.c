@@ -36,7 +36,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-timeout.h>
 
-#include "na-io-provider.h"
+#include "fma-io-provider.h"
 #include "na-module.h"
 #include "na-pivot.h"
 
@@ -332,7 +332,7 @@ instance_dispose( GObject *object )
 		na_settings_free();
 
 		/* release the I/O Provider object list */
-		na_io_provider_unref_io_providers_list();
+		fma_io_provider_unref_io_providers_list();
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -570,7 +570,7 @@ na_pivot_load_items( NAPivot *pivot )
 
 		messages = NULL;
 		fma_object_free_items( pivot->private->tree );
-		pivot->private->tree = na_io_provider_load_items( pivot, pivot->private->loadable_set, &messages );
+		pivot->private->tree = fma_io_provider_load_items( pivot, pivot->private->loadable_set, &messages );
 
 		for( im = messages ; im ; im = im->next ){
 			g_warning( "%s: %s", thisfn, ( const gchar * ) im->data );

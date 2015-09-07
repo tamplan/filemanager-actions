@@ -35,7 +35,7 @@
 #include <api/fma-gconf-utils.h>
 #include <api/fma-object-api.h>
 
-#include "na-io-provider.h"
+#include "fma-io-provider.h"
 #include "na-settings.h"
 #include "na-updater.h"
 
@@ -251,7 +251,7 @@ void
 na_updater_check_item_writability_status( const NAUpdater *updater, const FMAObjectItem *item )
 {
 	gboolean writable;
-	NAIOProvider *provider;
+	FMAIOProvider *provider;
 	FMAObjectItem *parent;
 	guint reason;
 
@@ -283,12 +283,12 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const FMAObj
 		if( writable ){
 			provider = fma_object_get_provider( item );
 			if( provider ){
-				writable = na_io_provider_is_finally_writable( provider, &reason );
+				writable = fma_io_provider_is_finally_writable( provider, &reason );
 
 			/* the get_writable_provider() api already takes care of above checks
 			 */
 			} else {
-				provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
+				provider = fma_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
 				if( !provider ){
 					writable = FALSE;
 					reason = FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
@@ -566,15 +566,15 @@ na_updater_write_item( const NAUpdater *updater, FMAObjectItem *item, GSList **m
 
 	if( !updater->private->dispose_has_run ){
 
-		NAIOProvider *provider = fma_object_get_provider( item );
+		FMAIOProvider *provider = fma_object_get_provider( item );
 
 		if( !provider ){
-			provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
+			provider = fma_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
 			g_return_val_if_fail( provider, FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND );
 		}
 
 		if( provider ){
-			ret = na_io_provider_write_item( provider, item, messages );
+			ret = fma_io_provider_write_item( provider, item, messages );
 		}
 	}
 
@@ -599,7 +599,7 @@ guint
 na_updater_delete_item( const NAUpdater *updater, const FMAObjectItem *item, GSList **messages )
 {
 	guint ret;
-	NAIOProvider *provider;
+	FMAIOProvider *provider;
 
 	g_return_val_if_fail( NA_IS_UPDATER( updater ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
@@ -615,8 +615,8 @@ na_updater_delete_item( const NAUpdater *updater, const FMAObjectItem *item, GSL
 		 * without having been ever saved
 		 */
 		if( provider ){
-			g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-			ret = na_io_provider_delete_item( provider, item, messages );
+			g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+			ret = fma_io_provider_delete_item( provider, item, messages );
 		}
 	}
 

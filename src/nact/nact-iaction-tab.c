@@ -38,7 +38,7 @@
 #include "api/fma-object-api.h"
 
 #include "core/fma-gtk-utils.h"
-#include "core/na-io-provider.h"
+#include "core/fma-io-provider.h"
 
 #include "nact-application.h"
 #include "nact-statusbar.h"
