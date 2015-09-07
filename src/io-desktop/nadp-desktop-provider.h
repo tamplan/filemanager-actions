@@ -36,8 +36,8 @@
  * @include: nadp-desktop-provider.h
  *
  * This class manages .desktop files I/O storage subsystem, or, in
- * other words, .desktop files as NAIIOProvider providers. As this, it
- * should only be used through the NAIIOProvider interface.
+ * other words, .desktop files as FMAIIOProvider providers. As this, it
+ * should only be used through the FMAIIOProvider interface.
  */
 
 #include <api/na-object-item.h>

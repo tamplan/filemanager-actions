@@ -30,13 +30,13 @@
 #ifndef __NADP_READER_H__
 #define __NADP_READER_H__
 
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/fma-iimporter.h>
 #include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
-GList       *nadp_iio_provider_read_items            ( const NAIIOProvider *provider, GSList **messages );
+GList       *nadp_iio_provider_read_items            ( const FMAIIOProvider *provider, GSList **messages );
 
 guint        nadp_reader_iimporter_import_from_uri   ( const FMAIImporter *instance, void *parms_ptr );
 

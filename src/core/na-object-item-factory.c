@@ -311,7 +311,7 @@ FMADataDef data_def_item [] = {
 				NULL },
 
 	/* dynamic data, so non readable / non writable
-	 * must be set by the NAIIOProvider when reading the item
+	 * must be set by the FMAIIOProvider when reading the item
 	 */
 	{ FMAFO_DATA_READONLY,
 				FALSE,
@@ -365,8 +365,8 @@ FMADataDef data_def_item [] = {
 				NULL },
 
 	/* dynamic data, so non readable / non writable (but has property)
-	 * is left at the NAIIOProvider disposition
-	 * not copyable as directly duplicated by NAIIOProvider interface
+	 * is left at the FMAIIOProvider disposition
+	 * not copyable as directly duplicated by FMAIIOProvider interface
 	 * (see NAObjectItem::object_copy)
 	 */
 	{ FMAFO_DATA_PROVIDER_DATA,

@@ -36,11 +36,11 @@
  * @include: na-gconf-provider.h
  *
  * This class manages the GConf I/O storage subsystem, or, in other words,
- * the GConf subsystem as an #NAIIOProvider. As this, it should only be
- * used through the #NAIIOProvider interface.
+ * the GConf subsystem as an #FMAIIOProvider. As this, it should only be
+ * used through the #FMAIIOProvider interface.
  *
  * #NagpGConfProvider uses #FMAGConfMonitor to watch at the configuration
- * tree. Modifications are notified to the #NAIIOProvider interface.
+ * tree. Modifications are notified to the #FMAIIOProvider interface.
  */
 
 #include <glib-object.h>

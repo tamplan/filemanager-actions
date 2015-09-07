@@ -57,7 +57,7 @@
  *   returns the type of GObjects implemented in the plugin
  * - NAPivot dynamically instantiates a GObject for each returned GType.
  *
- * After that, when NAPivot wants to access, say to NAIIOProvider
+ * After that, when NAPivot wants to access, say to FMAIIOProvider
  * interfaces, it asks each module for its list of objects which implement
  * this given interface.
  * Interface API is then called against the returned GObject.

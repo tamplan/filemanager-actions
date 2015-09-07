@@ -30,18 +30,18 @@
 #ifndef __NADP_WRITER_H__
 #define __NADP_WRITER_H__
 
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/fma-iexporter.h>
 #include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
-gboolean nadp_iio_provider_is_willing_to_write ( const NAIIOProvider *provider );
-gboolean nadp_iio_provider_is_able_to_write    ( const NAIIOProvider *provider );
+gboolean nadp_iio_provider_is_willing_to_write ( const FMAIIOProvider *provider );
+gboolean nadp_iio_provider_is_able_to_write    ( const FMAIIOProvider *provider );
 
-guint    nadp_iio_provider_write_item          ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint    nadp_iio_provider_delete_item         ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint    nadp_iio_provider_duplicate_data      ( const NAIIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
+guint    nadp_iio_provider_write_item          ( const FMAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint    nadp_iio_provider_delete_item         ( const FMAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint    nadp_iio_provider_duplicate_data      ( const FMAIIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
 
 guint    nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms );
 guint    nadp_writer_iexporter_export_to_file  ( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms );

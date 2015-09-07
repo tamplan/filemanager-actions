@@ -30,12 +30,12 @@
 #ifndef __NAGP_READER_H__
 #define __NAGP_READER_H__
 
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
-GList       *nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
+GList       *nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages );
 
 void         nagp_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
 FMADataBoxed *nagp_reader_read_data ( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages );

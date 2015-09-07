@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-provider.h>
 
 #include "na-factory-object.h"
@@ -155,7 +155,7 @@ ifactory_provider_get_version( const FMAIFactoryProvider *instance )
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
  *
- * This function is to be called by a #NAIIOProvider which would wish read
+ * This function is to be called by a #FMAIIOProvider which would wish read
  * its items. The function takes care of collecting and structuring data,
  * while the callback interface methods #FMAIFactoryProviderInterface.read_start(),
  * #FMAIFactoryProviderInterface.read_data() and #FMAIFactoryProviderInterface.read_done()
@@ -203,10 +203,10 @@ fma_ifactory_provider_read_item( const FMAIFactoryProvider *reader, void *reader
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
  *
- * This function is to be called by a #NAIIOProvider which would wish write
+ * This function is to be called by a #FMAIIOProvider which would wish write
  * an item. The function takes care of collecting and writing elementary data.
  *
- * Returns: a NAIIOProvider operation return code.
+ * Returns: a FMAIIOProvider operation return code.
  *
  * Since: 2.30
  */
@@ -216,19 +216,19 @@ fma_ifactory_provider_write_item( const FMAIFactoryProvider *writer, void *write
 	static const gchar *thisfn = "fma_ifactory_provider_write_item";
 	guint code;
 
-	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
 	g_debug( "%s: writer=%p, writer_data=%p, object=%p (%s)",
 			thisfn, ( void * ) writer, ( void * ) writer_data, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	code = v_factory_provider_write_start( writer, writer_data, object, messages );
 
-	if( code == NA_IIO_PROVIDER_CODE_OK ){
+	if( code == FMA_IIO_PROVIDER_CODE_OK ){
 		code = na_factory_object_write_item( object, writer, writer_data, messages );
 	}
 
-	if( code == NA_IIO_PROVIDER_CODE_OK ){
+	if( code == FMA_IIO_PROVIDER_CODE_OK ){
 		code = v_factory_provider_write_done( writer, writer_data, object, messages );
 	}
 
@@ -254,7 +254,7 @@ v_factory_provider_read_done( const FMAIFactoryProvider *reader, void *reader_da
 static guint
 v_factory_provider_write_start( const FMAIFactoryProvider *writer, void *writer_data, FMAIFactoryObject *serializable, GSList **messages )
 {
-	guint code = NA_IIO_PROVIDER_CODE_OK;
+	guint code = FMA_IIO_PROVIDER_CODE_OK;
 
 	if( FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_start ){
 		code = FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_start( writer, writer_data, serializable, messages );
@@ -266,7 +266,7 @@ v_factory_provider_write_start( const FMAIFactoryProvider *writer, void *writer_
 static guint
 v_factory_provider_write_done( const FMAIFactoryProvider *writer, void *writer_data, FMAIFactoryObject *serializable, GSList **messages )
 {
-	guint code = NA_IIO_PROVIDER_CODE_OK;
+	guint code = FMA_IIO_PROVIDER_CODE_OK;
 
 	if( FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_done ){
 		code = FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_done( writer, writer_data, serializable, messages );

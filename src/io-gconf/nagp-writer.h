@@ -31,24 +31,24 @@
 #define __NAGP_WRITE_H__
 
 #include <api/fma-data-boxed.h>
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
-/* NAIIOProvider interface
+/* FMAIIOProvider interface
  */
-gboolean nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider );
+gboolean nagp_iio_provider_is_willing_to_write( const FMAIIOProvider *provider );
 
-gboolean nagp_iio_provider_is_able_to_write   ( const NAIIOProvider *provider );
+gboolean nagp_iio_provider_is_able_to_write   ( const FMAIIOProvider *provider );
 
 /* Writing into GConf is deprecated since 3.1.0
  */
 #ifdef NA_ENABLE_DEPRECATED
-guint    nagp_iio_provider_write_item         ( const NAIIOProvider *provider,
+guint    nagp_iio_provider_write_item         ( const FMAIIOProvider *provider,
 													const NAObjectItem *item, GSList **message );
 
-guint    nagp_iio_provider_delete_item        ( const NAIIOProvider *provider,
+guint    nagp_iio_provider_delete_item        ( const FMAIIOProvider *provider,
 													const NAObjectItem *item, GSList **message );
 
 /* FMAIFactoryProvider interface

@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <api/fma-ifactory-provider.h>
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/fma-gconf-monitor.h>
 
 #include "nagp-gconf-provider.h"
@@ -61,10 +61,10 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
-static void     iio_provider_iface_init( NAIIOProviderInterface *iface );
-static gchar   *iio_provider_get_id( const NAIIOProvider *provider );
-static gchar   *iio_provider_get_name( const NAIIOProvider *provider );
-static guint    iio_provider_get_version( const NAIIOProvider *provider );
+static void     iio_provider_iface_init( FMAIIOProviderInterface *iface );
+static gchar   *iio_provider_get_id( const FMAIIOProvider *provider );
+static gchar   *iio_provider_get_name( const FMAIIOProvider *provider );
+static guint    iio_provider_get_version( const FMAIIOProvider *provider );
 
 static void     ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface );
 static guint    ifactory_provider_get_version( const FMAIFactoryProvider *provider );
@@ -115,7 +115,7 @@ nagp_gconf_provider_register_type( GTypeModule *module )
 
 	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NagpGConfProvider", &info, 0 );
 
-	g_type_module_add_interface( module, st_module_type, NA_TYPE_IIO_PROVIDER, &iio_provider_iface_info );
+	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IIO_PROVIDER, &iio_provider_iface_info );
 
 	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
 }
@@ -213,7 +213,7 @@ instance_finalize( GObject *object )
 }
 
 static void
-iio_provider_iface_init( NAIIOProviderInterface *iface )
+iio_provider_iface_init( FMAIIOProviderInterface *iface )
 {
 	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_iface_init";
 
@@ -236,19 +236,19 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 }
 
 static gchar *
-iio_provider_get_id( const NAIIOProvider *provider )
+iio_provider_get_id( const FMAIIOProvider *provider )
 {
 	return( g_strdup( "na-gconf" ));
 }
 
 static gchar *
-iio_provider_get_name( const NAIIOProvider *provider )
+iio_provider_get_name( const FMAIIOProvider *provider )
 {
 	return( g_strdup( _( "FileManager-Actions GConf I/O Provider" )));
 }
 
 static guint
-iio_provider_get_version( const NAIIOProvider *provider )
+iio_provider_get_version( const FMAIIOProvider *provider )
 {
 	return( 1 );
 }
@@ -288,7 +288,7 @@ install_monitors( NagpGConfProvider *provider )
 	GList *list = NULL;
 
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
 	/* monitor the configurations/ directory which contains all menus,
@@ -336,14 +336,14 @@ install_monitors( NagpGConfProvider *provider )
  * - first, GConf underlying subsystem advertises us, through the watch
  *   mechanism, of each and every modification ; this leads us to be
  *   triggered for each new/modified/deleted _entry_
- * - as we want trigger the NAIIOProvider interface only once for each
+ * - as we want trigger the FMAIIOProvider interface only once for each
  *   update operation (i.e. once for each flow of individual notifications),
  *   then we install a timer in order to wait for all
  *   entries have been modified
  * - when a [burst_timeout] reasonable delay has elapsed without having
  *   received any new individual notification, then we can assume that
  *   we have reached the end of the flow and that we can now trigger
- *   the NAIIOProvider interface
+ *   the FMAIIOProvider interface
  *
  * Note that we used to try to send one notification per modified object.
  * This cannot work as we are not sure at all that we will received
@@ -353,7 +353,7 @@ static void
 config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider )
 {
 	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_IIO_PROVIDER( provider ));
 
 	if( !provider->private->dispose_has_run ){
 
@@ -391,12 +391,12 @@ config_path_changed_trigger_interface( NagpGConfProvider *provider )
 	}
 
 	/* last individual notification is older that the st_burst_timeout
-	 * so triggers the NAIIOProvider interface and destroys this timeout
+	 * so triggers the FMAIIOProvider interface and destroys this timeout
 	 */
-	g_debug( "%s: triggering NAIIOProvider interface for provider=%p (%s)",
+	g_debug( "%s: triggering FMAIIOProvider interface for provider=%p (%s)",
 			thisfn, ( void * ) provider, G_OBJECT_TYPE_NAME( provider ));
 
-	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ));
+	fma_iio_provider_item_changed( FMA_IIO_PROVIDER( provider ));
 	provider->private->event_source_id = 0;
 	return( FALSE );
 }

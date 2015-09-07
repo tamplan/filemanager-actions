@@ -36,7 +36,7 @@
 #include <api/fma-data-def.h>
 #include <api/fma-data-types.h>
 #include <api/fma-ifactory-provider.h>
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/na-object-api.h>
 #include <api/fma-core-utils.h>
 #include <api/fma-gconf-utils.h>
@@ -71,7 +71,7 @@ static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key
  * latest, version of these classes.
  */
 GList *
-nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
+nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_nagp_iio_provider_read_items";
 	NagpGConfProvider *self;
@@ -81,7 +81,7 @@ nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 
 	g_debug( "%s: provider=%p, messages=%p", thisfn, ( void * ) provider, ( void * ) messages );
 
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
 	self = NAGP_GCONF_PROVIDER( provider );
 
@@ -120,7 +120,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 
 	g_debug( "%s: provider=%p, path=%s", thisfn, ( void * ) provider, path );
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
 	full_path = gconf_concat_dir_and_key( path, NAGP_ENTRY_TYPE );

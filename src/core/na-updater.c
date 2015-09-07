@@ -259,12 +259,12 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const NAObje
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
 
 	writable = FALSE;
-	reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
+	reason = FMA_IIO_PROVIDER_STATUS_UNDETERMINED;
 
 	if( !updater->private->dispose_has_run ){
 
 		writable = TRUE;
-		reason = NA_IIO_PROVIDER_STATUS_WRITABLE;
+		reason = FMA_IIO_PROVIDER_STATUS_WRITABLE;
 
 		/* Writability status of the item has been determined at load time
 		 * (cf. e.g. io-desktop/nadp-reader.c:read_done_item_is_writable()).
@@ -276,7 +276,7 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const NAObje
 		if( writable ){
 			if( na_object_is_readonly( item )){
 				writable = FALSE;
-				reason = NA_IIO_PROVIDER_STATUS_ITEM_READONLY;
+				reason = FMA_IIO_PROVIDER_STATUS_ITEM_READONLY;
 			}
 		}
 
@@ -291,7 +291,7 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const NAObje
 				provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
 				if( !provider ){
 					writable = FALSE;
-					reason = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
+					reason = FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
 				}
 			}
 		}
@@ -302,7 +302,7 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const NAObje
 			parent = ( NAObjectItem * ) na_object_get_parent( item );
 			if( !parent ){
 				if( updater->private->is_level_zero_writable ){
-					reason = NA_IIO_PROVIDER_STATUS_LEVEL_ZERO;
+					reason = FMA_IIO_PROVIDER_STATUS_LEVEL_ZERO;
 				}
 			}
 		}
@@ -551,14 +551,14 @@ set_writability_status( NAObjectItem *item, const NAUpdater *updater )
  *
  * Writes an item (an action or a menu).
  *
- * Returns: the #NAIIOProvider return code.
+ * Returns: the #FMAIIOProvider return code.
  */
 guint
 na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **messages )
 {
 	guint ret;
 
-	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NA_IS_UPDATER( updater ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
@@ -570,7 +570,7 @@ na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **me
 
 		if( !provider ){
 			provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
-			g_return_val_if_fail( provider, NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND );
+			g_return_val_if_fail( provider, FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND );
 		}
 
 		if( provider ){
@@ -590,7 +590,7 @@ na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **me
  *
  * Deletes an item, action or menu, from the I/O storage subsystem.
  *
- * Returns: the #NAIIOProvider return code.
+ * Returns: the #FMAIIOProvider return code.
  *
  * Note that a new item, not already written to an I/O subsystem,
  * doesn't have any attached provider. We so do nothing and return OK...
@@ -601,11 +601,11 @@ na_updater_delete_item( const NAUpdater *updater, const NAObjectItem *item, GSLi
 	guint ret;
 	NAIOProvider *provider;
 
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( messages, NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( messages, FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
-	ret = NA_IIO_PROVIDER_CODE_OK;
+	ret = FMA_IIO_PROVIDER_CODE_OK;
 
 	if( !updater->private->dispose_has_run ){
 
@@ -615,7 +615,7 @@ na_updater_delete_item( const NAUpdater *updater, const NAObjectItem *item, GSLi
 		 * without having been ever saved
 		 */
 		if( provider ){
-			g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+			g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 			ret = na_io_provider_delete_item( provider, item, messages );
 		}
 	}

@@ -27,16 +27,16 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_IIO_PROVIDER_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_IIO_PROVIDER_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_IIO_PROVIDER_H__
+#define __FILE_MANAGER_ACTIONS_API_IIO_PROVIDER_H__
 
 /**
  * SECTION: iio-provider
- * @title: NAIIOProvider
+ * @title: FMAIIOProvider
  * @short_description: The I/O Provider Interface
- * @include: file-manager-actions/na-iio-provider.h
+ * @include: file-manager-actions/fma-iio-provider.h
  *
- * The #NAIIOProvider interface is defined in order to let both &prodname;
+ * The #FMAIIOProvider interface is defined in order to let both &prodname;
  * internal and user-provided external plugins provide read and write accesses
  * to their own private storage subsystem.
  *
@@ -50,7 +50,7 @@
  * <ulink role="online-location" url="http://www.file-manager-actions.org/?q=node/377/">DES-EMA</ulink>
  * specification, is the preferred way of storing (and sharing) items.
  *
- * The #NAIIOProvider interface provides three types of services:
+ * The #FMAIIOProvider interface provides three types of services:
  * <itemizedlist>
  *  <listitem>
  *   <formalpara>
@@ -89,11 +89,11 @@
  *    &nact; program.
  *   </para>
  *   <para>
- *    The #NAIIOProvider interface does not define specific monitoring
+ *    The #FMAIIOProvider interface does not define specific monitoring
  *    methods (but you can also take a glance at #NATimeout object).
  *    Instead, it is waited that the I/O provider module takes care
  *    itself of managing its own monitoring services at
- *    load/unload time, calling the na_iio_provider_item_changed()
+ *    load/unload time, calling the fma_iio_provider_item_changed()
  *    function when appropriate.
  *   </para>
  *  </listitem>
@@ -169,7 +169,7 @@
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIIOProvider interface</title>
+ *    <title>Historic of the versions of the #FMAIIOProvider interface</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -177,7 +177,7 @@
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIIOProvider interface version</entry>
+ *          <entry>#FMAIIOProvider interface version</entry>
  *          <entry></entry>
  *        </row>
  *      </thead>
@@ -197,16 +197,16 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_IIO_PROVIDER                      ( na_iio_provider_get_type())
-#define NA_IIO_PROVIDER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IIO_PROVIDER, NAIIOProvider ))
-#define NA_IS_IIO_PROVIDER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IIO_PROVIDER ))
-#define NA_IIO_PROVIDER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IIO_PROVIDER, NAIIOProviderInterface ))
+#define FMA_TYPE_IIO_PROVIDER                      ( fma_iio_provider_get_type())
+#define FMA_IIO_PROVIDER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IIO_PROVIDER, FMAIIOProvider ))
+#define FMA_IS_IIO_PROVIDER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IIO_PROVIDER ))
+#define FMA_IIO_PROVIDER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IIO_PROVIDER, FMAIIOProviderInterface ))
 
-typedef struct _NAIIOProvider                     NAIIOProvider;
-typedef struct _NAIIOProviderInterfacePrivate     NAIIOProviderInterfacePrivate;
+typedef struct _FMAIIOProvider                     FMAIIOProvider;
+typedef struct _FMAIIOProviderInterfacePrivate     FMAIIOProviderInterfacePrivate;
 
 /**
- * NAIIOProviderInterface:
+ * FMAIIOProviderInterface:
  * @get_version:         [should] returns the version of this interface that the
  *                                plugin implements.
  * @get_id:              [must]   returns the internal id of the plugin.
@@ -218,25 +218,25 @@ typedef struct _NAIIOProviderInterfacePrivate     NAIIOProviderInterfacePrivate;
  * @delete_item:         [should] deletes an item.
  * @duplicate_data:      [may]    let the I/O provider duplicates its specific data.
  *
- * This defines the methods that a #NAIIOProvider may, should, or must
+ * This defines the methods that a #FMAIIOProvider may, should, or must
  * implement.
  */
 typedef struct {
 	/*< private >*/
-	GTypeInterface                 parent;
-	NAIIOProviderInterfacePrivate *private;
+	GTypeInterface                  parent;
+	FMAIIOProviderInterfacePrivate *private;
 
 	/*< public >*/
 	/**
 	 * get_version:
-	 * @instance: the NAIIOProvider provider.
+	 * @instance: the FMAIIOProvider provider.
 	 *
 	 * FileManager-Actions calls this method each time it needs to know
 	 * which version of this interface the plugin implements.
 	 *
 	 * If this method is not implemented by the plugin,
 	 * FileManager-Actions considers that the plugin only implements
-	 * the version 1 of the NAIIOProvider interface.
+	 * the version 1 of the FMAIIOProvider interface.
 	 *
 	 * Return value: if implemented, this method must return the version
 	 * number of this interface the I/O provider is supporting.
@@ -245,11 +245,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *get_version )        ( const NAIIOProvider *instance );
+	guint    ( *get_version )        ( const FMAIIOProvider *instance );
 
 	/**
 	 * get_id:
-	 * @instance: the NAIIOProvider provider.
+	 * @instance: the FMAIIOProvider provider.
 	 *
 	 * The I/O provider must implement this method.
 	 *
@@ -259,11 +259,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gchar *  ( *get_id )             ( const NAIIOProvider *instance );
+	gchar *  ( *get_id )             ( const FMAIIOProvider *instance );
 
 	/**
 	 * get_name:
-	 * @instance: the NAIIOProvider provider.
+	 * @instance: the FMAIIOProvider provider.
 	 *
 	 * Return value: if implemented, this method must return the display
 	 * name of the I/O provider, as a newly allocated string which will be
@@ -276,11 +276,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gchar *  ( *get_name )           ( const NAIIOProvider *instance );
+	gchar *  ( *get_name )           ( const FMAIIOProvider *instance );
 
 	/**
 	 * read_items:
-	 * @instance: the NAIIOProvider provider.
+	 * @instance: the FMAIIOProvider provider.
 	 * @messages: a pointer to a GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
@@ -297,11 +297,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	GList *  ( *read_items )         ( const NAIIOProvider *instance, GSList **messages );
+	GList *  ( *read_items )         ( const FMAIIOProvider *instance, GSList **messages );
 
 	/**
 	 * is_willing_to_write:
-	 * @instance: the NAIIOProvider provider.
+	 * @instance: the FMAIIOProvider provider.
 	 *
 	 * The 'willing_to_write' property is intrinsic to the I/O provider.
 	 * It is not supposed to make any assumption on the environment it is
@@ -322,11 +322,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean ( *is_willing_to_write )( const NAIIOProvider *instance );
+	gboolean ( *is_willing_to_write )( const FMAIIOProvider *instance );
 
 	/**
 	 * is_able_to_write:
-	 * @instance: the NAIIOProvider provider.
+	 * @instance: the FMAIIOProvider provider.
 	 *
 	 * The 'able_to_write' property is a runtime one.
 	 * When returning TRUE, the I/O provider insures that it has
@@ -355,11 +355,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean ( *is_able_to_write )   ( const NAIIOProvider *instance );
+	gboolean ( *is_able_to_write )   ( const FMAIIOProvider *instance );
 
 	/**
 	 * write_item:
-	 * @instance: the NAIIOProvider provider.
+	 * @instance: the FMAIIOProvider provider.
 	 * @item: a NAObjectItem-derived item, menu or action.
 	 * @messages: a pointer to a GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
@@ -374,16 +374,16 @@ typedef struct {
 	 * The I/O provider should implement this method, or return
 	 * FALSE in is_willing_to_write() method above.
 	 *
-	 * Return value: NA_IIO_PROVIDER_CODE_OK if the write operation
+	 * Return value: FMA_IIO_PROVIDER_CODE_OK if the write operation
 	 * was successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *write_item )         ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
+	guint    ( *write_item )         ( const FMAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 
 	/**
 	 * delete_item:
-	 * @instance: the NAIIOProvider provider.
+	 * @instance: the FMAIIOProvider provider.
 	 * @item: a NAObjectItem-derived item, menu or action.
 	 * @messages: a pointer to a GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
@@ -393,16 +393,16 @@ typedef struct {
 	 * The I/O provider should implement this method, or return
 	 * FALSE in is_willing_to_write() method above.
 	 *
-	 * Return value: NA_IIO_PROVIDER_CODE_OK if the delete operation was
+	 * Return value: FMA_IIO_PROVIDER_CODE_OK if the delete operation was
 	 * successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *delete_item )        ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
+	guint    ( *delete_item )        ( const FMAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 
 	/**
 	 * duplicate_data:
-	 * @instance: the NAIIOProvider provider.
+	 * @instance: the FMAIIOProvider provider.
 	 * @dest: a NAObjectItem-derived item, menu or action.
 	 * @source: a NAObjectItem-derived item, menu or action.
 	 * @messages: a pointer to a GSList list of strings; the provider
@@ -418,31 +418,31 @@ typedef struct {
 	 * the provider-specific data which may have been attached to
 	 * the NAObjectItem-derived object.
 	 *
-	 * Return value: NA_IIO_PROVIDER_CODE_OK if the duplicate operation
+	 * Return value: FMA_IIO_PROVIDER_CODE_OK if the duplicate operation
 	 * was successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *duplicate_data )     ( const NAIIOProvider *instance, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
+	guint    ( *duplicate_data )     ( const FMAIIOProvider *instance, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
 }
-	NAIIOProviderInterface;
+	FMAIIOProviderInterface;
 
 /* -- adding a new status here should imply also adding a new tooltip
  * -- in na_io_provider_get_readonly_tooltip().
  */
 /**
- * NAIIOProviderWritabilityStatus:
- * @NA_IIO_PROVIDER_STATUS_WRITABLE:          item and i/o provider are writable.
- * @NA_IIO_PROVIDER_STATUS_UNAVAILABLE:       unavailable i/o provider.
- * @NA_IIO_PROVIDER_STATUS_INCOMPLETE_API:    i/o provider has an incomplete write api.
- * @NA_IIO_PROVIDER_STATUS_NOT_WILLING_TO:    i/o provider is not willing to write.
- * @NA_IIO_PROVIDER_STATUS_NOT_ABLE_TO:       i/o provider is not able to write.
- * @NA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:   i/o provider has been locked by the administrator.
- * @NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER:    i/o provider has been locked by the user.
- * @NA_IIO_PROVIDER_STATUS_ITEM_READONLY:     item is read-only.
- * @NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND: no writable i/o provider found.
- * @NA_IIO_PROVIDER_STATUS_LEVEL_ZERO:        level zero is not writable.
- * @NA_IIO_PROVIDER_STATUS_UNDETERMINED:      unknwon reason (and probably a bug).
+ * FMAIIOProviderWritabilityStatus:
+ * @FMA_IIO_PROVIDER_STATUS_WRITABLE:          item and i/o provider are writable.
+ * @FMA_IIO_PROVIDER_STATUS_UNAVAILABLE:       unavailable i/o provider.
+ * @FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API:    i/o provider has an incomplete write api.
+ * @FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO:    i/o provider is not willing to write.
+ * @FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO:       i/o provider is not able to write.
+ * @FMA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:   i/o provider has been locked by the administrator.
+ * @FMA_IIO_PROVIDER_STATUS_LOCKED_BY_USER:    i/o provider has been locked by the user.
+ * @FMA_IIO_PROVIDER_STATUS_ITEM_READONLY:     item is read-only.
+ * @FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND: no writable i/o provider found.
+ * @FMA_IIO_PROVIDER_STATUS_LEVEL_ZERO:        level zero is not writable.
+ * @FMA_IIO_PROVIDER_STATUS_UNDETERMINED:      unknwon reason (and probably a bug).
  *
  * The reasons for which an item may not be writable.
  *
@@ -450,55 +450,55 @@ typedef struct {
  * Some are to be used only internally from &prodname; programs.
  */
 typedef enum {
-	NA_IIO_PROVIDER_STATUS_WRITABLE = 0,
-	NA_IIO_PROVIDER_STATUS_UNAVAILABLE,
-	NA_IIO_PROVIDER_STATUS_INCOMPLETE_API,
-	NA_IIO_PROVIDER_STATUS_NOT_WILLING_TO,
-	NA_IIO_PROVIDER_STATUS_NOT_ABLE_TO,
-	NA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN,
-	NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER,
-	NA_IIO_PROVIDER_STATUS_ITEM_READONLY,
-	NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND,
-	NA_IIO_PROVIDER_STATUS_LEVEL_ZERO,
-	NA_IIO_PROVIDER_STATUS_UNDETERMINED,
+	FMA_IIO_PROVIDER_STATUS_WRITABLE = 0,
+	FMA_IIO_PROVIDER_STATUS_UNAVAILABLE,
+	FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API,
+	FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO,
+	FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO,
+	FMA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN,
+	FMA_IIO_PROVIDER_STATUS_LOCKED_BY_USER,
+	FMA_IIO_PROVIDER_STATUS_ITEM_READONLY,
+	FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND,
+	FMA_IIO_PROVIDER_STATUS_LEVEL_ZERO,
+	FMA_IIO_PROVIDER_STATUS_UNDETERMINED,
 	/*< private >*/
-	NA_IIO_PROVIDER_STATUS_LAST,
+	FMA_IIO_PROVIDER_STATUS_LAST,
 }
-	NAIIOProviderWritabilityStatus;
+	FMAIIOProviderWritabilityStatus;
 
 /* -- adding a new code here should imply also adding a new label
  * -- in #na_io_provider_get_return_code_label().
  */
 /**
- * NAIIOProviderOperationStatus:
- * @NA_IIO_PROVIDER_CODE_OK:            the requested operation has been successful.
- * @NA_IIO_PROVIDER_CODE_PROGRAM_ERROR: a program error has been detected;
+ * FMAIIOProviderOperationStatus:
+ * @FMA_IIO_PROVIDER_CODE_OK:            the requested operation has been successful.
+ * @FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR: a program error has been detected;
  *                                      you should open a bug in
  *                                      <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=file-manager-actions">Bugzilla</ulink>.
- * @NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:   the provider is not willing
+ * @FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:   the provider is not willing
  *                                             to do the requested action.
- * @NA_IIO_PROVIDER_CODE_WRITE_ERROR:          a write error has been detected.
- * @NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR: the schemas could not be deleted.
- * @NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:  the configuration could not be deleted.
+ * @FMA_IIO_PROVIDER_CODE_WRITE_ERROR:          a write error has been detected.
+ * @FMA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR: the schemas could not be deleted.
+ * @FMA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:  the configuration could not be deleted.
  *
  * The return code of operations.
  */
 typedef enum {
-	NA_IIO_PROVIDER_CODE_OK = 0,
-	NA_IIO_PROVIDER_CODE_PROGRAM_ERROR = 1 + NA_IIO_PROVIDER_STATUS_LAST,
-	NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN,
-	NA_IIO_PROVIDER_CODE_WRITE_ERROR,
-	NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR,
-	NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR,
+	FMA_IIO_PROVIDER_CODE_OK = 0,
+	FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR = 1 + FMA_IIO_PROVIDER_STATUS_LAST,
+	FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN,
+	FMA_IIO_PROVIDER_CODE_WRITE_ERROR,
+	FMA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR,
+	FMA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR,
 }
-	NAIIOProviderOperationStatus;
+	FMAIIOProviderOperationStatus;
 
-GType na_iio_provider_get_type    ( void );
+GType fma_iio_provider_get_type    ( void );
 
 /* -- to be called by the I/O provider when an item has changed
  */
-void  na_iio_provider_item_changed( const NAIIOProvider *instance );
+void  fma_iio_provider_item_changed( const FMAIIOProvider *instance );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_IIO_PROVIDER_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_IIO_PROVIDER_H__ */

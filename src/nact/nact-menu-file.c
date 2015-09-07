@@ -350,7 +350,7 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSLis
 		g_free( label );
 
 		save_ret = na_updater_write_item( updater, item, messages );
-		ret = ( save_ret == NA_IIO_PROVIDER_CODE_OK );
+		ret = ( save_ret == FMA_IIO_PROVIDER_CODE_OK );
 
 		if( ret ){
 			if( NA_IS_OBJECT_ACTION( item )){

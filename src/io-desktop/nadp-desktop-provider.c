@@ -59,10 +59,10 @@ static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
-static void   iio_provider_iface_init( NAIIOProviderInterface *iface );
-static gchar *iio_provider_get_id( const NAIIOProvider *provider );
-static gchar *iio_provider_get_name( const NAIIOProvider *provider );
-static guint  iio_provider_get_version( const NAIIOProvider *provider );
+static void   iio_provider_iface_init( FMAIIOProviderInterface *iface );
+static gchar *iio_provider_get_id( const FMAIIOProvider *provider );
+static gchar *iio_provider_get_name( const FMAIIOProvider *provider );
+static guint  iio_provider_get_version( const FMAIIOProvider *provider );
 
 static void   ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface );
 static guint  ifactory_provider_get_version( const FMAIFactoryProvider *reader );
@@ -129,7 +129,7 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 
 	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NadpDesktopProvider", &info, 0 );
 
-	g_type_module_add_interface( module, st_module_type, NA_TYPE_IIO_PROVIDER, &iio_provider_iface_info );
+	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IIO_PROVIDER, &iio_provider_iface_info );
 
 	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
 
@@ -224,7 +224,7 @@ instance_finalize( GObject *object )
 }
 
 static void
-iio_provider_iface_init( NAIIOProviderInterface *iface )
+iio_provider_iface_init( FMAIIOProviderInterface *iface )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_iio_provider_iface_init";
 
@@ -242,19 +242,19 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 }
 
 static guint
-iio_provider_get_version( const NAIIOProvider *provider )
+iio_provider_get_version( const FMAIIOProvider *provider )
 {
 	return( 1 );
 }
 
 static gchar *
-iio_provider_get_id( const NAIIOProvider *provider )
+iio_provider_get_id( const FMAIIOProvider *provider )
 {
 	return( g_strdup( PROVIDER_ID ));
 }
 
 static gchar *
-iio_provider_get_name( const NAIIOProvider *provider )
+iio_provider_get_name( const FMAIIOProvider *provider )
 {
 	return( g_strdup( _( "FileManager-Actions Desktop I/O Provider" )));
 }
@@ -400,10 +400,10 @@ on_monitor_timeout( NadpDesktopProvider *provider )
 	static const gchar *thisfn = "nadp_desktop_provider_on_monitor_timeout";
 
 	/* last individual notification is older that the st_burst_timeout
-	 * so triggers the NAIIOProvider interface and destroys this timeout
+	 * so triggers the FMAIIOProvider interface and destroys this timeout
 	 */
-	g_debug( "%s: triggering NAIIOProvider interface for provider=%p (%s)",
+	g_debug( "%s: triggering FMAIIOProvider interface for provider=%p (%s)",
 			thisfn, ( void * ) provider, G_OBJECT_TYPE_NAME( provider ));
 
-	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ));
+	fma_iio_provider_item_changed( FMA_IIO_PROVIDER( provider ));
 }

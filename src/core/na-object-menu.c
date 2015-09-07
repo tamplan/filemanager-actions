@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-object.h>
 #include <api/na-object-api.h>
 
@@ -312,13 +312,13 @@ ifactory_object_write_start( FMAIFactoryObject *instance, const FMAIFactoryProvi
 {
 	na_object_item_rebuild_children_slist( NA_OBJECT_ITEM( instance ));
 
-	return( NA_IIO_PROVIDER_CODE_OK );
+	return( FMA_IIO_PROVIDER_CODE_OK );
 }
 
 static guint
 ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	return( NA_IIO_PROVIDER_CODE_OK );
+	return( FMA_IIO_PROVIDER_CODE_OK );
 }
 
 static void

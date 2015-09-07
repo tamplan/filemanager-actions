@@ -100,7 +100,7 @@ static void          instance_finalize( GObject *object );
 
 static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id );
 
-/* NAIIOProvider management */
+/* FMAIIOProvider management */
 static void          on_items_changed_timeout( NAPivot *pivot );
 
 GType
@@ -425,7 +425,7 @@ na_pivot_dump( const NAPivot *pivot )
  * na_pivot_get_providers:
  * @pivot: this #NAPivot instance.
  * @type: the type of searched interface.
- * For now, we only have NA_TYPE_IIO_PROVIDER interfaces.
+ * For now, we only have FMA_TYPE_IIO_PROVIDER interfaces.
  *
  * Returns: a newly allocated list of providers of the required interface.
  *
@@ -607,13 +607,13 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
 
 /*
  * na_pivot_on_item_changed_handler:
- * @provider: the #NAIIOProvider which has emitted the signal.
+ * @provider: the #FMAIIOProvider which has emitted the signal.
  * @pivot: this #NAPivot instance.
  *
- * This handler is trigerred by #NAIIOProvider providers when an action
+ * This handler is trigerred by #FMAIIOProvider providers when an action
  * is changed in their underlying storage subsystems.
  *
- * The NAIIOProvider is supposed to have itself already summarized
+ * The FMAIIOProvider is supposed to have itself already summarized
  * a minima its own burst of notifications.
  *
  * We don't care of updating our internal list with each and every
@@ -621,11 +621,11 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
  * serie, and then signal our consumers.
  */
 void
-na_pivot_on_item_changed_handler( NAIIOProvider *provider, NAPivot *pivot  )
+na_pivot_on_item_changed_handler( FMAIIOProvider *provider, NAPivot *pivot  )
 {
 	static const gchar *thisfn = "na_pivot_on_item_changed_handler";
 
-	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_IIO_PROVIDER( provider ));
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){

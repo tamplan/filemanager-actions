@@ -35,12 +35,12 @@
  * @include: core/na-io-provider.h
  *
  * #NAIOProvider is the FileManager-Actions class which is used to manage
- * external I/O Providers which implement #NAIIOProvider interface. Each
- * #NAIOProvider objects may (or not) encapsulates one #NAIIOProvider
+ * external I/O Providers which implement #FMAIIOProvider interface. Each
+ * #NAIOProvider objects may (or not) encapsulates one #FMAIIOProvider
  * provider.
  *
  * Internal FileManager-Actions code should never directly call a
- * #NAIIOProvider interface method, but rather should call the
+ * #FMAIIOProvider interface method, but rather should call the
  * corresponding NAIOProvider class method.
  *
  * Two preferences are used for each i/o provider:
@@ -88,8 +88,8 @@ typedef struct {
 }
 	NAIOProviderClass;
 
-/* signal sent from a NAIIOProvider
- * via the na_iio_provider_item_changed() function
+/* signal sent from a FMAIIOProvider
+ * via the fma_iio_provider_item_changed() function
  */
 #define IO_PROVIDER_SIGNAL_ITEM_CHANGED		"io-provider-item-changed"
 

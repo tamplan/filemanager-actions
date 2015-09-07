@@ -82,10 +82,10 @@ static void              read_done_action_load_profile( const FMAIFactoryProvide
 /*
  * Returns an unordered list of FMAIFactoryObject-derived objects
  *
- * This is implementation of NAIIOProvider::read_items method
+ * This is implementation of FMAIIOProvider::read_items method
  */
 GList *
-nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
+nadp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_iio_provider_read_items";
 	GList *items;
@@ -95,7 +95,7 @@ nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 	g_debug( "%s: provider=%p (%s), messages=%p",
 			thisfn, ( void * ) provider, G_OBJECT_TYPE_NAME( provider ), ( void * ) messages );
 
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), NULL );
 
 	items = NULL;
 	nadp_desktop_provider_release_monitors( NADP_DESKTOP_PROVIDER( provider ));

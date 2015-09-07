@@ -885,7 +885,7 @@ na_object_item_is_finally_writable( const NAObjectItem *item, guint *reason )
 	gboolean writable;
 
 	if( reason ){
-		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
+		*reason = FMA_IIO_PROVIDER_STATUS_UNDETERMINED;
 	}
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
 

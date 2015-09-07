@@ -37,7 +37,7 @@
  * @include: file-manager-actions/fma-iimporter.h
  *
  * The #FMAIImporter interface imports items from the outside world
- * into &prodname; repository (see #NAIIOProvider interface for how
+ * into &prodname; repository (see #FMAIIOProvider interface for how
  * these items will be later managed to be store somewhere).
  *
  * In version 1 of the #FMAIImporter interface, &prodname; used to

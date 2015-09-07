@@ -35,7 +35,7 @@ api_include_HEADERS = \
 	fma-iimporter.h										\
 	fma-ifactory-provider.h								\
 	fma-ifactory-provider-provider.h						\
-	na-iio-provider.h									\
+	fma-iio-provider.h									\
 	\
 	fma-boxed.h											\
 	fma-core-utils.h										\

@@ -54,11 +54,11 @@
  *   to summarize its notifications messages;
  *
  * - At the end of this first stage of summarization, the I/O provider
- *   should call the na_iio_provider_item_changed() function, which
+ *   should call the fma_iio_provider_item_changed() function, which
  *   itself will emit the "io-provider-item-changed" signal.
  *   This is done so that an external I/O provider does not have to know
  *   anything with the signal name, but has only to take care of calling
- *   a function of the NAIIOProvider API.
+ *   a function of the FMAIIOProvider API.
  *
  * - The emitted signal is catched by na_pivot_on_item_changed_handler(),
  *   which was connected when the I/O provider plugin was associated with
@@ -72,7 +72,7 @@
  * choose itself whether to reload items or not.
  */
 
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/na-object-api.h>
 
 #include "na-settings.h"
@@ -114,7 +114,7 @@ GType    na_pivot_get_type( void );
 /* signals
  *
  * NAPivot acts as a 'summarizing' proxy for signals emitted by the
- * NAIIOProvider providers when they detect a modification in their
+ * FMAIIOProvider providers when they detect a modification in their
  * underlying items storage subsystems.
  *
  * As several to many signals may be emitted when such a modification occurs,
@@ -138,7 +138,7 @@ NAPivot      *na_pivot_new ( void );
 void          na_pivot_dump( const NAPivot *pivot );
 
 /* Management of the plugins which claim to implement a FileManager-Actions interface.
- * As of 2.30, these may be NAIIOProvider, FMAIImporter or FMAIExporter
+ * As of 2.30, these may be FMAIIOProvider, FMAIImporter or FMAIExporter
  */
 GList        *na_pivot_get_providers ( const NAPivot *pivot, GType type );
 void          na_pivot_free_providers( GList *providers );
@@ -150,7 +150,7 @@ GList        *na_pivot_get_items    ( const NAPivot *pivot );
 void          na_pivot_load_items   ( NAPivot *pivot );
 void          na_pivot_set_new_items( NAPivot *pivot, GList *tree );
 
-void          na_pivot_on_item_changed_handler( NAIIOProvider *provider, NAPivot *pivot  );
+void          na_pivot_on_item_changed_handler( FMAIIOProvider *provider, NAPivot *pivot  );
 
 /* NAPivot properties and configuration
  */

@@ -212,7 +212,7 @@ typedef struct {
 	 *
 	 * Called just before the object is serialized.
 	 *
-	 * Returns: a NAIIOProvider operation return code.
+	 * Returns: a FMAIIOProvider operation return code.
 	 *
 	 * Since: 2.30
 	 */
@@ -228,7 +228,7 @@ typedef struct {
 	 *
 	 * Called when the object has been serialized.
 	 *
-	 * Returns: a NAIIOProvider operation return code.
+	 * Returns: a FMAIIOProvider operation return code.
 	 *
 	 * Since: 2.30
 	 */

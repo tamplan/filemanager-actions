@@ -37,7 +37,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-object.h>
 #include <api/na-object-api.h>
 
@@ -368,7 +368,7 @@ ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvide
 static guint
 ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	return( NA_IIO_PROVIDER_CODE_OK );
+	return( FMA_IIO_PROVIDER_CODE_OK );
 }
 
 static void

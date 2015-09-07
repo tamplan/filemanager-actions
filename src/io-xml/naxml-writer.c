@@ -40,7 +40,7 @@
 #include <api/fma-data-types.h>
 #include <api/na-object-api.h>
 #include <api/fma-ifactory-provider.h>
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 
 #include <io-gconf/nagp-keys.h>
 
@@ -432,7 +432,7 @@ naxml_writer_write_start( const FMAIFactoryProvider *provider, void *writer_data
 		write_start_write_version( writer, NA_OBJECT_ITEM( object ), groups );
 	}
 
-	return( NA_IIO_PROVIDER_CODE_OK );
+	return( FMA_IIO_PROVIDER_CODE_OK );
 }
 
 /* at end of write_start (list_node already created)
@@ -493,13 +493,13 @@ naxml_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 		( *writer->private->fn_str->write_data_fn )( writer, NA_OBJECT_ID( object ), boxed, def );
 	}
 
-	return( NA_IIO_PROVIDER_CODE_OK );
+	return( FMA_IIO_PROVIDER_CODE_OK );
 }
 
 guint
 naxml_writer_write_done( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
 {
-	return( NA_IIO_PROVIDER_CODE_OK );
+	return( FMA_IIO_PROVIDER_CODE_OK );
 }
 
 static void

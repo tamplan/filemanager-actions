@@ -237,7 +237,7 @@ typedef struct {
 	 *
 	 * API called by #FMAIFactoryObject just before starting with writing data.
 	 *
-	 * Returns: a NAIIOProvider operation return code.
+	 * Returns: a FMAIIOProvider operation return code.
 	 *
 	 * Since: 2.30
 	 */
@@ -257,7 +257,7 @@ typedef struct {
 	 *
 	 * This method must be implemented in order any data be written.
 	 *
-	 * Returns: a NAIIOProvider operation return code.
+	 * Returns: a FMAIIOProvider operation return code.
 	 *
 	 * Since: 2.30
 	 */
@@ -274,7 +274,7 @@ typedef struct {
 	 * API called by #FMAIFactoryObject when all data have been written.
 	 * Implementor may take advantage of this to do some cleanup.
 	 *
-	 * Returns: a NAIIOProvider operation return code.
+	 * Returns: a FMAIIOProvider operation return code.
 	 *
 	 * Since: 2.30
 	 */

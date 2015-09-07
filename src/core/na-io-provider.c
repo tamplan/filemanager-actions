@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/na-object-api.h>
 #include <api/fma-core-utils.h>
 
@@ -52,7 +52,7 @@ struct _NAIOProviderClassPrivate {
 struct _NAIOProviderPrivate {
 	gboolean       dispose_has_run;
 	gchar         *id;
-	NAIIOProvider *provider;
+	FMAIIOProvider *provider;
 	gulong         item_changed_handler;
 	gboolean       writable;
 	guint          reason;
@@ -85,13 +85,13 @@ static void          instance_finalize( GObject *object );
 static void          dump( const NAIOProvider *provider );
 static void          dump_providers_list( GList *providers );
 #endif
-static NAIOProvider *io_provider_new( const NAPivot *pivot, NAIIOProvider *module, const gchar *id );
+static NAIOProvider *io_provider_new( const NAPivot *pivot, FMAIIOProvider *module, const gchar *id );
 static GList        *io_providers_list_add_from_plugins( const NAPivot *pivot, GList *list );
 static GList        *io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list );
 static GSList       *io_providers_get_from_prefs( void );
 static GList        *io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list );
-static GList        *io_providers_list_append_object( const NAPivot *pivot, GList *list, NAIIOProvider *module, const gchar *id );
-static void          io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, NAIIOProvider *provider_module );
+static GList        *io_providers_list_append_object( const NAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id );
+static void          io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, FMAIIOProvider *provider_module );
 static gboolean      is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory );
 static gboolean      is_finally_writable( const NAIOProvider *provider, const NAPivot *pivot, guint *reason );
 static GList        *load_items_filter_unwanted_items( const NAPivot *pivot, GList *merged, guint loadable_set );
@@ -187,7 +187,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->provider = NULL;
 	self->private->item_changed_handler = 0;
 	self->private->writable = FALSE;
-	self->private->reason = NA_IIO_PROVIDER_STATUS_UNAVAILABLE;
+	self->private->reason = FMA_IIO_PROVIDER_STATUS_UNAVAILABLE;
 }
 
 static void
@@ -375,7 +375,7 @@ na_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
  *
  * A NAIOProvider object may be created:
  * - either because we have loaded a plugin which claims to implement the
- *   NAIIOProvider interface;
+ *   FMAIIOProvider interface;
  * - or because an i/o provider identifier has been found in preferences.
  *
  * The objects in this list must be in write order:
@@ -404,7 +404,7 @@ na_io_provider_get_io_providers_list( const NAPivot *pivot )
 
 /*
  * adding from write-order means we only create NAIOProvider objects
- * without having any pointer to the underlying NAIIOProvider (if it exists)
+ * without having any pointer to the underlying FMAIIOProvider (if it exists)
  */
 static GList *
 io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list )
@@ -428,7 +428,7 @@ io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_lis
 
 /*
  * add to the list a NAIOProvider object for each loaded plugin which claim
- * to implement the NAIIOProvider interface
+ * to implement the FMAIIOProvider interface
  */
 static GList *
 io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
@@ -437,25 +437,25 @@ io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
 	GList *merged;
 	GList *modules_list, *im;
 	gchar *id;
-	NAIIOProvider *provider_module;
+	FMAIIOProvider *provider_module;
 
 	merged = objects_list;
-	modules_list = na_pivot_get_providers( pivot, NA_TYPE_IIO_PROVIDER );
+	modules_list = na_pivot_get_providers( pivot, FMA_TYPE_IIO_PROVIDER );
 
 	for( im = modules_list ; im ; im = im->next ){
 
 		id = NULL;
-		provider_module = NA_IIO_PROVIDER( im->data );
+		provider_module = FMA_IIO_PROVIDER( im->data );
 
-		if( NA_IIO_PROVIDER_GET_INTERFACE( provider_module )->get_id ){
-			id = NA_IIO_PROVIDER_GET_INTERFACE( provider_module )->get_id( provider_module );
+		if( FMA_IIO_PROVIDER_GET_INTERFACE( provider_module )->get_id ){
+			id = FMA_IIO_PROVIDER_GET_INTERFACE( provider_module )->get_id( provider_module );
 			if( !id || !strlen( id )){
-				g_warning( "%s: NAIIOProvider %p get_id() interface returns null or empty id", thisfn, ( void * ) im->data );
+				g_warning( "%s: FMAIIOProvider %p get_id() interface returns null or empty id", thisfn, ( void * ) im->data );
 				g_free( id );
 				id = NULL;
 			}
 		} else {
-			g_warning( "%s: NAIIOProvider %p doesn't support get_id() interface", thisfn, ( void * ) im->data );
+			g_warning( "%s: FMAIIOProvider %p doesn't support get_id() interface", thisfn, ( void * ) im->data );
 		}
 
 		if( id ){
@@ -543,7 +543,7 @@ io_providers_get_from_prefs( void )
  * if it does not have been already registered
  */
 static GList *
-io_providers_list_append_object( const NAPivot *pivot, GList *list, NAIIOProvider *module, const gchar *id )
+io_providers_list_append_object( const NAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id )
 {
 	GList *merged;
 	NAIOProvider *object;
@@ -584,7 +584,7 @@ peek_provider_by_id( const GList *providers, const gchar *id )
  * module may be NULL
  */
 static NAIOProvider *
-io_provider_new( const NAPivot *pivot, NAIIOProvider *module, const gchar *id )
+io_provider_new( const NAPivot *pivot, FMAIIOProvider *module, const gchar *id )
 {
 	NAIOProvider *object;
 
@@ -604,7 +604,7 @@ io_provider_new( const NAPivot *pivot, NAIIOProvider *module, const gchar *id )
  * we connect the NAPivot callback to the 'item-changed' signal
  */
 static void
-io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, NAIIOProvider *provider_module )
+io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, FMAIIOProvider *provider_module )
 {
 	provider_object->private->provider = g_object_ref( provider_module );
 
@@ -641,7 +641,7 @@ na_io_provider_unref_io_providers_list( void )
  * na_io_provider_get_id:
  * @provider: this #NAIOProvider.
  *
- * Returns: the internal id of this #NAIIOProvider, as a newly
+ * Returns: the internal id of this #FMAIIOProvider, as a newly
  * allocated string which should be g_free() by the caller.
  */
 gchar *
@@ -665,11 +665,11 @@ na_io_provider_get_id( const NAIOProvider *provider )
  * na_io_provider_get_name:
  * @provider: this #NAIOProvider.
  *
- * Returns: the displayable name of this #NAIIOProvider, as a newly
+ * Returns: the displayable name of this #FMAIIOProvider, as a newly
  * allocated string which should be g_free() by the caller.
  *
  * This function makes sure to never return %NULL. An empty string
- * may be returned if the NAIIOProvider is not present at runtime,
+ * may be returned if the FMAIIOProvider is not present at runtime,
  * or does not implement the needed interface, or returns itself %NULL
  * or an empty string.
  */
@@ -685,18 +685,18 @@ na_io_provider_get_name( const NAIOProvider *provider )
 
 	if( !provider->private->dispose_has_run ){
 		if( na_io_provider_is_available( provider ) &&
-			NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name ){
+			FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name ){
 
 				g_free( name );
 				name = NULL;
-				name = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name( provider->private->provider );
+				name = FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name( provider->private->provider );
 				if( !name ){
-					g_message( "%s: NAIIOProvider %s get_name() interface returns NULL", thisfn, provider->private->id );
+					g_message( "%s: FMAIIOProvider %s get_name() interface returns NULL", thisfn, provider->private->id );
 					name = g_strdup( "" );
 			}
 
 		} else {
-			g_message( "%s: NAIIOProvider %s is not available or doesn't support get_name() interface", thisfn, provider->private->id );
+			g_message( "%s: FMAIIOProvider %s is not available or doesn't support get_name() interface", thisfn, provider->private->id );
 		}
 	}
 
@@ -707,7 +707,7 @@ na_io_provider_get_name( const NAIOProvider *provider )
  * na_io_provider_is_available:
  * @provider: the #NAIOProvider object.
  *
- * Returns: %TRUE if the corresponding #NAIIOProvider module is available
+ * Returns: %TRUE if the corresponding #FMAIIOProvider module is available
  * at runtime, %FALSE else.
  */
 gboolean
@@ -721,7 +721,7 @@ na_io_provider_is_available( const NAIOProvider *provider )
 
 	if( !provider->private->dispose_has_run ){
 
-		is_available = ( provider->private->provider && NA_IS_IIO_PROVIDER( provider->private->provider ));
+		is_available = ( provider->private->provider && FMA_IS_IIO_PROVIDER( provider->private->provider ));
 	}
 
 	return( is_available );
@@ -780,7 +780,7 @@ na_io_provider_is_conf_readable( const NAIOProvider *provider, const NAPivot *pi
  * - whether this flag has been set as mandatory by an admin.
  *
  * This property does not say that an item can actually be written by this
- * NAIIOProvider module. See also is_willing_to() and is_able_to().
+ * FMAIIOProvider module. See also is_willing_to() and is_able_to().
  */
 gboolean
 na_io_provider_is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
@@ -813,7 +813,7 @@ na_io_provider_is_finally_writable( const NAIOProvider *provider, guint *reason 
 	gboolean is_writable;
 
 	if( reason ){
-		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
+		*reason = FMA_IIO_PROVIDER_STATUS_UNDETERMINED;
 	}
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
 
@@ -968,35 +968,35 @@ is_finally_writable( const NAIOProvider *provider, const NAPivot *pivot, guint *
 	g_return_val_if_fail( reason, FALSE );
 
 	writable = FALSE;
-	*reason = NA_IIO_PROVIDER_STATUS_UNAVAILABLE;
+	*reason = FMA_IIO_PROVIDER_STATUS_UNAVAILABLE;
 
-	if( provider->private->provider && NA_IS_IIO_PROVIDER( provider->private->provider )){
+	if( provider->private->provider && FMA_IS_IIO_PROVIDER( provider->private->provider )){
 
 		writable = TRUE;
-		*reason = NA_IIO_PROVIDER_STATUS_WRITABLE;
+		*reason = FMA_IIO_PROVIDER_STATUS_WRITABLE;
 
-		if( !NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write ||
-			!NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write ||
-			!NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item ||
-			!NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item ){
+		if( !FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write ||
+			!FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write ||
+			!FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item ||
+			!FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item ){
 
 				writable = FALSE;
-				*reason = NA_IIO_PROVIDER_STATUS_INCOMPLETE_API;
-				g_debug( "%s: provider_module=%p (%s), writable=False, reason=NA_IIO_PROVIDER_STATUS_INCOMPLETE_API",
+				*reason = FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API;
+				g_debug( "%s: provider_module=%p (%s), writable=False, reason=FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API",
 						thisfn, ( void * ) provider->private->provider, provider->private->id );
 
-		} else if( !NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write( provider->private->provider )){
+		} else if( !FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write( provider->private->provider )){
 
 				writable = FALSE;
-				*reason = NA_IIO_PROVIDER_STATUS_NOT_WILLING_TO;
-				g_debug( "%s: provider_module=%p (%s), writable=False, reason=NA_IIO_PROVIDER_STATUS_NOT_WILLING_TO",
+				*reason = FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO;
+				g_debug( "%s: provider_module=%p (%s), writable=False, reason=FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO",
 						thisfn, ( void * ) provider->private->provider, provider->private->id );
 
-		} else if( !NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write( provider->private->provider )){
+		} else if( !FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write( provider->private->provider )){
 
 				writable = FALSE;
-				*reason = NA_IIO_PROVIDER_STATUS_NOT_ABLE_TO;
-				g_debug( "%s: provider_module=%p (%s), writable=False, reason=NA_IIO_PROVIDER_STATUS_NOT_ABLE_TO",
+				*reason = FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO;
+				g_debug( "%s: provider_module=%p (%s), writable=False, reason=FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO",
 						thisfn, ( void * ) provider->private->provider, provider->private->id );
 
 		} else {
@@ -1004,11 +1004,11 @@ is_finally_writable( const NAIOProvider *provider, const NAPivot *pivot, guint *
 			if( !is_writable ){
 				writable = FALSE;
 				if( mandatory ){
-					*reason = NA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN;
+					*reason = FMA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN;
 				} else {
-					*reason = NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER;
+					*reason = FMA_IIO_PROVIDER_STATUS_LOCKED_BY_USER;
 				}
-				g_debug( "%s: provider_module=%p (%s), writable=False, reason=NA_IIO_PROVIDER_STATUS_LOCKED_BY_someone, mandatory=%s",
+				g_debug( "%s: provider_module=%p (%s), writable=False, reason=FMA_IIO_PROVIDER_STATUS_LOCKED_BY_someone, mandatory=%s",
 						thisfn, ( void * ) provider->private->provider, provider->private->id,
 						mandatory ? "True":"False" );
 			}
@@ -1107,7 +1107,7 @@ load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **m
 	const GList *ip;
 	GList *merged, *items, *it;
 	const NAIOProvider *provider_object;
-	const NAIIOProvider *provider_module;
+	const FMAIIOProvider *provider_module;
 
 	merged = NULL;
 	providers = na_io_provider_get_io_providers_list( pivot );
@@ -1117,10 +1117,10 @@ load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **m
 		provider_module = provider_object->private->provider;
 
 		if( provider_module &&
-			NA_IIO_PROVIDER_GET_INTERFACE( provider_module )->read_items &&
+			FMA_IIO_PROVIDER_GET_INTERFACE( provider_module )->read_items &&
 			na_io_provider_is_conf_readable( provider_object, pivot, NULL )){
 
-			items = NA_IIO_PROVIDER_GET_INTERFACE( provider_module )->read_items( provider_module, messages );
+			items = FMA_IIO_PROVIDER_GET_INTERFACE( provider_module )->read_items( provider_module, messages );
 
 			for( it = items ; it ; it = it->next ){
 				na_object_set_provider( it->data, provider_object );
@@ -1236,7 +1236,7 @@ peek_item_by_id_compare( const NAObject *obj, const gchar *id )
  *
  * Writes an @item to the storage subsystem.
  *
- * Returns: the NAIIOProvider return code.
+ * Returns: the FMAIIOProvider return code.
  *
  * #NAPivot class, which should be the only caller of this function,
  * has already check that this item is writable, i.e. that all conditions
@@ -1254,16 +1254,16 @@ na_io_provider_write_item( const NAIOProvider *provider, const NAObjectItem *ite
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			( void * ) messages );
 
-	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider->private->provider ), ret );
-	g_return_val_if_fail( NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item, ret );
+	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider->private->provider ), ret );
+	g_return_val_if_fail( FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item, ret );
 
-	ret = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item( provider->private->provider, item, messages );
+	ret = FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item( provider->private->provider, item, messages );
 
-	if( ret == NA_IIO_PROVIDER_CODE_OK ){
+	if( ret == FMA_IIO_PROVIDER_CODE_OK ){
 		na_object_set_provider( item, provider );
 	}
 
@@ -1278,7 +1278,7 @@ na_io_provider_write_item( const NAIOProvider *provider, const NAObjectItem *ite
  *
  * Deletes an item (action or menu) from the storage subsystem.
  *
- * Returns: the NAIIOProvider return code.
+ * Returns: the FMAIIOProvider return code.
  */
 guint
 na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages )
@@ -1291,14 +1291,14 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			( void * ) messages );
 
-	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider->private->provider ), ret );
-	g_return_val_if_fail( NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item, ret );
+	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider->private->provider ), ret );
+	g_return_val_if_fail( FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item, ret );
 
-	ret = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item( provider->private->provider, item, messages );
+	ret = FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item( provider->private->provider, item, messages );
 
 	return( ret );
 }
@@ -1312,7 +1312,7 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
  *
  * Duplicates provider data (if any) from @source to @dest.
  *
- * Returns: the NAIIOProvider return code.
+ * Returns: the FMAIIOProvider return code.
  */
 guint
 na_io_provider_duplicate_data( const NAIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages )
@@ -1327,19 +1327,19 @@ na_io_provider_duplicate_data( const NAIOProvider *provider, NAObjectItem *dest,
 			( void * ) source, G_OBJECT_TYPE_NAME( source ),
 			( void * ) messages );
 
-	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( dest ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( source ), ret );
-	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider->private->provider ), ret );
+	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider->private->provider ), ret );
 
 	na_object_set_provider_data( dest, NULL );
 	provider_data = na_object_get_provider_data( source );
 
 	if( provider_data &&
-		NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->duplicate_data ){
-			ret = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->duplicate_data( provider->private->provider, dest, source, messages );
+		FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->duplicate_data ){
+			ret = FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->duplicate_data( provider->private->provider, dest, source, messages );
 	}
 
 	return( ret );
@@ -1361,39 +1361,39 @@ na_io_provider_get_readonly_tooltip( guint reason )
 
 	switch( reason ){
 		/* item is writable, so tooltip is empty */
-		case NA_IIO_PROVIDER_STATUS_WRITABLE:
+		case FMA_IIO_PROVIDER_STATUS_WRITABLE:
 			tooltip = g_strdup( "" );
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_UNAVAILABLE:
+		case FMA_IIO_PROVIDER_STATUS_UNAVAILABLE:
 			tooltip = g_strdup( _( "Unavailable I/O provider." ));
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_INCOMPLETE_API:
+		case FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API:
 			tooltip = g_strdup( _( "I/O provider implementation lacks of required API." ));
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_NOT_WILLING_TO:
+		case FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO:
 			tooltip = g_strdup( _( "I/O provider is not willing to write." ));
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_NOT_ABLE_TO:
+		case FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO:
 			tooltip = g_strdup( _( "I/O provider announces itself as unable to write." ));
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:
+		case FMA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:
 			tooltip = g_strdup( _( "I/O provider has been locked down by an administrator." ));
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER:
+		case FMA_IIO_PROVIDER_STATUS_LOCKED_BY_USER:
 			tooltip = g_strdup( _( "I/O provider has been locked down by the user." ));
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_ITEM_READONLY:
+		case FMA_IIO_PROVIDER_STATUS_ITEM_READONLY:
 			tooltip = g_strdup( _( "Item is read-only." ));
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND:
+		case FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND:
 			tooltip = g_strdup( _( "No writable I/O provider found." ));
 			break;
 
@@ -1421,27 +1421,27 @@ na_io_provider_get_return_code_label( guint code )
 	label = NULL;
 
 	switch( code ){
-		case NA_IIO_PROVIDER_CODE_OK:
+		case FMA_IIO_PROVIDER_CODE_OK:
 			label = g_strdup( _( "OK." ));
 			break;
 
-		case NA_IIO_PROVIDER_CODE_PROGRAM_ERROR:
+		case FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR:
 			label = g_strdup_printf( _( "Program flow error.\n%s" ), st_enter_bug );
 			break;
 
-		case NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:
+		case FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:
 			label = g_strdup( _( "The I/O provider is not willing to do that." ));
 			break;
 
-		case NA_IIO_PROVIDER_CODE_WRITE_ERROR:
+		case FMA_IIO_PROVIDER_CODE_WRITE_ERROR:
 			label = g_strdup( _( "Write error in I/O provider." ));
 			break;
 
-		case NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR:
+		case FMA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR:
 			label = g_strdup( _( "Unable to delete GConf schemas." ));
 			break;
 
-		case NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:
+		case FMA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:
 			label = g_strdup( _( "Unable to delete configuration." ));
 			break;
 

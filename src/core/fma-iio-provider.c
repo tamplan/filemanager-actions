@@ -31,13 +31,13 @@
 #include <config.h>
 #endif
 
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 
 #include "na-io-provider.h"
 
 /* private interface data
  */
-struct _NAIIOProviderInterfacePrivate {
+struct _FMAIIOProviderInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -52,19 +52,19 @@ static guint st_initializations = 0;	/* interface initialization count */
 static gint  st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType    register_type( void );
-static void     interface_base_init( NAIIOProviderInterface *klass );
-static void     interface_base_finalize( NAIIOProviderInterface *klass );
+static void     interface_base_init( FMAIIOProviderInterface *klass );
+static void     interface_base_finalize( FMAIIOProviderInterface *klass );
 
-static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
-static gboolean do_is_able_to_write( const NAIIOProvider *instance );
+static gboolean do_is_willing_to_write( const FMAIIOProvider *instance );
+static gboolean do_is_able_to_write( const FMAIIOProvider *instance );
 
 /**
- * na_iio_provider_get_type:
+ * fma_iio_provider_get_type:
  *
  * Returns: the #GType type of this interface.
  */
 GType
-na_iio_provider_get_type( void )
+fma_iio_provider_get_type( void )
 {
 	static GType type = 0;
 
@@ -76,18 +76,18 @@ na_iio_provider_get_type( void )
 }
 
 /*
- * na_iio_provider_register_type:
+ * fma_iio_provider_register_type:
  *
  * Registers this interface.
  */
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_iio_provider_register_type";
+	static const gchar *thisfn = "fma_iio_provider_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIIOProviderInterface ),
+		sizeof( FMAIIOProviderInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -100,7 +100,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIIOProvider", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIIOProvider", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -108,15 +108,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIIOProviderInterface *klass )
+interface_base_init( FMAIIOProviderInterface *klass )
 {
-	static const gchar *thisfn = "na_iio_provider_interface_base_init";
+	static const gchar *thisfn = "fma_iio_provider_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
-		klass->private = g_new0( NAIIOProviderInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIIOProviderInterfacePrivate, 1 );
 
 		klass->get_id = NULL;
 		klass->get_version = NULL;
@@ -128,21 +128,21 @@ interface_base_init( NAIIOProviderInterface *klass )
 		klass->duplicate_data = NULL;
 
 		/**
-		 * NAIIOProvider::io-provider-item-changed:
-		 * @provider: the #NAIIOProvider which has called the
-		 *  na_iio_provider_item_changed() function.
+		 * FMAIIOProvider::io-provider-item-changed:
+		 * @provider: the #FMAIIOProvider which has called the
+		 *  fma_iio_provider_item_changed() function.
 		 *
 		 * This signal is registered without any default handler.
 		 *
 		 * This signal is not meant to be directly sent by a plugin.
-		 * Instead, the plugin should call the na_iio_provider_item_changed()
+		 * Instead, the plugin should call the fma_iio_provider_item_changed()
 		 * function.
 		 *
-		 * See also na_iio_provider_item_changed().
+		 * See also fma_iio_provider_item_changed().
 		 */
 		st_signals[ ITEM_CHANGED ] = g_signal_new(
 					IO_PROVIDER_SIGNAL_ITEM_CHANGED,
-					NA_TYPE_IIO_PROVIDER,
+					FMA_TYPE_IIO_PROVIDER,
 					G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 					0,									/* class offset */
 					NULL,								/* accumulator */
@@ -156,9 +156,9 @@ interface_base_init( NAIIOProviderInterface *klass )
 }
 
 static void
-interface_base_finalize( NAIIOProviderInterface *klass )
+interface_base_finalize( FMAIIOProviderInterface *klass )
 {
-	static const gchar *thisfn = "na_iio_provider_interface_base_finalize";
+	static const gchar *thisfn = "fma_iio_provider_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -171,22 +171,22 @@ interface_base_finalize( NAIIOProviderInterface *klass )
 }
 
 static gboolean
-do_is_willing_to_write( const NAIIOProvider *instance )
+do_is_willing_to_write( const FMAIIOProvider *instance )
 {
 	return( FALSE );
 }
 
 static gboolean
-do_is_able_to_write( const NAIIOProvider *instance )
+do_is_able_to_write( const FMAIIOProvider *instance )
 {
 	return( FALSE );
 }
 
 /**
- * na_iio_provider_item_changed:
- * @instance: the calling #NAIIOProvider.
+ * fma_iio_provider_item_changed:
+ * @instance: the calling #FMAIIOProvider.
  *
- * Informs &prodname; that this #NAIIOProvider @instance has
+ * Informs &prodname; that this #FMAIIOProvider @instance has
  * detected a modification in (at least) one of its items (menu
  * or action).
  *
@@ -208,9 +208,9 @@ do_is_able_to_write( const NAIIOProvider *instance )
  * Since: 2.30
  */
 void
-na_iio_provider_item_changed( const NAIIOProvider *instance )
+fma_iio_provider_item_changed( const FMAIIOProvider *instance )
 {
-	static const gchar *thisfn = "na_iio_provider_item_changed";
+	static const gchar *thisfn = "fma_iio_provider_item_changed";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 

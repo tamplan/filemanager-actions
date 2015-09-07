@@ -37,7 +37,7 @@
 #include <stdlib.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/na-object-api.h>
 
 #include "na-factory-provider.h"
@@ -418,7 +418,7 @@ ifactory_object_write_start( FMAIFactoryObject *instance, const FMAIFactoryProvi
 {
 	na_object_item_rebuild_children_slist( NA_OBJECT_ITEM( instance ));
 
-	return( NA_IIO_PROVIDER_CODE_OK );
+	return( FMA_IIO_PROVIDER_CODE_OK );
 }
 
 static guint
@@ -426,7 +426,7 @@ ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvid
 {
 	guint code;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ACTION( instance ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( instance ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
 	code = write_done_write_profiles( instance, writer, writer_data, messages );
 
@@ -538,10 +538,10 @@ write_done_write_profiles( FMAIFactoryObject *instance, const FMAIFactoryProvide
 	GSList *children_slist, *ic;
 	NAObjectProfile *profile;
 
-	code = NA_IIO_PROVIDER_CODE_OK;
+	code = FMA_IIO_PROVIDER_CODE_OK;
 	children_slist = na_object_get_items_slist( instance );
 
-	for( ic = children_slist ; ic && code == NA_IIO_PROVIDER_CODE_OK ; ic = ic->next ){
+	for( ic = children_slist ; ic && code == FMA_IIO_PROVIDER_CODE_OK ; ic = ic->next ){
 		profile = NA_OBJECT_PROFILE( na_object_get_item( instance, ic->data ));
 
 		if( profile ){

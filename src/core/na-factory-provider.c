@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 
 #include "na-factory-provider.h"
 
@@ -76,7 +76,7 @@ na_factory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_d
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
  *
- * Returns: a NAIIOProvider operation return code.
+ * Returns: a FMAIIOProvider operation return code.
  */
 guint
 na_factory_provider_write_data( const FMAIFactoryProvider *writer, void *writer_data,
@@ -85,10 +85,10 @@ na_factory_provider_write_data( const FMAIFactoryProvider *writer, void *writer_
 {
 	guint code;
 
-	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
-	code = NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
+	code = FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
 
 	if( FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data ){
 		code = FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data( writer, writer_data, object, boxed, messages );

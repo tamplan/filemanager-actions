@@ -39,7 +39,7 @@
 #include <stdlib.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-iio-provider.h>
+#include <api/fma-iio-provider.h>
 #include <api/na-object-api.h>
 
 #include <core/na-gconf-migration.h>
@@ -588,7 +588,7 @@ output_to_desktop( NAObjectAction *action, GSList **msgs )
 	if( provider ){
 		na_object_set_provider( action, provider );
 		ret = na_updater_write_item( updater, NA_OBJECT_ITEM( action ), msgs );
-		code = ( ret == NA_IIO_PROVIDER_CODE_OK );
+		code = ( ret == FMA_IIO_PROVIDER_CODE_OK );
 
 	} else {
 		/* i18n: 'na-desktop' is a plugin identifier - do not translate */
