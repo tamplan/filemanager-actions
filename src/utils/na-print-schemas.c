@@ -41,7 +41,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/fma-data-types.h>
-#include <api/na-ifactory-object-data.h>
+#include <api/fma-ifactory-object-data.h>
 
 #include <io-gconf/nagp-keys.h>
 

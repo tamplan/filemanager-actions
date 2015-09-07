@@ -57,7 +57,7 @@ enum {
 /* while iterating on read item
  */
 typedef struct {
-	NAIFactoryObject   *object;
+	FMAIFactoryObject   *object;
 	NAIFactoryProvider *reader;
 	void               *reader_data;
 	GSList            **messages;
@@ -77,7 +77,7 @@ typedef struct {
 /* while iterating on is_valid
  */
 typedef struct {
-	NAIFactoryObject  *object;
+	FMAIFactoryObject  *object;
 	gboolean           is_valid;
 }
 	NafoValidIter;
@@ -85,7 +85,7 @@ typedef struct {
 /* while iterating on set defaults
  */
 typedef struct {
-	NAIFactoryObject *object;
+	FMAIFactoryObject *object;
 }
 	NafoDefaultIter;
 
@@ -96,19 +96,19 @@ static gboolean     define_class_properties_iter( const FMADataDef *def, GObject
 static gboolean     set_defaults_iter( FMADataDef *def, NafoDefaultIter *data );
 static gboolean     is_valid_mandatory_iter( const FMADataDef *def, NafoValidIter *data );
 static gboolean     read_data_iter( FMADataDef *def, NafoReadIter *iter );
-static gboolean     write_data_iter( const NAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteIter *iter );
+static gboolean     write_data_iter( const FMAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteIter *iter );
 
-static FMADataGroup *v_get_groups( const NAIFactoryObject *object );
-static void         v_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
-static gboolean     v_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
-static gboolean     v_is_valid( const NAIFactoryObject *object );
-static void         v_read_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void         v_read_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        v_write_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        v_write_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static FMADataGroup *v_get_groups( const FMAIFactoryObject *object );
+static void         v_copy( FMAIFactoryObject *target, const FMAIFactoryObject *source );
+static gboolean     v_are_equal( const FMAIFactoryObject *a, const FMAIFactoryObject *b );
+static gboolean     v_is_valid( const FMAIFactoryObject *object );
+static void         v_read_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void         v_read_done( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        v_write_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        v_write_done( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
-static void         attach_boxed_to_object( NAIFactoryObject *object, FMADataBoxed *boxed );
-static void         free_data_boxed_list( NAIFactoryObject *object );
+static void         attach_boxed_to_object( FMAIFactoryObject *object, FMADataBoxed *boxed );
+static void         free_data_boxed_list( FMAIFactoryObject *object );
 static void         iter_on_data_defs( const FMADataGroup *idgroups, guint mode, FMADataDefIterFunc pfn, void *user_data );
 
 /*
@@ -158,17 +158,17 @@ define_class_properties_iter( const FMADataDef *def, GObjectClass *class )
 
 /*
  * na_factory_object_get_data_def:
- * @object: this #NAIFactoryObject object.
+ * @object: this #FMAIFactoryObject object.
  * @name: the searched name.
  *
  * Returns: the #FMADataDef structure which describes this @name, or %NULL.
  */
 FMADataDef *
-na_factory_object_get_data_def( const NAIFactoryObject *object, const gchar *name )
+na_factory_object_get_data_def( const FMAIFactoryObject *object, const gchar *name )
 {
 	FMADataDef *def;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	def = NULL;
 
@@ -193,16 +193,16 @@ na_factory_object_get_data_def( const NAIFactoryObject *object, const gchar *nam
 
 /*
  * na_factory_object_get_data_groups:
- * @object: the #NAIFactoryObject instance.
+ * @object: the #FMAIFactoryObject instance.
  *
  * Returns: a pointer to the list of #FMADataGroup which define the data.
  */
 FMADataGroup *
-na_factory_object_get_data_groups( const NAIFactoryObject *object )
+na_factory_object_get_data_groups( const FMAIFactoryObject *object )
 {
 	FMADataGroup *groups;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	groups = v_get_groups( object );
 
@@ -211,7 +211,7 @@ na_factory_object_get_data_groups( const NAIFactoryObject *object )
 
 /*
  * na_factory_object_iter_on_boxed:
- * @object: this #NAIFactoryObject object.
+ * @object: this #FMAIFactoryObject object.
  * @pfn: the function to be called.
  * @user_data: data to be provided to the user function.
  *
@@ -220,14 +220,14 @@ na_factory_object_get_data_groups( const NAIFactoryObject *object )
  * The @fn called function may return %TRUE to stop the iteration.
  */
 void
-na_factory_object_iter_on_boxed( const NAIFactoryObject *object, NAFactoryObjectIterBoxedFn pfn, void *user_data )
+na_factory_object_iter_on_boxed( const FMAIFactoryObject *object, NAFactoryObjectIterBoxedFn pfn, void *user_data )
 {
 	GList *list, *ibox;
 	gboolean stop;
 
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
+	list = g_object_get_data( G_OBJECT( object ), FMA_IFACTORY_OBJECT_PROP_DATA );
 	/*g_debug( "list=%p (count=%u)", ( void * ) list, g_list_length( list ));*/
 	stop = FALSE;
 
@@ -238,20 +238,20 @@ na_factory_object_iter_on_boxed( const NAIFactoryObject *object, NAFactoryObject
 
 /*
  * na_factory_object_get_default:
- * @object: this #NAIFactoryObject object.
+ * @object: this #FMAIFactoryObject object.
  * @name: the searched name.
  *
  * Returns: the default value for this @object, as a newly allocated
  * string which should be g_free() by the caller.
  */
 gchar *
-na_factory_object_get_default( NAIFactoryObject *object, const gchar *name )
+na_factory_object_get_default( FMAIFactoryObject *object, const gchar *name )
 {
 	static const gchar *thisfn = "na_factory_object_set_defaults";
 	gchar *value;
 	FMADataDef *def;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	value = NULL;
 
@@ -267,18 +267,18 @@ na_factory_object_get_default( NAIFactoryObject *object, const gchar *name )
 
 /*
  * na_factory_object_set_defaults:
- * @object: this #NAIFactoryObject object.
+ * @object: this #FMAIFactoryObject object.
  *
  * Implement default values in this new @object.
  */
 void
-na_factory_object_set_defaults( NAIFactoryObject *object )
+na_factory_object_set_defaults( FMAIFactoryObject *object )
 {
 	static const gchar *thisfn = "na_factory_object_set_defaults";
 	FMADataGroup *groups;
 	NafoDefaultIter *iter_data;
 
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -297,7 +297,7 @@ na_factory_object_set_defaults( NAIFactoryObject *object )
 }
 
 /*
- * because this function is called very early in the NAIFactoryObject life,
+ * because this function is called very early in the FMAIFactoryObject life,
  * we assume here that if a FMADataBoxed has been allocated, then this is
  * most probably because it is set. Thus a 'null' value is not considered
  * as an 'unset' value.
@@ -305,7 +305,7 @@ na_factory_object_set_defaults( NAIFactoryObject *object )
 static gboolean
 set_defaults_iter( FMADataDef *def, NafoDefaultIter *data )
 {
-	FMADataBoxed *boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
+	FMADataBoxed *boxed = fma_ifactory_object_get_data_boxed( data->object, def->name );
 
 	if( !boxed ){
 		boxed = fma_data_boxed_new( def );
@@ -319,24 +319,24 @@ set_defaults_iter( FMADataDef *def, NafoDefaultIter *data )
 
 /*
  * na_factory_object_move_boxed:
- * @target: the target #NAIFactoryObject instance.
- * @source: the source #NAIFactoryObject instance.
+ * @target: the target #FMAIFactoryObject instance.
+ * @source: the source #FMAIFactoryObject instance.
  * @boxed: a #FMADataBoxed.
  *
  * Move the @boxed from @source to @target, detaching from @source list
  * to be attached to @target one.
  */
 void
-na_factory_object_move_boxed( NAIFactoryObject *target, const NAIFactoryObject *source, FMADataBoxed *boxed )
+na_factory_object_move_boxed( FMAIFactoryObject *target, const FMAIFactoryObject *source, FMADataBoxed *boxed )
 {
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( target ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( source ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( target ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( source ));
 
-	GList *src_list = g_object_get_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA );
+	GList *src_list = g_object_get_data( G_OBJECT( source ), FMA_IFACTORY_OBJECT_PROP_DATA );
 
 	if( g_list_find( src_list, boxed )){
 		src_list = g_list_remove( src_list, boxed );
-		g_object_set_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA, src_list );
+		g_object_set_data( G_OBJECT( source ), FMA_IFACTORY_OBJECT_PROP_DATA, src_list );
 
 		attach_boxed_to_object( target, boxed );
 
@@ -348,14 +348,14 @@ na_factory_object_move_boxed( NAIFactoryObject *target, const NAIFactoryObject *
 
 /*
  * na_factory_object_copy:
- * @target: the target #NAIFactoryObject instance.
- * @source: the source #NAIFactoryObject instance.
+ * @target: the target #FMAIFactoryObject instance.
+ * @source: the source #FMAIFactoryObject instance.
  *
  * Copies one instance to another.
  * Takes care of not overriding provider data.
  */
 void
-na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
+na_factory_object_copy( FMAIFactoryObject *target, const FMAIFactoryObject *source )
 {
 	static const gchar *thisfn = "na_factory_object_copy";
 	GList *dest_list, *idest, *inext;
@@ -364,8 +364,8 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 	const FMADataDef *def;
 	void *provider, *provider_data;
 
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( target ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( source ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( target ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( source ));
 
 	g_debug( "%s: target=%p (%s), source=%p (%s)",
 			thisfn,
@@ -377,7 +377,7 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 	provider = na_object_get_provider( target );
 	provider_data = na_object_get_provider_data( target );
 
-	idest = dest_list = g_object_get_data( G_OBJECT( target ), NA_IFACTORY_OBJECT_PROP_DATA );
+	idest = dest_list = g_object_get_data( G_OBJECT( target ), FMA_IFACTORY_OBJECT_PROP_DATA );
 	while( idest ){
 		boxed = FMA_DATA_BOXED( idest->data );
 		inext = idest->next;
@@ -388,16 +388,16 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 		}
 		idest = inext;
 	}
-	g_object_set_data( G_OBJECT( target ), NA_IFACTORY_OBJECT_PROP_DATA, dest_list );
+	g_object_set_data( G_OBJECT( target ), FMA_IFACTORY_OBJECT_PROP_DATA, dest_list );
 
 	/* only then copy copyable data from source
 	 */
-	src_list = g_object_get_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA );
+	src_list = g_object_get_data( G_OBJECT( source ), FMA_IFACTORY_OBJECT_PROP_DATA );
 	for( isrc = src_list ; isrc ; isrc = isrc->next ){
 		boxed = FMA_DATA_BOXED( isrc->data );
 		def = fma_data_boxed_get_data_def( boxed );
 		if( def->copyable ){
-			FMADataBoxed *tgt_boxed = na_ifactory_object_get_data_boxed( target, def->name );
+			FMADataBoxed *tgt_boxed = fma_ifactory_object_get_data_boxed( target, def->name );
 			if( !tgt_boxed ){
 				tgt_boxed = fma_data_boxed_new( def );
 				attach_boxed_to_object( target, tgt_boxed );
@@ -418,13 +418,13 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 
 /*
  * na_factory_object_are_equal:
- * @a: the first (original) #NAIFactoryObject instance.
- * @b: the second (current) #NAIFactoryObject isntance.
+ * @a: the first (original) #FMAIFactoryObject instance.
+ * @b: the second (current) #FMAIFactoryObject isntance.
  *
  * Returns: %TRUE if @a is equal to @b, %FALSE else.
  */
 gboolean
-na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
+na_factory_object_are_equal( const FMAIFactoryObject *a, const FMAIFactoryObject *b )
 {
 	static const gchar *thisfn = "na_factory_object_are_equal";
 	gboolean are_equal;
@@ -432,8 +432,8 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 
 	are_equal = FALSE;
 
-	a_list = g_object_get_data( G_OBJECT( a ), NA_IFACTORY_OBJECT_PROP_DATA );
-	b_list = g_object_get_data( G_OBJECT( b ), NA_IFACTORY_OBJECT_PROP_DATA );
+	a_list = g_object_get_data( G_OBJECT( a ), FMA_IFACTORY_OBJECT_PROP_DATA );
+	b_list = g_object_get_data( G_OBJECT( b ), FMA_IFACTORY_OBJECT_PROP_DATA );
 
 	g_debug( "%s: a=%p, b=%p", thisfn, ( void * ) a, ( void * ) b );
 
@@ -444,7 +444,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 		const FMADataDef *a_def = fma_data_boxed_get_data_def( a_boxed );
 		if( a_def->comparable ){
 
-			FMADataBoxed *b_boxed = na_ifactory_object_get_data_boxed( b, a_def->name );
+			FMADataBoxed *b_boxed = fma_ifactory_object_get_data_boxed( b, a_def->name );
 			if( b_boxed ){
 				are_equal = fma_boxed_are_equal( FMA_BOXED( a_boxed ), FMA_BOXED( b_boxed ));
 				if( !are_equal ){
@@ -464,7 +464,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 		const FMADataDef *b_def = fma_data_boxed_get_data_def( b_boxed );
 		if( b_def->comparable ){
 
-			FMADataBoxed *a_boxed = na_ifactory_object_get_data_boxed( a, b_def->name );
+			FMADataBoxed *a_boxed = fma_ifactory_object_get_data_boxed( a, b_def->name );
 			if( !a_boxed ){
 				are_equal = FALSE;
 				g_debug( "%s: %s not equal as %s was not set", thisfn, G_OBJECT_TYPE_NAME( a ), b_def->name );
@@ -479,29 +479,29 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 
 /*
  * na_factory_object_is_valid:
- * @object: the #NAIFactoryObject instance whose validity is to be checked.
+ * @object: the #FMAIFactoryObject instance whose validity is to be checked.
  *
  * Returns: %TRUE if @object is valid, %FALSE else.
  */
 gboolean
-na_factory_object_is_valid( const NAIFactoryObject *object )
+na_factory_object_is_valid( const FMAIFactoryObject *object )
 {
 	static const gchar *thisfn = "na_factory_object_is_valid";
 	gboolean is_valid;
 	FMADataGroup *groups;
 	GList *list, *iv;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), FALSE );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), FALSE );
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
+	list = g_object_get_data( G_OBJECT( object ), FMA_IFACTORY_OBJECT_PROP_DATA );
 	is_valid = TRUE;
 
 	/* mandatory data must be set
 	 */
 	NafoValidIter iter_data;
-	iter_data.object = ( NAIFactoryObject * ) object;
+	iter_data.object = ( FMAIFactoryObject * ) object;
 	iter_data.is_valid = TRUE;
 
 	groups = v_get_groups( object );
@@ -525,7 +525,7 @@ is_valid_mandatory_iter( const FMADataDef *def, NafoValidIter *data )
 	FMADataBoxed *boxed;
 
 	if( def->mandatory ){
-		boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
+		boxed = fma_ifactory_object_get_data_boxed( data->object, def->name );
 		if( !boxed ){
 			g_debug( "na_factory_object_is_valid_mandatory_iter: invalid %s: mandatory but not set", def->name );
 			data->is_valid = FALSE;
@@ -538,12 +538,12 @@ is_valid_mandatory_iter( const FMADataDef *def, NafoValidIter *data )
 
 /*
  * na_factory_object_dump:
- * @object: this #NAIFactoryObject instance.
+ * @object: this #FMAIFactoryObject instance.
  *
  * Dumps the content of @object.
  */
 void
-na_factory_object_dump( const NAIFactoryObject *object )
+na_factory_object_dump( const FMAIFactoryObject *object )
 {
 	static const gchar *thisfn = "na_factory_object_dump";
 	static const gchar *prefix = "na-factory-data-";
@@ -553,7 +553,7 @@ na_factory_object_dump( const NAIFactoryObject *object )
 
 	length = 0;
 	l_prefix = strlen( prefix );
-	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
+	list = g_object_get_data( G_OBJECT( object ), FMA_IFACTORY_OBJECT_PROP_DATA );
 
 	for( it = list ; it ; it = it->next ){
 		FMADataBoxed *boxed = FMA_DATA_BOXED( it->data );
@@ -575,19 +575,19 @@ na_factory_object_dump( const NAIFactoryObject *object )
 
 /*
  * na_factory_object_finalize:
- * @object: the #NAIFactoryObject being finalized.
+ * @object: the #FMAIFactoryObject being finalized.
  *
  * Clears all data associated with this @object.
  */
 void
-na_factory_object_finalize( NAIFactoryObject *object )
+na_factory_object_finalize( FMAIFactoryObject *object )
 {
 	free_data_boxed_list( object );
 }
 
 /*
  * na_factory_object_read_item:
- * @object: this #NAIFactoryObject instance.
+ * @object: this #FMAIFactoryObject instance.
  * @reader: the #NAIFactoryProvider which is at the origin of this read.
  * @reader_data: reader data.
  * @messages: a pointer to a #GSList list of strings; the implementation
@@ -596,11 +596,11 @@ na_factory_object_finalize( NAIFactoryObject *object )
  * Unserializes the object.
  */
 void
-na_factory_object_read_item( NAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+na_factory_object_read_item( FMAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	static const gchar *thisfn = "na_factory_object_read_item";
 
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 
 	FMADataGroup *groups = v_get_groups( object );
@@ -636,7 +636,7 @@ read_data_iter( FMADataDef *def, NafoReadIter *iter )
 	FMADataBoxed *boxed = na_factory_provider_read_data( iter->reader, iter->reader_data, iter->object, def, iter->messages );
 
 	if( boxed ){
-		FMADataBoxed *exist = na_ifactory_object_get_data_boxed( iter->object, def->name );
+		FMADataBoxed *exist = fma_ifactory_object_get_data_boxed( iter->object, def->name );
 
 		if( exist ){
 			fma_boxed_set_from_boxed( FMA_BOXED( exist ), FMA_BOXED( boxed ));
@@ -652,7 +652,7 @@ read_data_iter( FMADataDef *def, NafoReadIter *iter )
 
 /*
  * na_factory_object_write_item:
- * @object: this #NAIFactoryObject instance.
+ * @object: this #FMAIFactoryObject instance.
  * @writer: the #NAIFactoryProvider which is at the origin of this write.
  * @writer_data: writer data.
  * @messages: a pointer to a #GSList list of strings; the implementation
@@ -663,14 +663,14 @@ read_data_iter( FMADataDef *def, NafoReadIter *iter )
  * Returns: a NAIIOProvider operation return code.
  */
 guint
-na_factory_object_write_item( NAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+na_factory_object_write_item( FMAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	static const gchar *thisfn = "na_factory_object_write_item";
 	guint code;
 	FMADataGroup *groups;
 	gchar *msg;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
 	code = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
@@ -709,7 +709,7 @@ na_factory_object_write_item( NAIFactoryObject *object, const NAIFactoryProvider
 }
 
 static gboolean
-write_data_iter( const NAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteIter *iter )
+write_data_iter( const FMAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteIter *iter )
 {
 	const FMADataDef *def = fma_data_boxed_get_data_def( boxed );
 
@@ -723,7 +723,7 @@ write_data_iter( const NAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteI
 
 /*
  * na_factory_object_get_as_value:
- * @object: this #NAIFactoryObject instance.
+ * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data id.
  * @value: the #GValue to be set.
  *
@@ -733,15 +733,15 @@ write_data_iter( const NAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteI
  * This is to be read as "set value from data element".
  */
 void
-na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *name, GValue *value )
+na_factory_object_get_as_value( const FMAIFactoryObject *object, const gchar *name, GValue *value )
 {
 	FMADataBoxed *boxed;
 
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	g_value_unset( value );
 
-	boxed = na_ifactory_object_get_data_boxed( object, name );
+	boxed = fma_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
 		fma_boxed_get_as_value( FMA_BOXED( boxed ), value );
 	}
@@ -749,7 +749,7 @@ na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *nam
 
 /*
  * na_factory_object_get_as_void:
- * @object: this #NAIFactoryObject instance.
+ * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data whose value is to be got.
  *
  * Returns: the searched value.
@@ -760,16 +760,16 @@ na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *nam
  * by the caller.
  */
 void *
-na_factory_object_get_as_void( const NAIFactoryObject *object, const gchar *name )
+na_factory_object_get_as_void( const FMAIFactoryObject *object, const gchar *name )
 {
 	void *value;
 	FMADataBoxed *boxed;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	value = NULL;
 
-	boxed = na_ifactory_object_get_data_boxed( object, name );
+	boxed = fma_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
 		value = fma_boxed_get_as_void( FMA_BOXED( boxed ));
 	}
@@ -779,26 +779,26 @@ na_factory_object_get_as_void( const NAIFactoryObject *object, const gchar *name
 
 /*
  * na_factory_object_is_set:
- * @object: this #NAIFactoryObject instance.
+ * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data whose value is to be tested.
  *
  * Returns: %TRUE if the value is set (may be %NULL), %FALSE else.
  */
 gboolean
-na_factory_object_is_set( const NAIFactoryObject *object, const gchar *name )
+na_factory_object_is_set( const FMAIFactoryObject *object, const gchar *name )
 {
 	FMADataBoxed *boxed;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), FALSE );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), FALSE );
 
-	boxed = na_ifactory_object_get_data_boxed( object, name );
+	boxed = fma_ifactory_object_get_data_boxed( object, name );
 
 	return( boxed != NULL );
 }
 
 /*
  * na_factory_object_set_from_value:
- * @object: this #NAIFactoryObject instance.
+ * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data id.
  * @value: the #GValue whose content is to be got.
  *
@@ -806,13 +806,13 @@ na_factory_object_is_set( const NAIFactoryObject *object, const gchar *name )
  * attached to @property_id.
  */
 void
-na_factory_object_set_from_value( NAIFactoryObject *object, const gchar *name, const GValue *value )
+na_factory_object_set_from_value( FMAIFactoryObject *object, const gchar *name, const GValue *value )
 {
 	static const gchar *thisfn = "na_factory_object_set_from_value";
 
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	FMADataBoxed *boxed = na_ifactory_object_get_data_boxed( object, name );
+	FMADataBoxed *boxed = fma_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
 		fma_boxed_set_from_value( FMA_BOXED( boxed ), value );
 
@@ -831,20 +831,20 @@ na_factory_object_set_from_value( NAIFactoryObject *object, const gchar *name, c
 
 /*
  * na_factory_object_set_from_void:
- * @object: this #NAIFactoryObject instance.
+ * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data whose value is to be set.
  * @data: the value to set.
  *
  * Set the elementary data with the given value.
  */
 void
-na_factory_object_set_from_void( NAIFactoryObject *object, const gchar *name, const void *data )
+na_factory_object_set_from_void( FMAIFactoryObject *object, const gchar *name, const void *data )
 {
 	static const gchar *thisfn = "na_factory_object_set_from_void";
 
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	FMADataBoxed *boxed = na_ifactory_object_get_data_boxed( object, name );
+	FMADataBoxed *boxed = fma_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
 		fma_boxed_set_from_void( FMA_BOXED( boxed ), data );
 
@@ -862,102 +862,102 @@ na_factory_object_set_from_void( NAIFactoryObject *object, const gchar *name, co
 }
 
 static FMADataGroup *
-v_get_groups( const NAIFactoryObject *object )
+v_get_groups( const FMAIFactoryObject *object )
 {
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
-		return( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object ));
+	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
+		return( FMA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object ));
 	}
 
 	return( NULL );
 }
 
 static void
-v_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
+v_copy( FMAIFactoryObject *target, const FMAIFactoryObject *source )
 {
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( target )->copy ){
-		NA_IFACTORY_OBJECT_GET_INTERFACE( target )->copy( target, source );
+	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( target )->copy ){
+		FMA_IFACTORY_OBJECT_GET_INTERFACE( target )->copy( target, source );
 	}
 }
 
 static gboolean
-v_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
+v_are_equal( const FMAIFactoryObject *a, const FMAIFactoryObject *b )
 {
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( a )->are_equal ){
-		return( NA_IFACTORY_OBJECT_GET_INTERFACE( a )->are_equal( a, b ));
+	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( a )->are_equal ){
+		return( FMA_IFACTORY_OBJECT_GET_INTERFACE( a )->are_equal( a, b ));
 	}
 
 	return( TRUE );
 }
 
 static gboolean
-v_is_valid( const NAIFactoryObject *object )
+v_is_valid( const FMAIFactoryObject *object )
 {
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid ){
-		return( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid( object ));
+	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid ){
+		return( FMA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid( object ));
 	}
 
 	return( TRUE );
 }
 
 static void
-v_read_start( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+v_read_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_start ){
-		NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_start( serializable, reader, reader_data, messages );
+	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_start ){
+		FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_start( serializable, reader, reader_data, messages );
 	}
 }
 
 static void
-v_read_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+v_read_done( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_done ){
-		NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_done( serializable, reader, reader_data, messages );
+	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_done ){
+		FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_done( serializable, reader, reader_data, messages );
 	}
 }
 
 static guint
-v_write_start( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+v_write_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	guint code = NA_IIO_PROVIDER_CODE_OK;
 
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start ){
-		code = NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start( serializable, writer, writer_data, messages );
+	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start ){
+		code = FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start( serializable, writer, writer_data, messages );
 	}
 
 	return( code );
 }
 
 static guint
-v_write_done( NAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+v_write_done( FMAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	guint code = NA_IIO_PROVIDER_CODE_OK;
 
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done ){
-		code = NA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done( serializable, writer, writer_data, messages );
+	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done ){
+		code = FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done( serializable, writer, writer_data, messages );
 	}
 
 	return( code );
 }
 
 static void
-attach_boxed_to_object( NAIFactoryObject *object, FMADataBoxed *boxed )
+attach_boxed_to_object( FMAIFactoryObject *object, FMADataBoxed *boxed )
 {
-	GList *list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
+	GList *list = g_object_get_data( G_OBJECT( object ), FMA_IFACTORY_OBJECT_PROP_DATA );
 	list = g_list_prepend( list, boxed );
-	g_object_set_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA, list );
+	g_object_set_data( G_OBJECT( object ), FMA_IFACTORY_OBJECT_PROP_DATA, list );
 }
 
 static void
-free_data_boxed_list( NAIFactoryObject *object )
+free_data_boxed_list( FMAIFactoryObject *object )
 {
 	GList *list;
 
-	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
+	list = g_object_get_data( G_OBJECT( object ), FMA_IFACTORY_OBJECT_PROP_DATA );
 
 	g_list_foreach( list, ( GFunc ) g_object_unref, NULL );
 	g_list_free( list );
 
-	g_object_set_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA, NULL );
+	g_object_set_data( G_OBJECT( object ), FMA_IFACTORY_OBJECT_PROP_DATA, NULL );
 }
 
 /*

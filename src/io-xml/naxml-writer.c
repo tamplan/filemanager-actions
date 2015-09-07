@@ -402,14 +402,14 @@ build_xml_doc( NAXMLWriter *writer )
 	na_ifactory_provider_write_item(
 			NA_IFACTORY_PROVIDER( writer->private->provider ),
 			writer,
-			NA_IFACTORY_OBJECT( writer->private->exported ),
+			FMA_IFACTORY_OBJECT( writer->private->exported ),
 			writer->private->messages ? & writer->private->messages : NULL );
 
 	return( writer->private->doc );
 }
 
 guint
-naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object, GSList **messages  )
+naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	NAXMLWriter *writer;
 	FMADataGroup *groups;
@@ -427,7 +427,7 @@ naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data,
 			( *writer->private->fn_str->write_list_attribs_fn )( writer, NA_OBJECT_ITEM( object ));
 		}
 
-		groups = na_ifactory_object_get_data_groups( object );
+		groups = fma_ifactory_object_get_data_groups( object );
 		write_start_write_type( writer, NA_OBJECT_ITEM( object ), groups );
 		write_start_write_version( writer, NA_OBJECT_ITEM( object ), groups );
 	}
@@ -471,7 +471,7 @@ write_start_write_version( NAXMLWriter *writer, NAObjectItem *object, const FMAD
 }
 
 guint
-naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages )
+naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages )
 {
 	NAXMLWriter *writer;
 	const FMADataDef *def;
@@ -497,7 +497,7 @@ naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, 
 }
 
 guint
-naxml_writer_write_done( const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object, GSList **messages  )
+naxml_writer_write_done( const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	return( NA_IIO_PROVIDER_CODE_OK );
 }

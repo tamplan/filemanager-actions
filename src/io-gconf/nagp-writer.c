@@ -153,7 +153,7 @@ nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 	ret = nagp_iio_provider_delete_item( provider, item, messages );
 
 	if( ret == NA_IIO_PROVIDER_CODE_OK ){
-		na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), NULL, NA_IFACTORY_OBJECT( item ), messages );
+		na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), NULL, FMA_IFACTORY_OBJECT( item ), messages );
 	}
 
 	gconf_client_suggest_sync( self->private->gconf, NULL );
@@ -234,7 +234,7 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 
 guint
 nagp_writer_write_start( const NAIFactoryProvider *writer, void *writer_data,
-							const NAIFactoryObject *object, GSList **messages  )
+							const FMAIFactoryObject *object, GSList **messages  )
 {
 	if( NA_IS_OBJECT_ITEM( object )){
 		write_start_write_type( NAGP_GCONF_PROVIDER( writer ), NA_OBJECT_ITEM( object ));
@@ -280,7 +280,7 @@ write_start_write_version( NagpGConfProvider *provider, NAObjectItem *item )
 
 guint
 nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
-									const NAIFactoryObject *object, const FMADataBoxed *boxed,
+									const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages )
 {
 	static const gchar *thisfn = "nagp_writer_write_data";
@@ -388,7 +388,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 guint
 nagp_writer_write_done( const NAIFactoryProvider *writer, void *writer_data,
-									const NAIFactoryObject *object,
+									const FMAIFactoryObject *object,
 									GSList **messages  )
 {
 	return( NA_IIO_PROVIDER_CODE_OK );

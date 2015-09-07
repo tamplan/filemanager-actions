@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-ifactory-object-data.h>
+#include <api/fma-ifactory-object-data.h>
 #include <api/fma-data-def.h>
 #include <api/fma-data-types.h>
 

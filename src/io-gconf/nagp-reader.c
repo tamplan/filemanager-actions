@@ -155,7 +155,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 		na_ifactory_provider_read_item(
 				NA_IFACTORY_PROVIDER( provider ),
 				data,
-				NA_IFACTORY_OBJECT( item ),
+				FMA_IFACTORY_OBJECT( item ),
 				messages );
 
 		fma_gconf_utils_free_entries( data->entries );
@@ -166,13 +166,13 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 }
 
 void
-nagp_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  )
+nagp_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	static const gchar *thisfn = "nagp_reader_read_start";
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
 	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	if( !NAGP_GCONF_PROVIDER( provider )->private->dispose_has_run ){
 
@@ -196,13 +196,13 @@ read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectP
 }
 
 FMADataBoxed *
-nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const FMADataDef *def, GSList **messages )
+nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_read_data";
 	FMADataBoxed *boxed;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), NULL );
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	/*g_debug( "%s: reader_data=%p, object=%p (%s), data=%s",
 			thisfn,
@@ -222,14 +222,14 @@ nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, co
 }
 
 void
-nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  )
+nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	static const gchar *thisfn = "nagp_reader_read_done";
 	gboolean writable;
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
 	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	if( !NAGP_GCONF_PROVIDER( provider )->private->dispose_has_run ){
 
@@ -348,7 +348,7 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 	na_ifactory_provider_read_item(
 			NA_IFACTORY_PROVIDER( provider ),
 			profile_data,
-			NA_IFACTORY_OBJECT( profile ),
+			FMA_IFACTORY_OBJECT( profile ),
 			messages );
 
 	fma_gconf_utils_free_entries( profile_data->entries );

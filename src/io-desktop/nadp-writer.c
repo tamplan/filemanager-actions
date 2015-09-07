@@ -225,7 +225,7 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), ret );
 
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( item ), ret );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( item ), ret );
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
 
@@ -237,7 +237,7 @@ write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktop
 
 	ret = NA_IIO_PROVIDER_CODE_OK;
 
-	na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), ndf, NA_IFACTORY_OBJECT( item ), messages );
+	na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), ndf, FMA_IFACTORY_OBJECT( item ), messages );
 
 	if( !nadp_desktop_file_write( ndf )){
 		ret = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
@@ -386,7 +386,7 @@ nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExport
 
 		} else {
 			ndf = nadp_desktop_file_new();
-			write_code = na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( instance ), ndf, NA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
+			write_code = na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( instance ), ndf, FMA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
 
 			if( write_code != NA_IIO_PROVIDER_CODE_OK ){
 				code = FMA_IEXPORTER_CODE_ERROR;
@@ -454,7 +454,7 @@ nadp_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIExporter
 			g_free( folder_path );
 
 			ndf = nadp_desktop_file_new_for_write( dest_path );
-			write_code = na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( instance ), ndf, NA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
+			write_code = na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( instance ), ndf, FMA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
 
 			if( write_code != NA_IIO_PROVIDER_CODE_OK ){
 				code = FMA_IEXPORTER_CODE_ERROR;
@@ -474,7 +474,7 @@ nadp_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIExporter
 
 guint
 nadp_writer_ifactory_provider_write_start( const NAIFactoryProvider *provider, void *writer_data,
-							const NAIFactoryObject *object, GSList **messages  )
+							const FMAIFactoryObject *object, GSList **messages  )
 {
 	if( NA_IS_OBJECT_ITEM( object )){
 		write_start_write_type( NADP_DESKTOP_FILE( writer_data ), NA_OBJECT_ITEM( object ));
@@ -499,7 +499,7 @@ write_start_write_type( NadpDesktopFile *ndp, NAObjectItem *item )
  */
 guint
 nadp_writer_ifactory_provider_write_data(
-				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,
+				const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object,
 				const FMADataBoxed *boxed, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_writer_ifactory_provider_write_data";
@@ -590,7 +590,7 @@ nadp_writer_ifactory_provider_write_data(
 
 guint
 nadp_writer_ifactory_provider_write_done( const NAIFactoryProvider *provider, void *writer_data,
-							const NAIFactoryObject *object, GSList **messages  )
+							const FMAIFactoryObject *object, GSList **messages  )
 {
 	if( NA_IS_OBJECT_ITEM( object )){
 		write_done_write_subitems_list( NADP_DESKTOP_FILE( writer_data ), NA_OBJECT_ITEM( object ));

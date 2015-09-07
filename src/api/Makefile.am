@@ -46,8 +46,8 @@ api_include_HEADERS = \
 	fma-gconf-utils.h									\
 	fma-icontext.h										\
 	fma-iduplicable.h									\
-	na-ifactory-object.h								\
-	na-ifactory-object-data.h							\
+	fma-ifactory-object.h								\
+	fma-ifactory-object-data.h							\
 	na-object-api.h										\
 	na-object.h											\
 	na-object-id.h										\

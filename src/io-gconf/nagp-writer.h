@@ -54,15 +54,15 @@ guint    nagp_iio_provider_delete_item        ( const NAIIOProvider *provider,
 /* NAIFactoryProvider interface
  */
 guint    nagp_writer_write_start( const NAIFactoryProvider *writer, void *writer_data,
-									const NAIFactoryObject *object,
+									const FMAIFactoryObject *object,
 									GSList **messages  );
 
 guint    nagp_writer_write_data ( const NAIFactoryProvider *provider, void *writer_data,
-									const NAIFactoryObject *object, const FMADataBoxed *boxed,
+									const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages );
 
 guint    nagp_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data,
-									const NAIFactoryObject *object,
+									const FMAIFactoryObject *object,
 									GSList **messages  );
 #endif /* NA_ENABLE_DEPRECATED */
 

@@ -37,7 +37,7 @@
 
 #include <api/fma-core-utils.h>
 #include <api/fma-data-types.h>
-#include <api/na-ifactory-object-data.h>
+#include <api/fma-ifactory-object-data.h>
 #include <api/na-ifactory-provider.h>
 #include <api/na-object-api.h>
 
@@ -53,7 +53,7 @@ typedef struct {
 }
 	DesktopPath;
 
-/* the structure passed as reader data to NAIFactoryObject
+/* the structure passed as reader data to FMAIFactoryObject
  */
 typedef struct {
 	NadpDesktopFile *ndf;
@@ -67,8 +67,8 @@ static GList            *get_list_of_desktop_paths( NadpDesktopProvider *provide
 static void              get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
 static gboolean          is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id );
 static GList            *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
-static NAIFactoryObject *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
-static NAIFactoryObject *item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *ndf, GSList **messages );
+static FMAIFactoryObject *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
+static FMAIFactoryObject *item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *ndf, GSList **messages );
 static void              desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
 static void              free_desktop_paths( GList *paths );
 
@@ -80,7 +80,7 @@ static void              read_done_action_read_profiles( const NAIFactoryProvide
 static void              read_done_action_load_profile( const NAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages );
 
 /*
- * Returns an unordered list of NAIFactoryObject-derived objects
+ * Returns an unordered list of FMAIFactoryObject-derived objects
  *
  * This is implementation of NAIIOProvider::read_items method
  */
@@ -90,7 +90,7 @@ nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 	static const gchar *thisfn = "nadp_iio_provider_read_items";
 	GList *items;
 	GList *desktop_paths, *ip;
-	NAIFactoryObject *item;
+	FMAIFactoryObject *item;
 
 	g_debug( "%s: provider=%p (%s), messages=%p",
 			thisfn, ( void * ) provider, G_OBJECT_TYPE_NAME( provider ), ( void * ) messages );
@@ -249,10 +249,10 @@ desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const g
 }
 
 /*
- * Returns a newly allocated NAIFactoryObject-derived object, initialized
+ * Returns a newly allocated FMAIFactoryObject-derived object, initialized
  * from the .desktop file pointed to by DesktopPath struct
  */
-static NAIFactoryObject *
+static FMAIFactoryObject *
 item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages )
 {
 	NadpDesktopFile *ndf;
@@ -266,14 +266,14 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
 }
 
 /*
- * Returns a newly allocated NAIFactoryObject-derived object, initialized
+ * Returns a newly allocated FMAIFactoryObject-derived object, initialized
  * from the .desktop file
  */
-static NAIFactoryObject *
+static FMAIFactoryObject *
 item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *ndf, GSList **messages )
 {
 	/*static const gchar *thisfn = "nadp_reader_item_from_desktop_file";*/
-	NAIFactoryObject *item;
+	FMAIFactoryObject *item;
 	gchar *type;
 	NadpReaderData *reader_data;
 	gchar *id;
@@ -282,10 +282,10 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 	type = nadp_desktop_file_get_file_type( ndf );
 
 	if( !strcmp( type, NADP_VALUE_TYPE_ACTION )){
-		item = NA_IFACTORY_OBJECT( na_object_action_new());
+		item = FMA_IFACTORY_OBJECT( na_object_action_new());
 
 	} else if( !strcmp( type, NADP_VALUE_TYPE_MENU )){
-		item = NA_IFACTORY_OBJECT( na_object_menu_new());
+		item = FMA_IFACTORY_OBJECT( na_object_menu_new());
 
 	} else {
 		/* i18n: 'type' is the nature of the item: Action or Menu */
@@ -419,13 +419,13 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, void *parms_
  * depending of the exact class of the NAObjectItem
  */
 void
-nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages )
+nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_start";
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( serializable ));
 
 	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
@@ -483,7 +483,7 @@ read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectP
  * letting the caller deal with default values
  */
 FMADataBoxed *
-nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const FMADataDef *def, GSList **messages )
+nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_data";
 	FMADataBoxed *boxed;
@@ -498,7 +498,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ), NULL );
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	boxed = NULL;
 
@@ -578,17 +578,17 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 }
 
 /*
- * called when each NAIFactoryObject object has been read
+ * called when each FMAIFactoryObject object has been read
  */
 void
-nadp_reader_ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages )
+nadp_reader_ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_done";
 	gboolean writable;
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( serializable ));
 
 	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
@@ -680,7 +680,7 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, NadpReaderDat
 		na_ifactory_provider_read_item(
 				NA_IFACTORY_PROVIDER( provider ),
 				reader_data,
-				NA_IFACTORY_OBJECT( profile ),
+				FMA_IFACTORY_OBJECT( profile ),
 				messages );
 
 	} else {

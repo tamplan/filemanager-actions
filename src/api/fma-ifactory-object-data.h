@@ -27,19 +27,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_OBJECT_DATA_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_OBJECT_DATA_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_IFACTORY_OBJECT_DATA_H__
+#define __FILE_MANAGER_ACTIONS_API_IFACTORY_OBJECT_DATA_H__
 
 /**
  * SECTION: data-name
  * @title: Constants
  * @short_description: The Data Factory Constant Definitions
- * @include: file-manager-actions/na-ifactory-object-data.h
+ * @include: file-manager-actions/fma-ifactory-object-data.h
  *
  * Each elementary data get its own name here.
  *
  * Through #FMADataDef and #FMADataGroup definitions, each #NAObjectItem
- * derived object which implement the #NAIFactoryObject interface will
+ * derived object which implement the #FMAIFactoryObject interface will
  * dynamically define a property for each attached elementary data.
  */
 
@@ -153,4 +153,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_OBJECT_DATA_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_IFACTORY_OBJECT_DATA_H__ */

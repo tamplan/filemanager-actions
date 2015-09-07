@@ -135,7 +135,7 @@
  */
 
 #include "fma-data-boxed.h"
-#include "na-ifactory-object.h"
+#include "fma-ifactory-object.h"
 #include "na-ifactory-provider-provider.h"
 
 G_BEGIN_DECLS
@@ -182,15 +182,15 @@ typedef struct {
 	 * @reader: this #NAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance, as provided
 	 *  when na_ifactory_provider_read_item() was called.
-	 * @object: the #NAIFactoryObject object which comes to be read.
+	 * @object: the #FMAIFactoryObject object which comes to be read.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * API called by #NAIFactoryObject just before starting with reading data.
+	 * API called by #FMAIFactoryObject just before starting with reading data.
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_start ) ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
+	void          ( *read_start ) ( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * read_data:
@@ -209,45 +209,45 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	FMADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const FMADataDef *def, GSList **messages );
+	FMADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages );
 
 	/**
 	 * read_done:
 	 * @reader: this #NAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance, as provided
 	 *  when na_ifactory_provider_read_item() was called.
-	 * @object: the #NAIFactoryObject object which comes to be read.
+	 * @object: the #FMAIFactoryObject object which comes to be read.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * API called by #NAIFactoryObject when all data have been read.
+	 * API called by #FMAIFactoryObject when all data have been read.
 	 * Implementor may take advantage of this to do some cleanup.
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_done )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
+	void          ( *read_done )  ( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * write_start:
 	 * @writer: this #NAIFactoryProvider instance.
 	 * @writer_data: the data associated to this instance.
-	 * @object: the #NAIFactoryObject object which comes to be written.
+	 * @object: the #FMAIFactoryObject object which comes to be written.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * API called by #NAIFactoryObject just before starting with writing data.
+	 * API called by #FMAIFactoryObject just before starting with writing data.
 	 *
 	 * Returns: a NAIIOProvider operation return code.
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
+	guint         ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * write_data:
 	 * @writer: this #NAIFactoryProvider instance.
 	 * @writer_data: the data associated to this instance.
-	 * @object: the #NAIFactoryObject object being written.
+	 * @object: the #FMAIFactoryObject object being written.
 	 * @def: the description of the data to be written.
 	 * @value: the #FMADataBoxed to be written down.
 	 * @messages: a pointer to a #GSList list of strings; the provider
@@ -261,31 +261,31 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
+	guint         ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
 
 	/**
 	 * write_done:
 	 * @writer: this #NAIFactoryProvider instance.
 	 * @writer_data: the data associated to this instance.
-	 * @object: the #NAIFactoryObject object which comes to be written.
+	 * @object: the #FMAIFactoryObject object which comes to be written.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * API called by #NAIFactoryObject when all data have been written.
+	 * API called by #FMAIFactoryObject when all data have been written.
 	 * Implementor may take advantage of this to do some cleanup.
 	 *
 	 * Returns: a NAIIOProvider operation return code.
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
+	guint         ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
 }
 	NAIFactoryProviderInterface;
 
 GType na_ifactory_provider_get_type( void );
 
-void  na_ifactory_provider_read_item ( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages );
-guint na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages );
+void  na_ifactory_provider_read_item ( const NAIFactoryProvider *reader, void *reader_data, FMAIFactoryObject *object, GSList **messages );
+guint na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, FMAIFactoryObject *object, GSList **messages );
 
 G_END_DECLS
 

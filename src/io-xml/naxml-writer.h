@@ -74,9 +74,9 @@ GType  naxml_writer_get_type( void );
 guint  naxml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms );
 guint  naxml_writer_export_to_file  ( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms );
 
-guint  naxml_writer_write_start( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
-guint  naxml_writer_write_data ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
-guint  naxml_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
+guint  naxml_writer_write_start( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
+guint  naxml_writer_write_data ( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
+guint  naxml_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
 
 G_END_DECLS
 

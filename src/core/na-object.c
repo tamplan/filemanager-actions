@@ -183,8 +183,8 @@ instance_finalize( GObject *object )
 
 	g_free( self->private );
 
-	if( NA_IS_IFACTORY_OBJECT( object )){
-		na_factory_object_finalize( NA_IFACTORY_OBJECT( object ));
+	if( FMA_IS_IFACTORY_OBJECT( object )){
+		na_factory_object_finalize( FMA_IFACTORY_OBJECT( object ));
 	}
 
 	/* chain call to parent class */
@@ -200,8 +200,8 @@ object_dump( const NAObject *object )
 
 		fma_iduplicable_dump( FMA_IDUPLICABLE( object ));
 
-		if( NA_IS_IFACTORY_OBJECT( object )){
-			na_factory_object_dump( NA_IFACTORY_OBJECT( object ));
+		if( FMA_IS_IFACTORY_OBJECT( object )){
+			na_factory_object_dump( FMA_IFACTORY_OBJECT( object ));
 		}
 	}
 }
@@ -243,8 +243,8 @@ iduplicable_copy( FMAIDuplicable *target, const FMAIDuplicable *source, guint mo
 				( void * ) src, G_OBJECT_TYPE_NAME( src ),
 				mode );
 
-		if( NA_IS_IFACTORY_OBJECT( target )){
-			na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
+		if( FMA_IS_IFACTORY_OBJECT( target )){
+			na_factory_object_copy( FMA_IFACTORY_OBJECT( target ), FMA_IFACTORY_OBJECT( source ));
 		}
 
 		if( FMA_IS_ICONTEXT( target )){
@@ -273,8 +273,8 @@ iduplicable_are_equal( const FMAIDuplicable *a, const FMAIDuplicable *b )
 
 		are_equal = TRUE;
 
-		if( NA_IS_IFACTORY_OBJECT( a )){
-			are_equal &= na_factory_object_are_equal( NA_IFACTORY_OBJECT( a ), NA_IFACTORY_OBJECT( b ));
+		if( FMA_IS_IFACTORY_OBJECT( a )){
+			are_equal &= na_factory_object_are_equal( FMA_IFACTORY_OBJECT( a ), FMA_IFACTORY_OBJECT( b ));
 		}
 
 		if( FMA_IS_ICONTEXT( a )){
@@ -302,8 +302,8 @@ iduplicable_is_valid( const FMAIDuplicable *object )
 
 		is_valid = TRUE;
 
-		if( NA_IS_IFACTORY_OBJECT( object )){
-			is_valid &= na_factory_object_is_valid( NA_IFACTORY_OBJECT( object ));
+		if( FMA_IS_IFACTORY_OBJECT( object )){
+			is_valid &= na_factory_object_is_valid( FMA_IFACTORY_OBJECT( object ));
 		}
 
 		if( FMA_IS_ICONTEXT( object )){

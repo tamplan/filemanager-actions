@@ -43,11 +43,11 @@
 G_BEGIN_DECLS
 
 FMADataBoxed *na_factory_provider_read_data ( const NAIFactoryProvider *reader, void *reader_data,
-									const NAIFactoryObject *object, const FMADataDef *def,
+									const FMAIFactoryObject *object, const FMADataDef *def,
 									GSList **messages );
 
 guint        na_factory_provider_write_data( const NAIFactoryProvider *writer, void *writer_data,
-									const NAIFactoryObject *object, const FMADataBoxed *boxed,
+									const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages );
 
 G_END_DECLS

@@ -36,7 +36,7 @@
  * @short_description: The Data Factory Element Class Definition
  * @include: file-manager-actions/fma-data-boxed.h
  *
- * The object which encapsulates an elementary data of #NAIFactoryObject.
+ * The object which encapsulates an elementary data of #FMAIFactoryObject.
  * A #FMADataBoxed object has a type and a value.
  *
  * #FMADataBoxed class is derived from #FMABoxed one, and implements the same

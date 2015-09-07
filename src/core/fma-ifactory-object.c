@@ -33,29 +33,29 @@
 
 #include <string.h>
 
-#include <api/na-ifactory-object.h>
+#include <api/fma-ifactory-object.h>
 
 #include "na-factory-object.h"
 
 /* private interface data
  */
-struct _NAIFactoryObjectInterfacePrivate {
+struct _FMAIFactoryObjectInterfacePrivate {
 	void *empty;					/* so that gcc -pedantic is happy */
 };
 
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_base_init( NAIFactoryObjectInterface *klass );
-static void  interface_base_finalize( NAIFactoryObjectInterface *klass );
+static void  interface_base_init( FMAIFactoryObjectInterface *klass );
+static void  interface_base_finalize( FMAIFactoryObjectInterface *klass );
 
-static guint ifactory_object_get_version( const NAIFactoryObject *instance );
+static guint ifactory_object_get_version( const FMAIFactoryObject *instance );
 
 /*
  * Registers the GType of this interface.
  */
 GType
-na_ifactory_object_get_type( void )
+fma_ifactory_object_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -69,11 +69,11 @@ na_ifactory_object_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_ifactory_object_register_type";
+	static const gchar *thisfn = "fma_ifactory_object_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIFactoryObjectInterface ),
+		sizeof( FMAIFactoryObjectInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -86,7 +86,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIFactoryObject", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIFactoryObject", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -94,15 +94,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIFactoryObjectInterface *klass )
+interface_base_init( FMAIFactoryObjectInterface *klass )
 {
-	static const gchar *thisfn = "na_ifactory_object_interface_base_init";
+	static const gchar *thisfn = "fma_ifactory_object_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
-		klass->private = g_new0( NAIFactoryObjectInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIFactoryObjectInterfacePrivate, 1 );
 
 		klass->get_version = ifactory_object_get_version;
 		klass->get_groups = NULL;
@@ -119,9 +119,9 @@ interface_base_init( NAIFactoryObjectInterface *klass )
 }
 
 static void
-interface_base_finalize( NAIFactoryObjectInterface *klass )
+interface_base_finalize( FMAIFactoryObjectInterface *klass )
 {
-	static const gchar *thisfn = "na_ifactory_object_interface_base_finalize";
+	static const gchar *thisfn = "fma_ifactory_object_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -134,17 +134,17 @@ interface_base_finalize( NAIFactoryObjectInterface *klass )
 }
 
 static guint
-ifactory_object_get_version( const NAIFactoryObject *instance )
+ifactory_object_get_version( const FMAIFactoryObject *instance )
 {
 	return( 1 );
 }
 
 /**
- * na_ifactory_object_get_data_boxed:
- * @object: a #NAIFactoryObject object.
+ * fma_ifactory_object_get_data_boxed:
+ * @object: a #FMAIFactoryObject object.
  * @name: the name of the elementary data we are searching for.
  *
- * The returned #FMADataBoxed is owned by #NAIFactoryObject @object, and
+ * The returned #FMADataBoxed is owned by #FMAIFactoryObject @object, and
  * should not be released by the caller.
  *
  * Returns: The #FMADataBoxed object which contains the specified data,
@@ -153,13 +153,13 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
  * Since: 2.30
  */
 FMADataBoxed *
-na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *name )
+fma_ifactory_object_get_data_boxed( const FMAIFactoryObject *object, const gchar *name )
 {
 	GList *list, *ip;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
-	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
+	list = g_object_get_data( G_OBJECT( object ), FMA_IFACTORY_OBJECT_PROP_DATA );
 	/*g_debug( "list=%p (count=%u)", ( void * ) list, g_list_length( list ));*/
 
 	for( ip = list ; ip ; ip = ip->next ){
@@ -175,10 +175,10 @@ na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *
 }
 
 /**
- * na_ifactory_object_get_data_groups:
- * @object: a #NAIFactoryObject object.
+ * fma_ifactory_object_get_data_groups:
+ * @object: a #FMAIFactoryObject object.
  *
- * The returned #FMADataGroup is owned by the #NAIFactoryObject @object,
+ * The returned #FMADataGroup is owned by the #FMAIFactoryObject @object,
  * and should not be released by the caller.
  *
  * Returns: The #FMADataGroup groups definition, or %NULL.
@@ -186,24 +186,24 @@ na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *
  * Since: 2.30
  */
 FMADataGroup *
-na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
+fma_ifactory_object_get_data_groups( const FMAIFactoryObject *object )
 {
 	FMADataGroup *groups;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	groups = NULL;
 
-	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
-		groups = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object );
+	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
+		groups = FMA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object );
 	}
 
 	return( groups );
 }
 
 /**
- * na_ifactory_object_get_as_void:
- * @object: this #NAIFactoryObject instance.
+ * fma_ifactory_object_get_as_void:
+ * @object: this #FMAIFactoryObject instance.
  * @name: the elementary data whose value is to be got.
  *
  * If the type of the value is %NA_DATA_TYPE_STRING, %NA_DATA_TYPE_LOCALE_STRING,
@@ -216,16 +216,16 @@ na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
  * Since: 2.30
  */
 void *
-na_ifactory_object_get_as_void( const NAIFactoryObject *object, const gchar *name )
+fma_ifactory_object_get_as_void( const FMAIFactoryObject *object, const gchar *name )
 {
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	return( na_factory_object_get_as_void( object, name ));
 }
 
 /**
- * na_ifactory_object_set_from_void:
- * @object: this #NAIFactoryObject instance.
+ * fma_ifactory_object_set_from_void:
+ * @object: this #FMAIFactoryObject instance.
  * @name: the name of the elementary data whose value is to be set.
  * @data: the value to set.
  *
@@ -234,9 +234,9 @@ na_ifactory_object_get_as_void( const NAIFactoryObject *object, const gchar *nam
  * Since: 2.30
  */
 void
-na_ifactory_object_set_from_void( NAIFactoryObject *object, const gchar *name, const void *data )
+fma_ifactory_object_set_from_void( FMAIFactoryObject *object, const gchar *name, const void *data )
 {
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	na_factory_object_set_from_void( object, name, data );
 }

@@ -50,13 +50,13 @@
  */
 FMADataBoxed *
 na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data,
-								const NAIFactoryObject *object, const FMADataDef *def,
+								const FMAIFactoryObject *object, const FMADataDef *def,
 								GSList **messages )
 {
 	FMADataBoxed *boxed;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	boxed = NULL;
 
@@ -80,13 +80,13 @@ na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_da
  */
 guint
 na_factory_provider_write_data( const NAIFactoryProvider *writer, void *writer_data,
-								const NAIFactoryObject *object, const FMADataBoxed *boxed,
+								const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 								GSList **messages )
 {
 	guint code;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
 	code = NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
 

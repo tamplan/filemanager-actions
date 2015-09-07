@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <api/na-iio-provider.h>
-#include <api/na-ifactory-object.h>
+#include <api/fma-ifactory-object.h>
 #include <api/na-object-api.h>
 
 #include "na-factory-provider.h"
@@ -70,12 +70,12 @@ static void         instance_finalize( GObject *object );
 
 static void         object_dump( const NAObject *object );
 
-static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data );
-static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
-static FMADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
-static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void         ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
+static guint        ifactory_object_get_version( const FMAIFactoryObject *instance );
+static FMADataGroup *ifactory_object_get_groups( const FMAIFactoryObject *instance );
+static void         ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        ifactory_object_write_start( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static guint        ifactory_object_write_done( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static void         icontext_iface_init( FMAIContextInterface *iface, void *user_data );
 static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
@@ -129,7 +129,7 @@ register_type( void )
 
 	g_type_add_interface_static( type, FMA_TYPE_ICONTEXT, &icontext_iface_info );
 
-	g_type_add_interface_static( type, NA_TYPE_IFACTORY_OBJECT, &ifactory_object_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IFACTORY_OBJECT, &ifactory_object_iface_info );
 
 	return( type );
 }
@@ -179,11 +179,11 @@ static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
 	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	if( !NA_OBJECT_MENU( object )->private->dispose_has_run ){
 
-		na_factory_object_get_as_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		na_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -191,11 +191,11 @@ static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
 	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	if( !NA_OBJECT_MENU( object )->private->dispose_has_run ){
 
-		na_factory_object_set_from_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		na_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -266,7 +266,7 @@ object_dump( const NAObject *object )
 }
 
 static void
-ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data )
+ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_object_menu_ifactory_object_iface_init";
 
@@ -280,19 +280,19 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data )
 }
 
 static guint
-ifactory_object_get_version( const NAIFactoryObject *instance )
+ifactory_object_get_version( const FMAIFactoryObject *instance )
 {
 	return( 1 );
 }
 
 static FMADataGroup *
-ifactory_object_get_groups( const NAIFactoryObject *instance )
+ifactory_object_get_groups( const FMAIFactoryObject *instance )
 {
 	return( menu_data_groups );
 }
 
 static void
-ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	g_debug( "na_object_menu_ifactory_object_read_done: instance=%p", ( void * ) instance );
 
@@ -308,7 +308,7 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 }
 
 static guint
-ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+ifactory_object_write_start( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	na_object_item_rebuild_children_slist( NA_OBJECT_ITEM( instance ));
 
@@ -316,7 +316,7 @@ ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvide
 }
 
 static guint
-ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+ifactory_object_write_done( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	return( NA_IIO_PROVIDER_CODE_OK );
 }
@@ -371,7 +371,7 @@ na_object_menu_new_with_defaults( void )
 	NAObjectMenu *menu = na_object_menu_new();
 	na_object_set_new_id( menu, NULL );
 	na_object_set_label( menu, gettext( NEW_NAUTILUS_MENU ));
-	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( menu ));
+	na_factory_object_set_defaults( FMA_IFACTORY_OBJECT( menu ));
 
 	return( menu );
 }

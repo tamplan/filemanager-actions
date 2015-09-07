@@ -30,8 +30,8 @@
 #ifndef __CORE_NA_FACTORY_OBJECT_H__
 #define __CORE_NA_FACTORY_OBJECT_H__
 
-/* @title: NAIFactoryObject
- * @short_description: The #NAIFactoryObject Internal Functions
+/* @title: FMAIFactoryObject
+ * @short_description: The #FMAIFactoryObject Internal Functions
  * @include: core/na-factory-object.h
  *
  * Declare the function only accessed from core library, i.e. not
@@ -42,35 +42,35 @@
 
 G_BEGIN_DECLS
 
-typedef gboolean ( *NAFactoryObjectIterBoxedFn )( const NAIFactoryObject *object, FMADataBoxed *boxed, void *data );
+typedef gboolean ( *NAFactoryObjectIterBoxedFn )( const FMAIFactoryObject *object, FMADataBoxed *boxed, void *data );
 
-#define NA_IFACTORY_OBJECT_PROP_DATA			"na-ifactory-object-prop-data"
+#define FMA_IFACTORY_OBJECT_PROP_DATA			"fma-ifactory-object-prop-data"
 
 void         na_factory_object_define_properties( GObjectClass *class, const FMADataGroup *groups );
-FMADataDef   *na_factory_object_get_data_def     ( const NAIFactoryObject *object, const gchar *name );
-FMADataGroup *na_factory_object_get_data_groups  ( const NAIFactoryObject *object );
-void         na_factory_object_iter_on_boxed    ( const NAIFactoryObject *object, NAFactoryObjectIterBoxedFn pfn, void *user_data );
+FMADataDef   *na_factory_object_get_data_def     ( const FMAIFactoryObject *object, const gchar *name );
+FMADataGroup *na_factory_object_get_data_groups  ( const FMAIFactoryObject *object );
+void         na_factory_object_iter_on_boxed    ( const FMAIFactoryObject *object, NAFactoryObjectIterBoxedFn pfn, void *user_data );
 
-gchar       *na_factory_object_get_default      ( NAIFactoryObject *object, const gchar *name );
-void         na_factory_object_set_defaults     ( NAIFactoryObject *object );
+gchar       *na_factory_object_get_default      ( FMAIFactoryObject *object, const gchar *name );
+void         na_factory_object_set_defaults     ( FMAIFactoryObject *object );
 
-void         na_factory_object_move_boxed       ( NAIFactoryObject *target, const NAIFactoryObject *source, FMADataBoxed *boxed );
+void         na_factory_object_move_boxed       ( FMAIFactoryObject *target, const FMAIFactoryObject *source, FMADataBoxed *boxed );
 
-void         na_factory_object_copy             ( NAIFactoryObject *target, const NAIFactoryObject *source );
-gboolean     na_factory_object_are_equal        ( const NAIFactoryObject *a, const NAIFactoryObject *b );
-gboolean     na_factory_object_is_valid         ( const NAIFactoryObject *object );
-void         na_factory_object_dump             ( const NAIFactoryObject *object );
-void         na_factory_object_finalize         ( NAIFactoryObject *object );
+void         na_factory_object_copy             ( FMAIFactoryObject *target, const FMAIFactoryObject *source );
+gboolean     na_factory_object_are_equal        ( const FMAIFactoryObject *a, const FMAIFactoryObject *b );
+gboolean     na_factory_object_is_valid         ( const FMAIFactoryObject *object );
+void         na_factory_object_dump             ( const FMAIFactoryObject *object );
+void         na_factory_object_finalize         ( FMAIFactoryObject *object );
 
-void         na_factory_object_read_item        ( NAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-guint        na_factory_object_write_item       ( NAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+void         na_factory_object_read_item        ( FMAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+guint        na_factory_object_write_item       ( FMAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-void        *na_factory_object_get_as_void      ( const NAIFactoryObject *object, const gchar *name );
-void         na_factory_object_get_as_value     ( const NAIFactoryObject *object, const gchar *name, GValue *value );
-gboolean     na_factory_object_is_set           ( const NAIFactoryObject *object, const gchar *name );
+void        *na_factory_object_get_as_void      ( const FMAIFactoryObject *object, const gchar *name );
+void         na_factory_object_get_as_value     ( const FMAIFactoryObject *object, const gchar *name, GValue *value );
+gboolean     na_factory_object_is_set           ( const FMAIFactoryObject *object, const gchar *name );
 
-void         na_factory_object_set_from_value   ( NAIFactoryObject *object, const gchar *name, const GValue *value );
-void         na_factory_object_set_from_void    ( NAIFactoryObject *object, const gchar *name, const void *data );
+void         na_factory_object_set_from_value   ( FMAIFactoryObject *object, const gchar *name, const GValue *value );
+void         na_factory_object_set_from_void    ( FMAIFactoryObject *object, const gchar *name, const void *data );
 
 G_END_DECLS
 

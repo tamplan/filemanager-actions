@@ -963,7 +963,7 @@ nact_tree_ieditable_set_items( NactTreeIEditable *instance, GList *items )
 			 * data, read-only status - notably children are not impacted by this
 			 * copy
 			 */
-			na_factory_object_copy( NA_IFACTORY_OBJECT( old_item ), NA_IFACTORY_OBJECT( new_item ));
+			na_factory_object_copy( FMA_IFACTORY_OBJECT( old_item ), FMA_IFACTORY_OBJECT( new_item ));
 
 		} else if( NA_IS_OBJECT_ACTION( old_item )){
 			/* na_factory_object is not a deep copy, which is fine for the menu

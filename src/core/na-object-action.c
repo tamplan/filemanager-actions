@@ -75,20 +75,20 @@ static void         object_dump( const NAObject *object );
 static gboolean     object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean     object_is_valid( const NAObject *object );
 
-static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data );
-static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
-static FMADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
-static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void         ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
+static guint        ifactory_object_get_version( const FMAIFactoryObject *instance );
+static FMADataGroup *ifactory_object_get_groups( const FMAIFactoryObject *instance );
+static void         ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        ifactory_object_write_start( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static guint        ifactory_object_write_done( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static void         icontext_iface_init( FMAIContextInterface *iface, void *user_data );
 static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
 
-static NAObjectProfile *read_done_convert_v1_to_v2( NAIFactoryObject *instance );
-static void             read_done_deals_with_toolbar_label( NAIFactoryObject *instance );
+static NAObjectProfile *read_done_convert_v1_to_v2( FMAIFactoryObject *instance );
+static void             read_done_deals_with_toolbar_label( FMAIFactoryObject *instance );
 
-static guint        write_done_write_profiles( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static guint        write_done_write_profiles( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static gboolean     is_valid_label( const NAObjectAction *action );
 static gboolean     is_valid_toolbar_label( const NAObjectAction *action );
@@ -142,7 +142,7 @@ register_type( void )
 
 	g_type_add_interface_static( type, FMA_TYPE_ICONTEXT, &icontext_iface_info );
 
-	g_type_add_interface_static( type, NA_TYPE_IFACTORY_OBJECT, &ifactory_object_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IFACTORY_OBJECT, &ifactory_object_iface_info );
 
 	return( type );
 }
@@ -194,11 +194,11 @@ static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
 	g_return_if_fail( NA_IS_OBJECT_ACTION( object ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	if( !NA_OBJECT_ACTION( object )->private->dispose_has_run ){
 
-		na_factory_object_get_as_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		na_factory_object_get_as_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -206,11 +206,11 @@ static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
 	g_return_if_fail( NA_IS_OBJECT_ACTION( object ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	if( !NA_OBJECT_ACTION( object )->private->dispose_has_run ){
 
-		na_factory_object_set_from_value( NA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
+		na_factory_object_set_from_value( FMA_IFACTORY_OBJECT( object ), g_quark_to_string( property_id ), value );
 	}
 }
 
@@ -350,7 +350,7 @@ object_is_valid( const NAObject *object )
 }
 
 static void
-ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data )
+ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_object_action_ifactory_object_iface_init";
 
@@ -364,13 +364,13 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data )
 }
 
 static guint
-ifactory_object_get_version( const NAIFactoryObject *instance )
+ifactory_object_get_version( const FMAIFactoryObject *instance )
 {
 	return( 1 );
 }
 
 static FMADataGroup *
-ifactory_object_get_groups( const NAIFactoryObject *instance )
+ifactory_object_get_groups( const FMAIFactoryObject *instance )
 {
 	return( action_data_groups );
 }
@@ -381,7 +381,7 @@ ifactory_object_get_groups( const NAIFactoryObject *instance )
  * action-specific properties (not to check for profiles consistency)
  */
 static void
-ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	guint iversion;
 	NAObjectProfile *profile;
@@ -414,7 +414,7 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 }
 
 static guint
-ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+ifactory_object_write_start( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	na_object_item_rebuild_children_slist( NA_OBJECT_ITEM( instance ));
 
@@ -422,7 +422,7 @@ ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvide
 }
 
 static guint
-ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+ifactory_object_write_done( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	guint code;
 
@@ -460,7 +460,7 @@ icontext_is_candidate( FMAIContext *object, guint target, GList *selection )
  * returns the newly defined profile
  */
 static NAObjectProfile *
-read_done_convert_v1_to_v2( NAIFactoryObject *instance )
+read_done_convert_v1_to_v2( FMAIFactoryObject *instance )
 {
 	static const gchar *thisfn = "na_object_action_read_done_read_done_convert_v1_to_last";
 	GList *to_move;
@@ -476,7 +476,7 @@ read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 	def = data_def_action_v1;
 
 	while( def->name ){
-		boxed = na_ifactory_object_get_data_boxed( instance, def->name );
+		boxed = fma_ifactory_object_get_data_boxed( instance, def->name );
 		if( boxed ){
 			g_debug( "%s: boxed=%p (%s) marked to be moved from action body to profile",
 							 thisfn, ( void * ) boxed, def->name );
@@ -494,7 +494,7 @@ read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 
 	for( ibox = to_move ; ibox ; ibox = ibox->next ){
 		na_factory_object_move_boxed(
-				NA_IFACTORY_OBJECT( profile ), instance, FMA_DATA_BOXED( ibox->data ));
+				FMA_IFACTORY_OBJECT( profile ), instance, FMA_DATA_BOXED( ibox->data ));
 	}
 
 	return( profile );
@@ -504,7 +504,7 @@ read_done_convert_v1_to_v2( NAIFactoryObject *instance )
  * if toolbar-same-label is true, then ensure that this is actually true
  */
 static void
-read_done_deals_with_toolbar_label( NAIFactoryObject *instance )
+read_done_deals_with_toolbar_label( FMAIFactoryObject *instance )
 {
 	gchar *toolbar_label;
 	gchar *action_label;
@@ -531,7 +531,7 @@ read_done_deals_with_toolbar_label( NAIFactoryObject *instance )
  * note that subitems string list has been rebuilt on write_start
  */
 static guint
-write_done_write_profiles( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+write_done_write_profiles( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	static const gchar *thisfn = "na_object_action_write_done_write_profiles";
 	guint code;
@@ -545,7 +545,7 @@ write_done_write_profiles( NAIFactoryObject *instance, const NAIFactoryProvider 
 		profile = NA_OBJECT_PROFILE( na_object_get_item( instance, ic->data ));
 
 		if( profile ){
-			code = na_ifactory_provider_write_item( writer, writer_data, NA_IFACTORY_OBJECT( profile ), messages );
+			code = na_ifactory_provider_write_item( writer, writer_data, FMA_IFACTORY_OBJECT( profile ), messages );
 
 		} else {
 			g_warning( "%s: profile not found: %s", thisfn, ( const gchar * ) ic->data );
@@ -653,7 +653,7 @@ na_object_action_new_with_defaults( void )
 	na_object_set_new_id( action, NULL );
 	na_object_set_label( action, gettext( NEW_NAUTILUS_ACTION ));
 	na_object_set_toolbar_label( action, gettext( NEW_NAUTILUS_ACTION ));
-	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( action ));
+	na_factory_object_set_defaults( FMA_IFACTORY_OBJECT( action ));
 
 	profile = na_object_profile_new_with_defaults();
 	na_object_attach_profile( action, profile );

@@ -27,19 +27,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_OBJECT_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_OBJECT_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_IFACTORY_OBJECT_H__
+#define __FILE_MANAGER_ACTIONS_API_IFACTORY_OBJECT_H__
 
 /**
  * SECTION: ifactory-object
- * @title: NAIFactoryObject
+ * @title: FMAIFactoryObject
  * @short_description: The #NAObjectItem Interface v 1
  * @include: file-manager-actions/na-ifactory_object.h
  *
  * This interface is implemented by #NAObjectItem derived objects so that they
  * can take advantage of our data factory management system.
  *
- * A #NAObjectItem derived object which would implement this #NAIFactoryObject
+ * A #NAObjectItem derived object which would implement this #FMAIFactoryObject
  * interface must meet following conditions:
  * <itemizedlist>
  *   <listitem>
@@ -52,7 +52,7 @@
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIFactoryObject interface</title>
+ *    <title>Historic of the versions of the #FMAIFactoryObject interface</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -60,7 +60,7 @@
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIFactoryObject interface version</entry>
+ *          <entry>#FMAIFactoryObject interface version</entry>
  *          <entry></entry>
  *        </row>
  *      </thead>
@@ -82,16 +82,16 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_IFACTORY_OBJECT                      ( na_ifactory_object_get_type())
-#define NA_IFACTORY_OBJECT( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IFACTORY_OBJECT, NAIFactoryObject ))
-#define NA_IS_IFACTORY_OBJECT( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IFACTORY_OBJECT ))
-#define NA_IFACTORY_OBJECT_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IFACTORY_OBJECT, NAIFactoryObjectInterface ))
+#define FMA_TYPE_IFACTORY_OBJECT                      ( fma_ifactory_object_get_type())
+#define FMA_IFACTORY_OBJECT( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IFACTORY_OBJECT, FMAIFactoryObject ))
+#define FMA_IS_IFACTORY_OBJECT( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IFACTORY_OBJECT ))
+#define FMA_IFACTORY_OBJECT_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IFACTORY_OBJECT, FMAIFactoryObjectInterface ))
 
-typedef struct _NAIFactoryObject                     NAIFactoryObject;
-typedef struct _NAIFactoryObjectInterfacePrivate     NAIFactoryObjectInterfacePrivate;
+typedef struct _FMAIFactoryObject                     FMAIFactoryObject;
+typedef struct _FMAIFactoryObjectInterfacePrivate     FMAIFactoryObjectInterfacePrivate;
 
 /**
- * NAIFactoryObjectInterface:
+ * FMAIFactoryObjectInterface:
  * @get_version: returns the version of this interface the NAObjectItem implements.
  * @get_groups:  returns a pointer to the FMADataGroup which defines this object.
  * @copy:        post copy callback.
@@ -103,18 +103,18 @@ typedef struct _NAIFactoryObjectInterfacePrivate     NAIFactoryObjectInterfacePr
  * @write_done:  triggered after a NAObjectItem has been unserialized.
  *
  * In order to take full advantage of our data managament system,
- * NAObjectItem-derived objects all implement this #NAIFactoryObject
+ * NAObjectItem-derived objects all implement this #FMAIFactoryObject
  * interface.
  */
 typedef struct {
 	/*< private >*/
 	GTypeInterface                    parent;
-	NAIFactoryObjectInterfacePrivate *private;
+	FMAIFactoryObjectInterfacePrivate *private;
 
 	/*< public >*/
 	/**
 	 * get_version:
-	 * @instance: this #NAIFactoryObject instance.
+	 * @instance: this #FMAIFactoryObject instance.
 	 *
 	 * Defaults to 1.
 	 *
@@ -122,22 +122,22 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *get_version )( const NAIFactoryObject *instance );
+	guint         ( *get_version )( const FMAIFactoryObject *instance );
 
 	/**
 	 * get_groups:
-	 * @instance: this #NAIFactoryObject instance.
+	 * @instance: this #FMAIFactoryObject instance.
 	 *
 	 * Returns: a pointer to the FMADataGroup which defines this object.
 	 *
 	 * Since: 2.30
 	 */
-	FMADataGroup * ( *get_groups ) ( const NAIFactoryObject *instance );
+	FMADataGroup * ( *get_groups ) ( const FMAIFactoryObject *instance );
 
 	/**
 	 * copy:
-	 * @instance: the target #NAIFactoryObject instance.
-	 * @source: the source #NAIFactoryObject instance.
+	 * @instance: the target #FMAIFactoryObject instance.
+	 * @source: the source #FMAIFactoryObject instance.
 	 *
 	 * This function is triggered after having copied @source to
 	 * @instance target. This later may take advantage of this call
@@ -145,12 +145,12 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *copy )       ( NAIFactoryObject *instance, const NAIFactoryObject *source );
+	void          ( *copy )       ( FMAIFactoryObject *instance, const FMAIFactoryObject *source );
 
 	/**
 	 * are_equal:
-	 * @a: the first #NAIFactoryObject instance.
-	 * @b: the second #NAIFactoryObject instance.
+	 * @a: the first #FMAIFactoryObject instance.
+	 * @b: the second #FMAIFactoryObject instance.
 	 *
 	 * This function is triggered after all elementary data comparisons
 	 * have been sucessfully made.
@@ -159,11 +159,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean      ( *are_equal )  ( const NAIFactoryObject *a, const NAIFactoryObject *b );
+	gboolean      ( *are_equal )  ( const FMAIFactoryObject *a, const FMAIFactoryObject *b );
 
 	/**
 	 * is_valid:
-	 * @object: the #NAIFactoryObject instance whose validity is to be checked.
+	 * @object: the #FMAIFactoryObject instance whose validity is to be checked.
 	 *
 	 * This function is triggered after all elementary data comparisons
 	 * have been sucessfully made.
@@ -172,11 +172,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean      ( *is_valid )   ( const NAIFactoryObject *object );
+	gboolean      ( *is_valid )   ( const FMAIFactoryObject *object );
 
 	/**
 	 * read_start:
-	 * @instance: this #NAIFactoryObject instance.
+	 * @instance: this #FMAIFactoryObject instance.
 	 * @reader: the instance which has provided read services.
 	 * @reader_data: the data associated to @reader.
 	 * @messages: a pointer to a #GSList list of strings; the instance
@@ -186,11 +186,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_start ) ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void          ( *read_start ) ( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * read_done:
-	 * @instance: this #NAIFactoryObject instance.
+	 * @instance: this #FMAIFactoryObject instance.
 	 * @reader: the instance which has provided read services.
 	 * @reader_data: the data associated to @reader.
 	 * @messages: a pointer to a #GSList list of strings; the instance
@@ -200,11 +200,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_done )  ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void          ( *read_done )  ( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * write_start:
-	 * @instance: this #NAIFactoryObject instance.
+	 * @instance: this #FMAIFactoryObject instance.
 	 * @writer: the instance which has provided writing services.
 	 * @writer_data: the data associated to @writer.
 	 * @messages: a pointer to a #GSList list of strings; the instance
@@ -216,11 +216,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_start )( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	guint         ( *write_start )( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 	/**
 	 * write_done:
-	 * @instance: this #NAIFactoryObject instance.
+	 * @instance: this #FMAIFactoryObject instance.
 	 * @writer: the instance which has provided writing services.
 	 * @writer_data: the data associated to @writer.
 	 * @messages: a pointer to a #GSList list of strings; the instance
@@ -232,17 +232,17 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_done ) ( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	guint         ( *write_done ) ( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 }
-	NAIFactoryObjectInterface;
+	FMAIFactoryObjectInterface;
 
-GType        na_ifactory_object_get_type( void );
+GType        fma_ifactory_object_get_type( void );
 
-FMADataBoxed *na_ifactory_object_get_data_boxed ( const NAIFactoryObject *object, const gchar *name );
-FMADataGroup *na_ifactory_object_get_data_groups( const NAIFactoryObject *object );
-void        *na_ifactory_object_get_as_void    ( const NAIFactoryObject *object, const gchar *name );
-void         na_ifactory_object_set_from_void  ( NAIFactoryObject *object, const gchar *name, const void *data );
+FMADataBoxed *fma_ifactory_object_get_data_boxed ( const FMAIFactoryObject *object, const gchar *name );
+FMADataGroup *fma_ifactory_object_get_data_groups( const FMAIFactoryObject *object );
+void        *fma_ifactory_object_get_as_void    ( const FMAIFactoryObject *object, const gchar *name );
+void         fma_ifactory_object_set_from_void  ( FMAIFactoryObject *object, const gchar *name, const void *data );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_OBJECT_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_IFACTORY_OBJECT_H__ */

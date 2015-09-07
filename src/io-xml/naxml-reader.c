@@ -154,7 +154,7 @@ static RootNodeStr st_root_node_str[] = {
 #define ERR_NOT_IOXML				_( "The XML I/O Provider is not able to handle the URI" )
 
 static void          read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile );
-static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text );
+static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const FMAIFactoryObject *object, xmlChar *text );
 static FMADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const FMADataDef *def );
 static void          read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item );
 static void          read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action );
@@ -588,7 +588,7 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 		na_ifactory_provider_read_item(
 				NA_IFACTORY_PROVIDER( reader->private->importer ),
 				reader,
-				NA_IFACTORY_OBJECT( reader->private->parms->imported ),
+				FMA_IFACTORY_OBJECT( reader->private->parms->imported ),
 				&reader->private->parms->messages );
 	}
 
@@ -596,12 +596,12 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 }
 
 void
-naxml_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  )
+naxml_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	static const gchar *thisfn = "naxml_reader_read_start";
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	g_debug( "%s: provider=%p, reader_data=%p, object=%p (%s), messages=%p",
 			thisfn,
@@ -622,7 +622,7 @@ read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile
 }
 
 /*
- * this callback function is called by NAIFactoryObject once for each
+ * this callback function is called by FMAIFactoryObject once for each
  * serializable data for the object
  *
  * Note that some nodes may be read twice because of multiple definition
@@ -630,14 +630,14 @@ read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile
  * versions). So do not remove dealt-with nodes here
  */
 FMADataBoxed *
-naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const FMADataDef *def, GSList **messages )
+naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "naxml_reader_read_data";
 	xmlNode *parent_node;
 	GList *ielt;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), NULL );
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	g_debug( "%s: reader_data=%p, object=%p (%s), data=%s",
 			thisfn, ( void * ) reader_data, ( void * ) object, G_OBJECT_TYPE_NAME( object ), def->name );
@@ -680,7 +680,7 @@ naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, c
 }
 
 static gboolean
-read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text )
+read_data_is_path_adhoc_for_object( NAXMLReader *reader, const FMAIFactoryObject *object, xmlChar *text )
 {
 	gboolean adhoc;
 	GSList *path_slist;
@@ -757,12 +757,12 @@ read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, 
  * all serializable data of the object has been read
  */
 void
-naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  )
+naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	static const gchar *thisfn = "naxml_reader_read_done";
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
+	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	g_debug( "%s: provider=%p, reader_data=%p, object=%p (%s), messages=%p",
 			thisfn,
@@ -912,7 +912,7 @@ read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
 	na_ifactory_provider_read_item(
 			NA_IFACTORY_PROVIDER( reader->private->importer ),
 			reader,
-			NA_IFACTORY_OBJECT( profile ),
+			FMA_IFACTORY_OBJECT( profile ),
 			&reader->private->parms->messages );
 }
 

@@ -38,7 +38,7 @@
  *
  * #FMADataDef and #FMADataGroup are structures which handle the list of
  * elementary datas for each and every #NAObjectItem which happens to
- * implement the #NAIFactoryObject interface.
+ * implement the #FMAIFactoryObject interface.
  */
 
 #include <glib.h>
@@ -49,7 +49,7 @@ G_BEGIN_DECLS
  * FMADataDef:
  * @name:             both the id and the canonical name.
  *                    Used when getting/setting properties.
- *                    Is defined in na-ifactory-object-data.h and must be globally unique.
+ *                    Is defined in fma-ifactory-object-data.h and must be globally unique.
  *                    Must be an invariant as it is known from plugin extensions.
  * @readable:         whether the data should be read on unserialization operations.
  *                    If FALSE, then no attempt will be made to read it
@@ -95,7 +95,7 @@ G_BEGIN_DECLS
  * @option_arg_label: the localizable description for the argument.
  *
  * This structure fully describes an elementary factory data.
- * Each #NAIFactoryObject item definition may include several groups of
+ * Each #FMAIFactoryObject item definition may include several groups of
  * this structure.
  */
 typedef struct {
@@ -125,11 +125,11 @@ typedef struct {
 
 /**
  * FMADataGroup:
- * @group: the name of the group, as defined in na-ifactory-object-data.h.
+ * @group: the name of the group, as defined in fma-ifactory-object-data.h.
  * @def: the list of the corresponding data structures.
  *
  * This structure fully describes a logical group of data.
- * Each #NAIFactoryObject item definition is built from a list of
+ * Each #FMAIFactoryObject item definition is built from a list of
  * these groups.
  */
 typedef struct {

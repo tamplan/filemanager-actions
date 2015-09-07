@@ -40,9 +40,9 @@ GList       *nadp_iio_provider_read_items            ( const NAIIOProvider *prov
 
 guint        nadp_reader_iimporter_import_from_uri   ( const NAIImporter *instance, void *parms_ptr );
 
-void         nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages );
-FMADataBoxed *nadp_reader_ifactory_provider_read_data ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, const FMADataDef *iddef, GSList **messages );
-void         nadp_reader_ifactory_provider_read_done ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages );
+void         nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages );
+FMADataBoxed *nadp_reader_ifactory_provider_read_data ( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, const FMADataDef *iddef, GSList **messages );
+void         nadp_reader_ifactory_provider_read_done ( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages );
 
 G_END_DECLS
 

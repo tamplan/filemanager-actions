@@ -274,7 +274,7 @@ object_copy( NAObject *target, const NAObject *source, guint mode )
  * @b: the second #NAObjectItem instance.
  *
  * This function participates to the #fma_iduplicable_check_status() stack,
- * and is triggered after all comparable elementary data (in #NAIFactoryObject
+ * and is triggered after all comparable elementary data (in #FMAIFactoryObject
  * sense) have already been successfully compared.
  *
  * We have to deal here with the subitems: comparing children by their ids
