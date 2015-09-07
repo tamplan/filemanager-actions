@@ -41,7 +41,7 @@
 #include <core/fma-export-format.h>
 #include <core/fma-gtk-utils.h>
 #include <core/na-import-mode.h>
-#include <core/na-importer.h>
+#include <core/fma-importer.h>
 #include <core/na-ioptions-list.h>
 #include <core/na-iprefs.h>
 #include <core/na-tokens.h>
@@ -271,7 +271,7 @@ ioptions_list_get_options( const NAIOptionsList *instance, GtkWidget *container 
 		options = fma_exporter_get_formats( NA_PIVOT( updater ));
 
 	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
-		options = na_importer_get_modes();
+		options = fma_importer_get_modes();
 
 	} else {
 		g_warning( "%s: container=%p (%s): unmanaged container",
@@ -293,7 +293,7 @@ ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container
 		fma_exporter_free_formats( options );
 
 	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
-		na_importer_free_modes( options );
+		fma_importer_free_modes( options );
 
 	} else {
 		g_warning( "%s: container=%p (%s): unmanaged container",
@@ -316,7 +316,7 @@ ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *contain
 		option = fma_exporter_get_ask_option();
 
 	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
-		option = na_importer_get_ask_mode();
+		option = fma_importer_get_ask_mode();
 
 	} else {
 		g_warning( "%s: container=%p (%s): unmanaged container",

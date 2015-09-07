@@ -37,7 +37,7 @@
 #include <api/fma-core-utils.h>
 
 #include <core/na-pivot.h>
-#include <core/na-importer.h>
+#include <core/fma-importer.h>
 
 static gchar     *uri     = "";
 static gboolean   version = FALSE;
@@ -63,9 +63,9 @@ static void             exit_with_usage( void );
 int
 main( int argc, char **argv )
 {
-	NAImporterParms parms;
+	FMAImporterParms parms;
 	GList *import_results;
-	NAImporterResult *result;
+	FMAImporterResult *result;
 
 #if !GLIB_CHECK_VERSION( 2,36, 0 )
 	g_type_init();
@@ -84,7 +84,7 @@ main( int argc, char **argv )
 	parms.preferred_mode = IMPORTER_MODE_ASK;
 	parms.parent_toplevel = NULL;
 
-	import_results = na_importer_import_from_uris( pivot, &parms );
+	import_results = fma_importer_import_from_uris( pivot, &parms );
 
 	result = import_results->data;
 	if( result->imported ){

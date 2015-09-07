@@ -35,7 +35,7 @@
 
 #include <api/fma-core-utils.h>
 
-#include "na-importer.h"
+#include "fma-importer.h"
 #include "na-iprefs.h"
 #include "na-settings.h"
 

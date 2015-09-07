@@ -86,10 +86,10 @@ libna_core_la_SOURCES = \
 	fma-iio-provider.c									\
 	na-import-mode.c									\
 	na-import-mode.h									\
-	na-importer.c										\
-	na-importer.h										\
-	na-importer-ask.c									\
-	na-importer-ask.h									\
+	fma-importer.c										\
+	fma-importer.h										\
+	fma-importer-ask.c									\
+	fma-importer-ask.h									\
 	na-io-provider.c									\
 	na-io-provider.h									\
 	na-ioption.c										\
@@ -136,7 +136,7 @@ libna_core_la_LDFLAGS = \
 	$(NULL)
 
 ui_data_DATA = \
-	na-importer-ask.ui									\
+	fma-importer-ask.ui									\
 	$(NULL)
 
 exportformat_data_DATA = \

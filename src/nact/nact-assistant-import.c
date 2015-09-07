@@ -39,7 +39,7 @@
 #include <api/fma-core-utils.h>
 
 #include <core/na-import-mode.h>
-#include <core/na-importer.h>
+#include <core/fma-importer.h>
 #include <core/na-ioptions-list.h>
 #include <core/fma-gtk-utils.h>
 #include <core/na-settings.h>
@@ -209,7 +209,7 @@ ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
 
 	g_return_val_if_fail( NACT_IS_ASSISTANT_IMPORT( instance ), NULL );
 
-	modes = na_importer_get_modes();
+	modes = fma_importer_get_modes();
 
 	return( modes );
 }
@@ -217,13 +217,13 @@ ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
 static void
 ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes )
 {
-	na_importer_free_modes( modes );
+	fma_importer_free_modes( modes );
 }
 
 static NAIOption *
 ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container )
 {
-	return( na_importer_get_ask_mode());
+	return( fma_importer_get_ask_mode());
 }
 
 static void
@@ -643,11 +643,11 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_import_assistant_apply";
 	NactAssistantImport *window;
-	NAImporterParms importer_parms;
+	FMAImporterParms importer_parms;
 	BaseWindow *main_window;
 	GList *import_results, *it;
 	GList *insertable_items, *overriden_items;
-	NAImporterResult *result;
+	FMAImporterResult *result;
 	NactApplication *application;
 	NAUpdater *updater;
 	NactTreeView *items_view;
@@ -660,20 +660,20 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	application = NACT_APPLICATION( base_window_get_application( main_window ));
 	updater = nact_application_get_updater( application );
 
-	memset( &importer_parms, '\0', sizeof( NAImporterParms ));
+	memset( &importer_parms, '\0', sizeof( FMAImporterParms ));
 	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));
-	importer_parms.check_fn = ( NAImporterCheckFn ) check_for_existence;
+	importer_parms.check_fn = ( FMAImporterCheckFn ) check_for_existence;
 	importer_parms.check_fn_data = main_window;
 	importer_parms.preferred_mode = na_import_mode_get_id( NA_IMPORT_MODE( window->private->mode ));
 	importer_parms.parent_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( wnd ));
 
-	import_results = na_importer_import_from_uris( NA_PIVOT( updater ), &importer_parms );
+	import_results = fma_importer_import_from_uris( NA_PIVOT( updater ), &importer_parms );
 
 	insertable_items = NULL;
 	overriden_items = NULL;
 
 	for( it = import_results ; it ; it = it->next ){
-		result = ( NAImporterResult * ) it->data;
+		result = ( FMAImporterResult * ) it->data;
 		if( result->imported ){
 
 			if( !result->exist || result->mode == IMPORTER_MODE_RENUMBER ){
@@ -747,7 +747,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	GtkWidget *file_vbox, *file_uri, *file_report;
 	GList *is;
 	GSList *im;
-	NAImporterResult *result;
+	FMAImporterResult *result;
 	gchar *text, *id, *item_label, *text2, *tmp;
 	const gchar *color;
 	gchar *mode_id;
@@ -773,7 +773,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	 *  - display a brief import log
 	 */
 	for( is = window->private->results ; is ; is = is->next ){
-		result = ( NAImporterResult * ) is->data;
+		result = ( FMAImporterResult * ) is->data;
 		g_debug( "%s: uri=%s", thisfn, result->uri );
 
 		/* display the uri
@@ -852,7 +852,7 @@ free_results( GList *list )
 	GList *it;
 
 	for( it = list ; it ; it = it->next ){
-		na_importer_free_result(( NAImporterResult * ) it->data );
+		fma_importer_free_result(( FMAImporterResult * ) it->data );
 	}
 
 	g_list_free( list );

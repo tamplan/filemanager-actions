@@ -38,49 +38,49 @@
 
 #include "fma-gtk-utils.h"
 #include "na-import-mode.h"
-#include "na-importer.h"
-#include "na-importer-ask.h"
+#include "fma-importer.h"
+#include "fma-importer-ask.h"
 #include "na-ioptions-list.h"
 #include "na-settings.h"
 
 /* private class data
  */
-struct _NAImporterAskClassPrivate {
+struct _FMAImporterAskClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAImporterAskPrivate {
+struct _FMAImporterAskPrivate {
 	gboolean                dispose_has_run;
 	GtkWindow              *toplevel;
 	FMAObjectItem           *importing;
 	FMAObjectItem           *existing;
-	NAImporterAskUserParms *parms;
+	FMAImporterAskUserParms *parms;
 	guint                   mode;
 };
 
 static GObjectClass  *st_parent_class = NULL;
-static NAImporterAsk *st_dialog       = NULL;
-static const gchar   *st_uixml        = PKGUIDIR "/na-importer-ask.ui";
+static FMAImporterAsk *st_dialog       = NULL;
+static const gchar   *st_uixml        = PKGUIDIR "/fma-importer-ask.ui";
 
 static GType          register_type( void );
-static void           class_init( NAImporterAskClass *klass );
+static void           class_init( FMAImporterAskClass *klass );
 static void           ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data );
 static GList         *ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container );
 static void           ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes );
 static void           instance_init( GTypeInstance *instance, gpointer klass );
 static void           instance_dispose( GObject *dialog );
 static void           instance_finalize( GObject *dialog );
-static NAImporterAsk *import_ask_new( GtkWindow *parent );
-static void           initialize_gtk( NAImporterAsk *dialog, GtkWindow *toplevel );
-static void           initialize_window( NAImporterAsk *dialog, GtkWindow *toplevel );
-static void           get_selected_mode( NAImporterAsk *editor );
-static void           on_destroy_toplevel( GtkWindow *toplevel, NAImporterAsk *dialog );
-static gboolean       on_dialog_response( NAImporterAsk *editor, gint code );
+static FMAImporterAsk *import_ask_new( GtkWindow *parent );
+static void           initialize_gtk( FMAImporterAsk *dialog, GtkWindow *toplevel );
+static void           initialize_window( FMAImporterAsk *dialog, GtkWindow *toplevel );
+static void           get_selected_mode( FMAImporterAsk *editor );
+static void           on_destroy_toplevel( GtkWindow *toplevel, FMAImporterAsk *dialog );
+static gboolean       on_dialog_response( FMAImporterAsk *editor, gint code );
 
 GType
-na_importer_ask_get_type( void )
+fma_importer_ask_get_type( void )
 {
 	static GType dialog_type = 0;
 
@@ -94,17 +94,17 @@ na_importer_ask_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_importer_ask_register_type";
+	static const gchar *thisfn = "fma_importer_ask_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAImporterAskClass ),
+		sizeof( FMAImporterAskClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAImporterAsk ),
+		sizeof( FMAImporterAsk ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -117,7 +117,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NAImporterAsk", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMAImporterAsk", &info, 0 );
 
 	g_type_add_interface_static( type, NA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
@@ -125,9 +125,9 @@ register_type( void )
 }
 
 static void
-class_init( NAImporterAskClass *klass )
+class_init( FMAImporterAskClass *klass )
 {
-	static const gchar *thisfn = "na_importer_ask_class_init";
+	static const gchar *thisfn = "fma_importer_ask_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -138,7 +138,7 @@ class_init( NAImporterAskClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAImporterAskClassPrivate, 1 );
+	klass->private = g_new0( FMAImporterAskClassPrivate, 1 );
 }
 
 static void
@@ -157,9 +157,9 @@ ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
 {
 	GList *modes;
 
-	g_return_val_if_fail( NA_IS_IMPORTER_ASK( instance ), NULL );
+	g_return_val_if_fail( FMA_IS_IMPORTER_ASK( instance ), NULL );
 
-	modes = na_importer_get_modes();
+	modes = fma_importer_get_modes();
 
 	return( modes );
 }
@@ -167,25 +167,25 @@ ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
 static void
 ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes )
 {
-	g_return_if_fail( NA_IS_IMPORTER_ASK( instance ));
+	g_return_if_fail( FMA_IS_IMPORTER_ASK( instance ));
 
-	na_importer_free_modes( modes );
+	fma_importer_free_modes( modes );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_importer_ask_instance_init";
-	NAImporterAsk *self;
+	static const gchar *thisfn = "fma_importer_ask_instance_init";
+	FMAImporterAsk *self;
 
-	g_return_if_fail( NA_IS_IMPORTER_ASK( instance ));
+	g_return_if_fail( FMA_IS_IMPORTER_ASK( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NA_IMPORTER_ASK( instance );
+	self = FMA_IMPORTER_ASK( instance );
 
-	self->private = g_new0( NAImporterAskPrivate, 1 );
+	self->private = g_new0( FMAImporterAskPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -193,12 +193,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *dialog )
 {
-	static const gchar *thisfn = "na_importer_ask_instance_dispose";
-	NAImporterAsk *self;
+	static const gchar *thisfn = "fma_importer_ask_instance_dispose";
+	FMAImporterAsk *self;
 
-	g_return_if_fail( NA_IS_IMPORTER_ASK( dialog ));
+	g_return_if_fail( FMA_IS_IMPORTER_ASK( dialog ));
 
-	self = NA_IMPORTER_ASK( dialog );
+	self = FMA_IMPORTER_ASK( dialog );
 
 	if( !self->private->dispose_has_run ){
 
@@ -216,14 +216,14 @@ instance_dispose( GObject *dialog )
 static void
 instance_finalize( GObject *dialog )
 {
-	static const gchar *thisfn = "na_importer_ask_instance_finalize";
-	NAImporterAsk *self;
+	static const gchar *thisfn = "fma_importer_ask_instance_finalize";
+	FMAImporterAsk *self;
 
-	g_return_if_fail( NA_IS_IMPORTER_ASK( dialog ));
+	g_return_if_fail( FMA_IS_IMPORTER_ASK( dialog ));
 
 	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
-	self = NA_IMPORTER_ASK( dialog );
+	self = FMA_IMPORTER_ASK( dialog );
 
 	if( self->private->toplevel ){
 		gtk_widget_destroy( GTK_WIDGET( self->private->toplevel ));
@@ -238,12 +238,12 @@ instance_finalize( GObject *dialog )
 }
 
 /*
- * Returns a newly allocated NAImporterAsk object.
+ * Returns a newly allocated FMAImporterAsk object.
  */
-static NAImporterAsk *
+static FMAImporterAsk *
 import_ask_new( GtkWindow *parent )
 {
-	NAImporterAsk *dialog;
+	FMAImporterAsk *dialog;
 	GtkBuilder *builder;
 	GError *error;
 	GtkWindow *toplevel;
@@ -252,7 +252,7 @@ import_ask_new( GtkWindow *parent )
 		dialog = st_dialog;
 
 	} else {
-		dialog = g_object_new( NA_TYPE_IMPORTER_ASK, NULL );
+		dialog = g_object_new( FMA_TYPE_IMPORTER_ASK, NULL );
 
 		builder = gtk_builder_new();
 		error = NULL;
@@ -299,7 +299,7 @@ import_ask_new( GtkWindow *parent )
 }
 
 /*
- * na_importer_ask_user:
+ * fma_importer_ask_user:
  * @importing: the #FMAObjectItem-derived object being currently imported.
  * @existing: the #FMAObjectItem-derived already existing object with the same ID.
  * @parms: a #FMAIImporterUriParms structure.
@@ -307,13 +307,13 @@ import_ask_new( GtkWindow *parent )
  * Ask the user for what to do when an imported item has the same ID
  * that an already existing one.
  *
- * If a parent is specified, then we allocate a new NAImporterAsk from
+ * If a parent is specified, then we allocate a new FMAImporterAsk from
  * GtkBuilder, hiding and showing it for each invocation of the dialog
  * by the parent, as long as the parent exists.
- * When the parent is destroyed, this (maybe hidden) NAImporterAsk dialog
+ * When the parent is destroyed, this (maybe hidden) FMAImporterAsk dialog
  * is also destroyed.
  *
- * If there is no specified parent, then we recreate a new NAImporterAsk
+ * If there is no specified parent, then we recreate a new FMAImporterAsk
  * dialog at each invocation, destroying it after on_dialog_response()
  * returns.
  *
@@ -323,10 +323,10 @@ import_ask_new( GtkWindow *parent )
  * becomes his preference import mode.
  */
 guint
-na_importer_ask_user( const FMAObjectItem *importing, const FMAObjectItem *existing, NAImporterAskUserParms *parms )
+fma_importer_ask_user( const FMAObjectItem *importing, const FMAObjectItem *existing, FMAImporterAskUserParms *parms )
 {
-	static const gchar *thisfn = "na_importer_ask_user";
-	NAImporterAsk *dialog;
+	static const gchar *thisfn = "fma_importer_ask_user";
+	FMAImporterAsk *dialog;
 	guint mode;
 	gint code;
 
@@ -365,12 +365,12 @@ na_importer_ask_user( const FMAObjectItem *importing, const FMAObjectItem *exist
 	return( mode );
 }
 static void
-initialize_gtk( NAImporterAsk *dialog, GtkWindow *toplevel )
+initialize_gtk( FMAImporterAsk *dialog, GtkWindow *toplevel )
 {
-	static const gchar *thisfn = "na_importer_ask_initialize_gtk";
+	static const gchar *thisfn = "fma_importer_ask_initialize_gtk";
 	GtkWidget *container;
 
-	g_return_if_fail( NA_IS_IMPORTER_ASK( dialog ));
+	g_return_if_fail( FMA_IS_IMPORTER_ASK( dialog ));
 
 	g_debug( "%s: dialog=%p, toplevel=%p", thisfn, ( void * ) dialog, ( void * ) toplevel );
 
@@ -379,16 +379,16 @@ initialize_gtk( NAImporterAsk *dialog, GtkWindow *toplevel )
 }
 
 static void
-initialize_window( NAImporterAsk *editor, GtkWindow *toplevel )
+initialize_window( FMAImporterAsk *editor, GtkWindow *toplevel )
 {
-	static const gchar *thisfn = "na_importer_ask_initialize_window";
+	static const gchar *thisfn = "fma_importer_ask_initialize_window";
 	gchar *imported_label, *existing_label;
 	gchar *label;
 	GtkWidget *widget;
 	GtkWidget *button;
 	gchar *mode_id;
 
-	g_return_if_fail( NA_IS_IMPORTER_ASK( editor ));
+	g_return_if_fail( FMA_IS_IMPORTER_ASK( editor ));
 
 	g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
 
@@ -425,7 +425,7 @@ initialize_window( NAImporterAsk *editor, GtkWindow *toplevel )
 }
 
 static void
-get_selected_mode( NAImporterAsk *editor )
+get_selected_mode( FMAImporterAsk *editor )
 {
 	GtkWidget *widget;
 	NAIOption *mode;
@@ -448,19 +448,19 @@ get_selected_mode( NAImporterAsk *editor )
 }
 
 /*
- * destroy signal is only connected if the NAImporterAsk has been created
+ * destroy signal is only connected if the FMAImporterAsk has been created
  * with a parent window; it has been defined with 'destroy_with_parent'
- * and so we have yet to unref the NAImporterAsk object itself
+ * and so we have yet to unref the FMAImporterAsk object itself
  */
 static void
-on_destroy_toplevel( GtkWindow *toplevel, NAImporterAsk *dialog )
+on_destroy_toplevel( GtkWindow *toplevel, FMAImporterAsk *dialog )
 {
-	static const gchar *thisfn = "na_importer_ask_on_destroy_toplevel";
+	static const gchar *thisfn = "fma_importer_ask_on_destroy_toplevel";
 
 	g_debug( "%s: toplevel=%p, dialog=%p",
 			thisfn, ( void * ) toplevel, ( void * ) dialog );
 
-	g_return_if_fail( NA_IS_IMPORTER_ASK( dialog ));
+	g_return_if_fail( FMA_IS_IMPORTER_ASK( dialog ));
 	g_return_if_fail( toplevel == dialog->private->toplevel );
 
 	if( !dialog->private->dispose_has_run ){
@@ -473,11 +473,11 @@ on_destroy_toplevel( GtkWindow *toplevel, NAImporterAsk *dialog )
 }
 
 static gboolean
-on_dialog_response( NAImporterAsk *editor, gint code )
+on_dialog_response( FMAImporterAsk *editor, gint code )
 {
-	static const gchar *thisfn = "na_importer_ask_on_dialog_response";
+	static const gchar *thisfn = "fma_importer_ask_on_dialog_response";
 
-	g_return_val_if_fail( NA_IS_IMPORTER_ASK( editor ), FALSE );
+	g_return_val_if_fail( FMA_IS_IMPORTER_ASK( editor ), FALSE );
 
 	g_debug( "%s: editor=%p, code=%d", thisfn, ( void * ) editor, code );
 

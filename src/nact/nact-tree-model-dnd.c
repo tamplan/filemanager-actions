@@ -39,7 +39,7 @@
 #include <api/fma-object-api.h>
 
 #include <core/fma-gnome-vfs-uri.h>
-#include <core/na-importer.h>
+#include <core/fma-importer.h>
 
 #include "nact-application.h"
 #include "nact-clipboard.h"
@@ -867,7 +867,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	GtkApplication *application;
 	NAUpdater *updater;
 	NactMainWindow *main_window;
-	NAImporterParms parms;
+	FMAImporterParms parms;
 	GList *import_results, *it;
 	guint count;
 	GSList *im;
@@ -902,14 +902,14 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	selection_data_data = ( const gchar * ) gtk_selection_data_get_data( selection_data );
 	g_debug( "%s", selection_data_data );
 
-	memset( &parms, '\0', sizeof( NAImporterParms ));
+	memset( &parms, '\0', sizeof( FMAImporterParms ));
 	parms.uris = g_slist_reverse( fma_core_utils_slist_from_split( selection_data_data, "\r\n" ));
-	parms.check_fn = ( NAImporterCheckFn ) is_dropped_already_exists;
+	parms.check_fn = ( FMAImporterCheckFn ) is_dropped_already_exists;
 	parms.check_fn_data = main_window;
 	parms.preferred_mode = 0;
 	parms.parent_toplevel = GTK_WINDOW( main_window );
 
-	import_results = na_importer_import_from_uris( NA_PIVOT( updater ), &parms );
+	import_results = fma_importer_import_from_uris( NA_PIVOT( updater ), &parms );
 
 	/* analysing output results, simultaneously building a concatenation
 	 * of all lines of messages, and the list of imported items
@@ -919,7 +919,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	messages = NULL;
 
 	for( it = import_results ; it ; it = it->next ){
-		NAImporterResult *result = ( NAImporterResult * ) it->data;
+		FMAImporterResult *result = ( FMAImporterResult * ) it->data;
 
 		for( im = result->messages ; im ; im = im->next ){
 			messages = g_slist_prepend( messages, im->data );
@@ -983,7 +983,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	fma_core_utils_slist_free( parms.uris );
 
 	for( it = import_results ; it ; it = it->next ){
-		na_importer_free_result( it->data );
+		fma_importer_free_result( it->data );
 	}
 	g_list_free( import_results );
 

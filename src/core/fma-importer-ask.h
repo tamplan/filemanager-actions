@@ -27,12 +27,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_IMPORTER_ASK_H__
-#define __CORE_NA_IMPORTER_ASK_H__
+#ifndef __CORE_FMA_IMPORTER_ASK_H__
+#define __CORE_FMA_IMPORTER_ASK_H__
 
-/* @title: NAImporterAsk
- * @short_description: The #NAImporterAsk Class Definition
- * @include: core/na-importer-ask.h
+/* @title: FMAImporterAsk
+ * @short_description: The #FMAImporterAsk Class Definition
+ * @include: core/fma-importer-ask.h
  *
  * This class creates and manages a dialog. It is ran each time an
  * imported action has the same Id as an existing one, and the user
@@ -47,44 +47,44 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_IMPORTER_ASK                ( na_importer_ask_get_type())
-#define NA_IMPORTER_ASK( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_IMPORTER_ASK, NAImporterAsk ))
-#define NA_IMPORTER_ASK_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_IMPORTER_ASK, NAImporterAskClass ))
-#define NA_IS_IMPORTER_ASK( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_IMPORTER_ASK ))
-#define NA_IS_IMPORTER_ASK_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_IMPORTER_ASK ))
-#define NA_IMPORTER_ASK_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_IMPORTER_ASK, NAImporterAskClass ))
+#define FMA_TYPE_IMPORTER_ASK                ( fma_importer_ask_get_type())
+#define FMA_IMPORTER_ASK( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_IMPORTER_ASK, FMAImporterAsk ))
+#define FMA_IMPORTER_ASK_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_IMPORTER_ASK, FMAImporterAskClass ))
+#define FMA_IS_IMPORTER_ASK( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_IMPORTER_ASK ))
+#define FMA_IS_IMPORTER_ASK_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_IMPORTER_ASK ))
+#define FMA_IMPORTER_ASK_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_IMPORTER_ASK, FMAImporterAskClass ))
 
-typedef struct _NAImporterAskPrivate        NAImporterAskPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject               parent;
-	NAImporterAskPrivate *private;
-}
-	NAImporterAsk;
-
-typedef struct _NAImporterAskClassPrivate   NAImporterAskClassPrivate;
+typedef struct _FMAImporterAskPrivate        FMAImporterAskPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass               parent;
-	NAImporterAskClassPrivate *private;
+	GObject                parent;
+	FMAImporterAskPrivate *private;
 }
-	NAImporterAskClass;
+	FMAImporterAsk;
+
+typedef struct _FMAImporterAskClassPrivate   FMAImporterAskClassPrivate;
 
 typedef struct {
-	GtkWindow     *parent;
-	gchar         *uri;
-	guint          count;
-	gboolean       keep_choice;
+	/*< private >*/
+	GObjectClass                parent;
+	FMAImporterAskClassPrivate *private;
+}
+	FMAImporterAskClass;
+
+typedef struct {
+	GtkWindow      *parent;
+	gchar          *uri;
+	guint           count;
+	gboolean        keep_choice;
 	const NAPivot *pivot;
 }
-	NAImporterAskUserParms;
+	FMAImporterAskUserParms;
 
-GType na_importer_ask_get_type( void );
+GType fma_importer_ask_get_type( void );
 
-guint na_importer_ask_user( const FMAObjectItem *importing, const FMAObjectItem *existing, NAImporterAskUserParms *parms );
+guint fma_importer_ask_user    ( const FMAObjectItem *importing, const FMAObjectItem *existing, FMAImporterAskUserParms *parms );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_IMPORTER_ASK_H__ */
+#endif /* __CORE_FMA_IMPORTER_ASK_H__ */

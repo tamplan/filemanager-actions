@@ -39,8 +39,8 @@
 #include <api/fma-object-api.h>
 
 #include "na-import-mode.h"
-#include "na-importer.h"
-#include "na-importer-ask.h"
+#include "fma-importer.h"
+#include "fma-importer-ask.h"
 
 typedef struct {
 	guint        id;				/* the import mode used in switch statement in the code */
@@ -89,11 +89,11 @@ static NAImportModeStr st_import_ask_mode = {
 			"import-mode-ask.png"
 };
 
-static NAImporterResult *import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri );
-static void              manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserParms *ask_parms, NAImporterResult *result );
-static FMAObjectItem     *is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterResult *result );
+static FMAImporterResult *import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri );
+static void              manage_import_mode( FMAImporterParms *parms, GList *results, FMAImporterAskUserParms *ask_parms, FMAImporterResult *result );
+static FMAObjectItem     *is_importing_already_exists( FMAImporterParms *parms, GList *results, FMAImporterResult *result );
 static void              renumber_label_item( FMAObjectItem *item );
-static guint             ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, NAImporterAskUserParms *parms );
+static guint             ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, FMAImporterAskUserParms *parms );
 static guint             get_id_from_string( const gchar *str );
 static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
 
@@ -101,9 +101,9 @@ static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
 #define ERR_NOT_LOADABLE	_( "%s is not loadable (empty or too big or not a regular file)" )
 
 /*
- * na_importer_import_from_uris:
+ * fma_importer_import_from_uris:
  * @pivot: the #NAPivot pivot for this application.
- * @parms: a #NAImporterParms structure.
+ * @parms: a #FMAImporterParms structure.
  *
  * Imports a list of URIs.
  *
@@ -114,26 +114,26 @@ static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
  * #parms.uris contains a list of URIs to import.
  *
  * Each import operation will have its corresponding newly allocated
- * #NAImporterResult structure which will contain:
+ * #FMAImporterResult structure which will contain:
  * - the imported URI
  * - the #FMAIImporter provider if one has been found, or %NULL
  * - a #FMAObjectItem item if import was successful, or %NULL
  * - a list of error messages, or %NULL.
  *
- * Returns: a #GList of #NAImporterResult structures
+ * Returns: a #GList of #FMAImporterResult structures
  * (was the last import operation code up to 3.2).
  *
  * Since: 2.30
  */
 GList *
-na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
+fma_importer_import_from_uris( const NAPivot *pivot, FMAImporterParms *parms )
 {
-	static const gchar *thisfn = "na_importer_import_from_uris";
+	static const gchar *thisfn = "fma_importer_import_from_uris";
 	GList *results, *ires;
 	GList *modules;
 	GSList *uri;
-	NAImporterResult *import_result;
-	NAImporterAskUserParms ask_parms;
+	FMAImporterResult *import_result;
+	FMAImporterAskUserParms ask_parms;
 	gchar *mode_str;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
@@ -156,7 +156,7 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 
 	results = g_list_reverse( results );
 
-	memset( &ask_parms, '\0', sizeof( NAImporterAskUserParms ));
+	memset( &ask_parms, '\0', sizeof( FMAImporterAskUserParms ));
 	ask_parms.parent = parms->parent_toplevel;
 	ask_parms.count = 0;
 	ask_parms.keep_choice = FALSE;
@@ -173,7 +173,7 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 	/* second phase: check for their pre-existence
 	 */
 	for( ires = results ; ires ; ires = ires->next ){
-		import_result = ( NAImporterResult * ) ires->data;
+		import_result = ( FMAImporterResult * ) ires->data;
 
 		if( import_result->imported ){
 			g_return_val_if_fail( FMA_IS_OBJECT_ITEM( import_result->imported ), NULL );
@@ -188,13 +188,13 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 }
 
 /*
- * na_importer_free_result:
- * @result: the #NAImporterResult structure to be released.
+ * fma_importer_free_result:
+ * @result: the #FMAImporterResult structure to be released.
  *
  * Release the structure.
  */
 void
-na_importer_free_result( NAImporterResult *result )
+fma_importer_free_result( FMAImporterResult *result )
 {
 	g_free( result->uri );
 	fma_core_utils_slist_free( result->messages );
@@ -212,10 +212,10 @@ na_importer_free_result( NAImporterResult *result )
  * only keep the messages provided by the interface which has successfully
  * imported the item.
  */
-static NAImporterResult *
+static FMAImporterResult *
 import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
 {
-	NAImporterResult *result;
+	FMAImporterResult *result;
 	FMAIImporterImportFromUriParmsv2 provider_parms;
 	GList *im;
 	guint code;
@@ -256,7 +256,7 @@ import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
 		}
 	}
 
-	result = g_new0( NAImporterResult, 1 );
+	result = g_new0( FMAImporterResult, 1 );
 	result->uri = g_strdup( uri );
 	result->imported = provider_parms.imported;
 	result->importer = provider;
@@ -270,9 +270,9 @@ import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
  * ask for the user if needed
  */
 static void
-manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserParms *ask_parms, NAImporterResult *result )
+manage_import_mode( FMAImporterParms *parms, GList *results, FMAImporterAskUserParms *ask_parms, FMAImporterResult *result )
 {
-	static const gchar *thisfn = "na_importer_manage_import_mode";
+	static const gchar *thisfn = "fma_importer_manage_import_mode";
 	FMAObjectItem *exists;
 	guint mode;
 	gchar *id;
@@ -361,9 +361,9 @@ manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserPar
  * then delegates to the caller-provided check function the rest of work...
  */
 static FMAObjectItem *
-is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterResult *result )
+is_importing_already_exists( FMAImporterParms *parms, GList *results, FMAImporterResult *result )
 {
-	static const gchar *thisfn = "na_importer_is_importing_already_exists";
+	static const gchar *thisfn = "fma_importer_is_importing_already_exists";
 	FMAObjectItem *exists;
 	GList *ip;
 
@@ -376,7 +376,7 @@ is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterR
 	 * (only tries previous items of the list)
 	 */
 	for( ip = results ; ip && !exists && ip->data != result ; ip = ip->next ){
-		NAImporterResult *try_result = ( NAImporterResult * ) ip->data;
+		FMAImporterResult *try_result = ( FMAImporterResult * ) ip->data;
 
 		if( try_result->imported ){
 			g_return_val_if_fail( FMA_IS_OBJECT_ITEM( try_result->imported ), NULL );
@@ -423,13 +423,13 @@ renumber_label_item( FMAObjectItem *item )
 }
 
 static guint
-ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, NAImporterAskUserParms *parms )
+ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, FMAImporterAskUserParms *parms )
 {
 	guint mode;
 	gchar *mode_str;
 
 	if( parms->count == 0 || !parms->keep_choice ){
-		mode = na_importer_ask_user( importing, existing, parms );
+		mode = fma_importer_ask_user( importing, existing, parms );
 
 	} else {
 		mode_str = na_settings_get_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
@@ -463,15 +463,15 @@ get_id_from_string( const gchar *str )
 }
 
 /*
- * na_importer_get_modes:
+ * fma_importer_get_modes:
  *
  * Returns: the list of available import modes.
- * This list should later be released by calling na_importer_free_modes();
+ * This list should later be released by calling fma_importer_free_modes();
  */
 GList *
-na_importer_get_modes( void )
+fma_importer_get_modes( void )
 {
-	static const gchar *thisfn = "na_importer_get_modes";
+	static const gchar *thisfn = "fma_importer_get_modes";
 	GList *modes;
 	NAIOption *mode;
 	guint i;
@@ -519,15 +519,15 @@ get_mode_from_struct( const NAImportModeStr *str )
 }
 
 /*
- * na_importer_free_modes:
- * @modes: a #GList of #NAImportMode items, as returned by na_importer_get_modes().
+ * fma_importer_free_modes:
+ * @modes: a #GList of #NAImportMode items, as returned by fma_importer_get_modes().
  *
  * Releases the resources allocated to the @modes list.
  */
 void
-na_importer_free_modes( GList *modes )
+fma_importer_free_modes( GList *modes )
 {
-	static const gchar *thisfn = "na_importer_free_modes";
+	static const gchar *thisfn = "fma_importer_free_modes";
 
 	g_debug( "%s: modes=%p", thisfn, ( void * ) modes );
 
@@ -536,14 +536,14 @@ na_importer_free_modes( GList *modes )
 }
 
 /*
- * na_importer_get_ask_mode:
+ * fma_importer_get_ask_mode:
  *
  * Returns: a #NAImportMode object which describes the 'Ask me' option.
  */
 NAIOption *
-na_importer_get_ask_mode( void )
+fma_importer_get_ask_mode( void )
 {
-	static const gchar *thisfn = "na_importer_get_ask_mode";
+	static const gchar *thisfn = "fma_importer_get_ask_mode";
 
 	g_debug( "%s", thisfn );
 

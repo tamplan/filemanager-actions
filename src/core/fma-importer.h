@@ -27,16 +27,16 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_IMPORTER_H__
-#define __CORE_NA_IMPORTER_H__
+#ifndef __CORE_FMA_IMPORTER_H__
+#define __CORE_FMA_IMPORTER_H__
 
 /* @title: FMAIImporter
  * @short_description: The #FMAIImporter Internal Functions
- * @include: core/na-importer.h
+ * @include: core/fma-importer.h
  *
  * Internal FileManager-Actions code should never directly call a
  * #FMAIImporter interface method, but rather should call the
- * corresponding na_importer_xxx() functions.
+ * corresponding fma_importer_xxx() functions.
  *
  * Importing items is a three-phase operation:
  *
@@ -67,7 +67,7 @@ G_BEGIN_DECLS
 
 #ifndef NA_ENABLE_DEPRECATED
 /*
- * NAImporterImportMode:
+ * FMAImporterImportMode:
  * @IMPORTER_MODE_NO_IMPORT: a "do not import" mode.
  * @IMPORTER_MODE_RENUMBER:  reallocate a new id when the imported one already exists.
  * @IMPORTER_MODE_OVERRIDE:  override the existing id with the imported one.
@@ -79,7 +79,7 @@ G_BEGIN_DECLS
  *
  * This same enum used to be defined as FMAIImporterImportMode in api/fma-iimporter.h
  * header. The enum has been deprecated there in N-A 3.2 when the FMAIImporter v2
- * interface was defined. It has so been moved here with the NAImporterImportMode
+ * interface was defined. It has so been moved here with the FMAImporterImportMode
  * name.
  */
 typedef enum {
@@ -88,11 +88,11 @@ typedef enum {
 	IMPORTER_MODE_OVERRIDE,
 	IMPORTER_MODE_ASK
 }
-	NAImporterImportMode;
+	FMAImporterImportMode;
 #endif
 
 /*
- * NAImporterCheckFn:
+ * FMAImporterCheckFn:
  * @imported: the currently imported #FMAObjectItem -derived object.
  * @fn_data: some data to be passed to the function.
  *
@@ -114,42 +114,42 @@ typedef enum {
  *
  * Since: 3.2
  */
-typedef FMAObjectItem * ( *NAImporterCheckFn )( const FMAObjectItem *, void * );
+typedef FMAObjectItem * ( *FMAImporterCheckFn )( const FMAObjectItem *, void * );
 
 typedef struct {
-	GSList             *uris;				/* the list of uris to import */
-	NAImporterCheckFn   check_fn;			/* the check_for_duplicate function */
-	void               *check_fn_data;		/* data to be passed to the check_fn function */
-	guint               preferred_mode;		/* preferred import mode, defaults to NA_IPREFS_IMPORT_PREFERRED_MODE */
-	GtkWindow          *parent_toplevel;	/* parent toplevel */
+	GSList              *uris;				/* the list of uris to import */
+	FMAImporterCheckFn   check_fn;			/* the check_for_duplicate function */
+	void                *check_fn_data;		/* data to be passed to the check_fn function */
+	guint                preferred_mode;	/* preferred import mode, defaults to NA_IPREFS_IMPORT_PREFERRED_MODE */
+	GtkWindow           *parent_toplevel;	/* parent toplevel */
 }
-	NAImporterParms;
+	FMAImporterParms;
 
 typedef struct {
 
 	/* phase 1: import into memory from i/o provider
 	 */
-	gchar        *uri;					/* the imported uri */
+	gchar         *uri;						/* the imported uri */
 	FMAObjectItem *imported;				/* the imported FMAObjectItem-derived object, or %NULL */
 	FMAIImporter  *importer;				/* the importer module, or %NULL */
 
 	/* phase 2: check for pre-existence
 	 */
-	gboolean      exist;				/* whether the imported Id already existed */
-	guint         mode;					/* the actual mode in effect for this import */
-	GSList       *messages;				/* a #GSList list of localized strings */
+	gboolean       exist;					/* whether the imported Id already existed */
+	guint          mode;					/* the actual mode in effect for this import */
+	GSList        *messages;				/* a #GSList list of localized strings */
 }
-	NAImporterResult;
+	FMAImporterResult;
 
-GList     *na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms );
+GList      *fma_importer_import_from_uris( const NAPivot *pivot, FMAImporterParms *parms );
 
-void       na_importer_free_result     ( NAImporterResult *result );
+void        fma_importer_free_result     ( FMAImporterResult *result );
 
-GList     *na_importer_get_modes       ( void );
-void       na_importer_free_modes      ( GList *modes );
+GList      *fma_importer_get_modes       ( void );
+void        fma_importer_free_modes      ( GList *modes );
 
-NAIOption *na_importer_get_ask_mode    ( void );
+NAIOption *fma_importer_get_ask_mode    ( void );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_IMPORTER_H__ */
+#endif /* __CORE_FMA_IMPORTER_H__ */
