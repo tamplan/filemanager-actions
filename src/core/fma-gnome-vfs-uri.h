@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_NA_PRIVATE_GNOME_VFS_URI_H__
-#define __NAUTILUS_ACTIONS_NA_PRIVATE_GNOME_VFS_URI_H__
+#ifndef __CORE_FMA_GNOME_VFS_URI_H__
+#define __CORE_FMA_GNOME_VFS_URI_H__
 
 /*
  * pwi 2009-07-29
@@ -68,7 +68,7 @@ typedef struct {
 	gchar *user_name;
 	gchar *password;
 }
-	NAGnomeVFSURI;
+	FMAGnomeVFSURI;
 
 /*
  * GNOME_VFS_URI_MAGIC_CHR:
@@ -98,10 +98,10 @@ typedef struct {
 #define GNOME_VFS_URI_PATH_CHR '/'
 #define GNOME_VFS_URI_PATH_STR "/"
 
-void na_gnome_vfs_uri_parse( NAGnomeVFSURI *vfs, const gchar *uri );
+void fma_gnome_vfs_uri_parse( FMAGnomeVFSURI *vfs, const gchar *uri );
 
-void na_gnome_vfs_uri_free( NAGnomeVFSURI *vfs );
+void fma_gnome_vfs_uri_free( FMAGnomeVFSURI *vfs );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_NA_PRIVATE_GNOME_VFS_URI_H__ */
+#endif /* __CORE_FMA_GNOME_VFS_URI_H__ */

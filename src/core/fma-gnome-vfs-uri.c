@@ -59,7 +59,7 @@
 
 #include <string.h>
 
-#include "na-gnome-vfs-uri.h"
+#include "fma-gnome-vfs-uri.h"
 
 #define HEX_ESCAPE '%'
 
@@ -72,14 +72,14 @@ static char        *gnome_vfs_escape_set(const char *string, const char *match_s
 static void         gnome_vfs_remove_optional_escapes (char *uri);
 static char *       gnome_vfs_unescape_string (const gchar *escaped_string, const gchar *illegal_characters);
 static int          hex_to_int (gchar c);
-static void         set_uri_element (NAGnomeVFSURI *vfs, const gchar *text, guint len);
+static void         set_uri_element (FMAGnomeVFSURI *vfs, const gchar *text, guint len);
 static gchar       *split_toplevel_uri (const gchar *path, guint path_len,
 												gchar **host_return, gchar **user_return,
 												guint *port_return, gchar **password_return);
 static int          unescape_character (const char *scanner);
 
 void
-na_gnome_vfs_uri_parse( NAGnomeVFSURI *vfs, const gchar *text_uri )
+fma_gnome_vfs_uri_parse( FMAGnomeVFSURI *vfs, const gchar *text_uri )
 {
 	const gchar *method_scanner;
 	gchar *extension_scanner;
@@ -117,7 +117,7 @@ na_gnome_vfs_uri_parse( NAGnomeVFSURI *vfs, const gchar *text_uri )
 }
 
 void
-na_gnome_vfs_uri_free( NAGnomeVFSURI *vfs )
+fma_gnome_vfs_uri_free( FMAGnomeVFSURI *vfs )
 {
 	g_free( vfs->path );
 	g_free( vfs->scheme );
@@ -570,7 +570,7 @@ gnome_vfs_unescape_string (const gchar *escaped_string,
 }
 
 static void
-set_uri_element (NAGnomeVFSURI *vfs,
+set_uri_element (FMAGnomeVFSURI *vfs,
 		 const gchar *text,
 		 guint len)
 {

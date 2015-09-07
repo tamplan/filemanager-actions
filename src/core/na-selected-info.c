@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include "na-gnome-vfs-uri.h"
+#include "fma-gnome-vfs-uri.h"
 #include "na-selected-info.h"
 
 /* private class data
@@ -807,7 +807,7 @@ static NASelectedInfo *
 new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 {
 	GFile *location;
-	NAGnomeVFSURI *vfs;
+	FMAGnomeVFSURI *vfs;
 
 	NASelectedInfo *info = g_object_new( NA_TYPE_SELECTED_INFO, NULL );
 
@@ -825,8 +825,8 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 	location = g_file_new_for_uri( uri );
 	info->private->filename = g_file_get_path( location );
 
-	vfs = g_new0( NAGnomeVFSURI, 1 );
-	na_gnome_vfs_uri_parse( vfs, uri );
+	vfs = g_new0( FMAGnomeVFSURI, 1 );
+	fma_gnome_vfs_uri_parse( vfs, uri );
 	if( !info->private->filename ){
 		g_debug( "na_selected_info_new_from_uri: uri='%s', filename=NULL, setting it to '%s'", uri, vfs->path );
 		info->private->filename = g_strdup( vfs->path );
@@ -838,7 +838,7 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 	info->private->username = g_strdup( vfs->user_name );
 	info->private->scheme = g_strdup( vfs->scheme );
 	info->private->port = vfs->host_port;
-	na_gnome_vfs_uri_free( vfs );
+	fma_gnome_vfs_uri_free( vfs );
 
 	query_file_attributes( info, location, errmsg );
 	g_object_unref( location );

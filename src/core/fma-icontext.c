@@ -51,7 +51,7 @@
 #include <api/fma-object-api.h>
 
 #include "fma-desktop-environment.h"
-#include "na-gnome-vfs-uri.h"
+#include "fma-gnome-vfs-uri.h"
 #include "na-selected-info.h"
 #include "na-settings.h"
 

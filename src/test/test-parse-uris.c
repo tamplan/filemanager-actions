@@ -35,7 +35,7 @@
 #include <glib/gprintf.h>
 #include <stdlib.h>
 
-#include <core/na-gnome-vfs-uri.h>
+#include <core/fma-gnome-vfs-uri.h>
 
 static const gchar *uris[] = {
 		"http://robert:azerty01@mon.domain.com/path/to/a/document?query#anchor",
@@ -58,8 +58,8 @@ main( int argc, char** argv )
 	g_printf( "URIs parsing test.\n\n" );
 
 	for( i = 0 ; uris[i] ; ++i ){
-		NAGnomeVFSURI *vfs = g_new0( NAGnomeVFSURI, 1 );
-		na_gnome_vfs_uri_parse( vfs, uris[i] );
+		FMAGnomeVFSURI *vfs = g_new0( FMAGnomeVFSURI, 1 );
+		fma_gnome_vfs_uri_parse( vfs, uris[i] );
 		g_printf( "original  uri=%s\n", uris[i] );
 		g_printf( "vfs      path=%s\n", vfs->path );
 		g_printf( "vfs    scheme=%s\n", vfs->scheme );

@@ -38,7 +38,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-object-api.h>
 
-#include <core/na-gnome-vfs-uri.h>
+#include <core/fma-gnome-vfs-uri.h>
 #include <core/na-importer.h>
 
 #include "nact-application.h"

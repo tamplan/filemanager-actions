@@ -39,7 +39,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-object-api.h>
 
-#include "na-gnome-vfs-uri.h"
+#include "fma-gnome-vfs-uri.h"
 #include "na-selected-info.h"
 #include "na-settings.h"
 #include "na-tokens.h"
@@ -255,7 +255,7 @@ na_tokens_new_for_example( void )
 	const guint  ex_port = 8080;
 	const gchar *ex_host = _( "test.example.net" );
 	const gchar *ex_user = _( "user" );
-	NAGnomeVFSURI *vfs;
+	FMAGnomeVFSURI *vfs;
 	gchar *dirname, *bname, *bname_woext, *ext;
 	GSList *is;
 	gboolean first;
@@ -270,8 +270,8 @@ na_tokens_new_for_example( void )
 	tokens->private->uris = g_slist_append( tokens->private->uris, g_strdup( ex_uri2 ));
 
 	for( is = tokens->private->uris ; is ; is = is->next ){
-		vfs = g_new0( NAGnomeVFSURI, 1 );
-		na_gnome_vfs_uri_parse( vfs, is->data );
+		vfs = g_new0( FMAGnomeVFSURI, 1 );
+		fma_gnome_vfs_uri_parse( vfs, is->data );
 
 		tokens->private->filenames = g_slist_append( tokens->private->filenames, g_strdup( vfs->path ));
 		dirname = g_path_get_dirname( vfs->path );
@@ -287,7 +287,7 @@ na_tokens_new_for_example( void )
 			first = FALSE;
 		}
 
-		na_gnome_vfs_uri_free( vfs );
+		fma_gnome_vfs_uri_free( vfs );
 	}
 
 	tokens->private->mimetypes = g_slist_append( tokens->private->mimetypes, g_strdup( ex_mimetype1 ));

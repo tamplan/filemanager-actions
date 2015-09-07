@@ -44,7 +44,7 @@
 #include "fma-factory-provider.h"
 #include "fma-factory-object.h"
 #include "na-selected-info.h"
-#include "na-gnome-vfs-uri.h"
+#include "fma-gnome-vfs-uri.h"
 
 /* private class data
  */
