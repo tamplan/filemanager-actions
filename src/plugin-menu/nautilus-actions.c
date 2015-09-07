@@ -48,7 +48,7 @@
 #include <core/na-selected-info.h>
 #include <core/na-tokens.h>
 
-#include "file-manager-actions.h"
+#include "nautilus-actions.h"
 
 /* private class data
  */

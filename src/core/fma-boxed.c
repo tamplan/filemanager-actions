@@ -34,52 +34,52 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <api/na-boxed.h>
+#include <api/fma-boxed.h>
 #include <api/na-data-types.h>
 #include <api/na-core-utils.h>
 
 /* private class data
  */
-struct _NABoxedClassPrivate {
+struct _FMABoxedClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-/* BoxedDef:
+/* sBoxedDef:
  * This is the structure which fully defines the behavior of this data type.
  */
 typedef struct {
 	guint            type;
 	const gchar     *label;
-	gboolean      ( *are_equal )     ( const NABoxed *, const NABoxed * );
-	void          ( *copy )          ( NABoxed *, const NABoxed * );
-	void          ( *free )          ( NABoxed * );
-	void          ( *from_string )   ( NABoxed *, const gchar * );
-	void          ( *from_value )    ( NABoxed *, const GValue * );
-	void          ( *from_void )     ( NABoxed *, const void * );
-	gboolean      ( *to_bool )       ( const NABoxed * );
-	gconstpointer ( *to_pointer )    ( const NABoxed * );
-	gchar       * ( *to_string )     ( const NABoxed * );
-	GSList      * ( *to_string_list )( const NABoxed * );
-	guint         ( *to_uint )       ( const NABoxed * );
-	GList       * ( *to_uint_list )  ( const NABoxed * );
-	void          ( *to_value )      ( const NABoxed *, GValue * );
-	void        * ( *to_void )       ( const NABoxed * );
+	gboolean      ( *are_equal )     ( const FMABoxed *, const FMABoxed * );
+	void          ( *copy )          ( FMABoxed *, const FMABoxed * );
+	void          ( *free )          ( FMABoxed * );
+	void          ( *from_string )   ( FMABoxed *, const gchar * );
+	void          ( *from_value )    ( FMABoxed *, const GValue * );
+	void          ( *from_void )     ( FMABoxed *, const void * );
+	gboolean      ( *to_bool )       ( const FMABoxed * );
+	gconstpointer ( *to_pointer )    ( const FMABoxed * );
+	gchar       * ( *to_string )     ( const FMABoxed * );
+	GSList      * ( *to_string_list )( const FMABoxed * );
+	guint         ( *to_uint )       ( const FMABoxed * );
+	GList       * ( *to_uint_list )  ( const FMABoxed * );
+	void          ( *to_value )      ( const FMABoxed *, GValue * );
+	void        * ( *to_void )       ( const FMABoxed * );
 }
-	BoxedDef;
+	sBoxedDef;
 
 /* private instance data
  */
-struct _NABoxedPrivate {
-	gboolean        dispose_has_run;
-	const BoxedDef *def;
-	gboolean        is_set;
+struct _FMABoxedPrivate {
+	gboolean         dispose_has_run;
+	const sBoxedDef *def;
+	gboolean         is_set;
 	union {
-		gboolean    boolean;
-		void       *pointer;
-		gchar      *string;
-		GSList     *string_list;
-		guint       uint;
-		GList      *uint_list;
+		gboolean  boolean;
+		void     *pointer;
+		gchar    *string;
+		GSList   *string_list;
+		guint     uint;
+		GList    *uint_list;
 	} u;
 };
 
@@ -88,90 +88,90 @@ struct _NABoxedPrivate {
 
 static GObjectClass *st_parent_class    = NULL;
 
-static GType           register_type( void );
-static void            class_init( NABoxedClass *klass );
-static void            instance_init( GTypeInstance *instance, gpointer klass );
-static void            instance_dispose( GObject *object );
-static void            instance_finalize( GObject *object );
+static GType            register_type( void );
+static void             class_init( FMABoxedClass *klass );
+static void             instance_init( GTypeInstance *instance, gpointer klass );
+static void             instance_dispose( GObject *object );
+static void             instance_finalize( GObject *object );
 
-static NABoxed        *boxed_new( const BoxedDef *def );
-static const BoxedDef *get_boxed_def( guint type );
-static gchar         **string_to_array( const gchar *string );
+static FMABoxed        *boxed_new( const sBoxedDef *def );
+static const sBoxedDef *get_boxed_def( guint type );
+static gchar          **string_to_array( const gchar *string );
 
-static gboolean        bool_are_equal( const NABoxed *a, const NABoxed *b );
-static void            bool_copy( NABoxed *dest, const NABoxed *src );
-static void            bool_free( NABoxed *boxed );
-static void            bool_from_string( NABoxed *boxed, const gchar *string );
-static void            bool_from_value( NABoxed *boxed, const GValue *value );
-static void            bool_from_void( NABoxed *boxed, const void *value );
-static gchar          *bool_to_string( const NABoxed *boxed );
-static gboolean        bool_to_bool( const NABoxed *boxed );
-static gconstpointer   bool_to_pointer( const NABoxed *boxed );
-static gchar          *bool_to_string( const NABoxed *boxed );
-static void            bool_to_value( const NABoxed *boxed, GValue *value );
-static void           *bool_to_void( const NABoxed *boxed );
+static gboolean         bool_are_equal( const FMABoxed *a, const FMABoxed *b );
+static void             bool_copy( FMABoxed *dest, const FMABoxed *src );
+static void             bool_free( FMABoxed *boxed );
+static void             bool_from_string( FMABoxed *boxed, const gchar *string );
+static void             bool_from_value( FMABoxed *boxed, const GValue *value );
+static void             bool_from_void( FMABoxed *boxed, const void *value );
+static gchar           *bool_to_string( const FMABoxed *boxed );
+static gboolean         bool_to_bool( const FMABoxed *boxed );
+static gconstpointer    bool_to_pointer( const FMABoxed *boxed );
+static gchar           *bool_to_string( const FMABoxed *boxed );
+static void             bool_to_value( const FMABoxed *boxed, GValue *value );
+static void            *bool_to_void( const FMABoxed *boxed );
 
-static gboolean        pointer_are_equal( const NABoxed *a, const NABoxed *b );
-static void            pointer_copy( NABoxed *dest, const NABoxed *src );
-static void            pointer_free( NABoxed *boxed );
-static void            pointer_from_string( NABoxed *boxed, const gchar *string );
-static void            pointer_from_value( NABoxed *boxed, const GValue *value );
-static void            pointer_from_void( NABoxed *boxed, const void *value );
-static gconstpointer   pointer_to_pointer( const NABoxed *boxed );
-static gchar          *pointer_to_string( const NABoxed *boxed );
-static void            pointer_to_value( const NABoxed *boxed, GValue *value );
-static void           *pointer_to_void( const NABoxed *boxed );
+static gboolean         pointer_are_equal( const FMABoxed *a, const FMABoxed *b );
+static void             pointer_copy( FMABoxed *dest, const FMABoxed *src );
+static void             pointer_free( FMABoxed *boxed );
+static void             pointer_from_string( FMABoxed *boxed, const gchar *string );
+static void             pointer_from_value( FMABoxed *boxed, const GValue *value );
+static void             pointer_from_void( FMABoxed *boxed, const void *value );
+static gconstpointer    pointer_to_pointer( const FMABoxed *boxed );
+static gchar           *pointer_to_string( const FMABoxed *boxed );
+static void             pointer_to_value( const FMABoxed *boxed, GValue *value );
+static void            *pointer_to_void( const FMABoxed *boxed );
 
-static gboolean        string_are_equal( const NABoxed *a, const NABoxed *b );
-static void            string_copy( NABoxed *dest, const NABoxed *src );
-static void            string_free( NABoxed *boxed );
-static void            string_from_string( NABoxed *boxed, const gchar *string );
-static void            string_from_value( NABoxed *boxed, const GValue *value );
-static void            string_from_void( NABoxed *boxed, const void *value );
-static gconstpointer   string_to_pointer( const NABoxed *boxed );
-static gchar          *string_to_string( const NABoxed *boxed );
-static void            string_to_value( const NABoxed *boxed, GValue *value );
-static void           *string_to_void( const NABoxed *boxed );
+static gboolean         string_are_equal( const FMABoxed *a, const FMABoxed *b );
+static void             string_copy( FMABoxed *dest, const FMABoxed *src );
+static void             string_free( FMABoxed *boxed );
+static void             string_from_string( FMABoxed *boxed, const gchar *string );
+static void             string_from_value( FMABoxed *boxed, const GValue *value );
+static void             string_from_void( FMABoxed *boxed, const void *value );
+static gconstpointer    string_to_pointer( const FMABoxed *boxed );
+static gchar           *string_to_string( const FMABoxed *boxed );
+static void             string_to_value( const FMABoxed *boxed, GValue *value );
+static void            *string_to_void( const FMABoxed *boxed );
 
-static gboolean        string_list_are_equal( const NABoxed *a, const NABoxed *b );
-static void            string_list_copy( NABoxed *dest, const NABoxed *src );
-static void            string_list_free( NABoxed *boxed );
-static void            string_list_from_string( NABoxed *boxed, const gchar *string );
-static void            string_list_from_value( NABoxed *boxed, const GValue *value );
-static void            string_list_from_void( NABoxed *boxed, const void *value );
-static gconstpointer   string_list_to_pointer( const NABoxed *boxed );
-static gchar          *string_list_to_string( const NABoxed *boxed );
-static GSList         *string_list_to_string_list( const NABoxed *boxed );
-static void            string_list_to_value( const NABoxed *boxed, GValue *value );
-static void           *string_list_to_void( const NABoxed *boxed );
+static gboolean         string_list_are_equal( const FMABoxed *a, const FMABoxed *b );
+static void             string_list_copy( FMABoxed *dest, const FMABoxed *src );
+static void             string_list_free( FMABoxed *boxed );
+static void             string_list_from_string( FMABoxed *boxed, const gchar *string );
+static void             string_list_from_value( FMABoxed *boxed, const GValue *value );
+static void             string_list_from_void( FMABoxed *boxed, const void *value );
+static gconstpointer    string_list_to_pointer( const FMABoxed *boxed );
+static gchar           *string_list_to_string( const FMABoxed *boxed );
+static GSList          *string_list_to_string_list( const FMABoxed *boxed );
+static void             string_list_to_value( const FMABoxed *boxed, GValue *value );
+static void            *string_list_to_void( const FMABoxed *boxed );
 
-static gboolean        locale_are_equal( const NABoxed *a, const NABoxed *b );
+static gboolean         locale_are_equal( const FMABoxed *a, const FMABoxed *b );
 
-static gboolean        uint_are_equal( const NABoxed *a, const NABoxed *b );
-static void            uint_copy( NABoxed *dest, const NABoxed *src );
-static void            uint_free( NABoxed *boxed );
-static void            uint_from_string( NABoxed *boxed, const gchar *string );
-static void            uint_from_value( NABoxed *boxed, const GValue *value );
-static void            uint_from_void( NABoxed *boxed, const void *value );
-static gconstpointer   uint_to_pointer( const NABoxed *boxed );
-static gchar          *uint_to_string( const NABoxed *boxed );
-static guint           uint_to_uint( const NABoxed *boxed );
-static void            uint_to_value( const NABoxed *boxed, GValue *value );
-static void           *uint_to_void( const NABoxed *boxed );
+static gboolean         uint_are_equal( const FMABoxed *a, const FMABoxed *b );
+static void             uint_copy( FMABoxed *dest, const FMABoxed *src );
+static void             uint_free( FMABoxed *boxed );
+static void             uint_from_string( FMABoxed *boxed, const gchar *string );
+static void             uint_from_value( FMABoxed *boxed, const GValue *value );
+static void             uint_from_void( FMABoxed *boxed, const void *value );
+static gconstpointer    uint_to_pointer( const FMABoxed *boxed );
+static gchar           *uint_to_string( const FMABoxed *boxed );
+static guint            uint_to_uint( const FMABoxed *boxed );
+static void             uint_to_value( const FMABoxed *boxed, GValue *value );
+static void            *uint_to_void( const FMABoxed *boxed );
 
-static gboolean        uint_list_are_equal( const NABoxed *a, const NABoxed *b );
-static void            uint_list_copy( NABoxed *dest, const NABoxed *src );
-static void            uint_list_free( NABoxed *boxed );
-static void            uint_list_from_string( NABoxed *boxed, const gchar *string );
-static void            uint_list_from_value( NABoxed *boxed, const GValue *value );
-static void            uint_list_from_void( NABoxed *boxed, const void *value );
-static gconstpointer   uint_list_to_pointer( const NABoxed *boxed );
-static gchar          *uint_list_to_string( const NABoxed *boxed );
-static GList          *uint_list_to_uint_list( const NABoxed *boxed );
-static void            uint_list_to_value( const NABoxed *boxed, GValue *value );
-static void           *uint_list_to_void( const NABoxed *boxed );
+static gboolean         uint_list_are_equal( const FMABoxed *a, const FMABoxed *b );
+static void             uint_list_copy( FMABoxed *dest, const FMABoxed *src );
+static void             uint_list_free( FMABoxed *boxed );
+static void             uint_list_from_string( FMABoxed *boxed, const gchar *string );
+static void             uint_list_from_value( FMABoxed *boxed, const GValue *value );
+static void             uint_list_from_void( FMABoxed *boxed, const void *value );
+static gconstpointer    uint_list_to_pointer( const FMABoxed *boxed );
+static gchar           *uint_list_to_string( const FMABoxed *boxed );
+static GList           *uint_list_to_uint_list( const FMABoxed *boxed );
+static void             uint_list_to_value( const FMABoxed *boxed, GValue *value );
+static void            *uint_list_to_void( const FMABoxed *boxed );
 
-static BoxedDef st_boxed_def[] = {
+static sBoxedDef st_boxed_def[] = {
 		{ NA_DATA_TYPE_BOOLEAN,
 				"boolean",
 				bool_are_equal,
@@ -295,7 +295,7 @@ static BoxedDef st_boxed_def[] = {
 };
 
 GType
-na_boxed_get_type( void )
+fma_boxed_get_type( void )
 {
 	static GType item_type = 0;
 
@@ -309,32 +309,32 @@ na_boxed_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_boxed_register_type";
+	static const gchar *thisfn = "fma_boxed_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NABoxedClass ),
+		sizeof( FMABoxedClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NABoxed ),
+		sizeof( FMABoxed ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NABoxed", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMABoxed", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NABoxedClass *klass )
+class_init( FMABoxedClass *klass )
 {
-	static const gchar *thisfn = "na_boxed_class_init";
+	static const gchar *thisfn = "fma_boxed_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -345,23 +345,23 @@ class_init( NABoxedClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NABoxedClassPrivate, 1 );
+	klass->private = g_new0( FMABoxedClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_boxed_instance_init";
-	NABoxed *self;
+	static const gchar *thisfn = "fma_boxed_instance_init";
+	FMABoxed *self;
 
-	g_return_if_fail( NA_IS_BOXED( instance ));
+	g_return_if_fail( FMA_IS_BOXED( instance ));
 
 	DEBUG( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NA_BOXED( instance );
+	self = FMA_BOXED( instance );
 
-	self->private = g_new0( NABoxedPrivate, 1 );
+	self->private = g_new0( FMABoxedPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->def = NULL;
@@ -371,11 +371,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	NABoxed *self;
+	FMABoxed *self;
 
-	g_return_if_fail( NA_IS_BOXED( object ));
+	g_return_if_fail( FMA_IS_BOXED( object ));
 
-	self = NA_BOXED( object );
+	self = FMA_BOXED( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -391,14 +391,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_boxed_instance_finalize";
-	NABoxed *self;
+	static const gchar *thisfn = "fma_boxed_instance_finalize";
+	FMABoxed *self;
 
-	g_return_if_fail( NA_IS_BOXED( object ));
+	g_return_if_fail( FMA_IS_BOXED( object ));
 
 	DEBUG( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NA_BOXED( object );
+	self = FMA_BOXED( object );
 
 	if( self->private->def ){
 		if( self->private->def->free ){
@@ -414,26 +414,26 @@ instance_finalize( GObject *object )
 	}
 }
 
-static NABoxed *
-boxed_new( const BoxedDef *def )
+static FMABoxed *
+boxed_new( const sBoxedDef *def )
 {
-	NABoxed *boxed;
+	FMABoxed *boxed;
 
-	boxed = g_object_new( NA_TYPE_BOXED, NULL );
+	boxed = g_object_new( FMA_TYPE_BOXED, NULL );
 	boxed->private->def = def;
 
 	return( boxed );
 }
 
-static const BoxedDef *
+static const sBoxedDef *
 get_boxed_def( guint type )
 {
-	static const gchar *thisfn = "na_boxed_get_boxed_def";
-	BoxedDef *def;
+	static const gchar *thisfn = "fma_boxed_get_boxed_def";
+	sBoxedDef *def;
 
 	for( def = st_boxed_def ; def->type ; ++def ){
 		if( def->type == type ){
-			return(( const BoxedDef * ) def );
+			return(( const sBoxedDef * ) def );
 		}
 	}
 
@@ -483,8 +483,8 @@ string_to_array( const gchar *string )
 }
 
 /**
- * na_boxed_set_type:
- * @boxed: this #NABoxed object.
+ * fma_boxed_set_type:
+ * @boxed: this #FMABoxed object.
  * @type: the required type as defined in na-data-types.h
  *
  * Set the type of the just-allocated @boxed object.
@@ -492,9 +492,9 @@ string_to_array( const gchar *string )
  * Since: 3.1
  */
 void
-na_boxed_set_type( NABoxed *boxed, guint type )
+fma_boxed_set_type( FMABoxed *boxed, guint type )
 {
-	g_return_if_fail( NA_IS_BOXED( boxed ));
+	g_return_if_fail( FMA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def == NULL );
 
@@ -502,22 +502,22 @@ na_boxed_set_type( NABoxed *boxed, guint type )
 }
 
 /**
- * na_boxed_are_equal:
- * @a: the first #NABoxed object.
- * @b: the second #NABoxed object.
+ * fma_boxed_are_equal:
+ * @a: the first #FMABoxed object.
+ * @b: the second #FMABoxed object.
  *
  * Returns: %TRUE if @a and @b are equal, %FALSE else.
  *
  * Since: 3.1
  */
 gboolean
-na_boxed_are_equal( const NABoxed *a, const NABoxed *b )
+fma_boxed_are_equal( const FMABoxed *a, const FMABoxed *b )
 {
 	gboolean are_equal;
 
-	g_return_val_if_fail( NA_IS_BOXED( a ), FALSE );
+	g_return_val_if_fail( FMA_IS_BOXED( a ), FALSE );
 	g_return_val_if_fail( a->private->dispose_has_run == FALSE, FALSE );
-	g_return_val_if_fail( NA_IS_BOXED( b ), FALSE );
+	g_return_val_if_fail( FMA_IS_BOXED( b ), FALSE );
 	g_return_val_if_fail( b->private->dispose_has_run == FALSE, FALSE );
 	g_return_val_if_fail( a->private->def, FALSE );
 	g_return_val_if_fail( a->private->def == b->private->def, FALSE );
@@ -536,20 +536,20 @@ na_boxed_are_equal( const NABoxed *a, const NABoxed *b )
 }
 
 /**
- * na_boxed_copy:
- * @boxed: the source #NABoxed box.
+ * fma_boxed_copy:
+ * @boxed: the source #FMABoxed box.
  *
- * Returns: a copy of @boxed, as a newly allocated #NABoxed which should
+ * Returns: a copy of @boxed, as a newly allocated #FMABoxed which should
  * be g_object_unref() by the caller.
  *
  * Since: 3.1
  */
-NABoxed *
-na_boxed_copy( const NABoxed *boxed )
+FMABoxed *
+fma_boxed_copy( const FMABoxed *boxed )
 {
-	NABoxed *dest;
+	FMABoxed *dest;
 
-	g_return_val_if_fail( NA_IS_BOXED( boxed ), NULL );
+	g_return_val_if_fail( FMA_IS_BOXED( boxed ), NULL );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, NULL );
 	g_return_val_if_fail( boxed->private->def, NULL );
 	g_return_val_if_fail( boxed->private->def->copy, NULL );
@@ -564,20 +564,20 @@ na_boxed_copy( const NABoxed *boxed )
 }
 
 /**
- * na_boxed_dump:
- * @boxed: the #NABoxed box to be dumped.
+ * fma_boxed_dump:
+ * @boxed: the #FMABoxed box to be dumped.
  *
  * Dumps the @boxed box.
  *
  * Since: 3.1
  */
 void
-na_boxed_dump( const NABoxed *boxed )
+fma_boxed_dump( const FMABoxed *boxed )
 {
-	static const gchar *thisfn = "na_boxed_dump";
+	static const gchar *thisfn = "fma_boxed_dump";
 	gchar *str;
 
-	g_return_if_fail( NA_IS_BOXED( boxed ));
+	g_return_if_fail( FMA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def );
 	g_return_if_fail( boxed->private->def->to_string );
@@ -590,26 +590,26 @@ na_boxed_dump( const NABoxed *boxed )
 }
 
 /**
- * na_boxed_new_from_string:
- * @type: the type of the #NABoxed to be allocated.
- * @string: the initial value of the #NABoxed as a string.
+ * fma_boxed_new_from_string:
+ * @type: the type of the #FMABoxed to be allocated.
+ * @string: the initial value of the #FMABoxed as a string.
  *
- * Allocates a new #NABoxed of the specified @type, and initializes it
+ * Allocates a new #FMABoxed of the specified @type, and initializes it
  * with @string.
  *
  * If the type is a list, then the last separator is automatically stripped.
  *
- * Returns: a newly allocated #NABoxed, which should be g_object_unref()
+ * Returns: a newly allocated #FMABoxed, which should be g_object_unref()
  * by the caller, or %NULL if the type is unknowned, or does not provide
  * the 'from_string' function.
  *
  * Since: 3.1
  */
-NABoxed *
-na_boxed_new_from_string( guint type, const gchar *string )
+FMABoxed *
+fma_boxed_new_from_string( guint type, const gchar *string )
 {
-	const BoxedDef *def;
-	NABoxed *boxed;
+	const sBoxedDef *def;
+	FMABoxed *boxed;
 
 	def = get_boxed_def( type );
 
@@ -624,8 +624,8 @@ na_boxed_new_from_string( guint type, const gchar *string )
 }
 
 /**
- * na_boxed_get_boolean:
- * @boxed: the #NABoxed structure.
+ * fma_boxed_get_boolean:
+ * @boxed: the #FMABoxed structure.
  *
  * Returns: the boolean value if @boxed is of %NA_DATA_TYPE_BOOLEAN type,
  * %FALSE else.
@@ -633,11 +633,11 @@ na_boxed_new_from_string( guint type, const gchar *string )
  * Since: 3.1
  */
 gboolean
-na_boxed_get_boolean( const NABoxed *boxed )
+fma_boxed_get_boolean( const FMABoxed *boxed )
 {
 	gboolean value;
 
-	g_return_val_if_fail( NA_IS_BOXED( boxed ), FALSE );
+	g_return_val_if_fail( FMA_IS_BOXED( boxed ), FALSE );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, FALSE );
 	g_return_val_if_fail( boxed->private->def, FALSE );
 	g_return_val_if_fail( boxed->private->def->type == NA_DATA_TYPE_BOOLEAN, FALSE );
@@ -649,8 +649,8 @@ na_boxed_get_boolean( const NABoxed *boxed )
 }
 
 /**
- * na_boxed_get_pointer:
- * @boxed: the #NABoxed structure.
+ * fma_boxed_get_pointer:
+ * @boxed: the #FMABoxed structure.
  *
  * Returns: a const pointer to the data if @boxed is of %NA_DATA_TYPE_POINTER
  * type, %NULL else.
@@ -658,11 +658,11 @@ na_boxed_get_boolean( const NABoxed *boxed )
  * Since: 3.1
  */
 gconstpointer
-na_boxed_get_pointer( const NABoxed *boxed )
+fma_boxed_get_pointer( const FMABoxed *boxed )
 {
 	gconstpointer value;
 
-	g_return_val_if_fail( NA_IS_BOXED( boxed ), NULL );
+	g_return_val_if_fail( FMA_IS_BOXED( boxed ), NULL );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, NULL );
 	g_return_val_if_fail( boxed->private->def, NULL );
 	g_return_val_if_fail( boxed->private->def->to_pointer, NULL );
@@ -673,8 +673,8 @@ na_boxed_get_pointer( const NABoxed *boxed )
 }
 
 /**
- * na_boxed_get_string:
- * @boxed: the #NABoxed structure.
+ * fma_boxed_get_string:
+ * @boxed: the #FMABoxed structure.
  *
  * Returns: a newly allocated string if @boxed is of %NA_DATA_TYPE_STRING
  * type, which should be g_free() by the caller, %NULL else.
@@ -682,11 +682,11 @@ na_boxed_get_pointer( const NABoxed *boxed )
  * Since: 3.1
  */
 gchar *
-na_boxed_get_string( const NABoxed *boxed )
+fma_boxed_get_string( const FMABoxed *boxed )
 {
 	gchar *value;
 
-	g_return_val_if_fail( NA_IS_BOXED( boxed ), NULL );
+	g_return_val_if_fail( FMA_IS_BOXED( boxed ), NULL );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, NULL );
 	g_return_val_if_fail( boxed->private->def, NULL );
 	g_return_val_if_fail( boxed->private->def->to_string, NULL );
@@ -697,8 +697,8 @@ na_boxed_get_string( const NABoxed *boxed )
 }
 
 /**
- * na_boxed_get_string_list:
- * @boxed: the #NABoxed structure.
+ * fma_boxed_get_string_list:
+ * @boxed: the #FMABoxed structure.
  *
  * Returns: a newly allocated string list if @boxed is of %NA_DATA_TYPE_STRING_LIST
  * type, which should be na_core_utils_slist_free() by the caller, %NULL else.
@@ -706,11 +706,11 @@ na_boxed_get_string( const NABoxed *boxed )
  * Since: 3.1
  */
 GSList *
-na_boxed_get_string_list( const NABoxed *boxed )
+fma_boxed_get_string_list( const FMABoxed *boxed )
 {
 	GSList *value;
 
-	g_return_val_if_fail( NA_IS_BOXED( boxed ), NULL );
+	g_return_val_if_fail( FMA_IS_BOXED( boxed ), NULL );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, NULL );
 	g_return_val_if_fail( boxed->private->def, NULL );
 	g_return_val_if_fail( boxed->private->def->type == NA_DATA_TYPE_STRING_LIST, NULL );
@@ -722,8 +722,8 @@ na_boxed_get_string_list( const NABoxed *boxed )
 }
 
 /**
- * na_boxed_get_uint:
- * @boxed: the #NABoxed structure.
+ * fma_boxed_get_uint:
+ * @boxed: the #FMABoxed structure.
  *
  * Returns: an unsigned integer if @boxed is of %NA_DATA_TYPE_UINT type,
  * zero else.
@@ -731,11 +731,11 @@ na_boxed_get_string_list( const NABoxed *boxed )
  * Since: 3.1
  */
 guint
-na_boxed_get_uint( const NABoxed *boxed )
+fma_boxed_get_uint( const FMABoxed *boxed )
 {
 	guint value;
 
-	g_return_val_if_fail( NA_IS_BOXED( boxed ), 0 );
+	g_return_val_if_fail( FMA_IS_BOXED( boxed ), 0 );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, 0 );
 	g_return_val_if_fail( boxed->private->def, 0 );
 	g_return_val_if_fail( boxed->private->def->type == NA_DATA_TYPE_UINT, 0 );
@@ -747,8 +747,8 @@ na_boxed_get_uint( const NABoxed *boxed )
 }
 
 /**
- * na_boxed_get_uint_list:
- * @boxed: the #NABoxed structure.
+ * fma_boxed_get_uint_list:
+ * @boxed: the #FMABoxed structure.
  *
  * Returns: a newly allocated list if @boxed is of %NA_DATA_TYPE_UINT_LIST
  * type, which should be g_list_free() by the caller, %FALSE else.
@@ -756,11 +756,11 @@ na_boxed_get_uint( const NABoxed *boxed )
  * Since: 3.1
  */
 GList *
-na_boxed_get_uint_list( const NABoxed *boxed )
+fma_boxed_get_uint_list( const FMABoxed *boxed )
 {
 	GList *value;
 
-	g_return_val_if_fail( NA_IS_BOXED( boxed ), NULL );
+	g_return_val_if_fail( FMA_IS_BOXED( boxed ), NULL );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, NULL );
 	g_return_val_if_fail( boxed->private->def, NULL );
 	g_return_val_if_fail( boxed->private->def->type == NA_DATA_TYPE_UINT_LIST, NULL );
@@ -772,8 +772,8 @@ na_boxed_get_uint_list( const NABoxed *boxed )
 }
 
 /**
- * na_boxed_get_as_value:
- * @boxed: the #NABoxed whose value is to be got.
+ * fma_boxed_get_as_value:
+ * @boxed: the #FMABoxed whose value is to be got.
  * @value: the #GValue which holds the string to be set.
  *
  * Setup @value with the content of the @boxed.
@@ -781,9 +781,9 @@ na_boxed_get_uint_list( const NABoxed *boxed )
  * Since: 3.1
  */
 void
-na_boxed_get_as_value( const NABoxed *boxed, GValue *value )
+fma_boxed_get_as_value( const FMABoxed *boxed, GValue *value )
 {
-	g_return_if_fail( NA_IS_BOXED( boxed ));
+	g_return_if_fail( FMA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def );
 	g_return_if_fail( boxed->private->def->to_value );
@@ -792,8 +792,8 @@ na_boxed_get_as_value( const NABoxed *boxed, GValue *value )
 }
 
 /**
- * na_boxed_get_as_void:
- * @boxed: the #NABoxed whose value is to be got.
+ * fma_boxed_get_as_void:
+ * @boxed: the #FMABoxed whose value is to be got.
  *
  * Returns: the content of the @boxed.
  *
@@ -805,9 +805,9 @@ na_boxed_get_as_value( const NABoxed *boxed, GValue *value )
  * Since: 3.1
  */
 void *
-na_boxed_get_as_void( const NABoxed *boxed )
+fma_boxed_get_as_void( const FMABoxed *boxed )
 {
-	g_return_val_if_fail( NA_IS_BOXED( boxed ), NULL );
+	g_return_val_if_fail( FMA_IS_BOXED( boxed ), NULL );
 	g_return_val_if_fail( boxed->private->dispose_has_run == FALSE, NULL );
 	g_return_val_if_fail( boxed->private->def, NULL );
 	g_return_val_if_fail( boxed->private->def->to_void, NULL );
@@ -816,20 +816,20 @@ na_boxed_get_as_void( const NABoxed *boxed )
 }
 
 /**
- * na_boxed_set_from_boxed:
- * @boxed: the #NABoxed whose value is to be set.
- * @value: the source #NABoxed.
+ * fma_boxed_set_from_boxed:
+ * @boxed: the #FMABoxed whose value is to be set.
+ * @value: the source #FMABoxed.
  *
  * Copy value from @value to @boxed.
  *
  * Since: 3.1
  */
 void
-na_boxed_set_from_boxed( NABoxed *boxed, const NABoxed *value )
+fma_boxed_set_from_boxed( FMABoxed *boxed, const FMABoxed *value )
 {
-	g_return_if_fail( NA_IS_BOXED( boxed ));
+	g_return_if_fail( FMA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
-	g_return_if_fail( NA_IS_BOXED( value ));
+	g_return_if_fail( FMA_IS_BOXED( value ));
 	g_return_if_fail( value->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def );
 	g_return_if_fail( boxed->private->def == value->private->def );
@@ -842,8 +842,8 @@ na_boxed_set_from_boxed( NABoxed *boxed, const NABoxed *value )
 }
 
 /**
- * na_boxed_set_from_string:
- * @boxed: the #NABoxed whose value is to be set.
+ * fma_boxed_set_from_string:
+ * @boxed: the #FMABoxed whose value is to be set.
  * @value: the string to be set.
  *
  * Evaluates the @value and set it to the @boxed.
@@ -851,9 +851,9 @@ na_boxed_set_from_boxed( NABoxed *boxed, const NABoxed *value )
  * Since: 3.1
  */
 void
-na_boxed_set_from_string( NABoxed *boxed, const gchar *value )
+fma_boxed_set_from_string( FMABoxed *boxed, const gchar *value )
 {
-	g_return_if_fail( NA_IS_BOXED( boxed ));
+	g_return_if_fail( FMA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def );
 	g_return_if_fail( boxed->private->def->free );
@@ -865,8 +865,8 @@ na_boxed_set_from_string( NABoxed *boxed, const gchar *value )
 }
 
 /**
- * na_boxed_set_from_value:
- * @boxed: the #NABoxed whose value is to be set.
+ * fma_boxed_set_from_value:
+ * @boxed: the #FMABoxed whose value is to be set.
  * @value: the value whose content is to be got.
  *
  * Evaluates the @value and set it to the @boxed.
@@ -874,9 +874,9 @@ na_boxed_set_from_string( NABoxed *boxed, const gchar *value )
  * Since: 3.1
  */
 void
-na_boxed_set_from_value( NABoxed *boxed, const GValue *value )
+fma_boxed_set_from_value( FMABoxed *boxed, const GValue *value )
 {
-	g_return_if_fail( NA_IS_BOXED( boxed ));
+	g_return_if_fail( FMA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def );
 	g_return_if_fail( boxed->private->def->free );
@@ -888,8 +888,8 @@ na_boxed_set_from_value( NABoxed *boxed, const GValue *value )
 }
 
 /**
- * na_boxed_set_from_void:
- * @boxed: the #NABoxed whose value is to be set.
+ * fma_boxed_set_from_void:
+ * @boxed: the #FMABoxed whose value is to be set.
  * @value: the value whose content is to be got.
  *
  * Evaluates the @value and set it to the @boxed.
@@ -897,9 +897,9 @@ na_boxed_set_from_value( NABoxed *boxed, const GValue *value )
  * Since: 3.1
  */
 void
-na_boxed_set_from_void( NABoxed *boxed, const void *value )
+fma_boxed_set_from_void( FMABoxed *boxed, const void *value )
 {
-	g_return_if_fail( NA_IS_BOXED( boxed ));
+	g_return_if_fail( FMA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def );
 	g_return_if_fail( boxed->private->def->free );
@@ -911,74 +911,74 @@ na_boxed_set_from_void( NABoxed *boxed, const void *value )
 }
 
 static gboolean
-bool_are_equal( const NABoxed *a, const NABoxed *b )
+bool_are_equal( const FMABoxed *a, const FMABoxed *b )
 {
 	return( a->private->u.boolean == b->private->u.boolean );
 }
 
 static void
-bool_copy( NABoxed *dest, const NABoxed *src )
+bool_copy( FMABoxed *dest, const FMABoxed *src )
 {
 	dest->private->u.boolean = src->private->u.boolean;
 }
 
 static void
-bool_free( NABoxed *boxed )
+bool_free( FMABoxed *boxed )
 {
 	boxed->private->u.boolean = FALSE;
 	boxed->private->is_set = FALSE;
 }
 
 static void
-bool_from_string( NABoxed *boxed, const gchar *string )
+bool_from_string( FMABoxed *boxed, const gchar *string )
 {
 	boxed->private->u.boolean = na_core_utils_boolean_from_string( string );
 }
 
 static void
-bool_from_value( NABoxed *boxed, const GValue *value )
+bool_from_value( FMABoxed *boxed, const GValue *value )
 {
 	boxed->private->u.boolean = g_value_get_boolean( value );
 }
 
 static void
-bool_from_void( NABoxed *boxed, const void *value )
+bool_from_void( FMABoxed *boxed, const void *value )
 {
 	boxed->private->u.boolean = GPOINTER_TO_UINT( value );
 }
 
 static gboolean
-bool_to_bool( const NABoxed *boxed )
+bool_to_bool( const FMABoxed *boxed )
 {
 	return( boxed->private->u.boolean );
 }
 
 static gconstpointer
-bool_to_pointer( const NABoxed *boxed )
+bool_to_pointer( const FMABoxed *boxed )
 {
 	return(( gconstpointer ) GUINT_TO_POINTER( boxed->private->u.boolean ));
 }
 
 static gchar *
-bool_to_string( const NABoxed *boxed )
+bool_to_string( const FMABoxed *boxed )
 {
 	return( g_strdup_printf( "%s", boxed->private->u.boolean ? "true":"false" ));
 }
 
 static void
-bool_to_value( const NABoxed *boxed, GValue *value )
+bool_to_value( const FMABoxed *boxed, GValue *value )
 {
 	g_value_set_boolean( value, boxed->private->u.boolean );
 }
 
 static void *
-bool_to_void( const NABoxed *boxed )
+bool_to_void( const FMABoxed *boxed )
 {
 	return( GUINT_TO_POINTER( boxed->private->u.boolean ));
 }
 
 static gboolean
-pointer_are_equal( const NABoxed *a, const NABoxed *b )
+pointer_are_equal( const FMABoxed *a, const FMABoxed *b )
 {
 	return( a->private->u.pointer == b->private->u.pointer );
 }
@@ -987,62 +987,62 @@ pointer_are_equal( const NABoxed *a, const NABoxed *b )
  * note that copying a pointer is not safe
  */
 static void
-pointer_copy( NABoxed *dest, const NABoxed *src )
+pointer_copy( FMABoxed *dest, const FMABoxed *src )
 {
 	dest->private->u.pointer = src->private->u.pointer;
 }
 
 static void
-pointer_free( NABoxed *boxed )
+pointer_free( FMABoxed *boxed )
 {
 	boxed->private->u.pointer = NULL;
 	boxed->private->is_set = FALSE;
 }
 
 static void
-pointer_from_string( NABoxed *boxed, const gchar *pointer )
+pointer_from_string( FMABoxed *boxed, const gchar *pointer )
 {
-	g_warning( "na_boxed_pointer_from_string: unrelevant function call" );
+	g_warning( "fma_boxed_pointer_from_string: unrelevant function call" );
 }
 
 static void
-pointer_from_value( NABoxed *boxed, const GValue *value )
+pointer_from_value( FMABoxed *boxed, const GValue *value )
 {
 	boxed->private->u.pointer = g_value_get_pointer( value );
 }
 
 static void
-pointer_from_void( NABoxed *boxed, const void *value )
+pointer_from_void( FMABoxed *boxed, const void *value )
 {
 	boxed->private->u.pointer = ( void * ) value;
 }
 
 static gconstpointer
-pointer_to_pointer( const NABoxed *boxed )
+pointer_to_pointer( const FMABoxed *boxed )
 {
 	return( boxed->private->u.pointer );
 }
 
 static gchar *
-pointer_to_string( const NABoxed *boxed )
+pointer_to_string( const FMABoxed *boxed )
 {
 	return( g_strdup_printf( "%p", boxed->private->u.pointer ));
 }
 
 static void
-pointer_to_value( const NABoxed *boxed, GValue *value )
+pointer_to_value( const FMABoxed *boxed, GValue *value )
 {
 	g_value_set_pointer( value, boxed->private->u.pointer );
 }
 
 static void *
-pointer_to_void( const NABoxed *boxed )
+pointer_to_void( const FMABoxed *boxed )
 {
 	return( boxed->private->u.pointer );
 }
 
 static gboolean
-string_are_equal( const NABoxed *a, const NABoxed *b )
+string_are_equal( const FMABoxed *a, const FMABoxed *b )
 {
 	if( a->private->u.string && b->private->u.string ){
 		return( strcmp( a->private->u.string, b->private->u.string ) == 0 );
@@ -1054,13 +1054,13 @@ string_are_equal( const NABoxed *a, const NABoxed *b )
 }
 
 static void
-string_copy( NABoxed *dest, const NABoxed *src )
+string_copy( FMABoxed *dest, const FMABoxed *src )
 {
 	dest->private->u.string = g_strdup( src->private->u.string );
 }
 
 static void
-string_free( NABoxed *boxed )
+string_free( FMABoxed *boxed )
 {
 	g_free( boxed->private->u.string );
 	boxed->private->u.string = NULL;
@@ -1068,13 +1068,13 @@ string_free( NABoxed *boxed )
 }
 
 static void
-string_from_string( NABoxed *boxed, const gchar *string )
+string_from_string( FMABoxed *boxed, const gchar *string )
 {
 	boxed->private->u.string = g_strdup( string ? string : "" );
 }
 
 static void
-string_from_value( NABoxed *boxed, const GValue *value )
+string_from_value( FMABoxed *boxed, const GValue *value )
 {
 	if( g_value_get_string( value )){
 		boxed->private->u.string = g_value_dup_string( value );
@@ -1084,25 +1084,25 @@ string_from_value( NABoxed *boxed, const GValue *value )
 }
 
 static void
-string_from_void( NABoxed *boxed, const void *value )
+string_from_void( FMABoxed *boxed, const void *value )
 {
 	boxed->private->u.string = g_strdup( value ? ( const gchar * ) value : "" );
 }
 
 static gconstpointer
-string_to_pointer( const NABoxed *boxed )
+string_to_pointer( const FMABoxed *boxed )
 {
 	return(( gconstpointer ) boxed->private->u.string );
 }
 
 static gchar *
-string_to_string( const NABoxed *boxed )
+string_to_string( const FMABoxed *boxed )
 {
 	return( g_strdup( boxed->private->u.string ));
 }
 
 static void
-string_to_value( const NABoxed *boxed, GValue *value )
+string_to_value( const FMABoxed *boxed, GValue *value )
 {
 	gchar *str;
 
@@ -1112,7 +1112,7 @@ string_to_value( const NABoxed *boxed, GValue *value )
 }
 
 static void *
-string_to_void( const NABoxed *boxed )
+string_to_void( const FMABoxed *boxed )
 {
 	return(( void * ) string_to_string( boxed ));
 }
@@ -1121,7 +1121,7 @@ string_to_void( const NABoxed *boxed )
  * same order
  */
 static gboolean
-string_list_are_equal( const NABoxed *a, const NABoxed *b )
+string_list_are_equal( const FMABoxed *a, const FMABoxed *b )
 {
 	GSList *ia, *ib;
 	gboolean diff = FALSE;
@@ -1141,7 +1141,7 @@ string_list_are_equal( const NABoxed *a, const NABoxed *b )
 }
 
 static void
-string_list_copy( NABoxed *dest, const NABoxed *src )
+string_list_copy( FMABoxed *dest, const FMABoxed *src )
 {
 	if( dest->private->is_set ){
 		string_list_free( dest );
@@ -1151,7 +1151,7 @@ string_list_copy( NABoxed *dest, const NABoxed *src )
 }
 
 static void
-string_list_free( NABoxed *boxed )
+string_list_free( FMABoxed *boxed )
 {
 	na_core_utils_slist_free( boxed->private->u.string_list );
 	boxed->private->u.string_list = NULL;
@@ -1164,7 +1164,7 @@ string_list_free( NABoxed *boxed )
  * - as a comma-separated list of string, between two square brackets (à la GConf)
  */
 static void
-string_list_from_string( NABoxed *boxed, const gchar *string )
+string_list_from_string( FMABoxed *boxed, const gchar *string )
 {
 	gchar **array;
 	gchar **i;
@@ -1186,13 +1186,13 @@ string_list_from_string( NABoxed *boxed, const gchar *string )
 }
 
 static void
-string_list_from_value( NABoxed *boxed, const GValue *value )
+string_list_from_value( FMABoxed *boxed, const GValue *value )
 {
 	string_list_from_void( boxed, ( const void * ) g_value_get_pointer( value ));
 }
 
 static void
-string_list_from_void( NABoxed *boxed, const void *value )
+string_list_from_void( FMABoxed *boxed, const void *value )
 {
 	GSList *value_slist;
 	GSList *it;
@@ -1207,13 +1207,13 @@ string_list_from_void( NABoxed *boxed, const void *value )
 }
 
 static gconstpointer
-string_list_to_pointer( const NABoxed *boxed )
+string_list_to_pointer( const FMABoxed *boxed )
 {
 	return(( gconstpointer ) boxed->private->u.string_list );
 }
 
 static gchar *
-string_list_to_string( const NABoxed *boxed )
+string_list_to_string( const FMABoxed *boxed )
 {
 	GSList *is;
 	GString *str = g_string_new( "" );
@@ -1232,19 +1232,19 @@ string_list_to_string( const NABoxed *boxed )
 }
 
 static GSList *
-string_list_to_string_list( const NABoxed *boxed )
+string_list_to_string_list( const FMABoxed *boxed )
 {
 	return( na_core_utils_slist_duplicate( boxed->private->u.string_list ));
 }
 
 static void
-string_list_to_value( const NABoxed *boxed, GValue *value )
+string_list_to_value( const FMABoxed *boxed, GValue *value )
 {
 	g_value_set_pointer( value, na_core_utils_slist_duplicate( boxed->private->u.string_list ));
 }
 
 static void *
-string_list_to_void( const NABoxed *boxed )
+string_list_to_void( const FMABoxed *boxed )
 {
 	void *value = NULL;
 
@@ -1256,7 +1256,7 @@ string_list_to_void( const NABoxed *boxed )
 }
 
 static gboolean
-locale_are_equal( const NABoxed *a, const NABoxed *b )
+locale_are_equal( const FMABoxed *a, const FMABoxed *b )
 {
 	if( !a->private->u.string && !b->private->u.string ){
 		return( TRUE );
@@ -1268,69 +1268,69 @@ locale_are_equal( const NABoxed *a, const NABoxed *b )
 }
 
 static gboolean
-uint_are_equal( const NABoxed *a, const NABoxed *b )
+uint_are_equal( const FMABoxed *a, const FMABoxed *b )
 {
 	return( a->private->u.uint == b->private->u.uint );
 }
 
 static void
-uint_copy( NABoxed *dest, const NABoxed *src )
+uint_copy( FMABoxed *dest, const FMABoxed *src )
 {
 	dest->private->u.uint = src->private->u.uint;
 	dest->private->is_set = TRUE;
 }
 
 static void
-uint_free( NABoxed *boxed )
+uint_free( FMABoxed *boxed )
 {
 	boxed->private->u.uint = 0;
 	boxed->private->is_set = FALSE;
 }
 
 static void
-uint_from_string( NABoxed *boxed, const gchar *string )
+uint_from_string( FMABoxed *boxed, const gchar *string )
 {
 	boxed->private->u.uint = string ? atoi( string ) : 0;
 }
 
 static void
-uint_from_value( NABoxed *boxed, const GValue *value )
+uint_from_value( FMABoxed *boxed, const GValue *value )
 {
 	boxed->private->u.uint = g_value_get_uint( value );
 }
 
 static void
-uint_from_void( NABoxed *boxed, const void *value )
+uint_from_void( FMABoxed *boxed, const void *value )
 {
 	boxed->private->u.uint = GPOINTER_TO_UINT( value );
 }
 
 static gconstpointer
-uint_to_pointer( const NABoxed *boxed )
+uint_to_pointer( const FMABoxed *boxed )
 {
 	return(( gconstpointer ) GUINT_TO_POINTER( boxed->private->u.uint ));
 }
 
 static gchar *
-uint_to_string( const NABoxed *boxed )
+uint_to_string( const FMABoxed *boxed )
 {
 	return( g_strdup_printf( "%u", boxed->private->u.uint ));
 }
 
 static guint
-uint_to_uint( const NABoxed *boxed )
+uint_to_uint( const FMABoxed *boxed )
 {
 	return( boxed->private->u.uint );
 }
 
 static void
-uint_to_value( const NABoxed *boxed, GValue *value )
+uint_to_value( const FMABoxed *boxed, GValue *value )
 {
 	g_value_set_uint( value, boxed->private->u.uint );
 }
 
 static void *
-uint_to_void( const NABoxed *boxed )
+uint_to_void( const FMABoxed *boxed )
 {
 	return( GUINT_TO_POINTER( boxed->private->u.uint ));
 }
@@ -1341,7 +1341,7 @@ uint_to_void( const NABoxed *boxed )
  * else just arbitrarily return -1
  */
 static gboolean
-uint_list_are_equal( const NABoxed *a, const NABoxed *b )
+uint_list_are_equal( const FMABoxed *a, const FMABoxed *b )
 {
 	GList *ia, *ib;
 	gboolean diff = FALSE;
@@ -1361,7 +1361,7 @@ uint_list_are_equal( const NABoxed *a, const NABoxed *b )
 }
 
 static void
-uint_list_copy( NABoxed *dest, const NABoxed *src )
+uint_list_copy( FMABoxed *dest, const FMABoxed *src )
 {
 	GList *isrc;
 
@@ -1373,7 +1373,7 @@ uint_list_copy( NABoxed *dest, const NABoxed *src )
 }
 
 static void
-uint_list_free( NABoxed *boxed )
+uint_list_free( FMABoxed *boxed )
 {
 	g_list_free( boxed->private->u.uint_list );
 	boxed->private->u.uint_list = NULL;
@@ -1381,7 +1381,7 @@ uint_list_free( NABoxed *boxed )
 }
 
 static void
-uint_list_from_string( NABoxed *boxed, const gchar *string )
+uint_list_from_string( FMABoxed *boxed, const gchar *string )
 {
 	gchar **array;
 	gchar **i;
@@ -1403,7 +1403,7 @@ uint_list_from_string( NABoxed *boxed, const gchar *string )
 }
 
 static void
-uint_list_from_value( NABoxed *boxed, const GValue *value )
+uint_list_from_value( FMABoxed *boxed, const GValue *value )
 {
 	if( g_value_get_pointer( value )){
 		boxed->private->u.uint_list = g_list_copy( g_value_get_pointer( value ));
@@ -1411,7 +1411,7 @@ uint_list_from_value( NABoxed *boxed, const GValue *value )
 }
 
 static void
-uint_list_from_void( NABoxed *boxed, const void *value )
+uint_list_from_void( FMABoxed *boxed, const void *value )
 {
 	if( value ){
 		boxed->private->u.uint_list = g_list_copy(( GList * ) value );
@@ -1419,13 +1419,13 @@ uint_list_from_void( NABoxed *boxed, const void *value )
 }
 
 static gconstpointer
-uint_list_to_pointer( const NABoxed *boxed )
+uint_list_to_pointer( const FMABoxed *boxed )
 {
 	return(( gconstpointer ) boxed->private->u.uint_list );
 }
 
 static gchar *
-uint_list_to_string( const NABoxed *boxed )
+uint_list_to_string( const FMABoxed *boxed )
 {
 	GList *is;
 	GString *str = g_string_new( "" );
@@ -1444,19 +1444,19 @@ uint_list_to_string( const NABoxed *boxed )
 }
 
 static GList *
-uint_list_to_uint_list( const NABoxed *boxed )
+uint_list_to_uint_list( const FMABoxed *boxed )
 {
 	return( g_list_copy( boxed->private->u.uint_list ));
 }
 
 static void
-uint_list_to_value( const NABoxed *boxed, GValue *value )
+uint_list_to_value( const FMABoxed *boxed, GValue *value )
 {
 	g_value_set_pointer( value, g_list_copy( boxed->private->u.uint_list ));
 }
 
 static void *
-uint_list_to_void( const NABoxed *boxed )
+uint_list_to_void( const FMABoxed *boxed )
 {
 	void *value = NULL;
 

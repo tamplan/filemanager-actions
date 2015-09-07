@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_OBJECT_MENU_H__
-#define __NAUTILUS_ACTIONS_API_NA_OBJECT_MENU_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_OBJECT_MENU_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_OBJECT_MENU_H__
 
 /**
  * SECTION: object-menu
@@ -73,4 +73,4 @@ NAObjectMenu *na_object_menu_new_with_defaults( void );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_MENU_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_OBJECT_MENU_H__ */

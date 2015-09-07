@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_DATA_TYPES_H__
-#define __NAUTILUS_ACTIONS_API_NA_DATA_TYPES_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_DATA_TYPES_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_DATA_TYPES_H__
 
 /**
  * SECTION: data-type
@@ -52,7 +52,7 @@ G_BEGIN_DECLS
  * @NA_DATA_TYPE_UINT:          an unsigned integer
  * @NA_DATA_TYPE_UINT_LIST:     a list of unsigned integers
  *
- * Each elementary data which would take advantage of #NABoxed facilities
+ * Each elementary data which would take advantage of #FMABoxed facilities
  * should be typed at instanciation time.
  *
  * #NAIFactoryProvider implementations should provide a primitive for reading
@@ -91,4 +91,4 @@ const gchar *na_data_types_get_gconf_dump_key( guint type );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_DATA_TYPES_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_DATA_TYPES_H__ */

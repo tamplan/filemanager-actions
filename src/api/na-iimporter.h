@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_IIMPORTER_H__
-#define __NAUTILUS_ACTIONS_API_NA_IIMPORTER_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_IIMPORTER_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_IIMPORTER_H__
 
 /**
  * SECTION: iimporter
@@ -411,4 +411,4 @@ guint na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImpo
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IIMPORTER_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_IIMPORTER_H__ */

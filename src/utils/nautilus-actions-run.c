@@ -47,7 +47,7 @@
 #include <core/na-tokens.h>
 
 #include "console-utils.h"
-#include "file-manager-actions-run-bindings.h"
+#include "nautilus-actions-run-bindings.h"
 
 static gchar     *id               = "";
 static gchar    **targets_array    = NULL;

@@ -1,64 +1,71 @@
 Deprecating GConf
 =================
 
- Gnome is deprecating GConf in favour of GSettings. This is the short story.
- We so have to migrate several pool of datas.
+ Gnome is deprecating GConf in favour of GSettings. This is the short
+ story. We so have to migrate several pool of datas.
  
- Starting with 3.1.0, Nautilus-Actions is distributed with the needed migration
- tools, whether the migration may occur automatically (for users items and
- preferences), or the system admin must run a script (for mandatory items).
+ Starting with 3.1.0, Nautilus-Actions has been distributed with the
+ needed migration tools, whether the migration may occur automatically
+ (for users items and preferences), or the system admin must run a
+ script (for mandatory items).
  
- Note that this does not break backward compatibility. The 3.1.x serie of
- Nautilus-Actions may still be run on a "old" platform. The oldest supported
- as of January 2011 is Ubuntu 8 LTS.
+ Note that this does not break backward compatibility. The 3.1.x serie
+ of Nautilus-Actions may still be run on a "old" platform. The oldest
+ supported as of January 2011 was Ubuntu 8 LTS.
+ 
+ See README for the oldest supported platforms for the current version.
 
  1. Items, menus and actions, stored in GConf backend
  ----------------------------------------------------
- Historically, actions, then menus, were stored in GConf. These are user items.
+ Historically, actions, then menus, were stored in GConf. These are user
+ items.
 
- A system admin was free to define mandatory menus and actions, and to store
- them in the Mandatory pool of GConf. Such defined items are so available to
- all users, though as read-only items.
+ A system admin was free to define mandatory menus and actions, and to
+ store them in the Mandatory pool of GConf. Such defined items are so
+ available to all users, though as read-only items.
 
    1a. Migrating user items
    ------------------------
    The good news is:
    user items are automatically migrated from GConf to .desktop files.
 
-   The migration happens when the user runs the Nautilus-Actions Configuration
-   Tool user interface, or when the Nautilus-Actions menu plugin is loaded
-   by the Nautilus file-manager, or when the user runs one of the command-line
-   tools nautilus-actions-new or nautilus-actions-run.
+   The migration happens when the user runs the FileManager-Actions
+   Configuration Tool user interface, or when the FileManager-Actions
+   menu plugin is loaded by the file-manager, or when the user runs one
+   of the command-line tools fma-new or fma-run.
 
-   The nautilus-actions-print command-line tool, along with na-delete-xmltree,
-   and na-print-schemas installed in PKGLIBEXECDIR, have no effect on the
-   migration process.
+   The fma-print command-line tool, along with fma-delete-xmltree,
+   and fma-print-schemas installed in PKGLIBEXECDIR, have no effect on
+   the migration process.
 
    The new .desktop files are stored in HOME/.local/file-manager/actions.
 
-   When the migration of its items has occurred, the GConf I/O Provider is
-   disabled, both for reading and writing.
+   When the migration of its items has occurred, the GConf I/O Provider
+   is disabled, for both reading and writing.
 
    1b. Migrating mandatory items
    -----------------------------
    The bad news is:
-   the system admin has to manually run PKGLIBEXECDIR/na-gconf2key.sh script
-   as root in order to migrate existing mandatory items to .desktop files.
+   the system admin has to manually run PKGLIBEXECDIR/fma-gconf2key.sh
+   script as root in order to migrate existing mandatory items to
+   .desktop files.
 
    The new .desktop files default to be stored in /usr/share/file-manager/actions.
 
-   It is enough to run this script once, e.g. when installing for the first time
-   a recent enough version (>= 3.1.0) of Nautilus-Actions.
+   It is enough to run this script once, e.g. when installing for the
+   first time a recent enough version (>= 3.1.0) of FileManager-Actions.
    
    Command-line example:
-   # /usr/libexec/nautilus-actions/na-gconf2key.sh -delete -nodummy
+   # /usr/libexec/file-manager-actions/fma-gconf2key.sh -delete -nodummy
 
  2. User preferences stored in GConf
  -----------------------------------
- Mandatory and user preferences follow the same migration rules that items:
+ Mandatory and user preferences follow the same migration rules that
+ items:
 
  - user preferences are automatically migrated,
- - mandatory preferences have to be manually migrated by the system admin.
+ - mandatory preferences have to be manually migrated by the system
+   admin.
  
  Preferences are renamed and reorganized:
 
@@ -113,8 +120,9 @@ Deprecating GConf
  schemes = [dav|WebDAV files,file|Local files,ftp|FTP files,sftp|SSH files,smb|Windows files]
                                             [nact]     scheme-default-list
 
- User preferences for I/O providers were stored as /apps/nautilus-actions/io-providers/<provider_id>
- keys. They are moved to [io-provider <provider_id>] group.
+ User preferences for I/O providers were stored as
+ /apps/nautilus-actions/io-providers/<provider_id> keys. They are moved
+ to [io-provider <provider_id>] group.
 
  GConf                                                 Key
  -----------------------------------------             --------------------------------------
@@ -129,11 +137,11 @@ Deprecating GConf
      na-desktop/locked
      na-gconf/locked
 
- These keys are just ignored if they are not in the mandatory GConf pool, i.e.
- if they happens to be eventually editable by the user.
+ These keys are just ignored if they are not in the mandatory GConf
+ pool, i.e. if they happens to be eventually editable by the user.
 
- If these keys are actually in the system mandatory GConf pool, they are renamed
- in the following way:
+ If these keys are actually in the system mandatory GConf pool, they
+ are renamed in the following way:
 
  GConf                                      Group      Key
  -----------------------------------------  ------     --------------------------------------
@@ -144,4 +152,4 @@ Deprecating GConf
  /apps/nautilus-actions/mandatory/na-desktop/locked    <removed>
  /apps/nautilus-actions/mandatory/na-gconf/locked      <removed>
 
-P. Wieser - Jan. 2011
+P. Wieser, last updated on sept. 2015

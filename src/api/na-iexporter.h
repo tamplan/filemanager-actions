@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_IEXPORTER_H__
-#define __NAUTILUS_ACTIONS_API_NA_IEXPORTER_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_IEXPORTER_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_IEXPORTER_H__
 
 /**
  * SECTION: iexporter
@@ -539,4 +539,4 @@ GType na_iexporter_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IEXPORTER_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_IEXPORTER_H__ */

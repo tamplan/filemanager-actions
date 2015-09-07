@@ -743,7 +743,7 @@ read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, 
 		if( reader->private->root_node_str->fn_get_value ){
 			value = ( *reader->private->root_node_str->fn_get_value )( reader, parent, def );
 			boxed = na_data_boxed_new( def );
-			na_boxed_set_from_string( NA_BOXED( boxed ), value );
+			fma_boxed_set_from_string( FMA_BOXED( boxed ), value );
 			g_free( value );
 		}
 	}
@@ -1208,7 +1208,7 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
 }
 
 /*
- * string list is converted to GSList, then to a NABoxed string list 'value;value'
+ * string list is converted to GSList, then to a FMABoxed string list 'value;value'
  */
 static gchar *
 dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
@@ -1266,7 +1266,7 @@ dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 }
 
 /*
- * NABoxed accepts a string list as a semi-comma-separated list of strings
+ * FMABoxed accepts a string list as a semi-comma-separated list of strings
  */
 static gchar *
 slist_to_string( GSList *slist )

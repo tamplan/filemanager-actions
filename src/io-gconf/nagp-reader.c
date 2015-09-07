@@ -379,24 +379,24 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 			case NA_DATA_TYPE_STRING:
 			case NA_DATA_TYPE_LOCALE_STRING:
 				str_value = na_gconf_utils_read_string( provider->private->gconf, entry_path, TRUE, NULL );
-				na_boxed_set_from_string( NA_BOXED( boxed ), str_value );
+				fma_boxed_set_from_string( FMA_BOXED( boxed ), str_value );
 				g_free( str_value );
 				break;
 
 			case NA_DATA_TYPE_BOOLEAN:
 				bool_value = na_gconf_utils_read_bool( provider->private->gconf, entry_path, TRUE, FALSE );
-				na_boxed_set_from_void( NA_BOXED( boxed ), GUINT_TO_POINTER( bool_value ));
+				fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( bool_value ));
 				break;
 
 			case NA_DATA_TYPE_STRING_LIST:
 				slist_value = na_gconf_utils_read_string_list( provider->private->gconf, entry_path );
-				na_boxed_set_from_void( NA_BOXED( boxed ), slist_value );
+				fma_boxed_set_from_void( FMA_BOXED( boxed ), slist_value );
 				na_core_utils_slist_free( slist_value );
 				break;
 
 			case NA_DATA_TYPE_UINT:
 				int_value = na_gconf_utils_read_int( provider->private->gconf, entry_path, TRUE, 0 );
-				na_boxed_set_from_void( NA_BOXED( boxed ), GUINT_TO_POINTER( int_value ));
+				fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( int_value ));
 				break;
 
 			default:

@@ -36,7 +36,7 @@
 #include <string.h>
 #include <strings.h>
 
-#include "api/na-boxed.h"
+#include "api/fma-boxed.h"
 #include "api/na-data-types.h"
 #include "api/na-core-utils.h"
 #include "api/na-timeout.h"
@@ -198,7 +198,7 @@ typedef struct {
 	const KeyDef *def;
 	const gchar  *group;
 	gboolean      mandatory;
-	NABoxed      *boxed;
+	FMABoxed      *boxed;
 }
 	KeyValue;
 
@@ -229,7 +229,7 @@ static KeyDef   *get_key_def( const gchar *key );
 static KeyFile  *key_file_new( const gchar *dir );
 static void      on_keyfile_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type );
 static void      on_keyfile_changed_timeout( void );
-static void      on_key_changed_final_handler( NASettings *settings, gchar *group, gchar *key, NABoxed *new_value, gboolean mandatory );
+static void      on_key_changed_final_handler( NASettings *settings, gchar *group, gchar *key, FMABoxed *new_value, gboolean mandatory );
 static KeyValue *peek_key_value_from_content( GList *content, const gchar *group, const gchar *key );
 static KeyValue *read_key_value( const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory );
 static KeyValue *read_key_value_from_key_file( KeyFile *keyfile, const gchar *group, const gchar *key, const KeyDef *key_def );
@@ -297,14 +297,14 @@ class_init( NASettingsClass *klass )
 	 *
 	 * This signal is sent by NASettings when the value of a key is modified.
 	 *
-	 * Arguments are the group, the key, the new value as a NABoxed,
+	 * Arguments are the group, the key, the new value as a FMABoxed,
 	 * and whether it is mandatory.
 	 *
 	 * Handler is of type:
 	 * void ( *handler )( NASettings *settings,
 	 * 						const gchar *group,
 	 * 						const gchar *key,
-	 * 						NABoxed *value,
+	 * 						FMABoxed *value,
 	 * 						gboolean mandatory,
 	 * 						gpointer user_data );
 	 *
@@ -544,7 +544,7 @@ na_settings_get_boolean_ex( const gchar *group, const gchar *key, gboolean *foun
 	key_value = read_key_value( group, key, found, mandatory );
 
 	if( key_value ){
-		value = na_boxed_get_boolean( key_value->boxed );
+		value = fma_boxed_get_boolean( key_value->boxed );
 		release_key_value( key_value );
 
 	} else {
@@ -587,7 +587,7 @@ na_settings_get_string( const gchar *key, gboolean *found, gboolean *mandatory )
 	key_value = read_key_value( NULL, key, found, mandatory );
 
 	if( key_value ){
-		value = na_boxed_get_string( key_value->boxed );
+		value = fma_boxed_get_string( key_value->boxed );
 		release_key_value( key_value );
 
 	} else {
@@ -630,7 +630,7 @@ na_settings_get_string_list( const gchar *key, gboolean *found, gboolean *mandat
 	key_value = read_key_value( NULL, key, found, mandatory );
 
 	if( key_value ){
-		value = na_boxed_get_string_list( key_value->boxed );
+		value = fma_boxed_get_string_list( key_value->boxed );
 		release_key_value( key_value );
 
 	} else {
@@ -672,7 +672,7 @@ na_settings_get_uint( const gchar *key, gboolean *found, gboolean *mandatory )
 	key_value = read_key_value( NULL, key, found, mandatory );
 
 	if( key_value ){
-		value = na_boxed_get_uint( key_value->boxed );
+		value = fma_boxed_get_uint( key_value->boxed );
 		release_key_value( key_value );
 
 	} else {
@@ -715,7 +715,7 @@ na_settings_get_uint_list( const gchar *key, gboolean *found, gboolean *mandator
 	key_value = read_key_value( NULL, key, found, mandatory );
 
 	if( key_value ){
-		value = na_boxed_get_uint_list( key_value->boxed );
+		value = fma_boxed_get_uint_list( key_value->boxed );
 		release_key_value( key_value );
 
 	} else {
@@ -996,13 +996,13 @@ content_diff( GList *old, GList *new )
 			knew = ( KeyValue * ) in->data;
 			if( !strcmp( kold->group, knew->group ) && ( gpointer ) kold->def == ( gpointer ) knew->def ){
 				found = TRUE;
-				if( !na_boxed_are_equal( kold->boxed, knew->boxed )){
+				if( !fma_boxed_are_equal( kold->boxed, knew->boxed )){
 					/* a key has been modified */
 					kdiff = g_new0( KeyValue, 1 );
 					kdiff->group = g_strdup( knew->group );
 					kdiff->def = knew->def;
 					kdiff->mandatory = knew->mandatory;
-					kdiff->boxed = na_boxed_copy( knew->boxed );
+					kdiff->boxed = fma_boxed_copy( knew->boxed );
 					diffs = g_list_prepend( diffs, kdiff );
 				}
 			}
@@ -1013,7 +1013,7 @@ content_diff( GList *old, GList *new )
 			kdiff->group = g_strdup( kold->group );
 			kdiff->def = kold->def;
 			kdiff->mandatory = FALSE;
-			kdiff->boxed = na_boxed_new_from_string( kold->def->type, kold->def->default_value );
+			kdiff->boxed = fma_boxed_new_from_string( kold->def->type, kold->def->default_value );
 			diffs = g_list_prepend( diffs, kdiff );
 		}
 	}
@@ -1033,7 +1033,7 @@ content_diff( GList *old, GList *new )
 			kdiff->group = g_strdup( knew->group );
 			kdiff->def = knew->def;
 			kdiff->mandatory = knew->mandatory;
-			kdiff->boxed = na_boxed_copy( knew->boxed );
+			kdiff->boxed = fma_boxed_copy( knew->boxed );
 			diffs = g_list_prepend( diffs, kdiff );
 		}
 	}
@@ -1191,7 +1191,7 @@ on_keyfile_changed_timeout( void )
 	g_debug( "%s: %d found update(s)", thisfn, g_list_length( modifs ));
 	for( im = modifs ; im ; im = im->next ){
 		changed = ( const KeyValue * ) im->data;
-		value = na_boxed_get_string( changed->boxed );
+		value = fma_boxed_get_string( changed->boxed );
 		g_debug( "%s: group=%s, key=%s, value=%s", thisfn, changed->group, changed->def->key, value );
 		g_free( value );
 	}
@@ -1219,7 +1219,7 @@ on_keyfile_changed_timeout( void )
 				( *( NASettingsKeyCallback ) consumer->callback )(
 						changed->group,
 						changed->def->key,
-						na_boxed_get_pointer( changed->boxed ),
+						fma_boxed_get_pointer( changed->boxed ),
 						changed->mandatory,
 						consumer->user_data );
 			}
@@ -1244,10 +1244,10 @@ on_keyfile_changed_timeout( void )
 }
 
 static void
-on_key_changed_final_handler( NASettings *settings, gchar *group, gchar *key, NABoxed *new_value, gboolean mandatory )
+on_key_changed_final_handler( NASettings *settings, gchar *group, gchar *key, FMABoxed *new_value, gboolean mandatory )
 {
 	g_debug( "na_settings_on_key_changed_final_handler: group=%s, key=%s", group, key );
-	na_boxed_dump( new_value );
+	fma_boxed_dump( new_value );
 }
 
 static KeyValue *
@@ -1352,7 +1352,7 @@ read_key_value_from_key_file( KeyFile *keyfile, const gchar *group, const gchar 
 					case NA_DATA_TYPE_BOOLEAN:
 					case NA_DATA_TYPE_STRING_LIST:
 					case NA_DATA_TYPE_UINT_LIST:
-						value->boxed = na_boxed_new_from_string( key_def->type, str );
+						value->boxed = fma_boxed_new_from_string( key_def->type, str );
 						break;
 				}
 			}

@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_IFACTORY_PROVIDER_H__
-#define __NAUTILUS_ACTIONS_API_NA_IFACTORY_PROVIDER_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_PROVIDER_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_PROVIDER_H__
 
 /**
  * SECTION: ifactory-provider
@@ -289,4 +289,4 @@ guint na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *w
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IFACTORY_PROVIDER_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_PROVIDER_H__ */

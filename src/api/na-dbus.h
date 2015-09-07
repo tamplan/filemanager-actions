@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_DBUS_H__
-#define __NAUTILUS_ACTIONS_API_NA_DBUS_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_DBUS_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_DBUS_H__
 
 /**
  * SECTION: dbus
@@ -134,4 +134,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_DBUS_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_DBUS_H__ */

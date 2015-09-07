@@ -310,7 +310,7 @@ set_defaults_iter( NADataDef *def, NafoDefaultIter *data )
 	if( !boxed ){
 		boxed = na_data_boxed_new( def );
 		attach_boxed_to_object( data->object, boxed );
-		na_boxed_set_from_string( NA_BOXED( boxed ), def->default_value );
+		fma_boxed_set_from_string( FMA_BOXED( boxed ), def->default_value );
 	}
 
 	/* do not stop */
@@ -402,7 +402,7 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 				tgt_boxed = na_data_boxed_new( def );
 				attach_boxed_to_object( target, tgt_boxed );
 			}
-			na_boxed_set_from_boxed( NA_BOXED( tgt_boxed ), NA_BOXED( boxed ));
+			fma_boxed_set_from_boxed( FMA_BOXED( tgt_boxed ), FMA_BOXED( boxed ));
 		}
 	}
 
@@ -446,7 +446,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 
 			NADataBoxed *b_boxed = na_ifactory_object_get_data_boxed( b, a_def->name );
 			if( b_boxed ){
-				are_equal = na_boxed_are_equal( NA_BOXED( a_boxed ), NA_BOXED( b_boxed ));
+				are_equal = fma_boxed_are_equal( FMA_BOXED( a_boxed ), FMA_BOXED( b_boxed ));
 				if( !are_equal ){
 					g_debug( "%s: %s not equal as %s different", thisfn, G_OBJECT_TYPE_NAME( a ), a_def->name );
 				}
@@ -567,7 +567,7 @@ na_factory_object_dump( const NAIFactoryObject *object )
 	for( it = list ; it ; it = it->next ){
 		NADataBoxed *boxed = NA_DATA_BOXED( it->data );
 		const NADataDef *def = na_data_boxed_get_data_def( boxed );
-		gchar *value = na_boxed_get_string( NA_BOXED( boxed ));
+		gchar *value = fma_boxed_get_string( FMA_BOXED( boxed ));
 		g_debug( "| %s: %*s=%s", thisfn, length, def->name+l_prefix, value );
 		g_free( value );
 	}
@@ -639,7 +639,7 @@ read_data_iter( NADataDef *def, NafoReadIter *iter )
 		NADataBoxed *exist = na_ifactory_object_get_data_boxed( iter->object, def->name );
 
 		if( exist ){
-			na_boxed_set_from_boxed( NA_BOXED( exist ), NA_BOXED( boxed ));
+			fma_boxed_set_from_boxed( FMA_BOXED( exist ), FMA_BOXED( boxed ));
 			g_object_unref( boxed );
 
 		} else {
@@ -743,7 +743,7 @@ na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *nam
 
 	boxed = na_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
-		na_boxed_get_as_value( NA_BOXED( boxed ), value );
+		fma_boxed_get_as_value( FMA_BOXED( boxed ), value );
 	}
 }
 
@@ -771,7 +771,7 @@ na_factory_object_get_as_void( const NAIFactoryObject *object, const gchar *name
 
 	boxed = na_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
-		value = na_boxed_get_as_void( NA_BOXED( boxed ));
+		value = fma_boxed_get_as_void( FMA_BOXED( boxed ));
 	}
 
 	return( value );
@@ -814,7 +814,7 @@ na_factory_object_set_from_value( NAIFactoryObject *object, const gchar *name, c
 
 	NADataBoxed *boxed = na_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
-		na_boxed_set_from_value( NA_BOXED( boxed ), value );
+		fma_boxed_set_from_value( FMA_BOXED( boxed ), value );
 
 	} else {
 		NADataDef *def = na_factory_object_get_data_def( object, name );
@@ -823,7 +823,7 @@ na_factory_object_set_from_value( NAIFactoryObject *object, const gchar *name, c
 
 		} else {
 			boxed = na_data_boxed_new( def );
-			na_boxed_set_from_value( NA_BOXED( boxed ), value );
+			fma_boxed_set_from_value( FMA_BOXED( boxed ), value );
 			attach_boxed_to_object( object, boxed );
 		}
 	}
@@ -846,7 +846,7 @@ na_factory_object_set_from_void( NAIFactoryObject *object, const gchar *name, co
 
 	NADataBoxed *boxed = na_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
-		na_boxed_set_from_void( NA_BOXED( boxed ), data );
+		fma_boxed_set_from_void( FMA_BOXED( boxed ), data );
 
 	} else {
 		NADataDef *def = na_factory_object_get_data_def( object, name );
@@ -855,7 +855,7 @@ na_factory_object_set_from_void( NAIFactoryObject *object, const gchar *name, co
 
 		} else {
 			boxed = na_data_boxed_new( def );
-			na_boxed_set_from_void( NA_BOXED( boxed ), data );
+			fma_boxed_set_from_void( FMA_BOXED( boxed ), data );
 			attach_boxed_to_object( object, boxed );
 		}
 	}

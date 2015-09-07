@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__
-#define __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_DATA_BOXED_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_DATA_BOXED_H__
 
 /**
  * SECTION: data-boxed
@@ -39,7 +39,7 @@
  * The object which encapsulates an elementary data of #NAIFactoryObject.
  * A #NADataBoxed object has a type and a value.
  *
- * #NADataBoxed class is derived from #NABoxed one, and implements the same
+ * #NADataBoxed class is derived from #FMABoxed one, and implements the same
  * types that those defined in na-data-types.h.
  *
  * Additionally, #NADataBoxed class holds the #NADataDef data definition
@@ -51,7 +51,7 @@
 
 #include <glib-object.h>
 
-#include "na-boxed.h"
+#include "fma-boxed.h"
 #include "na-data-def.h"
 
 G_BEGIN_DECLS
@@ -67,7 +67,7 @@ typedef struct _NADataBoxedPrivate        NADataBoxedPrivate;
 
 typedef struct {
 	/*< private >*/
-	NABoxed             parent;
+	FMABoxed             parent;
 	NADataBoxedPrivate *private;
 }
 	NADataBoxed;
@@ -76,7 +76,7 @@ typedef struct _NADataBoxedClassPrivate   NADataBoxedClassPrivate;
 
 typedef struct {
 	/*< private >*/
-	NABoxedClass             parent;
+	FMABoxedClass             parent;
 	NADataBoxedClassPrivate *private;
 }
 	NADataBoxedClass;
@@ -109,4 +109,4 @@ void             na_data_boxed_set_from_void  ( NADataBoxed *boxed, const void *
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_DATA_BOXED_H__ */

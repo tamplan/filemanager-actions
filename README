@@ -1,12 +1,12 @@
-Nautilus-Actions
+FileManager-Actions
 
   Nautilus-actions is an extension for Nautilus file manager which
   allows the user to add arbitrary program to be launched through the
   Nautilus file manager popup menu of selected files.
 
-Nautilus-Actions components.
+FileManager-Actions components.
 
-  Nautilus-Actions has three sort of components:
+  FileManager-Actions has three sort of components:
 
   - A user interface, nautilus-actions-config-tool (NACT), which let you
     manage your actions. With NACT, you are able to create, modify and
@@ -34,11 +34,11 @@ Nautilus-Actions components.
        . na-gconf2keys.sh migrates menus, actions and user preferences from
          GConf to files.
 
-Nautilus-Actions plugins.
+FileManager-Actions plugins.
 
   I/O Providers.
 
-    Nautilus-Actions itself uses plugins to load menus and actions from
+    FileManager-Actions itself uses plugins to load menus and actions from
     the storage space. These plugins are installed in PKGLIBDIR, usually
     something as /usr/lib/nautilus-actions/.
 
@@ -48,15 +48,15 @@ Nautilus-Actions plugins.
 
   Importers/Exporters.
 
-    Nautilus-Actions also relies on plugins to import actions and menus,
+    FileManager-Actions also relies on plugins to import actions and menus,
     and to export them, in several formats.
-    For now, Nautilus-Actions is able to import/export its items as:
+    For now, FileManager-Actions is able to import/export its items as:
     . GConf schemas;
     . GConf dump;
     . XML;
     . .desktop files.
 
-Nautilus-Actions documentation.
+FileManager-Actions documentation.
 
   Documentation is provided in several formats:
   - developer documentation is provided as xml and html files, as generated

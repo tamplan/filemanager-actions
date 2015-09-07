@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_OBJECT_ID_H__
-#define __NAUTILUS_ACTIONS_API_NA_OBJECT_ID_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_OBJECT_ID_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_OBJECT_ID_H__
 
 /**
  * SECTION: object-id
@@ -108,4 +108,4 @@ void   na_object_id_set_new_id       ( NAObjectId *object, const NAObjectId *new
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_ID_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_OBJECT_ID_H__ */

@@ -40,7 +40,7 @@
 #include <core/na-gconf-migration.h>
 #include <core/na-settings.h>
 
-#include "file-manager-actions.h"
+#include "nautilus-actions.h"
 
 static void set_log_handler( void );
 static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );

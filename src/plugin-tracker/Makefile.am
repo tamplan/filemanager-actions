@@ -34,7 +34,7 @@ AM_CPPFLAGS += \
 
 nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
 
-nautilus_extension_LTLIBRARIES = libfile-manager-actions-tracker.la
+nautilus_extension_LTLIBRARIES = libnautilus-actions-tracker.la
 
 BUILT_SOURCES =
 

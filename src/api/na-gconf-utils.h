@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
-#define __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_GCONF_UTILS_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_GCONF_UTILS_H__
 
 #ifdef HAVE_GCONF
 /**
@@ -76,4 +76,4 @@ gchar   *na_gconf_utils_slist_to_string  ( GSList *slist );
 G_END_DECLS
 
 #endif /* HAVE_GCONF */
-#endif /* __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_GCONF_UTILS_H__ */

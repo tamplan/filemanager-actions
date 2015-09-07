@@ -53,7 +53,7 @@ AM_CPPFLAGS += \
 libna_core_la_SOURCES = \
 	na-about.c											\
 	na-about.h											\
-	na-boxed.c											\
+	fma-boxed.c											\
 	na-core-utils.c										\
 	na-data-boxed.c										\
 	na-data-def.c										\

@@ -323,7 +323,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 		switch( def->type ){
 
 			case NA_DATA_TYPE_STRING:
-				str_value = na_boxed_get_string( NA_BOXED( boxed ));
+				str_value = fma_boxed_get_string( FMA_BOXED( boxed ));
 				na_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
@@ -333,7 +333,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 				break;
 
 			case NA_DATA_TYPE_LOCALE_STRING:
-				str_value = na_boxed_get_string( NA_BOXED( boxed ));
+				str_value = fma_boxed_get_string( FMA_BOXED( boxed ));
 				na_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
@@ -343,7 +343,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 				break;
 
 			case NA_DATA_TYPE_BOOLEAN:
-				bool_value = GPOINTER_TO_UINT( na_boxed_get_as_void( NA_BOXED( boxed )));
+				bool_value = GPOINTER_TO_UINT( fma_boxed_get_as_void( FMA_BOXED( boxed )));
 				na_gconf_utils_write_bool( gconf, path, bool_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
@@ -352,7 +352,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 				break;
 
 			case NA_DATA_TYPE_STRING_LIST:
-				slist_value = ( GSList * ) na_boxed_get_as_void( NA_BOXED( boxed ));
+				slist_value = ( GSList * ) fma_boxed_get_as_void( FMA_BOXED( boxed ));
 				na_gconf_utils_write_string_list( gconf, path, slist_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
@@ -362,7 +362,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 				break;
 
 			case NA_DATA_TYPE_UINT:
-				uint_value = GPOINTER_TO_UINT( na_boxed_get_as_void( NA_BOXED( boxed )));
+				uint_value = GPOINTER_TO_UINT( fma_boxed_get_as_void( FMA_BOXED( boxed )));
 				na_gconf_utils_write_int( gconf, path, uint_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );

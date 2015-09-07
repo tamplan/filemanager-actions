@@ -26,7 +26,7 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
-	file-manager-actions-config-tool						\
+	fma-config-tool										\
 	$(NULL)
 
 ui_datadir = $(pkgdatadir)/ui
@@ -46,7 +46,7 @@ AM_CPPFLAGS += \
 BUILT_SOURCES = \
 	$(NULL)
 
-nautilus_actions_config_tool_SOURCES = \
+fma_config_tool_SOURCES = \
 	base-assistant.c									\
 	base-assistant.h									\
 	base-builder.c										\
@@ -143,13 +143,13 @@ nautilus_actions_config_tool_SOURCES = \
 	$(BUILT_SOURCES)									\
 	$(NULL)
 
-nautilus_actions_config_tool_LDADD = \
+fma_config_tool_LDADD = \
 	$(top_builddir)/src/core/libna-core.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 actions_files = \
-	file-manager-actions-config-tool.actions				\
+	nautilus-actions-config-tool.actions				\
 	$(NULL)
 
 ui_files = \

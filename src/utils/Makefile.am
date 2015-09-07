@@ -31,9 +31,9 @@ NA_UTILS_LDADD = \
 	$(NULL)
 
 bin_PROGRAMS = \
-	file-manager-actions-new										\
-	file-manager-actions-print										\
-	file-manager-actions-run										\
+	nautilus-actions-new										\
+	nautilus-actions-print										\
+	nautilus-actions-run										\
 	$(NULL)
 
 pkglibexec_PROGRAMS = \
@@ -50,7 +50,7 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 nautilus_actions_new_SOURCES = \
-	file-manager-actions-new.c										\
+	nautilus-actions-new.c										\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)
@@ -60,7 +60,7 @@ nautilus_actions_new_LDADD = \
 	$(NULL)
 
 nautilus_actions_print_SOURCES = \
-	file-manager-actions-print.c									\
+	nautilus-actions-print.c									\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)
@@ -72,14 +72,14 @@ nautilus_actions_print_LDADD = \
 BUILT_SOURCES =
 
 BUILT_SOURCES += \
-	file-manager-actions-run-bindings.c								\
-	file-manager-actions-run-bindings.h								\
+	nautilus-actions-run-bindings.c								\
+	nautilus-actions-run-bindings.h								\
 	$(NULL)
 
-file-manager-actions-run-bindings.c nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-gdbus.xml
+nautilus-actions-run-bindings.c nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-gdbus.xml
 	gdbus-codegen \
 		--interface-prefix org.nautilus_actions.DBus.Tracker.	\
-		--generate-c-code file-manager-actions-run-bindings			\
+		--generate-c-code nautilus-actions-run-bindings			\
 		--c-namespace NA_Tracker								\
 		--c-generate-object-manager								\
 		$<
@@ -89,7 +89,7 @@ nodist_nautilus_actions_run_SOURCES = \
 	$(NULL)
 
 nautilus_actions_run_SOURCES = \
-	file-manager-actions-run.c										\
+	nautilus-actions-run.c										\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)

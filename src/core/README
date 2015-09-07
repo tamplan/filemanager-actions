@@ -1,4 +1,8 @@
-This is the core dynamic library for Nautilus-Actions.
+src/core
+--------
+This is the core dynamic library for FileManager-Actions.
 
 Come here which is not in the API and should yet be shared between several
 N-A components.
+
+P. Wieser, last updated on sept. 2015

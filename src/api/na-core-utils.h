@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_CORE_UTILS_H__
-#define __NAUTILUS_ACTIONS_API_NA_CORE_UTILS_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_CORE_UTILS_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_CORE_UTILS_H__
 
 /**
  * SECTION: core-utils
@@ -103,4 +103,4 @@ void     na_core_utils_print_version( void );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_CORE_UTILS_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_CORE_UTILS_H__ */

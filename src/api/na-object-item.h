@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_OBJECT_ITEM_H__
-#define __NAUTILUS_ACTIONS_API_NA_OBJECT_ITEM_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_OBJECT_ITEM_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_OBJECT_ITEM_H__
 
 /**
  * SECTION: object-item
@@ -112,4 +112,4 @@ void        na_object_item_set_writability_status( NAObjectItem *item, gboolean 
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_ITEM_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_OBJECT_ITEM_H__ */

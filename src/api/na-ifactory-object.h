@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__
-#define __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_OBJECT_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_OBJECT_H__
 
 /**
  * SECTION: ifactory-object
@@ -245,4 +245,4 @@ void         na_ifactory_object_set_from_void  ( NAIFactoryObject *object, const
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_OBJECT_H__ */

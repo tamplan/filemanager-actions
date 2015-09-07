@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_ICONTEXT_H__
-#define __NAUTILUS_ACTIONS_API_NA_ICONTEXT_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_ICONTEXT_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_ICONTEXT_H__
 
 /**
  * SECTION: icontext
@@ -109,4 +109,4 @@ void     na_icontext_replace_folder  ( NAIContext *context, const gchar *old, co
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_ICONTEXT_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_ICONTEXT_H__ */

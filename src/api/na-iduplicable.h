@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_IDUPLICABLE_H__
-#define __NAUTILUS_ACTIONS_API_NA_IDUPLICABLE_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_NA_IDUPLICABLE_H__
+#define __FILE_MANAGER_ACTIONS_API_NA_IDUPLICABLE_H__
 
 /**
  * SECTION: iduplicable
@@ -225,4 +225,4 @@ void           na_iduplicable_set_modified( NAIDuplicable *object, gboolean modi
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_IDUPLICABLE_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_NA_IDUPLICABLE_H__ */
