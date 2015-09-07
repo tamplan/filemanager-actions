@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 #include "core/na-updater.h"
 
 #include "base-gtk-utils.h"
@@ -61,7 +61,7 @@ base_gtk_utils_restore_window_position( const BaseWindow *window, const gchar *w
 	toplevel = base_window_get_gtk_toplevel( window );
 	g_return_if_fail( GTK_IS_WINDOW( toplevel ));
 
-	na_gtk_utils_restore_window_position( toplevel, wsp_name );
+	fma_gtk_utils_restore_window_position( toplevel, wsp_name );
 }
 
 /**
@@ -82,7 +82,7 @@ base_gtk_utils_save_window_position( const BaseWindow *window, const gchar *wsp_
 	toplevel = base_window_get_gtk_toplevel( window );
 	g_return_if_fail( GTK_IS_WINDOW( toplevel ));
 
-	na_gtk_utils_save_window_position( toplevel, wsp_name );
+	fma_gtk_utils_save_window_position( toplevel, wsp_name );
 }
 
 /**
@@ -99,7 +99,7 @@ base_gtk_utils_save_window_position( const BaseWindow *window, const gchar *wsp_
 void
 base_gtk_utils_set_editable( GObject *widget, gboolean editable )
 {
-	na_gtk_utils_set_editable( widget, editable );
+	fma_gtk_utils_set_editable( widget, editable );
 }
 
 /**
@@ -129,7 +129,7 @@ void
 base_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 		GCallback handler, void *user_data, gboolean editable, gboolean sensitive )
 {
-	na_gtk_utils_radio_set_initial_state( button, handler, user_data, editable, sensitive );
+	fma_gtk_utils_radio_set_initial_state( button, handler, user_data, editable, sensitive );
 }
 
 /**
@@ -146,7 +146,7 @@ base_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 void
 base_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback handler )
 {
-	na_gtk_utils_radio_reset_initial_state( button, handler );
+	fma_gtk_utils_radio_reset_initial_state( button, handler );
 }
 
 /**
@@ -182,9 +182,9 @@ base_gtk_utils_toggle_set_initial_state( BaseWindow *window,
 	if( button ){
 		base_window_signal_connect( window, G_OBJECT( button ), "toggled", handler );
 
-		g_object_set_data( G_OBJECT( button ), NA_TOGGLE_DATA_HANDLER, handler );
-		g_object_set_data( G_OBJECT( button ), NA_TOGGLE_DATA_USER_DATA, window );
-		g_object_set_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE, GUINT_TO_POINTER( editable ));
+		g_object_set_data( G_OBJECT( button ), FMA_TOGGLE_DATA_HANDLER, handler );
+		g_object_set_data( G_OBJECT( button ), FMA_TOGGLE_DATA_USER_DATA, window );
+		g_object_set_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE, GUINT_TO_POINTER( editable ));
 
 		base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 		gtk_widget_set_sensitive( GTK_WIDGET( button ), sensitive );
@@ -210,12 +210,12 @@ base_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button )
 	gpointer user_data;
 	gboolean active;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( !editable ){
 		active = gtk_toggle_button_get_active( button );
-		handler = G_CALLBACK( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_HANDLER ));
-		user_data = g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_USER_DATA );
+		handler = G_CALLBACK( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_HANDLER ));
+		user_data = g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_USER_DATA );
 
 		g_signal_handlers_block_by_func(( gpointer ) button, handler, user_data );
 		gtk_toggle_button_set_active( button, !active );
@@ -405,7 +405,7 @@ base_gtk_utils_select_file_with_preview( GtkApplicationWindow *window,
 		g_signal_connect( dialog, "update-preview", update_preview_cb, preview );
 	}
 
-	na_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), wsp_name );
+	fma_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), wsp_name );
 
 	text = gtk_entry_get_text( GTK_ENTRY( entry ));
 
@@ -430,7 +430,7 @@ base_gtk_utils_select_file_with_preview( GtkApplicationWindow *window,
 	na_settings_set_string( entry_name, uri );
 	g_free( uri );
 
-	na_gtk_utils_save_window_position( GTK_WINDOW( dialog ), wsp_name );
+	fma_gtk_utils_save_window_position( GTK_WINDOW( dialog ), wsp_name );
 
 	gtk_widget_destroy( dialog );
 }
@@ -472,7 +472,7 @@ base_gtk_utils_select_dir( GtkApplicationWindow *window,
 			NULL
 			);
 
-	na_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), wsp_name );
+	fma_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), wsp_name );
 
 	text = gtk_entry_get_text( GTK_ENTRY( entry ));
 
@@ -497,7 +497,7 @@ base_gtk_utils_select_dir( GtkApplicationWindow *window,
 	na_settings_set_string( entry_name, uri );
 	g_free( uri );
 
-	na_gtk_utils_save_window_position( GTK_WINDOW( dialog ), wsp_name );
+	fma_gtk_utils_save_window_position( GTK_WINDOW( dialog ), wsp_name );
 
 	gtk_widget_destroy( dialog );
 }

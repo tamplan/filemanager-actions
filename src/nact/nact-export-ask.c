@@ -37,7 +37,7 @@
 
 #include "core/fma-exporter.h"
 #include "core/fma-export-format.h"
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 #include "core/na-ioptions-list.h"
 
 #include "base-gtk-utils.h"
@@ -427,7 +427,7 @@ keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor )
 {
 	gboolean editable;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->keep_last_choice = gtk_toggle_button_get_active( button );

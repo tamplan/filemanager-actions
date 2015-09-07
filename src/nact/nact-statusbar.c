@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 #include "core/na-io-provider.h"
 
 #include "base-gtk-utils.h"

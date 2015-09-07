@@ -35,7 +35,7 @@
 
 #include "api/fma-object-api.h"
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 
 #include "base-keysyms.h"
 #include "nact-application.h"
@@ -550,7 +550,7 @@ nact_tree_view_set_mnemonic( NactTreeView *view, GtkContainer *parent, const gch
 
 	if( !priv->dispose_has_run ){
 
-		label = na_gtk_utils_find_widget_by_name( parent, widget_name );
+		label = fma_gtk_utils_find_widget_by_name( parent, widget_name );
 		g_return_if_fail( label && GTK_IS_LABEL( label ));
 		gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( priv->tree_view ));
 	}

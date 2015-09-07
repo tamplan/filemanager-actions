@@ -39,7 +39,7 @@
 #include <core/fma-desktop-environment.h>
 #include <core/fma-exporter.h>
 #include <core/fma-export-format.h>
-#include <core/na-gtk-utils.h>
+#include <core/fma-gtk-utils.h>
 #include <core/na-import-mode.h>
 #include <core/na-importer.h>
 #include <core/na-ioptions-list.h>
@@ -682,7 +682,7 @@ order_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *toggle_bu
 	gboolean editable;
 	gboolean active;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( toggle_button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( toggle_button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		active = gtk_toggle_button_get_active( toggle_button );
@@ -715,7 +715,7 @@ root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->root_menu = gtk_toggle_button_get_active( button );
@@ -760,7 +760,7 @@ about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->about_item = gtk_toggle_button_get_active( button );
@@ -963,7 +963,7 @@ relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor 
 {
 	gboolean editable;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->relabel_menu = gtk_toggle_button_get_active( button );
@@ -994,7 +994,7 @@ relabel_action_on_toggled( GtkToggleButton *button, NactPreferencesEditor *edito
 {
 	gboolean editable;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->relabel_action = gtk_toggle_button_get_active( button );
@@ -1025,7 +1025,7 @@ relabel_profile_on_toggled( GtkToggleButton *button, NactPreferencesEditor *edit
 {
 	gboolean editable;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->relabel_profile = gtk_toggle_button_get_active( button );
@@ -1057,7 +1057,7 @@ esc_quit_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 	gboolean editable;
 	GtkWidget *confirm_button;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->esc_quit = gtk_toggle_button_get_active( button );
@@ -1091,7 +1091,7 @@ esc_confirm_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->esc_confirm = gtk_toggle_button_get_active( button );
@@ -1138,7 +1138,7 @@ auto_save_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 	GtkWidget *widget;
 	gboolean sensitive;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->auto_save = gtk_toggle_button_get_active( button );

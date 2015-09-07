@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 #include "core/na-iprefs.h"
 #include "core/na-updater.h"
 
@@ -241,7 +241,7 @@ initialize_buttons( NactSortButtons *buttons, NactMainWindow *window )
 	for( i = 0 ; st_toggle_group[i].btn_name ; ++i ){
 		st_toggle_group[i].button =
 				GTK_TOGGLE_BUTTON(
-						na_gtk_utils_find_widget_by_name(
+						fma_gtk_utils_find_widget_by_name(
 								GTK_CONTAINER( window ), st_toggle_group[i].btn_name ));
 		g_signal_connect(
 				st_toggle_group[i].button, "toggled",

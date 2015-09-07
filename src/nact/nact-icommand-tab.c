@@ -38,7 +38,7 @@
 #include "api/fma-object-api.h"
 
 #include "core/fma-factory-object.h"
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 #include "core/na-tokens.h"
 
 #include "nact-application.h"
@@ -260,11 +260,11 @@ initialize_window( NactICommandTab *instance )
 			"delete-event", G_CALLBACK( on_legend_dialog_deleted ), instance );
 #endif
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "WorkingDirectoryEntry",
 			"changed", G_CALLBACK( on_wdir_changed ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 				GTK_CONTAINER( instance ), "CommandWorkingDirectoryButton",
 			"clicked", G_CALLBACK( on_wdir_browse ), instance );
 
@@ -371,7 +371,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 
 	update_example_label( instance, profile );
 
-	wdir_entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "WorkingDirectoryEntry" );
+	wdir_entry = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "WorkingDirectoryEntry" );
 	wdir = profile ? fma_object_get_working_dir( profile ) : g_strdup( "" );
 	wdir = wdir ? wdir : g_strdup( "" );
 	gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir );
@@ -379,7 +379,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 	gtk_widget_set_sensitive( wdir_entry, profile != NULL );
 	base_gtk_utils_set_editable( G_OBJECT( wdir_entry ), editable );
 
-	wdir_button = GTK_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandWorkingDirectoryButton" ));
+	wdir_button = GTK_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandWorkingDirectoryButton" ));
 	gtk_widget_set_sensitive( GTK_WIDGET( wdir_button ), profile != NULL );
 	base_gtk_utils_set_editable( G_OBJECT( wdir_button ), editable );
 
@@ -389,13 +389,13 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 static GtkWidget *
 get_label_entry( NactICommandTab *instance )
 {
-	return( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ProfileLabelEntry" ));
+	return( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ProfileLabelEntry" ));
 }
 
 static GtkButton *
 get_legend_button( NactICommandTab *instance )
 {
-	return( GTK_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandLegendButton" )));
+	return( GTK_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandLegendButton" )));
 }
 
 static GtkWindow *
@@ -410,19 +410,19 @@ get_legend_dialog( NactICommandTab *instance )
 static GtkWidget *
 get_parameters_entry( NactICommandTab *instance )
 {
-	return( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandParametersEntry" ));
+	return( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandParametersEntry" ));
 }
 
 static GtkButton *
 get_path_button( NactICommandTab *instance )
 {
-	return( GTK_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandPathButton" )));
+	return( GTK_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandPathButton" )));
 }
 
 static GtkWidget *
 get_path_entry( NactICommandTab *instance )
 {
-	return( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandPathEntry" ));
+	return( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandPathEntry" ));
 }
 
 static void
@@ -578,7 +578,7 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 			NULL );
 
 	if( profile ){
-		wdir_entry = na_gtk_utils_find_widget_by_name(
+		wdir_entry = fma_gtk_utils_find_widget_by_name(
 							GTK_CONTAINER( instance ), "WorkingDirectoryEntry" );
 		base_gtk_utils_select_dir(
 				GTK_APPLICATION_WINDOW( instance ),
@@ -641,7 +641,7 @@ update_example_label( NactICommandTab *instance, FMAObjectProfile *profile )
 	gchar *parameters;
 	GtkWidget *example_widget;
 
-	example_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandExampleLabel" );
+	example_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandExampleLabel" );
 
 	if( profile ){
 		parameters = parse_parameters( instance );

@@ -35,7 +35,7 @@
 
 #include "api/fma-object-api.h"
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
@@ -196,31 +196,31 @@ initialize_window( NactIExecutionTab *instance )
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
 			G_CALLBACK( on_tree_selection_changed ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "ExecutionModeNormal",
 			"toggled", G_CALLBACK( on_normal_mode_toggled ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "ExecutionModeTerminal",
 			"toggled", G_CALLBACK( on_terminal_mode_toggled ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "ExecutionModeEmbedded",
 			"toggled", G_CALLBACK( on_embedded_mode_toggled ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "ExecutionModeDisplayOutput",
 			"toggled", G_CALLBACK( on_display_mode_toggled ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "StartupNotifyButton",
 			"toggled", G_CALLBACK( on_startup_notify_toggled ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "StartupWMClassEntry",
 			"changed", G_CALLBACK( on_startup_class_changed ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "ExecuteAsEntry",
 			"changed", G_CALLBACK( on_execute_as_changed ), instance );
 }
@@ -259,10 +259,10 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIExec
 	data = get_iexecution_data( instance );
 	data->on_selection_change = TRUE;
 
-	normal_toggle = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecutionModeNormal" );
-	terminal_toggle = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecutionModeTerminal" );
-	embedded_toggle = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecutionModeEmbedded" );
-	display_toggle = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecutionModeDisplayOutput" );
+	normal_toggle = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecutionModeNormal" );
+	terminal_toggle = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecutionModeTerminal" );
+	embedded_toggle = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecutionModeEmbedded" );
+	display_toggle = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecutionModeDisplayOutput" );
 
 	mode = profile ? fma_object_get_execution_mode( profile ) : g_strdup( "Normal" );
 	gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( normal_toggle ), profile == NULL );
@@ -293,25 +293,25 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIExec
 
 	g_free( mode );
 
-	frame = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupModeFrame" );
+	frame = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupModeFrame" );
 	gtk_widget_set_sensitive( frame, FALSE );
 
 	notify = profile ? fma_object_get_startup_notify( profile ) : FALSE;
-	notify_check = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupNotifyButton" );
+	notify_check = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupNotifyButton" );
 	base_gtk_utils_set_editable( G_OBJECT( notify_check ), editable );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( notify_check ), notify );
 
 	class = profile ? fma_object_get_startup_class( profile ) : g_strdup( "" );
-	entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupWMClassEntry" );
+	entry = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupWMClassEntry" );
 	gtk_entry_set_text( GTK_ENTRY( entry ), class );
 	base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 	g_free( class );
 
-	frame = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "UserFrame" );
+	frame = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "UserFrame" );
 	gtk_widget_set_sensitive( frame, FALSE );
 
 	user = profile ? fma_object_get_execute_as( profile ) : g_strdup( "" );
-	entry = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecuteAsEntry" );
+	entry = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ExecuteAsEntry" );
 	gtk_entry_set_text( GTK_ENTRY( entry ), user );
 	base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 	g_free( user );
@@ -366,9 +366,9 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 				fma_object_set_execution_mode( profile, mode );
 
 				is_normal = ( strcmp( mode, "Normal" ) == 0 );
-				widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupNotifyButton" );
+				widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupNotifyButton" );
 				gtk_widget_set_sensitive( widget, is_normal );
-				widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupWMClassEntry" );
+				widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "StartupWMClassEntry" );
 				gtk_widget_set_sensitive( widget, is_normal );
 
 				g_signal_emit_by_name( G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, profile, 0 );

@@ -27,12 +27,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_API_NA_GTK_UTILS_H__
-#define __CORE_API_NA_GTK_UTILS_H__
+#ifndef __CORE_FMA_GTK_UTILS_H__
+#define __CORE_FMA_GTK_UTILS_H__
 
 /* @title: GTK+
  * @short_description: The Gtk+ Library Utilities.
- * @include: core/na-gtk-utils.h
+ * @include: core/fma-gtk-utils.h
  */
 
 #include <gtk/gtk.h>
@@ -41,42 +41,42 @@ G_BEGIN_DECLS
 
 /* widget hierarchy
  */
-GtkWidget *na_gtk_utils_find_widget_by_name   ( GtkContainer *container,
+GtkWidget *fma_gtk_utils_find_widget_by_name   ( GtkContainer *container,
 													const gchar *name );
-void       na_gtk_utils_connect_widget_by_name( GtkContainer *container,
+void       fma_gtk_utils_connect_widget_by_name( GtkContainer *container,
 													const gchar *name,
 													const gchar *signal,
 													GCallback cb,
 													void *user_data );
 
 #ifdef NA_MAINTAINER_MODE
-void       na_gtk_utils_dump_children          ( GtkContainer *container );
+void       fma_gtk_utils_dump_children          ( GtkContainer *container );
 #endif
 
 /* window size and position
  */
-void       na_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_name );
-void       na_gtk_utils_save_window_position   ( GtkWindow *toplevel, const gchar *wsp_name );
+void       fma_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_name );
+void       fma_gtk_utils_save_window_position   ( GtkWindow *toplevel, const gchar *wsp_name );
 
 /* widget status
  */
-void       na_gtk_utils_set_editable( GObject *widget, gboolean editable );
+void       fma_gtk_utils_set_editable( GObject *widget, gboolean editable );
 
-void       na_gtk_utils_radio_set_initial_state  ( GtkRadioButton *button,
+void       fma_gtk_utils_radio_set_initial_state  ( GtkRadioButton *button,
 				GCallback toggled_handler, void *user_data,
 				gboolean editable, gboolean sensitive );
 
-void       na_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback toggled_handler );
+void       fma_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback toggled_handler );
 
 /* default height of a panel bar (dirty hack!)
  */
 #define DEFAULT_HEIGHT		22
 
-#define NA_TOGGLE_DATA_EDITABLE			"na-toggle-data-editable"
-#define NA_TOGGLE_DATA_BUTTON			"na-toggle-data-button"
-#define NA_TOGGLE_DATA_HANDLER			"na-toggle-data-handler"
-#define NA_TOGGLE_DATA_USER_DATA		"na-toggle-data-user-data"
+#define FMA_TOGGLE_DATA_EDITABLE		"fma-toggle-data-editable"
+#define FMA_TOGGLE_DATA_BUTTON			"fma-toggle-data-button"
+#define FMA_TOGGLE_DATA_HANDLER			"fma-toggle-data-handler"
+#define FMA_TOGGLE_DATA_USER_DATA		"fma-toggle-data-user-data"
 
 G_END_DECLS
 
-#endif /* __CORE_API_NA_GTK_UTILS_H__ */
+#endif /* __CORE_FMA_GTK_UTILS_H__ */

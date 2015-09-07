@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 
 #include "base-builder.h"
 #include "base-window.h"
@@ -962,7 +962,7 @@ base_window_dump_children( const BaseWindow *window )
 
 	if( !window->private->dispose_has_run ){
 
-		na_gtk_utils_dump_children( GTK_CONTAINER( window->private->gtk_toplevel ));
+		fma_gtk_utils_dump_children( GTK_CONTAINER( window->private->gtk_toplevel ));
 	}
 }
 #endif
@@ -1108,7 +1108,7 @@ base_window_get_widget( const BaseWindow *window, const gchar *name )
 
 	if( !window->private->dispose_has_run ){
 
-		widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( window->private->gtk_toplevel ), name );
+		widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( window->private->gtk_toplevel ), name );
 	}
 
 	return( widget );

@@ -33,7 +33,7 @@
 
 #include "api/fma-object-profile.h"
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
@@ -57,7 +57,7 @@ nact_main_tab_init( NactMainWindow *main_window, gint num_page )
 	 * but the displayed labels default to be those of the tab, i.e. embed
 	 * an underscore as an accelerator - so get rid of this
 	 */
-	notebook = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "main-notebook" );
+	notebook = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "main-notebook" );
 	g_return_if_fail( notebook && GTK_IS_NOTEBOOK( notebook ));
 	page = gtk_notebook_get_nth_page( GTK_NOTEBOOK( notebook ), num_page );
 	text = gtk_notebook_get_tab_label_text( GTK_NOTEBOOK( notebook ), page );
@@ -78,7 +78,7 @@ nact_main_tab_enable_page( NactMainWindow *window, gint num_page, gboolean enabl
 	GtkWidget *notebook;
 	GtkWidget *page, *label;
 
-	notebook = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-notebook" );
+	notebook = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-notebook" );
 	g_return_if_fail( notebook && GTK_IS_NOTEBOOK( notebook ));
 	page = gtk_notebook_get_nth_page( GTK_NOTEBOOK( notebook ), num_page );
 	gtk_widget_set_sensitive( page, enabled );
@@ -100,7 +100,7 @@ nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
 	gboolean is_sensitive;
 	GtkWidget *notebook, *page;
 
-	notebook = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-notebook" );
+	notebook = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-notebook" );
 	g_return_val_if_fail( notebook && GTK_IS_NOTEBOOK( notebook ), FALSE );
 	page = gtk_notebook_get_nth_page( GTK_NOTEBOOK( notebook ), num_page );
 	is_sensitive = gtk_widget_is_sensitive( page );

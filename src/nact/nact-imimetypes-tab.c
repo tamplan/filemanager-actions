@@ -35,7 +35,7 @@
 
 #include "api/fma-object-api.h"
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
@@ -178,9 +178,9 @@ initialize_gtk( NactIMimetypesTab *instance )
 			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_MIMETYPES,
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "MimetypesTreeView" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddMimetypeButton" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveMimetypeButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "MimetypesTreeView" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddMimetypeButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveMimetypeButton" ),
 			( pget_filters ) get_mimetypes,
 			( pset_filters ) set_mimetypes,
 			NULL,

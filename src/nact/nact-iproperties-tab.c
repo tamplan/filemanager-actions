@@ -37,7 +37,7 @@
 
 #include "api/fma-object-api.h"
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 #include "core/na-io-provider.h"
 
 #include "base-gtk-utils.h"
@@ -205,16 +205,16 @@ initialize_window( NactIPropertiesTab *instance )
 	g_signal_connect(
 			enabled_button, "toggled", G_CALLBACK( on_enabled_toggled ), instance );
 
-	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionDescriptionText" );
+	label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionDescriptionText" );
 	buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( label_widget ));
 	g_signal_connect(
 			buffer, "changed", G_CALLBACK( on_description_changed ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "SuggestedShortcutButton",
 			"clicked", G_CALLBACK( on_shortcut_clicked ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "ActionReadonlyButton",
 			"toggled", G_CALLBACK( on_readonly_toggled ), instance );
 }
@@ -257,9 +257,9 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 	data = get_iproperties_data( instance );
 	data->on_selection_change = TRUE;
 
-	notebook = GTK_NOTEBOOK( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "main-notebook" ));
+	notebook = GTK_NOTEBOOK( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "main-notebook" ));
 	page = gtk_notebook_get_nth_page( notebook, TAB_ACTION );
-	title_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionPropertiesTitle" );
+	title_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionPropertiesTitle" );
 	label_widget = gtk_notebook_get_tab_label( notebook, page );
 
 	if( item && FMA_IS_OBJECT_MENU( item )){
@@ -275,14 +275,14 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( enabled_button ), enabled_item );
 	base_gtk_utils_set_editable( G_OBJECT( enabled_button ), editable );
 
-	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionDescriptionText" );
+	label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionDescriptionText" );
 	buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( label_widget ));
 	label = item ? fma_object_get_description( item ) : g_strdup( "" );
 	gtk_text_buffer_set_text( buffer, label, -1 );
 	g_free( label );
 	base_gtk_utils_set_editable( G_OBJECT( label_widget ), editable );
 
-	shortcut_button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "SuggestedShortcutButton" );
+	shortcut_button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "SuggestedShortcutButton" );
 	shortcut = item ? fma_object_get_shortcut( item ) : g_strdup( "" );
 	if( !shortcut || !strlen( shortcut )){
 		g_free( shortcut );
@@ -298,11 +298,11 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 	/* read-only toggle only indicates the intrinsic writability status of this item
 	 * _not_ the writability status of the provider
 	 */
-	readonly_button = GTK_TOGGLE_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionReadonlyButton" ));
+	readonly_button = GTK_TOGGLE_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionReadonlyButton" ));
 	gtk_toggle_button_set_active( readonly_button, item ? fma_object_is_readonly( item ) : FALSE );
 	base_gtk_utils_set_editable( G_OBJECT( readonly_button ), FALSE );
 
-	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionItemID" );
+	label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionItemID" );
 	label = item ? fma_object_get_id( item ) : g_strdup( "" );
 	gtk_label_set_text( GTK_LABEL( label_widget ), label );
 	g_free( label );
@@ -330,7 +330,7 @@ on_main_item_updated( NactIPropertiesTab *instance, FMAIContext *context, guint 
 static GtkButton *
 get_enabled_button( NactIPropertiesTab *instance )
 {
-	return( GTK_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionEnabledButton" )));
+	return( GTK_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionEnabledButton" )));
 }
 
 static void
@@ -495,7 +495,7 @@ display_provider_name( NactIPropertiesTab *instance, FMAObjectItem *item )
 	gchar *label;
 	NAIOProvider *provider;
 
-	label_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionItemProvider" );
+	label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionItemProvider" );
 	label = NULL;
 	if( item ){
 		provider = fma_object_get_provider( item );

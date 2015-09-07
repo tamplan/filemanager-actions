@@ -35,7 +35,7 @@
 
 #include "api/fma-object-api.h"
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 
 #include "base-gtk-utils.h"
 #include "nact-ibasenames-tab.h"
@@ -194,9 +194,9 @@ initialize_gtk( NactIBasenamesTab *instance )
 			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_BASENAMES,
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "BasenamesTreeView" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddBasenameButton" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveBasenameButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "BasenamesTreeView" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddBasenameButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveBasenameButton" ),
 			( pget_filters ) get_basenames,
 			( pset_filters ) set_basenames,
 			NULL,
@@ -229,7 +229,7 @@ initialize_window( NactIBasenamesTab *instance )
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
 			G_CALLBACK( on_tree_selection_changed ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "BasenamesMatchcaseButton",
 			"toggled", G_CALLBACK( on_matchcase_toggled ), instance );
 }
@@ -254,7 +254,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBase
 	data = get_ibasenames_data( NACT_IBASENAMES_TAB( instance ));
 	data->on_selection_change = TRUE;
 
-	matchcase_button = GTK_TOGGLE_BUTTON( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "BasenamesMatchcaseButton" ));
+	matchcase_button = GTK_TOGGLE_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "BasenamesMatchcaseButton" ));
 	matchcase = context ? fma_object_get_matchcase( context ) : FALSE;
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
 	base_gtk_utils_set_editable( G_OBJECT( matchcase_button ), editable );

@@ -34,7 +34,7 @@
 #include <glib.h>
 #include <string.h>
 
-#include "na-gtk-utils.h"
+#include "fma-gtk-utils.h"
 #include "na-settings.h"
 
 static void   int_list_to_position( GList *list, gint *x, gint *y, gint *width, gint *height );
@@ -42,14 +42,14 @@ static GList *position_to_int_list( gint x, gint y, gint width, gint height );
 static void   free_int_list( GList *list );
 
 /*
- * na_gtk_utils_find_widget_by_name:
+ * fma_gtk_utils_find_widget_by_name:
  * @container: a #GtkContainer, usually the #GtkWindow toplevel.
  * @name: the name of the searched widget.
  *
  * Returns: the searched widget.
  */
 GtkWidget *
-na_gtk_utils_find_widget_by_name( GtkContainer *container, const gchar *name )
+fma_gtk_utils_find_widget_by_name( GtkContainer *container, const gchar *name )
 {
 	GList *children = gtk_container_get_children( container );
 	GList *ic;
@@ -67,7 +67,7 @@ na_gtk_utils_find_widget_by_name( GtkContainer *container, const gchar *name )
 				break;
 			}
 			if( GTK_IS_CONTAINER( child )){
-				found = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( child ), name );
+				found = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( child ), name );
 			}
 		}
 	}
@@ -111,9 +111,9 @@ dump_children( const gchar *thisfn, GtkContainer *container, int level )
 }
 
 void
-na_gtk_utils_dump_children( GtkContainer *container )
+fma_gtk_utils_dump_children( GtkContainer *container )
 {
-	static const gchar *thisfn = "na_gtk_utils_dump_children";
+	static const gchar *thisfn = "fma_gtk_utils_dump_children";
 
 	g_debug( "%s: container=%p", thisfn, container );
 
@@ -122,7 +122,7 @@ na_gtk_utils_dump_children( GtkContainer *container )
 #endif
 
 /*
- * na_gtk_utils_connect_widget_by_name:
+ * fma_gtk_utils_connect_widget_by_name:
  * @container: a #GtkContainer, usually the #GtkWindow toplevel.
  * @name: the name of the searched widget.
  * @signal: the name of the signal to connect the #callabck to.
@@ -132,19 +132,19 @@ na_gtk_utils_dump_children( GtkContainer *container )
  * Connect the signal to the widget.
  */
 void
-na_gtk_utils_connect_widget_by_name(
+fma_gtk_utils_connect_widget_by_name(
 		GtkContainer *container, const gchar *name,
 		const gchar *signal, GCallback cb, void *user_data )
 {
 	GtkWidget *widget;
 
-	widget = na_gtk_utils_find_widget_by_name( container, name );
+	widget = fma_gtk_utils_find_widget_by_name( container, name );
 	g_return_if_fail( widget && GTK_IS_WIDGET( widget ));
 	g_signal_connect( G_OBJECT( widget ), signal, cb, user_data );
 }
 
 /**
- * na_gtk_utils_restore_window_position:
+ * fma_gtk_utils_restore_window_position:
  * @toplevel: the #GtkWindow window.
  * @wsp_name: the string which handles the window size and position in user preferences.
  *
@@ -153,9 +153,9 @@ na_gtk_utils_connect_widget_by_name(
  * A window position is stored as a list of integers "x,y,width,height".
  */
 void
-na_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_name )
+fma_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_name )
 {
-	static const gchar *thisfn = "na_gtk_utils_restore_window_position";
+	static const gchar *thisfn = "fma_gtk_utils_restore_window_position";
 	GList *list;
 	gint x=0, y=0, width=0, height=0;
 	GdkDisplay *display;
@@ -213,16 +213,16 @@ na_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_name
 }
 
 /**
- * na_gtk_utils_save_window_position:
+ * fma_gtk_utils_save_window_position:
  * @toplevel: the #GtkWindow window.
  * @wsp_name: the string which handles the window size and position in user preferences.
  *
  * Save the size and position of the specified window.
  */
 void
-na_gtk_utils_save_window_position( GtkWindow *toplevel, const gchar *wsp_name )
+fma_gtk_utils_save_window_position( GtkWindow *toplevel, const gchar *wsp_name )
 {
-	static const gchar *thisfn = "na_gtk_utils_save_window_position";
+	static const gchar *thisfn = "fma_gtk_utils_save_window_position";
 	gint x, y, width, height;
 	GList *list;
 
@@ -293,7 +293,7 @@ free_int_list( GList *list )
 }
 
 /**
- * na_gtk_utils_set_editable:
+ * fma_gtk_utils_set_editable:
  * @widget: the #GtkWdiget.
  * @editable: whether the @widget is editable or not.
  *
@@ -309,7 +309,7 @@ free_int_list( GList *list )
  * - sensitive: whether the value is relevant (has a sense in this context)
  */
 void
-na_gtk_utils_set_editable( GObject *widget, gboolean editable )
+fma_gtk_utils_set_editable( GObject *widget, gboolean editable )
 {
 	GList *renderers, *irender;
 
@@ -366,7 +366,7 @@ na_gtk_utils_set_editable( GObject *widget, gboolean editable )
 }
 
 /**
- * na_gtk_utils_radio_set_initial_state:
+ * fma_gtk_utils_radio_set_initial_state:
  * @button: the #GtkRadioButton button which is initially active.
  * @handler: the corresponding "toggled" handler.
  * @user_data: the user data associated to the handler.
@@ -389,7 +389,7 @@ na_gtk_utils_set_editable( GObject *widget, gboolean editable )
  * initial state.
  */
 void
-na_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
+fma_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 		GCallback handler, void *user_data, gboolean editable, gboolean sensitive )
 {
 	GSList *group, *ig;
@@ -399,11 +399,11 @@ na_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 
 	for( ig = group ; ig ; ig = ig->next ){
 		other = GTK_RADIO_BUTTON( ig->data );
-		g_object_set_data( G_OBJECT( other ), NA_TOGGLE_DATA_BUTTON, button );
-		g_object_set_data( G_OBJECT( other ), NA_TOGGLE_DATA_HANDLER, handler );
-		g_object_set_data( G_OBJECT( other ), NA_TOGGLE_DATA_USER_DATA, user_data );
-		g_object_set_data( G_OBJECT( other ), NA_TOGGLE_DATA_EDITABLE, GUINT_TO_POINTER( editable ));
-		na_gtk_utils_set_editable( G_OBJECT( other ), editable );
+		g_object_set_data( G_OBJECT( other ), FMA_TOGGLE_DATA_BUTTON, button );
+		g_object_set_data( G_OBJECT( other ), FMA_TOGGLE_DATA_HANDLER, handler );
+		g_object_set_data( G_OBJECT( other ), FMA_TOGGLE_DATA_USER_DATA, user_data );
+		g_object_set_data( G_OBJECT( other ), FMA_TOGGLE_DATA_EDITABLE, GUINT_TO_POINTER( editable ));
+		fma_gtk_utils_set_editable( G_OBJECT( other ), editable );
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( other ), FALSE );
 		gtk_widget_set_sensitive( GTK_WIDGET( other ), sensitive );
 	}
@@ -412,7 +412,7 @@ na_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 }
 
 /**
- * na_gtk_utils_radio_reset_initial_state:
+ * fma_gtk_utils_radio_reset_initial_state:
  * @button: the #GtkRadioButton being toggled.
  * @handler: the corresponding "toggled" handler.
  * @data: data associated with the @handler callback.
@@ -423,7 +423,7 @@ na_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
  * editable).
  */
 void
-na_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback handler )
+fma_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback handler )
 {
 	GtkToggleButton *initial_button;
 	GCallback initial_handler;
@@ -432,12 +432,12 @@ na_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback handle
 	gpointer user_data;
 
 	active = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_EDITABLE ));
 
 	if( active && !editable ){
-		initial_button = GTK_TOGGLE_BUTTON( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_BUTTON ));
-		initial_handler = G_CALLBACK( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_HANDLER ));
-		user_data = g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_USER_DATA );
+		initial_button = GTK_TOGGLE_BUTTON( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_BUTTON ));
+		initial_handler = G_CALLBACK( g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_HANDLER ));
+		user_data = g_object_get_data( G_OBJECT( button ), FMA_TOGGLE_DATA_USER_DATA );
 
 		if( handler ){
 			g_signal_handlers_block_by_func(( gpointer ) button, handler, user_data );

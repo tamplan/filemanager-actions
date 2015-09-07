@@ -36,7 +36,7 @@
 #include <api/fma-iimporter.h>
 #include <api/fma-object-api.h>
 
-#include "na-gtk-utils.h"
+#include "fma-gtk-utils.h"
 #include "na-import-mode.h"
 #include "na-importer.h"
 #include "na-importer-ask.h"
@@ -352,7 +352,7 @@ na_importer_ask_user( const FMAObjectItem *importing, const FMAObjectItem *exist
 		} while ( !on_dialog_response( dialog, code ));
 
 		mode = dialog->private->mode;
-		na_gtk_utils_save_window_position( dialog->private->toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
+		fma_gtk_utils_save_window_position( dialog->private->toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
 
 		if( parms->parent ){
 			gtk_widget_hide( GTK_WIDGET( dialog->private->toplevel ));
@@ -374,7 +374,7 @@ initialize_gtk( NAImporterAsk *dialog, GtkWindow *toplevel )
 
 	g_debug( "%s: dialog=%p, toplevel=%p", thisfn, ( void * ) dialog, ( void * ) toplevel );
 
-	container = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
+	container = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
 	na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( dialog ), container, FALSE );
 }
 
@@ -408,19 +408,19 @@ initialize_window( NAImporterAsk *editor, GtkWindow *toplevel )
 				imported_label, editor->private->parms->uri, existing_label );
 	}
 
-	widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "ImporterAskLabel" );
+	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "ImporterAskLabel" );
 	gtk_label_set_text( GTK_LABEL( widget ), label );
 	g_free( label );
 
-	widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
+	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
 	mode_id = na_settings_get_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
 	na_ioptions_list_set_default( NA_IOPTIONS_LIST( editor ), widget, mode_id );
 	g_free( mode_id );
 
-	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskKeepChoiceButton" );
+	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskKeepChoiceButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), editor->private->parms->keep_choice );
 
-	na_gtk_utils_restore_window_position( toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
+	fma_gtk_utils_restore_window_position( toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
 	gtk_widget_show_all( GTK_WIDGET( toplevel ));
 }
 
@@ -433,7 +433,7 @@ get_selected_mode( NAImporterAsk *editor )
 	GtkWidget *button;
 	gboolean keep;
 
-	widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskModeVBox" );
+	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskModeVBox" );
 	mode = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), widget );
 
 	mode_id = na_ioption_get_id( mode );
@@ -442,7 +442,7 @@ get_selected_mode( NAImporterAsk *editor )
 
 	editor->private->mode = na_import_mode_get_id( NA_IMPORT_MODE( mode ));
 
-	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
+	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	na_settings_set_boolean( NA_IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, keep );
 }

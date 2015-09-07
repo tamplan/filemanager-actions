@@ -37,7 +37,7 @@
 #include "api/fma-core-utils.h"
 #include "api/fma-object-api.h"
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 
 #include "base-gtk-utils.h"
 #include "nact-application.h"
@@ -177,9 +177,9 @@ initialize_gtk( NactIFoldersTab *instance )
 			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_FOLDERS,
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "FoldersTreeView" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddFolderButton" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveFolderButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "FoldersTreeView" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddFolderButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveFolderButton" ),
 			( pget_filters ) get_folders,
 			( pset_filters ) set_folders,
 			NULL,
@@ -206,7 +206,7 @@ initialize_window( NactIFoldersTab *instance )
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
 			G_CALLBACK( on_tree_selection_changed ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "FolderBrowseButton",
 			"clicked", G_CALLBACK( on_browse_folder_clicked ), instance );
 }
@@ -226,7 +226,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIFold
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS, enable_tab );
 
-	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "FolderBrowseButton" );
+	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "FolderBrowseButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }
 
@@ -248,7 +248,7 @@ on_browse_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 			_( "_Open" ), GTK_RESPONSE_ACCEPT,
 			NULL );
 
-	na_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
+	fma_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
 
 	uri = na_settings_get_string( NA_IPREFS_FOLDER_CHOOSER_URI, NULL, NULL );
 	if( uri && g_utf8_strlen( uri, -1 )){
@@ -265,7 +265,7 @@ on_browse_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 		g_free( uri );
 	}
 
-	na_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
+	fma_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
 
 	gtk_widget_destroy( dialog );
 }

@@ -35,7 +35,7 @@
 
 #include <api/fma-core-utils.h>
 
-#include "na-gtk-utils.h"
+#include "fma-gtk-utils.h"
 #include "na-ioptions-list.h"
 
 /* private interface data
@@ -779,7 +779,7 @@ radio_button_select_iter( GtkWidget *button, GtkWidget *container_parent )
 	if( !strcmp( default_id, option_id )){
 		editable = get_options_list_editable( container_parent );
 		sensitive = get_options_list_sensitive( container_parent );
-		na_gtk_utils_radio_set_initial_state( GTK_RADIO_BUTTON( button ), NULL, NULL, editable, sensitive );
+		fma_gtk_utils_radio_set_initial_state( GTK_RADIO_BUTTON( button ), NULL, NULL, editable, sensitive );
 		g_debug( "na_ioptions_list_radio_button_select_iter: container_parent=%p, set active button=%p",
 				( void * ) container_parent, ( void * ) button );
 	}

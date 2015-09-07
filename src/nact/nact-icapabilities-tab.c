@@ -36,7 +36,7 @@
 #include "api/fma-core-utils.h"
 #include "api/fma-object-api.h"
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
@@ -173,9 +173,9 @@ initialize_gtk( NactICapabilitiesTab *instance )
 			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_CAPABILITIES,
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CapabilitiesTreeView" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddCapabilityButton" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveCapabilityButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CapabilitiesTreeView" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddCapabilityButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveCapabilityButton" ),
 			( pget_filters ) get_capabilities,
 			( pset_filters ) set_capabilities,
 			( pon_add_cb ) on_add_clicked,

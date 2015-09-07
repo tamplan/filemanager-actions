@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 #include "core/na-iprefs.h"
 
 #include "nact-main-window.h"
@@ -195,7 +195,7 @@ nact_menu_view_toolbar_display( NactMainWindow *main_window, const gchar *action
 	props = get_toolbar_properties_by_name( action_name );
 	g_return_if_fail( props );
 
-	parent = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "main-toolbar" );
+	parent = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "main-toolbar" );
 	g_return_if_fail( parent && GTK_IS_CONTAINER( parent ));
 
 	if( visible ){
@@ -377,7 +377,7 @@ set_notebook_tabs_position( NactMainWindow *main_window, guint pos )
 {
 	GtkNotebook *notebook;
 
-	notebook = GTK_NOTEBOOK( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "main-notebook" ));
+	notebook = GTK_NOTEBOOK( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "main-notebook" ));
 	gtk_notebook_set_tab_pos( notebook, pos );
 	na_iprefs_set_tabs_pos( pos );
 }

@@ -38,7 +38,7 @@
 #include "api/fma-timeout.h"
 
 #include "core/fma-about.h"
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 #include "core/na-iprefs.h"
 #include "core/na-pivot.h"
 
@@ -614,15 +614,15 @@ instance_dispose( GObject *window )
 
 		g_object_unref( self->private->clipboard );
 
-		pane = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-paned" );
+		pane = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-paned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		na_settings_set_uint( NA_IPREFS_MAIN_PANED, pos );
 
-		notebook = GTK_NOTEBOOK( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-notebook" ));
+		notebook = GTK_NOTEBOOK( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-notebook" ));
 		pos = gtk_notebook_get_tab_pos( notebook );
 		na_iprefs_set_tabs_pos( pos );
 
-		na_gtk_utils_save_window_position( GTK_WINDOW( window ), st_wsp_name );
+		fma_gtk_utils_save_window_position( GTK_WINDOW( window ), st_wsp_name );
 	}
 
 	/* chain up to the parent class */
@@ -684,7 +684,7 @@ nact_main_window_new( NactApplication *application )
 
 	g_signal_connect( window, MAIN_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_item_updated ), NULL );
 
-	na_gtk_utils_restore_window_position( GTK_WINDOW( window ), st_wsp_name );
+	fma_gtk_utils_restore_window_position( GTK_WINDOW( window ), st_wsp_name );
 	g_signal_connect( window, "delete-event", G_CALLBACK( on_delete_event ), NULL );
 
 	setup_monitor_pivot( window );
@@ -715,7 +715,7 @@ setup_main_ui( NactMainWindow *main_window )
 	top_window = gtk_builder_get_object( builder, st_toplevel_name );
 	g_return_if_fail( top_window && GTK_IS_WINDOW( top_window ));
 
-	top_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_window ), "top" );
+	top_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_window ), "top" );
 	g_return_if_fail( top_widget && GTK_IS_CONTAINER( top_widget ));
 
 	/* reparent
@@ -729,7 +729,7 @@ setup_main_ui( NactMainWindow *main_window )
 
 	/* restore the notebook tabs position, and enable its popup menu
 	 */
-	notebook = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-notebook" );
+	notebook = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-notebook" );
 	g_return_if_fail( notebook && GTK_IS_NOTEBOOK( notebook ));
 	pos = na_iprefs_get_tabs_pos( NULL );
 	gtk_notebook_set_tab_pos( GTK_NOTEBOOK( notebook ), pos );
@@ -739,7 +739,7 @@ setup_main_ui( NactMainWindow *main_window )
 	 */
 	pos = na_settings_get_uint( NA_IPREFS_MAIN_PANED, NULL, NULL );
 	if( pos ){
-		pane = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-paned" );
+		pane = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-paned" );
 		g_return_if_fail( pane && GTK_IS_PANED( pane ));
 		gtk_paned_set_position( GTK_PANED( pane ), pos );
 	}
@@ -747,7 +747,7 @@ setup_main_ui( NactMainWindow *main_window )
 	/* setup statusbar
 	 */
 	bar = nact_statusbar_new();
-	alignment = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-statusbar" );
+	alignment = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-statusbar" );
 	g_return_if_fail( alignment && GTK_IS_CONTAINER( alignment ));
 	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( bar ));
 	main_window->private->statusbar = bar;
@@ -769,7 +769,7 @@ setup_treeview( NactMainWindow *main_window )
 	priv = main_window->private;
 	priv->items_view = nact_tree_view_new( main_window );
 
-	top_widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "ActionsList" );
+	top_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "ActionsList" );
 	g_return_if_fail( top_widget && GTK_IS_CONTAINER( top_widget ));
 	gtk_container_add( GTK_CONTAINER( top_widget ), GTK_WIDGET( priv->items_view ));
 

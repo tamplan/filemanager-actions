@@ -36,7 +36,7 @@
 #include "api/fma-core-utils.h"
 #include "api/fma-object-api.h"
 
-#include "core/na-gtk-utils.h"
+#include "core/fma-gtk-utils.h"
 
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
@@ -176,9 +176,9 @@ initialize_gtk( NactISchemesTab *instance )
 			NACT_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_SCHEMES,
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "SchemesTreeView" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddSchemeButton" ),
-			na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveSchemeButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "SchemesTreeView" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddSchemeButton" ),
+			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "RemoveSchemeButton" ),
 			( pget_filters ) get_schemes,
 			( pset_filters ) set_schemes,
 			NULL,
@@ -205,7 +205,7 @@ initialize_window( NactISchemesTab *instance )
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
 			G_CALLBACK( on_tree_selection_changed ), instance );
 
-	na_gtk_utils_connect_widget_by_name(
+	fma_gtk_utils_connect_widget_by_name(
 			GTK_CONTAINER( instance ), "AddFromDefaultButton",
 			"clicked", G_CALLBACK( on_add_from_defaults ), instance );
 }
@@ -225,7 +225,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactISche
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES, enable_tab );
 
-	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddFromDefaultButton" );
+	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddFromDefaultButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }
 
