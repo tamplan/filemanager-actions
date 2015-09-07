@@ -349,7 +349,7 @@ static void
 on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_on_tree_selection_changed";
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean enable_tab;
 	gchar *sel_count, *selcount_ope, *selcount_int;
@@ -494,7 +494,7 @@ on_selcount_int_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 static void
 on_selection_count_changed( NactIEnvironmentTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	gchar *selcount;
 	IEnvironData *data;
 
@@ -529,7 +529,7 @@ static void
 on_show_always_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_on_show_always_toggled";
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean active;
 	GtkTreeView *listview;
@@ -570,7 +570,7 @@ static void
 on_only_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_on_only_show_toggled";
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean active;
 	GSList *show;
@@ -611,7 +611,7 @@ static void
 on_do_not_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_on_do_not_show_toggled";
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean active;
 	GSList *show;
@@ -652,7 +652,7 @@ static void
 on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_on_desktop_toggled";
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	GtkTreeView *listview;
 	GtkTreeModel *model;
@@ -706,7 +706,7 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, NactIEnvironme
 static void
 on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	const gchar *text;
 
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
@@ -734,7 +734,7 @@ on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance )
 static void
 on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	const gchar *text;
 
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
@@ -749,7 +749,7 @@ on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 static void
 on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	const gchar *text;
 
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
@@ -764,7 +764,7 @@ on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 static void
 on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	const gchar *text;
 
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );

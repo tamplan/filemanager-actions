@@ -106,7 +106,7 @@ static void     instance_dispose( GObject *model );
 static void     instance_finalize( GObject *model );
 static void     connect_item_updated_signal( NactTreeModel *tmodel );
 static void     on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactTreeModel *model );
-static void     on_main_item_updated( BaseWindow *window, NAIContext *context, guint data, NactTreeModel *model );
+static void     on_main_item_updated( BaseWindow *window, FMAIContext *context, guint data, NactTreeModel *model );
 static void     setup_dnd_edition( NactTreeModel *tmodel );
 static void     append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
 static void     display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, const NAObject *object );
@@ -525,7 +525,7 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
  * if force_display is true, then refresh the display of the view
  */
 static void
-on_main_item_updated( BaseWindow *window, NAIContext *context, guint data, NactTreeModel *model )
+on_main_item_updated( BaseWindow *window, FMAIContext *context, guint data, NactTreeModel *model )
 {
 	static const gchar *thisfn = "nact_tree_model_on_main_item_updated";
 	GtkTreePath *path;

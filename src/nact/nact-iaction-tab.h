@@ -39,7 +39,7 @@
  *
  * Entry fields are enabled, as soon as an edited item has been set as a
  * property of the main window, Fields are those of NAObjectItem (i.e.
- * not NAObjectProfile, not NAIContext, but may be NAObjectAction specific).
+ * not NAObjectProfile, not FMAIContext, but may be NAObjectAction specific).
  */
 
 #include <glib-object.h>

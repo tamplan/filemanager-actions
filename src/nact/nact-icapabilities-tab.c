@@ -61,8 +61,8 @@ static void    initialize_gtk( NactICapabilitiesTab *instance );
 static void    initialize_window( NactICapabilitiesTab *instance );
 static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICapabilitiesTab *instance );
 static void    on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance );
-static GSList *get_capabilities( NAIContext *context );
-static void    set_capabilities( NAIContext *context, GSList *list );
+static GSList *get_capabilities( FMAIContext *context );
+static void    set_capabilities( FMAIContext *context, GSList *list );
 static void    on_instance_finalized( gpointer user_data, NactICapabilitiesTab *instance );
 
 GType
@@ -206,7 +206,7 @@ initialize_window( NactICapabilitiesTab *instance )
 static void
 on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICapabilitiesTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean enable_tab;
 
@@ -221,7 +221,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICapa
 static void
 on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	GSList *capabilities;
 	gchar *new_cap;
 
@@ -241,13 +241,13 @@ on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance )
 }
 
 static GSList *
-get_capabilities( NAIContext *context )
+get_capabilities( FMAIContext *context )
 {
 	return( na_object_get_capabilities( context ));
 }
 
 static void
-set_capabilities( NAIContext *context, GSList *list )
+set_capabilities( FMAIContext *context, GSList *list )
 {
 	na_object_set_capabilities( context, list );
 }

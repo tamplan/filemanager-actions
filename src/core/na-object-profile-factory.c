@@ -38,7 +38,7 @@
 #include <api/fma-data-types.h>
 
 extern FMADataDef data_def_id [];			/* defined in na-object-id-factory.c */
-extern FMADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
+extern FMADataDef data_def_conditions [];	/* defined in fma-icontext-factory.c */
 
 static FMADataDef data_def_profile [] = {
 

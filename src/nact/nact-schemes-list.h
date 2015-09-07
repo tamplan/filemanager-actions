@@ -49,7 +49,7 @@
  *   adding/removing a scheme is possible
  *
  * Starting with 2.31.x serie (future 3.0), the scheme conditions of a
- * #NAIContext are handled by nact-match-list.{c,h} set of function.
+ * #FMAIContext are handled by nact-match-list.{c,h} set of function.
  * This set of functions is only used:
  *  a) to edit the preferences
  *     add/remove scheme
@@ -57,7 +57,7 @@
  *     In this mode, the widget is embedded in the Preferences notebook.
  *     Modifications are saved when user clicks the global OK button.
  *  b) to select a scheme from the default list
- *     schemes already used by the current #NAIContext are marked as used
+ *     schemes already used by the current #FMAIContext are marked as used
  *     edition of the current list is not available
  *     In this mode, widget is embedded in a dedicated #NactAddSchemeDialog
  *     dialog box

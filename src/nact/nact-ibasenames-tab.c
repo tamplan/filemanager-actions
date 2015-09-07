@@ -237,7 +237,7 @@ initialize_window( NactIBasenamesTab *instance )
 static void
 on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBasenamesTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean enable_tab;
 	GtkToggleButton *matchcase_button;
@@ -265,7 +265,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBase
 static void
 on_matchcase_toggled( GtkToggleButton *button, NactIBasenamesTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean matchcase;
 	IBasenamesData *data;

@@ -70,7 +70,7 @@ static void             interface_base_init( NactIPropertiesTabInterface *klass 
 static void             interface_base_finalize( NactIPropertiesTabInterface *klass );
 static void             initialize_window( NactIPropertiesTab *instance );
 static void             on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIPropertiesTab *instance );
-static void             on_main_item_updated( NactIPropertiesTab *instance, NAIContext *context, guint data, void *empty );
+static void             on_main_item_updated( NactIPropertiesTab *instance, FMAIContext *context, guint data, void *empty );
 static GtkButton       *get_enabled_button( NactIPropertiesTab *instance );
 static void             on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
 static void             on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
@@ -313,7 +313,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 }
 
 static void
-on_main_item_updated( NactIPropertiesTab *instance, NAIContext *context, guint data, void *empty )
+on_main_item_updated( NactIPropertiesTab *instance, FMAIContext *context, guint data, void *empty )
 {
 	static const gchar *thisfn = "nact_iproperties_tab_on_main_item_updated";
 

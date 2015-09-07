@@ -130,7 +130,7 @@ G_BEGIN_DECLS
  *
  * The datas which determine the display conditions of a menu or an action.
  *
- * @see_also: #NAIContext interface.
+ * @see_also: #FMAIContext interface.
  */
 #define NA_FACTORY_OBJECT_CONDITIONS_GROUP  "na-factory-group-conditions"
 #define NAFO_DATA_BASENAMES                 "na-factory-data-basenames"

@@ -30,7 +30,7 @@
 #ifndef __NACT_MAIN_TAB_H__
 #define __NACT_MAIN_TAB_H__
 
-#include <api/na-icontext.h>
+#include <api/fma-icontext.h>
 
 #include "nact-main-window-def.h"
 

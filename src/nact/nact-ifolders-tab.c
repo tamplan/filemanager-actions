@@ -214,7 +214,7 @@ initialize_window( NactIFoldersTab *instance )
 static void
 on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIFoldersTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean enable_tab;
 	GtkWidget *button;

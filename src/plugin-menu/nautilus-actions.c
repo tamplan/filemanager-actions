@@ -87,7 +87,7 @@ static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *
 static GList            *build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection );
 static GList            *build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *tokens );
 static NAObjectItem     *expand_tokens_item( const NAObjectItem *item, NATokens *tokens );
-static void              expand_tokens_context( NAIContext *context, NATokens *tokens );
+static void              expand_tokens_context( FMAIContext *context, NATokens *tokens );
 static NAObjectProfile  *get_candidate_profile( NAObjectAction *action, guint target, GList *files );
 static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, NATokens *tokens );
 static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems, guint target );
@@ -547,8 +547,8 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 		label = na_object_get_label( it->data );
 		g_debug( "%s: examining %s", thisfn, label );
 
-		if( !na_icontext_is_candidate( NA_ICONTEXT( it->data ), target, selection )){
-			g_debug( "%s: is not candidate (NAIContext): %s", thisfn, label );
+		if( !fma_icontext_is_candidate( FMA_ICONTEXT( it->data ), target, selection )){
+			g_debug( "%s: is not candidate (FMAIContext): %s", thisfn, label );
 			g_free( label );
 			continue;
 		}
@@ -664,9 +664,9 @@ expand_tokens_item( const NAObjectItem *src, NATokens *tokens )
 		g_free( new );
 	}
 
-	/* A NAObjectItem, whether it is an action or a menu, is also a NAIContext
+	/* A NAObjectItem, whether it is an action or a menu, is also a FMAIContext
 	 */
-	expand_tokens_context( NA_ICONTEXT( item ), tokens );
+	expand_tokens_context( FMA_ICONTEXT( item ), tokens );
 
 	/* subitems lists, whether this is the profiles list of an action
 	 * or the items list of a menu, may be dynamic and embed a command;
@@ -704,9 +704,9 @@ expand_tokens_item( const NAObjectItem *src, NATokens *tokens )
 			g_free( old );
 			g_free( new );
 
-			/* a NAObjectProfile is also a NAIContext
+			/* a NAObjectProfile is also a FMAIContext
 			 */
-			expand_tokens_context( NA_ICONTEXT( it->data ), tokens );
+			expand_tokens_context( FMA_ICONTEXT( it->data ), tokens );
 		}
 	}
 
@@ -714,7 +714,7 @@ expand_tokens_item( const NAObjectItem *src, NATokens *tokens )
 }
 
 static void
-expand_tokens_context( NAIContext *context, NATokens *tokens )
+expand_tokens_context( FMAIContext *context, NATokens *tokens )
 {
 	gchar *old, *new;
 
@@ -761,7 +761,7 @@ get_candidate_profile( NAObjectAction *action, guint target, GList *files )
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
 
-		if( na_icontext_is_candidate( NA_ICONTEXT( profile ), target, files )){
+		if( fma_icontext_is_candidate( FMA_ICONTEXT( profile ), target, files )){
 			profile_label = na_object_get_label( profile );
 			g_debug( "%s: selecting %s (profile=%p '%s')", thisfn, action_label, ( void * ) profile, profile_label );
 			g_free( profile_label );

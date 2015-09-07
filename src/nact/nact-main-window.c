@@ -104,10 +104,10 @@ struct _NactMainWindowPrivate {
 	/**
 	 * Current context.
 	 *
-	 * This is the #NAIContext data which corresponds to @current_profile
+	 * This is the #FMAIContext data which corresponds to @current_profile
 	 * or @current_item, depending of which one is actually selected.
 	 */
-	NAIContext      *current_context;
+	FMAIContext      *current_context;
 
 	/**
 	 * Some convenience objects and data.
@@ -176,7 +176,7 @@ static void       setup_monitor_pivot( NactMainWindow *main_window );
 static void       on_block_items_changed_timeout( NactMainWindow *window );
 static void       on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, NactMainWindow *window );
 static void       on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, NactMainWindow *window );
-static void       on_tab_item_updated( NactMainWindow *window, NAIContext *context, guint data, void *empty );
+static void       on_tab_item_updated( NactMainWindow *window, FMAIContext *context, guint data, void *empty );
 static void       raz_selection_properties( NactMainWindow *window );
 static void       setup_current_selection( NactMainWindow *window, NAObjectId *selected_row );
 static void       setup_dialog_title( NactMainWindow *window );
@@ -342,8 +342,8 @@ class_init( NactMainWindowClass *klass )
 	g_object_class_install_property( object_class, MAIN_PROP_CONTEXT_ID,
 			g_param_spec_pointer(
 					MAIN_PROP_CONTEXT,
-					_( "Current NAIContext" ),
-					_( "A pointer to the currently edited NAIContext" ),
+					_( "Current FMAIContext" ),
+					_( "A pointer to the currently edited FMAIContext" ),
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_EDITABLE_ID,
@@ -373,7 +373,7 @@ class_init( NactMainWindowClass *klass )
 	 *
 	 * Handler:
 	 *   void handler( NactMainWindow *main_window,
-	 *   				NAIContext *updated_context,
+	 *   				FMAIContext *updated_context,
 	 *   				guint       updated_data,
 	 *   				void       *user_data );
 	 */
@@ -1004,7 +1004,7 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, N
 }
 
 static void
-on_tab_item_updated( NactMainWindow *window, NAIContext *context, guint data, void *empty )
+on_tab_item_updated( NactMainWindow *window, FMAIContext *context, guint data, void *empty )
 {
 	static const gchar *thisfn = "nact_main_window_on_tab_item_updated";
 
@@ -1045,13 +1045,13 @@ setup_current_selection( NactMainWindow *window, NAObjectId *selected_row )
 
 	if( NA_IS_OBJECT_PROFILE( selected_row )){
 		window->private->current_profile = NA_OBJECT_PROFILE( selected_row );
-		window->private->current_context = NA_ICONTEXT( selected_row );
+		window->private->current_context = FMA_ICONTEXT( selected_row );
 		window->private->current_item = NA_OBJECT_ITEM( na_object_get_parent( selected_row ));
 
 	} else {
 		g_return_if_fail( NA_IS_OBJECT_ITEM( selected_row ));
 		window->private->current_item = NA_OBJECT_ITEM( selected_row );
-		window->private->current_context = NA_ICONTEXT( selected_row );
+		window->private->current_context = FMA_ICONTEXT( selected_row );
 
 		if( NA_IS_OBJECT_ACTION( selected_row )){
 			nb_profiles = na_object_get_items_count( selected_row );
@@ -1059,7 +1059,7 @@ setup_current_selection( NactMainWindow *window, NAObjectId *selected_row )
 			if( nb_profiles == 1 ){
 				profiles = na_object_get_items( selected_row );
 				window->private->current_profile = NA_OBJECT_PROFILE( profiles->data );
-				window->private->current_context = NA_ICONTEXT( profiles->data );
+				window->private->current_context = FMA_ICONTEXT( profiles->data );
 			}
 		}
 	}

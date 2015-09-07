@@ -327,7 +327,7 @@ static void
 on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchListData *data )
 {
 	static const gchar *thisfn = "nact_match_list_on_tree_selection_changed";
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean enable_tab;
 	GSList *filters;
 	GtkTreeModel *model;
@@ -447,7 +447,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 	GtkTreeIter iter;
 	GtkTreePath *path;
 	gchar *old_text;
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean must_match, must_not_match;
 	gchar *to_add, *to_remove;
 	GSList *filters;
@@ -456,7 +456,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 	g_return_if_fail( data->editable_filter );
 
 	g_object_get( G_OBJECT( data->window ), MAIN_PROP_CONTEXT, &context, NULL );
-	g_return_if_fail( NA_IS_ICONTEXT( context ));
+	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
 	model = gtk_tree_view_get_model( data->listview );
 	path = gtk_tree_path_new_from_string( path_str );
@@ -566,7 +566,7 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 {
 	/*static const gchar *thisfn = "nact_match_list_on_must_match_toggled";*/
 	gchar *filter;
-	NAIContext *context;
+	FMAIContext *context;
 	GSList *filters;
 	gchar *to_remove;
 	gboolean active;
@@ -579,7 +579,7 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 	if( data->editable_item ){
 		if( !active ){
 			g_object_get( G_OBJECT( data->window ), MAIN_PROP_CONTEXT, &context, NULL );
-			g_return_if_fail( NA_IS_ICONTEXT( context ));
+			g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
 			set_match_status( path_str, TRUE, FALSE, data );
 
@@ -618,7 +618,7 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 {
 	/*static const gchar *thisfn = "nact_match_list_on_must_not_match_toggled";*/
 	gchar *filter;
-	NAIContext *context;
+	FMAIContext *context;
 	GSList *filters;
 	gchar *to_add;
 	gboolean active;
@@ -631,7 +631,7 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 	if( data->editable_item ){
 		if( !active ){
 			g_object_get( G_OBJECT( data->window ), MAIN_PROP_CONTEXT, &context, NULL );
-			g_return_if_fail( NA_IS_ICONTEXT( context ));
+			g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
 			set_match_status( path_str, FALSE, TRUE, data );
 
@@ -674,7 +674,7 @@ on_selection_changed( GtkTreeSelection *selection, MatchListData *data )
 static void
 add_filter( MatchListData *data, const gchar *filter, const gchar *prefix )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	GSList *filters;
 	gchar *to_add;
 
@@ -716,7 +716,7 @@ delete_current_row( MatchListData *data )
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gchar *filter;
-	NAIContext *context;
+	FMAIContext *context;
 	GSList *filters;
 	gchar *to_remove;
 

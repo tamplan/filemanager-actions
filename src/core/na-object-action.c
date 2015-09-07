@@ -82,8 +82,8 @@ static void         ifactory_object_read_done( NAIFactoryObject *instance, const
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static void         icontext_iface_init( NAIContextInterface *iface, void *user_data );
-static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
+static void         icontext_iface_init( FMAIContextInterface *iface, void *user_data );
+static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
 
 static NAObjectProfile *read_done_convert_v1_to_v2( NAIFactoryObject *instance );
 static void             read_done_deals_with_toolbar_label( NAIFactoryObject *instance );
@@ -140,7 +140,7 @@ register_type( void )
 
 	type = g_type_register_static( NA_TYPE_OBJECT_ITEM, "NAObjectAction", &info, 0 );
 
-	g_type_add_interface_static( type, NA_TYPE_ICONTEXT, &icontext_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_ICONTEXT, &icontext_iface_info );
 
 	g_type_add_interface_static( type, NA_TYPE_IFACTORY_OBJECT, &ifactory_object_iface_info );
 
@@ -406,7 +406,7 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 
 	/* prepare the context after the reading
 	 */
-	na_icontext_read_done( NA_ICONTEXT( instance ));
+	fma_icontext_read_done( FMA_ICONTEXT( instance ));
 
 	/* last, set action defaults
 	 */
@@ -434,7 +434,7 @@ ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider
 }
 
 static void
-icontext_iface_init( NAIContextInterface *iface, void *user_data )
+icontext_iface_init( FMAIContextInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_object_action_icontext_iface_init";
 
@@ -444,7 +444,7 @@ icontext_iface_init( NAIContextInterface *iface, void *user_data )
 }
 
 static gboolean
-icontext_is_candidate( NAIContext *object, guint target, GList *selection )
+icontext_is_candidate( FMAIContext *object, guint target, GList *selection )
 {
 	return( TRUE );
 }

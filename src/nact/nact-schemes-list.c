@@ -191,7 +191,7 @@ nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
  * When mode is for preferences, this is all that is required for runtime
  * initialization.
  *
- * When mode is for add from defaults, i.e. when editing #NAIContext schemes
+ * When mode is for add from defaults, i.e. when editing #FMAIContext schemes
  * conditions, then #nact_schemes_list_setup_values() must also be called in
  * order to actually setup the already used schemes.
  */
@@ -374,7 +374,7 @@ init_view_select_first_row( SchemesListData *data )
  * @window: the #BaseWindow which embeds this treeview.
  * @schemes: a #GSList of already used schemes.
  *
- * Set the used schemes for the current #NAIContext.
+ * Set the used schemes for the current #FMAIContext.
  */
 void
 nact_schemes_list_setup_values( BaseWindow *window, GSList *schemes )

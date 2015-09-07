@@ -160,7 +160,7 @@ main( int argc, char** argv )
 		exit( status );
 	}
 
-	if( !na_icontext_is_candidate( NA_ICONTEXT( action ), ITEM_TARGET_ANY, targets )){
+	if( !fma_icontext_is_candidate( FMA_ICONTEXT( action ), ITEM_TARGET_ANY, targets )){
 		g_printerr( _( "Action %s is not a valid candidate. Exiting.\n" ), id );
 		exit( status );
 	}
@@ -392,7 +392,7 @@ get_profile_for_targets( NAObjectAction *action, GList *targets )
 	profiles = na_object_get_items( action );
 
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
-		if( na_icontext_is_candidate( NA_ICONTEXT( ip->data ), ITEM_TARGET_ANY, targets )){
+		if( fma_icontext_is_candidate( FMA_ICONTEXT( ip->data ), ITEM_TARGET_ANY, targets )){
 			candidate = NA_OBJECT_PROFILE( ip->data );
 		}
 	}

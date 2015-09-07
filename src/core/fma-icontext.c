@@ -57,49 +57,49 @@
 
 /* private interface data
  */
-struct _NAIContextInterfacePrivate {
+struct _FMAIContextInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType        register_type( void );
-static void         interface_base_init( NAIContextInterface *klass );
-static void         interface_base_finalize( NAIContextInterface *klass );
+static void         interface_base_init( FMAIContextInterface *klass );
+static void         interface_base_finalize( FMAIContextInterface *klass );
 
-static gboolean     v_is_candidate( NAIContext *object, guint target, GList *selection );
+static gboolean     v_is_candidate( FMAIContext *object, guint target, GList *selection );
 
-static gboolean     is_candidate_for_target( const NAIContext *object, guint target, GList *files );
-static gboolean     is_candidate_for_show_in( const NAIContext *object, guint target, GList *files );
-static gboolean     is_candidate_for_try_exec( const NAIContext *object, guint target, GList *files );
-static gboolean     is_candidate_for_show_if_registered( const NAIContext *object, guint target, GList *files );
-static gboolean     is_candidate_for_show_if_true( const NAIContext *object, guint target, GList *files );
-static gboolean     is_candidate_for_show_if_running( const NAIContext *object, guint target, GList *files );
-static gboolean     is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_target( const FMAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_show_in( const FMAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_try_exec( const FMAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_show_if_registered( const FMAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_show_if_true( const FMAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_show_if_running( const FMAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_mimetypes( const FMAIContext *object, guint target, GList *files );
 static gboolean     is_all_mimetype( const gchar *mimetype );
 static gboolean     is_file_mimetype( const gchar *mimetype );
 static gboolean     is_mimetype_of( const gchar *file_type, const gchar *ftype, gboolean is_regular );
-static gboolean     is_candidate_for_basenames( const NAIContext *object, guint target, GList *files );
-static gboolean     is_candidate_for_selection_count( const NAIContext *object, guint target, GList *files );
-static gboolean     is_candidate_for_schemes( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_basenames( const FMAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_selection_count( const FMAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_schemes( const FMAIContext *object, guint target, GList *files );
 static gboolean     is_compatible_scheme( const gchar *pattern, const gchar *scheme );
-static gboolean     is_candidate_for_folders( const NAIContext *object, guint target, GList *files );
-static gboolean     is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_folders( const FMAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_capabilities( const FMAIContext *object, guint target, GList *files );
 
-static gboolean     is_valid_basenames( const NAIContext *object );
-static gboolean     is_valid_mimetypes( const NAIContext *object );
-static gboolean     is_valid_schemes( const NAIContext *object );
-static gboolean     is_valid_folders( const NAIContext *object );
+static gboolean     is_valid_basenames( const FMAIContext *object );
+static gboolean     is_valid_mimetypes( const FMAIContext *object );
+static gboolean     is_valid_schemes( const FMAIContext *object );
+static gboolean     is_valid_folders( const FMAIContext *object );
 
 static gboolean     is_positive_assertion( const gchar *assertion );
 
 /**
- * na_icontext_get_type:
+ * fma_icontext_get_type:
  *
  * Returns: the #GType type of this interface.
  */
 GType
-na_icontext_get_type( void )
+fma_icontext_get_type( void )
 {
 	static GType type = 0;
 
@@ -111,18 +111,18 @@ na_icontext_get_type( void )
 }
 
 /*
- * na_icontext_register_type:
+ * fma_icontext_register_type:
  *
  * Registers this interface.
  */
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_icontext_register_type";
+	static const gchar *thisfn = "fma_icontext_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIContextInterface ),
+		sizeof( FMAIContextInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -135,7 +135,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIContext", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIContext", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -143,24 +143,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIContextInterface *klass )
+interface_base_init( FMAIContextInterface *klass )
 {
-	static const gchar *thisfn = "na_icontext_interface_base_init";
+	static const gchar *thisfn = "fma_icontext_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
-		klass->private = g_new0( NAIContextInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIContextInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIContextInterface *klass )
+interface_base_finalize( FMAIContextInterface *klass )
 {
-	static const gchar *thisfn = "na_icontext_interface_base_finalize";
+	static const gchar *thisfn = "fma_icontext_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -173,22 +173,22 @@ interface_base_finalize( NAIContextInterface *klass )
 }
 
 /**
- * na_icontext_are_equal:
- * @a: the (original) #NAIContext context.
- * @b: the (duplicated) #NAIContext context to be checked.
+ * fma_icontext_are_equal:
+ * @a: the (original) #FMAIContext context.
+ * @b: the (duplicated) #FMAIContext context to be checked.
  *
  * Returns: %TRUE if this @a and @b are equal, %FALSE else.
  *
  * Since: 3.1
  */
 gboolean
-na_icontext_are_equal( const NAIContext *a, const NAIContext *b )
+fma_icontext_are_equal( const FMAIContext *a, const FMAIContext *b )
 {
-	static const gchar *thisfn = "na_icontext_are_equal";
+	static const gchar *thisfn = "fma_icontext_are_equal";
 	gboolean are_equal;
 
-	g_return_val_if_fail( NA_IS_ICONTEXT( a ), FALSE );
-	g_return_val_if_fail( NA_IS_ICONTEXT( b ), FALSE );
+	g_return_val_if_fail( FMA_IS_ICONTEXT( a ), FALSE );
+	g_return_val_if_fail( FMA_IS_ICONTEXT( b ), FALSE );
 
 	g_debug( "%s: a=%p, b=%p", thisfn, ( void * ) a, ( void * ) b );
 
@@ -198,8 +198,8 @@ na_icontext_are_equal( const NAIContext *a, const NAIContext *b )
 }
 
 /**
- * na_icontext_is_candidate:
- * @context: a #NAIContext to be checked.
+ * fma_icontext_is_candidate:
+ * @context: a #FMAIContext to be checked.
  * @target: the current target.
  * @selection: the currently selected items, as a #GList of NASelectedInfo items.
  *
@@ -218,17 +218,17 @@ na_icontext_are_equal( const NAIContext *a, const NAIContext *b )
  * Since: 2.30
  */
 gboolean
-na_icontext_is_candidate( const NAIContext *context, guint target, GList *selection )
+fma_icontext_is_candidate( const FMAIContext *context, guint target, GList *selection )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate";
+	static const gchar *thisfn = "fma_icontext_is_candidate";
 	gboolean is_candidate;
 
-	g_return_val_if_fail( NA_IS_ICONTEXT( context ), FALSE );
+	g_return_val_if_fail( FMA_IS_ICONTEXT( context ), FALSE );
 
 	g_debug( "%s: object=%p (%s), target=%d, selection=%p (count=%d)",
 			thisfn, ( void * ) context, G_OBJECT_TYPE_NAME( context ), target, (void * ) selection, g_list_length( selection ));
 
-	is_candidate = v_is_candidate( NA_ICONTEXT( context ), target, selection );
+	is_candidate = v_is_candidate( FMA_ICONTEXT( context ), target, selection );
 
 	if( is_candidate ){
 		is_candidate =
@@ -250,13 +250,13 @@ na_icontext_is_candidate( const NAIContext *context, guint target, GList *select
 }
 
 /**
- * na_icontext_is_valid:
- * @context: the #NAIContext to be checked.
+ * fma_icontext_is_valid:
+ * @context: the #FMAIContext to be checked.
  *
  * Returns: %TRUE if this @context is valid, %FALSE else.
  *
  * This function is part of <methodname>NAIDuplicable::check_status</methodname>
- * and is called by #NAIDuplicable objects which also implement #NAIContext
+ * and is called by #NAIDuplicable objects which also implement #FMAIContext
  * interface. It so doesn't make sense of asking the object for its
  * validity status as it has already been checked before calling the
  * function.
@@ -264,12 +264,12 @@ na_icontext_is_candidate( const NAIContext *context, guint target, GList *select
  * Since: 2.30
  */
 gboolean
-na_icontext_is_valid( const NAIContext *context )
+fma_icontext_is_valid( const FMAIContext *context )
 {
-	static const gchar *thisfn = "na_icontext_is_valid";
+	static const gchar *thisfn = "fma_icontext_is_valid";
 	gboolean is_valid;
 
-	g_return_val_if_fail( NA_IS_ICONTEXT( context ), FALSE );
+	g_return_val_if_fail( FMA_IS_ICONTEXT( context ), FALSE );
 
 	g_debug( "%s: context=%p (%s)", thisfn, ( void * ) context, G_OBJECT_TYPE_NAME( context ));
 
@@ -283,8 +283,8 @@ na_icontext_is_valid( const NAIContext *context )
 }
 
 /**
- * na_icontext_check_mimetypes:
- * @context: the #NAIContext object to be checked.
+ * fma_icontext_check_mimetypes:
+ * @context: the #FMAIContext object to be checked.
  *
  * Check the current list of mimetypes to see if it covers all mimetypes,
  * or all regular files, or something else.
@@ -292,13 +292,13 @@ na_icontext_is_valid( const NAIContext *context )
  * Since: 2.30
  */
 void
-na_icontext_check_mimetypes( const NAIContext *context )
+fma_icontext_check_mimetypes( const FMAIContext *context )
 {
-	static const gchar *thisfn = "na_icontext_check_mimetypes";
+	static const gchar *thisfn = "fma_icontext_check_mimetypes";
 	gboolean is_all;
 	GSList *mimetypes, *im;
 
-	g_return_if_fail( NA_IS_ICONTEXT( context ));
+	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
 	is_all = TRUE;
 	mimetypes = na_object_get_mimetypes( context );
@@ -322,25 +322,25 @@ na_icontext_check_mimetypes( const NAIContext *context )
 }
 
 /**
- * na_icontext_copy:
- * @context: the target #NAIContext context.
- * @source: the source #NAIContext context.
+ * fma_icontext_copy:
+ * @context: the target #FMAIContext context.
+ * @source: the source #FMAIContext context.
  *
  * Copy specific data from @source to @context.
  *
  * Since: 3.1
  */
 void
-na_icontext_copy( NAIContext *context, const NAIContext *source )
+fma_icontext_copy( FMAIContext *context, const FMAIContext *source )
 {
 	/* nothing to do for now */
 }
 
 /**
- * na_icontext_read_done:
- * @context: the #NAIContext to be prepared.
+ * fma_icontext_read_done:
+ * @context: the #FMAIContext to be prepared.
  *
- * Prepares the specified #NAIContext just after it has been read.
+ * Prepares the specified #FMAIContext just after it has been read.
  *
  * <itemizedlist>
  *   <listitem>
@@ -354,14 +354,14 @@ na_icontext_copy( NAIContext *context, const NAIContext *source )
  * Since: 2.30
  */
 void
-na_icontext_read_done( NAIContext *context )
+fma_icontext_read_done( FMAIContext *context )
 {
 	na_object_check_mimetypes( context );
 }
 
 /**
- * na_icontext_set_scheme:
- * @context: the #NAIContext to be updated.
+ * fma_icontext_set_scheme:
+ * @context: the #FMAIContext to be updated.
  * @scheme: name of the scheme.
  * @selected: whether this scheme is candidate to this @context.
  *
@@ -370,11 +370,11 @@ na_icontext_read_done( NAIContext *context )
  * Since: 2.30
  */
 void
-na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selected )
+fma_icontext_set_scheme( FMAIContext *context, const gchar *scheme, gboolean selected )
 {
 	GSList *schemes;
 
-	g_return_if_fail( NA_IS_ICONTEXT( context ));
+	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
 	schemes = na_object_get_schemes( context );
 	schemes = fma_core_utils_slist_setup_element( schemes, scheme, selected );
@@ -383,8 +383,8 @@ na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selec
 }
 
 /**
- * na_icontext_set_only_desktop:
- * @context: the #NAIContext to be updated.
+ * fma_icontext_set_only_desktop:
+ * @context: the #FMAIContext to be updated.
  * @desktop: name of the desktop environment.
  * @selected: whether this @desktop is candidate to this @context.
  *
@@ -393,11 +393,11 @@ na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selec
  * Since: 2.30
  */
 void
-na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
+fma_icontext_set_only_desktop( FMAIContext *context, const gchar *desktop, gboolean selected )
 {
 	GSList *desktops;
 
-	g_return_if_fail( NA_IS_ICONTEXT( context ));
+	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
 	desktops = na_object_get_only_show_in( context );
 	desktops = fma_core_utils_slist_setup_element( desktops, desktop, selected );
@@ -406,8 +406,8 @@ na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolea
 }
 
 /**
- * na_icontext_set_only_desktop:
- * @context: the #NAIContext to be updated.
+ * fma_icontext_set_only_desktop:
+ * @context: the #FMAIContext to be updated.
  * @desktop: name of the desktop environment.
  * @selected: whether this @desktop is candidate to this @context.
  *
@@ -416,11 +416,11 @@ na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolea
  * Since: 2.30
  */
 void
-na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
+fma_icontext_set_not_desktop( FMAIContext *context, const gchar *desktop, gboolean selected )
 {
 	GSList *desktops;
 
-	g_return_if_fail( NA_IS_ICONTEXT( context ));
+	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
 	desktops = na_object_get_not_show_in( context );
 	desktops = fma_core_utils_slist_setup_element( desktops, desktop, selected );
@@ -429,8 +429,8 @@ na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean
 }
 
 /**
- * na_icontext_replace_folder:
- * @context: the #NAIContext to be updated.
+ * fma_icontext_replace_folder:
+ * @context: the #FMAIContext to be updated.
  * @old: the old uri.
  * @new: the new uri.
  *
@@ -439,11 +439,11 @@ na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean
  * Since: 2.30
  */
 void
-na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *new )
+fma_icontext_replace_folder( FMAIContext *context, const gchar *old, const gchar *new )
 {
 	GSList *folders;
 
-	g_return_if_fail( NA_IS_ICONTEXT( context ));
+	g_return_if_fail( FMA_IS_ICONTEXT( context ));
 
 	folders = na_object_get_folders( context );
 	folders = fma_core_utils_slist_remove_utf8( folders, old );
@@ -453,28 +453,28 @@ na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *
 }
 
 static gboolean
-v_is_candidate( NAIContext *context, guint target, GList *selection )
+v_is_candidate( FMAIContext *context, guint target, GList *selection )
 {
 	gboolean is_candidate;
 
 	is_candidate = TRUE;
 
-	if( NA_ICONTEXT_GET_INTERFACE( context )->is_candidate ){
-		is_candidate = NA_ICONTEXT_GET_INTERFACE( context )->is_candidate( context, target, selection );
+	if( FMA_ICONTEXT_GET_INTERFACE( context )->is_candidate ){
+		is_candidate = FMA_ICONTEXT_GET_INTERFACE( context )->is_candidate( context, target, selection );
 	}
 
 	return( is_candidate );
 }
 
 /*
- * whether the given NAIContext object is candidate for this target
+ * whether the given FMAIContext object is candidate for this target
  * target is context menu for location, context menu for selection or toolbar for location
  * only actions are concerned by this check
  */
 static gboolean
-is_candidate_for_target( const NAIContext *object, guint target, GList *files )
+is_candidate_for_target( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_target";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_target";
 	gboolean ok = TRUE;
 
 	if( NA_IS_OBJECT_ACTION( object )){
@@ -514,9 +514,9 @@ is_candidate_for_target( const NAIContext *object, guint target, GList *files )
  * only one of these two data may be set
  */
 static gboolean
-is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
+is_candidate_for_show_in( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_show_in";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_show_in";
 	gboolean ok = TRUE;
 	GSList *only_in = na_object_get_only_show_in( object );
 	GSList *not_in = na_object_get_not_show_in( object );
@@ -558,9 +558,9 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
  * if the data is set, it should be the path of an executable file
  */
 static gboolean
-is_candidate_for_try_exec( const NAIContext *object, guint target, GList *files )
+is_candidate_for_try_exec( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_try_exec";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_try_exec";
 	gboolean ok = TRUE;
 	GError *error = NULL;
 	gchar *tryexec = na_object_get_try_exec( object );
@@ -594,9 +594,9 @@ is_candidate_for_try_exec( const NAIContext *object, guint target, GList *files 
 }
 
 static gboolean
-is_candidate_for_show_if_registered( const NAIContext *object, guint target, GList *files )
+is_candidate_for_show_if_registered( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_show_if_registered";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_show_if_registered";
 	gboolean ok = TRUE;
 	gchar *name = na_object_get_show_if_registered( object );
 
@@ -633,9 +633,9 @@ is_candidate_for_show_if_registered( const NAIContext *object, guint target, GLi
 }
 
 static gboolean
-is_candidate_for_show_if_true( const NAIContext *object, guint target, GList *files )
+is_candidate_for_show_if_true( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_show_if_true";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_show_if_true";
 	gboolean ok = TRUE;
 	gchar *command = na_object_get_show_if_true( object );
 
@@ -661,9 +661,9 @@ is_candidate_for_show_if_true( const NAIContext *object, guint target, GList *fi
 }
 
 static gboolean
-is_candidate_for_show_if_running( const NAIContext *object, guint target, GList *files )
+is_candidate_for_show_if_running( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_show_if_running";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_show_if_running";
 	gboolean ok = TRUE;
 	gchar *searched;
 	glibtop_proclist proclist;
@@ -721,9 +721,9 @@ is_candidate_for_show_if_running( const NAIContext *object, guint target, GList 
  *  examined mimetype never match these
  */
 static gboolean
-is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files )
+is_candidate_for_mimetypes( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_mimetypes";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_mimetypes";
 	gboolean ok = TRUE;
 	gboolean all = na_object_get_all_mimetypes( object );
 
@@ -815,7 +815,7 @@ is_file_mimetype( const gchar *mimetype )
 static gboolean
 is_mimetype_of( const gchar *mimetype, const gchar *ftype, gboolean is_regular )
 {
-	static const gchar *thisfn = "na_icontext_is_mimetype_of";
+	static const gchar *thisfn = "fma_icontext_is_mimetype_of";
 	gboolean is_type_of;
 	gchar *file_content_type, *def_content_type;
 
@@ -845,9 +845,9 @@ is_mimetype_of( const gchar *mimetype, const gchar *ftype, gboolean is_regular )
 }
 
 static gboolean
-is_candidate_for_basenames( const NAIContext *object, guint target, GList *files )
+is_candidate_for_basenames( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_basenames";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_basenames";
 	gboolean ok = TRUE;
 	GSList *basenames = na_object_get_basenames( object );
 
@@ -914,9 +914,9 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 }
 
 static gboolean
-is_candidate_for_selection_count( const NAIContext *object, guint target, GList *files )
+is_candidate_for_selection_count( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_selection_count";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_selection_count";
 	gboolean ok = TRUE;
 	gint limit;
 	guint count;
@@ -962,9 +962,9 @@ is_candidate_for_selection_count( const NAIContext *object, guint target, GList 
  * against schemes conditions.
  */
 static gboolean
-is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
+is_candidate_for_schemes( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_schemes";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_schemes";
 	gboolean ok = TRUE;
 	GSList *schemes = na_object_get_schemes( object );
 
@@ -1045,9 +1045,9 @@ is_compatible_scheme( const gchar *pattern, const gchar *scheme )
  * conditions
  */
 static gboolean
-is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
+is_candidate_for_folders( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_folders";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_folders";
 	gboolean ok = TRUE;
 	GSList *folders = na_object_get_folders( object );
 
@@ -1108,9 +1108,9 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 }
 
 static gboolean
-is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files )
+is_candidate_for_capabilities( const FMAIContext *object, guint target, GList *files )
 {
-	static const gchar *thisfn = "na_icontext_is_candidate_for_capabilities";
+	static const gchar *thisfn = "fma_icontext_is_candidate_for_capabilities";
 	gboolean ok = TRUE;
 	GSList *capabilities = na_object_get_capabilities( object );
 
@@ -1162,7 +1162,7 @@ is_candidate_for_capabilities( const NAIContext *object, guint target, GList *fi
 }
 
 static gboolean
-is_valid_basenames( const NAIContext *object )
+is_valid_basenames( const FMAIContext *object )
 {
 	gboolean valid;
 	GSList *basenames;
@@ -1185,9 +1185,9 @@ is_valid_basenames( const NAIContext *object )
  *  that no mimetype is coded as '* / something'
  */
 static gboolean
-is_valid_mimetypes( const NAIContext *object )
+is_valid_mimetypes( const FMAIContext *object )
 {
-	static const gchar *thisfn = "na_icontext_is_valid_mimetypes";
+	static const gchar *thisfn = "fma_icontext_is_valid_mimetypes";
 	gboolean valid;
 	GSList *mimetypes, *it;
 	guint count_ok, count_errs;
@@ -1235,7 +1235,7 @@ is_valid_mimetypes( const NAIContext *object )
 }
 
 static gboolean
-is_valid_schemes( const NAIContext *object )
+is_valid_schemes( const FMAIContext *object )
 {
 	gboolean valid;
 	GSList *schemes;
@@ -1252,7 +1252,7 @@ is_valid_schemes( const NAIContext *object )
 }
 
 static gboolean
-is_valid_folders( const NAIContext *object )
+is_valid_folders( const FMAIContext *object )
 {
 	gboolean valid;
 	GSList *folders;

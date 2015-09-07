@@ -213,7 +213,7 @@ initialize_window( NactISchemesTab *instance )
 static void
 on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactISchemesTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean enable_tab;
 	GtkWidget *button;
@@ -234,7 +234,7 @@ on_add_from_defaults( GtkButton *button, NactISchemesTab *instance )
 {
 	GSList *schemes;
 	gchar *new_scheme;
-	NAIContext *context;
+	FMAIContext *context;
 
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 	g_return_if_fail( context );

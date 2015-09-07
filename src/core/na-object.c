@@ -247,8 +247,8 @@ iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode
 			na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
 		}
 
-		if( NA_IS_ICONTEXT( target )){
-			na_icontext_copy( NA_ICONTEXT( target ), NA_ICONTEXT( source ));
+		if( FMA_IS_ICONTEXT( target )){
+			fma_icontext_copy( FMA_ICONTEXT( target ), FMA_ICONTEXT( source ));
 		}
 
 		v_copy( dest, src, mode );
@@ -277,8 +277,8 @@ iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 			are_equal &= na_factory_object_are_equal( NA_IFACTORY_OBJECT( a ), NA_IFACTORY_OBJECT( b ));
 		}
 
-		if( NA_IS_ICONTEXT( a )){
-			are_equal &= na_icontext_are_equal( NA_ICONTEXT( a ), NA_ICONTEXT( b ));
+		if( FMA_IS_ICONTEXT( a )){
+			are_equal &= fma_icontext_are_equal( FMA_ICONTEXT( a ), FMA_ICONTEXT( b ));
 		}
 
 		are_equal &= v_are_equal( NA_OBJECT( a ), NA_OBJECT( b ));
@@ -306,8 +306,8 @@ iduplicable_is_valid( const NAIDuplicable *object )
 			is_valid &= na_factory_object_is_valid( NA_IFACTORY_OBJECT( object ));
 		}
 
-		if( NA_IS_ICONTEXT( object )){
-			is_valid &= na_icontext_is_valid( NA_ICONTEXT( object ));
+		if( FMA_IS_ICONTEXT( object )){
+			is_valid &= fma_icontext_is_valid( FMA_ICONTEXT( object ));
 		}
 
 		is_valid &= v_is_valid( NA_OBJECT( object ));

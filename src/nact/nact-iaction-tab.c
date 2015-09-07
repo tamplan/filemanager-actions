@@ -75,7 +75,7 @@ static void         interface_base_init( NactIActionTabInterface *klass );
 static void         interface_base_finalize( NactIActionTabInterface *klass );
 static void         initialize_gtk( NactIActionTab *instance );
 static void         initialize_window( NactIActionTab *instance );
-static void         on_main_item_updated( NactIActionTab *instance, NAIContext *context, guint data, void *empty );
+static void         on_main_item_updated( NactIActionTab *instance, FMAIContext *context, guint data, void *empty );
 static void         on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIActionTab *instance );
 static void         on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance );
 static void         on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance );
@@ -313,7 +313,7 @@ nact_iaction_tab_has_label( NactIActionTab *instance )
 }
 
 static void
-on_main_item_updated( NactIActionTab *instance, NAIContext *context, guint data, void *empty )
+on_main_item_updated( NactIActionTab *instance, FMAIContext *context, guint data, void *empty )
 {
 	GtkWidget *label_widget;
 	gchar *label;

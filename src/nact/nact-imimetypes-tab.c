@@ -218,7 +218,7 @@ initialize_window( NactIMimetypesTab *instance )
 static void
 on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIMimetypesTab *instance )
 {
-	NAIContext *context;
+	FMAIContext *context;
 	gboolean editable;
 	gboolean enable_tab;
 

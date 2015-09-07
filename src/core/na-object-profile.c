@@ -85,8 +85,8 @@ static FMADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instanc
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static void         icontext_iface_init( NAIContextInterface *iface, void *user_data );
-static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
+static void         icontext_iface_init( FMAIContextInterface *iface, void *user_data );
+static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
 
 static gboolean     convert_pre_v3_parameters( NAObjectProfile *profile );
 static gboolean     convert_pre_v3_parameters_str( gchar *str );
@@ -144,7 +144,7 @@ register_type( void )
 
 	type = g_type_register_static( NA_TYPE_OBJECT_ID, "NAObjectProfile", &info, 0 );
 
-	g_type_add_interface_static( type, NA_TYPE_ICONTEXT, &icontext_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_ICONTEXT, &icontext_iface_info );
 
 	g_type_add_interface_static( type, NA_TYPE_IFACTORY_OBJECT, &ifactory_object_iface_info );
 
@@ -372,7 +372,7 @@ ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider
 }
 
 static void
-icontext_iface_init( NAIContextInterface *iface, void *user_data )
+icontext_iface_init( FMAIContextInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_object_profile_icontext_iface_init";
 
@@ -382,7 +382,7 @@ icontext_iface_init( NAIContextInterface *iface, void *user_data )
 }
 
 static gboolean
-icontext_is_candidate( NAIContext *object, guint target, GList *selection )
+icontext_is_candidate( FMAIContext *object, guint target, GList *selection )
 {
 	return( TRUE );
 }
@@ -643,7 +643,7 @@ read_done_ending( NAObjectProfile *profile )
 
 	/* prepare the context after the reading
 	 */
-	na_icontext_read_done( NA_ICONTEXT( profile ));
+	fma_icontext_read_done( FMA_ICONTEXT( profile ));
 
 	/* last, set profile defaults
 	 */

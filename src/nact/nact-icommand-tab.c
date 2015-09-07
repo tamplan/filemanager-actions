@@ -77,7 +77,7 @@ static void          interface_base_init( NactICommandTabInterface *klass );
 static void          interface_base_finalize( NactICommandTabInterface *klass );
 static void          initialize_gtk( NactICommandTab *instance );
 static void          initialize_window( NactICommandTab *instance );
-static void          on_main_item_updated( NactICommandTab *instance, NAIContext *context, guint data, void *empty );
+static void          on_main_item_updated( NactICommandTab *instance, FMAIContext *context, guint data, void *empty );
 static void          on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICommandTab *instance );
 static GtkWidget    *get_label_entry( NactICommandTab *instance );
 static GtkButton    *get_legend_button( NactICommandTab *instance );
@@ -289,7 +289,7 @@ initialize_window( NactICommandTab *instance )
 }
 
 static void
-on_main_item_updated( NactICommandTab *instance, NAIContext *context, guint data, void *empty )
+on_main_item_updated( NactICommandTab *instance, FMAIContext *context, guint data, void *empty )
 {
 	GtkWidget *label_widget;
 	gchar *label;

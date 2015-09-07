@@ -44,7 +44,7 @@
 #include "na-ifactory-object.h"
 #include "na-ifactory-object-data.h"
 #include "na-iduplicable.h"
-#include "na-icontext.h"
+#include "fma-icontext.h"
 #include "na-object-action.h"
 #include "na-object-profile.h"
 #include "na-object-menu.h"
@@ -174,9 +174,9 @@ G_BEGIN_DECLS
 #define na_object_set_startup_class( obj, class )       na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_STARTUP_WMCLASS, ( const void * )( class ))
 #define na_object_set_execute_as( obj, user )           na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_EXECUTE_AS, ( const void * )( user ))
 
-/* NAIContext
+/* FMAIContext
  */
-#define na_object_check_mimetypes( obj )                na_icontext_check_mimetypes( NA_ICONTEXT( obj ))
+#define na_object_check_mimetypes( obj )                fma_icontext_check_mimetypes( FMA_ICONTEXT( obj ))
 
 #define na_object_get_basenames( obj )                  (( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_BASENAMES ))
 #define na_object_get_matchcase( obj )                  (( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MATCHCASE )))
@@ -198,13 +198,13 @@ G_BEGIN_DECLS
 #define na_object_set_mimetypes( obj, types )           na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES, ( const void * )( types ))
 #define na_object_set_all_mimetypes( obj, all )         na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES_IS_ALL, ( const void * ) GUINT_TO_POINTER( all ))
 #define na_object_set_folders( obj, folders )           na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_FOLDERS, ( const void * )( folders ))
-#define na_object_replace_folder( obj, old, new )       na_icontext_replace_folder( NA_ICONTEXT( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
-#define na_object_set_scheme( obj, scheme, add )        na_icontext_set_scheme( NA_ICONTEXT( obj ), ( const gchar * )( scheme ), ( add ))
+#define na_object_replace_folder( obj, old, new )       fma_icontext_replace_folder( FMA_ICONTEXT( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
+#define na_object_set_scheme( obj, scheme, add )        fma_icontext_set_scheme( FMA_ICONTEXT( obj ), ( const gchar * )( scheme ), ( add ))
 #define na_object_set_schemes( obj, schemes )           na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SCHEMES, ( const void * )( schemes ))
 #define na_object_set_only_show_in( obj, list )         na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ONLY_SHOW, ( const void * )( list ))
-#define na_object_set_only_desktop( obj, desktop, add ) na_icontext_set_only_desktop( NA_ICONTEXT( obj ), ( const gchar * )( desktop ), ( add ))
+#define na_object_set_only_desktop( obj, desktop, add ) fma_icontext_set_only_desktop( FMA_ICONTEXT( obj ), ( const gchar * )( desktop ), ( add ))
 #define na_object_set_not_show_in( obj, list )          na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_NOT_SHOW, ( const void * )( list ))
-#define na_object_set_not_desktop( obj, desktop, add )  na_icontext_set_not_desktop( NA_ICONTEXT( obj ), ( const gchar * )( desktop ), ( add ))
+#define na_object_set_not_desktop( obj, desktop, add )  fma_icontext_set_not_desktop( FMA_ICONTEXT( obj ), ( const gchar * )( desktop ), ( add ))
 #define na_object_set_try_exec( obj, exec )             na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TRY_EXEC, ( const void * )( exec ))
 #define na_object_set_show_if_registered( obj, name )   na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHOW_IF_REGISTERED, ( const void * )( name ))
 #define na_object_set_show_if_true( obj, exec )         na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHOW_IF_TRUE, ( const void * )( exec ))

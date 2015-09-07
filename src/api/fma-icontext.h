@@ -32,9 +32,9 @@
 
 /**
  * SECTION: icontext
- * @title: NAIContext
+ * @title: FMAIContext
  * @short_description: The Contextual Interface
- * @include: file-manager-actions/na-icontext.h
+ * @include: file-manager-actions/fma-icontext.h
  *
  * This interface is implemented by all #NAObject -derived objects
  * whose the display in the Nautilus context menu is subject to some
@@ -49,16 +49,16 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_ICONTEXT                      ( na_icontext_get_type())
-#define NA_ICONTEXT( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_ICONTEXT, NAIContext ))
-#define NA_IS_ICONTEXT( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_ICONTEXT ))
-#define NA_ICONTEXT_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_ICONTEXT, NAIContextInterface ))
+#define FMA_TYPE_ICONTEXT                      ( fma_icontext_get_type())
+#define FMA_ICONTEXT( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_ICONTEXT, FMAIContext ))
+#define FMA_IS_ICONTEXT( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_ICONTEXT ))
+#define FMA_ICONTEXT_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_ICONTEXT, FMAIContextInterface ))
 
-typedef struct _NAIContext                    NAIContext;
-typedef struct _NAIContextInterfacePrivate    NAIContextInterfacePrivate;
+typedef struct _FMAIContext                    FMAIContext;
+typedef struct _FMAIContextInterfacePrivate    FMAIContextInterfacePrivate;
 
 /**
- * NAIContextInterface:
+ * FMAIContextInterface:
  * @is_candidate: determines if the given NAObject-derived object is
  *                candidate to display in Nautilus.
  *
@@ -68,17 +68,17 @@ typedef struct _NAIContextInterfacePrivate    NAIContextInterfacePrivate;
 typedef struct {
 	/*< private >*/
 	GTypeInterface              parent;
-	NAIContextInterfacePrivate *private;
+	FMAIContextInterfacePrivate *private;
 
 	/*< public >*/
 	/**
 	 * is_candidate:
-	 * @object: this NAIContext object.
+	 * @object: this FMAIContext object.
 	 * @target: the initial target which triggered this function's stack.
 	 *  This target is defined in na-object-item.h.
 	 * @selection: the current selection as a GList of NautilusFileInfo.
 	 *
-	 * The NAIContext implementor may take advantage of this
+	 * The FMAIContext implementor may take advantage of this
 	 * virtual function to check for its own specific data. Only if the
 	 * implementor does return %TRUE (or just doesn't implement this
 	 * virtual), the conditions themselves will be checked.
@@ -88,24 +88,24 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean ( *is_candidate )( NAIContext *object, guint target, GList *selection );
+	gboolean ( *is_candidate )( FMAIContext *object, guint target, GList *selection );
 }
-	NAIContextInterface;
+	FMAIContextInterface;
 
-GType    na_icontext_get_type( void );
+GType    fma_icontext_get_type( void );
 
-gboolean na_icontext_are_equal       ( const NAIContext *a, const NAIContext *b );
-gboolean na_icontext_is_candidate    ( const NAIContext *context, guint target, GList *selection );
-gboolean na_icontext_is_valid        ( const NAIContext *context );
+gboolean fma_icontext_are_equal       ( const FMAIContext *a, const FMAIContext *b );
+gboolean fma_icontext_is_candidate    ( const FMAIContext *context, guint target, GList *selection );
+gboolean fma_icontext_is_valid        ( const FMAIContext *context );
 
-void     na_icontext_check_mimetypes ( const NAIContext *context );
+void     fma_icontext_check_mimetypes ( const FMAIContext *context );
 
-void     na_icontext_copy            ( NAIContext *context, const NAIContext *source );
-void     na_icontext_read_done       ( NAIContext *context );
-void     na_icontext_set_scheme      ( NAIContext *context, const gchar *scheme, gboolean selected );
-void     na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolean selected );
-void     na_icontext_set_not_desktop ( NAIContext *context, const gchar *desktop, gboolean selected );
-void     na_icontext_replace_folder  ( NAIContext *context, const gchar *old, const gchar *new );
+void     fma_icontext_copy            ( FMAIContext *context, const FMAIContext *source );
+void     fma_icontext_read_done       ( FMAIContext *context );
+void     fma_icontext_set_scheme      ( FMAIContext *context, const gchar *scheme, gboolean selected );
+void     fma_icontext_set_only_desktop( FMAIContext *context, const gchar *desktop, gboolean selected );
+void     fma_icontext_set_not_desktop ( FMAIContext *context, const gchar *desktop, gboolean selected );
+void     fma_icontext_replace_folder  ( FMAIContext *context, const gchar *old, const gchar *new );
 
 G_END_DECLS
 

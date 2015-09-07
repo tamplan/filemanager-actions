@@ -76,8 +76,8 @@ libna_core_la_SOURCES = \
 	na-gnome-vfs-uri.h									\
 	na-gtk-utils.c										\
 	na-gtk-utils.h										\
-	na-icontext.c										\
-	na-icontext-factory.c								\
+	fma-icontext.c										\
+	fma-icontext-factory.c								\
 	na-iduplicable.c									\
 	na-iexporter.c										\
 	na-ifactory-object.c								\
