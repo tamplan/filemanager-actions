@@ -343,8 +343,8 @@ free_desktop_paths( GList *paths )
 
 /**
  * nadp_reader_iimporter_import_from_uri:
- * @instance: the #NAIImporter provider.
- * @parms: a #NAIImporterUriParms structure.
+ * @instance: the #FMAIImporter provider.
+ * @parms: a #FMAIImporterUriParms structure.
  *
  * Imports an item.
  *
@@ -357,23 +357,23 @@ free_desktop_paths( GList *paths )
  * So we have to load the file into memory, and then try to load the key
  * file from the memory data.
  *
- * Starting with N-A 3.2, we only honor the version 2 of #NAIImporter interface,
+ * Starting with N-A 3.2, we only honor the version 2 of #FMAIImporter interface,
  * thus no more checking here against possible duplicate identifiers.
  */
 guint
-nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, void *parms_ptr )
+nadp_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
 {
 	static const gchar *thisfn = "nadp_reader_iimporter_import_from_uri";
 	guint code;
-	NAIImporterImportFromUriParmsv2 *parms;
+	FMAIImporterImportFromUriParmsv2 *parms;
 	NadpDesktopFile *ndf;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, parms_ptr );
 
-	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 
-	parms = ( NAIImporterImportFromUriParmsv2 * ) parms_ptr;
+	parms = ( FMAIImporterImportFromUriParmsv2 * ) parms_ptr;
 
 	if( !fma_core_utils_file_is_loadable( parms->uri )){
 		code = IMPORTER_CODE_NOT_LOADABLE;

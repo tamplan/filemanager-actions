@@ -75,7 +75,7 @@
  *        </title>
  *        <para>
  *          This extension is provided via the public
- *          <link linkend="NAIImporter">NAIImporter</link>
+ *          <link linkend="FMAIImporter">FMAIImporter</link>
  *          interface; it takes care of importing menus and actions
  *          from the filesystem into the &prodname; Configuration Tool
  *          user interface.

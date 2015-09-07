@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-iimporter.h>
+#include <api/fma-iimporter.h>
 #include <api/na-object-api.h>
 
 #include "na-import-mode.h"
@@ -107,7 +107,7 @@ static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
  *
  * Imports a list of URIs.
  *
- * For each URI to import, we search through the available #NAIImporter
+ * For each URI to import, we search through the available #FMAIImporter
  * providers until the first which returns with something different from
  * "not_willing_to" code.
  *
@@ -116,7 +116,7 @@ static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
  * Each import operation will have its corresponding newly allocated
  * #NAImporterResult structure which will contain:
  * - the imported URI
- * - the #NAIImporter provider if one has been found, or %NULL
+ * - the #FMAIImporter provider if one has been found, or %NULL
  * - a #NAObjectItem item if import was successful, or %NULL
  * - a list of error messages, or %NULL.
  *
@@ -145,7 +145,7 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 
 	/* first phase: just try to import the uris into memory
 	 */
-	modules = na_pivot_get_providers( pivot, NA_TYPE_IIMPORTER );
+	modules = na_pivot_get_providers( pivot, FMA_TYPE_IIMPORTER );
 
 	for( uri = parms->uris ; uri ; uri = uri->next ){
 		import_result = import_from_uri( pivot, modules, ( const gchar * ) uri->data );
@@ -177,7 +177,7 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 
 		if( import_result->imported ){
 			g_return_val_if_fail( NA_IS_OBJECT_ITEM( import_result->imported ), NULL );
-			g_return_val_if_fail( NA_IS_IIMPORTER( import_result->importer ), NULL );
+			g_return_val_if_fail( FMA_IS_IIMPORTER( import_result->importer ), NULL );
 
 			ask_parms.uri = import_result->uri;
 			manage_import_mode( parms, results, &ask_parms, import_result );
@@ -203,7 +203,7 @@ na_importer_free_result( NAImporterResult *result )
 }
 
 /*
- * Each NAIImporter interface may return some messages, specially if it
+ * Each FMAIImporter interface may return some messages, specially if it
  * recognized but is not able to import the provided URI. But as long
  * we do not have yet asked to all available interfaces, we are not sure
  * of whether this URI is eventually importable or not.
@@ -216,18 +216,18 @@ static NAImporterResult *
 import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
 {
 	NAImporterResult *result;
-	NAIImporterImportFromUriParmsv2 provider_parms;
+	FMAIImporterImportFromUriParmsv2 provider_parms;
 	GList *im;
 	guint code;
 	GSList *all_messages;
-	NAIImporter *provider;
+	FMAIImporter *provider;
 
 	result = NULL;
 	all_messages = NULL;
 	provider = NULL;
 	code = IMPORTER_CODE_NOT_WILLING_TO;
 
-	memset( &provider_parms, '\0', sizeof( NAIImporterImportFromUriParmsv2 ));
+	memset( &provider_parms, '\0', sizeof( FMAIImporterImportFromUriParmsv2 ));
 	provider_parms.version = 2;
 	provider_parms.content = 1;
 	provider_parms.uri = uri;
@@ -236,7 +236,7 @@ import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
 			im && ( code == IMPORTER_CODE_NOT_WILLING_TO || code == IMPORTER_CODE_NOT_LOADABLE ) ;
 			im = im->next ){
 
-		code = na_iimporter_import_from_uri( NA_IIMPORTER( im->data ), &provider_parms );
+		code = fma_iimporter_import_from_uri( FMA_IIMPORTER( im->data ), &provider_parms );
 
 		if( code == IMPORTER_CODE_NOT_WILLING_TO ){
 			all_messages = g_slist_concat( all_messages, provider_parms.messages );
@@ -252,7 +252,7 @@ import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
 		} else {
 			fma_core_utils_slist_free( all_messages );
 			all_messages = provider_parms.messages;
-			provider = NA_IIMPORTER( im->data );
+			provider = FMA_IIMPORTER( im->data );
 		}
 	}
 

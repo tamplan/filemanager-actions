@@ -77,8 +77,8 @@ struct _NAXMLReaderPrivate {
 
 	/* data provided by the caller
 	 */
-	NAIImporter                     *importer;
-	NAIImporterImportFromUriParmsv2 *parms;
+	FMAIImporter                     *importer;
+	FMAIImporterImportFromUriParmsv2 *parms;
 
 	/* data dynamically set during the import operation
 	 */
@@ -305,8 +305,8 @@ reader_new( void )
 
 /**
  * naxml_reader_import_uri:
- * @instance: the #NAIImporter provider.
- * @parms: a #NAIImporterImportFromUriParmsv2 structure.
+ * @instance: the #FMAIImporter provider.
+ * @parms: a #FMAIImporterImportFromUriParmsv2 structure.
  *
  * Imports an item.
  *
@@ -316,22 +316,22 @@ reader_new( void )
  *  then we do not return any error message at all, but just the 'unwilling to'
  *  code.
  *
- * Starting with N-A 3.2, we only honor the version 2 of #NAIImporter interface,
+ * Starting with N-A 3.2, we only honor the version 2 of #FMAIImporter interface,
  * thus no more checking here against possible duplicate identifiers.
  */
 guint
-naxml_reader_import_from_uri( const NAIImporter *instance, void *parms_ptr )
+naxml_reader_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
 {
 	static const gchar *thisfn = "naxml_reader_import_from_uri";
 	NAXMLReader *reader;
-	NAIImporterImportFromUriParmsv2* parms;
+	FMAIImporterImportFromUriParmsv2* parms;
 	guint code;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, parms_ptr );
 
-	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 
-	parms = ( NAIImporterImportFromUriParmsv2 * ) parms_ptr;
+	parms = ( FMAIImporterImportFromUriParmsv2 * ) parms_ptr;
 	parms->imported = NULL;
 
 	if( !fma_core_utils_file_is_loadable( parms->uri )){
@@ -339,7 +339,7 @@ naxml_reader_import_from_uri( const NAIImporter *instance, void *parms_ptr )
 	}
 
 	reader = reader_new();
-	reader->private->importer = ( NAIImporter * ) instance;
+	reader->private->importer = ( FMAIImporter * ) instance;
 	reader->private->parms = parms;
 
 	code = reader_parse_xmldoc( reader );

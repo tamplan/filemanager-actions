@@ -408,7 +408,7 @@ typedef struct {
 	 *
 	 * If this method is not implemented by the plugin,
 	 * FileManager-Actions considers that the plugin only implements
-	 * the version 1 of the NAIImporter interface.
+	 * the version 1 of the FMAIImporter interface.
 	 *
 	 * Return value: if implemented, this method must return the version
 	 * number of this interface the I/O provider is supporting.

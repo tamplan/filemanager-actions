@@ -34,33 +34,33 @@
 #include <glib/gi18n.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-iimporter.h>
+#include <api/fma-iimporter.h>
 #include <api/na-object-api.h>
 
 /* private interface data
  */
-struct _NAIImporterInterfacePrivate {
+struct _FMAIImporterInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_base_init( NAIImporterInterface *klass );
-static void  interface_base_finalize( NAIImporterInterface *klass );
-static guint iimporter_get_version( const NAIImporter *instance );
+static void  interface_base_init( FMAIImporterInterface *klass );
+static void  interface_base_finalize( FMAIImporterInterface *klass );
+static guint iimporter_get_version( const FMAIImporter *instance );
 
 #ifdef NA_ENABLE_DEPRECATED
-static void  renumber_label_item( NAIImporterManageImportModeParms *parms );
+static void  renumber_label_item( FMAIImporterManageImportModeParms *parms );
 #endif
 
 /**
- * na_iimporter_get_type:
+ * fma_iimporter_get_type:
  *
  * Returns: the #GType type of this interface.
  */
 GType
-na_iimporter_get_type( void )
+fma_iimporter_get_type( void )
 {
 	static GType type = 0;
 
@@ -72,18 +72,18 @@ na_iimporter_get_type( void )
 }
 
 /*
- * na_iimporter_register_type:
+ * fma_iimporter_register_type:
  *
  * Registers this interface.
  */
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_iimporter_register_type";
+	static const gchar *thisfn = "fma_iimporter_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIImporterInterface ),
+		sizeof( FMAIImporterInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -96,7 +96,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIImporter", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIImporter", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -104,15 +104,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIImporterInterface *klass )
+interface_base_init( FMAIImporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iimporter_interface_base_init";
+	static const gchar *thisfn = "fma_iimporter_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
-		klass->private = g_new0( NAIImporterInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIImporterInterfacePrivate, 1 );
 
 		klass->get_version = iimporter_get_version;
 		klass->import_from_uri = NULL;
@@ -122,9 +122,9 @@ interface_base_init( NAIImporterInterface *klass )
 }
 
 static void
-interface_base_finalize( NAIImporterInterface *klass )
+interface_base_finalize( FMAIImporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iimporter_interface_base_finalize";
+	static const gchar *thisfn = "fma_iimporter_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -137,21 +137,21 @@ interface_base_finalize( NAIImporterInterface *klass )
 }
 
 static guint
-iimporter_get_version( const NAIImporter *instance )
+iimporter_get_version( const FMAIImporter *instance )
 {
 	return( 1 );
 }
 
 /**
- * na_iimporter_import_from_uri:
- * @importer: this #NAIImporter instance.
- * @parms: a #NAIImporterImportFromUriParmsv2 structure.
+ * fma_iimporter_import_from_uri:
+ * @importer: this #FMAIImporter instance.
+ * @parms: a #FMAIImporterImportFromUriParmsv2 structure.
  *
  * Tries to import a #NAObjectItem from the URI specified in @parms, returning
  * the result in <structfield>@parms->imported</structfield>.
  *
  * Note that, starting with &prodname; 3.2, the @parms argument is no more a
- * #NAIImporterImportFromUriParms pointer, but a #NAIImporterImportFromUriParmsv2
+ * #FMAIImporterImportFromUriParms pointer, but a #FMAIImporterImportFromUriParmsv2
  * one.
  *
  * Returns: the return code of the operation.
@@ -160,12 +160,12 @@ iimporter_get_version( const NAIImporter *instance )
  */
 
 guint
-na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFromUriParmsv2 *parms )
+fma_iimporter_import_from_uri( const FMAIImporter *importer, FMAIImporterImportFromUriParmsv2 *parms )
 {
-	static const gchar *thisfn = "na_iimporter_import_from_uri";
+	static const gchar *thisfn = "fma_iimporter_import_from_uri";
 	guint code;
 
-	g_return_val_if_fail( NA_IS_IIMPORTER( importer ), IMPORTER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IIMPORTER( importer ), IMPORTER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( parms && parms->version == 2, IMPORTER_CODE_PROGRAM_ERROR );
 
 	code = IMPORTER_CODE_NOT_WILLING_TO;
@@ -173,8 +173,8 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
 	g_debug( "%s: importer=%p (%s), parms=%p", thisfn,
 			( void * ) importer, G_OBJECT_TYPE_NAME( importer), ( void * ) parms );
 
-	if( NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri ){
-		code = NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri( importer, parms );
+	if( FMA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri ){
+		code = FMA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri( importer, parms );
 	}
 
 	return( code );
@@ -182,10 +182,10 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
- * na_iimporter_manage_import_mode:
- * @parms: a #NAIImporterManageImportModeParms struct.
+ * fma_iimporter_manage_import_mode:
+ * @parms: a #FMAIImporterManageImportModeParms struct.
  *
- * Returns: the #NAIImporterImportStatus status of the operation:
+ * Returns: the #FMAIImporterImportStatus status of the operation:
  *
  * <itemizedlist>
  *   <listitem>
@@ -215,9 +215,9 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
  * Deprecated: 3.2
  */
 guint
-na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
+fma_iimporter_manage_import_mode( FMAIImporterManageImportModeParms *parms )
 {
-	static const gchar *thisfn = "na_iimporter_manage_import_mode";
+	static const gchar *thisfn = "fma_iimporter_manage_import_mode";
 	guint code;
 	NAObjectItem *exists;
 	guint mode;
@@ -299,7 +299,7 @@ na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
  * renumber the item, and set a new label
  */
 static void
-renumber_label_item( NAIImporterManageImportModeParms *parms )
+renumber_label_item( FMAIImporterManageImportModeParms *parms )
 {
 	gchar *label, *tmp;
 

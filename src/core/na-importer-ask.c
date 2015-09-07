@@ -33,7 +33,7 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-iimporter.h>
+#include <api/fma-iimporter.h>
 #include <api/na-object-api.h>
 
 #include "na-gtk-utils.h"
@@ -302,7 +302,7 @@ import_ask_new( GtkWindow *parent )
  * na_importer_ask_user:
  * @importing: the #NAObjectItem-derived object being currently imported.
  * @existing: the #NAObjectItem-derived already existing object with the same ID.
- * @parms: a #NAIImporterUriParms structure.
+ * @parms: a #FMAIImporterUriParms structure.
  *
  * Ask the user for what to do when an imported item has the same ID
  * that an already existing one.

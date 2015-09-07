@@ -67,8 +67,8 @@ static guint  iio_provider_get_version( const NAIIOProvider *provider );
 static void   ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface );
 static guint  ifactory_provider_get_version( const FMAIFactoryProvider *reader );
 
-static void   iimporter_iface_init( NAIImporterInterface *iface );
-static guint  iimporter_get_version( const NAIImporter *importer );
+static void   iimporter_iface_init( FMAIImporterInterface *iface );
+static guint  iimporter_get_version( const FMAIImporter *importer );
 
 static void   iexporter_iface_init( FMAIExporterInterface *iface );
 static guint  iexporter_get_version( const FMAIExporter *exporter );
@@ -133,7 +133,7 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_TYPE_IIMPORTER, &iimporter_iface_info );
+	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IIMPORTER, &iimporter_iface_info );
 
 	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IEXPORTER, &iexporter_iface_info );
 }
@@ -282,7 +282,7 @@ ifactory_provider_get_version( const FMAIFactoryProvider *reader )
 }
 
 static void
-iimporter_iface_init( NAIImporterInterface *iface )
+iimporter_iface_init( FMAIImporterInterface *iface )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_iimporter_iface_init";
 
@@ -293,7 +293,7 @@ iimporter_iface_init( NAIImporterInterface *iface )
 }
 
 static guint
-iimporter_get_version( const NAIImporter *importer )
+iimporter_get_version( const FMAIImporter *importer )
 {
 	return( 2 );
 }

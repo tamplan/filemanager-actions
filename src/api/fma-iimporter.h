@@ -27,20 +27,20 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_IIMPORTER_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_IIMPORTER_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_IIMPORTER_H__
+#define __FILE_MANAGER_ACTIONS_API_IIMPORTER_H__
 
 /**
  * SECTION: iimporter
- * @title: NAIImporter
+ * @title: FMAIImporter
  * @short_description: The Import Interface
- * @include: file-manager-actions/na-iimporter.h
+ * @include: file-manager-actions/fma-iimporter.h
  *
- * The #NAIImporter interface imports items from the outside world
+ * The #FMAIImporter interface imports items from the outside world
  * into &prodname; repository (see #NAIIOProvider interface for how
  * these items will be later managed to be store somewhere).
  *
- * In version 1 of the #NAIImporter interface, &prodname; used to
+ * In version 1 of the #FMAIImporter interface, &prodname; used to
  * provide the implementation with all was needed to be able to manage
  * the import process up to be ready for insertion, including the
  * deduplication if required.
@@ -53,18 +53,18 @@
  * Starting with &prodname; version 3.2, this interface is bumped to
  * a version 2 which greatly simplifies it.
  *
- * The I/O provider which implements the #NAIImporter interface is no
+ * The I/O provider which implements the #FMAIImporter interface is no
  * more required to check for existence of the imported items, but this
  * check is pushed back to the caller responsability.
  *
  * Rationale is that only the caller is able to check against a valid
- * repository in its current import context, while the #NAIImporter
+ * repository in its current import context, while the #FMAIImporter
  * provider should only be responsible to import an item in memory.
  *
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIImporter interface</title>
+ *    <title>Historic of the versions of the #FMAIImporter interface</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -73,7 +73,7 @@
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIImporter interface version</entry>
+ *          <entry>#FMAIImporter interface version</entry>
  *          <entry></entry>
  *          <entry></entry>
  *        </row>
@@ -101,38 +101,38 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_IIMPORTER                      ( na_iimporter_get_type())
-#define NA_IIMPORTER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IIMPORTER, NAIImporter ))
-#define NA_IS_IIMPORTER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IIMPORTER ))
-#define NA_IIMPORTER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IIMPORTER, NAIImporterInterface ))
+#define FMA_TYPE_IIMPORTER                      ( fma_iimporter_get_type())
+#define FMA_IIMPORTER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IIMPORTER, FMAIImporter ))
+#define FMA_IS_IIMPORTER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IIMPORTER ))
+#define FMA_IIMPORTER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IIMPORTER, FMAIImporterInterface ))
 
-typedef struct _NAIImporter                    NAIImporter;
-typedef struct _NAIImporterInterfacePrivate    NAIImporterInterfacePrivate;
+typedef struct _FMAIImporter                    FMAIImporter;
+typedef struct _FMAIImporterInterfacePrivate    FMAIImporterInterfacePrivate;
 
 /**
- * NAIImporterInterface:
+ * FMAIImporterInterface:
  * @get_version:     [should] returns the version of this interface that the
  *                            plugin implements.
  * @import_from_uri: [should] imports an item.
  *
- * This defines the interface that a #NAIImporter should implement.
+ * This defines the interface that a #FMAIImporter should implement.
  */
 typedef struct {
 	/*< private >*/
-	GTypeInterface               parent;
-	NAIImporterInterfacePrivate *private;
+	GTypeInterface                parent;
+	FMAIImporterInterfacePrivate *private;
 
 	/*< public >*/
 	/**
 	 * get_version:
-	 * @instance: the NAIImporter provider.
+	 * @instance: the FMAIImporter provider.
 	 *
 	 * FileManager-Actions calls this method each time it needs to know
 	 * which version of this interface the plugin implements.
 	 *
 	 * If this method is not implemented by the plugin,
 	 * FileManager-Actions considers that the plugin only implements
-	 * the version 1 of the NAIImporter interface.
+	 * the version 1 of the FMAIImporter interface.
 	 *
 	 * Return value: if implemented, this method must return the version
 	 * number of this interface the I/O provider is supporting.
@@ -141,44 +141,44 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint ( *get_version )    ( const NAIImporter *instance );
+	guint ( *get_version )    ( const FMAIImporter *instance );
 
 	/**
 	 * import_from_uri:
-	 * @instance: the NAIImporter provider.
-	 * @parms: a NAIImporterImportFromUriParms structure.
+	 * @instance: the FMAIImporter provider.
+	 * @parms: a FMAIImporterImportFromUriParms structure.
 	 *
 	 * Imports an item.
 	 *
 	 * If the provider implements the version 1 of this interface, then
-	 * @parms is supposed to map to NAIImporterImportFromUriParms structure.
+	 * @parms is supposed to map to FMAIImporterImportFromUriParms structure.
 	 *
 	 * Contrarily, if the provider implements the version 2 of the interface,
-	 * then @parms is supposed to map to a NAIImporterImportFromUriParmsv2
+	 * then @parms is supposed to map to a FMAIImporterImportFromUriParmsv2
 	 * structure.
 	 *
 	 * Return value: the return code of the operation.
 	 *
 	 * Since: 2.30
 	 */
-	guint ( *import_from_uri )( const NAIImporter *instance, void *parms );
+	guint ( *import_from_uri )( const FMAIImporter *instance, void *parms );
 }
-	NAIImporterInterface;
+	FMAIImporterInterface;
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
- * NAIImporterCheckFn:
+ * FMAIImporterCheckFn:
  * @imported: the currently imported #NAObjectItem -derived object.
  * @fn_data: some data to be passed to the function.
  *
  * In version 1 of the interface, this function may be provided by
- * the caller in order the #NAIImporter provider be able to check for
+ * the caller in order the #FMAIImporter provider be able to check for
  * pre-existence of the imported item.
  * This function should return the already existing item which has the
  * same id than the currently being imported one, or %NULL if the
  * imported id will be unique.
  *
- * If this function is not provided, then the #NAIImporter provider will not
+ * If this function is not provided, then the #FMAIImporter provider will not
  * be able to check for duplicates. In this case, the id of the imported item
  * should be systematically regenerated as a unique id, regardless of the
  * asked import mode.
@@ -205,19 +205,19 @@ typedef struct {
  * Since: 2.30
  * Deprecated: 3.2
  */
-typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
+typedef NAObjectItem * ( *FMAIImporterCheckFn )( const NAObjectItem *, void * );
 
 /**
- * NAIImporterAskUserFn:
+ * FMAIImporterAskUserFn:
  * @imported: the currently imported #NAObjectItem.
  * @existing: an already existing #NAObjectItem with same id.
  * @fn_data: some data to be passed to the function.
  *
  * In version 1 of the interface, this function may be provided by the
- * caller as a convenience way for the #NAIImporter to ask the user to
+ * caller as a convenience way for the #FMAIImporter to ask the user to
  * know what to do in the case of a duplicate id.
  *
- * If this function is not provided, and the #NAIImporter does not have
+ * If this function is not provided, and the #FMAIImporter does not have
  * any other way to ask the user, then a 'no import' policy should be
  * preferred when managing duplicate identifiers.
  *
@@ -227,21 +227,21 @@ typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
  * Since: 2.30
  * Deprecated: 3.2
  */
-typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectItem *, void * );
+typedef guint ( *FMAIImporterAskUserFn )( const NAObjectItem *, const NAObjectItem *, void * );
 
 /**
- * NAIImporterManageImportModeParms:
+ * FMAIImporterManageImportModeParms:
  * @version:       [in] the version of the structure content, equals to 1;
  *                      since structure version 1.
  * @imported:      [in] the imported #NAObjectItem -derived object;
  *                      since structure version 1.
  * @asked_mode:    [in] asked import mode;
  *                      since structure version 1.
- * @check_fn:      [in] a #NAIImporterCheckFn function to check the existence of the imported id;
+ * @check_fn:      [in] a #FMAIImporterCheckFn function to check the existence of the imported id;
  *                      since structure version 1.
  * @check_fn_data: [in] @check_fn data;
  *                      since structure version 1.
- * @ask_fn:        [in] a #NAIImporterAskUserFn function to ask the user what to do in case of a duplicate id;
+ * @ask_fn:        [in] a #FMAIImporterAskUserFn function to ask the user what to do in case of a duplicate id;
  *                      since structure version 1.
  * @ask_fn_data:   [in] @ask_fn data;
  *                      since structure version 1.
@@ -260,21 +260,21 @@ typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectIte
  * Deprecated: 3.2
  */
 typedef struct {
-	guint                version;
+	guint                 version;
 	NAObjectItem        *imported;
-	guint                asked_mode;
-	NAIImporterCheckFn   check_fn;
-	void                *check_fn_data;
-	NAIImporterAskUserFn ask_fn;
-	void                *ask_fn_data;
-	gboolean             exist;
-	guint                import_mode;
-	GSList              *messages;
+	guint                 asked_mode;
+	FMAIImporterCheckFn   check_fn;
+	void                 *check_fn_data;
+	FMAIImporterAskUserFn ask_fn;
+	void                 *ask_fn_data;
+	gboolean              exist;
+	guint                 import_mode;
+	GSList               *messages;
 }
-	NAIImporterManageImportModeParms;
+	FMAIImporterManageImportModeParms;
 
 /**
- * NAIImporterImportMode:
+ * FMAIImporterImportMode:
  * @IMPORTER_MODE_NO_IMPORT: a "do not import" mode.
  * @IMPORTER_MODE_RENUMBER:  reallocate a new id when the imported one already exists.
  * @IMPORTER_MODE_OVERRIDE:  override the existing id with the imported one.
@@ -290,12 +290,12 @@ typedef enum {
 	IMPORTER_MODE_OVERRIDE,
 	IMPORTER_MODE_ASK
 }
-	NAIImporterImportMode;
+	FMAIImporterImportMode;
 
-guint na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms );
+guint fma_iimporter_manage_import_mode( FMAIImporterManageImportModeParms *parms );
 
 /**
- * NAIImporterImportFromUriParms:
+ * FMAIImporterImportFromUriParms:
  * @version:       [in] the version of this structure;
  *                      since structure version 1.
  * @uri:           [in] uri of the file to be imported;
@@ -308,12 +308,12 @@ guint na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
  *                      since structure version 1.
  * @imported:      [out] the imported #NAObjectItem -derived object, or %NULL;
  *                      since structure version 1.
- * @check_fn:      [in] a NAIImporterCheckFn() function to check the existence
+ * @check_fn:      [in] a FMAIImporterCheckFn() function to check the existence
  *                      of the imported id;
  *                      since structure version 1.
  * @check_fn_data: [in] @check_fn data;
  *                      since structure version 1.
- * @ask_fn:        [in] a NAIImporterAskUserFn() function to ask the user what to
+ * @ask_fn:        [in] a FMAIImporterAskUserFn() function to ask the user what to
  *                      do in case of a duplicate id;
  *                      since structure version 1.
  * @ask_fn_data:   [in] @ask_fn data;
@@ -330,24 +330,24 @@ guint na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
  * Deprecated: 3.2
  */
 typedef struct {
-	guint                version;
-	gchar               *uri;
-	guint                asked_mode;
-	gboolean             exist;
-	guint                import_mode;
+	guint                 version;
+	gchar                *uri;
+	guint                 asked_mode;
+	gboolean              exist;
+	guint                 import_mode;
 	NAObjectItem        *imported;
-	NAIImporterCheckFn   check_fn;
-	void                *check_fn_data;
-	NAIImporterAskUserFn ask_fn;
-	void                *ask_fn_data;
-	GSList              *messages;
+	FMAIImporterCheckFn   check_fn;
+	void                 *check_fn_data;
+	FMAIImporterAskUserFn ask_fn;
+	void                 *ask_fn_data;
+	GSList               *messages;
 }
-	NAIImporterImportFromUriParms;
+	FMAIImporterImportFromUriParms;
 
 #endif /* NA_ENABLE_DEPRECATED */
 
 /**
- * NAIImporterImportStatus:
+ * FMAIImporterImportStatus:
  * @IMPORTER_CODE_OK:                import ok.
  * @IMPORTER_CODE_PROGRAM_ERROR:     a program error has been detected.
  *                                   You should open a bug in
@@ -374,10 +374,10 @@ typedef enum {
 	IMPORTER_CODE_CANCELLED,
 	IMPORTER_CODE_NOT_LOADABLE
 }
-	NAIImporterImportStatus;
+	FMAIImporterImportStatus;
 
 /**
- * NAIImporterImportFromUriParmsv2:
+ * FMAIImporterImportFromUriParmsv2:
  * @version:       [in] the version of the structure, equals to 2;
  *                      since structure version 1.
  * @content:       [in] the version of the description content, equals to 1;
@@ -397,18 +397,18 @@ typedef enum {
  * Since: 3.2
  */
 typedef struct {
-	guint         version;
-	guint         content;
-	const gchar  *uri;
+	guint          version;
+	guint          content;
+	const gchar   *uri;
 	NAObjectItem *imported;
-	GSList       *messages;
+	GSList        *messages;
 }
-	NAIImporterImportFromUriParmsv2;
+	FMAIImporterImportFromUriParmsv2;
 
-GType na_iimporter_get_type       ( void );
+GType fma_iimporter_get_type       ( void );
 
-guint na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFromUriParmsv2 *parms );
+guint fma_iimporter_import_from_uri( const FMAIImporter *importer, FMAIImporterImportFromUriParmsv2 *parms );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_IIMPORTER_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_IIMPORTER_H__ */

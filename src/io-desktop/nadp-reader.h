@@ -31,14 +31,14 @@
 #define __NADP_READER_H__
 
 #include <api/na-iio-provider.h>
-#include <api/na-iimporter.h>
+#include <api/fma-iimporter.h>
 #include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
 GList       *nadp_iio_provider_read_items            ( const NAIIOProvider *provider, GSList **messages );
 
-guint        nadp_reader_iimporter_import_from_uri   ( const NAIImporter *instance, void *parms_ptr );
+guint        nadp_reader_iimporter_import_from_uri   ( const FMAIImporter *instance, void *parms_ptr );
 
 void         nadp_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages );
 FMADataBoxed *nadp_reader_ifactory_provider_read_data ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, const FMADataDef *iddef, GSList **messages );

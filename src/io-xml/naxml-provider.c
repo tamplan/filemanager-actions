@@ -33,7 +33,7 @@
 
 #include <api/fma-ifactory-provider.h>
 #include <api/fma-iexporter.h>
-#include <api/na-iimporter.h>
+#include <api/fma-iimporter.h>
 
 #include "naxml-provider.h"
 #include "naxml-formats.h"
@@ -60,8 +60,8 @@ static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
-static void   iimporter_iface_init( NAIImporterInterface *iface );
-static guint  iimporter_get_version( const NAIImporter *importer );
+static void   iimporter_iface_init( FMAIImporterInterface *iface );
+static guint  iimporter_get_version( const FMAIImporter *importer );
 
 static void   iexporter_iface_init( FMAIExporterInterface *iface );
 static guint  iexporter_get_version( const FMAIExporter *exporter );
@@ -117,7 +117,7 @@ naxml_provider_register_type( GTypeModule *module )
 
 	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NAXMLProvider", &info, 0 );
 
-	g_type_module_add_interface( module, st_module_type, NA_TYPE_IIMPORTER, &iimporter_iface_info );
+	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IIMPORTER, &iimporter_iface_info );
 
 	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IEXPORTER, &iexporter_iface_info );
 
@@ -203,7 +203,7 @@ instance_finalize( GObject *object )
 }
 
 static void
-iimporter_iface_init( NAIImporterInterface *iface )
+iimporter_iface_init( FMAIImporterInterface *iface )
 {
 	static const gchar *thisfn = "naxml_provider_iimporter_iface_init";
 
@@ -214,7 +214,7 @@ iimporter_iface_init( NAIImporterInterface *iface )
 }
 
 static guint
-iimporter_get_version( const NAIImporter *importer )
+iimporter_get_version( const FMAIImporter *importer )
 {
 	return( 2 );
 }

@@ -30,12 +30,12 @@
 #ifndef __CORE_NA_IMPORTER_H__
 #define __CORE_NA_IMPORTER_H__
 
-/* @title: NAIImporter
- * @short_description: The #NAIImporter Internal Functions
+/* @title: FMAIImporter
+ * @short_description: The #FMAIImporter Internal Functions
  * @include: core/na-importer.h
  *
  * Internal FileManager-Actions code should never directly call a
- * #NAIImporter interface method, but rather should call the
+ * #FMAIImporter interface method, but rather should call the
  * corresponding na_importer_xxx() functions.
  *
  * Importing items is a three-phase operation:
@@ -57,7 +57,7 @@
 
 #include <gtk/gtk.h>
 
-#include <api/na-iimporter.h>
+#include <api/fma-iimporter.h>
 #include <api/na-object-item.h>
 
 #include "na-ioption.h"
@@ -77,8 +77,8 @@ G_BEGIN_DECLS
  *
  * Since: 3.2
  *
- * This same enum used to be defined as NAIImporterImportMode in api/na-iimporter.h
- * header. The enum has been deprecated there in N-A 3.2 when the NAIImporter v2
+ * This same enum used to be defined as FMAIImporterImportMode in api/fma-iimporter.h
+ * header. The enum has been deprecated there in N-A 3.2 when the FMAIImporter v2
  * interface was defined. It has so been moved here with the NAImporterImportMode
  * name.
  */
@@ -131,7 +131,7 @@ typedef struct {
 	 */
 	gchar        *uri;					/* the imported uri */
 	NAObjectItem *imported;				/* the imported NAObjectItem-derived object, or %NULL */
-	NAIImporter  *importer;				/* the importer module, or %NULL */
+	FMAIImporter  *importer;				/* the importer module, or %NULL */
 
 	/* phase 2: check for pre-existence
 	 */

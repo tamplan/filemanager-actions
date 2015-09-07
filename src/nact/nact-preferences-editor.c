@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <libintl.h>
 
-#include <api/na-iimporter.h>
+#include <api/fma-iimporter.h>
 
 #include <core/na-desktop-environment.h>
 #include <core/na-exporter.h>
