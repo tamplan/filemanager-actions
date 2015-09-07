@@ -32,7 +32,7 @@
 
 #include <api/na-iio-provider.h>
 #include <api/fma-iexporter.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
@@ -47,15 +47,15 @@ guint    nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, F
 guint    nadp_writer_iexporter_export_to_file  ( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms );
 
 guint    nadp_writer_ifactory_provider_write_start(
-				const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object,
+				const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object,
 				GSList **messages  );
 
 guint    nadp_writer_ifactory_provider_write_data(
-				const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object,
+				const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object,
 				const FMADataBoxed *boxed, GSList **messages );
 
 guint    nadp_writer_ifactory_provider_write_done(
-				const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object,
+				const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object,
 				GSList **messages  );
 
 G_END_DECLS

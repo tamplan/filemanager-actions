@@ -38,7 +38,7 @@
  * published as API.
  */
 
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
@@ -62,8 +62,8 @@ gboolean     na_factory_object_is_valid         ( const FMAIFactoryObject *objec
 void         na_factory_object_dump             ( const FMAIFactoryObject *object );
 void         na_factory_object_finalize         ( FMAIFactoryObject *object );
 
-void         na_factory_object_read_item        ( FMAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-guint        na_factory_object_write_item       ( FMAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+void         na_factory_object_read_item        ( FMAIFactoryObject *object, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+guint        na_factory_object_write_item       ( FMAIFactoryObject *object, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 void        *na_factory_object_get_as_void      ( const FMAIFactoryObject *object, const gchar *name );
 void         na_factory_object_get_as_value     ( const FMAIFactoryObject *object, const gchar *name, GValue *value );

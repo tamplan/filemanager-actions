@@ -35,7 +35,7 @@
 
 #include <api/fma-data-def.h>
 #include <api/fma-data-types.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 #include <api/fma-core-utils.h>
@@ -54,11 +54,11 @@ typedef struct {
 
 static NAObjectItem *read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages );
 
-static void          read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
+static void          read_start_profile_attach_profile( const FMAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
 
-static gboolean      read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
-static void          read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
-static void          read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
+static gboolean      read_done_item_is_writable( const FMAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
+static void          read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
+static void          read_done_action_load_profile( const FMAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
 
 static FMADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const FMADataDef *def );
 static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key );
@@ -152,8 +152,8 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 		data->entries = fma_gconf_utils_get_entries( provider->private->gconf, path );
 		fma_gconf_utils_dump_entries( data->entries );
 
-		na_ifactory_provider_read_item(
-				NA_IFACTORY_PROVIDER( provider ),
+		fma_ifactory_provider_read_item(
+				FMA_IFACTORY_PROVIDER( provider ),
 				data,
 				FMA_IFACTORY_OBJECT( item ),
 				messages );
@@ -166,11 +166,11 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 }
 
 void
-nagp_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
+nagp_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	static const gchar *thisfn = "nagp_reader_read_start";
 
-	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ));
 	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
@@ -190,18 +190,18 @@ nagp_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, c
 }
 
 static void
-read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages )
+read_start_profile_attach_profile( const FMAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages )
 {
 	na_object_attach_profile( data->parent, profile );
 }
 
 FMADataBoxed *
-nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
+nagp_reader_read_data( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_read_data";
 	FMADataBoxed *boxed;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	/*g_debug( "%s: reader_data=%p, object=%p (%s), data=%s",
@@ -222,12 +222,12 @@ nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, co
 }
 
 void
-nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
+nagp_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	static const gchar *thisfn = "nagp_reader_read_done";
 	gboolean writable;
 
-	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ));
 	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
@@ -254,7 +254,7 @@ nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, co
 }
 
 static gboolean
-read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages )
+read_done_item_is_writable( const FMAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages )
 {
 	GSList *ie;
 	gboolean writable;
@@ -276,7 +276,7 @@ read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *it
 }
 
 static void
-read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages )
+read_done_action_read_profiles( const FMAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_read_done_action_read_profiles";
 	GSList *order;
@@ -329,7 +329,7 @@ read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectActi
 }
 
 static void
-read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages )
+read_done_action_load_profile( const FMAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages )
 {
 	gchar *id;
 	ReaderData *profile_data;
@@ -345,8 +345,8 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 	profile_data->path = ( gchar * ) path;
 	profile_data->entries = fma_gconf_utils_get_entries( NAGP_GCONF_PROVIDER( provider )->private->gconf, path );
 
-	na_ifactory_provider_read_item(
-			NA_IFACTORY_PROVIDER( provider ),
+	fma_ifactory_provider_read_item(
+			FMA_IFACTORY_PROVIDER( provider ),
 			profile_data,
 			FMA_IFACTORY_OBJECT( profile ),
 			messages );

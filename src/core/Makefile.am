@@ -81,7 +81,7 @@ libna_core_la_SOURCES = \
 	fma-iduplicable.c									\
 	fma-iexporter.c										\
 	fma-ifactory-object.c								\
-	na-ifactory-provider.c								\
+	fma-ifactory-provider.c								\
 	na-iimporter.c										\
 	na-iio-provider.c									\
 	na-import-mode.c									\

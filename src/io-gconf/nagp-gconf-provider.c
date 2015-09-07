@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 #include <api/na-iio-provider.h>
 #include <api/fma-gconf-monitor.h>
 
@@ -66,8 +66,8 @@ static gchar   *iio_provider_get_id( const NAIIOProvider *provider );
 static gchar   *iio_provider_get_name( const NAIIOProvider *provider );
 static guint    iio_provider_get_version( const NAIIOProvider *provider );
 
-static void     ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
-static guint    ifactory_provider_get_version( const NAIFactoryProvider *provider );
+static void     ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface );
+static guint    ifactory_provider_get_version( const FMAIFactoryProvider *provider );
 
 #ifdef NA_ENABLE_DEPRECATED
 static GList   *install_monitors( NagpGConfProvider *provider );
@@ -117,7 +117,7 @@ nagp_gconf_provider_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_module_type, NA_TYPE_IIO_PROVIDER, &iio_provider_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
+	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
 }
 
 static void
@@ -254,7 +254,7 @@ iio_provider_get_version( const NAIIOProvider *provider )
 }
 
 static void
-ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
+ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 {
 	static const gchar *thisfn = "nagp_gconf_provider_ifactory_provider_iface_init";
 
@@ -276,7 +276,7 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 }
 
 static guint
-ifactory_provider_get_version( const NAIFactoryProvider *provider )
+ifactory_provider_get_version( const FMAIFactoryProvider *provider )
 {
 	return( 1 );
 }

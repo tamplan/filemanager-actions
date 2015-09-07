@@ -27,15 +27,15 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_PROVIDER_PROVIDER_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_PROVIDER_PROVIDER_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_IFACTORY_PROVIDER_PROVIDER_H__
+#define __FILE_MANAGER_ACTIONS_API_IFACTORY_PROVIDER_PROVIDER_H__
 
 #include <glib.h>
 
 G_BEGIN_DECLS
 
-typedef struct _NAIFactoryProvider                     NAIFactoryProvider;
+typedef struct _FMAIFactoryProvider                     FMAIFactoryProvider;
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_PROVIDER_PROVIDER_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_IFACTORY_PROVIDER_PROVIDER_H__ */

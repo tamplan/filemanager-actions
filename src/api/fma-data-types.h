@@ -56,7 +56,7 @@ G_BEGIN_DECLS
  * Each elementary data which would take advantage of #FMABoxed
  * facilities should be typed at instanciation time.
  *
- * #NAIFactoryProvider implementations should provide a primitive for
+ * #FMAIFactoryProvider implementations should provide a primitive for
  * reading (resp. writing) a value for each of these elementary data
  * types.
  *

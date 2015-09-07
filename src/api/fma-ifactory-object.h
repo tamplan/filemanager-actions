@@ -78,7 +78,7 @@
 
 #include "fma-data-def.h"
 #include "fma-data-boxed.h"
-#include "na-ifactory-provider-provider.h"
+#include "fma-ifactory-provider-provider.h"
 
 G_BEGIN_DECLS
 
@@ -186,7 +186,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_start ) ( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void          ( *read_start ) ( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * read_done:
@@ -200,7 +200,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_done )  ( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void          ( *read_done )  ( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 	/**
 	 * write_start:
@@ -216,7 +216,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_start )( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	guint         ( *write_start )( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 	/**
 	 * write_done:
@@ -232,7 +232,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_done ) ( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	guint         ( *write_done ) ( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
 }
 	FMAIFactoryObjectInterface;
 

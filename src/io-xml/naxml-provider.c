@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 #include <api/fma-iexporter.h>
 #include <api/na-iimporter.h>
 
@@ -69,8 +69,8 @@ static gchar *iexporter_get_name( const FMAIExporter *exporter );
 static void  *iexporter_get_formats( const FMAIExporter *exporter );
 static void   iexporter_free_formats( const FMAIExporter *exporter, GList *format_list );
 
-static void   ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
-static guint  ifactory_provider_get_version( const NAIFactoryProvider *factory );
+static void   ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface );
+static guint  ifactory_provider_get_version( const FMAIFactoryProvider *factory );
 
 GType
 naxml_provider_get_type( void )
@@ -121,7 +121,7 @@ naxml_provider_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IEXPORTER, &iexporter_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
+	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
 }
 
 static void
@@ -259,7 +259,7 @@ iexporter_free_formats( const FMAIExporter *exporter, GList *format_list )
 }
 
 static void
-ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
+ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 {
 	static const gchar *thisfn = "naxml_provider_ifactory_provider_iface_init";
 
@@ -275,7 +275,7 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 }
 
 static guint
-ifactory_provider_get_version( const NAIFactoryProvider *factory )
+ifactory_provider_get_version( const FMAIFactoryProvider *factory )
 {
 	return( 1 );
 }

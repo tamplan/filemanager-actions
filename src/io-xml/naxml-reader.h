@@ -46,7 +46,7 @@
 
 #include <api/fma-data-boxed.h>
 #include <api/na-iimporter.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
@@ -79,9 +79,9 @@ GType        naxml_reader_get_type( void );
 
 guint        naxml_reader_import_from_uri( const NAIImporter *instance, void *parms_ptr );
 
-void         naxml_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
-FMADataBoxed *naxml_reader_read_data ( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages );
-void         naxml_reader_read_done ( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
+void         naxml_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
+FMADataBoxed *naxml_reader_read_data ( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages );
+void         naxml_reader_read_done ( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
 
 G_END_DECLS
 

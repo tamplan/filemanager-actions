@@ -33,8 +33,8 @@ api_include_HEADERS = \
 	fma-dbus.h											\
 	fma-iexporter.h										\
 	na-iimporter.h										\
-	na-ifactory-provider.h								\
-	na-ifactory-provider-provider.h						\
+	fma-ifactory-provider.h								\
+	fma-ifactory-provider-provider.h						\
 	na-iio-provider.h									\
 	\
 	fma-boxed.h											\

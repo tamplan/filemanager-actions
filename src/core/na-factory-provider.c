@@ -37,7 +37,7 @@
 
 /*
  * na_factory_provider_read_data:
- * @reader: the instance which implements this #NAIFactoryProvider interface.
+ * @reader: the instance which implements this #FMAIFactoryProvider interface.
  * @reader_data: instance data.
  * @object: the #NAIFactoryobject being unserialized.
  * @def: a #FMADataDef structure which identifies the data to be unserialized.
@@ -49,19 +49,19 @@
  * Returns: a new #FMADataBoxed object which contains the data.
  */
 FMADataBoxed *
-na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data,
+na_factory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_data,
 								const FMAIFactoryObject *object, const FMADataDef *def,
 								GSList **messages )
 {
 	FMADataBoxed *boxed;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	boxed = NULL;
 
-	if( NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data ){
-		boxed = NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data( reader, reader_data, object, def, messages );
+	if( FMA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data ){
+		boxed = FMA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data( reader, reader_data, object, def, messages );
 	}
 
 	return( boxed );
@@ -69,7 +69,7 @@ na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_da
 
 /*
  * na_factory_provider_write_data:
- * @writer: the instance which implements this #NAIFactoryProvider interface.
+ * @writer: the instance which implements this #FMAIFactoryProvider interface.
  * @writer_data: instance data.
  * @object: the #NAIFactoryobject being serialized.
  * @boxed: the #FMADataBoxed object which is to be serialized.
@@ -79,19 +79,19 @@ na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_da
  * Returns: a NAIIOProvider operation return code.
  */
 guint
-na_factory_provider_write_data( const NAIFactoryProvider *writer, void *writer_data,
+na_factory_provider_write_data( const FMAIFactoryProvider *writer, void *writer_data,
 								const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 								GSList **messages )
 {
 	guint code;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
 	code = NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
 
-	if( NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data ){
-		code = NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data( writer, writer_data, object, boxed, messages );
+	if( FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data ){
+		code = FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data( writer, writer_data, object, boxed, messages );
 	}
 
 	return( code );

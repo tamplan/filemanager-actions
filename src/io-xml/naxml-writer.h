@@ -40,7 +40,7 @@
 
 #include <api/fma-data-boxed.h>
 #include <api/fma-iexporter.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
@@ -74,9 +74,9 @@ GType  naxml_writer_get_type( void );
 guint  naxml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms );
 guint  naxml_writer_export_to_file  ( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms );
 
-guint  naxml_writer_write_start( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
-guint  naxml_writer_write_data ( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
-guint  naxml_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
+guint  naxml_writer_write_start( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
+guint  naxml_writer_write_data ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
+guint  naxml_writer_write_done ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
 
 G_END_DECLS
 

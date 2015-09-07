@@ -39,7 +39,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-data-types.h>
 #include <api/na-object-api.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 #include <api/na-iio-provider.h>
 
 #include <io-gconf/nagp-keys.h>
@@ -399,8 +399,8 @@ build_xml_doc( NAXMLWriter *writer )
 	writer->private->root_node = xmlNewNode( NULL, BAD_CAST( writer->private->fn_str->root_node ));
 	xmlDocSetRootElement( writer->private->doc, writer->private->root_node );
 
-	na_ifactory_provider_write_item(
-			NA_IFACTORY_PROVIDER( writer->private->provider ),
+	fma_ifactory_provider_write_item(
+			FMA_IFACTORY_PROVIDER( writer->private->provider ),
 			writer,
 			FMA_IFACTORY_OBJECT( writer->private->exported ),
 			writer->private->messages ? & writer->private->messages : NULL );
@@ -409,7 +409,7 @@ build_xml_doc( NAXMLWriter *writer )
 }
 
 guint
-naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
+naxml_writer_write_start( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	NAXMLWriter *writer;
 	FMADataGroup *groups;
@@ -471,7 +471,7 @@ write_start_write_version( NAXMLWriter *writer, NAObjectItem *object, const FMAD
 }
 
 guint
-naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages )
+naxml_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages )
 {
 	NAXMLWriter *writer;
 	const FMADataDef *def;
@@ -497,7 +497,7 @@ naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, 
 }
 
 guint
-naxml_writer_write_done( const NAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
+naxml_writer_write_done( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	return( NA_IIO_PROVIDER_CODE_OK );
 }

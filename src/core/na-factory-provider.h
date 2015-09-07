@@ -30,23 +30,23 @@
 #ifndef __CORE_FMA_FACTORY_PROVIDER_H__
 #define __CORE_FMA_FACTORY_PROVIDER_H__
 
-/* @title: NAIFactoryProvider
- * @short_description: The #NAIFactoryProvider Internal Functions
+/* @title: FMAIFactoryProvider
+ * @short_description: The #FMAIFactoryProvider Internal Functions
  * @include: core/na-factory-provider.h
  *
  * Declare the function only accessed from core library (not published as API).
  */
 
 #include <api/fma-data-boxed.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
-FMADataBoxed *na_factory_provider_read_data ( const NAIFactoryProvider *reader, void *reader_data,
+FMADataBoxed *na_factory_provider_read_data ( const FMAIFactoryProvider *reader, void *reader_data,
 									const FMAIFactoryObject *object, const FMADataDef *def,
 									GSList **messages );
 
-guint        na_factory_provider_write_data( const NAIFactoryProvider *writer, void *writer_data,
+guint        na_factory_provider_write_data( const FMAIFactoryProvider *writer, void *writer_data,
 									const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages );
 

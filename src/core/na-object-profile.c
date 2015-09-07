@@ -82,8 +82,8 @@ static gboolean     object_is_valid( const NAObject *object );
 static void         ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
 static guint        ifactory_object_get_version( const FMAIFactoryObject *instance );
 static FMADataGroup *ifactory_object_get_groups( const FMAIFactoryObject *instance );
-static void         ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        ifactory_object_write_done( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void         ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static void         icontext_iface_init( FMAIContextInterface *iface, void *user_data );
 static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
@@ -341,7 +341,7 @@ ifactory_object_get_groups( const FMAIFactoryObject *instance )
 }
 
 static void
-ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	static const gchar *thisfn = "na_object_profile_ifactory_object_read_done";
 	NAObjectAction *action;
@@ -366,7 +366,7 @@ ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider
 }
 
 static guint
-ifactory_object_write_done( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	return( NA_IIO_PROVIDER_CODE_OK );
 }

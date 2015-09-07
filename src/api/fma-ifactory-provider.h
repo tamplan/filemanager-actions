@@ -27,12 +27,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_PROVIDER_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_PROVIDER_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_IFACTORY_PROVIDER_H__
+#define __FILE_MANAGER_ACTIONS_API_IFACTORY_PROVIDER_H__
 
 /**
  * SECTION: ifactory-provider
- * @title: NAIFactoryProvider
+ * @title: FMAIFactoryProvider
  * @short_description: The Data Factory Provider Interface v 1
  * @include: file-manager-actions/na-ifactory_provider.h
  *
@@ -45,7 +45,7 @@
  * (historical storage subsystem) GConf; import and export assistants
  * must be carefully updated to export the new data...
  *
- * The #NAIFactoryProvider aims to simplify and organize all the work
+ * The #FMAIFactoryProvider aims to simplify and organize all the work
  * which must be done around each and every elementary data. It is based
  * on three main things:
  *
@@ -84,7 +84,7 @@
  * </orderedlist>
  *
  * Of course, I/O providers are good candidates to be users of this
- * #NAIFactoryProvider interface.
+ * #FMAIFactoryProvider interface.
  *
  * Without this interface, each and every I/O provider must,
  * for example when reading an item, have the list of data to be
@@ -94,7 +94,7 @@
  * then all available I/O providers must be updated: read the data,
  * write the data, then display the data, and so on..
  *
- * With this #NAIFactoryProvider interface, the I/O provider has just to
+ * With this #FMAIFactoryProvider interface, the I/O provider has just to
  * deal with reading/writing elementary types. It does need to know that
  * it will have to read, name, tooltip, description. It just needs to know
  * how to read a string.
@@ -110,7 +110,7 @@
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIFactoryProvider interface</title>
+ *    <title>Historic of the versions of the #FMAIFactoryProvider interface</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -118,7 +118,7 @@
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIFactoryProvider interface version</entry>
+ *          <entry>#FMAIFactoryProvider interface version</entry>
  *          <entry></entry>
  *        </row>
  *      </thead>
@@ -136,19 +136,19 @@
 
 #include "fma-data-boxed.h"
 #include "fma-ifactory-object.h"
-#include "na-ifactory-provider-provider.h"
+#include "fma-ifactory-provider-provider.h"
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_IFACTORY_PROVIDER                      ( na_ifactory_provider_get_type())
-#define NA_IFACTORY_PROVIDER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IFACTORY_PROVIDER, NAIFactoryProvider ))
-#define NA_IS_IFACTORY_PROVIDER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IFACTORY_PROVIDER ))
-#define NA_IFACTORY_PROVIDER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IFACTORY_PROVIDER, NAIFactoryProviderInterface ))
+#define FMA_TYPE_IFACTORY_PROVIDER                      ( fma_ifactory_provider_get_type())
+#define FMA_IFACTORY_PROVIDER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IFACTORY_PROVIDER, FMAIFactoryProvider ))
+#define FMA_IS_IFACTORY_PROVIDER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IFACTORY_PROVIDER ))
+#define FMA_IFACTORY_PROVIDER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IFACTORY_PROVIDER, FMAIFactoryProviderInterface ))
 
-typedef struct _NAIFactoryProviderInterfacePrivate     NAIFactoryProviderInterfacePrivate;
+typedef struct _FMAIFactoryProviderInterfacePrivate     FMAIFactoryProviderInterfacePrivate;
 
 /**
- * NAIFactoryProviderInterface:
+ * FMAIFactoryProviderInterface:
  * @get_version: returns the version of this interface the plugin implements.
  * @read_start:  triggered just before reading an item.
  * @read_data:   reads an item.
@@ -157,17 +157,17 @@ typedef struct _NAIFactoryProviderInterfacePrivate     NAIFactoryProviderInterfa
  * @write_data:  writes an item.
  * @write_done:  triggered at the end of item writing.
  *
- * This defines the interface that a #NAIFactoryProvider may implement.
+ * This defines the interface that a #FMAIFactoryProvider may implement.
  */
 typedef struct {
 	/*< private >*/
-	GTypeInterface                      parent;
-	NAIFactoryProviderInterfacePrivate *private;
+	GTypeInterface                       parent;
+	FMAIFactoryProviderInterfacePrivate *private;
 
 	/*< public >*/
 	/**
 	 * get_version:
-	 * @instance: this #NAIFactoryProvider instance.
+	 * @instance: this #FMAIFactoryProvider instance.
 	 *
 	 * Defaults to 1.
 	 *
@@ -175,13 +175,13 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *get_version )( const NAIFactoryProvider *instance );
+	guint         ( *get_version )( const FMAIFactoryProvider *instance );
 
 	/**
 	 * read_start:
-	 * @reader: this #NAIFactoryProvider instance.
+	 * @reader: this #FMAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance, as provided
-	 *  when na_ifactory_provider_read_item() was called.
+	 *  when fma_ifactory_provider_read_item() was called.
 	 * @object: the #FMAIFactoryObject object which comes to be read.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
@@ -190,13 +190,13 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_start ) ( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
+	void          ( *read_start ) ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * read_data:
-	 * @reader: this #NAIFactoryProvider instance.
+	 * @reader: this #FMAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance, as provided
-	 *  when na_ifactory_provider_read_item() was called.
+	 *  when fma_ifactory_provider_read_item() was called.
 	 * @object: the #NAIFactoryobject being unserialized.
 	 * @def: a #FMADataDef structure which identifies the data to be unserialized.
 	 * @messages: a pointer to a #GSList list of strings; the provider
@@ -209,13 +209,13 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	FMADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages );
+	FMADataBoxed * ( *read_data )  ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages );
 
 	/**
 	 * read_done:
-	 * @reader: this #NAIFactoryProvider instance.
+	 * @reader: this #FMAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance, as provided
-	 *  when na_ifactory_provider_read_item() was called.
+	 *  when fma_ifactory_provider_read_item() was called.
 	 * @object: the #FMAIFactoryObject object which comes to be read.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
@@ -225,11 +225,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_done )  ( const NAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
+	void          ( *read_done )  ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * write_start:
-	 * @writer: this #NAIFactoryProvider instance.
+	 * @writer: this #FMAIFactoryProvider instance.
 	 * @writer_data: the data associated to this instance.
 	 * @object: the #FMAIFactoryObject object which comes to be written.
 	 * @messages: a pointer to a #GSList list of strings; the provider
@@ -241,11 +241,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
+	guint         ( *write_start )( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * write_data:
-	 * @writer: this #NAIFactoryProvider instance.
+	 * @writer: this #FMAIFactoryProvider instance.
 	 * @writer_data: the data associated to this instance.
 	 * @object: the #FMAIFactoryObject object being written.
 	 * @def: the description of the data to be written.
@@ -261,11 +261,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
+	guint         ( *write_data ) ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
 
 	/**
 	 * write_done:
-	 * @writer: this #NAIFactoryProvider instance.
+	 * @writer: this #FMAIFactoryProvider instance.
 	 * @writer_data: the data associated to this instance.
 	 * @object: the #FMAIFactoryObject object which comes to be written.
 	 * @messages: a pointer to a #GSList list of strings; the provider
@@ -278,15 +278,15 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
+	guint         ( *write_done ) ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
 }
-	NAIFactoryProviderInterface;
+	FMAIFactoryProviderInterface;
 
-GType na_ifactory_provider_get_type( void );
+GType fma_ifactory_provider_get_type  ( void );
 
-void  na_ifactory_provider_read_item ( const NAIFactoryProvider *reader, void *reader_data, FMAIFactoryObject *object, GSList **messages );
-guint na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, FMAIFactoryObject *object, GSList **messages );
+void  fma_ifactory_provider_read_item ( const FMAIFactoryProvider *reader, void *reader_data, FMAIFactoryObject *object, GSList **messages );
+guint fma_ifactory_provider_write_item( const FMAIFactoryProvider *writer, void *writer_data, FMAIFactoryObject *object, GSList **messages );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_IFACTORY_PROVIDER_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_IFACTORY_PROVIDER_H__ */

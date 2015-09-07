@@ -39,7 +39,7 @@
 #include <api/fma-data-boxed.h>
 #include <api/fma-data-types.h>
 #include <api/na-iio-provider.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 #include <api/na-object-api.h>
 
 #include "na-factory-object.h"
@@ -58,7 +58,7 @@ enum {
  */
 typedef struct {
 	FMAIFactoryObject   *object;
-	NAIFactoryProvider *reader;
+	FMAIFactoryProvider *reader;
 	void               *reader_data;
 	GSList            **messages;
 }
@@ -67,7 +67,7 @@ typedef struct {
 /* while iterating on write item
  */
 typedef struct {
-	NAIFactoryProvider *writer;
+	FMAIFactoryProvider *writer;
 	void               *writer_data;
 	GSList            **messages;
 	guint               code;
@@ -102,10 +102,10 @@ static FMADataGroup *v_get_groups( const FMAIFactoryObject *object );
 static void         v_copy( FMAIFactoryObject *target, const FMAIFactoryObject *source );
 static gboolean     v_are_equal( const FMAIFactoryObject *a, const FMAIFactoryObject *b );
 static gboolean     v_is_valid( const FMAIFactoryObject *object );
-static void         v_read_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void         v_read_done( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        v_write_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        v_write_done( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void         v_read_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void         v_read_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        v_write_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        v_write_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 static void         attach_boxed_to_object( FMAIFactoryObject *object, FMADataBoxed *boxed );
 static void         free_data_boxed_list( FMAIFactoryObject *object );
@@ -588,7 +588,7 @@ na_factory_object_finalize( FMAIFactoryObject *object )
 /*
  * na_factory_object_read_item:
  * @object: this #FMAIFactoryObject instance.
- * @reader: the #NAIFactoryProvider which is at the origin of this read.
+ * @reader: the #FMAIFactoryProvider which is at the origin of this read.
  * @reader_data: reader data.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
@@ -596,12 +596,12 @@ na_factory_object_finalize( FMAIFactoryObject *object )
  * Unserializes the object.
  */
 void
-na_factory_object_read_item( FMAIFactoryObject *object, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+na_factory_object_read_item( FMAIFactoryObject *object, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	static const gchar *thisfn = "na_factory_object_read_item";
 
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
-	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
+	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ));
 
 	FMADataGroup *groups = v_get_groups( object );
 
@@ -610,7 +610,7 @@ na_factory_object_read_item( FMAIFactoryObject *object, const NAIFactoryProvider
 
 		NafoReadIter *iter = g_new0( NafoReadIter, 1 );
 		iter->object = object;
-		iter->reader = ( NAIFactoryProvider * ) reader;
+		iter->reader = ( FMAIFactoryProvider * ) reader;
 		iter->reader_data = reader_data;
 		iter->messages = messages;
 
@@ -653,7 +653,7 @@ read_data_iter( FMADataDef *def, NafoReadIter *iter )
 /*
  * na_factory_object_write_item:
  * @object: this #FMAIFactoryObject instance.
- * @writer: the #NAIFactoryProvider which is at the origin of this write.
+ * @writer: the #FMAIFactoryProvider which is at the origin of this write.
  * @writer_data: writer data.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
@@ -663,7 +663,7 @@ read_data_iter( FMADataDef *def, NafoReadIter *iter )
  * Returns: a NAIIOProvider operation return code.
  */
 guint
-na_factory_object_write_item( FMAIFactoryObject *object, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+na_factory_object_write_item( FMAIFactoryObject *object, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	static const gchar *thisfn = "na_factory_object_write_item";
 	guint code;
@@ -671,7 +671,7 @@ na_factory_object_write_item( FMAIFactoryObject *object, const NAIFactoryProvide
 	gchar *msg;
 
 	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
 	code = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
@@ -690,7 +690,7 @@ na_factory_object_write_item( FMAIFactoryObject *object, const NAIFactoryProvide
 	if( code == NA_IIO_PROVIDER_CODE_OK ){
 
 		NafoWriteIter *iter = g_new0( NafoWriteIter, 1 );
-		iter->writer = ( NAIFactoryProvider * ) writer;
+		iter->writer = ( FMAIFactoryProvider * ) writer;
 		iter->writer_data = writer_data;
 		iter->messages = messages;
 		iter->code = code;
@@ -900,7 +900,7 @@ v_is_valid( const FMAIFactoryObject *object )
 }
 
 static void
-v_read_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+v_read_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_start ){
 		FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_start( serializable, reader, reader_data, messages );
@@ -908,7 +908,7 @@ v_read_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader,
 }
 
 static void
-v_read_done( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+v_read_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_done ){
 		FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->read_done( serializable, reader, reader_data, messages );
@@ -916,7 +916,7 @@ v_read_done( FMAIFactoryObject *serializable, const NAIFactoryProvider *reader, 
 }
 
 static guint
-v_write_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+v_write_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	guint code = NA_IIO_PROVIDER_CODE_OK;
 
@@ -928,7 +928,7 @@ v_write_start( FMAIFactoryObject *serializable, const NAIFactoryProvider *writer
 }
 
 static guint
-v_write_done( FMAIFactoryObject *serializable, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+v_write_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	guint code = NA_IIO_PROVIDER_CODE_OK;
 

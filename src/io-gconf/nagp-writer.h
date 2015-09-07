@@ -32,7 +32,7 @@
 
 #include <api/fma-data-boxed.h>
 #include <api/na-iio-provider.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
@@ -51,17 +51,17 @@ guint    nagp_iio_provider_write_item         ( const NAIIOProvider *provider,
 guint    nagp_iio_provider_delete_item        ( const NAIIOProvider *provider,
 													const NAObjectItem *item, GSList **message );
 
-/* NAIFactoryProvider interface
+/* FMAIFactoryProvider interface
  */
-guint    nagp_writer_write_start( const NAIFactoryProvider *writer, void *writer_data,
+guint    nagp_writer_write_start( const FMAIFactoryProvider *writer, void *writer_data,
 									const FMAIFactoryObject *object,
 									GSList **messages  );
 
-guint    nagp_writer_write_data ( const NAIFactoryProvider *provider, void *writer_data,
+guint    nagp_writer_write_data ( const FMAIFactoryProvider *provider, void *writer_data,
 									const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages );
 
-guint    nagp_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data,
+guint    nagp_writer_write_done ( const FMAIFactoryProvider *writer, void *writer_data,
 									const FMAIFactoryObject *object,
 									GSList **messages  );
 #endif /* NA_ENABLE_DEPRECATED */

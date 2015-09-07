@@ -38,7 +38,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-gconf-utils.h>
 #include <api/fma-data-types.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 #include <api/na-object-api.h>
 
 #include <io-gconf/nagp-keys.h>
@@ -525,7 +525,7 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 
 	/* each occurrence should correspond to an elementary data
 	 * we run first to determine the type, and allocate the object
-	 * we then rely on NAIFactoryProvider to actually read the data
+	 * we then rely on FMAIFactoryProvider to actually read the data
 	 */
 	for( iter = list->children ; iter && code == IMPORTER_CODE_OK ; iter = iter->next ){
 
@@ -585,8 +585,8 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 
 		na_object_set_id( reader->private->parms->imported, reader->private->item_id );
 
-		na_ifactory_provider_read_item(
-				NA_IFACTORY_PROVIDER( reader->private->importer ),
+		fma_ifactory_provider_read_item(
+				FMA_IFACTORY_PROVIDER( reader->private->importer ),
 				reader,
 				FMA_IFACTORY_OBJECT( reader->private->parms->imported ),
 				&reader->private->parms->messages );
@@ -596,11 +596,11 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 }
 
 void
-naxml_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
+naxml_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	static const gchar *thisfn = "naxml_reader_read_start";
 
-	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	g_debug( "%s: provider=%p, reader_data=%p, object=%p (%s), messages=%p",
@@ -630,13 +630,13 @@ read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile
  * versions). So do not remove dealt-with nodes here
  */
 FMADataBoxed *
-naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
+naxml_reader_read_data( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
 	static const gchar *thisfn = "naxml_reader_read_data";
 	xmlNode *parent_node;
 	GList *ielt;
 
-	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	g_debug( "%s: reader_data=%p, object=%p (%s), data=%s",
@@ -757,11 +757,11 @@ read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, 
  * all serializable data of the object has been read
  */
 void
-naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
+naxml_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	static const gchar *thisfn = "naxml_reader_read_done";
 
-	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
 	g_debug( "%s: provider=%p, reader_data=%p, object=%p (%s), messages=%p",
@@ -909,8 +909,8 @@ read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
 
 	na_object_set_id( profile, profile_id );
 
-	na_ifactory_provider_read_item(
-			NA_IFACTORY_PROVIDER( reader->private->importer ),
+	fma_ifactory_provider_read_item(
+			FMA_IFACTORY_PROVIDER( reader->private->importer ),
 			reader,
 			FMA_IFACTORY_OBJECT( profile ),
 			&reader->private->parms->messages );

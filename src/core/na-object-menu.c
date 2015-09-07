@@ -73,9 +73,9 @@ static void         object_dump( const NAObject *object );
 static void         ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
 static guint        ifactory_object_get_version( const FMAIFactoryObject *instance );
 static FMADataGroup *ifactory_object_get_groups( const FMAIFactoryObject *instance );
-static void         ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        ifactory_object_write_start( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
-static guint        ifactory_object_write_done( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void         ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint        ifactory_object_write_start( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static guint        ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static void         icontext_iface_init( FMAIContextInterface *iface, void *user_data );
 static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
@@ -292,7 +292,7 @@ ifactory_object_get_groups( const FMAIFactoryObject *instance )
 }
 
 static void
-ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
+ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	g_debug( "na_object_menu_ifactory_object_read_done: instance=%p", ( void * ) instance );
 
@@ -308,7 +308,7 @@ ifactory_object_read_done( FMAIFactoryObject *instance, const NAIFactoryProvider
 }
 
 static guint
-ifactory_object_write_start( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+ifactory_object_write_start( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	na_object_item_rebuild_children_slist( NA_OBJECT_ITEM( instance ));
 
@@ -316,7 +316,7 @@ ifactory_object_write_start( FMAIFactoryObject *instance, const NAIFactoryProvid
 }
 
 static guint
-ifactory_object_write_done( FMAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	return( NA_IIO_PROVIDER_CODE_OK );
 }

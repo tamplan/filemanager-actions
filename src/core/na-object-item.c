@@ -758,7 +758,7 @@ na_object_item_free_items( GList *items )
  * na_object_item_deals_with_version:
  * @item: this #NAObjectItem -derived object.
  *
- * Just after the @item has been read from NAIFactoryProvider, setup
+ * Just after the @item has been read from FMAIFactoryProvider, setup
  * the version. This is needed because some conversions may occur in
  * this object.
  *

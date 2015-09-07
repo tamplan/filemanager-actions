@@ -101,7 +101,7 @@
  *
  * These services may be fully implemented by the I/O provider itself.
  * Or, the I/O provider may also prefer to take advantage of the data
- * factory management (see #FMAIFactoryObject and #NAIFactoryProvider
+ * factory management (see #FMAIFactoryObject and #FMAIFactoryProvider
  * interfaces) services.
  *
  * <refsect2>

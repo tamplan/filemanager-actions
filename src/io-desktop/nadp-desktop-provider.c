@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <api/fma-core-utils.h>
-#include <api/na-ifactory-provider.h>
+#include <api/fma-ifactory-provider.h>
 
 #include "nadp-desktop-provider.h"
 #include "nadp-formats.h"
@@ -64,8 +64,8 @@ static gchar *iio_provider_get_id( const NAIIOProvider *provider );
 static gchar *iio_provider_get_name( const NAIIOProvider *provider );
 static guint  iio_provider_get_version( const NAIIOProvider *provider );
 
-static void   ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
-static guint  ifactory_provider_get_version( const NAIFactoryProvider *reader );
+static void   ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface );
+static guint  ifactory_provider_get_version( const FMAIFactoryProvider *reader );
 
 static void   iimporter_iface_init( NAIImporterInterface *iface );
 static guint  iimporter_get_version( const NAIImporter *importer );
@@ -131,7 +131,7 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 
 	g_type_module_add_interface( module, st_module_type, NA_TYPE_IIO_PROVIDER, &iio_provider_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
+	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
 
 	g_type_module_add_interface( module, st_module_type, NA_TYPE_IIMPORTER, &iimporter_iface_info );
 
@@ -260,7 +260,7 @@ iio_provider_get_name( const NAIIOProvider *provider )
 }
 
 static void
-ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
+ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_iface_init";
 
@@ -276,7 +276,7 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 }
 
 static guint
-ifactory_provider_get_version( const NAIFactoryProvider *reader )
+ifactory_provider_get_version( const FMAIFactoryProvider *reader )
 {
 	return( 1 );
 }
