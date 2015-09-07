@@ -27,16 +27,16 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_NA_GCONF_MONITOR_H__
-#define __FILE_MANAGER_ACTIONS_API_NA_GCONF_MONITOR_H__
+#ifndef __FILE_MANAGER_ACTIONS_API_FMA_GCONF_MONITOR_H__
+#define __FILE_MANAGER_ACTIONS_API_FMA_GCONF_MONITOR_H__
 
 #ifdef HAVE_GCONF
 #ifdef NA_ENABLE_DEPRECATED
 /**
  * SECTION: gconf-monitor
- * @title: NAGConfMonitor
+ * @title: FMAGConfMonitor
  * @short_description: The GConf Monitoring Class Definition
- * @include: file-manager-actions/na-gconf-monitor.h
+ * @include: file-manager-actions/fma-gconf-monitor.h
  *
  * This class manages the GConf monitoring.
  * It is used to monitor both the GConf provider and the GConf runtime
@@ -50,39 +50,39 @@
 
 G_BEGIN_DECLS
 
-#define NA_GCONF_MONITOR_TYPE                ( na_gconf_monitor_get_type())
-#define NA_GCONF_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_GCONF_MONITOR_TYPE, NAGConfMonitor ))
-#define NA_GCONF_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_GCONF_MONITOR_TYPE, NAGConfMonitorClass ))
-#define NA_IS_GCONF_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_GCONF_MONITOR_TYPE ))
-#define NA_IS_GCONF_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_GCONF_MONITOR_TYPE ))
-#define NA_GCONF_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_GCONF_MONITOR_TYPE, NAGConfMonitorClass ))
+#define FMA_GCONF_MONITOR_TYPE                ( fma_gconf_monitor_get_type())
+#define FMA_GCONF_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_GCONF_MONITOR_TYPE, FMAGConfMonitor ))
+#define FMA_GCONF_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_GCONF_MONITOR_TYPE, FMAGConfMonitorClass ))
+#define FMA_IS_GCONF_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_GCONF_MONITOR_TYPE ))
+#define FMA_IS_GCONF_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_GCONF_MONITOR_TYPE ))
+#define FMA_GCONF_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_GCONF_MONITOR_TYPE, FMAGConfMonitorClass ))
 
-typedef struct _NAGConfMonitorPrivate        NAGConfMonitorPrivate;
+typedef struct _FMAGConfMonitorPrivate        FMAGConfMonitorPrivate;
 
 typedef struct {
 	/*< private >*/
 	GObject                parent;
-	NAGConfMonitorPrivate *private;
+	FMAGConfMonitorPrivate *private;
 }
-	NAGConfMonitor;
+	FMAGConfMonitor;
 
-typedef struct _NAGConfMonitorClassPrivate   NAGConfMonitorClassPrivate;
+typedef struct _FMAGConfMonitorClassPrivate   FMAGConfMonitorClassPrivate;
 
 typedef struct {
 	/*< private >*/
 	GObjectClass                parent;
-	NAGConfMonitorClassPrivate *private;
+	FMAGConfMonitorClassPrivate *private;
 }
-	NAGConfMonitorClass;
+	FMAGConfMonitorClass;
 
-GType           na_gconf_monitor_get_type( void );
+GType           fma_gconf_monitor_get_type( void );
 
-NAGConfMonitor *na_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data );
+FMAGConfMonitor *fma_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data );
 
-void            na_gconf_monitor_release_monitors( GList *monitors );
+void            fma_gconf_monitor_release_monitors( GList *monitors );
 
 G_END_DECLS
 
 #endif /* NA_ENABLE_DEPRECATED */
 #endif /* HAVE_GCONF */
-#endif /* __FILE_MANAGER_ACTIONS_API_NA_GCONF_MONITOR_H__ */
+#endif /* __FILE_MANAGER_ACTIONS_API_FMA_GCONF_MONITOR_H__ */

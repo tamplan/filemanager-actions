@@ -70,7 +70,7 @@ libna_core_la_SOURCES = \
 	na-factory-provider.h								\
 	na-gconf-migration.c								\
 	na-gconf-migration.h								\
-	na-gconf-monitor.c									\
+	fma-gconf-monitor.c									\
 	na-gconf-utils.c									\
 	na-gnome-vfs-uri.c									\
 	na-gnome-vfs-uri.h									\

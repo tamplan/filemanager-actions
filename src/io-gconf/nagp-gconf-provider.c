@@ -36,7 +36,7 @@
 
 #include <api/na-ifactory-provider.h>
 #include <api/na-iio-provider.h>
-#include <api/na-gconf-monitor.h>
+#include <api/fma-gconf-monitor.h>
 
 #include "nagp-gconf-provider.h"
 #include "nagp-reader.h"
@@ -179,7 +179,7 @@ instance_dispose( GObject *object )
 
 #ifdef NA_ENABLE_DEPRECATED
 		/* release the GConf monitoring */
-		na_gconf_monitor_release_monitors( self->private->monitors );
+		fma_gconf_monitor_release_monitors( self->private->monitors );
 #endif
 
 		/* release the GConf connexion */
@@ -295,13 +295,13 @@ install_monitors( NagpGConfProvider *provider )
 	 * actions and profiles definitions
 	 */
 	list = g_list_prepend( list,
-			na_gconf_monitor_new(
+			fma_gconf_monitor_new(
 					NAGP_CONFIGURATIONS_PATH,
 					( GConfClientNotifyFunc ) config_path_changed_cb,
 					provider ));
 
 	list = g_list_prepend( list,
-			na_gconf_monitor_new(
+			fma_gconf_monitor_new(
 					NAGP_SCHEMAS_PATH,
 					( GConfClientNotifyFunc ) config_path_changed_cb,
 					provider ));

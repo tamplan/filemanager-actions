@@ -42,7 +42,7 @@ api_include_HEADERS = \
 	fma-data-boxed.h										\
 	fma-data-def.h										\
 	fma-data-types.h										\
-	na-gconf-monitor.h									\
+	fma-gconf-monitor.h									\
 	na-gconf-utils.h									\
 	na-icontext.h										\
 	na-iduplicable.h									\

@@ -31,20 +31,20 @@
 #include <config.h>
 #endif
 
-#include <api/na-gconf-monitor.h>
+#include <api/fma-gconf-monitor.h>
 
 #ifdef HAVE_GCONF
 #ifdef NA_ENABLE_DEPRECATED
 
 /* private class data
  */
-struct _NAGConfMonitorClassPrivate {
+struct _FMAGConfMonitorClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAGConfMonitorPrivate {
+struct _FMAGConfMonitorPrivate {
 	gboolean              dispose_has_run;
 	GConfClient          *gconf;
 	gchar                *path;
@@ -57,16 +57,16 @@ struct _NAGConfMonitorPrivate {
 static GObjectClass *st_parent_class = NULL;
 
 static GType register_type( void );
-static void  class_init( NAGConfMonitorClass *klass );
+static void  class_init( FMAGConfMonitorClass *klass );
 static void  instance_init( GTypeInstance *instance, gpointer klass );
 static void  instance_dispose( GObject *object );
 static void  instance_finalize( GObject *object );
 
-static guint install_monitor( NAGConfMonitor *monitor );
-static void  release_monitor( NAGConfMonitor *monitor );
+static guint install_monitor( FMAGConfMonitor *monitor );
+static void  release_monitor( FMAGConfMonitor *monitor );
 
 GType
-na_gconf_monitor_get_type( void )
+fma_gconf_monitor_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -80,32 +80,32 @@ na_gconf_monitor_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_gconf_monitor_register_type";
+	static const gchar *thisfn = "fma_gconf_monitor_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAGConfMonitorClass ),
+		sizeof( FMAGConfMonitorClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAGConfMonitor ),
+		sizeof( FMAGConfMonitor ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NAGConfMonitor", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMAGConfMonitor", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAGConfMonitorClass *klass )
+class_init( FMAGConfMonitorClass *klass )
 {
-	static const gchar *thisfn = "na_gconf_monitor_class_init";
+	static const gchar *thisfn = "fma_gconf_monitor_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -116,22 +116,22 @@ class_init( NAGConfMonitorClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAGConfMonitorClassPrivate, 1 );
+	klass->private = g_new0( FMAGConfMonitorClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_gconf_monitor_instance_init";
-	NAGConfMonitor *self;
+	static const gchar *thisfn = "fma_gconf_monitor_instance_init";
+	FMAGConfMonitor *self;
 
-	g_return_if_fail( NA_IS_GCONF_MONITOR( instance ));
+	g_return_if_fail( FMA_IS_GCONF_MONITOR( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	self = NA_GCONF_MONITOR( instance );
+	self = FMA_GCONF_MONITOR( instance );
 
-	self->private = g_new0( NAGConfMonitorPrivate, 1 );
+	self->private = g_new0( FMAGConfMonitorPrivate, 1 );
 
 	self->private->gconf = gconf_client_get_default();
 
@@ -141,12 +141,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_gconf_monitor_instance_dispose";
-	NAGConfMonitor *self;
+	static const gchar *thisfn = "fma_gconf_monitor_instance_dispose";
+	FMAGConfMonitor *self;
 
-	g_return_if_fail( NA_IS_GCONF_MONITOR( object ));
+	g_return_if_fail( FMA_IS_GCONF_MONITOR( object ));
 
-	self = NA_GCONF_MONITOR( object );
+	self = FMA_GCONF_MONITOR( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -169,14 +169,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_gconf_monitor_instance_finalize";
-	NAGConfMonitor *self;
+	static const gchar *thisfn = "fma_gconf_monitor_instance_finalize";
+	FMAGConfMonitor *self;
 
-	g_return_if_fail( NA_IS_GCONF_MONITOR( object ));
+	g_return_if_fail( FMA_IS_GCONF_MONITOR( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NA_GCONF_MONITOR( object );
+	self = FMA_GCONF_MONITOR( object );
 
 	g_free( self->private->path );
 	g_free( self->private );
@@ -188,7 +188,7 @@ instance_finalize( GObject *object )
 }
 
 /**
- * na_gconf_monitor_new:
+ * fma_gconf_monitor_new:
  * @path: the absolute path to monitor.
  * @handler: the function to be triggered by the monitor.
  * @user_data: data to pass to the @handler.
@@ -198,21 +198,21 @@ instance_finalize( GObject *object )
  * This monitoring will only be stopped when object is released, via
  * g_object_unref().
  *
- * Returns: a new #NAGConfMonitor object, which will monitor the given path,
+ * Returns: a new #FMAGConfMonitor object, which will monitor the given path,
  * triggeering the @handler in case of modifications.
  *
  * Since: 2.30
  * Deprecated: 3.1
  */
-NAGConfMonitor *
-na_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data )
+FMAGConfMonitor *
+fma_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data )
 {
-	static const gchar *thisfn = "na_gconf_monitor_new";
-	NAGConfMonitor *monitor;
+	static const gchar *thisfn = "fma_gconf_monitor_new";
+	FMAGConfMonitor *monitor;
 
 	g_debug( "%s: path=%s, user_data=%p", thisfn, path, ( void * ) user_data );
 
-	monitor = g_object_new( NA_GCONF_MONITOR_TYPE, NULL );
+	monitor = g_object_new( FMA_GCONF_MONITOR_TYPE, NULL );
 
 	monitor->private->path = g_strdup( path );
 	monitor->private->preload = GCONF_CLIENT_PRELOAD_RECURSIVE;
@@ -225,13 +225,13 @@ na_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer
 }
 
 static guint
-install_monitor( NAGConfMonitor *monitor )
+install_monitor( FMAGConfMonitor *monitor )
 {
-	static const gchar *thisfn = "na_gconf_monitor_install_monitor";
+	static const gchar *thisfn = "fma_gconf_monitor_install_monitor";
 	GError *error = NULL;
 	guint notify_id;
 
-	g_return_val_if_fail( NA_IS_GCONF_MONITOR( monitor ), 0 );
+	g_return_val_if_fail( FMA_IS_GCONF_MONITOR( monitor ), 0 );
 	g_return_val_if_fail( !monitor->private->dispose_has_run, 0 );
 
 	gconf_client_add_dir(
@@ -264,8 +264,8 @@ install_monitor( NAGConfMonitor *monitor )
 }
 
 /**
- * na_gconf_monitor_release_monitors:
- * @monitors: a list of #NAGConfMonitors.
+ * fma_gconf_monitor_release_monitors:
+ * @monitors: a list of #FMAGConfMonitors.
  *
  * Release allocated monitors.
  *
@@ -273,7 +273,7 @@ install_monitor( NAGConfMonitor *monitor )
  * Deprecated: 3.1
  */
 void
-na_gconf_monitor_release_monitors( GList *monitors )
+fma_gconf_monitor_release_monitors( GList *monitors )
 {
 	g_list_foreach( monitors, ( GFunc ) g_object_unref, NULL );
 	g_list_free( monitors );
@@ -283,12 +283,12 @@ na_gconf_monitor_release_monitors( GList *monitors )
  * this is called by instance_dispose, before setting dispose_has_run
  */
 static void
-release_monitor( NAGConfMonitor *monitor )
+release_monitor( FMAGConfMonitor *monitor )
 {
-	static const gchar *thisfn = "na_gconf_monitor_release_monitor";
+	static const gchar *thisfn = "fma_gconf_monitor_release_monitor";
 	GError *error = NULL;
 
-	g_return_if_fail( NA_IS_GCONF_MONITOR( monitor ));
+	g_return_if_fail( FMA_IS_GCONF_MONITOR( monitor ));
 
 	if( !monitor->private->dispose_has_run ){
 

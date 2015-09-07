@@ -39,7 +39,7 @@
  * the GConf subsystem as an #NAIIOProvider. As this, it should only be
  * used through the #NAIIOProvider interface.
  *
- * #NagpGConfProvider uses #NAGConfMonitor to watch at the configuration
+ * #NagpGConfProvider uses #FMAGConfMonitor to watch at the configuration
  * tree. Modifications are notified to the #NAIIOProvider interface.
  */
 
