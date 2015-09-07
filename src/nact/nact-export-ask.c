@@ -35,7 +35,7 @@
 
 #include "api/fma-object-api.h"
 
-#include "core/na-exporter.h"
+#include "core/fma-exporter.h"
 #include "core/na-export-format.h"
 #include "core/na-gtk-utils.h"
 #include "core/na-ioptions-list.h"
@@ -165,7 +165,7 @@ ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container 
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
-	formats = na_exporter_get_formats( NA_PIVOT( updater ));
+	formats = fma_exporter_get_formats( NA_PIVOT( updater ));
 
 	return( formats );
 }
@@ -173,7 +173,7 @@ ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container 
 static void
 ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats )
 {
-	na_exporter_free_formats( formats );
+	fma_exporter_free_formats( formats );
 }
 
 static void

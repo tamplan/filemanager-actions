@@ -44,7 +44,7 @@
 
 #include <core/na-gconf-migration.h>
 #include <core/na-io-provider.h>
-#include <core/na-exporter.h>
+#include <core/fma-exporter.h>
 #include <core/na-updater.h>
 
 #include "console-utils.h"
@@ -609,7 +609,7 @@ output_to_stdout( const FMAObjectAction *action, GSList **msgs )
 	gchar *buffer;
 
 	updater = na_updater_new();
-	buffer = na_exporter_to_buffer( NA_PIVOT( updater ), FMA_OBJECT_ITEM( action ), "Desktop1", msgs );
+	buffer = fma_exporter_to_buffer( NA_PIVOT( updater ), FMA_OBJECT_ITEM( action ), "Desktop1", msgs );
 	ret = ( buffer != NULL );
 
 	if( buffer ){

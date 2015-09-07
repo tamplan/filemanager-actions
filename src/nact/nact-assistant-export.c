@@ -37,7 +37,7 @@
 #include "api/fma-core-utils.h"
 #include "api/fma-object-api.h"
 
-#include "core/na-exporter.h"
+#include "core/fma-exporter.h"
 #include "core/na-export-format.h"
 #include "core/na-gtk-utils.h"
 #include "core/na-ioptions-list.h"
@@ -209,7 +209,7 @@ ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container 
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
-	formats = na_exporter_get_formats( NA_PIVOT( updater ));
+	formats = fma_exporter_get_formats( NA_PIVOT( updater ));
 
 	return( formats );
 }
@@ -217,13 +217,13 @@ ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container 
 static void
 ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats )
 {
-	na_exporter_free_formats( formats );
+	fma_exporter_free_formats( formats );
 }
 
 static NAIOption *
 ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container )
 {
-	return( na_exporter_get_ask_option());
+	return( fma_exporter_get_ask_option());
 }
 
 static void
@@ -789,7 +789,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		}
 
 		if( strcmp( str->format, EXPORTER_FORMAT_NOEXPORT ) != 0 ){
-			str->fname = na_exporter_to_file( NA_PIVOT( updater ), str->item, window->private->uri, str->format, &str->msg );
+			str->fname = fma_exporter_to_file( NA_PIVOT( updater ), str->item, window->private->uri, str->format, &str->msg );
 		}
 
 		g_free( str->format );

@@ -41,7 +41,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-object-api.h>
 
-#include <core/na-exporter.h>
+#include <core/fma-exporter.h>
 #include <core/na-export-format.h>
 #include <core/na-ioption.h>
 
@@ -135,7 +135,7 @@ main( int argc, char** argv )
 		format = "Desktop1";
 	}
 
-	exporter = na_exporter_find_for_format( pivot, format );
+	exporter = fma_exporter_find_for_format( pivot, format );
 	if( !exporter ){
 		/* i18n: %s stands for the id of the export format, and is not translatable */
 		g_printerr( _( "Error: %s: unknown export format.\n" ), format );
@@ -218,7 +218,7 @@ export_item( const FMAObjectItem *item, const gchar *format )
 	GSList *messages = NULL;
 	GSList *it;
 
-	gchar *buffer = na_exporter_to_buffer( pivot, item, format, &messages );
+	gchar *buffer = fma_exporter_to_buffer( pivot, item, format, &messages );
 
 	for( it = messages ; it ; it = it->next ){
 		g_printerr( "%s\n", ( const gchar * ) it->data );

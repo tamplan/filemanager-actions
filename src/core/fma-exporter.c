@@ -35,7 +35,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-#include "na-exporter.h"
+#include "fma-exporter.h"
 #include "na-export-format.h"
 #include "na-settings.h"
 
@@ -65,17 +65,17 @@ static gchar *exporter_get_name( const FMAIExporter *exporter );
 static void   on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
 
 /*
- * na_exporter_get_formats:
+ * fma_exporter_get_formats:
  * @pivot: the #NAPivot instance.
  *
  * Returns: a list of #NAExportFormat objects, each of them addressing an
  * available export format, i.e. a format provided by a module which
  * implement the #FMAIExporter interface.
  *
- * The returned list should later be na_exporter_free_formats() by the caller.
+ * The returned list should later be fma_exporter_free_formats() by the caller.
  */
 GList *
-na_exporter_get_formats( const NAPivot *pivot )
+fma_exporter_get_formats( const NAPivot *pivot )
 {
 	GList *iexporters, *imod;
 	GList *formats;
@@ -173,16 +173,16 @@ exporter_free_formats( const FMAIExporter *exporter, GList *str_list )
 }
 
 /*
- * na_exporter_free_formats:
+ * fma_exporter_free_formats:
  * @formats: a list of available export formats, as returned by
- *  na_exporter_get_formats().
+ *  fma_exporter_get_formats().
  *
  * Release the @formats #GList.
  */
 void
-na_exporter_free_formats( GList *formats )
+fma_exporter_free_formats( GList *formats )
 {
-	static const gchar *thisfn = "na_exporter_free_formats";
+	static const gchar *thisfn = "fma_exporter_free_formats";
 
 	g_debug( "%s: formats=%p (count=%d)", thisfn, ( void * ) formats, g_list_length( formats ));
 
@@ -191,16 +191,16 @@ na_exporter_free_formats( GList *formats )
 }
 
 /*
- * na_exporter_get_ask_option:
+ * fma_exporter_get_ask_option:
  *
  * Returns the 'Ask me' option.
  *
  * Since: 3.2
  */
 NAIOption *
-na_exporter_get_ask_option( void )
+fma_exporter_get_ask_option( void )
 {
-	static const gchar *thisfn = "na_exporter_get_ask_option";
+	static const gchar *thisfn = "fma_exporter_get_ask_option";
 	FMAIExporterFormatv2 *str;
 	gint width, height;
 	gchar *fname;
@@ -242,11 +242,11 @@ na_exporter_get_ask_option( void )
 static void
 on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
 {
-	g_debug( "na_exporter_on_pixbuf_finalized: pixbuf=%p", ( void * ) pixbuf );
+	g_debug( "fma_exporter_on_pixbuf_finalized: pixbuf=%p", ( void * ) pixbuf );
 }
 
 /*
- * na_exporter_to_buffer:
+ * fma_exporter_to_buffer:
  * @pivot: the #NAPivot pivot for the running application.
  * @item: a #FMAObjectItem-derived object.
  * @format: the target format identifier.
@@ -259,10 +259,10 @@ on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
  * be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-na_exporter_to_buffer( const NAPivot *pivot,
+fma_exporter_to_buffer( const NAPivot *pivot,
 		const FMAObjectItem *item, const gchar *format, GSList **messages )
 {
-	static const gchar *thisfn = "na_exporter_to_buffer";
+	static const gchar *thisfn = "fma_exporter_to_buffer";
 	gchar *buffer;
 	FMAIExporterBufferParmsv2 parms;
 	FMAIExporter *exporter;
@@ -281,7 +281,7 @@ na_exporter_to_buffer( const NAPivot *pivot,
 			format,
 			( void * ) messages );
 
-	exporter = na_exporter_find_for_format( pivot, format );
+	exporter = fma_exporter_find_for_format( pivot, format );
 	g_debug( "%s: exporter=%p (%s)", thisfn, ( void * ) exporter, G_OBJECT_TYPE_NAME( exporter ));
 
 	if( exporter ){
@@ -317,7 +317,7 @@ na_exporter_to_buffer( const NAPivot *pivot,
 }
 
 /*
- * na_exporter_to_file:
+ * fma_exporter_to_file:
  * @pivot: the #NAPivot pivot for the running application.
  * @item: a #FMAObjectItem-derived object.
  * @folder_uri: the URI of the target folder.
@@ -331,10 +331,10 @@ na_exporter_to_buffer( const NAPivot *pivot,
  * should be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-na_exporter_to_file( const NAPivot *pivot,
+fma_exporter_to_file( const NAPivot *pivot,
 		const FMAObjectItem *item, const gchar *folder_uri, const gchar *format, GSList **messages )
 {
-	static const gchar *thisfn = "na_exporter_to_file";
+	static const gchar *thisfn = "fma_exporter_to_file";
 	gchar *export_uri;
 	FMAIExporterFileParmsv2 parms;
 	FMAIExporter *exporter;
@@ -354,7 +354,7 @@ na_exporter_to_file( const NAPivot *pivot,
 			format,
 			( void * ) messages );
 
-	exporter = na_exporter_find_for_format( pivot, format );
+	exporter = fma_exporter_find_for_format( pivot, format );
 
 	if( exporter ){
 		parms.version = 2;
@@ -404,7 +404,7 @@ exporter_get_name( const FMAIExporter *exporter )
 }
 
 /**
- * na_exporter_find_for_format:
+ * fma_exporter_find_for_format:
  * @pivot: the #NAPivot instance.
  * @format: the string identifier of the searched format.
  *
@@ -413,7 +413,7 @@ exporter_get_name( const FMAIExporter *exporter )
  * released by the caller.
  */
 FMAIExporter *
-na_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
+fma_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
 {
 	FMAIExporter *exporter;
 	GList *formats, *ifmt;
@@ -423,7 +423,7 @@ na_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	exporter = NULL;
-	formats = na_exporter_get_formats( pivot );
+	formats = fma_exporter_get_formats( pivot );
 
 	for( ifmt = formats ; ifmt && !exporter ; ifmt = ifmt->next ){
 
@@ -435,7 +435,7 @@ na_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
 		g_free( id );
 	}
 
-	na_exporter_free_formats( formats );
+	fma_exporter_free_formats( formats );
 
 	return( exporter );
 }

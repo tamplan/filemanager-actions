@@ -37,7 +37,7 @@
 #include <api/fma-iimporter.h>
 
 #include <core/fma-desktop-environment.h>
-#include <core/na-exporter.h>
+#include <core/fma-exporter.h>
 #include <core/na-export-format.h>
 #include <core/na-gtk-utils.h>
 #include <core/na-import-mode.h>
@@ -268,7 +268,7 @@ ioptions_list_get_options( const NAIOptionsList *instance, GtkWidget *container 
 	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
 		updater = nact_application_get_updater( application );
-		options = na_exporter_get_formats( NA_PIVOT( updater ));
+		options = fma_exporter_get_formats( NA_PIVOT( updater ));
 
 	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
 		options = na_importer_get_modes();
@@ -290,7 +290,7 @@ ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ));
 
 	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
-		na_exporter_free_formats( options );
+		fma_exporter_free_formats( options );
 
 	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
 		na_importer_free_modes( options );
@@ -313,7 +313,7 @@ ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *contain
 	option = NULL;
 
 	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
-		option = na_exporter_get_ask_option();
+		option = fma_exporter_get_ask_option();
 
 	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
 		option = na_importer_get_ask_mode();

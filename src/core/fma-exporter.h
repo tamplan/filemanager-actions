@@ -27,12 +27,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_EXPORTER_H__
-#define __CORE_NA_EXPORTER_H__
+#ifndef __CORE_FMA_EXPORTER_H__
+#define __CORE_FMA_EXPORTER_H__
 
 /* @title: FMAIExporter
  * @short_description: The #FMAIExporter Internal Functions
- * @include: core/na-exporter.h
+ * @include: core/fma-exporter.h
  */
 
 #include <api/fma-iexporter.h>
@@ -46,24 +46,24 @@ G_BEGIN_DECLS
 #define EXPORTER_FORMAT_ASK				"Ask"
 #define EXPORTER_FORMAT_NOEXPORT		"NoExport"
 
-GList       *na_exporter_get_formats    ( const NAPivot *pivot );
-void         na_exporter_free_formats   ( GList *formats );
-NAIOption   *na_exporter_get_ask_option ( void );
+GList        *fma_exporter_get_formats    ( const NAPivot *pivot );
+void          fma_exporter_free_formats   ( GList *formats );
+NAIOption   *fma_exporter_get_ask_option ( void );
 
-gchar       *na_exporter_to_buffer      ( const NAPivot *pivot,
-                                          const FMAObjectItem *item,
-                                          const gchar *format,
-                                          GSList **messages );
+gchar        *fma_exporter_to_buffer      ( const NAPivot *pivot,
+                                            const FMAObjectItem *item,
+                                            const gchar *format,
+                                            GSList **messages );
 
-gchar       *na_exporter_to_file        ( const NAPivot *pivot,
-                                          const FMAObjectItem *item,
-                                          const gchar *folder_uri,
-                                          const gchar *format,
-                                          GSList **messages );
+gchar        *fma_exporter_to_file        ( const NAPivot *pivot,
+                                            const FMAObjectItem *item,
+                                            const gchar *folder_uri,
+                                            const gchar *format,
+                                            GSList **messages );
 
-FMAIExporter *na_exporter_find_for_format( const NAPivot *pivot,
-		                                  const gchar *format );
+FMAIExporter *fma_exporter_find_for_format( const NAPivot *pivot,
+		                                    const gchar *format );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_EXPORTER_H__ */
+#endif /* __CORE_FMA_EXPORTER_H__ */
