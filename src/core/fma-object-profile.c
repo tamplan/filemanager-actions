@@ -41,7 +41,7 @@
 #include <api/fma-ifactory-object.h>
 #include <api/fma-object-api.h>
 
-#include "na-factory-provider.h"
+#include "fma-factory-provider.h"
 #include "fma-factory-object.h"
 #include "na-selected-info.h"
 #include "na-gnome-vfs-uri.h"

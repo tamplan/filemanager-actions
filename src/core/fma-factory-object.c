@@ -43,7 +43,7 @@
 #include <api/fma-object-api.h>
 
 #include "fma-factory-object.h"
-#include "na-factory-provider.h"
+#include "fma-factory-provider.h"
 
 typedef gboolean ( *FMADataDefIterFunc )( FMADataDef *def, void *user_data );
 
@@ -633,7 +633,7 @@ read_data_iter( FMADataDef *def, NafoReadIter *iter )
 
 	stop = FALSE;
 
-	FMADataBoxed *boxed = na_factory_provider_read_data( iter->reader, iter->reader_data, iter->object, def, iter->messages );
+	FMADataBoxed *boxed = fma_factory_provider_read_data( iter->reader, iter->reader_data, iter->object, def, iter->messages );
 
 	if( boxed ){
 		FMADataBoxed *exist = fma_ifactory_object_get_data_boxed( iter->object, def->name );
@@ -714,7 +714,7 @@ write_data_iter( const FMAIFactoryObject *object, FMADataBoxed *boxed, NafoWrite
 	const FMADataDef *def = fma_data_boxed_get_data_def( boxed );
 
 	if( def->writable ){
-		iter->code = na_factory_provider_write_data( iter->writer, iter->writer_data, object, boxed, iter->messages );
+		iter->code = fma_factory_provider_write_data( iter->writer, iter->writer_data, object, boxed, iter->messages );
 	}
 
 	/* iter while code is ok */

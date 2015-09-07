@@ -33,10 +33,10 @@
 
 #include <api/fma-iio-provider.h>
 
-#include "na-factory-provider.h"
+#include "fma-factory-provider.h"
 
 /*
- * na_factory_provider_read_data:
+ * fma_factory_provider_read_data:
  * @reader: the instance which implements this #FMAIFactoryProvider interface.
  * @reader_data: instance data.
  * @object: the #NAIFactoryobject being unserialized.
@@ -49,7 +49,7 @@
  * Returns: a new #FMADataBoxed object which contains the data.
  */
 FMADataBoxed *
-na_factory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_data,
+fma_factory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_data,
 								const FMAIFactoryObject *object, const FMADataDef *def,
 								GSList **messages )
 {
@@ -68,7 +68,7 @@ na_factory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_d
 }
 
 /*
- * na_factory_provider_write_data:
+ * fma_factory_provider_write_data:
  * @writer: the instance which implements this #FMAIFactoryProvider interface.
  * @writer_data: instance data.
  * @object: the #NAIFactoryobject being serialized.
@@ -79,7 +79,7 @@ na_factory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_d
  * Returns: a FMAIIOProvider operation return code.
  */
 guint
-na_factory_provider_write_data( const FMAIFactoryProvider *writer, void *writer_data,
+fma_factory_provider_write_data( const FMAIFactoryProvider *writer, void *writer_data,
 								const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 								GSList **messages )
 {

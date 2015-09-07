@@ -66,8 +66,8 @@ libna_core_la_SOURCES = \
 	fma-export-format.h									\
 	fma-factory-object.c									\
 	fma-factory-object.h									\
-	na-factory-provider.c								\
-	na-factory-provider.h								\
+	fma-factory-provider.c								\
+	fma-factory-provider.h								\
 	na-gconf-migration.c								\
 	na-gconf-migration.h								\
 	fma-gconf-monitor.c									\

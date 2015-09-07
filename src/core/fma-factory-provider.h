@@ -32,7 +32,7 @@
 
 /* @title: FMAIFactoryProvider
  * @short_description: The #FMAIFactoryProvider Internal Functions
- * @include: core/na-factory-provider.h
+ * @include: core/fma-factory-provider.h
  *
  * Declare the function only accessed from core library (not published as API).
  */
@@ -42,14 +42,14 @@
 
 G_BEGIN_DECLS
 
-FMADataBoxed *na_factory_provider_read_data ( const FMAIFactoryProvider *reader, void *reader_data,
+FMADataBoxed *fma_factory_provider_read_data ( const FMAIFactoryProvider *reader, void *reader_data,
 									const FMAIFactoryObject *object, const FMADataDef *def,
 									GSList **messages );
 
-guint        na_factory_provider_write_data( const FMAIFactoryProvider *writer, void *writer_data,
+guint         fma_factory_provider_write_data( const FMAIFactoryProvider *writer, void *writer_data,
 									const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_FMA_FACTORY_PROVIDER_H__ */
+#endif /* __CORE_FMA_FACTORY_PROVIDER_H__ */

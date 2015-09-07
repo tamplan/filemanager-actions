@@ -38,7 +38,7 @@
 #include <api/fma-ifactory-object.h>
 #include <api/fma-object-api.h>
 
-#include "na-factory-provider.h"
+#include "fma-factory-provider.h"
 #include "fma-factory-object.h"
 
 /* private class data
