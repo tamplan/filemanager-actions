@@ -52,17 +52,17 @@ struct _FMAImporterAskClassPrivate {
 /* private instance data
  */
 struct _FMAImporterAskPrivate {
-	gboolean                dispose_has_run;
-	GtkWindow              *toplevel;
+	gboolean                 dispose_has_run;
+	GtkWindow               *toplevel;
 	FMAObjectItem           *importing;
 	FMAObjectItem           *existing;
 	FMAImporterAskUserParms *parms;
-	guint                   mode;
+	guint                    mode;
 };
 
-static GObjectClass  *st_parent_class = NULL;
+static GObjectClass   *st_parent_class = NULL;
 static FMAImporterAsk *st_dialog       = NULL;
-static const gchar   *st_uixml        = PKGUIDIR "/fma-importer-ask.ui";
+static const gchar    *st_uixml        = PKGIMPORTERASKDIR "/fma-importer-ask.ui";
 
 static GType          register_type( void );
 static void           class_init( FMAImporterAskClass *klass );

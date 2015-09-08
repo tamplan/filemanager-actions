@@ -31,9 +31,9 @@ exportformat_datadir = $(pkgdatadir)/export-format
 
 importmode_datadir = $(pkgdatadir)/import-mode
 
-icon_fname = $(datadir)/icons/hicolor/48x48/apps/filemanager-actions.png
+importerask_datadir = $(pkgdatadir)/importer-ask
 
-ui_datadir = $(pkgdatadir)/ui
+icon_fname = $(datadir)/icons/hicolor/48x48/apps/filemanager-actions.png
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
@@ -46,7 +46,7 @@ AM_CPPFLAGS += \
 	-DICON_FNAME=\"$(icon_fname)\"						\
 	-DPKGEXPORTFORMATDIR=\"$(exportformat_datadir)\"	\
 	-DPKGIMPORTMODEDIR=\"$(importmode_datadir)\"		\
-	-DPKGUIDIR=\"$(ui_datadir)\"						\
+	-DPKGIMPORTERASKDIR=\"$(importerask_datadir)\"		\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
@@ -135,7 +135,7 @@ libfma_core_la_LDFLAGS = \
 	-fPIC												\
 	$(NULL)
 
-ui_data_DATA = \
+importerask_data_DATA = \
 	fma-importer-ask.ui									\
 	$(NULL)
 
@@ -154,7 +154,7 @@ CLEANFILES = \
 	$(NULL)
 
 EXTRA_DIST = \
-	$(ui_data_DATA)										\
+	$(importerask_data_DATA)							\
 	$(exportformat_data_DATA)							\
 	$(importmode_data_DATA)								\
 	$(NULL)
