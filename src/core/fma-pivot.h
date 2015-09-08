@@ -27,26 +27,26 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_PIVOT_H__
-#define __CORE_NA_PIVOT_H__
+#ifndef __CORE_FMA_PIVOT_H__
+#define __CORE_FMA_PIVOT_H__
 
-/* @title: NAPivot
- * @short_description: The #NAPivot Class Definition
- * @include: core/na-pivot.h
+/* @title: FMAPivot
+ * @short_description: The #FMAPivot Class Definition
+ * @include: core/fma-pivot.h
  *
- * A consuming program should allocate one new NAPivot object in its
+ * A consuming program should allocate one new FMAPivot object in its
  * startup phase. The class takes care of declaring the I/O interfaces,
  * while registering the known providers.
- * 		NAPivot *pivot = na_pivot_new();
+ * 		FMAPivot *pivot = fma_pivot_new();
  *
- * With this newly allocated #NAPivot object, the consuming program
+ * With this newly allocated #FMAPivot object, the consuming program
  * is then able to ask for loading the items.
- * 		na_pivot_set_loadable( pivot, PIVOT_LOADABLE_SET );
- * 		na_pivot_load_items( pivot );
+ * 		fma_pivot_set_loadable( pivot, PIVOT_LOADABLE_SET );
+ * 		fma_pivot_load_items( pivot );
  *
  * Notification system.
  *
- * The NAPivot object acts as a sort of "summarizing relay" for notification
+ * The FMAPivot object acts as a sort of "summarizing relay" for notification
  * messages sent by I/O storage providers:
  *
  * - When an I/O storage subsystem detects a change on an item it manages,
@@ -60,11 +60,11 @@
  *   anything with the signal name, but has only to take care of calling
  *   a function of the FMAIIOProvider API.
  *
- * - The emitted signal is catched by na_pivot_on_item_changed_handler(),
+ * - The emitted signal is catched by fma_pivot_on_item_changed_handler(),
  *   which was connected when the I/O provider plugin was associated with
  *   the FMAIOProvider object.
  *
- * - The NAPivot object receives these notifications originating from all
+ * - The FMAPivot object receives these notifications originating from all
  *   loaded I/O providers, itself summarizes them, and only then notify its
  *   consumers with only one message for a whole set of modifications.
  *
@@ -79,32 +79,32 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_PIVOT                ( na_pivot_get_type())
-#define NA_PIVOT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_PIVOT, NAPivot ))
-#define NA_PIVOT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_PIVOT, NAPivotClass ))
-#define NA_IS_PIVOT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_PIVOT ))
-#define NA_IS_PIVOT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_PIVOT ))
-#define NA_PIVOT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_PIVOT, NAPivotClass ))
+#define FMA_TYPE_PIVOT                ( fma_pivot_get_type())
+#define FMA_PIVOT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_PIVOT, FMAPivot ))
+#define FMA_PIVOT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_PIVOT, FMAPivotClass ))
+#define FMA_IS_PIVOT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_PIVOT ))
+#define FMA_IS_PIVOT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_PIVOT ))
+#define FMA_PIVOT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_PIVOT, FMAPivotClass ))
 
-typedef struct _NAPivotPrivate       NAPivotPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject         parent;
-	NAPivotPrivate *private;
-}
-	NAPivot;
-
-typedef struct _NAPivotClassPrivate  NAPivotClassPrivate;
+typedef struct _FMAPivotPrivate       FMAPivotPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass         parent;
-	NAPivotClassPrivate *private;
+	GObject          parent;
+	FMAPivotPrivate *private;
 }
-	NAPivotClass;
+	FMAPivot;
 
-GType    na_pivot_get_type( void );
+typedef struct _FMAPivotClassPrivate  FMAPivotClassPrivate;
+
+typedef struct {
+	/*< private >*/
+	GObjectClass          parent;
+	FMAPivotClassPrivate *private;
+}
+	FMAPivotClass;
+
+GType    fma_pivot_get_type( void );
 
 /* properties
  */
@@ -113,12 +113,12 @@ GType    na_pivot_get_type( void );
 
 /* signals
  *
- * NAPivot acts as a 'summarizing' proxy for signals emitted by the
+ * FMAPivot acts as a 'summarizing' proxy for signals emitted by the
  * FMAIIOProvider providers when they detect a modification in their
  * underlying items storage subsystems.
  *
  * As several to many signals may be emitted when such a modification occurs,
- * NAPivot summarizes all these signals in an only one 'items-changed' event.
+ * FMAPivot summarizes all these signals in an only one 'items-changed' event.
  */
 #define PIVOT_SIGNAL_ITEMS_CHANGED				"pivot-items-changed"
 
@@ -132,30 +132,30 @@ typedef enum {
 	PIVOT_LOAD_INVALID  = 1 << 1,
 	PIVOT_LOAD_ALL      = 0xff
 }
-	NAPivotLoadableSet;
+	FMAPivotLoadableSet;
 
-NAPivot      *na_pivot_new ( void );
-void          na_pivot_dump( const NAPivot *pivot );
+FMAPivot      *fma_pivot_new                    ( void );
+void           fma_pivot_dump                   ( const FMAPivot *pivot );
 
 /* Management of the plugins which claim to implement a FileManager-Actions interface.
  * As of 2.30, these may be FMAIIOProvider, FMAIImporter or FMAIExporter
  */
-GList        *na_pivot_get_providers ( const NAPivot *pivot, GType type );
-void          na_pivot_free_providers( GList *providers );
+GList         *fma_pivot_get_providers          ( const FMAPivot *pivot, GType type );
+void           fma_pivot_free_providers         ( GList *providers );
 
 /* Items, menus and actions, management
  */
-FMAObjectItem *na_pivot_get_item     ( const NAPivot *pivot, const gchar *id );
-GList        *na_pivot_get_items    ( const NAPivot *pivot );
-void          na_pivot_load_items   ( NAPivot *pivot );
-void          na_pivot_set_new_items( NAPivot *pivot, GList *tree );
+FMAObjectItem *fma_pivot_get_item               ( const FMAPivot *pivot, const gchar *id );
+GList         *fma_pivot_get_items              ( const FMAPivot *pivot );
+void           fma_pivot_load_items             ( FMAPivot *pivot );
+void           fma_pivot_set_new_items          ( FMAPivot *pivot, GList *tree );
 
-void          na_pivot_on_item_changed_handler( FMAIIOProvider *provider, NAPivot *pivot  );
+void           fma_pivot_on_item_changed_handler( FMAIIOProvider *provider, FMAPivot *pivot  );
 
-/* NAPivot properties and configuration
+/* FMAPivot properties and configuration
  */
-void          na_pivot_set_loadable     ( NAPivot *pivot, guint loadable );
+void           fma_pivot_set_loadable           ( FMAPivot *pivot, guint loadable );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_PIVOT_H__ */
+#endif /* __CORE_FMA_PIVOT_H__ */

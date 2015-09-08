@@ -189,7 +189,7 @@ main( int argc, char** argv )
 
 	/* pwi 2011-01-05
 	 * run GConf migration tools before doing anything else
-	 * above all before allocating a new NAPivot
+	 * above all before allocating a new FMAPivot
 	 */
 	fma_gconf_migration_run();
 
@@ -583,7 +583,7 @@ output_to_desktop( FMAObjectAction *action, GSList **msgs )
 	gboolean code;
 
 	updater = na_updater_new();
-	provider = fma_io_provider_find_io_provider_by_id( NA_PIVOT( updater ), "na-desktop" );
+	provider = fma_io_provider_find_io_provider_by_id( FMA_PIVOT( updater ), "na-desktop" );
 
 	if( provider ){
 		fma_object_set_provider( action, provider );
@@ -609,7 +609,7 @@ output_to_stdout( const FMAObjectAction *action, GSList **msgs )
 	gchar *buffer;
 
 	updater = na_updater_new();
-	buffer = fma_exporter_to_buffer( NA_PIVOT( updater ), FMA_OBJECT_ITEM( action ), "Desktop1", msgs );
+	buffer = fma_exporter_to_buffer( FMA_PIVOT( updater ), FMA_OBJECT_ITEM( action ), "Desktop1", msgs );
 	ret = ( buffer != NULL );
 
 	if( buffer ){

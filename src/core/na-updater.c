@@ -53,7 +53,7 @@ struct _NAUpdaterPrivate {
 	gboolean is_level_zero_writable;
 };
 
-static NAPivotClass *st_parent_class = NULL;
+static FMAPivotClass *st_parent_class = NULL;
 
 static GType    register_type( void );
 static void     class_init( NAUpdaterClass *klass );
@@ -97,7 +97,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_TYPE_PIVOT, "NAUpdater", &info, 0 );
+	type = g_type_register_static( FMA_TYPE_PIVOT, "NAUpdater", &info, 0 );
 
 	return( type );
 }
@@ -288,7 +288,7 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const FMAObj
 			/* the get_writable_provider() api already takes care of above checks
 			 */
 			} else {
-				provider = fma_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
+				provider = fma_io_provider_find_writable_io_provider( FMA_PIVOT( updater ));
 				if( !provider ){
 					writable = FALSE;
 					reason = FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
@@ -418,7 +418,7 @@ na_updater_insert_item( NAUpdater *updater, FMAObjectItem *item, const gchar *pa
 		g_object_get( G_OBJECT( updater ), PIVOT_PROP_TREE, &tree, NULL );
 
 		if( parent_id ){
-			parent = na_pivot_get_item( NA_PIVOT( updater ), parent_id );
+			parent = fma_pivot_get_item( FMA_PIVOT( updater ), parent_id );
 		}
 
 		if( parent ){
@@ -433,7 +433,7 @@ na_updater_insert_item( NAUpdater *updater, FMAObjectItem *item, const gchar *pa
 
 /*
  * na_updater_remove_item:
- * @updater: this #NAPivot instance.
+ * @updater: this #FMAPivot instance.
  * @item: the #FMAObjectItem to be removed from the list.
  *
  * Removes a #FMAObjectItem from the hierarchical tree. Does not delete it.
@@ -444,7 +444,7 @@ na_updater_remove_item( NAUpdater *updater, FMAObject *item )
 	GList *tree;
 	FMAObjectItem *parent;
 
-	g_return_if_fail( NA_IS_PIVOT( updater ));
+	g_return_if_fail( FMA_IS_PIVOT( updater ));
 
 	if( !updater->private->dispose_has_run ){
 
@@ -521,8 +521,8 @@ na_updater_load_items( NAUpdater *updater )
 	if( !updater->private->dispose_has_run ){
 		g_debug( "%s: updater=%p (%s)", thisfn, ( void * ) updater, G_OBJECT_TYPE_NAME( updater ));
 
-		na_pivot_load_items( NA_PIVOT( updater ));
-		tree = na_pivot_get_items( NA_PIVOT( updater ));
+		fma_pivot_load_items( FMA_PIVOT( updater ));
+		tree = fma_pivot_get_items( FMA_PIVOT( updater ));
 		g_list_foreach( tree, ( GFunc ) set_writability_status, ( gpointer ) updater );
 	}
 
@@ -569,7 +569,7 @@ na_updater_write_item( const NAUpdater *updater, FMAObjectItem *item, GSList **m
 		FMAIOProvider *provider = fma_object_get_provider( item );
 
 		if( !provider ){
-			provider = fma_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
+			provider = fma_io_provider_find_writable_io_provider( FMA_PIVOT( updater ));
 			g_return_val_if_fail( provider, FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND );
 		}
 

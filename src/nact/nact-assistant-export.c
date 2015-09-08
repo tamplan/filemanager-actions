@@ -209,7 +209,7 @@ ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
-	formats = fma_exporter_get_formats( NA_PIVOT( updater ));
+	formats = fma_exporter_get_formats( FMA_PIVOT( updater ));
 
 	return( formats );
 }
@@ -789,7 +789,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		}
 
 		if( strcmp( str->format, EXPORTER_FORMAT_NOEXPORT ) != 0 ){
-			str->fname = fma_exporter_to_file( NA_PIVOT( updater ), str->item, window->private->uri, str->format, &str->msg );
+			str->fname = fma_exporter_to_file( FMA_PIVOT( updater ), str->item, window->private->uri, str->format, &str->msg );
 		}
 
 		g_free( str->format );

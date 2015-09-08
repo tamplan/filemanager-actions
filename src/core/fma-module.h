@@ -49,15 +49,15 @@
  * which are dynamically instantiated at plugin initial-load time.
  *
  * So the dynamic is as follows:
- * - NAPivot scans for the PKGLIBDIR directory, trying to dynamically
+ * - FMAPivot scans for the PKGLIBDIR directory, trying to dynamically
  *   load all found libraries
  * - to be considered as a N-A plugin, a library must implement some
  *   functions (see api/na-api.h)
- * - for each found plugin, NAPivot calls na_api_list_types() which
+ * - for each found plugin, FMAPivot calls na_api_list_types() which
  *   returns the type of GObjects implemented in the plugin
- * - NAPivot dynamically instantiates a GObject for each returned GType.
+ * - FMAPivot dynamically instantiates a GObject for each returned GType.
  *
- * After that, when NAPivot wants to access, say to FMAIIOProvider
+ * After that, when FMAPivot wants to access, say to FMAIIOProvider
  * interfaces, it asks each module for its list of objects which implement
  * this given interface.
  * Interface API is then called against the returned GObject.

@@ -649,12 +649,12 @@ nact_tree_model_delete( NactTreeModel *model, FMAObject *object )
  * nact_tree_model_fill:
  * @model: this #NactTreeModel instance.
  * @ŧreeview: the #GtkTreeView widget.
- * @items: this list of items, usually from #NAPivot, which will be used
+ * @items: this list of items, usually from #FMAPivot, which will be used
  *  to fill up the tree store.
  *
  * Fill up the tree store with specified items.
  *
- * We enter with the GSList owned by NAPivot which contains the ordered
+ * We enter with the GSList owned by FMAPivot which contains the ordered
  * list of level-zero items. We want have a duplicate of this list in
  * tree store, so that we are able to freely edit it.
  */

@@ -74,7 +74,7 @@ nautilus_module_initialize( GTypeModule *module )
 
 	/* pwi 2011-01-05
 	 * run GConf migration tools before doing anything else
-	 * above all before allocating a new NAPivot
+	 * above all before allocating a new FMAPivot
 	 */
 	fma_gconf_migration_run();
 

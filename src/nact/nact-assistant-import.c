@@ -667,7 +667,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	importer_parms.preferred_mode = fma_import_mode_get_id( FMA_IMPORT_MODE( window->private->mode ));
 	importer_parms.parent_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( wnd ));
 
-	import_results = fma_importer_import_from_uris( NA_PIVOT( updater ), &importer_parms );
+	import_results = fma_importer_import_from_uris( FMA_PIVOT( updater ), &importer_parms );
 
 	insertable_items = NULL;
 	overriden_items = NULL;

@@ -43,7 +43,7 @@
 
 #include <api/fma-object-item.h>
 
-#include "na-pivot.h"
+#include "fma-pivot.h"
 
 G_BEGIN_DECLS
 
@@ -77,7 +77,7 @@ typedef struct {
 	gchar          *uri;
 	guint           count;
 	gboolean        keep_choice;
-	const NAPivot *pivot;
+	const FMAPivot *pivot;
 }
 	FMAImporterAskUserParms;
 

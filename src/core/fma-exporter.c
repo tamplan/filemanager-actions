@@ -66,7 +66,7 @@ static void   on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
 
 /*
  * fma_exporter_get_formats:
- * @pivot: the #NAPivot instance.
+ * @pivot: the #FMAPivot instance.
  *
  * Returns: a list of #FMAExportFormat objects, each of them addressing an
  * available export format, i.e. a format provided by a module which
@@ -75,17 +75,17 @@ static void   on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
  * The returned list should later be fma_exporter_free_formats() by the caller.
  */
 GList *
-fma_exporter_get_formats( const NAPivot *pivot )
+fma_exporter_get_formats( const FMAPivot *pivot )
 {
 	GList *iexporters, *imod;
 	GList *formats;
 	GList *str_list, *is;
 	FMAExportFormat *format;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 
 	formats = NULL;
-	iexporters = na_pivot_get_providers( pivot, FMA_TYPE_IEXPORTER );
+	iexporters = fma_pivot_get_providers( pivot, FMA_TYPE_IEXPORTER );
 
 	for( imod = iexporters ; imod ; imod = imod->next ){
 		str_list = exporter_get_formats( FMA_IEXPORTER( imod->data ));
@@ -98,7 +98,7 @@ fma_exporter_get_formats( const NAPivot *pivot )
 		exporter_free_formats( FMA_IEXPORTER( imod->data ), str_list );
 	}
 
-	na_pivot_free_providers( iexporters );
+	fma_pivot_free_providers( iexporters );
 
 	return( formats );
 }
@@ -247,7 +247,7 @@ on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
 
 /*
  * fma_exporter_to_buffer:
- * @pivot: the #NAPivot pivot for the running application.
+ * @pivot: the #FMAPivot pivot for the running application.
  * @item: a #FMAObjectItem-derived object.
  * @format: the target format identifier.
  * @messages: a pointer to a #GSList list of strings; the provider
@@ -259,7 +259,7 @@ on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
  * be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-fma_exporter_to_buffer( const NAPivot *pivot,
+fma_exporter_to_buffer( const FMAPivot *pivot,
 		const FMAObjectItem *item, const gchar *format, GSList **messages )
 {
 	static const gchar *thisfn = "fma_exporter_to_buffer";
@@ -269,7 +269,7 @@ fma_exporter_to_buffer( const NAPivot *pivot,
 	gchar *name;
 	gchar *msg;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), NULL );
 
 	buffer = NULL;
@@ -318,7 +318,7 @@ fma_exporter_to_buffer( const NAPivot *pivot,
 
 /*
  * fma_exporter_to_file:
- * @pivot: the #NAPivot pivot for the running application.
+ * @pivot: the #FMAPivot pivot for the running application.
  * @item: a #FMAObjectItem-derived object.
  * @folder_uri: the URI of the target folder.
  * @format: the target format identifier.
@@ -331,7 +331,7 @@ fma_exporter_to_buffer( const NAPivot *pivot,
  * should be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-fma_exporter_to_file( const NAPivot *pivot,
+fma_exporter_to_file( const FMAPivot *pivot,
 		const FMAObjectItem *item, const gchar *folder_uri, const gchar *format, GSList **messages )
 {
 	static const gchar *thisfn = "fma_exporter_to_file";
@@ -341,7 +341,7 @@ fma_exporter_to_file( const NAPivot *pivot,
 	gchar *msg;
 	gchar *name;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), NULL );
 
 	export_uri = NULL;
@@ -405,7 +405,7 @@ exporter_get_name( const FMAIExporter *exporter )
 
 /**
  * fma_exporter_find_for_format:
- * @pivot: the #NAPivot instance.
+ * @pivot: the #FMAPivot instance.
  * @format: the string identifier of the searched format.
  *
  * Returns: the #FMAIExporter instance which provides the @format export
@@ -413,14 +413,14 @@ exporter_get_name( const FMAIExporter *exporter )
  * released by the caller.
  */
 FMAIExporter *
-fma_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
+fma_exporter_find_for_format( const FMAPivot *pivot, const gchar *format )
 {
 	FMAIExporter *exporter;
 	GList *formats, *ifmt;
 	gchar *id;
 	FMAExportFormat *export_format;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 
 	exporter = NULL;
 	formats = fma_exporter_get_formats( pivot );

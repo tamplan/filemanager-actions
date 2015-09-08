@@ -909,7 +909,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	parms.preferred_mode = 0;
 	parms.parent_toplevel = GTK_WINDOW( main_window );
 
-	import_results = fma_importer_import_from_uris( NA_PIVOT( updater ), &parms );
+	import_results = fma_importer_import_from_uris( FMA_PIVOT( updater ), &parms );
 
 	/* analysing output results, simultaneously building a concatenation
 	 * of all lines of messages, and the list of imported items

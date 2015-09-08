@@ -517,7 +517,7 @@ fma_module_has_id( FMAModule *module, const gchar *id )
  * fma_module_release_modules:
  * @modules: the list of loaded modules.
  *
- * Release resources allocated to the loaded modules on #NAPivot dispose.
+ * Release resources allocated to the loaded modules on #FMAPivot dispose.
  */
 void
 fma_module_release_modules( GList *modules )

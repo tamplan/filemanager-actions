@@ -43,7 +43,7 @@
 #include <api/fma-object-api.h>
 #include <api/fma-timeout.h>
 
-#include <core/na-pivot.h>
+#include <core/fma-pivot.h>
 #include <core/fma-about.h>
 #include <core/na-selected-info.h>
 #include <core/na-tokens.h>
@@ -60,7 +60,7 @@ struct _NautilusActionsClassPrivate {
  */
 struct _NautilusActionsPrivate {
 	gboolean  dispose_has_run;
-	NAPivot  *pivot;
+	FMAPivot  *pivot;
 	gulong    items_changed_handler;
 	gulong    settings_changed_handler;
 	FMATimeout change_timeout;
@@ -102,7 +102,7 @@ static GList            *create_root_menu( NautilusActions *plugin, GList *nauti
 static GList            *add_about_item( NautilusActions *plugin, GList *nautilus_menu );
 static void              execute_about( NautilusMenuItem *item, NautilusActions *plugin );
 
-static void              on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin );
+static void              on_pivot_items_changed_handler( FMAPivot *pivot, NautilusActions *plugin );
 static void              on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NautilusActions *plugin );
 static void              on_change_event_timeout( NautilusActions *plugin );
 
@@ -190,7 +190,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
  * We have to react to some runtime environment modifications:
  *
  * - whether the items list has changed (we have to reload a new pivot)
- *   > registering for notifications against NAPivot
+ *   > registering for notifications against FMAPivot
  *
  * - whether to add the 'About FileManager-Actions' item
  * - whether to create a 'FileManager-Actions actions' root menu
@@ -215,14 +215,14 @@ instance_constructed( GObject *object )
 
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-		priv->pivot = na_pivot_new();
+		priv->pivot = fma_pivot_new();
 
-		/* setup NAPivot properties before loading items
+		/* setup FMAPivot properties before loading items
 		 */
-		na_pivot_set_loadable( priv->pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
-		na_pivot_load_items( priv->pivot );
+		fma_pivot_set_loadable( priv->pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
+		fma_pivot_load_items( priv->pivot );
 
-		/* register against NAPivot to be notified of items changes
+		/* register against FMAPivot to be notified of items changes
 		 */
 		priv->items_changed_handler =
 				g_signal_connect( priv->pivot,
@@ -495,11 +495,11 @@ build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection )
 	gboolean items_add_about_item;
 	gboolean items_create_root_menu;
 
-	g_return_val_if_fail( NA_IS_PIVOT( plugin->private->pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( plugin->private->pivot ), NULL );
 
 	tokens = na_tokens_new_from_selection( selection );
 
-	tree = na_pivot_get_items( plugin->private->pivot );
+	tree = fma_pivot_get_items( plugin->private->pivot );
 	g_debug( "%s: tree=%p, count=%d", thisfn, ( void * ) tree, g_list_length( tree ));
 
 	nautilus_menu = build_nautilus_menu_rec( tree, target, selection, tokens );
@@ -613,7 +613,7 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 
 /*
  * expand_tokens_item:
- * @item: a FMAObjectItem read from the NAPivot.
+ * @item: a FMAObjectItem read from the FMAPivot.
  * @tokens: the NATokens object which holds current selection data
  *  (uris, basenames, mimetypes, etc.)
  *
@@ -1008,20 +1008,20 @@ execute_about( NautilusMenuItem *item, NautilusActions *plugin )
  * Not only the items list itself, but also several runtime preferences have
  * an effect on the display of items in file manager context menu.
  *
- * We of course monitor here all these informations; only asking NAPivot
+ * We of course monitor here all these informations; only asking FMAPivot
  * for reloading its items when we detect the end of a burst of changes.
  *
- * Only when NAPivot has finished with reloading its items list, then we
+ * Only when FMAPivot has finished with reloading its items list, then we
  * inform the file manager that its items list has changed.
  */
 
-/* signal emitted by NAPivot at the end of a burst of 'item-changed' signals
+/* signal emitted by FMAPivot at the end of a burst of 'item-changed' signals
  * from i/o providers
  */
 static void
-on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin )
+on_pivot_items_changed_handler( FMAPivot *pivot, NautilusActions *plugin )
 {
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( FMA_IS_PIVOT( pivot ));
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
@@ -1054,6 +1054,6 @@ on_change_event_timeout( NautilusActions *plugin )
 	static const gchar *thisfn = "nautilus_actions_on_change_event_timeout";
 	g_debug( "%s: timeout expired", thisfn );
 
-	na_pivot_load_items( plugin->private->pivot );
+	fma_pivot_load_items( plugin->private->pivot );
 	nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
 }

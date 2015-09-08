@@ -208,7 +208,7 @@ fma_icontext_are_equal( const FMAIContext *a, const FMAIContext *b )
  * items.
  *
  * This function is called by <methodname>build_nautilus_menus</methodname>
- * plugin function for each item found in NAPivot items list, and, when this
+ * plugin function for each item found in FMAPivot items list, and, when this
  * an action, for each profile of this action.
  *
  * Returns: %TRUE if this @context succeeds to all tests and is so a

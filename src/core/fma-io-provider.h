@@ -59,7 +59,7 @@
  * and the whole configuration must not have been locked by an admin.
  */
 
-#include "na-pivot.h"
+#include "fma-pivot.h"
 
 G_BEGIN_DECLS
 
@@ -95,19 +95,19 @@ typedef struct {
 
 GType          fma_io_provider_get_type                 ( void );
 
-FMAIOProvider *fma_io_provider_find_writable_io_provider( const NAPivot *pivot );
-FMAIOProvider *fma_io_provider_find_io_provider_by_id   ( const NAPivot *pivot, const gchar *id );
-const GList   *fma_io_provider_get_io_providers_list    ( const NAPivot *pivot );
+FMAIOProvider *fma_io_provider_find_writable_io_provider( const FMAPivot *pivot );
+FMAIOProvider *fma_io_provider_find_io_provider_by_id   ( const FMAPivot *pivot, const gchar *id );
+const GList   *fma_io_provider_get_io_providers_list    ( const FMAPivot *pivot );
 void           fma_io_provider_unref_io_providers_list  ( void );
 
 gchar         *fma_io_provider_get_id                   ( const FMAIOProvider *provider );
 gchar         *fma_io_provider_get_name                 ( const FMAIOProvider *provider );
 gboolean       fma_io_provider_is_available             ( const FMAIOProvider *provider );
-gboolean       fma_io_provider_is_conf_readable         ( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory );
-gboolean       fma_io_provider_is_conf_writable         ( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory );
+gboolean       fma_io_provider_is_conf_readable         ( const FMAIOProvider *provider, const FMAPivot *pivot, gboolean *mandatory );
+gboolean       fma_io_provider_is_conf_writable         ( const FMAIOProvider *provider, const FMAPivot *pivot, gboolean *mandatory );
 gboolean       fma_io_provider_is_finally_writable      ( const FMAIOProvider *provider, guint *reason );
 
-GList         *fma_io_provider_load_items               ( const NAPivot *pivot, guint loadable_set, GSList **messages );
+GList         *fma_io_provider_load_items               ( const FMAPivot *pivot, guint loadable_set, GSList **messages );
 
 guint          fma_io_provider_write_item               ( const FMAIOProvider *provider, const FMAObjectItem *item, GSList **messages );
 guint          fma_io_provider_delete_item              ( const FMAIOProvider *provider, const FMAObjectItem *item, GSList **messages );

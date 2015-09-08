@@ -85,20 +85,20 @@ static void          instance_finalize( GObject *object );
 static void          dump( const FMAIOProvider *provider );
 static void          dump_providers_list( GList *providers );
 #endif
-static FMAIOProvider *io_provider_new( const NAPivot *pivot, FMAIIOProvider *module, const gchar *id );
-static GList        *io_providers_list_add_from_plugins( const NAPivot *pivot, GList *list );
-static GList        *io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list );
+static FMAIOProvider *io_provider_new( const FMAPivot *pivot, FMAIIOProvider *module, const gchar *id );
+static GList        *io_providers_list_add_from_plugins( const FMAPivot *pivot, GList *list );
+static GList        *io_providers_list_add_from_prefs( const FMAPivot *pivot, GList *objects_list );
 static GSList       *io_providers_get_from_prefs( void );
-static GList        *io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list );
-static GList        *io_providers_list_append_object( const NAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id );
-static void          io_providers_list_set_module( const NAPivot *pivot, FMAIOProvider *provider_object, FMAIIOProvider *provider_module );
-static gboolean      is_conf_writable( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory );
-static gboolean      is_finally_writable( const FMAIOProvider *provider, const NAPivot *pivot, guint *reason );
-static GList        *load_items_filter_unwanted_items( const NAPivot *pivot, GList *merged, guint loadable_set );
+static GList        *io_providers_list_add_from_write_order( const FMAPivot *pivot, GList *objects_list );
+static GList        *io_providers_list_append_object( const FMAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id );
+static void          io_providers_list_set_module( const FMAPivot *pivot, FMAIOProvider *provider_object, FMAIIOProvider *provider_module );
+static gboolean      is_conf_writable( const FMAIOProvider *provider, const FMAPivot *pivot, gboolean *mandatory );
+static gboolean      is_finally_writable( const FMAIOProvider *provider, const FMAPivot *pivot, guint *reason );
+static GList        *load_items_filter_unwanted_items( const FMAPivot *pivot, GList *merged, guint loadable_set );
 static GList        *load_items_filter_unwanted_items_rec( GList *merged, guint loadable_set );
-static GList        *load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **messages );
+static GList        *load_items_get_merged_list( const FMAPivot *pivot, guint loadable_set, GSList **messages );
 static GList        *load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_empty, FMAObjectItem *parent );
-static GList        *load_items_hierarchy_sort( const NAPivot *pivot, GList *tree, GCompareFunc fn );
+static GList        *load_items_hierarchy_sort( const FMAPivot *pivot, GList *tree, GCompareFunc fn );
 static gint          peek_item_by_id_compare( const FMAObject *obj, const gchar *id );
 static FMAIOProvider *peek_provider_by_id( const GList *providers, const gchar *id );
 
@@ -309,7 +309,7 @@ instance_finalize( GObject *object )
 
 /*
  * fma_io_provider_find_writable_io_provider:
- * @pivot: the #NAPivot instance.
+ * @pivot: the #FMAPivot instance.
  *
  * Returns: the first willing and able to write I/O provider, or NULL.
  *
@@ -317,7 +317,7 @@ instance_finalize( GObject *object )
  * be released by the caller.
  */
 FMAIOProvider *
-fma_io_provider_find_writable_io_provider( const NAPivot *pivot )
+fma_io_provider_find_writable_io_provider( const FMAPivot *pivot )
 {
 	const GList *providers;
 	const GList *ip;
@@ -337,7 +337,7 @@ fma_io_provider_find_writable_io_provider( const NAPivot *pivot )
 
 /*
  * fma_io_provider_find_io_provider_by_id:
- * @pivot: the #NAPivot instance.
+ * @pivot: the #FMAPivot instance.
  * @id: the identifier of the searched I/O provider.
  *
  * Returns: the I/O provider, or NULL.
@@ -346,7 +346,7 @@ fma_io_provider_find_writable_io_provider( const NAPivot *pivot )
  * be released by the caller.
  */
 FMAIOProvider *
-fma_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
+fma_io_provider_find_io_provider_by_id( const FMAPivot *pivot, const gchar *id )
 {
 	const GList *providers;
 	const GList *ip;
@@ -368,7 +368,7 @@ fma_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
 
 /*
  * fma_io_provider_get_io_providers_list:
- * @pivot: the current #NAPivot instance.
+ * @pivot: the current #FMAPivot instance.
  *
  * Build (if not already done) the write-ordered list of currently
  * available FMAIOProvider objects.
@@ -389,9 +389,9 @@ fma_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
  * released by the caller.
  */
 const GList *
-fma_io_provider_get_io_providers_list( const NAPivot *pivot )
+fma_io_provider_get_io_providers_list( const FMAPivot *pivot )
 {
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 
 	if( !st_io_providers ){
 		st_io_providers = io_providers_list_add_from_write_order( pivot, NULL );
@@ -407,7 +407,7 @@ fma_io_provider_get_io_providers_list( const NAPivot *pivot )
  * without having any pointer to the underlying FMAIIOProvider (if it exists)
  */
 static GList *
-io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list )
+io_providers_list_add_from_write_order( const FMAPivot *pivot, GList *objects_list )
 {
 	GList *merged;
 	GSList *io_providers, *it;
@@ -431,7 +431,7 @@ io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_lis
  * to implement the FMAIIOProvider interface
  */
 static GList *
-io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
+io_providers_list_add_from_plugins( const FMAPivot *pivot, GList *objects_list )
 {
 	static const gchar *thisfn = "fma_io_provider_io_providers_list_add_from_plugins";
 	GList *merged;
@@ -440,7 +440,7 @@ io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
 	FMAIIOProvider *provider_module;
 
 	merged = objects_list;
-	modules_list = na_pivot_get_providers( pivot, FMA_TYPE_IIO_PROVIDER );
+	modules_list = fma_pivot_get_providers( pivot, FMA_TYPE_IIO_PROVIDER );
 
 	for( im = modules_list ; im ; im = im->next ){
 
@@ -464,7 +464,7 @@ io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
 		}
 	}
 
-	na_pivot_free_providers( modules_list );
+	fma_pivot_free_providers( modules_list );
 
 	return( merged );
 }
@@ -476,7 +476,7 @@ io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
  * preferences come from the io-providers status.
  */
 static GList *
-io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list )
+io_providers_list_add_from_prefs( const FMAPivot *pivot, GList *objects_list )
 {
 	GList *merged;
 	const gchar *id;
@@ -543,7 +543,7 @@ io_providers_get_from_prefs( void )
  * if it does not have been already registered
  */
 static GList *
-io_providers_list_append_object( const NAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id )
+io_providers_list_append_object( const FMAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id )
 {
 	GList *merged;
 	FMAIOProvider *object;
@@ -584,7 +584,7 @@ peek_provider_by_id( const GList *providers, const gchar *id )
  * module may be NULL
  */
 static FMAIOProvider *
-io_provider_new( const NAPivot *pivot, FMAIIOProvider *module, const gchar *id )
+io_provider_new( const FMAPivot *pivot, FMAIIOProvider *module, const gchar *id )
 {
 	FMAIOProvider *object;
 
@@ -601,17 +601,17 @@ io_provider_new( const NAPivot *pivot, FMAIIOProvider *module, const gchar *id )
 
 /*
  * when a IIOProvider plugin is associated with the FMAIOProvider object,
- * we connect the NAPivot callback to the 'item-changed' signal
+ * we connect the FMAPivot callback to the 'item-changed' signal
  */
 static void
-io_providers_list_set_module( const NAPivot *pivot, FMAIOProvider *provider_object, FMAIIOProvider *provider_module )
+io_providers_list_set_module( const FMAPivot *pivot, FMAIOProvider *provider_object, FMAIIOProvider *provider_module )
 {
 	provider_object->private->provider = g_object_ref( provider_module );
 
 	provider_object->private->item_changed_handler =
 			g_signal_connect(
 					provider_module, IO_PROVIDER_SIGNAL_ITEM_CHANGED,
-					( GCallback ) na_pivot_on_item_changed_handler, ( gpointer ) pivot );
+					( GCallback ) fma_pivot_on_item_changed_handler, ( gpointer ) pivot );
 
 	provider_object->private->writable =
 			is_finally_writable( provider_object, pivot, &provider_object->private->reason );
@@ -626,7 +626,7 @@ io_providers_list_set_module( const NAPivot *pivot, FMAIOProvider *provider_obje
 /*
  * fma_io_provider_unref_io_providers_list:
  *
- * Called by on #NAPivot dispose(), free here resources allocated to
+ * Called by on #FMAPivot dispose(), free here resources allocated to
  * the I/O providers.
  */
 void
@@ -730,7 +730,7 @@ fma_io_provider_is_available( const FMAIOProvider *provider )
 /*
  * fma_io_provider_is_conf_readable:
  * @provider: this #FMAIOProvider.
- * @pivot: the #NAPivot application object.
+ * @pivot: the #FMAPivot application object.
  * @mandatory: a pointer to a boolean which will be set to %TRUE if the
  *  preference is mandatory; may be %NULL.
  *
@@ -744,13 +744,13 @@ fma_io_provider_is_available( const FMAIOProvider *provider )
  * - whether this flag has been set as mandatory by an admin.
  */
 gboolean
-fma_io_provider_is_conf_readable( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
+fma_io_provider_is_conf_readable( const FMAIOProvider *provider, const FMAPivot *pivot, gboolean *mandatory )
 {
 	gboolean readable;
 	gchar *group;
 
 	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), FALSE );
 
 	readable = FALSE;
 
@@ -767,7 +767,7 @@ fma_io_provider_is_conf_readable( const FMAIOProvider *provider, const NAPivot *
 /*
  * fma_io_provider_is_conf_writable:
  * @provider: this #FMAIOProvider.
- * @pivot: the #NAPivot application object.
+ * @pivot: the #FMAPivot application object.
  * @mandatory: a pointer to a boolean which will be set to %TRUE if the
  *  preference is mandatory; may be %NULL.
  *
@@ -783,12 +783,12 @@ fma_io_provider_is_conf_readable( const FMAIOProvider *provider, const NAPivot *
  * FMAIIOProvider module. See also is_willing_to() and is_able_to().
  */
 gboolean
-fma_io_provider_is_conf_writable( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
+fma_io_provider_is_conf_writable( const FMAIOProvider *provider, const FMAPivot *pivot, gboolean *mandatory )
 {
 	gboolean is_writable;
 
 	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), FALSE );
 
 	is_writable = FALSE;
 
@@ -832,10 +832,10 @@ fma_io_provider_is_finally_writable( const FMAIOProvider *provider, guint *reaso
 
 /*
  * fma_io_provider_load_items:
- * @pivot: the #NAPivot object which owns the list of registered I/O
+ * @pivot: the #FMAPivot object which owns the list of registered I/O
  *  storage providers.
  * @loadable_set: the set of loadable items
- *  (cf. NAPivotLoadableSet enumeration defined in core/na-pivot.h).
+ *  (cf. FMAPivotLoadableSet enumeration defined in core/fma-pivot.h).
  * @messages: error messages.
  *
  * Loads the tree from I/O storage subsystems.
@@ -847,14 +847,14 @@ fma_io_provider_is_finally_writable( const FMAIOProvider *provider, guint *reaso
  * The returned list should be fma_object_free_items().
  */
 GList *
-fma_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **messages )
+fma_io_provider_load_items( const FMAPivot *pivot, guint loadable_set, GSList **messages )
 {
 	static const gchar *thisfn = "fma_io_provider_load_items";
 	GList *flat, *hierarchy, *filtered;
 	GSList *level_zero;
 	guint order_mode;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 
 	g_debug( "%s: pivot=%p, loadable_set=%d, messages=%p",
 			thisfn, ( void * ) pivot, loadable_set, ( void * ) messages );
@@ -942,7 +942,7 @@ dump_providers_list( GList *providers )
 #endif
 
 static gboolean
-is_conf_writable( const FMAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
+is_conf_writable( const FMAIOProvider *provider, const FMAPivot *pivot, gboolean *mandatory )
 {
 	gchar *group;
 	gboolean is_writable;
@@ -959,7 +959,7 @@ is_conf_writable( const FMAIOProvider *provider, const NAPivot *pivot, gboolean 
  * This same status may later be reevaluated on demand.
  */
 static gboolean
-is_finally_writable( const FMAIOProvider *provider, const NAPivot *pivot, guint *reason )
+is_finally_writable( const FMAIOProvider *provider, const FMAPivot *pivot, guint *reason )
 {
 	static const gchar *thisfn = "fma_io_provider_is_finally_writable";
 	gboolean writable;
@@ -1019,7 +1019,7 @@ is_finally_writable( const FMAIOProvider *provider, const NAPivot *pivot, guint 
 }
 
 static GList *
-load_items_filter_unwanted_items( const NAPivot *pivot, GList *hierarchy, guint loadable_set )
+load_items_filter_unwanted_items( const FMAPivot *pivot, GList *hierarchy, guint loadable_set )
 {
 	GList *it;
 	GList *filtered;
@@ -1101,7 +1101,7 @@ load_items_filter_unwanted_items_rec( GList *hierarchy, guint loadable_set )
  * - items (actions or menus) which do not satisfy the defined loadable set
  */
 static GList *
-load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **messages )
+load_items_get_merged_list( const FMAPivot *pivot, guint loadable_set, GSList **messages )
 {
 	const GList *providers;
 	const GList *ip;
@@ -1190,7 +1190,7 @@ load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_e
 }
 
 static GList *
-load_items_hierarchy_sort( const NAPivot *pivot, GList *tree, GCompareFunc fn )
+load_items_hierarchy_sort( const FMAPivot *pivot, GList *tree, GCompareFunc fn )
 {
 	GList *sorted;
 	GList *items, *it;
@@ -1238,7 +1238,7 @@ peek_item_by_id_compare( const FMAObject *obj, const gchar *id )
  *
  * Returns: the FMAIIOProvider return code.
  *
- * #NAPivot class, which should be the only caller of this function,
+ * #FMAPivot class, which should be the only caller of this function,
  * has already check that this item is writable, i.e. that all conditions
  * are met to be able to successfully write the item down to the
  * storage subsystem.

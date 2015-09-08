@@ -1037,7 +1037,7 @@ check_level_zero_status( NactTreeIEditable *instance )
 	gchar *pivot_str, *view_str;
 
 	ied = get_instance_data( instance );
-	items = na_pivot_get_items( NA_PIVOT( ied->updater ));
+	items = fma_pivot_get_items( FMA_PIVOT( ied->updater ));
 	pivot_str = get_items_id_list_str( items );
 
 	items = nact_tree_view_get_items( NACT_TREE_VIEW( instance ));

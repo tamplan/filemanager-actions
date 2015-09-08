@@ -36,7 +36,7 @@
 
 #include <api/fma-core-utils.h>
 
-#include <core/na-pivot.h>
+#include <core/fma-pivot.h>
 #include <core/fma-importer.h>
 
 static gchar     *uri     = "";
@@ -74,9 +74,9 @@ main( int argc, char **argv )
 	GOptionContext *context = init_options();
 	check_options( argc, argv, context );
 
-	NAPivot *pivot = na_pivot_new();
-	na_pivot_set_loadable( pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
-	na_pivot_load_items( pivot );
+	FMAPivot *pivot = fma_pivot_new();
+	fma_pivot_set_loadable( pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
+	fma_pivot_load_items( pivot );
 
 	parms.uris = g_slist_prepend( NULL, uri );
 	parms.check_fn = NULL;

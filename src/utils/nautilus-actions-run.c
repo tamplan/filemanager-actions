@@ -42,7 +42,7 @@
 #include <api/fma-dbus.h>
 
 #include <core/fma-gconf-migration.h>
-#include <core/na-pivot.h>
+#include <core/fma-pivot.h>
 #include <core/na-selected-info.h>
 #include <core/na-tokens.h>
 
@@ -101,7 +101,7 @@ main( int argc, char** argv )
 
 	/* pwi 2011-01-05
 	 * run GConf migration tools before doing anything else
-	 * above all before allocating a new NAPivot
+	 * above all before allocating a new FMAPivot
 	 */
 	fma_gconf_migration_run();
 
@@ -221,16 +221,16 @@ init_options( void )
 static FMAObjectAction *
 get_action( const gchar *id )
 {
-	NAPivot *pivot;
+	FMAPivot *pivot;
 	FMAObjectAction *action;
 
 	action = NULL;
 
-	pivot = na_pivot_new();
-	na_pivot_set_loadable( pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
-	na_pivot_load_items( pivot );
+	pivot = fma_pivot_new();
+	fma_pivot_set_loadable( pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
+	fma_pivot_load_items( pivot );
 
-	action = ( FMAObjectAction * ) na_pivot_get_item( pivot, id );
+	action = ( FMAObjectAction * ) fma_pivot_get_item( pivot, id );
 
 	if( !action ){
 		g_printerr( _( "Error: action '%s' doesn't exist.\n" ), id );

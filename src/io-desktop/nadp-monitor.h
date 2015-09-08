@@ -43,7 +43,7 @@
  * file monitor would be triggered without the parent directory monitor
  * has been itself triggered. We, so only monitor directories (not files).
  * More, as several events may be triggered for one user modification,
- * we try to factorize all monitor events before advertizing NAPivot.
+ * we try to factorize all monitor events before advertizing FMAPivot.
  */
 
 #include "nadp-desktop-provider.h"

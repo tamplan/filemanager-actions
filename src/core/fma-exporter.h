@@ -39,29 +39,29 @@
 #include <api/fma-object-api.h>
 
 #include "fma-ioption.h"
-#include "na-pivot.h"
+#include "fma-pivot.h"
 
 G_BEGIN_DECLS
 
 #define EXPORTER_FORMAT_ASK				"Ask"
 #define EXPORTER_FORMAT_NOEXPORT		"NoExport"
 
-GList        *fma_exporter_get_formats    ( const NAPivot *pivot );
+GList        *fma_exporter_get_formats    ( const FMAPivot *pivot );
 void          fma_exporter_free_formats   ( GList *formats );
 FMAIOption   *fma_exporter_get_ask_option ( void );
 
-gchar        *fma_exporter_to_buffer      ( const NAPivot *pivot,
+gchar        *fma_exporter_to_buffer      ( const FMAPivot *pivot,
                                             const FMAObjectItem *item,
                                             const gchar *format,
                                             GSList **messages );
 
-gchar        *fma_exporter_to_file        ( const NAPivot *pivot,
+gchar        *fma_exporter_to_file        ( const FMAPivot *pivot,
                                             const FMAObjectItem *item,
                                             const gchar *folder_uri,
                                             const gchar *format,
                                             GSList **messages );
 
-FMAIExporter *fma_exporter_find_for_format( const NAPivot *pivot,
+FMAIExporter *fma_exporter_find_for_format( const FMAPivot *pivot,
 		                                    const gchar *format );
 
 G_END_DECLS

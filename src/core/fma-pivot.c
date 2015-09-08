@@ -38,17 +38,17 @@
 
 #include "fma-io-provider.h"
 #include "fma-module.h"
-#include "na-pivot.h"
+#include "fma-pivot.h"
 
 /* private class data
  */
-struct _NAPivotClassPrivate {
+struct _FMAPivotClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAPivotPrivate {
+struct _FMAPivotPrivate {
 	gboolean    dispose_has_run;
 
 	guint       loadable_set;
@@ -66,7 +66,7 @@ struct _NAPivotPrivate {
 	FMATimeout   change_timeout;
 };
 
-/* NAPivot properties
+/* FMAPivot properties
  */
 enum {
 	PRIVOT_PROP_0,
@@ -90,7 +90,7 @@ static gint          st_burst_timeout          = 100;		/* burst timeout in msec 
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType         register_type( void );
-static void          class_init( NAPivotClass *klass );
+static void          class_init( FMAPivotClass *klass );
 static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_constructed( GObject *object );
 static void          instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
@@ -98,13 +98,13 @@ static void          instance_set_property( GObject *object, guint property_id, 
 static void          instance_dispose( GObject *object );
 static void          instance_finalize( GObject *object );
 
-static FMAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id );
+static FMAObjectItem *get_item_from_tree( const FMAPivot *pivot, GList *tree, const gchar *id );
 
 /* FMAIIOProvider management */
-static void          on_items_changed_timeout( NAPivot *pivot );
+static void          on_items_changed_timeout( FMAPivot *pivot );
 
 GType
-na_pivot_get_type( void )
+fma_pivot_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -118,32 +118,32 @@ na_pivot_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_pivot_register_type";
+	static const gchar *thisfn = "fma_pivot_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAPivotClass ),
+		sizeof( FMAPivotClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAPivot ),
+		sizeof( FMAPivot ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NAPivot", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMAPivot", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAPivotClass *klass )
+class_init( FMAPivotClass *klass )
 {
-	static const gchar *thisfn = "na_pivot_class_init";
+	static const gchar *thisfn = "fma_pivot_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -172,19 +172,19 @@ class_init( NAPivotClass *klass )
 					"Hierarchical tree of items",
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	klass->private = g_new0( NAPivotClassPrivate, 1 );
+	klass->private = g_new0( FMAPivotClassPrivate, 1 );
 
 	/*
-	 * NAPivot::pivot-items-changed:
+	 * FMAPivot::pivot-items-changed:
 	 *
-	 * This signal is sent by NAPivot at the end of a burst of modifications
+	 * This signal is sent by FMAPivot at the end of a burst of modifications
 	 * as signaled by i/o providers.
 	 *
 	 * The signal is registered without any default handler.
 	 */
 	st_signals[ ITEMS_CHANGED ] = g_signal_new(
 				PIVOT_SIGNAL_ITEMS_CHANGED,
-				NA_TYPE_PIVOT,
+				FMA_TYPE_PIVOT,
 				G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 				0,									/* class offset */
 				NULL,								/* accumulator */
@@ -197,17 +197,17 @@ class_init( NAPivotClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_pivot_instance_init";
-	NAPivot *self;
+	static const gchar *thisfn = "fma_pivot_instance_init";
+	FMAPivot *self;
 
-	g_return_if_fail( NA_IS_PIVOT( instance ));
+	g_return_if_fail( FMA_IS_PIVOT( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NA_PIVOT( instance );
+	self = FMA_PIVOT( instance );
 
-	self->private = g_new0( NAPivotPrivate, 1 );
+	self->private = g_new0( FMAPivotPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->loadable_set = PIVOT_LOAD_NONE;
@@ -225,12 +225,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *object )
 {
-	static const gchar *thisfn = "na_pivot_instance_constructed";
-	NAPivotPrivate *priv;
+	static const gchar *thisfn = "fma_pivot_instance_constructed";
+	FMAPivotPrivate *priv;
 
-	g_return_if_fail( NA_IS_PIVOT( object ));
+	g_return_if_fail( FMA_IS_PIVOT( object ));
 
-	priv = NA_PIVOT( object )->private;
+	priv = FMA_PIVOT( object )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -253,10 +253,10 @@ instance_constructed( GObject *object )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	NAPivot *self;
+	FMAPivot *self;
 
-	g_return_if_fail( NA_IS_PIVOT( object ));
-	self = NA_PIVOT( object );
+	g_return_if_fail( FMA_IS_PIVOT( object ));
+	self = FMA_PIVOT( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -279,10 +279,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	NAPivot *self;
+	FMAPivot *self;
 
-	g_return_if_fail( NA_IS_PIVOT( object ));
-	self = NA_PIVOT( object );
+	g_return_if_fail( FMA_IS_PIVOT( object ));
+	self = FMA_PIVOT( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -305,12 +305,12 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_pivot_instance_dispose";
-	NAPivot *self;
+	static const gchar *thisfn = "fma_pivot_instance_dispose";
+	FMAPivot *self;
 
-	g_return_if_fail( NA_IS_PIVOT( object ));
+	g_return_if_fail( FMA_IS_PIVOT( object ));
 
-	self = NA_PIVOT( object );
+	self = FMA_PIVOT( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -344,14 +344,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_pivot_instance_finalize";
-	NAPivot *self;
+	static const gchar *thisfn = "fma_pivot_instance_finalize";
+	FMAPivot *self;
 
-	g_return_if_fail( NA_IS_PIVOT( object ));
+	g_return_if_fail( FMA_IS_PIVOT( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NA_PIVOT( object );
+	self = FMA_PIVOT( object );
 
 	g_free( self->private );
 
@@ -362,7 +362,7 @@ instance_finalize( GObject *object )
 }
 
 /*
- * na_pivot_new:
+ * fma_pivot_new:
  *
  * This object takes care of all items/actions/menus/providers/settings
  * management which is required to correctly handle file manager context
@@ -373,38 +373,38 @@ instance_finalize( GObject *object )
  * - initializing the preferences monitoring.
  *
  * Actual loading of items from i/o providers is delayed until a call
- * to call to na_pivot_load_items() function, so that the caller is able
- * to set its own needed #NAPivot properties (e.g. the loadable set of
+ * to call to fma_pivot_load_items() function, so that the caller is able
+ * to set its own needed #FMAPivot properties (e.g. the loadable set of
  * items).
  *
- * Only one #NAPivot object should be instantiated for a running application.
+ * Only one #FMAPivot object should be instantiated for a running application.
  *
- * Returns: a newly allocated #NAPivot object which should be g_object_unref()
+ * Returns: a newly allocated #FMAPivot object which should be g_object_unref()
  * by the caller at the end of the application.
  */
-NAPivot *
-na_pivot_new( void )
+FMAPivot *
+fma_pivot_new( void )
 {
-	static const gchar *thisfn = "na_pivot_new";
-	NAPivot *pivot;
+	static const gchar *thisfn = "fma_pivot_new";
+	FMAPivot *pivot;
 
 	g_debug( "%s", thisfn );
 
-	pivot = g_object_new( NA_TYPE_PIVOT, NULL );
+	pivot = g_object_new( FMA_TYPE_PIVOT, NULL );
 
 	return( pivot );
 }
 
 /*
- * na_pivot_dump:
- * @pivot: the #NAPivot object do be dumped.
+ * fma_pivot_dump:
+ * @pivot: the #FMAPivot object do be dumped.
  *
- * Dumps the content of a #NAPivot object.
+ * Dumps the content of a #FMAPivot object.
  */
 void
-na_pivot_dump( const NAPivot *pivot )
+fma_pivot_dump( const FMAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_dump";
+	static const gchar *thisfn = "fma_pivot_dump";
 	GList *it;
 	int i;
 
@@ -422,8 +422,8 @@ na_pivot_dump( const NAPivot *pivot )
 }
 
 /*
- * na_pivot_get_providers:
- * @pivot: this #NAPivot instance.
+ * fma_pivot_get_providers:
+ * @pivot: this #FMAPivot instance.
  * @type: the type of searched interface.
  * For now, we only have FMA_TYPE_IIO_PROVIDER interfaces.
  *
@@ -432,15 +432,15 @@ na_pivot_dump( const NAPivot *pivot )
  * This function is called by interfaces API in order to find the
  * list of providers registered for their own given interface.
  *
- * The returned list should be release by calling na_pivot_free_providers().
+ * The returned list should be release by calling fma_pivot_free_providers().
  */
 GList *
-na_pivot_get_providers( const NAPivot *pivot, GType type )
+fma_pivot_get_providers( const FMAPivot *pivot, GType type )
 {
-	static const gchar *thisfn = "na_pivot_get_providers";
+	static const gchar *thisfn = "fma_pivot_get_providers";
 	GList *list = NULL;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 
 	if( !pivot->private->dispose_has_run ){
 
@@ -454,15 +454,15 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 }
 
 /*
- * na_pivot_free_providers:
+ * fma_pivot_free_providers:
  * @providers: a list of providers.
  *
- * Frees a list of providers as returned from na_pivot_get_providers().
+ * Frees a list of providers as returned from fma_pivot_get_providers().
  */
 void
-na_pivot_free_providers( GList *providers )
+fma_pivot_free_providers( GList *providers )
 {
-	static const gchar *thisfn = "na_pivot_free_providers";
+	static const gchar *thisfn = "fma_pivot_free_providers";
 
 	g_debug( "%s: providers=%p", thisfn, ( void * ) providers );
 
@@ -470,8 +470,8 @@ na_pivot_free_providers( GList *providers )
 }
 
 /*
- * na_pivot_get_item:
- * @pivot: this #NAPivot instance.
+ * fma_pivot_get_item:
+ * @pivot: this #FMAPivot instance.
  * @id: the required item identifier.
  *
  * Returns the specified item, action or menu.
@@ -479,15 +479,15 @@ na_pivot_free_providers( GList *providers )
  * Returns: the required #FMAObjectItem-derived object, or %NULL if not
  * found.
  *
- * The returned pointer is owned by #NAPivot, and should not be
+ * The returned pointer is owned by #FMAPivot, and should not be
  * g_free() nor g_object_unref() by the caller.
  */
 FMAObjectItem *
-na_pivot_get_item( const NAPivot *pivot, const gchar *id )
+fma_pivot_get_item( const FMAPivot *pivot, const gchar *id )
 {
 	FMAObjectItem *object = NULL;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 
 	if( !pivot->private->dispose_has_run ){
 
@@ -502,7 +502,7 @@ na_pivot_get_item( const NAPivot *pivot, const gchar *id )
 }
 
 static FMAObjectItem *
-get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id )
+get_item_from_tree( const FMAPivot *pivot, GList *tree, const gchar *id )
 {
 	GList *subitems, *ia;
 	FMAObjectItem *found = NULL;
@@ -525,20 +525,20 @@ get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id )
 }
 
 /*
- * na_pivot_get_items:
- * @pivot: this #NAPivot instance.
+ * fma_pivot_get_items:
+ * @pivot: this #FMAPivot instance.
  *
  * Returns: the current configuration tree.
  *
- * The returned list is owned by this #NAPivot object, and should not
+ * The returned list is owned by this #FMAPivot object, and should not
  * be g_free(), nor g_object_unref() by the caller.
  */
 GList *
-na_pivot_get_items( const NAPivot *pivot )
+fma_pivot_get_items( const FMAPivot *pivot )
 {
 	GList *tree;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 
 	tree = NULL;
 
@@ -551,18 +551,18 @@ na_pivot_get_items( const NAPivot *pivot )
 }
 
 /*
- * na_pivot_load_items:
- * @pivot: this #NAPivot instance.
+ * fma_pivot_load_items:
+ * @pivot: this #FMAPivot instance.
  *
  * Loads the hierarchical list of items from I/O providers.
  */
 void
-na_pivot_load_items( NAPivot *pivot )
+fma_pivot_load_items( FMAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_load_items";
+	static const gchar *thisfn = "fma_pivot_load_items";
 	GSList *messages, *im;
 
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( FMA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
 
@@ -581,19 +581,19 @@ na_pivot_load_items( NAPivot *pivot )
 }
 
 /*
- * na_pivot_set_new_items:
- * @pivot: this #NAPivot instance.
+ * fma_pivot_set_new_items:
+ * @pivot: this #FMAPivot instance.
  * @tree: the new tree of items.
  *
  * Replace the current list with this one, acquiring the full ownership
  * of the provided @tree.
  */
 void
-na_pivot_set_new_items( NAPivot *pivot, GList *items )
+fma_pivot_set_new_items( FMAPivot *pivot, GList *items )
 {
-	static const gchar *thisfn = "na_pivot_set_new_items";
+	static const gchar *thisfn = "fma_pivot_set_new_items";
 
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( FMA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
 
@@ -606,9 +606,9 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
 }
 
 /*
- * na_pivot_on_item_changed_handler:
+ * fma_pivot_on_item_changed_handler:
  * @provider: the #FMAIIOProvider which has emitted the signal.
- * @pivot: this #NAPivot instance.
+ * @pivot: this #FMAPivot instance.
  *
  * This handler is trigerred by #FMAIIOProvider providers when an action
  * is changed in their underlying storage subsystems.
@@ -621,12 +621,12 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
  * serie, and then signal our consumers.
  */
 void
-na_pivot_on_item_changed_handler( FMAIIOProvider *provider, NAPivot *pivot  )
+fma_pivot_on_item_changed_handler( FMAIIOProvider *provider, FMAPivot *pivot  )
 {
-	static const gchar *thisfn = "na_pivot_on_item_changed_handler";
+	static const gchar *thisfn = "fma_pivot_on_item_changed_handler";
 
 	g_return_if_fail( FMA_IS_IIO_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( FMA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
 		g_debug( "%s: provider=%p, pivot=%p", thisfn, ( void * ) provider, ( void * ) pivot );
@@ -639,30 +639,30 @@ na_pivot_on_item_changed_handler( FMAIIOProvider *provider, NAPivot *pivot  )
  * this callback is triggered after having received a first 'item-changed' event,
  * and having received no more event during a 'st_burst_timeout' period; we can
  * so suppose that the burst if modification events is terminated
- * this is up to NAPivot to send now its summarized signal
+ * this is up to FMAPivot to send now its summarized signal
  */
 static void
-on_items_changed_timeout( NAPivot *pivot )
+on_items_changed_timeout( FMAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_on_items_changed_timeout";
+	static const gchar *thisfn = "fma_pivot_on_items_changed_timeout";
 
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( FMA_IS_PIVOT( pivot ));
 
 	g_debug( "%s: emitting %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
 	g_signal_emit_by_name(( gpointer ) pivot, PIVOT_SIGNAL_ITEMS_CHANGED );
 }
 
 /*
- * na_pivot_set_loadable:
- * @pivot: this #NAPivot instance.
+ * fma_pivot_set_loadable:
+ * @pivot: this #FMAPivot instance.
  * @loadable: the population of items to be loaded.
  *
  * Sets the loadable set.
  */
 void
-na_pivot_set_loadable( NAPivot *pivot, guint loadable )
+fma_pivot_set_loadable( FMAPivot *pivot, guint loadable )
 {
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( FMA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
 

@@ -239,14 +239,14 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	providers = fma_io_provider_get_io_providers_list( NA_PIVOT( updater ));
+	providers = fma_io_provider_get_io_providers_list( FMA_PIVOT( updater ));
 
 	for( iter = providers ; iter ; iter = iter->next ){
 		provider = FMA_IO_PROVIDER( iter->data );
 		id = fma_io_provider_get_id( provider );
 		libelle = fma_io_provider_get_name( provider );
-		readable = fma_io_provider_is_conf_readable( provider, NA_PIVOT( updater ), &readable_mandatory );
-		writable = fma_io_provider_is_conf_writable( provider, NA_PIVOT( updater ), &writable_mandatory );
+		readable = fma_io_provider_is_conf_readable( provider, FMA_PIVOT( updater ), &readable_mandatory );
+		writable = fma_io_provider_is_conf_writable( provider, FMA_PIVOT( updater ), &writable_mandatory );
 
 		g_debug( "%s: id=%s, readable=%s (mandatory=%s), writable=%s (mandatory=%s)",
 				thisfn, id,

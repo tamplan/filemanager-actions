@@ -309,7 +309,7 @@ nact_menu_file_save_items( NactMainWindow *window )
 		messages = NULL;
 	}
 
-	na_pivot_set_new_items( NA_PIVOT( sdata->updater ), g_list_reverse( new_pivot ));
+	fma_pivot_set_new_items( FMA_PIVOT( sdata->updater ), g_list_reverse( new_pivot ));
 	fma_object_free_items( items );
 	nact_main_window_block_reload( window );
 	g_signal_emit_by_name( items_view, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, FALSE );

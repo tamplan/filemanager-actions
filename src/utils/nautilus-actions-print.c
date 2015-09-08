@@ -71,7 +71,7 @@ static GOptionEntry misc_entries[] = {
 	{ NULL }
 };
 
-static NAPivot *pivot = NULL;
+static FMAPivot *pivot = NULL;
 
 static GOptionContext  *init_options( void );
 static FMAObjectItem    *get_item( const gchar *id );
@@ -196,11 +196,11 @@ get_item( const gchar *id )
 {
 	FMAObjectItem *item = NULL;
 
-	pivot = na_pivot_new();
-	na_pivot_set_loadable( pivot, PIVOT_LOAD_ALL );
-	na_pivot_load_items( pivot );
+	pivot = fma_pivot_new();
+	fma_pivot_set_loadable( pivot, PIVOT_LOAD_ALL );
+	fma_pivot_load_items( pivot );
 
-	item = na_pivot_get_item( pivot, id );
+	item = fma_pivot_get_item( pivot, id );
 
 	if( !item ){
 		g_printerr( _( "Error: item '%s' doesn't exist.\n" ), id );

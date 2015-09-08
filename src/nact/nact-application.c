@@ -417,11 +417,11 @@ application_startup( GApplication *application )
 		G_APPLICATION_CLASS( st_parent_class )->startup( application );
 	}
 
-	/* create the NAPivot object (loading the plugins and so on)
+	/* create the FMAPivot object (loading the plugins and so on)
 	 * after having dealt with command-line arguments
 	 */
 	priv->updater = na_updater_new();
-	na_pivot_set_loadable( NA_PIVOT( priv->updater ), PIVOT_LOAD_ALL );
+	fma_pivot_set_loadable( FMA_PIVOT( priv->updater ), PIVOT_LOAD_ALL );
 
 	/* define the application menu */
 	nact_menu_app( NACT_APPLICATION( application ));

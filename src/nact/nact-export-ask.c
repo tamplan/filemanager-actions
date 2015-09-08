@@ -165,7 +165,7 @@ ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
-	formats = fma_exporter_get_formats( NA_PIVOT( updater ));
+	formats = fma_exporter_get_formats( FMA_PIVOT( updater ));
 
 	return( formats );
 }

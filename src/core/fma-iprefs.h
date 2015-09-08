@@ -39,7 +39,7 @@
  * preferences.
  */
 
-#include "na-pivot.h"
+#include "fma-pivot.h"
 
 G_BEGIN_DECLS
 

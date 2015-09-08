@@ -111,8 +111,8 @@ libna_core_la_SOURCES = \
 	fma-object-profile-factory.c							\
 	fma-object-menu.c									\
 	fma-object-menu-factory.c							\
-	na-pivot.c											\
-	na-pivot.h											\
+	fma-pivot.c											\
+	fma-pivot.h											\
 	na-selected-info.c									\
 	na-selected-info.h									\
 	na-settings.c										\

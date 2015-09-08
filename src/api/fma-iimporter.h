@@ -197,7 +197,7 @@ typedef struct {
  *     </para>
  *   </listitem>
  * </itemizedlist>
- * Items which may have been loaded by NAPivot at the start of the
+ * Items which may have been loaded by FMAPivot at the start of the
  * application, and deleted meanwhile, are just ignored.
  *
  * Returns: the already existing #FMAObjectItem with same id, or %NULL.

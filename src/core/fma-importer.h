@@ -61,7 +61,7 @@
 #include <api/fma-object-item.h>
 
 #include "fma-ioption.h"
-#include "na-pivot.h"
+#include "fma-pivot.h"
 
 G_BEGIN_DECLS
 
@@ -141,7 +141,7 @@ typedef struct {
 }
 	FMAImporterResult;
 
-GList      *fma_importer_import_from_uris( const NAPivot *pivot, FMAImporterParms *parms );
+GList      *fma_importer_import_from_uris( const FMAPivot *pivot, FMAImporterParms *parms );
 
 void        fma_importer_free_result     ( FMAImporterResult *result );
 

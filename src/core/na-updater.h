@@ -34,11 +34,11 @@
  * @short_description: The #NAUpdater Class Definition
  * @include: core/na-updater.h
  *
- * #NAUpdater is a #NAPivot-derived class which allows its clients
+ * #NAUpdater is a #FMAPivot-derived class which allows its clients
  * to update actions and menus.
  */
 
-#include "na-pivot.h"
+#include "fma-pivot.h"
 
 G_BEGIN_DECLS
 
@@ -53,7 +53,7 @@ typedef struct _NAUpdaterPrivate       NAUpdaterPrivate;
 
 typedef struct {
 	/*< private >*/
-	NAPivot           parent;
+	FMAPivot           parent;
 	NAUpdaterPrivate *private;
 }
 	NAUpdater;
@@ -62,7 +62,7 @@ typedef struct _NAUpdaterClassPrivate  NAUpdaterClassPrivate;
 
 typedef struct {
 	/*< private >*/
-	NAPivotClass           parent;
+	FMAPivotClass           parent;
 	NAUpdaterClassPrivate *private;
 }
 	NAUpdaterClass;

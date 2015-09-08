@@ -326,7 +326,7 @@ nact_menu_win( NactMainWindow *main_window )
 	sdata->updater = nact_application_get_updater( NACT_APPLICATION( application ));
 	sdata->is_level_zero_writable = na_updater_is_level_zero_writable( sdata->updater );
 	sdata->has_writable_providers =
-			( fma_io_provider_find_writable_io_provider( NA_PIVOT( sdata->updater )) != NULL );
+			( fma_io_provider_find_writable_io_provider( FMA_PIVOT( sdata->updater )) != NULL );
 
 	g_debug( "%s: na_updater_is_level_zero_writable=%s, fma_io_provider_find_writable_io_provider=%s",
 			thisfn,

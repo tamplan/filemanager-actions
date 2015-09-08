@@ -40,7 +40,7 @@
 #include "core/fma-about.h"
 #include "core/fma-gtk-utils.h"
 #include "core/fma-iprefs.h"
-#include "core/na-pivot.h"
+#include "core/fma-pivot.h"
 
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
@@ -1112,7 +1112,7 @@ setup_writability_status( NactMainWindow *window )
 }
 
 /*
- * The handler of the signal sent by NAPivot when items have been modified
+ * The handler of the signal sent by FMAPivot when items have been modified
  * in the underlying storage subsystems
  */
 static void

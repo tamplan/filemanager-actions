@@ -627,11 +627,11 @@ export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *des
 
 		if( strcmp( format, EXPORTER_FORMAT_NOEXPORT ) != 0 ){
 			if( dest_folder ){
-				fname = fma_exporter_to_file( NA_PIVOT( updater ), item, dest_folder, format, &msgs );
+				fname = fma_exporter_to_file( FMA_PIVOT( updater ), item, dest_folder, format, &msgs );
 				g_free( fname );
 
 			} else {
-				buffer = fma_exporter_to_buffer( NA_PIVOT( updater ), item, format, &msgs );
+				buffer = fma_exporter_to_buffer( FMA_PIVOT( updater ), item, format, &msgs );
 				if( buffer && strlen( buffer )){
 					data = g_string_append( data, buffer );
 					g_free( buffer );

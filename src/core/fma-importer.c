@@ -89,7 +89,7 @@ static FMAImportModeStr st_import_ask_mode = {
 			"import-mode-ask.png"
 };
 
-static FMAImporterResult *import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri );
+static FMAImporterResult *import_from_uri( const FMAPivot *pivot, GList *modules, const gchar *uri );
 static void              manage_import_mode( FMAImporterParms *parms, GList *results, FMAImporterAskUserParms *ask_parms, FMAImporterResult *result );
 static FMAObjectItem     *is_importing_already_exists( FMAImporterParms *parms, GList *results, FMAImporterResult *result );
 static void              renumber_label_item( FMAObjectItem *item );
@@ -102,7 +102,7 @@ static FMAIOption        *get_mode_from_struct( const FMAImportModeStr *str );
 
 /*
  * fma_importer_import_from_uris:
- * @pivot: the #NAPivot pivot for this application.
+ * @pivot: the #FMAPivot pivot for this application.
  * @parms: a #FMAImporterParms structure.
  *
  * Imports a list of URIs.
@@ -126,7 +126,7 @@ static FMAIOption        *get_mode_from_struct( const FMAImportModeStr *str );
  * Since: 2.30
  */
 GList *
-fma_importer_import_from_uris( const NAPivot *pivot, FMAImporterParms *parms )
+fma_importer_import_from_uris( const FMAPivot *pivot, FMAImporterParms *parms )
 {
 	static const gchar *thisfn = "fma_importer_import_from_uris";
 	GList *results, *ires;
@@ -136,7 +136,7 @@ fma_importer_import_from_uris( const NAPivot *pivot, FMAImporterParms *parms )
 	FMAImporterAskUserParms ask_parms;
 	gchar *mode_str;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( FMA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( parms != NULL, NULL );
 
 	results = NULL;
@@ -145,14 +145,14 @@ fma_importer_import_from_uris( const NAPivot *pivot, FMAImporterParms *parms )
 
 	/* first phase: just try to import the uris into memory
 	 */
-	modules = na_pivot_get_providers( pivot, FMA_TYPE_IIMPORTER );
+	modules = fma_pivot_get_providers( pivot, FMA_TYPE_IIMPORTER );
 
 	for( uri = parms->uris ; uri ; uri = uri->next ){
 		import_result = import_from_uri( pivot, modules, ( const gchar * ) uri->data );
 		results = g_list_prepend( results, import_result );
 	}
 
-	na_pivot_free_providers( modules );
+	fma_pivot_free_providers( modules );
 
 	results = g_list_reverse( results );
 
@@ -213,7 +213,7 @@ fma_importer_free_result( FMAImporterResult *result )
  * imported the item.
  */
 static FMAImporterResult *
-import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
+import_from_uri( const FMAPivot *pivot, GList *modules, const gchar *uri )
 {
 	FMAImporterResult *result;
 	FMAIImporterImportFromUriParmsv2 provider_parms;
