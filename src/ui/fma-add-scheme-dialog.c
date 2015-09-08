@@ -38,7 +38,7 @@
 #include "core/fma-settings.h"
 
 #include "nact-schemes-list.h"
-#include "nact-add-scheme-dialog.h"
+#include "fma-add-scheme-dialog.h"
 #include "nact-main-window.h"
 
 /* private instance data

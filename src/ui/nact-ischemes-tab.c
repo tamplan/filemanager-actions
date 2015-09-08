@@ -42,7 +42,7 @@
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"
-#include "nact-add-scheme-dialog.h"
+#include "fma-add-scheme-dialog.h"
 #include "nact-ischemes-tab.h"
 
 /* private interface data

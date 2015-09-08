@@ -33,7 +33,7 @@
 /**
  * SECTION: fma_add_scheme_dialog
  * @short_description: #FMAAddSchemeDialog class definition.
- * @include: nact/nact-add-scheme-dialog.h
+ * @include: nact/fma-add-scheme-dialog.h
  *
  * The dialog let the user pick a scheme from the default list
  * when adding a new scheme to a profile (resp. an action, a menu).

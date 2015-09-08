@@ -71,8 +71,8 @@ fma_config_tool_SOURCES = \
 	main.c												\
 	fma-add-capability-dialog.c						\
 	fma-add-capability-dialog.h						\
-	nact-add-scheme-dialog.c							\
-	nact-add-scheme-dialog.h							\
+	fma-add-scheme-dialog.c							\
+	fma-add-scheme-dialog.h							\
 	fma-application.c									\
 	fma-application.h									\
 	nact-assistant-export.c								\
