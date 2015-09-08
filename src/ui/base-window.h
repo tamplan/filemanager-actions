@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __BASE_WINDOW_H__
-#define __BASE_WINDOW_H__
+#ifndef __UI_BASE_WINDOW_H__
+#define __UI_BASE_WINDOW_H__
 
 /**
  * SECTION: base-window
@@ -258,4 +258,4 @@ void                  base_window_signal_disconnect       ( BaseWindow *window,
 
 G_END_DECLS
 
-#endif /* __BASE_WINDOW_H__ */
+#endif /* __UI_BASE_WINDOW_H__ */

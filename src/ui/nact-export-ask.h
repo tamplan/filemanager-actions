@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_EXPORT_ASK_H__
-#define __NACT_EXPORT_ASK_H__
+#ifndef __UI_NACT_EXPORT_ASK_H__
+#define __UI_NACT_EXPORT_ASK_H__
 
 /**
  * SECTION: nact_export_ask
@@ -80,4 +80,4 @@ gchar *nact_export_ask_user    ( FMAObjectItem *item,
 
 G_END_DECLS
 
-#endif /* __NACT_EXPORT_ASK_H__ */
+#endif /* __UI_NACT_EXPORT_ASK_H__ */

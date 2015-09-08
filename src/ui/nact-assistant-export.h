@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_ASSISTANT_EXPORT_H__
-#define __NACT_ASSISTANT_EXPORT_H__
+#ifndef __UI_NACT_ASSISTANT_EXPORT_H__
+#define __UI_NACT_ASSISTANT_EXPORT_H__
 
 /**
  * SECTION: nact_assistant_export
@@ -94,4 +94,4 @@ void  nact_assistant_export_run     ( NactMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __NACT_ASSISTANT_EXPORT_H__ */
+#endif /* __UI_NACT_ASSISTANT_EXPORT_H__ */

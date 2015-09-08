@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_IEXECUTION_TAB_H__
-#define __NACT_IEXECUTION_TAB_H__
+#ifndef __UI_NACT_IEXECUTION_TAB_H__
+#define __UI_NACT_IEXECUTION_TAB_H__
 
 /**
  * SECTION: nact_iexecution_tab
@@ -64,4 +64,4 @@ void  nact_iexecution_tab_init    ( NactIExecutionTab *instance );
 
 G_END_DECLS
 
-#endif /* __NACT_IEXECUTION_TAB_H__ */
+#endif /* __UI_NACT_IEXECUTION_TAB_H__ */

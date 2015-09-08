@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MENU_VIEW_H__
-#define __NACT_MENU_VIEW_H__
+#ifndef __UI_NACT_MENU_VIEW_H__
+#define __UI_NACT_MENU_VIEW_H__
 
 #include "nact-main-window-def.h"
 
@@ -57,4 +57,4 @@ void nact_menu_view_set_notebook_label  ( NactMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __NACT_MENU_VIEW_H__ */
+#endif /* __UI_NACT_MENU_VIEW_H__ */

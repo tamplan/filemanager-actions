@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_ADD_CAPABILITY_DIALOG_H__
-#define __NACT_ADD_CAPABILITY_DIALOG_H__
+#ifndef __UI_NACT_ADD_CAPABILITY_DIALOG_H__
+#define __UI_NACT_ADD_CAPABILITY_DIALOG_H__
 
 /**
  * SECTION: nact_add_capability_dialog
@@ -76,4 +76,4 @@ gchar *nact_add_capability_dialog_run     ( NactMainWindow *parent,
 
 G_END_DECLS
 
-#endif /* __NACT_ADD_CAPABILITY_DIALOG_H__ */
+#endif /* __UI_NACT_ADD_CAPABILITY_DIALOG_H__ */

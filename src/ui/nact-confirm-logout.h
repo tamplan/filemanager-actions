@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_CONFIRM_LOGOUT_H__
-#define __NACT_CONFIRM_LOGOUT_H__
+#ifndef __UI_NACT_CONFIRM_LOGOUT_H__
+#define __UI_NACT_CONFIRM_LOGOUT_H__
 
 /**
  * SECTION: nact_preferences_editor
@@ -72,4 +72,4 @@ gboolean nact_confirm_logout_run     ( NactMainWindow *parent );
 
 G_END_DECLS
 
-#endif /* __NACT_CONFIRM_LOGOUT_H__ */
+#endif /* __UI_NACT_CONFIRM_LOGOUT_H__ */

@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MENU_H__
-#define __NACT_MENU_H__
+#ifndef __UI_NACT_MENU_H__
+#define __UI_NACT_MENU_H__
 
 /*
  * SECTION: nact-menu
@@ -118,4 +118,4 @@ sMenuData *nact_menu_get_data   ( NactMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __NACT_MENU_H__ */
+#endif /* __UI_NACT_MENU_H__ */

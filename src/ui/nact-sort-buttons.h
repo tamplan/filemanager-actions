@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_SORT_BUTTONS_H__
-#define __NACT_SORT_BUTTONS_H__
+#ifndef __UI_NACT_SORT_BUTTONS_H__
+#define __UI_NACT_SORT_BUTTONS_H__
 
 /**
  * SECTION: nact-sort-buttons
@@ -80,4 +80,4 @@ NactSortButtons *nact_sort_buttons_new     ( NactMainWindow *window );
 
 G_END_DECLS
 
-#endif /* __NACT_SORT_BUTTONS_H__ */
+#endif /* __UI_NACT_SORT_BUTTONS_H__ */

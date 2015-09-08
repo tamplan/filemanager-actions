@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_WINDOW_DEF_H__
-#define __NACT_MAIN_WINDOW_DEF_H__
+#ifndef __UI_NACT_MAIN_WINDOW_DEF_H__
+#define __UI_NACT_MAIN_WINDOW_DEF_H__
 
 /**
  * SECTION: main-window
@@ -117,4 +117,4 @@ GType nact_main_window_get_type( void );
 
 G_END_DECLS
 
-#endif /* __NACT_MAIN_WINDOW_DEF_H__ */
+#endif /* __UI_NACT_MAIN_WINDOW_DEF_H__ */

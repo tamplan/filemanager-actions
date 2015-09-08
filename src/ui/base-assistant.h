@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __BASE_ASSISTANT_H__
-#define __BASE_ASSISTANT_H__
+#ifndef __UI_BASE_ASSISTANT_H__
+#define __UI_BASE_ASSISTANT_H__
 
 /**
  * SECTION: base_assistant
@@ -111,4 +111,4 @@ GType base_assistant_get_type( void );
 
 G_END_DECLS
 
-#endif /* __BASE_ASSISTANT_H__ */
+#endif /* __UI_BASE_ASSISTANT_H__ */

@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_ICON_CHOOSER_H__
-#define __NACT_ICON_CHOOSER_H__
+#ifndef __UI_NACT_ICON_CHOOSER_H__
+#define __UI_NACT_ICON_CHOOSER_H__
 
 /**
  * SECTION: nact_icon_chooser
@@ -74,4 +74,4 @@ gchar *nact_icon_chooser_choose_icon( NactMainWindow *main_window, const gchar *
 
 G_END_DECLS
 
-#endif /* __NACT_ICON_CHOOSER_H__ */
+#endif /* __UI_NACT_ICON_CHOOSER_H__ */

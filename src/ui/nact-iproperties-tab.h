@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_IPROPERTIES_TAB_H__
-#define __NACT_IPROPERTIES_TAB_H__
+#ifndef __UI_NACT_IPROPERTIES_TAB_H__
+#define __UI_NACT_IPROPERTIES_TAB_H__
 
 /**
  * SECTION: nact_iproperties_tab
@@ -66,4 +66,4 @@ void  nact_iproperties_tab_init    ( NactIPropertiesTab *instance );
 
 G_END_DECLS
 
-#endif /* __NACT_IPROPERTIES_TAB_H__ */
+#endif /* __UI_NACT_IPROPERTIES_TAB_H__ */

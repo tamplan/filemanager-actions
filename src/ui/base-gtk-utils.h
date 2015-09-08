@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __BASE_GTK_UTILS_H__
-#define __BASE_GTK_UTILS_H__
+#ifndef __UI_BASE_GTK_UTILS_H__
+#define __UI_BASE_GTK_UTILS_H__
 
 /**
  * SECTION: base-gtk-utils
@@ -90,4 +90,4 @@ void       base_gtk_utils_table_to_grid( BaseWindow *window, const gchar *table_
 
 G_END_DECLS
 
-#endif /* __BASE_GTK_UTILS_H__ */
+#endif /* __UI_BASE_GTK_UTILS_H__ */

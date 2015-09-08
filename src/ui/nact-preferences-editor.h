@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_PREFERENCES_EDITOR_H__
-#define __NACT_PREFERENCES_EDITOR_H__
+#ifndef __UI_NACT_PREFERENCES_EDITOR_H__
+#define __UI_NACT_PREFERENCES_EDITOR_H__
 
 /**
  * SECTION: nact_preferences_editor
@@ -72,4 +72,4 @@ void  nact_preferences_editor_run     ( NactMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __NACT_PREFERENCES_EDITOR_H__ */
+#endif /* __UI_NACT_PREFERENCES_EDITOR_H__ */

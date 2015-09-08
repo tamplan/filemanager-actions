@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_CLIPBOARD_H__
-#define __NACT_CLIPBOARD_H__
+#ifndef __UI_NACT_CLIPBOARD_H__
+#define __UI_NACT_CLIPBOARD_H__
 
 /*
  * SECTION: nact_clipboard.
@@ -122,4 +122,4 @@ void           nact_clipboard_dump          ( NactClipboard *clipboard );
 
 G_END_DECLS
 
-#endif /* __NACT_CLIPBOARD_H__ */
+#endif /* __UI_NACT_CLIPBOARD_H__ */

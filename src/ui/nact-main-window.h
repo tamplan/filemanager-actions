@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_WINDOW_H__
-#define __NACT_MAIN_WINDOW_H__
+#ifndef __UI_NACT_MAIN_WINDOW_H__
+#define __UI_NACT_MAIN_WINDOW_H__
 
 /**
  * SECTION: main-window
@@ -91,4 +91,4 @@ gboolean         nact_main_window_quit            ( NactMainWindow *window );
 
 G_END_DECLS
 
-#endif /* __NACT_MAIN_WINDOW_H__ */
+#endif /* __UI_NACT_MAIN_WINDOW_H__ */

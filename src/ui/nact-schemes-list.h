@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_SCHEMES_LIST_H__
-#define __NACT_SCHEMES_LIST_H__
+#ifndef __UI_NACT_SCHEMES_LIST_H__
+#define __UI_NACT_SCHEMES_LIST_H__
 
 /**
  * SECTION: nact_schemes_list
@@ -89,4 +89,4 @@ void    nact_schemes_list_dispose           ( BaseWindow *window );
 
 G_END_DECLS
 
-#endif /* __NACT_SCHEMES_LIST_H__ */
+#endif /* __UI_NACT_SCHEMES_LIST_H__ */

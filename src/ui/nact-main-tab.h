@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_TAB_H__
-#define __NACT_MAIN_TAB_H__
+#ifndef __UI_NACT_MAIN_TAB_H__
+#define __UI_NACT_MAIN_TAB_H__
 
 #include <api/fma-icontext.h>
 
@@ -63,4 +63,4 @@ gboolean nact_main_tab_is_page_enabled( NactMainWindow *window, gint page );
 
 G_END_DECLS
 
-#endif /* __NACT_MAIN_TAB_H__ */
+#endif /* __UI_NACT_MAIN_TAB_H__ */

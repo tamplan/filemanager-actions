@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_PROVIDERS_LIST_H__
-#define __NACT_PROVIDERS_LIST_H__
+#ifndef __UI_NACT_PROVIDERS_LIST_H__
+#define __UI_NACT_PROVIDERS_LIST_H__
 
 #include <gtk/gtk.h>
 
@@ -43,4 +43,4 @@ void    nact_providers_list_dispose( BaseWindow *window );
 
 G_END_DECLS
 
-#endif /* __NACT_PROVIDERS_LIST_H__ */
+#endif /* __UI_NACT_PROVIDERS_LIST_H__ */

@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_ASSISTANT_IMPORT_H__
-#define __NACT_ASSISTANT_IMPORT_H__
+#ifndef __UI_NACT_ASSISTANT_IMPORT_H__
+#define __UI_NACT_ASSISTANT_IMPORT_H__
 
 /**
  * SECTION: nact_assistant_import
@@ -69,4 +69,4 @@ void  nact_assistant_import_run     ( NactMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __NACT_ASSISTANT_IMPORT_H__ */
+#endif /* __UI_NACT_ASSISTANT_IMPORT_H__ */

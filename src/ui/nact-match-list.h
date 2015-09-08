@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MATCH_LIST_H__
-#define __NACT_MATCH_LIST_H__
+#ifndef __UI_NACT_MATCH_LIST_H__
+#define __UI_NACT_MATCH_LIST_H__
 
 /**
  * SECTION: nact_match_list
@@ -87,4 +87,4 @@ GSList *nact_match_list_get_rows      ( NactMainWindow *window,
 
 G_END_DECLS
 
-#endif /* __NACT_MATCH_LIST_H__ */
+#endif /* __UI_NACT_MATCH_LIST_H__ */

@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_TREE_VIEW_H__
-#define __NACT_TREE_VIEW_H__
+#ifndef __UI_NACT_TREE_VIEW_H__
+#define __UI_NACT_TREE_VIEW_H__
 
 /*
  * SECTION: nact-tree-view
@@ -131,4 +131,4 @@ void          nact_tree_view_select_row_at_path( NactTreeView *view, GtkTreePath
 
 G_END_DECLS
 
-#endif /* __NACT_TREE_VIEW_H__ */
+#endif /* __UI_NACT_TREE_VIEW_H__ */

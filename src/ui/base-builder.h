@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __BASE_BUILDER_H__
-#define __BASE_BUILDER_H__
+#ifndef __UI_BASE_BUILDER_H__
+#define __UI_BASE_BUILDER_H__
 
 /**
  * SECTION: base_builder
@@ -85,4 +85,4 @@ GtkWindow   *base_builder_get_toplevel_by_name( const BaseBuilder *builder, cons
 
 G_END_DECLS
 
-#endif /* __BASE_BUILDER_H__ */
+#endif /* __UI_BASE_BUILDER_H__ */

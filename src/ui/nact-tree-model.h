@@ -41,8 +41,8 @@
  *
  * The GtkTreeModelFilter base class embeds a GtkTreeStore.
  */
-#ifndef __NACT_TREE_MODEL_H__
-#define __NACT_TREE_MODEL_H__
+#ifndef __UI_NACT_TREE_MODEL_H__
+#define __UI_NACT_TREE_MODEL_H__
 
 #include "api/fma-object.h"
 
@@ -120,4 +120,4 @@ GtkTreePath   *nact_tree_model_object_to_path  ( const NactTreeModel *model,
 
 G_END_DECLS
 
-#endif /* __NACT_TREE_MODEL_H__ */
+#endif /* __UI_NACT_TREE_MODEL_H__ */

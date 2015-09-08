@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_STATUSBAR_H__
-#define __NACT_STATUSBAR_H__
+#ifndef __UI_NACT_STATUSBAR_H__
+#define __UI_NACT_STATUSBAR_H__
 
 /**
  * SECTION: nact_statusbar
@@ -87,4 +87,4 @@ void           nact_statusbar_set_locked          ( NactStatusbar *bar,
 
 G_END_DECLS
 
-#endif /* __NACT_STATUSBAR_H__ */
+#endif /* __UI_NACT_STATUSBAR_H__ */

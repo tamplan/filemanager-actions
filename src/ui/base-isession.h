@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __BASE_ISESSION_H__
-#define __BASE_ISESSION_H__
+#ifndef __UI_BASE_ISESSION_H__
+#define __UI_BASE_ISESSION_H__
 
 /**
  * SECTION: base_isession
@@ -75,4 +75,4 @@ gboolean base_isession_is_willing_to_quit( const BaseISession *instance );
 
 G_END_DECLS
 
-#endif /* __BASE_ISESSION_H__ */
+#endif /* __UI_BASE_ISESSION_H__ */

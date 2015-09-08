@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_APPLICATION_H__
-#define __NACT_APPLICATION_H__
+#ifndef __UI_NACT_APPLICATION_H__
+#define __UI_NACT_APPLICATION_H__
 
 /**
  * SECTION: nact_application
@@ -109,4 +109,4 @@ gboolean         nact_application_is_willing_to_quit  ( const NactApplication *a
 
 G_END_DECLS
 
-#endif /* __NACT_APPLICATION_H__ */
+#endif /* __UI_NACT_APPLICATION_H__ */

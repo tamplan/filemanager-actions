@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __BASE_KEYSYMS_H__
-#define __BASE_KEYSYMS_H__
+#ifndef __UI_BASE_KEYSYMS_H__
+#define __UI_BASE_KEYSYMS_H__
 
 /**
  * SECTION: base_window
@@ -78,4 +78,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __BASE_KEYSYMS_H__ */
+#endif /* __UI_BASE_KEYSYMS_H__ */

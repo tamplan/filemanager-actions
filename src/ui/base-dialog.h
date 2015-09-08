@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __BASE_DIALOG_H__
-#define __BASE_DIALOG_H__
+#ifndef __UI_BASE_DIALOG_H__
+#define __UI_BASE_DIALOG_H__
 
 /**
  * SECTION: base-dialog
@@ -97,4 +97,4 @@ GType base_dialog_get_type( void );
 
 G_END_DECLS
 
-#endif /* __BASE_DIALOG_H__ */
+#endif /* __UI_BASE_DIALOG_H__ */

@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_IACTION_TAB_H__
-#define __NACT_IACTION_TAB_H__
+#ifndef __UI_NACT_IACTION_TAB_H__
+#define __UI_NACT_IACTION_TAB_H__
 
 /**
  * SECTION: nact_iaction_tab
@@ -69,4 +69,4 @@ gboolean nact_iaction_tab_has_label( NactIActionTab *instance );
 
 G_END_DECLS
 
-#endif /* __NACT_IACTION_TAB_H__ */
+#endif /* __UI_NACT_IACTION_TAB_H__ */
