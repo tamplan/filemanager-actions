@@ -440,7 +440,7 @@ legend_dialog_hide( NactICommandTab *instance )
 	}
 
 	if( is_visible ){
-		base_gtk_utils_save_window_position( BASE_WINDOW( instance ), NA_IPREFS_COMMAND_LEGEND_WSP );
+		base_gtk_utils_save_window_position( BASE_WINDOW( instance ), IPREFS_COMMAND_LEGEND_WSP );
 		gtk_widget_hide( GTK_WIDGET( legend_dialog ));
 
 		/* set the legend button state consistent for when the dialog is
@@ -463,7 +463,7 @@ legend_dialog_show( NactICommandTab *instance )
 
 	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), GTK_WINDOW( instance ));
 
-	base_gtk_utils_restore_window_position( BASE_WINDOW( instance ), NA_IPREFS_COMMAND_LEGEND_WSP );
+	base_gtk_utils_restore_window_position( BASE_WINDOW( instance ), IPREFS_COMMAND_LEGEND_WSP );
 	gtk_widget_show( GTK_WIDGET( legend_dialog ));
 
 	g_object_set_data( G_OBJECT( legend_dialog ), ICOMMAND_TAB_LEGEND_VISIBLE, GINT_TO_POINTER( TRUE ));
@@ -540,8 +540,8 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 {
 	base_gtk_utils_select_file(
 			GTK_APPLICATION_WINDOW( instance ),
-			_( "Choosing a command" ), NA_IPREFS_COMMAND_CHOOSER_WSP,
-			get_path_entry( instance ), NA_IPREFS_COMMAND_CHOOSER_URI );
+			_( "Choosing a command" ), IPREFS_COMMAND_CHOOSER_WSP,
+			get_path_entry( instance ), IPREFS_COMMAND_CHOOSER_URI );
 }
 
 static void
@@ -583,9 +583,9 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 		base_gtk_utils_select_dir(
 				GTK_APPLICATION_WINDOW( instance ),
 				_( "Choosing a working directory" ),
-				NA_IPREFS_WORKING_DIR_WSP,
+				IPREFS_WORKING_DIR_WSP,
 				wdir_entry,
-				NA_IPREFS_WORKING_DIR_URI );
+				IPREFS_WORKING_DIR_URI );
 	}
 }
 

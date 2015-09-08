@@ -53,7 +53,7 @@
 #include "fma-desktop-environment.h"
 #include "fma-gnome-vfs-uri.h"
 #include "fma-selected-info.h"
-#include "na-settings.h"
+#include "fma-settings.h"
 
 /* private interface data
  */
@@ -527,7 +527,7 @@ is_candidate_for_show_in( const FMAIContext *object, guint target, GList *files 
 	 * but this occurs only once..
 	 */
 	if( !environment ){
-		environment = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, NULL );
+		environment = fma_settings_get_string( IPREFS_DESKTOP_ENVIRONMENT, NULL, NULL );
 		if( !environment || !strlen( environment )){
 			environment = ( gchar * ) fma_desktop_environment_detect_running_desktop();
 		}

@@ -383,8 +383,8 @@ install_autosave( NactMainWindow *main_window )
 	st_autosave_prefs_timeout.handler = ( FMATimeoutFunc ) on_autosave_prefs_timeout;
 	st_autosave_prefs_timeout.user_data = main_window;
 
-	na_settings_register_key_callback( NA_IPREFS_MAIN_SAVE_AUTO, G_CALLBACK( on_autosave_prefs_changed ), NULL );
-	na_settings_register_key_callback( NA_IPREFS_MAIN_SAVE_PERIOD, G_CALLBACK( on_autosave_prefs_changed ), NULL );
+	fma_settings_register_key_callback( IPREFS_MAIN_SAVE_AUTO, G_CALLBACK( on_autosave_prefs_changed ), NULL );
+	fma_settings_register_key_callback( IPREFS_MAIN_SAVE_PERIOD, G_CALLBACK( on_autosave_prefs_changed ), NULL );
 
 	on_autosave_prefs_timeout( main_window );
 }
@@ -402,8 +402,8 @@ on_autosave_prefs_timeout( NactMainWindow *main_window )
 	gboolean autosave_on;
 	guint autosave_period;
 
-	autosave_on = na_settings_get_boolean( NA_IPREFS_MAIN_SAVE_AUTO, NULL, NULL );
-	autosave_period = na_settings_get_uint( NA_IPREFS_MAIN_SAVE_PERIOD, NULL, NULL );
+	autosave_on = fma_settings_get_boolean( IPREFS_MAIN_SAVE_AUTO, NULL, NULL );
+	autosave_period = fma_settings_get_uint( IPREFS_MAIN_SAVE_PERIOD, NULL, NULL );
 
 	if( st_event_autosave ){
 		if( !g_source_remove( st_event_autosave )){

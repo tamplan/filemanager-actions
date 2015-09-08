@@ -38,7 +38,7 @@
 #include <libnautilus-extension/nautilus-extension-types.h>
 
 #include <core/fma-gconf-migration.h>
-#include <core/na-settings.h>
+#include <core/fma-settings.h>
 
 #include "nautilus-actions.h"
 
@@ -133,7 +133,7 @@ set_log_handler( void )
 #else
 	is_log_enabled =
 			g_getenv( NAUTILUS_ACTIONS_DEBUG ) ||
-			na_settings_get_boolean( NA_IPREFS_PLUGIN_MENU_LOG, NULL, NULL );
+			fma_settings_get_boolean( IPREFS_PLUGIN_MENU_LOG, NULL, NULL );
 #endif
 
 	st_default_log_func = g_log_set_default_handler(( GLogFunc ) log_handler, GUINT_TO_POINTER( is_log_enabled ));

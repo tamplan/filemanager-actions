@@ -364,7 +364,7 @@ nact_providers_list_save( BaseWindow *window )
 	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) providers_list_save_iter, plsd );
 
 	plsd->order = g_slist_reverse( plsd->order );
-	na_settings_set_string_list( NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, plsd->order );
+	fma_settings_set_string_list( IPREFS_IO_PROVIDERS_WRITE_ORDER, plsd->order );
 
 	fma_core_utils_slist_free( plsd->order );
 	g_free( plsd );
@@ -385,9 +385,9 @@ providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* i
 			PROVIDER_PROVIDER_COLUMN, &provider,
 			-1 );
 
-	group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, id );
-	na_settings_set_boolean_ex( group, NA_IPREFS_IO_PROVIDER_READABLE, readable );
-	na_settings_set_boolean_ex( group, NA_IPREFS_IO_PROVIDER_WRITABLE, writable );
+	group = g_strdup_printf( "%s %s", IPREFS_IO_PROVIDER_GROUP, id );
+	fma_settings_set_boolean_ex( group, IPREFS_IO_PROVIDER_READABLE, readable );
+	fma_settings_set_boolean_ex( group, IPREFS_IO_PROVIDER_WRITABLE, writable );
 	g_free( group );
 
 	plsd->order = g_slist_prepend( plsd->order, g_strdup( id ));

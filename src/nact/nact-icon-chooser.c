@@ -91,7 +91,7 @@ enum {
 
 static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-icon-chooser.ui";
 static const gchar     *st_toplevel_name  = "IconChooserDialog";
-static const gchar     *st_wsp_name       = NA_IPREFS_ICON_CHOOSER_WSP;
+static const gchar     *st_wsp_name       = IPREFS_ICON_CHOOSER_WSP;
 
 static BaseDialogClass *st_parent_class   = NULL;
 
@@ -262,7 +262,7 @@ instance_dispose( GObject *dialog )
 
 		paned = base_window_get_widget( BASE_WINDOW( self ), "IconPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( paned ));
-		na_settings_set_uint( NA_IPREFS_ICON_CHOOSER_PANED, pos );
+		fma_settings_set_uint( IPREFS_ICON_CHOOSER_PANED, pos );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -451,7 +451,7 @@ on_base_initialize_window( NactIconChooser *editor, gpointer user_data )
 
 		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
-		pos = na_settings_get_uint( NA_IPREFS_ICON_CHOOSER_PANED, NULL, NULL );
+		pos = fma_settings_get_uint( IPREFS_ICON_CHOOSER_PANED, NULL, NULL );
 		if( pos ){
 			paned = base_window_get_widget( BASE_WINDOW( editor ), "IconPaned" );
 			gtk_paned_set_position( GTK_PANED( paned ), pos );
@@ -543,7 +543,7 @@ fillup_icons_by_path( NactIconChooser *editor )
 
 	gtk_file_chooser_unselect_all( file_chooser );
 
-	uri = na_settings_get_string( NA_IPREFS_ICON_CHOOSER_URI, NULL, NULL );
+	uri = fma_settings_get_string( IPREFS_ICON_CHOOSER_URI, NULL, NULL );
 	if( uri ){
 		gtk_file_chooser_set_current_folder_uri( file_chooser, uri );
 		g_free( uri );
@@ -845,7 +845,7 @@ on_path_selection_changed( GtkFileChooser *file_chooser, NactIconChooser *editor
 
 	uri = gtk_file_chooser_get_current_folder_uri( file_chooser );
 	if( uri ){
-		na_settings_set_string( NA_IPREFS_ICON_CHOOSER_URI, uri );
+		fma_settings_set_string( IPREFS_ICON_CHOOSER_URI, uri );
 		g_free( uri );
 	}
 }

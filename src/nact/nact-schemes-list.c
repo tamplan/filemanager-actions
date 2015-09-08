@@ -263,7 +263,7 @@ init_view_get_default_list( SchemesListData *data )
 	GSList *list = NULL;
 	gboolean mandatory;
 
-	list = na_settings_get_string_list( NA_IPREFS_SCHEME_DEFAULT_LIST, NULL, &mandatory );
+	list = fma_settings_get_string_list( IPREFS_SCHEME_DEFAULT_LIST, NULL, &mandatory );
 	if( !list ){
 		list = init_view_get_default_default_list( data );
 	}
@@ -485,7 +485,7 @@ nact_schemes_list_save_defaults( BaseWindow *window )
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
 	schemes = get_list_schemes( treeview );
 
-	na_settings_set_string_list( NA_IPREFS_SCHEME_DEFAULT_LIST, schemes );
+	fma_settings_set_string_list( IPREFS_SCHEME_DEFAULT_LIST, schemes );
 
 	fma_core_utils_slist_free( schemes );
 }

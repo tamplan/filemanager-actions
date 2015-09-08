@@ -41,7 +41,7 @@
 
 #include "fma-gnome-vfs-uri.h"
 #include "fma-selected-info.h"
-#include "na-settings.h"
+#include "fma-settings.h"
 #include "na-tokens.h"
 
 /* private class data
@@ -623,7 +623,7 @@ get_command_execution_terminal( const gchar *command )
 	gchar *run_command;
 	gchar *pattern;
 
-	pattern = na_settings_get_string( NA_IPREFS_TERMINAL_PATTERN, NULL, NULL );
+	pattern = fma_settings_get_string( IPREFS_TERMINAL_PATTERN, NULL, NULL );
 	run_command = na_tokens_command_for_terminal( pattern, command );
 	g_free( pattern );
 

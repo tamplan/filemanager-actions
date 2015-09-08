@@ -41,7 +41,7 @@
 
 #include "core/fma-gtk-utils.h"
 #include "core/fma-desktop-environment.h"
-#include "core/na-settings.h"
+#include "core/fma-settings.h"
 
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
@@ -727,8 +727,8 @@ on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance )
 
 	base_gtk_utils_select_file(
 			GTK_APPLICATION_WINDOW( instance ),
-			_( "Choosing an executable" ), NA_IPREFS_TRY_EXEC_WSP,
-			entry, NA_IPREFS_TRY_EXEC_URI );
+			_( "Choosing an executable" ), IPREFS_TRY_EXEC_WSP,
+			entry, IPREFS_TRY_EXEC_URI );
 }
 
 static void
@@ -785,8 +785,8 @@ on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance )
 
 	base_gtk_utils_select_file(
 			GTK_APPLICATION_WINDOW( instance ),
-			_( "Choosing an executable" ), NA_IPREFS_SHOW_IF_RUNNING_WSP,
-			entry, NA_IPREFS_SHOW_IF_RUNNING_URI );
+			_( "Choosing an executable" ), IPREFS_SHOW_IF_RUNNING_WSP,
+			entry, IPREFS_SHOW_IF_RUNNING_URI );
 }
 
 static void

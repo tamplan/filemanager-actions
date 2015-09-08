@@ -40,7 +40,7 @@
  *
  * Migrate users actions and menus from GConf to .desktop files.
  * Disable GConf I/O provider both for reading and writing.
- * Migrate users preferences to NASettings.
+ * Migrate users preferences to FMASettings.
  *
  * Since: 3.1
  */

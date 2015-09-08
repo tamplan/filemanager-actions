@@ -165,7 +165,7 @@ fma_importer_import_from_uris( const FMAPivot *pivot, FMAImporterParms *parms )
 	/* set the default import mode
 	 */
 	if( !parms->preferred_mode ){
-		mode_str = na_settings_get_string( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL, NULL );
+		mode_str = fma_settings_get_string( IPREFS_IMPORT_PREFERRED_MODE, NULL, NULL );
 		parms->preferred_mode = get_id_from_string( mode_str );
 		g_free( mode_str );
 	}
@@ -432,7 +432,7 @@ ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing
 		mode = fma_importer_ask_user( importing, existing, parms );
 
 	} else {
-		mode_str = na_settings_get_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
+		mode_str = fma_settings_get_string( IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
 		mode = get_id_from_string( mode_str );
 		g_free( mode_str );
 	}

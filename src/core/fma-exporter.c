@@ -37,7 +37,7 @@
 
 #include "fma-exporter.h"
 #include "fma-export-format.h"
-#include "na-settings.h"
+#include "fma-settings.h"
 
 typedef struct {
 	const gchar *format;				/* export format saved in user's preferences */

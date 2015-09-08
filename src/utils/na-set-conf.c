@@ -45,7 +45,7 @@
  * A program to update the N-A configuration files
  */
 
-#include <core/na-settings.h>
+#include <core/fma-settings.h>
 
 static gchar       *st_option_context = N_( "Set a key=value pair in a key file." );
 
@@ -235,16 +235,16 @@ do_update_conf( const gchar *group, const gchar *key, NAType type, const gchar *
 	switch( type ){
 		case TYPE_BOOL:
 			bvalue = fma_core_utils_boolean_from_string( value );
-			ok = na_settings_set_boolean_ex( group, key, bvalue );
+			ok = fma_settings_set_boolean_ex( group, key, bvalue );
 			break;
 
 		case TYPE_INT:
 			ivalue = atoi( value );
-			ok = na_settings_set_int_ex( group, key, ivalue );
+			ok = fma_settings_set_int_ex( group, key, ivalue );
 			break;
 
 		case TYPE_STR:
-			ok = na_settings_set_string_ex( group, key, value );
+			ok = fma_settings_set_string_ex( group, key, value );
 			break;
 
 		default:

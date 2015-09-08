@@ -37,7 +37,7 @@
 
 #include "fma-importer.h"
 #include "fma-iprefs.h"
-#include "na-settings.h"
+#include "fma-settings.h"
 
 typedef struct {
 	guint        id;
@@ -83,7 +83,7 @@ fma_iprefs_get_order_mode( gboolean *mandatory )
 	gchar *order_mode_str;
 	guint order_mode;
 
-	order_mode_str = na_settings_get_string( NA_IPREFS_ITEMS_LIST_ORDER_MODE, NULL, mandatory );
+	order_mode_str = fma_settings_get_string( IPREFS_ITEMS_LIST_ORDER_MODE, NULL, mandatory );
 	order_mode = enum_map_id_from_string( st_order_mode, order_mode_str );
 	g_free( order_mode_str );
 
@@ -123,7 +123,7 @@ fma_iprefs_set_order_mode( guint mode )
 	const gchar *order_str;
 
 	order_str = enum_map_string_from_id( st_order_mode, mode );
-	na_settings_set_string( NA_IPREFS_ITEMS_LIST_ORDER_MODE, order_str );
+	fma_settings_set_string( IPREFS_ITEMS_LIST_ORDER_MODE, order_str );
 }
 
 /*
@@ -139,7 +139,7 @@ fma_iprefs_get_tabs_pos( gboolean *mandatory )
 	gchar *tabs_pos_str;
 	guint tabs_pos;
 
-	tabs_pos_str = na_settings_get_string( NA_IPREFS_MAIN_TABS_POS, NULL, mandatory );
+	tabs_pos_str = fma_settings_get_string( IPREFS_MAIN_TABS_POS, NULL, mandatory );
 	tabs_pos = enum_map_id_from_string( st_tabs_pos, tabs_pos_str );
 	g_free( tabs_pos_str );
 
@@ -158,7 +158,7 @@ fma_iprefs_set_tabs_pos( guint position )
 	const gchar *tabs_pos_str;
 
 	tabs_pos_str = enum_map_string_from_id( st_tabs_pos, 1+position );
-	na_settings_set_string( NA_IPREFS_MAIN_TABS_POS, tabs_pos_str );
+	fma_settings_set_string( IPREFS_MAIN_TABS_POS, tabs_pos_str );
 }
 
 /*
@@ -197,7 +197,7 @@ fma_iprefs_write_level_zero( const GList *items, GSList **messages )
 	}
 	content = g_slist_reverse( content );
 
-	written = na_settings_set_string_list( NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, content );
+	written = fma_settings_set_string_list( IPREFS_ITEMS_LEVEL_ZERO_ORDER, content );
 
 	fma_core_utils_slist_free( content );
 

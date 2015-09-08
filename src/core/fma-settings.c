@@ -41,36 +41,36 @@
 #include "api/fma-core-utils.h"
 #include "api/fma-timeout.h"
 
-#include "na-settings.h"
+#include "fma-settings.h"
 
 #define NA_SETTINGS_TYPE                ( settings_get_type())
-#define NA_SETTINGS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_SETTINGS_TYPE, NASettings ))
-#define NA_SETTINGS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_SETTINGS_TYPE, NASettingsClass ))
+#define NA_SETTINGS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_SETTINGS_TYPE, FMASettings ))
+#define NA_SETTINGS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_SETTINGS_TYPE, FMASettingsClass ))
 #define NA_IS_SETTINGS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_SETTINGS_TYPE ))
 #define NA_IS_SETTINGS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_SETTINGS_TYPE ))
-#define NA_SETTINGS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_SETTINGS_TYPE, NASettingsClass ))
+#define NA_SETTINGS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_SETTINGS_TYPE, FMASettingsClass ))
 
-typedef struct _NASettingsPrivate       NASettingsPrivate;
+typedef struct _FMASettingsPrivate       FMASettingsPrivate;
 
 typedef struct {
 	/*< private >*/
 	GObject            parent;
-	NASettingsPrivate *private;
+	FMASettingsPrivate *private;
 }
-	NASettings;
+	FMASettings;
 
-typedef struct _NASettingsClassPrivate  NASettingsClassPrivate;
+typedef struct _FMASettingsClassPrivate  FMASettingsClassPrivate;
 
 typedef struct {
 	/*< private >*/
 	GObjectClass            parent;
-	NASettingsClassPrivate *private;
+	FMASettingsClassPrivate *private;
 }
-	NASettingsClass;
+	FMASettingsClass;
 
 /* private class data
  */
-struct _NASettingsClassPrivate {
+struct _FMASettingsClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -93,7 +93,7 @@ typedef struct {
  *
  * The monitored key usually is the real key read in the file;
  * as a special case, composite keys are defined:
- * - NA_IPREFS_IO_PROVIDERS_READ_STATUS monitors the 'readable' key for all i/o providers
+ * - IPREFS_IO_PROVIDERS_READ_STATUS monitors the 'readable' key for all i/o providers
  *
  * Note that we actually monitor the _user_view_ of the configuration:
  * e.g. if a key has a mandatory value in global conf, then the same
@@ -108,7 +108,7 @@ typedef struct {
 
 /* private instance data
  */
-struct _NASettingsPrivate {
+struct _FMASettingsPrivate {
 	gboolean  dispose_has_run;
 	KeyFile  *mandatory;
 	KeyFile  *user;
@@ -129,64 +129,64 @@ typedef struct {
 	KeyDef;
 
 static const KeyDef st_def_keys[] = {
-	{ NA_IPREFS_ADMIN_PREFERENCES_LOCKED,         GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_ADMIN_IO_PROVIDERS_LOCKED,        GROUP_RUNTIME, FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_ASSISTANT_ESC_CONFIRM,            GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_ASSISTANT_ESC_QUIT,               GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP,    GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_COMMAND_CHOOSER_WSP,              GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_COMMAND_CHOOSER_URI,              GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///bin" },
-	{ NA_IPREFS_COMMAND_LEGEND_WSP,               GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_CONFIRM_LOGOUT_WSP,               GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_DESKTOP_ENVIRONMENT,              GROUP_RUNTIME, FMA_DATA_TYPE_STRING,      "" },
-	{ NA_IPREFS_WORKING_DIR_WSP,                  GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_WORKING_DIR_URI,                  GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///" },
-	{ NA_IPREFS_SHOW_IF_RUNNING_WSP,              GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_SHOW_IF_RUNNING_URI,              GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///bin" },
-	{ NA_IPREFS_TRY_EXEC_WSP,                     GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_TRY_EXEC_URI,                     GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///bin" },
-	{ NA_IPREFS_EXPORT_ASK_USER_WSP,              GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT,      GROUP_NACT,    FMA_DATA_TYPE_STRING,      "Desktop1" },
-	{ NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_EXPORT_ASSISTANT_WSP,             GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_EXPORT_ASSISTANT_URI,             GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///tmp" },
-	{ NA_IPREFS_EXPORT_ASSISTANT_PANED,           GROUP_NACT,    FMA_DATA_TYPE_UINT,        "200" },
-	{ NA_IPREFS_EXPORT_PREFERRED_FORMAT,          GROUP_NACT,    FMA_DATA_TYPE_STRING,      "Ask" },
-	{ NA_IPREFS_FOLDER_CHOOSER_WSP,               GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_FOLDER_CHOOSER_URI,               GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///" },
-	{ NA_IPREFS_IMPORT_ASK_USER_WSP,              GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_IMPORT_ASK_USER_LAST_MODE,        GROUP_NACT,    FMA_DATA_TYPE_STRING,      "NoImport" },
-	{ NA_IPREFS_IMPORT_ASSISTANT_WSP,             GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_IMPORT_ASSISTANT_URI,             GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///tmp" },
-	{ NA_IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_IMPORT_PREFERRED_MODE,            GROUP_NACT,    FMA_DATA_TYPE_STRING,      "Ask" },
-	{ NA_IPREFS_IO_PROVIDERS_WRITE_ORDER,         GROUP_NACT,    FMA_DATA_TYPE_STRING_LIST, "" },
-	{ NA_IPREFS_ICON_CHOOSER_URI,                 GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///" },
-	{ NA_IPREFS_ICON_CHOOSER_PANED,               GROUP_NACT,    FMA_DATA_TYPE_UINT,        "200" },
-	{ NA_IPREFS_ICON_CHOOSER_WSP,                 GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_ITEMS_ADD_ABOUT_ITEM,             GROUP_RUNTIME, FMA_DATA_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_ITEMS_CREATE_ROOT_MENU,           GROUP_RUNTIME, FMA_DATA_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER,           GROUP_RUNTIME, FMA_DATA_TYPE_STRING_LIST, "" },
-	{ NA_IPREFS_ITEMS_LIST_ORDER_MODE,            GROUP_RUNTIME, FMA_DATA_TYPE_STRING,      "AscendingOrder" },
-	{ NA_IPREFS_MAIN_PANED,                       GROUP_NACT,    FMA_DATA_TYPE_UINT,        "200" },
-	{ NA_IPREFS_MAIN_SAVE_AUTO,                   GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_MAIN_SAVE_PERIOD,                 GROUP_NACT,    FMA_DATA_TYPE_UINT,        "5" },
-	{ NA_IPREFS_MAIN_TABS_POS,                    GROUP_NACT,    FMA_DATA_TYPE_STRING,      "Top" },
-	{ NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,        GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,        GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,        GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY,       GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_MAIN_WINDOW_WSP,                  GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_PREFERENCES_WSP,                  GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_PLUGIN_MENU_LOG,                  GROUP_RUNTIME, FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_RELABEL_DUPLICATE_ACTION,         GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_RELABEL_DUPLICATE_MENU,           GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_RELABEL_DUPLICATE_PROFILE,        GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_SCHEME_ADD_SCHEME_WSP,            GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_SCHEME_DEFAULT_LIST,              GROUP_NACT,    FMA_DATA_TYPE_STRING_LIST, "" },
-	{ NA_IPREFS_TERMINAL_PATTERN,                 GROUP_RUNTIME, FMA_DATA_TYPE_STRING,      "" },
-	{ NA_IPREFS_IO_PROVIDER_READABLE,             NA_IPREFS_IO_PROVIDER_GROUP, FMA_DATA_TYPE_BOOLEAN, "true" },
-	{ NA_IPREFS_IO_PROVIDER_WRITABLE,             NA_IPREFS_IO_PROVIDER_GROUP, FMA_DATA_TYPE_BOOLEAN, "true" },
+	{ IPREFS_ADMIN_PREFERENCES_LOCKED,         GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_ADMIN_IO_PROVIDERS_LOCKED,        GROUP_RUNTIME, FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_ASSISTANT_ESC_CONFIRM,            GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
+	{ IPREFS_ASSISTANT_ESC_QUIT,               GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
+	{ IPREFS_CAPABILITY_ADD_CAPABILITY_WSP,    GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_COMMAND_CHOOSER_WSP,              GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_COMMAND_CHOOSER_URI,              GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///bin" },
+	{ IPREFS_COMMAND_LEGEND_WSP,               GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_CONFIRM_LOGOUT_WSP,               GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_DESKTOP_ENVIRONMENT,              GROUP_RUNTIME, FMA_DATA_TYPE_STRING,      "" },
+	{ IPREFS_WORKING_DIR_WSP,                  GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_WORKING_DIR_URI,                  GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///" },
+	{ IPREFS_SHOW_IF_RUNNING_WSP,              GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_SHOW_IF_RUNNING_URI,              GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///bin" },
+	{ IPREFS_TRY_EXEC_WSP,                     GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_TRY_EXEC_URI,                     GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///bin" },
+	{ IPREFS_EXPORT_ASK_USER_WSP,              GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_EXPORT_ASK_USER_LAST_FORMAT,      GROUP_NACT,    FMA_DATA_TYPE_STRING,      "Desktop1" },
+	{ IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_EXPORT_ASSISTANT_WSP,             GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_EXPORT_ASSISTANT_URI,             GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///tmp" },
+	{ IPREFS_EXPORT_ASSISTANT_PANED,           GROUP_NACT,    FMA_DATA_TYPE_UINT,        "200" },
+	{ IPREFS_EXPORT_PREFERRED_FORMAT,          GROUP_NACT,    FMA_DATA_TYPE_STRING,      "Ask" },
+	{ IPREFS_FOLDER_CHOOSER_WSP,               GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_FOLDER_CHOOSER_URI,               GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///" },
+	{ IPREFS_IMPORT_ASK_USER_WSP,              GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_IMPORT_ASK_USER_LAST_MODE,        GROUP_NACT,    FMA_DATA_TYPE_STRING,      "NoImport" },
+	{ IPREFS_IMPORT_ASSISTANT_WSP,             GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_IMPORT_ASSISTANT_URI,             GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///tmp" },
+	{ IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_IMPORT_PREFERRED_MODE,            GROUP_NACT,    FMA_DATA_TYPE_STRING,      "Ask" },
+	{ IPREFS_IO_PROVIDERS_WRITE_ORDER,         GROUP_NACT,    FMA_DATA_TYPE_STRING_LIST, "" },
+	{ IPREFS_ICON_CHOOSER_URI,                 GROUP_NACT,    FMA_DATA_TYPE_STRING,      "file:///" },
+	{ IPREFS_ICON_CHOOSER_PANED,               GROUP_NACT,    FMA_DATA_TYPE_UINT,        "200" },
+	{ IPREFS_ICON_CHOOSER_WSP,                 GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_ITEMS_ADD_ABOUT_ITEM,             GROUP_RUNTIME, FMA_DATA_TYPE_BOOLEAN,     "true" },
+	{ IPREFS_ITEMS_CREATE_ROOT_MENU,           GROUP_RUNTIME, FMA_DATA_TYPE_BOOLEAN,     "true" },
+	{ IPREFS_ITEMS_LEVEL_ZERO_ORDER,           GROUP_RUNTIME, FMA_DATA_TYPE_STRING_LIST, "" },
+	{ IPREFS_ITEMS_LIST_ORDER_MODE,            GROUP_RUNTIME, FMA_DATA_TYPE_STRING,      "AscendingOrder" },
+	{ IPREFS_MAIN_PANED,                       GROUP_NACT,    FMA_DATA_TYPE_UINT,        "200" },
+	{ IPREFS_MAIN_SAVE_AUTO,                   GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_MAIN_SAVE_PERIOD,                 GROUP_NACT,    FMA_DATA_TYPE_UINT,        "5" },
+	{ IPREFS_MAIN_TABS_POS,                    GROUP_NACT,    FMA_DATA_TYPE_STRING,      "Top" },
+	{ IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,        GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
+	{ IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,        GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
+	{ IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,        GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "true" },
+	{ IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY,       GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_MAIN_WINDOW_WSP,                  GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_PREFERENCES_WSP,                  GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_PLUGIN_MENU_LOG,                  GROUP_RUNTIME, FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_RELABEL_DUPLICATE_ACTION,         GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_RELABEL_DUPLICATE_MENU,           GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_RELABEL_DUPLICATE_PROFILE,        GROUP_NACT,    FMA_DATA_TYPE_BOOLEAN,     "false" },
+	{ IPREFS_SCHEME_ADD_SCHEME_WSP,            GROUP_NACT,    FMA_DATA_TYPE_UINT_LIST,   "" },
+	{ IPREFS_SCHEME_DEFAULT_LIST,              GROUP_NACT,    FMA_DATA_TYPE_STRING_LIST, "" },
+	{ IPREFS_TERMINAL_PATTERN,                 GROUP_RUNTIME, FMA_DATA_TYPE_STRING,      "" },
+	{ IPREFS_IO_PROVIDER_READABLE,             IPREFS_IO_PROVIDER_GROUP, FMA_DATA_TYPE_BOOLEAN, "true" },
+	{ IPREFS_IO_PROVIDER_WRITABLE,             IPREFS_IO_PROVIDER_GROUP, FMA_DATA_TYPE_BOOLEAN, "true" },
 	{ 0 }
 };
 
@@ -212,11 +212,11 @@ enum {
 static GObjectClass *st_parent_class           = NULL;
 static gint          st_burst_timeout          = 100;		/* burst timeout in msec */
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
-static NASettings   *st_settings               = NULL;
+static FMASettings   *st_settings               = NULL;
 
 static GType     settings_get_type( void );
 static GType     register_type( void );
-static void      class_init( NASettingsClass *klass );
+static void      class_init( FMASettingsClass *klass );
 static void      instance_init( GTypeInstance *instance, gpointer klass );
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
@@ -229,7 +229,7 @@ static KeyDef   *get_key_def( const gchar *key );
 static KeyFile  *key_file_new( const gchar *dir );
 static void      on_keyfile_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type );
 static void      on_keyfile_changed_timeout( void );
-static void      on_key_changed_final_handler( NASettings *settings, gchar *group, gchar *key, FMABoxed *new_value, gboolean mandatory );
+static void      on_key_changed_final_handler( FMASettings *settings, gchar *group, gchar *key, FMABoxed *new_value, gboolean mandatory );
 static KeyValue *peek_key_value_from_content( GList *content, const gchar *group, const gchar *key );
 static KeyValue *read_key_value( const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory );
 static KeyValue *read_key_value_from_key_file( KeyFile *keyfile, const gchar *group, const gchar *key, const KeyDef *key_def );
@@ -254,32 +254,32 @@ settings_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_settings_register_type";
+	static const gchar *thisfn = "fma_settings_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NASettingsClass ),
+		sizeof( FMASettingsClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NASettings ),
+		sizeof( FMASettings ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NASettings", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMASettings", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NASettingsClass *klass )
+class_init( FMASettingsClass *klass )
 {
-	static const gchar *thisfn = "na_settings_class_init";
+	static const gchar *thisfn = "fma_settings_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -290,18 +290,18 @@ class_init( NASettingsClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NASettingsClassPrivate, 1 );
+	klass->private = g_new0( FMASettingsClassPrivate, 1 );
 
 	/*
-	 * NASettings::settings-key-changed:
+	 * FMASettings::settings-key-changed:
 	 *
-	 * This signal is sent by NASettings when the value of a key is modified.
+	 * This signal is sent by FMASettings when the value of a key is modified.
 	 *
 	 * Arguments are the group, the key, the new value as a FMABoxed,
 	 * and whether it is mandatory.
 	 *
 	 * Handler is of type:
-	 * void ( *handler )( NASettings *settings,
+	 * void ( *handler )( FMASettings *settings,
 	 * 						const gchar *group,
 	 * 						const gchar *key,
 	 * 						FMABoxed *value,
@@ -326,8 +326,8 @@ class_init( NASettingsClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_settings_instance_init";
-	NASettings *self;
+	static const gchar *thisfn = "fma_settings_instance_init";
+	FMASettings *self;
 
 	g_return_if_fail( NA_IS_SETTINGS( instance ));
 
@@ -336,7 +336,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self = NA_SETTINGS( instance );
 
-	self->private = g_new0( NASettingsPrivate, 1 );
+	self->private = g_new0( FMASettingsPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->mandatory = NULL;
@@ -353,8 +353,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_settings_instance_dispose";
-	NASettings *self;
+	static const gchar *thisfn = "fma_settings_instance_dispose";
+	FMASettings *self;
 
 	g_return_if_fail( NA_IS_SETTINGS( object ));
 
@@ -378,8 +378,8 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_settings_instance_finalize";
-	NASettings *self;
+	static const gchar *thisfn = "fma_settings_instance_finalize";
+	FMASettings *self;
 
 	g_return_if_fail( NA_IS_SETTINGS( object ));
 
@@ -402,15 +402,15 @@ instance_finalize( GObject *object )
 }
 
 /**
- * na_settings_new:
+ * fma_settings_new:
  *
- * Allocates a new #NASettings object which should be na_settings_free()
+ * Allocates a new #FMASettings object which should be fma_settings_free()
  * by the caller.
  */
 static void
 settings_new( void )
 {
-	static const gchar *thisfn = "na_settings_new";
+	static const gchar *thisfn = "fma_settings_new";
 	gchar *dir;
 	GList *content;
 	const gchar * const *array;
@@ -455,10 +455,10 @@ settings_new( void )
 }
 
 /**
- * na_settings_free:
+ * fma_settings_free:
  */
 void
-na_settings_free( void )
+fma_settings_free( void )
 {
 	if( st_settings ){
 		g_object_unref( st_settings );
@@ -467,7 +467,7 @@ na_settings_free( void )
 }
 
 /**
- * na_settings_register_key_callback:
+ * fma_settings_register_key_callback:
  * @key: the key to be monitored.
  * @callback: the function to be called when the value of the key changes.
  * @user_data: data to be passed to the @callback function.
@@ -477,9 +477,9 @@ na_settings_free( void )
  * Since: 3.1
  */
 void
-na_settings_register_key_callback( const gchar *key, GCallback callback, gpointer user_data )
+fma_settings_register_key_callback( const gchar *key, GCallback callback, gpointer user_data )
 {
-	static const gchar *thisfn = "na_settings_register_key_callback";
+	static const gchar *thisfn = "fma_settings_register_key_callback";
 
 	g_debug( "%s: key=%s, callback=%p, user_data=%p",
 			thisfn, key, ( void * ) callback, ( void * ) user_data );
@@ -494,7 +494,7 @@ na_settings_register_key_callback( const gchar *key, GCallback callback, gpointe
 }
 
 /**
- * na_settings_get_boolean:
+ * fma_settings_get_boolean:
  * @key: the key whose value is to be returned.
  * @found: if not %NULL, a pointer to a gboolean in which we will store
  *  whether the searched @key has been found (%TRUE), or if the returned
@@ -512,13 +512,13 @@ na_settings_register_key_callback( const gchar *key, GCallback callback, gpointe
  * Since: 3.1
  */
 gboolean
-na_settings_get_boolean( const gchar *key, gboolean *found, gboolean *mandatory )
+fma_settings_get_boolean( const gchar *key, gboolean *found, gboolean *mandatory )
 {
-	return( na_settings_get_boolean_ex( NULL, key, found, mandatory ));
+	return( fma_settings_get_boolean_ex( NULL, key, found, mandatory ));
 }
 
 /**
- * na_settings_get_boolean_ex:
+ * fma_settings_get_boolean_ex:
  * @group: the group where the @key is to be searched for. May be %NULL.
  * @key: the key whose value is to be returned.
  * @found: if not %NULL, a pointer to a gboolean in which we will store
@@ -534,7 +534,7 @@ na_settings_get_boolean( const gchar *key, gboolean *found, gboolean *mandatory 
  * Since: 3.1
  */
 gboolean
-na_settings_get_boolean_ex( const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory )
+fma_settings_get_boolean_ex( const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory )
 {
 	gboolean value;
 	KeyValue *key_value;
@@ -558,7 +558,7 @@ na_settings_get_boolean_ex( const gchar *group, const gchar *key, gboolean *foun
 }
 
 /**
- * na_settings_get_string:
+ * fma_settings_get_string:
  * @key: the key whose value is to be returned.
  * @found: if not %NULL, a pointer to a gboolean in which we will store
  *  whether the searched @key has been found (%TRUE), or if the returned
@@ -577,7 +577,7 @@ na_settings_get_boolean_ex( const gchar *group, const gchar *key, gboolean *foun
  * Since: 3.1
  */
 gchar *
-na_settings_get_string( const gchar *key, gboolean *found, gboolean *mandatory )
+fma_settings_get_string( const gchar *key, gboolean *found, gboolean *mandatory )
 {
 	gchar *value;
 	KeyValue *key_value;
@@ -601,7 +601,7 @@ na_settings_get_string( const gchar *key, gboolean *found, gboolean *mandatory )
 }
 
 /**
- * na_settings_get_string_list:
+ * fma_settings_get_string_list:
  * @key: the key whose value is to be returned.
  * @found: if not %NULL, a pointer to a gboolean in which we will store
  *  whether the searched @key has been found (%TRUE), or if the returned
@@ -620,7 +620,7 @@ na_settings_get_string( const gchar *key, gboolean *found, gboolean *mandatory )
  * Since: 3.1
  */
 GSList *
-na_settings_get_string_list( const gchar *key, gboolean *found, gboolean *mandatory )
+fma_settings_get_string_list( const gchar *key, gboolean *found, gboolean *mandatory )
 {
 	GSList *value;
 	KeyValue *key_value;
@@ -644,7 +644,7 @@ na_settings_get_string_list( const gchar *key, gboolean *found, gboolean *mandat
 }
 
 /**
- * na_settings_get_uint:
+ * fma_settings_get_uint:
  * @key: the key whose value is to be returned.
  * @found: if not %NULL, a pointer to a gboolean in which we will store
  *  whether the searched @key has been found (%TRUE), or if the returned
@@ -662,7 +662,7 @@ na_settings_get_string_list( const gchar *key, gboolean *found, gboolean *mandat
  * Since: 3.1
  */
 guint
-na_settings_get_uint( const gchar *key, gboolean *found, gboolean *mandatory )
+fma_settings_get_uint( const gchar *key, gboolean *found, gboolean *mandatory )
 {
 	guint value;
 	KeyDef *key_def;
@@ -686,7 +686,7 @@ na_settings_get_uint( const gchar *key, gboolean *found, gboolean *mandatory )
 }
 
 /**
- * na_settings_get_uint_list:
+ * fma_settings_get_uint_list:
  * @key: the key whose value is to be returned.
  * @found: if not %NULL, a pointer to a gboolean in which we will store
  *  whether the searched @key has been found (%TRUE), or if the returned
@@ -705,7 +705,7 @@ na_settings_get_uint( const gchar *key, gboolean *found, gboolean *mandatory )
  * Since: 3.1
  */
 GList *
-na_settings_get_uint_list( const gchar *key, gboolean *found, gboolean *mandatory )
+fma_settings_get_uint_list( const gchar *key, gboolean *found, gboolean *mandatory )
 {
 	GList *value;
 	KeyDef *key_def;
@@ -729,7 +729,7 @@ na_settings_get_uint_list( const gchar *key, gboolean *found, gboolean *mandator
 }
 
 /**
- * na_settings_set_boolean:
+ * fma_settings_set_boolean:
  * @key: the key whose value is to be returned.
  * @value: the boolean to be written.
  *
@@ -743,7 +743,7 @@ na_settings_get_uint_list( const gchar *key, gboolean *found, gboolean *mandator
  * Since: 3.1
  */
 gboolean
-na_settings_set_boolean( const gchar *key, gboolean value )
+fma_settings_set_boolean( const gchar *key, gboolean value )
 {
 	gchar *string;
 	gboolean ok;
@@ -756,7 +756,7 @@ na_settings_set_boolean( const gchar *key, gboolean value )
 }
 
 /**
- * na_settings_set_boolean_ex:
+ * fma_settings_set_boolean_ex:
  * @group: the group in the keyed file;
  * @key: the key whose value is to be returned.
  * @value: the boolean to be written.
@@ -768,7 +768,7 @@ na_settings_set_boolean( const gchar *key, gboolean value )
  * Since: 3.1
  */
 gboolean
-na_settings_set_boolean_ex( const gchar *group, const gchar *key, gboolean value )
+fma_settings_set_boolean_ex( const gchar *group, const gchar *key, gboolean value )
 {
 	gchar *string;
 	gboolean ok;
@@ -781,7 +781,7 @@ na_settings_set_boolean_ex( const gchar *group, const gchar *key, gboolean value
 }
 
 /**
- * na_settings_set_string:
+ * fma_settings_set_string:
  * @key: the key whose value is to be returned.
  * @value: the string to be written.
  *
@@ -795,13 +795,13 @@ na_settings_set_boolean_ex( const gchar *group, const gchar *key, gboolean value
  * Since: 3.1
  */
 gboolean
-na_settings_set_string( const gchar *key, const gchar *value )
+fma_settings_set_string( const gchar *key, const gchar *value )
 {
 	return( set_key_value( NULL, key, value ));
 }
 
 /**
- * na_settings_set_string_ex:
+ * fma_settings_set_string_ex:
  * @group: the group in the keyed file;
  * @key: the key whose value is to be returned.
  * @value: the string to be written.
@@ -813,13 +813,13 @@ na_settings_set_string( const gchar *key, const gchar *value )
  * Since: 3.2
  */
 gboolean
-na_settings_set_string_ex( const gchar *group, const gchar *key, const gchar *value )
+fma_settings_set_string_ex( const gchar *group, const gchar *key, const gchar *value )
 {
 	return( set_key_value( group, key, value ));
 }
 
 /**
- * na_settings_set_string_list:
+ * fma_settings_set_string_list:
  * @key: the key whose value is to be returned.
  * @value: the list of strings to be written.
  *
@@ -833,7 +833,7 @@ na_settings_set_string_ex( const gchar *group, const gchar *key, const gchar *va
  * Since: 3.1
  */
 gboolean
-na_settings_set_string_list( const gchar *key, const GSList *value )
+fma_settings_set_string_list( const gchar *key, const GSList *value )
 {
 	GString *string;
 	const GSList *it;
@@ -850,7 +850,7 @@ na_settings_set_string_list( const gchar *key, const GSList *value )
 }
 
 /**
- * na_settings_set_int_ex:
+ * fma_settings_set_int_ex:
  * @group: the group in the keyed file;
  * @key: the key whose value is to be returned.
  * @value: the unsigned integer to be written.
@@ -862,7 +862,7 @@ na_settings_set_string_list( const gchar *key, const GSList *value )
  * Since: 3.2
  */
 gboolean
-na_settings_set_int_ex( const gchar *group, const gchar *key, int value )
+fma_settings_set_int_ex( const gchar *group, const gchar *key, int value )
 {
 	gchar *string;
 	gboolean ok;
@@ -875,7 +875,7 @@ na_settings_set_int_ex( const gchar *group, const gchar *key, int value )
 }
 
 /**
- * na_settings_set_uint:
+ * fma_settings_set_uint:
  * @key: the key whose value is to be returned.
  * @value: the unsigned integer to be written.
  *
@@ -889,7 +889,7 @@ na_settings_set_int_ex( const gchar *group, const gchar *key, int value )
  * Since: 3.1
  */
 gboolean
-na_settings_set_uint( const gchar *key, guint value )
+fma_settings_set_uint( const gchar *key, guint value )
 {
 	gchar *string;
 	gboolean ok;
@@ -902,7 +902,7 @@ na_settings_set_uint( const gchar *key, guint value )
 }
 
 /**
- * na_settings_set_uint_list:
+ * fma_settings_set_uint_list:
  * @key: the key whose value is to be returned.
  * @value: the list of unsigned integers to be written.
  *
@@ -916,7 +916,7 @@ na_settings_set_uint( const gchar *key, guint value )
  * Since: 3.1
  */
 gboolean
-na_settings_set_uint_list( const gchar *key, const GList *value )
+fma_settings_set_uint_list( const gchar *key, const GList *value )
 {
 	GString *string;
 	const GList *it;
@@ -933,7 +933,7 @@ na_settings_set_uint_list( const gchar *key, const GList *value )
 }
 
 /**
- * na_settings_get_groups:
+ * fma_settings_get_groups:
  *
  * Returns: the list of groups in the configuration; this list should be
  * fma_core_utils_slist_free() by the caller.
@@ -945,7 +945,7 @@ na_settings_set_uint_list( const gchar *key, const GList *value )
  * Since: 3.1
  */
 GSList *
-na_settings_get_groups( void )
+fma_settings_get_groups( void )
 {
 	GSList *groups;
 	gchar **array;
@@ -1050,7 +1050,7 @@ content_diff( GList *old, GList *new )
 static GList *
 content_load_keys( GList *content, KeyFile *keyfile )
 {
-	static const gchar *thisfn = "na_settings_content_load_keys";
+	static const gchar *thisfn = "fma_settings_content_load_keys";
 	GError *error;
 	gchar **groups, **ig;
 	gchar **keys, **ik;
@@ -1099,7 +1099,7 @@ content_load_keys( GList *content, KeyFile *keyfile )
 static KeyDef *
 get_key_def( const gchar *key )
 {
-	static const gchar *thisfn = "na_settings_get_key_def";
+	static const gchar *thisfn = "fma_settings_get_key_def";
 	KeyDef *found = NULL;
 	KeyDef *idef;
 
@@ -1118,13 +1118,13 @@ get_key_def( const gchar *key )
 }
 
 /*
- * called from na_settings_new
+ * called from fma_settings_new
  * allocate and load the key files for global and user preferences
  */
 static KeyFile *
 key_file_new( const gchar *dir )
 {
-	static const gchar *thisfn = "na_settings_key_file_new";
+	static const gchar *thisfn = "fma_settings_key_file_new";
 	KeyFile *keyfile;
 	GError *error;
 	GFile *file;
@@ -1169,7 +1169,7 @@ on_keyfile_changed( GFileMonitor *monitor,
 static void
 on_keyfile_changed_timeout( void )
 {
-	static const gchar *thisfn = "na_settings_on_keyfile_changed_timeout";
+	static const gchar *thisfn = "fma_settings_on_keyfile_changed_timeout";
 	GList *new_content;
 	GList *modifs;
 	GList *ic, *im;
@@ -1208,15 +1208,15 @@ on_keyfile_changed_timeout( void )
 			consumer = ( const Consumer * ) ic->data;
 			group_prefix = NULL;
 
-			if( !strcmp( consumer->monitored_key, NA_IPREFS_IO_PROVIDERS_READ_STATUS )){
-				group_prefix = g_strdup_printf( "%s ", NA_IPREFS_IO_PROVIDER_GROUP );
-				key = NA_IPREFS_IO_PROVIDER_READABLE;
+			if( !strcmp( consumer->monitored_key, IPREFS_IO_PROVIDERS_READ_STATUS )){
+				group_prefix = g_strdup_printf( "%s ", IPREFS_IO_PROVIDER_GROUP );
+				key = IPREFS_IO_PROVIDER_READABLE;
 			} else {
 				key = consumer->monitored_key;
 			}
 
 			if(( !group_prefix || g_str_has_prefix( changed->group, group_prefix )) && !strcmp( changed->def->key, key )){
-				( *( NASettingsKeyCallback ) consumer->callback )(
+				( *( FMASettingsKeyCallback ) consumer->callback )(
 						changed->group,
 						changed->def->key,
 						fma_boxed_get_pointer( changed->boxed ),
@@ -1244,9 +1244,9 @@ on_keyfile_changed_timeout( void )
 }
 
 static void
-on_key_changed_final_handler( NASettings *settings, gchar *group, gchar *key, FMABoxed *new_value, gboolean mandatory )
+on_key_changed_final_handler( FMASettings *settings, gchar *group, gchar *key, FMABoxed *new_value, gboolean mandatory )
 {
-	g_debug( "na_settings_on_key_changed_final_handler: group=%s, key=%s", group, key );
+	g_debug( "fma_settings_on_key_changed_final_handler: group=%s, key=%s", group, key );
 	fma_boxed_dump( new_value );
 }
 
@@ -1272,7 +1272,7 @@ peek_key_value_from_content( GList *content, const gchar *group, const gchar *ke
 static KeyValue *
 read_key_value( const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory )
 {
-	static const gchar *thisfn = "na_settings_read_key_value";
+	static const gchar *thisfn = "fma_settings_read_key_value";
 	KeyDef *key_def;
 	gboolean has_entry;
 	KeyValue *key_value;
@@ -1318,7 +1318,7 @@ read_key_value( const gchar *group, const gchar *key, gboolean *found, gboolean 
 static KeyValue *
 read_key_value_from_key_file( KeyFile *keyfile, const gchar *group, const gchar *key, const KeyDef *key_def )
 {
-	static const gchar *thisfn = "na_settings_read_key_value_from_key_file";
+	static const gchar *thisfn = "fma_settings_read_key_value_from_key_file";
 	KeyValue *value;
 	gchar *str;
 	GError *error;
@@ -1418,7 +1418,7 @@ release_key_value( KeyValue *value )
 static gboolean
 set_key_value( const gchar *group, const gchar *key, const gchar *string )
 {
-	static const gchar *thisfn = "na_settings_set_key_value";
+	static const gchar *thisfn = "fma_settings_set_key_value";
 	KeyDef *key_def;
 	const gchar *wgroup;
 	gboolean ok;
@@ -1458,7 +1458,7 @@ set_key_value( const gchar *group, const gchar *key, const gchar *string )
 static gboolean
 write_user_key_file( void )
 {
-	static const gchar *thisfn = "na_settings_write_user_key_file";
+	static const gchar *thisfn = "fma_settings_write_user_key_file";
 	gchar *data;
 	GFile *file;
 	GFileOutputStream *stream;

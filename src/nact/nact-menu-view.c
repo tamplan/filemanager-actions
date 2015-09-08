@@ -50,10 +50,10 @@ typedef struct {
 	sToolbarProps;
 
 static sToolbarProps st_toolbar_props[] = {
-	{ TOOLBAR_FILE_ID,  NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,  "toolbar-file",  "file-toolbar",  NULL },
-	{ TOOLBAR_EDIT_ID,  NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,  "toolbar-edit",  "edit-toolbar",  NULL },
-	{ TOOLBAR_TOOLS_ID, NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY, "toolbar-tools", "tools-toolbar", NULL },
-	{ TOOLBAR_HELP_ID,  NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,  "toolbar-help",  "help-toolbar",  NULL }
+	{ TOOLBAR_FILE_ID,  IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,  "toolbar-file",  "file-toolbar",  NULL },
+	{ TOOLBAR_EDIT_ID,  IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,  "toolbar-edit",  "edit-toolbar",  NULL },
+	{ TOOLBAR_TOOLS_ID, IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY, "toolbar-tools", "tools-toolbar", NULL },
+	{ TOOLBAR_HELP_ID,  IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,  "toolbar-help",  "help-toolbar",  NULL }
 };
 
 static const gchar *st_toolbar_ui       = PKGUIDIR "/nact-toolbar.ui";
@@ -157,7 +157,7 @@ setup_toolbar( NactMainWindow *window, GtkBuilder *builder, guint toolbar_id )
 	g_return_if_fail( props->toolbar && GTK_IS_TOOLBAR( props->toolbar ));
 
 	/* display the toolbar depending it is active or not */
-	is_active = na_settings_get_boolean( props->prefs_key, NULL, NULL );
+	is_active = fma_settings_get_boolean( props->prefs_key, NULL, NULL );
 	if( is_active ){
 		action = g_action_map_lookup_action( G_ACTION_MAP( window ), props->action_name );
 		g_action_change_state( action, g_variant_new_boolean( is_active ));
@@ -206,7 +206,7 @@ nact_menu_view_toolbar_display( NactMainWindow *main_window, const gchar *action
 	}
 
 	gtk_widget_show_all( parent );
-	na_settings_set_boolean( props->prefs_key, visible );
+	fma_settings_set_boolean( props->prefs_key, visible );
 }
 
 static sToolbarProps *

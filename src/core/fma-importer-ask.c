@@ -41,7 +41,7 @@
 #include "fma-importer.h"
 #include "fma-importer-ask.h"
 #include "fma-ioptions-list.h"
-#include "na-settings.h"
+#include "fma-settings.h"
 
 /* private class data
  */
@@ -352,7 +352,7 @@ fma_importer_ask_user( const FMAObjectItem *importing, const FMAObjectItem *exis
 		} while ( !on_dialog_response( dialog, code ));
 
 		mode = dialog->private->mode;
-		fma_gtk_utils_save_window_position( dialog->private->toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
+		fma_gtk_utils_save_window_position( dialog->private->toplevel, IPREFS_IMPORT_ASK_USER_WSP );
 
 		if( parms->parent ){
 			gtk_widget_hide( GTK_WIDGET( dialog->private->toplevel ));
@@ -413,14 +413,14 @@ initialize_window( FMAImporterAsk *editor, GtkWindow *toplevel )
 	g_free( label );
 
 	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
-	mode_id = na_settings_get_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
+	mode_id = fma_settings_get_string( IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
 	fma_ioptions_list_set_default( FMA_IOPTIONS_LIST( editor ), widget, mode_id );
 	g_free( mode_id );
 
 	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskKeepChoiceButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), editor->private->parms->keep_choice );
 
-	fma_gtk_utils_restore_window_position( toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
+	fma_gtk_utils_restore_window_position( toplevel, IPREFS_IMPORT_ASK_USER_WSP );
 	gtk_widget_show_all( GTK_WIDGET( toplevel ));
 }
 
@@ -437,14 +437,14 @@ get_selected_mode( FMAImporterAsk *editor )
 	mode = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), widget );
 
 	mode_id = fma_ioption_get_id( mode );
-	na_settings_set_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, mode_id );
+	fma_settings_set_string( IPREFS_IMPORT_ASK_USER_LAST_MODE, mode_id );
 	g_free( mode_id );
 
 	editor->private->mode = fma_import_mode_get_id( FMA_IMPORT_MODE( mode ));
 
 	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	na_settings_set_boolean( NA_IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, keep );
+	fma_settings_set_boolean( IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, keep );
 }
 
 /*

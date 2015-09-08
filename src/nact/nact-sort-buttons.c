@@ -248,8 +248,8 @@ initialize_buttons( NactSortButtons *buttons, NactMainWindow *window )
 				G_CALLBACK( on_toggle_button_toggled ), buttons );
 	}
 
-	na_settings_register_key_callback(
-			NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), buttons );
+	fma_settings_register_key_callback(
+			IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), buttons );
 
 	/* for now, disable the sort buttons
 	 * they will be enabled as soon as we receive the count of displayed items
@@ -294,13 +294,13 @@ on_toggle_button_toggled( GtkToggleButton *toggled_button, NactSortButtons *butt
 }
 
 /*
- * NASettings callback for a change on NA_IPREFS_ITEMS_LIST_ORDER_MODE key
+ * FMASettings callback for a change on IPREFS_ITEMS_LIST_ORDER_MODE key
  *
  * activate the button corresponding to the new sort order
  * desactivate the previous button
  * do nothing if new button and previous button are the sames
  *
- * testing 'toggling' is useless here because NASettings slightly delay the
+ * testing 'toggling' is useless here because FMASettings slightly delay the
  * notifications: when we toggle a button, and update the settings, then
  * we already have reset 'toggling' to FALSE when we are coming here
  */

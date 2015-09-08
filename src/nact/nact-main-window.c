@@ -147,7 +147,7 @@ enum {
 
 static const gchar     *st_xmlui_filename         = PKGUIDIR "/nact-main-window.ui";
 static const gchar     *st_toplevel_name          = "MainWindow";
-static const gchar     *st_wsp_name               = NA_IPREFS_MAIN_WINDOW_WSP;
+static const gchar     *st_wsp_name               = IPREFS_MAIN_WINDOW_WSP;
 
 static gint             st_burst_timeout          = 2500;		/* burst timeout in msec */
 static BaseWindowClass *st_parent_class           = NULL;
@@ -616,7 +616,7 @@ instance_dispose( GObject *window )
 
 		pane = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-paned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
-		na_settings_set_uint( NA_IPREFS_MAIN_PANED, pos );
+		fma_settings_set_uint( IPREFS_MAIN_PANED, pos );
 
 		notebook = GTK_NOTEBOOK( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-notebook" ));
 		pos = gtk_notebook_get_tab_pos( notebook );
@@ -737,7 +737,7 @@ setup_main_ui( NactMainWindow *main_window )
 
 	/* restore pane position
 	 */
-	pos = na_settings_get_uint( NA_IPREFS_MAIN_PANED, NULL, NULL );
+	pos = fma_settings_get_uint( IPREFS_MAIN_PANED, NULL, NULL );
 	if( pos ){
 		pane = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-paned" );
 		g_return_if_fail( pane && GTK_IS_PANED( pane ));

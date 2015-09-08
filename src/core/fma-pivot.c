@@ -329,7 +329,7 @@ instance_dispose( GObject *object )
 		self->private->tree = fma_object_free_items( self->private->tree );
 
 		/* release the settings */
-		na_settings_free();
+		fma_settings_free();
 
 		/* release the I/O Provider object list */
 		fma_io_provider_unref_io_providers_list();

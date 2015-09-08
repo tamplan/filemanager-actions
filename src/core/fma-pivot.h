@@ -75,7 +75,7 @@
 #include <api/fma-iio-provider.h>
 #include <api/fma-object-api.h>
 
-#include "na-settings.h"
+#include "fma-settings.h"
 
 G_BEGIN_DECLS
 

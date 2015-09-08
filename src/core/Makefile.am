@@ -115,8 +115,8 @@ libna_core_la_SOURCES = \
 	fma-pivot.h											\
 	fma-selected-info.c									\
 	fma-selected-info.h									\
-	na-settings.c										\
-	na-settings.h										\
+	fma-settings.c										\
+	fma-settings.h										\
 	fma-timeout.c										\
 	na-tokens.c											\
 	na-tokens.h											\

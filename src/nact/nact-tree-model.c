@@ -299,8 +299,8 @@ instance_constructed( GObject *model )
 					G_CALLBACK( nact_tree_model_dnd_on_drag_end ), priv->window );
 
 			/* set_edition_mode */
-			na_settings_register_key_callback(
-					NA_IPREFS_ITEMS_LIST_ORDER_MODE,
+			fma_settings_register_key_callback(
+					IPREFS_ITEMS_LIST_ORDER_MODE,
 					G_CALLBACK( on_settings_order_mode_changed ),
 					model );
 
@@ -460,8 +460,8 @@ nact_tree_model_set_edition_mode( NactTreeModel *tmodel, guint mode )
 
 		if( priv->mode == TREE_MODE_EDITION ){
 
-			na_settings_register_key_callback(
-					NA_IPREFS_ITEMS_LIST_ORDER_MODE,
+			fma_settings_register_key_callback(
+					IPREFS_ITEMS_LIST_ORDER_MODE,
 					G_CALLBACK( on_settings_order_mode_changed ),
 					tmodel );
 
@@ -497,7 +497,7 @@ connect_item_updated_signal( NactTreeModel *tmodel )
 }
 
 /*
- * NASettings callback for a change on NA_IPREFS_ITEMS_LIST_ORDER_MODE key
+ * FMASettings callback for a change on IPREFS_ITEMS_LIST_ORDER_MODE key
  */
 static void
 on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactTreeModel *model )

@@ -414,7 +414,7 @@ io_providers_list_add_from_write_order( const FMAPivot *pivot, GList *objects_li
 	const gchar *id;
 
 	merged = objects_list;
-	io_providers = na_settings_get_string_list( NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
+	io_providers = fma_settings_get_string_list( IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
 
 	for( it = io_providers ; it ; it = it->next ){
 		id = ( const gchar * ) it->data;
@@ -521,8 +521,8 @@ io_providers_get_from_prefs( void )
 	guint prefix_len;
 
 	providers = NULL;
-	groups = na_settings_get_groups();
-	group_prefix = g_strdup_printf( "%s ", NA_IPREFS_IO_PROVIDER_GROUP );
+	groups = fma_settings_get_groups();
+	group_prefix = g_strdup_printf( "%s ", IPREFS_IO_PROVIDER_GROUP );
 	prefix_len = strlen( group_prefix );
 
 	for( it = groups ; it ; it = it->next ){
@@ -756,8 +756,8 @@ fma_io_provider_is_conf_readable( const FMAIOProvider *provider, const FMAPivot 
 
 	if( !provider->private->dispose_has_run ){
 
-		group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, provider->private->id );
-		readable = na_settings_get_boolean_ex( group, NA_IPREFS_IO_PROVIDER_READABLE, NULL, mandatory );
+		group = g_strdup_printf( "%s %s", IPREFS_IO_PROVIDER_GROUP, provider->private->id );
+		readable = fma_settings_get_boolean_ex( group, IPREFS_IO_PROVIDER_READABLE, NULL, mandatory );
 		g_free( group );
 	}
 
@@ -866,7 +866,7 @@ fma_io_provider_load_items( const FMAPivot *pivot, guint loadable_set, GSList **
 
 	/* build the items hierarchy
 	 */
-	level_zero = na_settings_get_string_list( NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, NULL );
+	level_zero = fma_settings_get_string_list( IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, NULL );
 
 	hierarchy = load_items_hierarchy_build( &flat, level_zero, TRUE, NULL );
 
@@ -947,8 +947,8 @@ is_conf_writable( const FMAIOProvider *provider, const FMAPivot *pivot, gboolean
 	gchar *group;
 	gboolean is_writable;
 
-	group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, provider->private->id );
-	is_writable = na_settings_get_boolean_ex( group, NA_IPREFS_IO_PROVIDER_WRITABLE, NULL, mandatory );
+	group = g_strdup_printf( "%s %s", IPREFS_IO_PROVIDER_GROUP, provider->private->id );
+	is_writable = fma_settings_get_boolean_ex( group, IPREFS_IO_PROVIDER_WRITABLE, NULL, mandatory );
 	g_free( group );
 
 	return( is_writable );

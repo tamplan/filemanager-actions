@@ -36,7 +36,7 @@
 #include <api/fma-object-api.h>
 
 #include "fma-io-provider.h"
-#include "na-settings.h"
+#include "fma-settings.h"
 #include "na-updater.h"
 
 /* private class data
@@ -211,7 +211,7 @@ are_preferences_locked( const NAUpdater *updater )
 	gboolean are_locked;
 	gboolean mandatory;
 
-	are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+	are_locked = fma_settings_get_boolean( IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 
 	return( are_locked && mandatory );
 }
@@ -222,11 +222,11 @@ is_level_zero_writable( const NAUpdater *updater )
 	GSList *level_zero;
 	gboolean mandatory;
 
-	level_zero = na_settings_get_string_list( NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, &mandatory );
+	level_zero = fma_settings_get_string_list( IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, &mandatory );
 
 	fma_core_utils_slist_free( level_zero );
 
-	g_debug( "na_updater_is_level_zero_writable: NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER: mandatory=%s",
+	g_debug( "na_updater_is_level_zero_writable: IPREFS_ITEMS_LEVEL_ZERO_ORDER: mandatory=%s",
 			mandatory ? "True":"False" );
 
 	return( !mandatory );
@@ -482,13 +482,13 @@ na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const FMAObject
 	gboolean relabel;
 
 	if( FMA_IS_OBJECT_MENU( item )){
-		relabel = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, NULL );
+		relabel = fma_settings_get_boolean( IPREFS_RELABEL_DUPLICATE_MENU, NULL, NULL );
 
 	} else if( FMA_IS_OBJECT_ACTION( item )){
-		relabel = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, NULL );
+		relabel = fma_settings_get_boolean( IPREFS_RELABEL_DUPLICATE_ACTION, NULL, NULL );
 
 	} else if( FMA_IS_OBJECT_PROFILE( item )){
-		relabel = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, NULL );
+		relabel = fma_settings_get_boolean( IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, NULL );
 
 	} else {
 		g_warning( "%s: unknown item type at %p", thisfn, ( void * ) item );

@@ -120,7 +120,7 @@ static const FMADesktopEnv st_no_desktop     = { "None", N_( "Rely on runtime de
 
 #define                   st_xmlui_filename   PKGUIDIR "/nact-preferences.ui"
 static const gchar       *st_toplevel_name  = "PreferencesDialog";
-static const gchar       *st_wsp_name       = NA_IPREFS_PREFERENCES_WSP;
+static const gchar       *st_wsp_name       = IPREFS_PREFERENCES_WSP;
 
 static GObjectClass      *st_parent_class   = NULL;
 static guint              st_last_tab       = 0;
@@ -459,7 +459,7 @@ nact_preferences_editor_run( NactMainWindow *parent )
 					BASE_PROP_WSP_NAME,        st_wsp_name,
 					NULL );
 
-	are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+	are_locked = fma_settings_get_boolean( IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 	editor->private->preferences_locked = are_locked && mandatory;
 	g_debug( "%s: are_locked=%s, mandatory=%s",
 			thisfn, are_locked ? "True":"False", mandatory ? "True":"False" );
@@ -545,7 +545,7 @@ on_base_initialize_window( NactPreferencesEditor *editor, gpointer user_data )
 		/* fourth tab: import mode
 		 */
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
-		import_mode = na_settings_get_string( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL, &editor->private->import_mode_mandatory );
+		import_mode = fma_settings_get_string( IPREFS_IMPORT_PREFERRED_MODE, NULL, &editor->private->import_mode_mandatory );
 		fma_ioptions_list_set_editable(
 				FMA_IOPTIONS_LIST( editor ), container,
 				!editor->private->import_mode_mandatory && !editor->private->preferences_locked );
@@ -557,7 +557,7 @@ on_base_initialize_window( NactPreferencesEditor *editor, gpointer user_data )
 		/* fifth tab: export format
 		 */
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-		export_format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, &editor->private->export_format_mandatory );
+		export_format = fma_settings_get_string( IPREFS_EXPORT_PREFERRED_FORMAT, NULL, &editor->private->export_format_mandatory );
 		fma_ioptions_list_set_editable(
 				FMA_IOPTIONS_LIST( editor ), container,
 				!editor->private->export_format_mandatory && !editor->private->preferences_locked );
@@ -702,7 +702,7 @@ root_menu_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->root_menu = na_settings_get_boolean( NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, &editor->private->root_menu_mandatory );
+	editor->private->root_menu = fma_settings_get_boolean( IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, &editor->private->root_menu_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->root_menu_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -736,7 +736,7 @@ about_item_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->about_item = na_settings_get_boolean( NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, &editor->private->about_item_mandatory );
+	editor->private->about_item = fma_settings_get_boolean( IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, &editor->private->about_item_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->about_item_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -781,7 +781,7 @@ terminal_pattern_setup( NactPreferencesEditor *editor )
 	gboolean editable;
 	GtkWidget *entry;
 
-	editor->private->terminal_pattern = na_settings_get_string( NA_IPREFS_TERMINAL_PATTERN, NULL, &editor->private->terminal_pattern_mandatory );
+	editor->private->terminal_pattern = fma_settings_get_string( IPREFS_TERMINAL_PATTERN, NULL, &editor->private->terminal_pattern_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->terminal_pattern_mandatory;
 
 	entry = base_window_get_widget( BASE_WINDOW( editor ), "TerminalPrefixEntry" );
@@ -887,7 +887,7 @@ desktop_setup( NactPreferencesEditor *editor )
 	const gchar *desktop_label;
 
 	found = -1;
-	editor->private->desktop = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
+	editor->private->desktop = fma_settings_get_string( IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
 
 	if( editor->private->desktop && strlen( editor->private->desktop )){
 		desktops = fma_desktop_environment_get_known_list();
@@ -950,7 +950,7 @@ relabel_menu_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->relabel_menu = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, &editor->private->relabel_menu_mandatory );
+	editor->private->relabel_menu = fma_settings_get_boolean( IPREFS_RELABEL_DUPLICATE_MENU, NULL, &editor->private->relabel_menu_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->relabel_menu_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -981,7 +981,7 @@ relabel_action_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->relabel_action = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, &editor->private->relabel_action_mandatory );
+	editor->private->relabel_action = fma_settings_get_boolean( IPREFS_RELABEL_DUPLICATE_ACTION, NULL, &editor->private->relabel_action_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->relabel_action_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -1012,7 +1012,7 @@ relabel_profile_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->relabel_profile = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, &editor->private->relabel_profile_mandatory );
+	editor->private->relabel_profile = fma_settings_get_boolean( IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, &editor->private->relabel_profile_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->relabel_profile_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -1043,7 +1043,7 @@ esc_quit_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->esc_quit = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, &editor->private->esc_quit_mandatory );
+	editor->private->esc_quit = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_QUIT, NULL, &editor->private->esc_quit_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->esc_quit_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -1078,7 +1078,7 @@ esc_confirm_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->esc_confirm = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, &editor->private->esc_confirm_mandatory );
+	editor->private->esc_confirm = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_CONFIRM, NULL, &editor->private->esc_confirm_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->esc_confirm_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -1112,10 +1112,10 @@ auto_save_setup( NactPreferencesEditor *editor )
 	GtkAdjustment *adjustment;
 
 	g_debug( "nact_preferences_editor_auto_save_setup" );
-	editor->private->auto_save = na_settings_get_boolean( NA_IPREFS_MAIN_SAVE_AUTO, NULL, &editor->private->auto_save_mandatory );
+	editor->private->auto_save = fma_settings_get_boolean( IPREFS_MAIN_SAVE_AUTO, NULL, &editor->private->auto_save_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->auto_save_mandatory;
 
-	editor->private->auto_save_period = na_settings_get_uint( NA_IPREFS_MAIN_SAVE_PERIOD, NULL, &editor->private->auto_save_period_mandatory );
+	editor->private->auto_save_period = fma_settings_get_uint( IPREFS_MAIN_SAVE_PERIOD, NULL, &editor->private->auto_save_period_mandatory );
 	spin_button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSavePeriodicitySpinButton" );
 	adjustment = gtk_spin_button_get_adjustment( GTK_SPIN_BUTTON( spin_button ));
 	gtk_adjustment_configure( adjustment, editor->private->auto_save_period, 1, 999, 1, 10, 0 );
@@ -1201,43 +1201,43 @@ on_dialog_ok( BaseDialog *dialog )
 			fma_iprefs_set_order_mode( editor->private->order_mode );
 		}
 		if( !editor->private->root_menu_mandatory ){
-			na_settings_set_boolean( NA_IPREFS_ITEMS_CREATE_ROOT_MENU, editor->private->root_menu );
+			fma_settings_set_boolean( IPREFS_ITEMS_CREATE_ROOT_MENU, editor->private->root_menu );
 		}
 		if( !editor->private->about_item_mandatory ){
-			na_settings_set_boolean( NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, editor->private->about_item );
+			fma_settings_set_boolean( IPREFS_ITEMS_ADD_ABOUT_ITEM, editor->private->about_item );
 		}
 
 		/* second tab: runtime execution
 		 */
 		if( !editor->private->terminal_pattern_mandatory ){
-			na_settings_set_string( NA_IPREFS_TERMINAL_PATTERN, editor->private->terminal_pattern );
+			fma_settings_set_string( IPREFS_TERMINAL_PATTERN, editor->private->terminal_pattern );
 		}
 		if( !editor->private->desktop_mandatory ){
-			na_settings_set_string( NA_IPREFS_DESKTOP_ENVIRONMENT, editor->private->desktop );
+			fma_settings_set_string( IPREFS_DESKTOP_ENVIRONMENT, editor->private->desktop );
 		}
 
 		/* third tab: ui preferences
 		 */
 		if( !editor->private->relabel_menu_mandatory ){
-			na_settings_set_boolean( NA_IPREFS_RELABEL_DUPLICATE_MENU, editor->private->relabel_menu );
+			fma_settings_set_boolean( IPREFS_RELABEL_DUPLICATE_MENU, editor->private->relabel_menu );
 		}
 		if( !editor->private->relabel_action_mandatory ){
-			na_settings_set_boolean( NA_IPREFS_RELABEL_DUPLICATE_ACTION, editor->private->relabel_action );
+			fma_settings_set_boolean( IPREFS_RELABEL_DUPLICATE_ACTION, editor->private->relabel_action );
 		}
 		if( !editor->private->relabel_profile_mandatory ){
-			na_settings_set_boolean( NA_IPREFS_RELABEL_DUPLICATE_PROFILE, editor->private->relabel_profile );
+			fma_settings_set_boolean( IPREFS_RELABEL_DUPLICATE_PROFILE, editor->private->relabel_profile );
 		}
 		if( !editor->private->esc_quit_mandatory ){
-			na_settings_set_boolean( NA_IPREFS_ASSISTANT_ESC_QUIT, editor->private->esc_quit );
+			fma_settings_set_boolean( IPREFS_ASSISTANT_ESC_QUIT, editor->private->esc_quit );
 		}
 		if( !editor->private->esc_confirm_mandatory ){
-			na_settings_set_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, editor->private->esc_confirm );
+			fma_settings_set_boolean( IPREFS_ASSISTANT_ESC_CONFIRM, editor->private->esc_confirm );
 		}
 		if( !editor->private->auto_save_mandatory ){
-			na_settings_set_boolean( NA_IPREFS_MAIN_SAVE_AUTO, editor->private->auto_save );
+			fma_settings_set_boolean( IPREFS_MAIN_SAVE_AUTO, editor->private->auto_save );
 		}
 		if( !editor->private->auto_save_period_mandatory ){
-			na_settings_set_uint( NA_IPREFS_MAIN_SAVE_PERIOD, editor->private->auto_save_period );
+			fma_settings_set_uint( IPREFS_MAIN_SAVE_PERIOD, editor->private->auto_save_period );
 		}
 
 		/* fourth tab: import mode
@@ -1247,7 +1247,7 @@ on_dialog_ok( BaseDialog *dialog )
 			option = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), container );
 			g_return_if_fail( FMA_IS_IMPORT_MODE( option ));
 			import_mode = fma_ioption_get_id( option );
-			na_settings_set_string( NA_IPREFS_IMPORT_PREFERRED_MODE, import_mode );
+			fma_settings_set_string( IPREFS_IMPORT_PREFERRED_MODE, import_mode );
 			g_free( import_mode );
 		}
 
@@ -1259,7 +1259,7 @@ on_dialog_ok( BaseDialog *dialog )
 			g_debug( "nact_preferences_editor_on_dialog_ok: option=%p", ( void * ) option );
 			g_return_if_fail( FMA_IS_EXPORT_FORMAT( option ));
 			export_format = fma_ioption_get_id( option );
-			na_settings_set_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, export_format );
+			fma_settings_set_string( IPREFS_EXPORT_PREFERRED_FORMAT, export_format );
 			g_free( export_format );
 		}
 

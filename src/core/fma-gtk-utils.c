@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include "fma-gtk-utils.h"
-#include "na-settings.h"
+#include "fma-settings.h"
 
 static void   int_list_to_position( GList *list, gint *x, gint *y, gint *width, gint *height );
 static GList *position_to_int_list( gint x, gint y, gint width, gint height );
@@ -168,7 +168,7 @@ fma_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_nam
 	g_debug( "%s: toplevel=%p (%s), wsp_name=%s",
 			thisfn, ( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ), wsp_name );
 
-	list = na_settings_get_uint_list( wsp_name, NULL, NULL );
+	list = fma_settings_get_uint_list( wsp_name, NULL, NULL );
 
 	if( list ){
 		int_list_to_position( list, &x, &y, &width, &height );
@@ -184,7 +184,7 @@ fma_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_nam
 	/* bad hack for the first time we open the main window
 	 * try to target an ideal size and position
 	 */
-	if( !strcmp( wsp_name, NA_IPREFS_MAIN_WINDOW_WSP )){
+	if( !strcmp( wsp_name, IPREFS_MAIN_WINDOW_WSP )){
 		if( x == 1 && y == 1 && width == 1 && height == 1 ){
 			x = 50;
 			y = 70;
@@ -234,7 +234,7 @@ fma_gtk_utils_save_window_position( GtkWindow *toplevel, const gchar *wsp_name )
 	g_debug( "%s: wsp_name=%s, x=%d, y=%d, width=%d, height=%d", thisfn, wsp_name, x, y, width, height );
 
 	list = position_to_int_list( x, y, width, height );
-	na_settings_set_uint_list( wsp_name, list );
+	fma_settings_set_uint_list( wsp_name, list );
 	free_int_list( list );
 }
 

@@ -616,7 +616,7 @@ export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *des
 		g_free( item_label );
 
 		*exported = g_list_prepend( *exported, ( gpointer ) item );
-		format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, NULL );
+		format = fma_settings_get_string( IPREFS_EXPORT_PREFERRED_FORMAT, NULL, NULL );
 		g_return_val_if_fail( format && strlen( format ), NULL );
 
 		if( !strcmp( format, EXPORTER_FORMAT_ASK )){

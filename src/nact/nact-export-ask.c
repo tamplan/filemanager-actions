@@ -59,7 +59,7 @@ struct _NactExportAskPrivate {
 
 static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-export-ask.ui";
 static const gchar     *st_toplevel_name  = "ExportAskDialog";
-static const gchar     *st_wsp_name       = NA_IPREFS_EXPORT_ASK_USER_WSP;
+static const gchar     *st_wsp_name       = IPREFS_EXPORT_ASK_USER_WSP;
 
 static BaseDialogClass *st_parent_class   = NULL;
 
@@ -286,7 +286,7 @@ instance_finalize( GObject *dialog )
  *
  * Returns: the export format chosen by the user as a newly allocated
  * string which should be g_free() by the caller.
- * The function defaults to returning NA_IPREFS_DEFAULT_EXPORT_FORMAT.
+ * The function defaults to returning IPREFS_DEFAULT_EXPORT_FORMAT.
  *
  * When the user selects 'Keep same choice without asking me', this choice
  * becomes his new preferred export format.
@@ -306,8 +306,8 @@ nact_export_ask_user( FMAObjectItem *item, gboolean first )
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			first ? "True":"False" );
 
-	format = na_settings_get_string( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, NULL, &mandatory );
-	keep = na_settings_get_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, &keep_mandatory );
+	format = fma_settings_get_string( IPREFS_EXPORT_ASK_USER_LAST_FORMAT, NULL, &mandatory );
+	keep = fma_settings_get_boolean( IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, &keep_mandatory );
 
 	if( first || !keep ){
 		editor = g_object_new( NACT_TYPE_EXPORT_ASK,
@@ -322,7 +322,7 @@ nact_export_ask_user( FMAObjectItem *item, gboolean first )
 		editor->private->keep_last_choice_mandatory = keep_mandatory;
 		editor->private->item = item;
 
-		are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+		are_locked = fma_settings_get_boolean( IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 		editor->private->preferences_locked = are_locked && mandatory;
 		code = base_window_run( BASE_WINDOW( editor ));
 
@@ -475,11 +475,11 @@ get_export_format( NactExportAsk *editor )
 	g_return_val_if_fail( FMA_IS_EXPORT_FORMAT( format ), 0 );
 
 	if( !editor->private->keep_last_choice_mandatory ){
-		na_settings_set_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, editor->private->keep_last_choice );
+		fma_settings_set_boolean( IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, editor->private->keep_last_choice );
 	}
 
 	format_id = fma_ioption_get_id( format );
-	na_settings_set_string( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_id );
+	fma_settings_set_string( IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_id );
 
 	return( format_id );
 }

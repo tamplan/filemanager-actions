@@ -120,7 +120,7 @@ typedef struct {
 	GSList              *uris;				/* the list of uris to import */
 	FMAImporterCheckFn   check_fn;			/* the check_for_duplicate function */
 	void                *check_fn_data;		/* data to be passed to the check_fn function */
-	guint                preferred_mode;	/* preferred import mode, defaults to NA_IPREFS_IMPORT_PREFERRED_MODE */
+	guint                preferred_mode;	/* preferred import mode, defaults to IPREFS_IMPORT_PREFERRED_MODE */
 	GtkWindow           *parent_toplevel;	/* parent toplevel */
 }
 	FMAImporterParms;

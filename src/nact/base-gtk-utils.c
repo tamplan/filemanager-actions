@@ -413,7 +413,7 @@ base_gtk_utils_select_file_with_preview( GtkApplicationWindow *window,
 		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), text );
 
 	} else {
-		uri = na_settings_get_string( entry_name, NULL, NULL );
+		uri = fma_settings_get_string( entry_name, NULL, NULL );
 		if( uri ){
 			gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 			g_free( uri );
@@ -427,7 +427,7 @@ base_gtk_utils_select_file_with_preview( GtkApplicationWindow *window,
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	na_settings_set_string( entry_name, uri );
+	fma_settings_set_string( entry_name, uri );
 	g_free( uri );
 
 	fma_gtk_utils_save_window_position( GTK_WINDOW( dialog ), wsp_name );
@@ -480,7 +480,7 @@ base_gtk_utils_select_dir( GtkApplicationWindow *window,
 		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), text );
 
 	} else {
-		uri = na_settings_get_string( entry_name, NULL, NULL );
+		uri = fma_settings_get_string( entry_name, NULL, NULL );
 		if( uri ){
 			gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 			g_free( uri );
@@ -494,7 +494,7 @@ base_gtk_utils_select_dir( GtkApplicationWindow *window,
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	na_settings_set_string( entry_name, uri );
+	fma_settings_set_string( entry_name, uri );
 	g_free( uri );
 
 	fma_gtk_utils_save_window_position( GTK_WINDOW( dialog ), wsp_name );

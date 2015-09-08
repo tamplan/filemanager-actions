@@ -248,9 +248,9 @@ on_browse_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 			_( "_Open" ), GTK_RESPONSE_ACCEPT,
 			NULL );
 
-	fma_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
+	fma_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), IPREFS_FOLDER_CHOOSER_WSP );
 
-	uri = na_settings_get_string( NA_IPREFS_FOLDER_CHOOSER_URI, NULL, NULL );
+	uri = fma_settings_get_string( IPREFS_FOLDER_CHOOSER_URI, NULL, NULL );
 	if( uri && g_utf8_strlen( uri, -1 )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 	}
@@ -258,14 +258,14 @@ on_browse_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-		na_settings_set_string( NA_IPREFS_FOLDER_CHOOSER_URI, uri );
+		fma_settings_set_string( IPREFS_FOLDER_CHOOSER_URI, uri );
 		path = g_filename_from_uri( uri, NULL, NULL );
 		nact_match_list_insert_row( NACT_MAIN_WINDOW( instance ), ITAB_NAME, path, FALSE, FALSE );
 		g_free( path );
 		g_free( uri );
 	}
 
-	fma_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
+	fma_gtk_utils_restore_window_position( GTK_WINDOW( dialog ), IPREFS_FOLDER_CHOOSER_WSP );
 
 	gtk_widget_destroy( dialog );
 }

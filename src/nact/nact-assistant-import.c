@@ -42,7 +42,7 @@
 #include <core/fma-importer.h>
 #include <core/fma-ioptions-list.h>
 #include <core/fma-gtk-utils.h>
-#include <core/na-settings.h>
+#include <core/fma-settings.h>
 
 #include "nact-application.h"
 #include "nact-assistant-import.h"
@@ -91,7 +91,7 @@ struct _NactAssistantImportPrivate {
 
 static const gchar        *st_xmlui_filename = PKGUIDIR "/nact-assistant-import.ui";
 static const gchar        *st_toplevel_name  = "ImportAssistant";
-static const gchar        *st_wsp_name       = NA_IPREFS_IMPORT_ASSISTANT_WSP;
+static const gchar        *st_wsp_name       = IPREFS_IMPORT_ASSISTANT_WSP;
 
 static BaseAssistantClass *st_parent_class   = NULL;
 
@@ -316,8 +316,8 @@ nact_assistant_import_run( NactMainWindow *main_window )
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( main_window ));
 
-	esc_quit = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
-	esc_confirm = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
+	esc_quit = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
+	esc_confirm = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 
 	assistant = g_object_new( NACT_TYPE_ASSISTANT_IMPORT,
 			BASE_PROP_MAIN_WINDOW,     main_window,
@@ -438,7 +438,7 @@ runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page, ( void * ) chooser );
 
 
-	uri = na_settings_get_string( NA_IPREFS_IMPORT_ASSISTANT_URI, NULL, NULL );
+	uri = fma_settings_get_string( IPREFS_IMPORT_ASSISTANT_URI, NULL, NULL );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( chooser ), uri );
 	}
@@ -483,7 +483,7 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 			folder = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( chooser ));
 			g_debug( "%s: current folder uri=%s", thisfn, folder );
 			if( folder && strlen( folder )){
-				na_settings_set_string( NA_IPREFS_IMPORT_ASSISTANT_URI, folder );
+				fma_settings_set_string( IPREFS_IMPORT_ASSISTANT_URI, folder );
 			}
 			g_free( folder );
 		}
@@ -534,7 +534,7 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 	g_debug( "%s: window=%p, assistant=%p",
 			thisfn, ( void * ) window, ( void * ) assistant );
 
-	import_mode = na_settings_get_string( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL, &mandatory );
+	import_mode = fma_settings_get_string( IPREFS_IMPORT_PREFERRED_MODE, NULL, &mandatory );
 	fma_ioptions_list_set_editable(
 			FMA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ),
 			!mandatory );
@@ -832,7 +832,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	}
 
 	mode_id = fma_ioption_get_id( window->private->mode );
-	na_settings_set_string( NA_IPREFS_IMPORT_PREFERRED_MODE, mode_id );
+	fma_settings_set_string( IPREFS_IMPORT_PREFERRED_MODE, mode_id );
 	g_free( mode_id );
 
 	/* release here our reference on overriding items

@@ -194,7 +194,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
  *
  * - whether to add the 'About FileManager-Actions' item
  * - whether to create a 'FileManager-Actions actions' root menu
- *   > registering for notifications against NASettings
+ *   > registering for notifications against FMASettings
  */
 static void
 instance_constructed( GObject *object )
@@ -230,33 +230,33 @@ instance_constructed( GObject *object )
 						G_CALLBACK( on_pivot_items_changed_handler ),
 						object );
 
-		/* register against NASettings to be notified of changes on
+		/* register against FMASettings to be notified of changes on
 		 *  our runtime preferences
 		 * because we only monitor here a few runtime keys, we prefer the
 		 * callback way that the signal one
 		 */
-		na_settings_register_key_callback(
-				NA_IPREFS_IO_PROVIDERS_READ_STATUS,
+		fma_settings_register_key_callback(
+				IPREFS_IO_PROVIDERS_READ_STATUS,
 				G_CALLBACK( on_settings_key_changed_handler ),
 				object );
 
-		na_settings_register_key_callback(
-				NA_IPREFS_ITEMS_ADD_ABOUT_ITEM,
+		fma_settings_register_key_callback(
+				IPREFS_ITEMS_ADD_ABOUT_ITEM,
 				G_CALLBACK( on_settings_key_changed_handler ),
 				object );
 
-		na_settings_register_key_callback(
-				NA_IPREFS_ITEMS_CREATE_ROOT_MENU,
+		fma_settings_register_key_callback(
+				IPREFS_ITEMS_CREATE_ROOT_MENU,
 				G_CALLBACK( on_settings_key_changed_handler ),
 				object );
 
-		na_settings_register_key_callback(
-				NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER,
+		fma_settings_register_key_callback(
+				IPREFS_ITEMS_LEVEL_ZERO_ORDER,
 				G_CALLBACK( on_settings_key_changed_handler ),
 				object );
 
-		na_settings_register_key_callback(
-				NA_IPREFS_ITEMS_LIST_ORDER_MODE,
+		fma_settings_register_key_callback(
+				IPREFS_ITEMS_LIST_ORDER_MODE,
 				G_CALLBACK( on_settings_key_changed_handler ),
 				object );
 	}
@@ -512,11 +512,11 @@ build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection )
 
 	if( target != ITEM_TARGET_TOOLBAR && nautilus_menu && g_list_length( nautilus_menu )){
 
-		items_create_root_menu = na_settings_get_boolean( NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
+		items_create_root_menu = fma_settings_get_boolean( IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
 		if( items_create_root_menu ){
 			nautilus_menu = create_root_menu( plugin, nautilus_menu );
 
-			items_add_about_item = na_settings_get_boolean( NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
+			items_add_about_item = fma_settings_get_boolean( IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
 			if( items_add_about_item ){
 				nautilus_menu = add_about_item( plugin, nautilus_menu );
 			}
@@ -1030,7 +1030,7 @@ on_pivot_items_changed_handler( FMAPivot *pivot, NautilusActions *plugin )
 	}
 }
 
-/* callback triggered by NASettings at the end of a burst of 'changed' signals
+/* callback triggered by FMASettings at the end of a burst of 'changed' signals
  * on runtime preferences which may affect the way file manager displays
  * its context menus
  */

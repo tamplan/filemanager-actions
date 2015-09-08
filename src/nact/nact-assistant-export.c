@@ -90,7 +90,7 @@ typedef struct {
 
 static const gchar        *st_xmlui_filename = PKGUIDIR "/nact-assistant-export.ui";
 static const gchar        *st_toplevel_name  = "ExportAssistant";
-static const gchar        *st_wsp_name       = NA_IPREFS_EXPORT_ASSISTANT_WSP;
+static const gchar        *st_wsp_name       = IPREFS_EXPORT_ASSISTANT_WSP;
 
 static BaseAssistantClass *st_parent_class   = NULL;
 
@@ -312,7 +312,7 @@ instance_dispose( GObject *window )
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
 		pane = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p1-paned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
-		na_settings_set_uint( NA_IPREFS_EXPORT_ASSISTANT_PANED, pos );
+		fma_settings_set_uint( IPREFS_EXPORT_ASSISTANT_PANED, pos );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -357,8 +357,8 @@ nact_assistant_export_run( NactMainWindow *main_window )
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( main_window ));
 
-	esc_quit = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
-	esc_confirm = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
+	esc_quit = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
+	esc_confirm = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 
 	assistant = g_object_new( NACT_TYPE_ASSISTANT_EXPORT,
 			BASE_PROP_MAIN_WINDOW,     main_window,
@@ -389,7 +389,7 @@ on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *assi
 		folder_chooser_initialize_gtk( window );
 		format_tree_view_initialize_gtk( window );
 
-		are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+		are_locked = fma_settings_get_boolean( IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 		window->private->preferences_locked = are_locked && mandatory;
 	}
 }
@@ -433,7 +433,7 @@ folder_chooser_initialize_gtk( NactAssistantExport *window )
 	gtk_file_chooser_set_create_folders( GTK_FILE_CHOOSER( chooser ), TRUE );
 	gtk_file_chooser_set_select_multiple( GTK_FILE_CHOOSER( chooser ), FALSE );
 
-	uri = na_settings_get_string( NA_IPREFS_EXPORT_ASSISTANT_URI, NULL, NULL );
+	uri = fma_settings_get_string( IPREFS_EXPORT_ASSISTANT_URI, NULL, NULL );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( chooser ), uri );
 	}
@@ -490,7 +490,7 @@ on_base_initialize_base_window( NactAssistantExport *window, void *empty )
 
 		/* set the slider position of the item selection page
 		 */
-		pos = na_settings_get_uint( NA_IPREFS_EXPORT_ASSISTANT_PANED, NULL, NULL );
+		pos = fma_settings_get_uint( IPREFS_EXPORT_ASSISTANT_PANED, NULL, NULL );
 		if( pos ){
 			page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
 			pane = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p1-paned" );
@@ -501,7 +501,7 @@ on_base_initialize_base_window( NactAssistantExport *window, void *empty )
 		 */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
 		tree_view = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" );
-		format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, &mandatory );
+		format = fma_settings_get_string( IPREFS_EXPORT_PREFERRED_FORMAT, NULL, &mandatory );
 		fma_ioptions_list_set_editable(
 				FMA_IOPTIONS_LIST( window ), tree_view,
 				!mandatory && !window->private->preferences_locked );
@@ -622,7 +622,7 @@ on_folder_chooser_selection_changed( GtkFileChooser *chooser, NactAssistantExpor
 		if( enabled ){
 			g_free( window->private->uri );
 			window->private->uri = g_strdup( uri );
-			na_settings_set_string( NA_IPREFS_EXPORT_ASSISTANT_URI, uri );
+			fma_settings_set_string( IPREFS_EXPORT_ASSISTANT_URI, uri );
 		}
 
 		g_free( uri );
@@ -736,7 +736,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	g_free( format_description2 );
 
 	format_id = fma_ioption_get_id( format );
-	na_settings_set_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, format_id );
+	fma_settings_set_string( IPREFS_EXPORT_PREFERRED_FORMAT, format_id );
 	g_free( format_id );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
@@ -775,7 +775,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		window->private->results = g_list_append( window->private->results, str );
 
 		str->item = FMA_OBJECT_ITEM( fma_object_get_origin( FMA_IDUPLICABLE( ia->data )));
-		str->format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, NULL );
+		str->format = fma_settings_get_string( IPREFS_EXPORT_PREFERRED_FORMAT, NULL, NULL );
 		g_return_if_fail( str->format && strlen( str->format ));
 
 		if( !strcmp( str->format, EXPORTER_FORMAT_ASK )){

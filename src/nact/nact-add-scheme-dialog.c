@@ -35,7 +35,7 @@
 
 #include "api/fma-core-utils.h"
 
-#include "core/na-settings.h"
+#include "core/fma-settings.h"
 
 #include "nact-schemes-list.h"
 #include "nact-add-scheme-dialog.h"
@@ -51,7 +51,7 @@ struct _NactAddSchemeDialogPrivate {
 
 static const gchar  *st_xmlui_filename = PKGUIDIR "/nact-add-scheme.ui";
 static const gchar  *st_toplevel_name  = "AddSchemeDialog";
-static const gchar  *st_wsp_name       = NA_IPREFS_SCHEME_ADD_SCHEME_WSP;
+static const gchar  *st_wsp_name       = IPREFS_SCHEME_ADD_SCHEME_WSP;
 
 static GObjectClass *st_parent_class   = NULL;
 

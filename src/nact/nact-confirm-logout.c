@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include "core/na-settings.h"
+#include "core/fma-settings.h"
 
 #include "nact-confirm-logout.h"
 #include "nact-main-window-def.h"
@@ -52,7 +52,7 @@ enum {
 
 static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-confirm-logout.ui";
 static const gchar     *st_toplevel_name  = "ConfirmLogoutDialog";
-static const gchar     *st_wsp_name       = NA_IPREFS_CONFIRM_LOGOUT_WSP;
+static const gchar     *st_wsp_name       = IPREFS_CONFIRM_LOGOUT_WSP;
 
 static BaseDialogClass *st_parent_class   = NULL;
 
