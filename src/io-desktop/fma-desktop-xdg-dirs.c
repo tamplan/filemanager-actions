@@ -33,10 +33,10 @@
 
 #include <api/fma-core-utils.h>
 
-#include "nadp-xdg-dirs.h"
+#include "fma-desktop-xdg-dirs.h"
 
 /**
- * nadp_xdg_dirs_get_data_dirs:
+ * fma_desktop_xdg_dirs_get_data_dirs:
  *
  * Returns: the ordered list of data directories, most important first,
  * as a GSList of newly allocated strings.
@@ -45,23 +45,23 @@
  * freed by the caller.
  */
 GSList *
-nadp_xdg_dirs_get_data_dirs( void )
+fma_desktop_xdg_dirs_get_data_dirs( void )
 {
 	GSList *listdirs;
 	gchar *userdir;
 	GSList *datadirs;
 
-	userdir = nadp_xdg_dirs_get_user_data_dir();
+	userdir = fma_desktop_xdg_dirs_get_user_data_dir();
 	listdirs = g_slist_prepend( NULL, userdir );
 
-	datadirs = nadp_xdg_dirs_get_system_data_dirs();
+	datadirs = fma_desktop_xdg_dirs_get_system_data_dirs();
 	listdirs = g_slist_concat( listdirs, datadirs );
 
 	return( listdirs );
 }
 
 /**
- * nadp_xdg_dirs_get_user_data_dir:
+ * fma_desktop_xdg_dirs_get_user_data_dir:
  *
  * Returns: the path to the single base directory relative to which
  * user-specific data files should be written, as a newly allocated
@@ -74,7 +74,7 @@ nadp_xdg_dirs_get_data_dirs( void )
  * The returned string should be g_free() by the caller.
  */
 gchar *
-nadp_xdg_dirs_get_user_data_dir( void )
+fma_desktop_xdg_dirs_get_user_data_dir( void )
 {
 	gchar *dir;
 
@@ -84,7 +84,7 @@ nadp_xdg_dirs_get_user_data_dir( void )
 }
 
 /**
- * nadp_xdg_dirs_get_system_data_dirs:
+ * fma_desktop_xdg_dirs_get_system_data_dirs:
  *
  * Returns: the set of preference ordered base directories relative to
  * which data files should be written, as a GSList of newly allocated
@@ -99,7 +99,7 @@ nadp_xdg_dirs_get_user_data_dir( void )
  * by the caller.
  */
 GSList *
-nadp_xdg_dirs_get_system_data_dirs( void )
+fma_desktop_xdg_dirs_get_system_data_dirs( void )
 {
 	const gchar **dirs;
 	GSList *paths;

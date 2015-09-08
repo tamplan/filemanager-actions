@@ -45,7 +45,7 @@
 #include "fma-desktop-keys.h"
 #include "fma-desktop-utils.h"
 #include "fma-desktop-writer.h"
-#include "nadp-xdg-dirs.h"
+#include "fma-desktop-xdg-dirs.h"
 
 /* the association between an export format and the functions
  */
@@ -102,7 +102,7 @@ fma_desktop_writer_iio_provider_is_able_to_write( const FMAIIOProvider *provider
 
 	able_to = FALSE;
 
-	userdir = nadp_xdg_dirs_get_user_data_dir();
+	userdir = fma_desktop_xdg_dirs_get_user_data_dir();
 
 	if( g_file_test( userdir, G_FILE_TEST_IS_DIR )){
 		able_to = fma_core_utils_dir_is_writable_path( userdir );
@@ -154,7 +154,7 @@ fma_desktop_writer_iio_provider_write_item( const FMAIIOProvider *provider, cons
 		g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), ret );
 
 	} else {
-		userdir = nadp_xdg_dirs_get_user_data_dir();
+		userdir = fma_desktop_xdg_dirs_get_user_data_dir();
 		subdirs = fma_core_utils_slist_from_split( FMA_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
 		fulldir = g_build_filename( userdir, ( gchar * ) subdirs->data, NULL );
 		dir_ok = TRUE;

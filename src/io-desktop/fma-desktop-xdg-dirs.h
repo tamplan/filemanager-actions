@@ -27,19 +27,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NADP_XDG_DIRS_H__
-#define __NADP_XDG_DIRS_H__
+#ifndef __IO_DESKTOP_FMA_DESKTOP_XDG_DIRS_H__
+#define __IO_DESKTOP_FMA_DESKTOP_XDG_DIRS_H__
 
 #include <glib.h>
 
 G_BEGIN_DECLS
 
-GSList *nadp_xdg_dirs_get_data_dirs       ( void );
+GSList *fma_desktop_xdg_dirs_get_data_dirs       ( void );
 
-gchar  *nadp_xdg_dirs_get_user_data_dir   ( void );
+gchar  *fma_desktop_xdg_dirs_get_user_data_dir   ( void );
 
-GSList *nadp_xdg_dirs_get_system_data_dirs( void );
+GSList *fma_desktop_xdg_dirs_get_system_data_dirs( void );
 
 G_END_DECLS
 
-#endif /* __NADP_XDG_DIRS_H__ */
+#endif /* __IO_DESKTOP_FMA_DESKTOP_XDG_DIRS_H__ */

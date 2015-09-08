@@ -58,8 +58,8 @@ libna_io_desktop_la_SOURCES = \
 	fma-desktop-utils.h									\
 	fma-desktop-writer.c								\
 	fma-desktop-writer.h								\
-	nadp-xdg-dirs.c										\
-	nadp-xdg-dirs.h										\
+	fma-desktop-xdg-dirs.c								\
+	fma-desktop-xdg-dirs.h								\
 	$(NULL)
 
 libna_io_desktop_la_LIBADD = \

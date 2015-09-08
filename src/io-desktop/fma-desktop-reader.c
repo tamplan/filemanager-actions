@@ -45,7 +45,7 @@
 #include "fma-desktop-keys.h"
 #include "fma-desktop-reader.h"
 #include "fma-desktop-utils.h"
-#include "nadp-xdg-dirs.h"
+#include "fma-desktop-xdg-dirs.h"
 
 typedef struct {
 	gchar *path;
@@ -136,7 +136,7 @@ get_list_of_desktop_paths( FMADesktopProvider *provider, GSList **messages )
 	gchar *dir;
 
 	files = NULL;
-	xdg_dirs = nadp_xdg_dirs_get_data_dirs();
+	xdg_dirs = fma_desktop_xdg_dirs_get_data_dirs();
 	subdirs = fma_core_utils_slist_from_split( FMA_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
 
 	/* explore each directory from XDG_DATA_DIRS
