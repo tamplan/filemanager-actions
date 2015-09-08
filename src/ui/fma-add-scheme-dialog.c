@@ -37,7 +37,7 @@
 
 #include "core/fma-settings.h"
 
-#include "nact-schemes-list.h"
+#include "fma-schemes-list.h"
 #include "fma-add-scheme-dialog.h"
 #include "fma-main-window.h"
 
@@ -297,7 +297,7 @@ on_base_initialize_gtk( FMAAddSchemeDialog *dialog, GtkDialog *toplevel, gpointe
 				thisfn, ( void * ) dialog, ( void * ) toplevel, ( void * ) user_data );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( dialog ), "SchemesTreeView" ));
-		nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_ADD_FROM_DEFAULTS );
+		fma_schemes_list_create_model( listview, SCHEMES_LIST_FOR_ADD_FROM_DEFAULTS );
 	}
 }
 
@@ -314,9 +314,9 @@ on_base_initialize_window( FMAAddSchemeDialog *dialog, gpointer user_data )
 		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( dialog ), "SchemesTreeView" ));
-		nact_schemes_list_init_view( listview, BASE_WINDOW( dialog ), ( pf_new_selection_cb ) on_selection_changed, ( void * ) dialog );
+		fma_schemes_list_init_view( listview, BASE_WINDOW( dialog ), ( pf_new_selection_cb ) on_selection_changed, ( void * ) dialog );
 
-		nact_schemes_list_setup_values( BASE_WINDOW( dialog ), dialog->private->already_used );
+		fma_schemes_list_setup_values( BASE_WINDOW( dialog ), dialog->private->already_used );
 
 		/* catch double-click */
 		base_window_signal_connect(
@@ -352,7 +352,7 @@ on_base_show_widgets( FMAAddSchemeDialog *dialog, gpointer user_data )
 
 		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 
-		nact_schemes_list_show_all( BASE_WINDOW( dialog ));
+		fma_schemes_list_show_all( BASE_WINDOW( dialog ));
 	}
 }
 
@@ -385,7 +385,7 @@ on_ok_clicked( GtkButton *button, FMAAddSchemeDialog *dialog )
 }
 
 /*
- * this function is a callback, called from nact-schemes-list:on_selection_changed
+ * this function is a callback, called from fma-schemes-list:on_selection_changed
  * this let us validate/invalidate the OK button
  */
 static void
@@ -424,5 +424,5 @@ static void
 on_dialog_ok( BaseDialog *dialog )
 {
 	FMAAddSchemeDialog *editor = FMA_ADD_SCHEME_DIALOG( dialog );
-	editor->private->scheme = nact_schemes_list_get_current_scheme( BASE_WINDOW( dialog ));
+	editor->private->scheme = fma_schemes_list_get_current_scheme( BASE_WINDOW( dialog ));
 }

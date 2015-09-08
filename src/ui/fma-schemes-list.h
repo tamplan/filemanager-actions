@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_SCHEMES_LIST_H__
-#define __UI_NACT_SCHEMES_LIST_H__
+#ifndef __UI_FMA_SCHEMES_LIST_H__
+#define __UI_FMA_SCHEMES_LIST_H__
 
 /**
- * SECTION: nact_schemes_list
+ * SECTION: fma_schemes_list
  * @short_description: Schemes list view management.
- * @include: ui/nact-schemes-list.h
+ * @include: ui/fma-schemes-list.h
  *
  * This set of functions manages the schemes list view.
  *
@@ -79,14 +79,14 @@ enum {
 	SCHEMES_LIST_FOR_ADD_FROM_DEFAULTS
 };
 
-void    nact_schemes_list_create_model      ( GtkTreeView *treeview, guint mode );
-void    nact_schemes_list_init_view         ( GtkTreeView *treeview, BaseWindow *window, pf_new_selection_cb pf, void *user_data );
-void    nact_schemes_list_setup_values      ( BaseWindow *window, GSList *schemes );
-void    nact_schemes_list_show_all          ( BaseWindow *window );
-gchar  *nact_schemes_list_get_current_scheme( BaseWindow *window );
-void    nact_schemes_list_save_defaults     ( BaseWindow *window );
-void    nact_schemes_list_dispose           ( BaseWindow *window );
+void    fma_schemes_list_create_model      ( GtkTreeView *treeview, guint mode );
+void    fma_schemes_list_init_view         ( GtkTreeView *treeview, BaseWindow *window, pf_new_selection_cb pf, void *user_data );
+void    fma_schemes_list_setup_values      ( BaseWindow *window, GSList *schemes );
+void    fma_schemes_list_show_all          ( BaseWindow *window );
+gchar  *fma_schemes_list_get_current_scheme( BaseWindow *window );
+void    fma_schemes_list_save_defaults     ( BaseWindow *window );
+void    fma_schemes_list_dispose           ( BaseWindow *window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_SCHEMES_LIST_H__ */
+#endif /* __UI_FMA_SCHEMES_LIST_H__ */

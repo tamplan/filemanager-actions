@@ -126,8 +126,8 @@ fma_config_tool_SOURCES = \
 	fma-preferences-editor.h							\
 	fma-providers-list.c								\
 	fma-providers-list.h								\
-	nact-schemes-list.c									\
-	nact-schemes-list.h									\
+	fma-schemes-list.c									\
+	fma-schemes-list.h									\
 	nact-sort-buttons.c									\
 	nact-sort-buttons.h									\
 	nact-statusbar.c									\

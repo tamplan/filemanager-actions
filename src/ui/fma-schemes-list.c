@@ -40,7 +40,7 @@
 #include "fma-application.h"
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
-#include "nact-schemes-list.h"
+#include "fma-schemes-list.h"
 
 /* data attached to the treeview widget on initial load
  * at this time, only treeview and mode are set
@@ -73,8 +73,8 @@ enum {
 	SCHEMES_N_COLUMN
 };
 
-#define SCHEMES_LIST_DATA				"nact-schemes-list-data"
-#define SCHEMES_LIST_TREEVIEW			"nact-schemes-list-treeview"
+#define SCHEMES_LIST_DATA				"fma-schemes-list-data"
+#define SCHEMES_LIST_TREEVIEW			"fma-schemes-list-treeview"
 
 static void             init_view_setup_defaults( SchemesListData *data );
 static GSList          *init_view_get_default_list( SchemesListData *data );
@@ -107,7 +107,7 @@ static GtkButton       *get_remove_button( BaseWindow *window );
 static SchemesListData *get_schemes_list_data( GtkTreeView *treeview );
 
 /**
- * nact_schemes_list_create_schemes_list:
+ * fma_schemes_list_create_schemes_list:
  * @treeview: the #GtkTreeView.
  * @mode: whether we are opening this listview for preferences edition,
  *  or to add a new scheme from the default list.
@@ -130,9 +130,9 @@ static SchemesListData *get_schemes_list_data( GtkTreeView *treeview );
  *   list is not a mandatory pref.
  */
 void
-nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
+fma_schemes_list_create_model( GtkTreeView *treeview, guint mode )
 {
-	static const char *thisfn = "nact_schemes_list_create_model";
+	static const char *thisfn = "fma_schemes_list_create_model";
 	GtkListStore *model;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *text_cell;
@@ -179,7 +179,7 @@ nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
 }
 
 /**
- * nact_schemes_list_init_view:
+ * fma_schemes_list_init_view:
  * @treeview: the #GtkTreeView.
  * @window: the parent #BaseWindow which embeds the view.
  * @pf: a callback function which will be called on selection change.
@@ -192,13 +192,13 @@ nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
  * initialization.
  *
  * When mode is for add from defaults, i.e. when editing #FMAIContext schemes
- * conditions, then #nact_schemes_list_setup_values() must also be called in
+ * conditions, then #fma_schemes_list_setup_values() must also be called in
  * order to actually setup the already used schemes.
  */
 void
-nact_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window, pf_new_selection_cb pf, void *user_data )
+fma_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window, pf_new_selection_cb pf, void *user_data )
 {
-	static const gchar *thisfn = "nact_schemes_list_init_view";
+	static const gchar *thisfn = "fma_schemes_list_init_view";
 	SchemesListData *data;
 	FMAApplication *application;
 	FMAUpdater *updater;
@@ -370,14 +370,14 @@ init_view_select_first_row( SchemesListData *data )
 }
 
 /**
- * nact_schemes_list_setup_values:
+ * fma_schemes_list_setup_values:
  * @window: the #BaseWindow which embeds this treeview.
  * @schemes: a #GSList of already used schemes.
  *
  * Set the used schemes for the current #FMAIContext.
  */
 void
-nact_schemes_list_setup_values( BaseWindow *window, GSList *schemes )
+fma_schemes_list_setup_values( BaseWindow *window, GSList *schemes )
 {
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
@@ -409,13 +409,13 @@ setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GS
 }
 
 /**
- * nact_schemes_list_show_all:
+ * fma_schemes_list_show_all:
  * @window: the #BaseWindow which embeds this treeview.
  *
  * Update visibility of widgets after all widgets are showed.
  */
 void
-nact_schemes_list_show_all( BaseWindow *window )
+fma_schemes_list_show_all( BaseWindow *window )
 {
 	GtkTreeView *listview;
 	SchemesListData *data;
@@ -436,14 +436,14 @@ nact_schemes_list_show_all( BaseWindow *window )
 }
 
 /**
- * nact_schemes_list_get_current_scheme:
+ * fma_schemes_list_get_current_scheme:
  * @window: the #BaseWindow which embeds this treeview.
  *
  * Returns: the currently selected scheme, if any, as a newly allocated
  * string which should be g_free() by the caller.
  */
 gchar *
-nact_schemes_list_get_current_scheme( BaseWindow *window )
+fma_schemes_list_get_current_scheme( BaseWindow *window )
 {
 	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
@@ -468,7 +468,7 @@ nact_schemes_list_get_current_scheme( BaseWindow *window )
 }
 
 /**
- * nact_schemes_list_save_defaults:
+ * fma_schemes_list_save_defaults:
  * @window: the #BaseWindow which embeds this treeview.
  *
  * Save the list of schemes as a GConf preference.
@@ -477,7 +477,7 @@ nact_schemes_list_get_current_scheme( BaseWindow *window )
  * where each string is of the form 'keyword|description'.
  */
 void
-nact_schemes_list_save_defaults( BaseWindow *window )
+fma_schemes_list_save_defaults( BaseWindow *window )
 {
 	GtkTreeView *treeview;
 	GSList *schemes;
@@ -520,13 +520,13 @@ get_list_schemes_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter
 }
 
 /**
- * nact_schemes_list_dispose:
+ * fma_schemes_list_dispose:
  * @treeview: the #GtkTreeView.
  */
 void
-nact_schemes_list_dispose( BaseWindow *window )
+fma_schemes_list_dispose( BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_schemes_list_dispose";
+	static const gchar *thisfn = "fma_schemes_list_dispose";
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
@@ -546,7 +546,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
 {
 	gboolean stop;
 
-	/*g_debug( "nact_schemes_list_on_key_pressed_event" );*/
+	/*g_debug( "fma_schemes_list_on_key_pressed_event" );*/
 
 	stop = FALSE;
 
@@ -571,7 +571,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
 static void
 on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 {
-	/*static const gchar *thisfn = "nact_schemes_list_on_selection_changed";*/
+	/*static const gchar *thisfn = "fma_schemes_list_on_selection_changed";*/
 	GtkButton *button;
 	GtkTreeView *listview;
 	SchemesListData *data;
@@ -623,7 +623,7 @@ on_remove_clicked( GtkButton *button, BaseWindow *window )
 static void
 on_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_schemes_list_on_desc_edited";
+	static const gchar *thisfn = "fma_schemes_list_on_desc_edited";
 
 	g_debug( "%s: renderer=%p, path=%s, text=%s, window=%p",
 			thisfn, ( void * ) renderer, path, text, ( void * ) window );
@@ -661,7 +661,7 @@ edit_cell( BaseWindow *window, const gchar *path_string, const gchar *text, gint
 static void
 edit_inline( BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_schemes_list_edit_inline";
+	static const gchar *thisfn = "fma_schemes_list_edit_inline";
 	GtkTreeView *listview;
 	GtkTreeSelection *selection;
 	GList *listrows;

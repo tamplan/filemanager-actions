@@ -49,7 +49,7 @@
 #include "fma-application.h"
 #include "base-gtk-utils.h"
 #include "fma-main-window.h"
-#include "nact-schemes-list.h"
+#include "fma-schemes-list.h"
 #include "fma-providers-list.h"
 #include "fma-preferences-editor.h"
 
@@ -398,7 +398,7 @@ instance_dispose( GObject *dialog )
 
 		self->private->dispose_has_run = TRUE;
 
-		nact_schemes_list_dispose( BASE_WINDOW( self ));
+		fma_schemes_list_dispose( BASE_WINDOW( self ));
 		fma_providers_list_dispose( BASE_WINDOW( self ));
 
 		/* chain up to the parent class */
@@ -495,7 +495,7 @@ on_base_initialize_gtk( FMAPreferencesEditor *editor, GtkDialog *toplevel, gpoin
 		fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( editor ), container, TRUE );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
-		nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
+		fma_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
 		fma_providers_list_create_model( listview );
@@ -569,7 +569,7 @@ on_base_initialize_window( FMAPreferencesEditor *editor, gpointer user_data )
 		/* sixth tab: default schemes
 		 */
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
-		nact_schemes_list_init_view( listview, BASE_WINDOW( editor ), NULL, NULL );
+		fma_schemes_list_init_view( listview, BASE_WINDOW( editor ), NULL, NULL );
 
 		/* seventh tab: I/O providers priorities
 		 */
@@ -603,7 +603,7 @@ on_base_show_widgets( FMAPreferencesEditor *editor, gpointer user_data )
 		notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
 		gtk_notebook_set_current_page( notebook, st_last_tab );
 
-		nact_schemes_list_show_all( BASE_WINDOW( editor ));
+		fma_schemes_list_show_all( BASE_WINDOW( editor ));
 	}
 }
 
@@ -1265,7 +1265,7 @@ on_dialog_ok( BaseDialog *dialog )
 
 		/* sixth tab: list of default schemes
 		 */
-		nact_schemes_list_save_defaults( BASE_WINDOW( editor ));
+		fma_schemes_list_save_defaults( BASE_WINDOW( editor ));
 
 		/* seventh tab: priorities of I/O providers
 		 */
