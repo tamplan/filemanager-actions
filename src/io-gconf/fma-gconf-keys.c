@@ -27,16 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FMA_GCONF_PROVIDER_KEYS_H__
-#define __FMA_GCONF_PROVIDER_KEYS_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#define NAGP_CONFIGURATIONS_PATH		"/apps/filemanager-actions/configurations"
-#define NAGP_SCHEMAS_PATH				"/schemas/apps/filemanager-actions/configurations"
-
-#define NAGP_ENTRY_TYPE					"type"
-#define NAGP_VALUE_TYPE_MENU			"Menu"
-#define NAGP_VALUE_TYPE_ACTION			"Action"
-
-#define NAGP_ENTRY_IVERSION				"iversion"
-
-#endif /* __FMA_GCONF_PROVIDER_KEYS_H__ */
+#include "fma-gconf-keys.h"

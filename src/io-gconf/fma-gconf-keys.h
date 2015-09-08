@@ -27,8 +27,16 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#ifndef __IO_GCONF_FMA_GCONF_KEYS_H__
+#define __IO_GCONF_FMA_GCONF_KEYS_H__
 
-#include "nagp-keys.h"
+#define FMA_GCONF_CONFIGURATIONS_PATH		"/apps/nautilus-actions/configurations"
+#define FMA_GCONF_SCHEMAS_PATH				"/schemas/apps/nautilus-actions/configurations"
+
+#define FMA_GCONF_ENTRY_TYPE				"type"
+#define FMA_GCONF_VALUE_TYPE_MENU			"Menu"
+#define FMA_GCONF_VALUE_TYPE_ACTION			"Action"
+
+#define FMA_GCONF_ENTRY_IVERSION			"iversion"
+
+#endif /* __IO_GCONF_FMA_GCONF_KEYS_H__ */

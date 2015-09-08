@@ -43,7 +43,7 @@
 
 #include "fma-gconf-provider.h"
 #include "nagp-writer.h"
-#include "nagp-keys.h"
+#include "fma-gconf-keys.h"
 
 #ifdef NA_ENABLE_DEPRECATED
 static void write_start_write_type( FMAGConfProvider *provider, FMAObjectItem *item );
@@ -200,7 +200,7 @@ nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 	 * mean including the schemas themselves
 	 */
 	if( ret == IIO_PROVIDER_CODE_OK ){
-		path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, uuid );
+		path = gconf_concat_dir_and_key( FMA_GCONF_CONFIGURATIONS_PATH, uuid );
 		gconf_client_recursive_unset( self->private->gconf, path, GCONF_UNSET_INCLUDING_SCHEMA_NAMES, &error );
 		if( error ){
 			g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
@@ -214,7 +214,7 @@ nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 	}
 
 	if( ret == IIO_PROVIDER_CODE_OK ){
-		path = gconf_concat_dir_and_key( NAGP_SCHEMAS_PATH, uuid );
+		path = gconf_concat_dir_and_key( FMA_GCONF_SCHEMAS_PATH, uuid );
 		gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
 		if( error ){
 			g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
@@ -250,12 +250,12 @@ write_start_write_type( FMAGConfProvider *provider, FMAObjectItem *item )
 	gchar *id, *path;
 
 	id = fma_object_get_id( item );
-	path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, id, NAGP_ENTRY_TYPE );
+	path = g_strdup_printf( "%s/%s/%s", FMA_GCONF_CONFIGURATIONS_PATH, id, FMA_GCONF_ENTRY_TYPE );
 
 	fma_gconf_utils_write_string(
 			provider->private->gconf,
 			path,
-			FMA_IS_OBJECT_ACTION( item ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU,
+			FMA_IS_OBJECT_ACTION( item ) ? FMA_GCONF_VALUE_TYPE_ACTION : FMA_GCONF_VALUE_TYPE_MENU,
 			NULL );
 
 	g_free( path );
@@ -269,7 +269,7 @@ write_start_write_version( FMAGConfProvider *provider, FMAObjectItem *item )
 	guint iversion;
 
 	id = fma_object_get_id( item );
-	path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, id, NAGP_ENTRY_IVERSION );
+	path = g_strdup_printf( "%s/%s/%s", FMA_GCONF_CONFIGURATIONS_PATH, id, FMA_GCONF_ENTRY_IVERSION );
 
 	iversion = fma_object_get_iversion( item );
 	fma_gconf_utils_write_int( provider->private->gconf, path, iversion, NULL );
@@ -315,7 +315,7 @@ nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 			this_id = fma_object_get_id( object );
 		}
 
-		this_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, this_id );
+		this_path = gconf_concat_dir_and_key( FMA_GCONF_CONFIGURATIONS_PATH, this_id );
 		path = gconf_concat_dir_and_key( this_path, def->gconf_entry );
 
 		gconf = FMA_GCONF_PROVIDER( provider )->private->gconf;

@@ -42,7 +42,7 @@
 #include <api/fma-gconf-utils.h>
 
 #include "fma-gconf-provider.h"
-#include "nagp-keys.h"
+#include "fma-gconf-keys.h"
 #include "nagp-reader.h"
 
 typedef struct {
@@ -87,7 +87,7 @@ nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages 
 
 	if( !self->private->dispose_has_run ){
 
-		listpath = fma_gconf_utils_get_subdirs( self->private->gconf, NAGP_CONFIGURATIONS_PATH );
+		listpath = fma_gconf_utils_get_subdirs( self->private->gconf, FMA_GCONF_CONFIGURATIONS_PATH );
 
 		for( ip = listpath ; ip ; ip = ip->next ){
 
@@ -123,17 +123,17 @@ read_item( FMAGConfProvider *provider, const gchar *path, GSList **messages )
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
-	full_path = gconf_concat_dir_and_key( path, NAGP_ENTRY_TYPE );
-	type = fma_gconf_utils_read_string( provider->private->gconf, full_path, TRUE, NAGP_VALUE_TYPE_ACTION );
+	full_path = gconf_concat_dir_and_key( path, FMA_GCONF_ENTRY_TYPE );
+	type = fma_gconf_utils_read_string( provider->private->gconf, full_path, TRUE, FMA_GCONF_VALUE_TYPE_ACTION );
 	g_free( full_path );
 	item = NULL;
 
 	/* an item may have 'Action' or 'Menu' type; defaults to Action
 	 */
-	if( !type || !strlen( type ) || !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
+	if( !type || !strlen( type ) || !strcmp( type, FMA_GCONF_VALUE_TYPE_ACTION )){
 		item = FMA_OBJECT_ITEM( fma_object_action_new());
 
-	} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
+	} else if( !strcmp( type, FMA_GCONF_VALUE_TYPE_MENU )){
 		item = FMA_OBJECT_ITEM( fma_object_menu_new());
 
 	} else {

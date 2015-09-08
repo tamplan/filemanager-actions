@@ -41,7 +41,7 @@
 #include "fma-gconf-provider.h"
 #include "nagp-reader.h"
 #include "nagp-writer.h"
-#include "nagp-keys.h"
+#include "fma-gconf-keys.h"
 
 /* private class data
  */
@@ -296,13 +296,13 @@ install_monitors( FMAGConfProvider *provider )
 	 */
 	list = g_list_prepend( list,
 			fma_gconf_monitor_new(
-					NAGP_CONFIGURATIONS_PATH,
+					FMA_GCONF_CONFIGURATIONS_PATH,
 					( GConfClientNotifyFunc ) config_path_changed_cb,
 					provider ));
 
 	list = g_list_prepend( list,
 			fma_gconf_monitor_new(
-					NAGP_SCHEMAS_PATH,
+					FMA_GCONF_SCHEMAS_PATH,
 					( GConfClientNotifyFunc ) config_path_changed_cb,
 					provider ));
 

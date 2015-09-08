@@ -39,7 +39,8 @@ AM_CPPFLAGS += \
 libna_io_gconf_la_SOURCES = \
 	fma-gconf-provider.c								\
 	fma-gconf-provider.h								\
-	nagp-keys.h											\
+	fma-gconf-keys.c									\
+	fma-gconf-keys.h									\
 	nagp-module.c										\
 	nagp-reader.c										\
 	nagp-reader.h										\
