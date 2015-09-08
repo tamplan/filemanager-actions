@@ -37,7 +37,7 @@
 
 #include <api/fma-iexporter.h>
 
-#include "fma-formats.h"
+#include "fma-desktop-formats.h"
 
 typedef struct {
 	gchar *format;
@@ -45,14 +45,14 @@ typedef struct {
 	gchar *description;
 	gchar *image;
 }
-	NadpExportFormat;
+	sExportFormat;
 
-static NadpExportFormat fma_formats[] = {
+static sExportFormat st_desktop_formats[] = {
 
 	/* DESKTOP_V1: the initial desktop format as described in
 	 * http://www.filemanager-actions.org/?q=node/377
 	 */
-	{ NADP_FORMAT_DESKTOP_V1,
+	{ FMA_DESKTOP_FORMAT_V1,
 			N_( "Export as a ._desktop file" ),
 			N_( "This format has been introduced with v 3.0 serie, " \
 				"and should be your newly preferred format when exporting items.\n" \
@@ -74,20 +74,20 @@ static void on_pixbuf_finalized( const FMAIExporter* exporter, GObject *pixbuf )
 #endif
 
 /**
- * fma_formats_get_formats:
+ * fma_desktop_formats_get_formats:
  * @exporter: this #FMAIExporter provider.
  *
  * Returns: a #GList of the #FMAIExporterFormatv2 supported export formats.
  *
- * This list should be fma_formats_free_formats() by the caller.
+ * This list should be fma_desktop_formats_free_formats() by the caller.
  *
  * Since: 3.2
  */
 GList *
-fma_formats_get_formats( const FMAIExporter* exporter )
+fma_desktop_formats_get_formats( const FMAIExporter* exporter )
 {
 #if 0
-	static const gchar *thisfn = "fma_formats_get_formats";
+	static const gchar *thisfn = "fma_desktop_formats_get_formats";
 #endif
 	GList *str_list;
 	FMAIExporterFormatv2 *str;
@@ -101,15 +101,15 @@ fma_formats_get_formats( const FMAIExporter* exporter )
 		width = height = 48;
 	}
 
-	for( i = 0 ; fma_formats[i].format ; ++i ){
+	for( i = 0 ; st_desktop_formats[i].format ; ++i ){
 		str = g_new0( FMAIExporterFormatv2, 1 );
 		str->version = 2;
 		str->provider = FMA_IEXPORTER( exporter );
-		str->format = g_strdup( fma_formats[i].format );
-		str->label = g_strdup( gettext( fma_formats[i].label ));
-		str->description = g_strdup( gettext( fma_formats[i].description ));
-		if( fma_formats[i].image ){
-			fname = g_strdup_printf( "%s/%s", PROVIDER_DATADIR, fma_formats[i].image );
+		str->format = g_strdup( st_desktop_formats[i].format );
+		str->label = g_strdup( gettext( st_desktop_formats[i].label ));
+		str->description = g_strdup( gettext( st_desktop_formats[i].description ));
+		if( st_desktop_formats[i].image ){
+			fname = g_strdup_printf( "%s/%s", PROVIDER_DATADIR, st_desktop_formats[i].image );
 			str->pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
 			g_free( fname );
 #if 0
@@ -134,12 +134,12 @@ fma_formats_get_formats( const FMAIExporter* exporter )
 static void
 on_pixbuf_finalized( const FMAIExporter* exporter, GObject *pixbuf )
 {
-	g_debug( "fma_formats_on_pixbuf_finalized: exporter=%p, pixbuf=%p", ( void * ) exporter, ( void * ) pixbuf );
+	g_debug( "fma_desktop_formats_on_pixbuf_finalized: exporter=%p, pixbuf=%p", ( void * ) exporter, ( void * ) pixbuf );
 }
 #endif
 
 /**
- * fma_formats_free_formats:
+ * fma_desktop_formats_free_formats:
  * @formats: a #GList to be freed.
  *
  * Returns: a #GList of the #FMAIExporterFormatv2 supported export formats.
@@ -149,7 +149,7 @@ on_pixbuf_finalized( const FMAIExporter* exporter, GObject *pixbuf )
  * Since: 3.2
  */
 void
-fma_formats_free_formats( GList *formats )
+fma_desktop_formats_free_formats( GList *formats )
 {
 	GList *is;
 	FMAIExporterFormatv2 *str;

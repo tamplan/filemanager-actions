@@ -38,7 +38,7 @@
 #include <api/fma-ifactory-provider.h>
 
 #include "fma-desktop-provider.h"
-#include "fma-formats.h"
+#include "fma-desktop-formats.h"
 #include "fma-keys.h"
 #include "fma-monitor.h"
 #include "fma-reader.h"
@@ -328,13 +328,13 @@ iexporter_get_name( const FMAIExporter *exporter )
 static void *
 iexporter_get_formats( const FMAIExporter *exporter )
 {
-	return(( void * ) fma_formats_get_formats( exporter ));
+	return(( void * ) fma_desktop_formats_get_formats( exporter ));
 }
 
 static void
 iexporter_free_formats( const FMAIExporter *exporter, GList *format_list )
 {
-	fma_formats_free_formats( format_list );
+	fma_desktop_formats_free_formats( format_list );
 }
 
 /**
