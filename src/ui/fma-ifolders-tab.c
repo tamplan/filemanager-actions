@@ -41,7 +41,7 @@
 
 #include "base-gtk-utils.h"
 #include "fma-application.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"
 #include "fma-ifolders-tab.h"
@@ -156,7 +156,7 @@ fma_ifolders_tab_init( FMAIFoldersTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS );
+	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -224,7 +224,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIFolde
 			NULL );
 
 	enable_tab = ( context != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS, enable_tab );
+	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS, enable_tab );
 
 	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "FolderBrowseButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );

@@ -42,7 +42,7 @@
 
 #include "base-gtk-utils.h"
 #include "fma-iproperties-tab.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 
 /* private interface data
@@ -168,7 +168,7 @@ fma_iproperties_tab_init( FMAIPropertiesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES );
+	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES );
 	initialize_window( instance );
 
 	data = get_iproperties_data( instance );
@@ -252,7 +252,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIPrope
 	g_return_if_fail( !item || FMA_IS_OBJECT_ITEM( item ));
 
 	enable_tab = ( count_selected == 1 );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES, enable_tab );
+	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES, enable_tab );
 
 	data = get_iproperties_data( instance );
 	data->on_selection_change = TRUE;

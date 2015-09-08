@@ -41,7 +41,7 @@
 #include "fma-application.h"
 #include "fma-clipboard.h"
 #include "base-gtk-utils.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-priv.h"

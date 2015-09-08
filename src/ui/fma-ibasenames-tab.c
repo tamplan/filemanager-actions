@@ -39,7 +39,7 @@
 
 #include "base-gtk-utils.h"
 #include "fma-ibasenames-tab.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"
 
@@ -164,7 +164,7 @@ fma_ibasenames_tab_init( FMAIBasenamesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES );
+	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -249,7 +249,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIBasen
 			NULL );
 
 	enable_tab = ( context != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES, enable_tab );
+	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES, enable_tab );
 
 	data = get_ibasenames_data( FMA_IBASENAMES_TAB( instance ));
 	data->on_selection_change = TRUE;

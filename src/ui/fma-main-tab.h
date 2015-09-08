@@ -27,17 +27,17 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_MAIN_TAB_H__
-#define __UI_NACT_MAIN_TAB_H__
+#ifndef __UI_FMA_MAIN_TAB_H__
+#define __UI_FMA_MAIN_TAB_H__
 
 #include <api/fma-icontext.h>
 
 #include "nact-main-window-def.h"
 
 /**
- * SECTION: nact_main_tab
+ * SECTION: fma_main_tab
  * @short_description: Signals and properties.
- * @include: ui/nact-main-tab.h
+ * @include: ui/fma-main-tab.h
  *
  * Here as defined signals and properties common to all tabs.
  */
@@ -57,10 +57,10 @@ enum {
 	TAB_PROPERTIES
 };
 
-void     nact_main_tab_init           ( NactMainWindow *window, gint page );
-void     nact_main_tab_enable_page    ( NactMainWindow *window, gint page, gboolean enabled );
-gboolean nact_main_tab_is_page_enabled( NactMainWindow *window, gint page );
+void     fma_main_tab_init           ( NactMainWindow *window, gint page );
+void     fma_main_tab_enable_page    ( NactMainWindow *window, gint page, gboolean enabled );
+gboolean fma_main_tab_is_page_enabled( NactMainWindow *window, gint page );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_MAIN_TAB_H__ */
+#endif /* __UI_FMA_MAIN_TAB_H__ */

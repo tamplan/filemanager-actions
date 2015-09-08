@@ -39,7 +39,7 @@
 #include "core/fma-gtk-utils.h"
 
 #include "base-gtk-utils.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"
 #include "fma-add-scheme-dialog.h"
@@ -155,7 +155,7 @@ fma_ischemes_tab_init( FMAISchemesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES );
+	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -223,7 +223,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAISchem
 			NULL );
 
 	enable_tab = ( context != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES, enable_tab );
+	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES, enable_tab );
 
 	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddFromDefaultButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );

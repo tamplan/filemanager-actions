@@ -35,19 +35,19 @@
 
 #include "core/fma-gtk-utils.h"
 
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 
 /**
- * nact_main_tab_init:
+ * fma_main_tab_init:
  * @window: the #NactMainWindow.
  * @num_page: the page number, starting from zero.
  *
  * Common initialization of each page of the notebook.
- * (provided that the page has itself called nact_main_tab_init())
+ * (provided that the page has itself called fma_main_tab_init())
  */
 void
-nact_main_tab_init( NactMainWindow *main_window, gint num_page )
+fma_main_tab_init( NactMainWindow *main_window, gint num_page )
 {
 	GtkWidget *notebook;
 	GtkWidget *page;
@@ -65,7 +65,7 @@ nact_main_tab_init( NactMainWindow *main_window, gint num_page )
 }
 
 /**
- * nact_main_tab_enable_page:
+ * fma_main_tab_enable_page:
  * @window: the #NactMainWindow.
  * @num_page: the page number, starting from zero.
  * @enabled: whether the tab should be set sensitive or not.
@@ -73,7 +73,7 @@ nact_main_tab_init( NactMainWindow *main_window, gint num_page )
  * Set the sensitivity of the tab.
  */
 void
-nact_main_tab_enable_page( NactMainWindow *window, gint num_page, gboolean enabled )
+fma_main_tab_enable_page( NactMainWindow *window, gint num_page, gboolean enabled )
 {
 	GtkWidget *notebook;
 	GtkWidget *page, *label;
@@ -88,14 +88,14 @@ nact_main_tab_enable_page( NactMainWindow *window, gint num_page, gboolean enabl
 }
 
 /**
- * nact_main_tab_is_page_enabled:
+ * fma_main_tab_is_page_enabled:
  * @window: the #NactMainWindow.
  * @num_page: the page number, starting from zero.
  *
  * Returns: %TRUE if the tab is sensitive, %FALSE else.
  */
 gboolean
-nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
+fma_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
 {
 	gboolean is_sensitive;
 	GtkWidget *notebook, *page;
@@ -105,7 +105,7 @@ nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
 	page = gtk_notebook_get_nth_page( GTK_NOTEBOOK( notebook ), num_page );
 	is_sensitive = gtk_widget_is_sensitive( page );
 
-	g_debug( "nact_main_tab_is_page_enabled: num_page=%d, is_sensitive=%s", num_page, is_sensitive ? "True":"False" );
+	g_debug( "fma_main_tab_is_page_enabled: num_page=%d, is_sensitive=%s", num_page, is_sensitive ? "True":"False" );
 
 	return( is_sensitive );
 }

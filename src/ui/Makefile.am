@@ -107,8 +107,8 @@ fma_config_tool_SOURCES = \
 	fma-iproperties-tab.h								\
 	fma-ischemes-tab.c									\
 	fma-ischemes-tab.h									\
-	nact-main-tab.c										\
-	nact-main-tab.h										\
+	fma-main-tab.c										\
+	fma-main-tab.h										\
 	nact-main-window.c									\
 	nact-main-window.h									\
 	nact-main-window-def.h								\

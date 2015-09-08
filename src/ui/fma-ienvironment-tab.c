@@ -44,7 +44,7 @@
 #include "core/fma-settings.h"
 
 #include "base-gtk-utils.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "fma-ienvironment-tab.h"
 
@@ -214,7 +214,7 @@ fma_ienvironment_tab_init( FMAIEnvironmentTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT );
+	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -375,7 +375,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIEnvir
 			NULL );
 
 	enable_tab = ( context != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT, enable_tab );
+	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT, enable_tab );
 
 	data = get_ienviron_data( instance );
 	data->on_selection_change = TRUE;

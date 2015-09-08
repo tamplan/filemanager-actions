@@ -42,7 +42,7 @@
 
 #include "fma-application.h"
 #include "nact-statusbar.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-menu.h"
 #include "nact-menu-file.h"

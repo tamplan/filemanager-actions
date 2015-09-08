@@ -38,7 +38,7 @@
 #include "core/fma-gtk-utils.h"
 
 #include "base-gtk-utils.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "fma-iexecution-tab.h"
 
@@ -163,7 +163,7 @@ fma_iexecution_tab_init( FMAIExecutionTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION );
+	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION );
 	initialize_window( instance );
 
 	data = get_iexecution_data( instance );
@@ -254,7 +254,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIExecu
 			NULL );
 
 	enable_tab = ( profile != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
+	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
 
 	data = get_iexecution_data( instance );
 	data->on_selection_change = TRUE;

@@ -52,7 +52,7 @@
 #include "fma-ienvironment-tab.h"
 #include "fma-iexecution-tab.h"
 #include "fma-iproperties-tab.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-menu.h"
 #include "nact-statusbar.h"

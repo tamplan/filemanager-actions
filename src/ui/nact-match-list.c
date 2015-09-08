@@ -39,7 +39,7 @@
 
 #include "base-keysyms.h"
 #include "base-gtk-utils.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"
 
@@ -343,7 +343,7 @@ on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchL
 			NULL );
 
 	enable_tab = ( context != NULL );
-	nact_main_tab_enable_page( data->window, data->tab_id, enable_tab );
+	fma_main_tab_enable_page( data->window, data->tab_id, enable_tab );
 
 	data->on_selection_change = TRUE;
 

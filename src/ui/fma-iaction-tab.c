@@ -43,7 +43,7 @@
 #include "fma-application.h"
 #include "nact-statusbar.h"
 #include "base-gtk-utils.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "fma-iaction-tab.h"
 #include "fma-icon-chooser.h"
@@ -181,7 +181,7 @@ fma_iaction_tab_init( FMAIActionTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_ACTION );
+	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_ACTION );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -356,7 +356,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIActio
 			instance, G_OBJECT_TYPE_NAME( instance ));
 
 	enable_tab = ( count_selected == 1 );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );
+	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );
 
 	data = get_iaction_data( instance );
 	data->on_selection_change = TRUE;

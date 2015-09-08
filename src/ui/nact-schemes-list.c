@@ -39,7 +39,7 @@
 #include "base-keysyms.h"
 #include "fma-application.h"
 #include "base-gtk-utils.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-schemes-list.h"
 
 /* data attached to the treeview widget on initial load

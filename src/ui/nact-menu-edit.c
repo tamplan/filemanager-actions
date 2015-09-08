@@ -39,7 +39,7 @@
 
 #include "fma-application.h"
 #include "fma-clipboard.h"
-#include "nact-main-tab.h"
+#include "fma-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-menu.h"
 #include "nact-menu-edit.h"
