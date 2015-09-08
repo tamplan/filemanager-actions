@@ -33,7 +33,7 @@
 
 #include "fma-xml-keys.h"
 
-FMAXMLKeyStr naxml_schema_key_schema_str [] = {
+FMAXMLKeyStr fma_xml_schema_key_schema_str [] = {
 		{ FMA_XML_KEY_SCHEMA_NODE_KEY,             TRUE,  TRUE, FALSE },
 		{ FMA_XML_KEY_SCHEMA_NODE_APPLYTO,         TRUE,  TRUE, FALSE },
 		{ FMA_XML_KEY_SCHEMA_NODE_OWNER,           TRUE, FALSE, FALSE },
@@ -44,14 +44,14 @@ FMAXMLKeyStr naxml_schema_key_schema_str [] = {
 		{ NULL }
 };
 
-FMAXMLKeyStr naxml_schema_key_locale_str [] = {
+FMAXMLKeyStr fma_xml_schema_key_locale_str [] = {
 		{ FMA_XML_KEY_SCHEMA_NODE_LOCALE_DEFAULT,  TRUE,  TRUE, FALSE },
 		{ FMA_XML_KEY_SCHEMA_NODE_LOCALE_SHORT,    TRUE, FALSE, FALSE },
 		{ FMA_XML_KEY_SCHEMA_NODE_LOCALE_LONG,     TRUE, FALSE, FALSE },
 		{ NULL }
 };
 
-FMAXMLKeyStr naxml_dump_key_entry_str [] = {
+FMAXMLKeyStr fma_xml_dump_key_entry_str [] = {
 		{ FMA_XML_KEY_DUMP_NODE_KEY,               TRUE,  TRUE, FALSE },
 		{ FMA_XML_KEY_DUMP_NODE_VALUE,             TRUE,  TRUE, FALSE },
 		{ NULL }

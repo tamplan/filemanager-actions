@@ -94,8 +94,8 @@ struct _NAXMLReaderPrivate {
 	gboolean                         node_ok;
 };
 
-extern FMAXMLKeyStr naxml_schema_key_schema_str[];
-extern FMAXMLKeyStr naxml_dump_key_entry_str[];
+extern FMAXMLKeyStr fma_xml_schema_key_schema_str[];
+extern FMAXMLKeyStr fma_xml_dump_key_entry_str[];
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -967,14 +967,14 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 		}
 
 		str = NULL;
-		for( i = 0 ; naxml_schema_key_schema_str[i].key && !str ; ++i ){
-			if( !strxcmp( iter->name, naxml_schema_key_schema_str[i].key )){
-				str = naxml_schema_key_schema_str+i;
+		for( i = 0 ; fma_xml_schema_key_schema_str[i].key && !str ; ++i ){
+			if( !strxcmp( iter->name, fma_xml_schema_key_schema_str[i].key )){
+				str = fma_xml_schema_key_schema_str+i;
 			}
 		}
 
 		if( !str ){
-			gchar *node_list = build_key_node_list( naxml_schema_key_schema_str );
+			gchar *node_list = build_key_node_list( fma_xml_schema_key_schema_str );
 			fma_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, node_list );
@@ -1137,14 +1137,14 @@ dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
 		}
 
 		str = NULL;
-		for( i = 0 ; naxml_dump_key_entry_str[i].key && !str ; ++i ){
-			if( !strxcmp( iter->name, naxml_dump_key_entry_str[i].key )){
-				str = naxml_dump_key_entry_str+i;
+		for( i = 0 ; fma_xml_dump_key_entry_str[i].key && !str ; ++i ){
+			if( !strxcmp( iter->name, fma_xml_dump_key_entry_str[i].key )){
+				str = fma_xml_dump_key_entry_str+i;
 			}
 		}
 
 		if( !str ){
-			gchar *node_list = build_key_node_list( naxml_dump_key_entry_str );
+			gchar *node_list = build_key_node_list( fma_xml_dump_key_entry_str );
 			fma_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, node_list );
@@ -1397,12 +1397,12 @@ reset_node_data( NAXMLReader *reader )
 {
 	int i;
 
-	for( i=0 ; naxml_schema_key_schema_str[i].key ; ++i ){
-		naxml_schema_key_schema_str[i].reader_found = FALSE;
+	for( i=0 ; fma_xml_schema_key_schema_str[i].key ; ++i ){
+		fma_xml_schema_key_schema_str[i].reader_found = FALSE;
 	}
 
-	for( i=0 ; naxml_dump_key_entry_str[i].key ; ++i ){
-		naxml_dump_key_entry_str[i].reader_found = FALSE;
+	for( i=0 ; fma_xml_dump_key_entry_str[i].key ; ++i ){
+		fma_xml_dump_key_entry_str[i].reader_found = FALSE;
 	}
 
 	reader->private->node_ok = TRUE;
