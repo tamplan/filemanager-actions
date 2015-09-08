@@ -27,15 +27,15 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_FMA_STATUSBAR_H__
-#define __UI_FMA_STATUSBAR_H__
+#ifndef __UI_FMA_STATUS_BAR_H__
+#define __UI_FMA_STATUS_BAR_H__
 
 /**
- * SECTION: fma_statusbar
+ * SECTION: fma_status_bar
  * @short_description: Statusbar class definition.
- * @include: ui/fma-statusbar.h
+ * @include: ui/fma-status-bar.h
  *
- * The #FMAStatusbar embeds both:
+ * The #FMAStatusBar embeds both:
  * - a message bar
  * - a read-only indicator.
  */
@@ -44,47 +44,47 @@
 
 G_BEGIN_DECLS
 
-#define FMA_TYPE_STATUSBAR                ( fma_statusbar_get_type())
-#define FMA_STATUSBAR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_STATUSBAR, FMAStatusbar ))
-#define FMA_STATUSBAR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_STATUSBAR, FMAStatusbarClass ))
-#define FMA_IS_STATUSBAR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_STATUSBAR ))
-#define FMA_IS_STATUSBAR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_STATUSBAR ))
-#define FMA_STATUSBAR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_STATUSBAR, FMAStatusbarClass ))
+#define FMA_TYPE_STATUS_BAR                ( fma_status_bar_get_type())
+#define FMA_STATUS_BAR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_STATUS_BAR, FMAStatusBar ))
+#define FMA_STATUS_BAR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_STATUS_BAR, FMAStatusBarClass ))
+#define FMA_IS_STATUS_BAR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_STATUS_BAR ))
+#define FMA_IS_STATUS_BAR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_STATUS_BAR ))
+#define FMA_STATUS_BAR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_STATUS_BAR, FMAStatusBarClass ))
 
-typedef struct _FMAStatusbarPrivate       FMAStatusbarPrivate;
+typedef struct _FMAStatusBarPrivate        FMAStatusBarPrivate;
 
 typedef struct {
 	/*< private >*/
 	GtkStatusbar         parent;
-	FMAStatusbarPrivate *private;
+	FMAStatusBarPrivate *private;
 }
-	FMAStatusbar;
+	FMAStatusBar;
 
 typedef struct {
 	/*< private >*/
 	GtkStatusbarClass    parent;
 }
-	FMAStatusbarClass;
+	FMAStatusBarClass;
 
-GType         fma_statusbar_get_type            ( void );
+GType         fma_status_bar_get_type            ( void );
 
-FMAStatusbar *fma_statusbar_new                 ( void );
+FMAStatusBar *fma_status_bar_new                 ( void );
 
-void          fma_statusbar_display_status      ( FMAStatusbar *bar,
+void          fma_status_bar_display_status      ( FMAStatusBar *bar,
 														const gchar *context,
 														const gchar *status );
 
-void          fma_statusbar_display_with_timeout( FMAStatusbar *bar,
+void          fma_status_bar_display_with_timeout( FMAStatusBar *bar,
 														const gchar *context,
 														const gchar *status );
 
-void          fma_statusbar_hide_status         ( FMAStatusbar *bar,
+void          fma_status_bar_hide_status         ( FMAStatusBar *bar,
 														const gchar *context );
 
-void          fma_statusbar_set_locked          ( FMAStatusbar *bar,
+void          fma_status_bar_set_locked          ( FMAStatusBar *bar,
 														gboolean readonly,
 														gint reason );
 
 G_END_DECLS
 
-#endif /* __UI_FMA_STATUSBAR_H__ */
+#endif /* __UI_FMA_STATUS_BAR_H__ */

@@ -35,9 +35,9 @@
 #include "core/fma-io-provider.h"
 
 #include "base-gtk-utils.h"
-#include "fma-statusbar.h"
+#include "fma-status-bar.h"
 
-struct _FMAStatusbarPrivate {
+struct _FMAStatusBarPrivate {
 	gboolean   dispose_has_run;
 	GtkWidget *image;
 };
@@ -45,7 +45,7 @@ struct _FMAStatusbarPrivate {
 typedef struct {
 	guint         event_source_id;
 	guint         context_id;
-	FMAStatusbar *bar;
+	FMAStatusBar *bar;
 }
 	StatusbarTimeoutDisplayStruct;
 
@@ -54,16 +54,16 @@ typedef struct {
 static GObjectClass *st_parent_class    = NULL;
 
 static GType    register_type( void );
-static void     class_init( FMAStatusbarClass *klass );
+static void     class_init( FMAStatusBarClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
-static void     init_bar( FMAStatusbar *bar );
+static void     init_bar( FMAStatusBar *bar );
 static gboolean display_timeout( StatusbarTimeoutDisplayStruct *stds );
 static void     display_timeout_free( StatusbarTimeoutDisplayStruct *stds );
 
 GType
-fma_statusbar_get_type( void )
+fma_status_bar_get_type( void )
 {
 	static GType type = 0;
 
@@ -77,32 +77,32 @@ fma_statusbar_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "fma_statusbar_register_type";
+	static const gchar *thisfn = "fma_status_bar_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( FMAStatusbarClass ),
+		sizeof( FMAStatusBarClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( FMAStatusbar ),
+		sizeof( FMAStatusBar ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( GTK_TYPE_STATUSBAR, "FMAStatusbar", &info, 0 );
+	type = g_type_register_static( GTK_TYPE_STATUSBAR, "FMAStatusBar", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( FMAStatusbarClass *klass )
+class_init( FMAStatusBarClass *klass )
 {
-	static const gchar *thisfn = "fma_statusbar_class_init";
+	static const gchar *thisfn = "fma_status_bar_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -117,17 +117,17 @@ class_init( FMAStatusbarClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "fma_statusbar_instance_init";
-	FMAStatusbar *self;
+	static const gchar *thisfn = "fma_status_bar_instance_init";
+	FMAStatusBar *self;
 
-	g_return_if_fail( FMA_IS_STATUSBAR( instance ));
+	g_return_if_fail( FMA_IS_STATUS_BAR( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = FMA_STATUSBAR( instance );
+	self = FMA_STATUS_BAR( instance );
 
-	self->private = g_new0( FMAStatusbarPrivate, 1 );
+	self->private = g_new0( FMAStatusBarPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -135,12 +135,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "fma_statusbar_instance_dispose";
-	FMAStatusbarPrivate *priv;
+	static const gchar *thisfn = "fma_status_bar_instance_dispose";
+	FMAStatusBarPrivate *priv;
 
-	g_return_if_fail( FMA_IS_STATUSBAR( object ));
+	g_return_if_fail( FMA_IS_STATUS_BAR( object ));
 
-	priv = FMA_STATUSBAR( object )->private;
+	priv = FMA_STATUS_BAR( object )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -159,14 +159,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *instance )
 {
-	static const gchar *thisfn = "fma_statusbar_instance_finalize";
-	FMAStatusbar *self;
+	static const gchar *thisfn = "fma_status_bar_instance_finalize";
+	FMAStatusBar *self;
 
-	g_return_if_fail( FMA_IS_STATUSBAR( instance ));
+	g_return_if_fail( FMA_IS_STATUS_BAR( instance ));
 
 	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	self = FMA_STATUSBAR( instance );
+	self = FMA_STATUS_BAR( instance );
 
 	g_free( self->private );
 
@@ -177,16 +177,16 @@ instance_finalize( GObject *instance )
 }
 
 /**
- * fma_statusbar_new:
+ * fma_status_bar_new:
  *
- * Returns: a new #FMAStatusbar object.
+ * Returns: a new #FMAStatusBar object.
  */
-FMAStatusbar *
-fma_statusbar_new( void )
+FMAStatusBar *
+fma_status_bar_new( void )
 {
-	FMAStatusbar *bar;
+	FMAStatusBar *bar;
 
-	bar = g_object_new( FMA_TYPE_STATUSBAR, NULL );
+	bar = g_object_new( FMA_TYPE_STATUS_BAR, NULL );
 
 	init_bar( bar );
 
@@ -194,7 +194,7 @@ fma_statusbar_new( void )
 }
 
 static void
-init_bar( FMAStatusbar *bar )
+init_bar( FMAStatusBar *bar )
 {
 	GtkWidget *frame, *image;
 
@@ -207,17 +207,17 @@ init_bar( FMAStatusbar *bar )
 }
 
 /**
- * fma_statusbar_display_status:
- * @bar: this #FMAStatusbar instance.
+ * fma_status_bar_display_status:
+ * @bar: this #FMAStatusBar instance.
  * @context: the context to be displayed.
  * @status: the message.
  *
  * Push a message.
  */
 void
-fma_statusbar_display_status( FMAStatusbar *bar, const gchar *context, const gchar *status )
+fma_status_bar_display_status( FMAStatusBar *bar, const gchar *context, const gchar *status )
 {
-	static const gchar *thisfn = "fma_statusbar_display_status";
+	static const gchar *thisfn = "fma_status_bar_display_status";
 
 	g_debug( "%s: bar=%p, context=%s, status=%s",
 			thisfn, ( void * ) bar, context, status );
@@ -231,8 +231,8 @@ fma_statusbar_display_status( FMAStatusbar *bar, const gchar *context, const gch
 }
 
 /**
- * fma_statusbar_display_with_timeout:
- * @bar: this #FMAStatusbar instance.
+ * fma_status_bar_display_with_timeout:
+ * @bar: this #FMAStatusBar instance.
  * @context: the context to be displayed.
  * @status: the message.
  *
@@ -242,9 +242,9 @@ fma_statusbar_display_status( FMAStatusbar *bar, const gchar *context, const gch
  * previous one.
  */
 void
-fma_statusbar_display_with_timeout( FMAStatusbar *bar, const gchar *context, const gchar *status )
+fma_status_bar_display_with_timeout( FMAStatusBar *bar, const gchar *context, const gchar *status )
 {
-	static const gchar *thisfn = "fma_statusbar_display_with_timeout";
+	static const gchar *thisfn = "fma_status_bar_display_with_timeout";
 	StatusbarTimeoutDisplayStruct *stds;
 
 	g_debug( "%s: bar=%p, context=%s, status=%s",
@@ -269,22 +269,22 @@ fma_statusbar_display_with_timeout( FMAStatusbar *bar, const gchar *context, con
 }
 
 /**
- * fma_statusbar_hide_status:
- * @bar: this #FMAStatusbar instance.
+ * fma_status_bar_hide_status:
+ * @bar: this #FMAStatusBar instance.
  * @context: the context to be hidden.
  *
  * Hide the specified context.
  */
 void
-fma_statusbar_hide_status( FMAStatusbar *bar, const gchar *context )
+fma_status_bar_hide_status( FMAStatusBar *bar, const gchar *context )
 {
 	guint context_id = gtk_statusbar_get_context_id( GTK_STATUSBAR( bar ), context );
 	gtk_statusbar_pop( GTK_STATUSBAR( bar ), context_id );
 }
 
 /**
- * fma_statusbar_set_locked:
- * @bar: this #FMAStatusbar instance.
+ * fma_status_bar_set_locked:
+ * @bar: this #FMAStatusBar instance.
  * @provider: whether the current provider is locked (read-only).
  * @item: whether the current item is locked (read-only).
  *
@@ -292,10 +292,10 @@ fma_statusbar_hide_status( FMAStatusbar *bar, const gchar *context )
  * Installs the corresponding tooltip.
  */
 void
-fma_statusbar_set_locked( FMAStatusbar *bar, gboolean readonly, gint reason )
+fma_status_bar_set_locked( FMAStatusBar *bar, gboolean readonly, gint reason )
 {
-	static const gchar *thisfn = "fma_statusbar_set_locked";
-	FMAStatusbarPrivate *priv;
+	static const gchar *thisfn = "fma_status_bar_set_locked";
+	FMAStatusBarPrivate *priv;
 	gchar *tooltip;
 	gboolean set_pixbuf;
 
@@ -337,7 +337,7 @@ display_timeout( StatusbarTimeoutDisplayStruct *stds )
 static void
 display_timeout_free( StatusbarTimeoutDisplayStruct *stds )
 {
-	g_debug( "fma_statusbar_display_timeout_free: stds=%p", ( void * ) stds );
+	g_debug( "fma_status_bar_display_timeout_free: stds=%p", ( void * ) stds );
 
 	g_free( stds );
 }

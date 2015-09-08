@@ -55,7 +55,7 @@
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
 #include "fma-menu.h"
-#include "fma-statusbar.h"
+#include "fma-status-bar.h"
 #include "nact-tree-view.h"
 #include "fma-confirm-logout.h"
 #include "fma-sort-buttons.h"
@@ -115,7 +115,7 @@ struct _FMAMainWindowPrivate {
 	NactTreeView      *items_view;
 	gboolean          is_tree_modified;
 	FMAClipboard     *clipboard;
-	FMAStatusbar     *statusbar;
+	FMAStatusBar     *statusbar;
 	FMASortButtons   *sort_buttons;
 
 	gulong            pivot_handler_id;
@@ -706,7 +706,7 @@ setup_main_ui( FMAMainWindow *main_window )
 	GtkWidget *notebook;
 	guint pos;
 	GtkWidget *pane;
-	FMAStatusbar *bar;
+	FMAStatusBar *bar;
 
 	/* no error condition here:
 	 * If there is an error opening the file or parsing the description
@@ -746,7 +746,7 @@ setup_main_ui( FMAMainWindow *main_window )
 
 	/* setup statusbar
 	 */
-	bar = fma_statusbar_new();
+	bar = fma_status_bar_new();
 	alignment = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-statusbar" );
 	g_return_if_fail( alignment && GTK_IS_CONTAINER( alignment ));
 	gtk_container_add( GTK_CONTAINER( alignment ), GTK_WIDGET( bar ));
@@ -858,12 +858,12 @@ fma_main_window_get_sort_buttons( const FMAMainWindow *window )
  * fma_main_window_get_statusbar:
  * @window: this #FMAMainWindow instance.
  *
- * Returns: the #FMAStatusbar object.
+ * Returns: the #FMAStatusBar object.
  */
-FMAStatusbar *
+FMAStatusBar *
 fma_main_window_get_statusbar( const FMAMainWindow *window )
 {
-	FMAStatusbar *bar;
+	FMAStatusBar *bar;
 
 	g_return_val_if_fail( window && FMA_IS_MAIN_WINDOW( window ), NULL );
 
@@ -1030,7 +1030,7 @@ raz_selection_properties( FMAMainWindow *window )
 	window->private->editable = FALSE;
 	window->private->reason = 0;
 
-	fma_statusbar_set_locked( window->private->statusbar, FALSE, 0 );
+	fma_status_bar_set_locked( window->private->statusbar, FALSE, 0 );
 }
 
 /*
@@ -1108,7 +1108,7 @@ setup_writability_status( FMAMainWindow *window )
 	g_return_if_fail( FMA_IS_OBJECT_ITEM( window->private->current_item ));
 
 	window->private->editable = fma_object_is_finally_writable( window->private->current_item, &window->private->reason );
-	fma_statusbar_set_locked( window->private->statusbar, !window->private->editable, window->private->reason );
+	fma_status_bar_set_locked( window->private->statusbar, !window->private->editable, window->private->reason );
 }
 
 /*

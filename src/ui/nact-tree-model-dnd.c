@@ -43,7 +43,7 @@
 
 #include "fma-application.h"
 #include "fma-clipboard.h"
-#include "fma-statusbar.h"
+#include "fma-status-bar.h"
 #include "fma-main-window.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-priv.h"
@@ -668,7 +668,7 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **paren
 	FMAMainWindow *main_window;
 	GtkTreeIter iter;
 	FMAObjectItem *parent_dest;
-	FMAStatusbar *bar;
+	FMAStatusBar *bar;
 
 	priv = model->private;
 	drop_ok = FALSE;
@@ -692,7 +692,7 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **paren
 
 		if( priv->drag_has_profiles ){
 			bar = fma_main_window_get_statusbar( main_window );
-			fma_statusbar_display_with_timeout(
+			fma_status_bar_display_with_timeout(
 						bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 
 		} else {
@@ -725,7 +725,7 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, FMAMainWi
 	static const gchar *thisfn = "nact_tree_model_dnd_is_drop_possible_before_iter";
 	gboolean drop_ok;
 	FMAObject *object;
-	FMAStatusbar *bar;
+	FMAStatusBar *bar;
 
 	drop_ok = FALSE;
 	*parent = NULL;
@@ -743,7 +743,7 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, FMAMainWi
 
 		} else {
 			/* unable to drop a profile here */
-			fma_statusbar_display_with_timeout(
+			fma_status_bar_display_with_timeout(
 					bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 		}
 
@@ -753,7 +753,7 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, FMAMainWi
 
 	} else {
 		/* unable to drop an action or a menu here */
-		fma_statusbar_display_with_timeout(
+		fma_status_bar_display_with_timeout(
 				bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_item ));
 	}
 
@@ -768,7 +768,7 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, FMAMainWind
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	FMAObject *object;
-	FMAStatusbar *bar;
+	FMAStatusBar *bar;
 
 	drop_ok = FALSE;
 	*parent = NULL;
@@ -789,7 +789,7 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, FMAMainWind
 					*parent = FMA_OBJECT_ITEM( object );
 
 				} else {
-					fma_statusbar_display_with_timeout(
+					fma_status_bar_display_with_timeout(
 							bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 				}
 
@@ -798,7 +798,7 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, FMAMainWind
 					*parent = fma_object_get_parent( object );
 
 			} else {
-				fma_statusbar_display_with_timeout(
+				fma_status_bar_display_with_timeout(
 						bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_item ));
 			}
 		}
@@ -877,7 +877,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	GSList *messages;
 	gchar *dlg_message;
 	GtkWidget *dialog;
-	FMAStatusbar *bar;
+	FMAStatusBar *bar;
 
 	priv = model->private;
 	gchar *dest_str = gtk_tree_path_to_string( dest );
@@ -942,7 +942,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	g_debug( "%s: count=%d", thisfn, count );
 	if( count == 1 ){
 		bar = fma_main_window_get_statusbar( main_window );
-		fma_statusbar_display_with_timeout(
+		fma_status_bar_display_with_timeout(
 				bar, TREE_MODEL_STATUSBAR_CONTEXT, messages->data );
 	}
 	if( count > 1 ){
@@ -1154,7 +1154,7 @@ is_parent_accept_new_children( FMAApplication *application, FMAMainWindow *windo
 {
 	gboolean accept_ok;
 	FMAUpdater *updater;
-	FMAStatusbar *bar;
+	FMAStatusBar *bar;
 
 	accept_ok = FALSE;
 	updater = fma_application_get_updater( application );
@@ -1168,7 +1168,7 @@ is_parent_accept_new_children( FMAApplication *application, FMAMainWindow *windo
 			accept_ok = TRUE;
 
 		} else {
-			fma_statusbar_display_with_timeout(
+			fma_status_bar_display_with_timeout(
 						bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_level_zero_not_writable ));
 		}
 
@@ -1178,7 +1178,7 @@ is_parent_accept_new_children( FMAApplication *application, FMAMainWindow *windo
 		accept_ok = TRUE;
 
 	} else {
-			fma_statusbar_display_with_timeout(
+			fma_status_bar_display_with_timeout(
 						bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_parent_not_writable ));
 	}
 
