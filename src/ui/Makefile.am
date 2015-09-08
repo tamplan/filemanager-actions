@@ -83,8 +83,8 @@ fma_config_tool_SOURCES = \
 	fma-clipboard.h									\
 	fma-confirm-logout.c								\
 	fma-confirm-logout.h								\
-	nact-export-ask.c									\
-	nact-export-ask.h									\
+	fma-export-ask.c									\
+	fma-export-ask.h									\
 	nact-iaction-tab.c									\
 	nact-iaction-tab.h									\
 	nact-ibasenames-tab.c								\
@@ -158,7 +158,7 @@ ui_files = \
 	fma-assistant-export.ui							\
 	fma-assistant-import.ui							\
 	fma-confirm-logout.ui								\
-	nact-export-ask.ui									\
+	fma-export-ask.ui									\
 	nact-icon-chooser.ui								\
 	nact-legend.ui										\
 	nact-main-window.ui									\

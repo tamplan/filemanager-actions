@@ -42,29 +42,29 @@
 
 #include "base-gtk-utils.h"
 #include "fma-application.h"
-#include "nact-export-ask.h"
+#include "fma-export-ask.h"
 #include "nact-main-window.h"
 
 /* private instance data
  */
-struct _NactExportAskPrivate {
-	gboolean      dispose_has_run;
-	gboolean      preferences_locked;
+struct _FMAExportAskPrivate {
+	gboolean       dispose_has_run;
+	gboolean       preferences_locked;
 	FMAObjectItem *item;
-	gchar        *format;
-	gboolean      format_mandatory;
-	gboolean      keep_last_choice;
-	gboolean      keep_last_choice_mandatory;
+	gchar         *format;
+	gboolean       format_mandatory;
+	gboolean       keep_last_choice;
+	gboolean       keep_last_choice_mandatory;
 };
 
-static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-export-ask.ui";
+static const gchar     *st_xmlui_filename = PKGUIDIR "/fma-export-ask.ui";
 static const gchar     *st_toplevel_name  = "ExportAskDialog";
 static const gchar     *st_wsp_name       = IPREFS_EXPORT_ASK_USER_WSP;
 
 static BaseDialogClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
-static void     class_init( NactExportAskClass *klass );
+static void     class_init( FMAExportAskClass *klass );
 static void     ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
 static GList   *ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container );
 static void     ioptions_list_free_formats( const FMAIOptionsList *instance, GtkWidget *container, GList *formats );
@@ -73,15 +73,15 @@ static void     instance_constructed( GObject *dialog );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static void     on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel, gpointer user_data );
-static void     on_base_initialize_window( NactExportAsk *editor, gpointer user_data );
-static void     keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor );
-static void     on_cancel_clicked( GtkButton *button, NactExportAsk *editor );
-static void     on_ok_clicked( GtkButton *button, NactExportAsk *editor );
-static gchar   *get_export_format( NactExportAsk *editor );
+static void     on_base_initialize_gtk( FMAExportAsk *editor, GtkDialog *toplevel, gpointer user_data );
+static void     on_base_initialize_window( FMAExportAsk *editor, gpointer user_data );
+static void     keep_choice_on_toggled( GtkToggleButton *button, FMAExportAsk *editor );
+static void     on_cancel_clicked( GtkButton *button, FMAExportAsk *editor );
+static void     on_ok_clicked( GtkButton *button, FMAExportAsk *editor );
+static gchar   *get_export_format( FMAExportAsk *editor );
 
 GType
-nact_export_ask_get_type( void )
+fma_export_ask_get_type( void )
 {
 	static GType dialog_type = 0;
 
@@ -95,17 +95,17 @@ nact_export_ask_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_export_ask_register_type";
+	static const gchar *thisfn = "fma_export_ask_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactExportAskClass ),
+		sizeof( FMAExportAskClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactExportAsk ),
+		sizeof( FMAExportAsk ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -118,7 +118,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_DIALOG, "NactExportAsk", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_DIALOG, "FMAExportAsk", &info, 0 );
 
 	g_type_add_interface_static( type, FMA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
@@ -126,9 +126,9 @@ register_type( void )
 }
 
 static void
-class_init( NactExportAskClass *klass )
+class_init( FMAExportAskClass *klass )
 {
-	static const gchar *thisfn = "nact_export_ask_class_init";
+	static const gchar *thisfn = "fma_export_ask_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -155,13 +155,13 @@ ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 static GList *
 ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container )
 {
-	NactExportAsk *window;
+	FMAExportAsk *window;
 	FMAApplication *application;
 	FMAUpdater *updater;
 	GList *formats;
 
-	g_return_val_if_fail( NACT_IS_EXPORT_ASK( instance ), NULL );
-	window = NACT_EXPORT_ASK( instance );
+	g_return_val_if_fail( FMA_IS_EXPORT_ASK( instance ), NULL );
+	window = FMA_EXPORT_ASK( instance );
 
 	application = FMA_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = fma_application_get_updater( application );
@@ -179,17 +179,17 @@ ioptions_list_free_formats( const FMAIOptionsList *instance, GtkWidget *containe
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_export_ask_instance_init";
-	NactExportAsk *self;
+	static const gchar *thisfn = "fma_export_ask_instance_init";
+	FMAExportAsk *self;
 
-	g_return_if_fail( NACT_IS_EXPORT_ASK( instance ));
+	g_return_if_fail( FMA_IS_EXPORT_ASK( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NACT_EXPORT_ASK( instance );
+	self = FMA_EXPORT_ASK( instance );
 
-	self->private = g_new0( NactExportAskPrivate, 1 );
+	self->private = g_new0( FMAExportAskPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -197,12 +197,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_export_ask_instance_constructed";
-	NactExportAskPrivate *priv;
+	static const gchar *thisfn = "fma_export_ask_instance_constructed";
+	FMAExportAskPrivate *priv;
 
-	g_return_if_fail( NACT_IS_EXPORT_ASK( dialog ));
+	g_return_if_fail( FMA_IS_EXPORT_ASK( dialog ));
 
-	priv = NACT_EXPORT_ASK( dialog )->private;
+	priv = FMA_EXPORT_ASK( dialog )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -230,12 +230,12 @@ instance_constructed( GObject *dialog )
 static void
 instance_dispose( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_export_ask_instance_dispose";
-	NactExportAsk *self;
+	static const gchar *thisfn = "fma_export_ask_instance_dispose";
+	FMAExportAsk *self;
 
-	g_return_if_fail( NACT_IS_EXPORT_ASK( dialog ));
+	g_return_if_fail( FMA_IS_EXPORT_ASK( dialog ));
 
-	self = NACT_EXPORT_ASK( dialog );
+	self = FMA_EXPORT_ASK( dialog );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
@@ -252,14 +252,14 @@ instance_dispose( GObject *dialog )
 static void
 instance_finalize( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_export_ask_instance_finalize";
-	NactExportAsk *self;
+	static const gchar *thisfn = "fma_export_ask_instance_finalize";
+	FMAExportAsk *self;
 
-	g_return_if_fail( NACT_IS_EXPORT_ASK( dialog ));
+	g_return_if_fail( FMA_IS_EXPORT_ASK( dialog ));
 
 	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
-	self = NACT_EXPORT_ASK( dialog );
+	self = FMA_EXPORT_ASK( dialog );
 
 	g_free( self->private->format );
 
@@ -272,7 +272,7 @@ instance_finalize( GObject *dialog )
 }
 
 /**
- * nact_export_ask_user:
+ * fma_export_ask_user:
  * @item: the FMAObjectItem to be exported.
  * @first: whether this is the first call of a serie.
  *  On a first call, the user is really asked for his choice.
@@ -292,10 +292,10 @@ instance_finalize( GObject *dialog )
  * becomes his new preferred export format.
  */
 gchar *
-nact_export_ask_user( FMAObjectItem *item, gboolean first )
+fma_export_ask_user( FMAObjectItem *item, gboolean first )
 {
-	static const gchar *thisfn = "nact_export_ask_user";
-	NactExportAsk *editor;
+	static const gchar *thisfn = "fma_export_ask_user";
+	FMAExportAsk *editor;
 	gboolean are_locked, mandatory;
 	gboolean keep, keep_mandatory;
 	int code;
@@ -310,7 +310,7 @@ nact_export_ask_user( FMAObjectItem *item, gboolean first )
 	keep = fma_settings_get_boolean( IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, &keep_mandatory );
 
 	if( first || !keep ){
-		editor = g_object_new( NACT_TYPE_EXPORT_ASK,
+		editor = g_object_new( FMA_TYPE_EXPORT_ASK,
 				BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 				BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 				BASE_PROP_WSP_NAME,       st_wsp_name,
@@ -347,12 +347,12 @@ nact_export_ask_user( FMAObjectItem *item, gboolean first )
 }
 
 static void
-on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel, gpointer user_data )
+on_base_initialize_gtk( FMAExportAsk *editor, GtkDialog *toplevel, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_export_ask_on_base_initialize_gtk";
+	static const gchar *thisfn = "fma_export_ask_on_base_initialize_gtk";
 	GtkWidget *container;
 
-	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
+	g_return_if_fail( FMA_IS_EXPORT_ASK( editor ));
 
 	if( !editor->private->dispose_has_run ){
 
@@ -365,14 +365,14 @@ on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel, gpointer use
 }
 
 static void
-on_base_initialize_window( NactExportAsk *editor, gpointer user_data )
+on_base_initialize_window( FMAExportAsk *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_export_ask_on_base_initialize_window";
+	static const gchar *thisfn = "fma_export_ask_on_base_initialize_window";
 	gchar *item_label, *label;
 	GtkWidget *widget;
-	NactExportAskPrivate *priv;
+	FMAExportAskPrivate *priv;
 
-	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
+	g_return_if_fail( FMA_IS_EXPORT_ASK( editor ));
 
 	priv = editor->private;
 
@@ -423,7 +423,7 @@ on_base_initialize_window( NactExportAsk *editor, gpointer user_data )
 }
 
 static void
-keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor )
+keep_choice_on_toggled( GtkToggleButton *button, FMAExportAsk *editor )
 {
 	gboolean editable;
 
@@ -438,14 +438,14 @@ keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor )
 }
 
 static void
-on_cancel_clicked( GtkButton *button, NactExportAsk *editor )
+on_cancel_clicked( GtkButton *button, FMAExportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static void
-on_ok_clicked( GtkButton *button, NactExportAsk *editor )
+on_ok_clicked( GtkButton *button, FMAExportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
@@ -464,7 +464,7 @@ on_ok_clicked( GtkButton *button, NactExportAsk *editor )
  * files to export
  */
 static gchar *
-get_export_format( NactExportAsk *editor )
+get_export_format( FMAExportAsk *editor )
 {
 	GtkWidget *widget;
 	FMAIOption *format;

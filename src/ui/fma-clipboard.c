@@ -40,7 +40,7 @@
 #include "core/fma-export-format.h"
 
 #include "fma-application.h"
-#include "nact-export-ask.h"
+#include "fma-export-ask.h"
 #include "nact-main-window.h"
 #include "nact-tree-model.h"
 #include "fma-clipboard.h"
@@ -621,7 +621,7 @@ export_row_object( FMAClipboard *clipboard, FMAObject *object, const gchar *dest
 
 		if( !strcmp( format, EXPORTER_FORMAT_ASK )){
 			g_free( format );
-			format = nact_export_ask_user( item, first );
+			format = fma_export_ask_user( item, first );
 			g_return_val_if_fail( format && strlen( format ), NULL );
 		}
 

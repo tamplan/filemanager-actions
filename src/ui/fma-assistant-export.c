@@ -45,7 +45,7 @@
 #include "fma-application.h"
 #include "nact-main-window.h"
 #include "fma-assistant-export.h"
-#include "nact-export-ask.h"
+#include "fma-export-ask.h"
 #include "nact-tree-view.h"
 
 /* Export Assistant
@@ -780,7 +780,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 		if( !strcmp( str->format, EXPORTER_FORMAT_ASK )){
 			g_free( str->format );
-			str->format = nact_export_ask_user( str->item, first );
+			str->format = fma_export_ask_user( str->item, first );
 			g_return_if_fail( str->format && strlen( str->format ));
 
 			if( !str->format || !strcmp( str->format, EXPORTER_FORMAT_NOEXPORT )){

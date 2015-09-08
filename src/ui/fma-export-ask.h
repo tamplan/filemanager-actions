@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_EXPORT_ASK_H__
-#define __UI_NACT_EXPORT_ASK_H__
+#ifndef __UI_FMA_EXPORT_ASK_H__
+#define __UI_FMA_EXPORT_ASK_H__
 
 /**
- * SECTION: nact_export_ask
- * @short_description: #NactExportAsk class definition.
- * @include: ui/nact-export-ask.h
+ * SECTION: fma_export_ask
+ * @short_description: #FMAExportAsk class definition.
+ * @include: ui/fma-export-ask.h
  *
  * This class is derived from BaseDialog.
  * It is ran each time an action is to be exported, and the user want
@@ -51,33 +51,33 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_EXPORT_ASK                ( nact_export_ask_get_type())
-#define NACT_EXPORT_ASK( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_EXPORT_ASK, NactExportAsk ))
-#define NACT_EXPORT_ASK_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_EXPORT_ASK, NactExportAskClass ))
-#define NACT_IS_EXPORT_ASK( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_EXPORT_ASK ))
-#define NACT_IS_EXPORT_ASK_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_EXPORT_ASK ))
-#define NACT_EXPORT_ASK_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_EXPORT_ASK, NactExportAskClass ))
+#define FMA_TYPE_EXPORT_ASK                ( fma_export_ask_get_type())
+#define FMA_EXPORT_ASK( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_EXPORT_ASK, FMAExportAsk ))
+#define FMA_EXPORT_ASK_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_EXPORT_ASK, FMAExportAskClass ))
+#define FMA_IS_EXPORT_ASK( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_EXPORT_ASK ))
+#define FMA_IS_EXPORT_ASK_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_EXPORT_ASK ))
+#define FMA_EXPORT_ASK_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_EXPORT_ASK, FMAExportAskClass ))
 
-typedef struct _NactExportAskPrivate        NactExportAskPrivate;
-
-typedef struct {
-	/*< private >*/
-	BaseDialog            parent;
-	NactExportAskPrivate *private;
-}
-	NactExportAsk;
+typedef struct _FMAExportAskPrivate        FMAExportAskPrivate;
 
 typedef struct {
 	/*< private >*/
-	BaseDialogClass       parent;
+	BaseDialog           parent;
+	FMAExportAskPrivate *private;
 }
-	NactExportAskClass;
+	FMAExportAsk;
 
-GType  nact_export_ask_get_type( void );
+typedef struct {
+	/*< private >*/
+	BaseDialogClass      parent;
+}
+	FMAExportAskClass;
 
-gchar *nact_export_ask_user    ( FMAObjectItem *item,
+GType  fma_export_ask_get_type( void );
+
+gchar *fma_export_ask_user    ( FMAObjectItem *item,
 										gboolean first );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_EXPORT_ASK_H__ */
+#endif /* __UI_FMA_EXPORT_ASK_H__ */
