@@ -56,7 +56,7 @@ typedef struct {
 /* the structure passed as reader data to FMAIFactoryObject
  */
 typedef struct {
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 	FMAObjectAction  *action;
 }
 	NadpReaderData;
@@ -68,8 +68,8 @@ static void              get_list_of_desktop_files( const NadpDesktopProvider *p
 static gboolean          is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id );
 static GList            *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
 static FMAIFactoryObject *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
-static FMAIFactoryObject *item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *ndf, GSList **messages );
-static void              desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
+static FMAIFactoryObject *item_from_desktop_file( const NadpDesktopProvider *provider, FMADesktopFile *ndf, GSList **messages );
+static void              desktop_weak_notify( FMADesktopFile *ndf, GObject *item );
 static void              free_desktop_paths( GList *paths );
 
 static void              read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
@@ -194,8 +194,8 @@ get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, c
 
 	if( dir_handle ){
 		while(( name = g_dir_read_name( dir_handle ))){
-			if( g_str_has_suffix( name, NADP_DESKTOP_FILE_SUFFIX )){
-				desktop_id = fma_core_utils_str_remove_suffix( name, NADP_DESKTOP_FILE_SUFFIX );
+			if( g_str_has_suffix( name, FMA_DESKTOP_FILE_SUFFIX )){
+				desktop_id = fma_core_utils_str_remove_suffix( name, FMA_DESKTOP_FILE_SUFFIX );
 				if( !is_already_loaded( provider, *files, desktop_id )){
 					*files = desktop_path_from_id( provider, *files, dir, desktop_id );
 				}
@@ -237,7 +237,7 @@ desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const g
 
 	dps = g_new0( DesktopPath, 1 );
 
-	bname = g_strdup_printf( "%s%s", id, NADP_DESKTOP_FILE_SUFFIX );
+	bname = g_strdup_printf( "%s%s", id, FMA_DESKTOP_FILE_SUFFIX );
 	dps->path = g_build_filename( dir, bname, NULL );
 	g_free( bname );
 
@@ -255,9 +255,9 @@ desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const g
 static FMAIFactoryObject *
 item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages )
 {
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 
-	ndf = nadp_desktop_file_new_from_path( dps->path );
+	ndf = fma_desktop_file_new_from_path( dps->path );
 	if( !ndf ){
 		return( NULL );
 	}
@@ -270,7 +270,7 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
  * from the .desktop file
  */
 static FMAIFactoryObject *
-item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *ndf, GSList **messages )
+item_from_desktop_file( const NadpDesktopProvider *provider, FMADesktopFile *ndf, GSList **messages )
 {
 	/*static const gchar *thisfn = "nadp_reader_item_from_desktop_file";*/
 	FMAIFactoryObject *item;
@@ -279,7 +279,7 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 	gchar *id;
 
 	item = NULL;
-	type = nadp_desktop_file_get_file_type( ndf );
+	type = fma_desktop_file_get_file_type( ndf );
 
 	if( !strcmp( type, NADP_VALUE_TYPE_ACTION )){
 		item = FMA_IFACTORY_OBJECT( fma_object_action_new());
@@ -293,7 +293,7 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 	}
 
 	if( item ){
-		id = nadp_desktop_file_get_id( ndf );
+		id = fma_desktop_file_get_id( ndf );
 		fma_object_set_id( item, id );
 		g_free( id );
 
@@ -314,7 +314,7 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 }
 
 static void
-desktop_weak_notify( NadpDesktopFile *ndf, GObject *item )
+desktop_weak_notify( FMADesktopFile *ndf, GObject *item )
 {
 	static const gchar *thisfn = "nadp_reader_desktop_weak_notify";
 
@@ -366,7 +366,7 @@ nadp_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms
 	static const gchar *thisfn = "nadp_reader_iimporter_import_from_uri";
 	guint code;
 	FMAIImporterImportFromUriParmsv2 *parms;
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, parms_ptr );
 
@@ -382,7 +382,7 @@ nadp_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms
 
 	code = IMPORTER_CODE_NOT_WILLING_TO;
 
-	ndf = nadp_desktop_file_new_from_uri( parms->uri );
+	ndf = fma_desktop_file_new_from_uri( parms->uri );
 	if( ndf ){
 		parms->imported = ( FMAObjectItem * ) item_from_desktop_file(
 				( const NadpDesktopProvider * ) NADP_DESKTOP_PROVIDER( instance ),
@@ -453,7 +453,7 @@ read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem
 	GSList *subitems;
 	gboolean key_found;
 
-	subitems = nadp_desktop_file_get_string_list( reader_data->ndf,
+	subitems = fma_desktop_file_get_string_list( reader_data->ndf,
 			NADP_GROUP_DESKTOP,
 			FMA_IS_OBJECT_ACTION( item ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
 			&key_found,
@@ -474,7 +474,7 @@ read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjec
 
 /*
  * reading any data from a desktop file requires:
- * - a NadpDesktopFile object which has been initialized with the .desktop file
+ * - a FMADesktopFile object which has been initialized with the .desktop file
  *   -> has been attached to the FMAObjectItem in get_item() above
  * - the data type (+ reading default value)
  * - group and key names
@@ -505,7 +505,7 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
 		nrd = ( NadpReaderData * ) reader_data;
-		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( nrd->ndf ), NULL );
+		g_return_val_if_fail( FMA_IS_DESKTOP_FILE( nrd->ndf ), NULL );
 
 		if( def->desktop_entry ){
 
@@ -522,7 +522,7 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 			switch( def->type ){
 
 				case FMA_DATA_TYPE_LOCALE_STRING:
-					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
+					str_value = fma_desktop_file_get_locale_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( found ){
 						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), str_value );
@@ -531,7 +531,7 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 					break;
 
 				case FMA_DATA_TYPE_STRING:
-					str_value = nadp_desktop_file_get_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
+					str_value = fma_desktop_file_get_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( found ){
 						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), str_value );
@@ -540,7 +540,7 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 					break;
 
 				case FMA_DATA_TYPE_BOOLEAN:
-					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, def->desktop_entry, &found, fma_core_utils_boolean_from_string( def->default_value ));
+					bool_value = fma_desktop_file_get_boolean( nrd->ndf, group, def->desktop_entry, &found, fma_core_utils_boolean_from_string( def->default_value ));
 					if( found ){
 						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( bool_value ));
@@ -548,7 +548,7 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 					break;
 
 				case FMA_DATA_TYPE_STRING_LIST:
-					slist_value = nadp_desktop_file_get_string_list( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
+					slist_value = fma_desktop_file_get_string_list( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( found ){
 						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), slist_value );
@@ -557,7 +557,7 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 					break;
 
 				case FMA_DATA_TYPE_UINT:
-					uint_value = nadp_desktop_file_get_uint( nrd->ndf, group, def->desktop_entry, &found, atoi( def->default_value ));
+					uint_value = fma_desktop_file_get_uint( nrd->ndf, group, def->desktop_entry, &found, atoi( def->default_value ));
 					if( found ){
 						boxed = fma_data_boxed_new( def );
 						fma_boxed_set_from_void( FMA_BOXED( boxed ), GUINT_TO_POINTER( uint_value ));
@@ -615,12 +615,12 @@ nadp_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void
 static gboolean
 read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
 {
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 	gchar *uri;
 	gboolean writable;
 
 	ndf = reader_data->ndf;
-	uri = nadp_desktop_file_get_key_file_uri( ndf );
+	uri = fma_desktop_file_get_key_file_uri( ndf );
 	writable = nadp_utils_uri_is_writable( uri );
 	g_free( uri );
 
@@ -676,7 +676,7 @@ read_done_action_load_profile( const FMAIFactoryProvider *provider, NadpReaderDa
 	profile = fma_object_profile_new_with_defaults();
 	fma_object_set_id( profile, profile_id );
 
-	if( nadp_desktop_file_has_profile( reader_data->ndf, profile_id )){
+	if( fma_desktop_file_has_profile( reader_data->ndf, profile_id )){
 		fma_ifactory_provider_read_item(
 				FMA_IFACTORY_PROVIDER( provider ),
 				reader_data,

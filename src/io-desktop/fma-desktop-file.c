@@ -42,13 +42,13 @@
 
 /* private class data
  */
-struct _NadpDesktopFileClassPrivate {
+struct _FMADesktopFileClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NadpDesktopFilePrivate {
+struct _FMADesktopFilePrivate {
 	gboolean   dispose_has_run;
 	gchar     *id;
 	gchar     *uri;
@@ -58,20 +58,20 @@ struct _NadpDesktopFilePrivate {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType            register_type( void );
-static void             class_init( NadpDesktopFileClass *klass );
-static void             instance_init( GTypeInstance *instance, gpointer klass );
-static void             instance_dispose( GObject *object );
-static void             instance_finalize( GObject *object );
+static GType           register_type( void );
+static void            class_init( FMADesktopFileClass *klass );
+static void            instance_init( GTypeInstance *instance, gpointer klass );
+static void            instance_dispose( GObject *object );
+static void            instance_finalize( GObject *object );
 
-static NadpDesktopFile *ndf_new( const gchar *uri );
-static gchar           *path2id( const gchar *path );
-static gchar           *uri2id( const gchar *uri );
-static gboolean         check_key_file( NadpDesktopFile *ndf );
-static void             remove_encoding_part( NadpDesktopFile *ndf );
+static FMADesktopFile *ndf_new( const gchar *uri );
+static gchar          *path2id( const gchar *path );
+static gchar          *uri2id( const gchar *uri );
+static gboolean        check_key_file( FMADesktopFile *ndf );
+static void            remove_encoding_part( FMADesktopFile *ndf );
 
 GType
-nadp_desktop_file_get_type( void )
+fma_desktop_file_get_type( void )
 {
 	static GType class_type = 0;
 
@@ -85,32 +85,32 @@ nadp_desktop_file_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nadp_desktop_file_register_type";
+	static const gchar *thisfn = "fma_desktop_file_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NadpDesktopFileClass ),
+		sizeof( FMADesktopFileClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NadpDesktopFile ),
+		sizeof( FMADesktopFile ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NadpDesktopFile", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMADesktopFile", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NadpDesktopFileClass *klass )
+class_init( FMADesktopFileClass *klass )
 {
-	static const gchar *thisfn = "nadp_desktop_file_class_init";
+	static const gchar *thisfn = "fma_desktop_file_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -121,21 +121,21 @@ class_init( NadpDesktopFileClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NadpDesktopFileClassPrivate, 1 );
+	klass->private = g_new0( FMADesktopFileClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nadp_desktop_file_instance_init";
-	NadpDesktopFile *self;
+	static const gchar *thisfn = "fma_desktop_file_instance_init";
+	FMADesktopFile *self;
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( instance ));
-	self = NADP_DESKTOP_FILE( instance );
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( instance ));
+	self = FMA_DESKTOP_FILE( instance );
 
-	self->private = g_new0( NadpDesktopFilePrivate, 1 );
+	self->private = g_new0( FMADesktopFilePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->key_file = g_key_file_new();
@@ -144,12 +144,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nadp_desktop_file_instance_dispose";
-	NadpDesktopFile *self;
+	static const gchar *thisfn = "fma_desktop_file_instance_dispose";
+	FMADesktopFile *self;
 
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( object ));
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( object ));
 
-	self = NADP_DESKTOP_FILE( object );
+	self = FMA_DESKTOP_FILE( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -167,14 +167,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "nadp_desktop_file_instance_finalize";
-	NadpDesktopFile *self;
+	static const gchar *thisfn = "fma_desktop_file_instance_finalize";
+	FMADesktopFile *self;
 
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( object ));
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NADP_DESKTOP_FILE( object );
+	self = FMA_DESKTOP_FILE( object );
 
 	g_free( self->private->id );
 	g_free( self->private->uri );
@@ -193,33 +193,33 @@ instance_finalize( GObject *object )
 }
 
 /**
- * nadp_desktop_file_new:
+ * fma_desktop_file_new:
  *
- * Retuns: a newly allocated #NadpDesktopFile object.
+ * Retuns: a newly allocated #FMADesktopFile object.
  */
-NadpDesktopFile *
-nadp_desktop_file_new( void )
+FMADesktopFile *
+fma_desktop_file_new( void )
 {
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 
-	ndf = g_object_new( NADP_TYPE_DESKTOP_FILE, NULL );
+	ndf = g_object_new( FMA_TYPE_DESKTOP_FILE, NULL );
 
 	return( ndf );
 }
 
 /**
- * nadp_desktop_file_new_from_path:
+ * fma_desktop_file_new_from_path:
  * @path: the full pathname of a .desktop file.
  *
- * Retuns: a newly allocated #NadpDesktopFile object.
+ * Retuns: a newly allocated #FMADesktopFile object.
  *
  * Key file has been loaded, and first validity checks made.
  */
-NadpDesktopFile *
-nadp_desktop_file_new_from_path( const gchar *path )
+FMADesktopFile *
+fma_desktop_file_new_from_path( const gchar *path )
 {
-	static const gchar *thisfn = "nadp_desktop_file_new_from_path";
-	NadpDesktopFile *ndf;
+	static const gchar *thisfn = "fma_desktop_file_new_from_path";
+	FMADesktopFile *ndf;
 	GError *error;
 	gchar *uri;
 
@@ -257,10 +257,10 @@ nadp_desktop_file_new_from_path( const gchar *path )
 }
 
 /**
- * nadp_desktop_file_new_from_uri:
+ * fma_desktop_file_new_from_uri:
  * @uri: the URI the desktop file should be loaded from.
  *
- * Retuns: a newly allocated #NadpDesktopFile object, or %NULL.
+ * Retuns: a newly allocated #FMADesktopFile object, or %NULL.
  *
  * Key file has been loaded, and first validity checks made.
  *
@@ -268,11 +268,11 @@ nadp_desktop_file_new_from_path( const gchar *path )
  * So it is rather common that the file not be a .desktop one.
  * Do not warns when file is malformed.
  */
-NadpDesktopFile *
-nadp_desktop_file_new_from_uri( const gchar *uri )
+FMADesktopFile *
+fma_desktop_file_new_from_uri( const gchar *uri )
 {
-	static const gchar *thisfn = "nadp_desktop_file_new_from_uri";
-	NadpDesktopFile *ndf;
+	static const gchar *thisfn = "fma_desktop_file_new_from_uri";
+	FMADesktopFile *ndf;
 	GError *error;
 	gchar *data;
 	gsize length;
@@ -316,16 +316,16 @@ nadp_desktop_file_new_from_uri( const gchar *uri )
 }
 
 /**
- * nadp_desktop_file_new_for_write:
+ * fma_desktop_file_new_for_write:
  * @path: the full pathname of a .desktop file.
  *
- * Retuns: a newly allocated #NadpDesktopFile object.
+ * Retuns: a newly allocated #FMADesktopFile object.
  */
-NadpDesktopFile *
-nadp_desktop_file_new_for_write( const gchar *path )
+FMADesktopFile *
+fma_desktop_file_new_for_write( const gchar *path )
 {
-	static const gchar *thisfn = "nadp_desktop_file_new_for_write";
-	NadpDesktopFile *ndf;
+	static const gchar *thisfn = "fma_desktop_file_new_for_write";
+	FMADesktopFile *ndf;
 	GError *error;
 	gchar *uri;
 
@@ -350,17 +350,17 @@ nadp_desktop_file_new_for_write( const gchar *path )
 }
 
 /**
- * nadp_desktop_file_get_key_file:
- * @ndf: the #NadpDesktopFile instance.
+ * fma_desktop_file_get_key_file:
+ * @ndf: the #FMADesktopFile instance.
  *
  * Returns: a pointer to the internal #GKeyFile.
  */
 GKeyFile *
-nadp_desktop_file_get_key_file( const NadpDesktopFile *ndf )
+fma_desktop_file_get_key_file( const FMADesktopFile *ndf )
 {
 	GKeyFile *key_file;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), NULL );
 
 	key_file = NULL;
 
@@ -373,18 +373,18 @@ nadp_desktop_file_get_key_file( const NadpDesktopFile *ndf )
 }
 
 /**
- * nadp_desktop_file_get_key_file_uri:
- * @ndf: the #NadpDesktopFile instance.
+ * fma_desktop_file_get_key_file_uri:
+ * @ndf: the #FMADesktopFile instance.
  *
  * Returns: the URI of the key file, as a newly allocated
  * string which should be g_free() by the caller.
  */
 gchar *
-nadp_desktop_file_get_key_file_uri( const NadpDesktopFile *ndf )
+fma_desktop_file_get_key_file_uri( const FMADesktopFile *ndf )
 {
 	gchar *uri;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), NULL );
 
 	uri = NULL;
 
@@ -396,12 +396,12 @@ nadp_desktop_file_get_key_file_uri( const NadpDesktopFile *ndf )
 	return( uri );
 }
 
-static NadpDesktopFile *
+static FMADesktopFile *
 ndf_new( const gchar *uri )
 {
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 
-	ndf = g_object_new( NADP_TYPE_DESKTOP_FILE, NULL );
+	ndf = g_object_new( FMA_TYPE_DESKTOP_FILE, NULL );
 
 	ndf->private->id = uri2id( uri );
 	ndf->private->uri = g_strdup( uri );
@@ -419,7 +419,7 @@ path2id( const gchar *path )
 	gchar *id;
 
 	bname = g_path_get_basename( path );
-	id = fma_core_utils_str_remove_suffix( bname, NADP_DESKTOP_FILE_SUFFIX );
+	id = fma_core_utils_str_remove_suffix( bname, FMA_DESKTOP_FILE_SUFFIX );
 	g_free( bname );
 
 	return( id );
@@ -443,9 +443,9 @@ uri2id( const gchar *uri )
 }
 
 static gboolean
-check_key_file( NadpDesktopFile *ndf )
+check_key_file( FMADesktopFile *ndf )
 {
-	static const gchar *thisfn = "nadp_desktop_file_check_key_file";
+	static const gchar *thisfn = "fma_desktop_file_check_key_file";
 	gboolean ret;
 	gchar *start_group;
 	gboolean has_key;
@@ -526,18 +526,18 @@ check_key_file( NadpDesktopFile *ndf )
 }
 
 /**
- * nadp_desktop_file_get_type:
- * @ndf: the #NadpDesktopFile instance.
+ * fma_desktop_file_get_type:
+ * @ndf: the #FMADesktopFile instance.
  *
  * Returns: the value for the Type entry as a newly allocated string which
  * should be g_free() by the caller.
  */
 gchar *
-nadp_desktop_file_get_file_type( const NadpDesktopFile *ndf )
+fma_desktop_file_get_file_type( const FMADesktopFile *ndf )
 {
 	gchar *type;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), NULL );
 
 	type = NULL;
 
@@ -550,18 +550,18 @@ nadp_desktop_file_get_file_type( const NadpDesktopFile *ndf )
 }
 
 /**
- * nadp_desktop_file_get_id:
- * @ndf: the #NadpDesktopFile instance.
+ * fma_desktop_file_get_id:
+ * @ndf: the #FMADesktopFile instance.
  *
  * Returns: a newly allocated string which holds the id of the Desktop
  * File.
  */
 gchar *
-nadp_desktop_file_get_id( const NadpDesktopFile *ndf )
+fma_desktop_file_get_id( const FMADesktopFile *ndf )
 {
 	gchar *value;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), NULL );
 
 	value = NULL;
 
@@ -574,8 +574,8 @@ nadp_desktop_file_get_id( const NadpDesktopFile *ndf )
 }
 
 /**
- * nadp_desktop_file_get_profiles:
- * @ndf: the #NadpDesktopFile instance.
+ * fma_desktop_file_get_profiles:
+ * @ndf: the #FMADesktopFile instance.
  *
  * Returns: the list of profiles in the file, as a newly allocated GSList
  * which must be fma_core_utils_slist_free() by the caller.
@@ -583,7 +583,7 @@ nadp_desktop_file_get_id( const NadpDesktopFile *ndf )
  * Silently ignore unknown groups.
  */
 GSList *
-nadp_desktop_file_get_profiles( const NadpDesktopFile *ndf )
+fma_desktop_file_get_profiles( const FMADesktopFile *ndf )
 {
 	GSList *list;
 	gchar **groups, **ig;
@@ -591,7 +591,7 @@ nadp_desktop_file_get_profiles( const NadpDesktopFile *ndf )
 	gchar *profile_id;
 	guint pfx_len;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), NULL );
 
 	list = NULL;
 
@@ -621,8 +621,8 @@ nadp_desktop_file_get_profiles( const NadpDesktopFile *ndf )
 }
 
 /**
- * nadp_desktop_file_has_profile:
- * @ndf: the #NadpDesktopFile instance.
+ * fma_desktop_file_has_profile:
+ * @ndf: the #FMADesktopFile instance.
  * @profile_id: the identifier of the profile.
  *
  * Returns: %TRUE if a group can be found in the .desktop file for this profile,
@@ -631,12 +631,12 @@ nadp_desktop_file_get_profiles( const NadpDesktopFile *ndf )
  * Since: 3.1
  */
 gboolean
-nadp_desktop_file_has_profile( const NadpDesktopFile *ndf, const gchar *profile_id )
+fma_desktop_file_has_profile( const FMADesktopFile *ndf, const gchar *profile_id )
 {
 	gboolean has_profile;
 	gchar *group_name;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), FALSE );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), FALSE );
 	g_return_val_if_fail( profile_id && g_utf8_strlen( profile_id, -1 ), FALSE );
 
 	has_profile = FALSE;
@@ -652,8 +652,8 @@ nadp_desktop_file_has_profile( const NadpDesktopFile *ndf, const gchar *profile_
 }
 
 /**
- * nadp_desktop_file_remove_key:
- * @ndf: this #NadpDesktopFile instance.
+ * fma_desktop_file_remove_key:
+ * @ndf: this #FMADesktopFile instance.
  * @group: the group.
  * @key: the key.
  *
@@ -668,13 +668,13 @@ nadp_desktop_file_has_profile( const NadpDesktopFile *ndf, const gchar *profile_
  * - key[en]
  */
 void
-nadp_desktop_file_remove_key( const NadpDesktopFile *ndf, const gchar *group, const gchar *key )
+fma_desktop_file_remove_key( const FMADesktopFile *ndf, const gchar *group, const gchar *key )
 {
 	char **locales;
 	char **iloc;
 	gchar *locale_key;
 
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( ndf ));
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -693,18 +693,18 @@ nadp_desktop_file_remove_key( const NadpDesktopFile *ndf, const gchar *group, co
 }
 
 /**
- * nadp_desktop_file_remove_profile:
- * @ndf: this #NadpDesktopFile instance.
+ * fma_desktop_file_remove_profile:
+ * @ndf: this #FMADesktopFile instance.
  * @profile_id: the id of the profile.
  *
  * Removes the group which describes the specified profile.
  */
 void
-nadp_desktop_file_remove_profile( const NadpDesktopFile *ndf, const gchar *profile_id )
+fma_desktop_file_remove_profile( const FMADesktopFile *ndf, const gchar *profile_id )
 {
 	gchar *group_name;
 
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( ndf ));
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -715,8 +715,8 @@ nadp_desktop_file_remove_profile( const NadpDesktopFile *ndf, const gchar *profi
 }
 
 /**
- * nadp_desktop_file_get_boolean:
- * @ndf: this #NadpDesktopFile instance.
+ * fma_desktop_file_get_boolean:
+ * @ndf: this #FMADesktopFile instance.
  * @group: the searched group.
  * @entry: the searched entry.
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
@@ -726,9 +726,9 @@ nadp_desktop_file_remove_profile( const NadpDesktopFile *ndf, const gchar *profi
  * been found in the given group.
  */
 gboolean
-nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, gboolean default_value )
+fma_desktop_file_get_boolean( const FMADesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, gboolean default_value )
 {
-	static const gchar *thisfn = "nadp_desktop_file_get_boolean";
+	static const gchar *thisfn = "fma_desktop_file_get_boolean";
 	gboolean value;
 	gboolean read_value;
 	gboolean has_entry;
@@ -737,7 +737,7 @@ nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, c
 	value = default_value;
 	*key_found = FALSE;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), FALSE );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), FALSE );
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -764,8 +764,8 @@ nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, c
 }
 
 /**
- * nadp_desktop_file_get_locale_string:
- * @ndf: this #NadpDesktopFile instance.
+ * fma_desktop_file_get_locale_string:
+ * @ndf: this #FMADesktopFile instance.
  * @group: the searched group.
  * @entry: the searched entry.
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
@@ -775,9 +775,9 @@ nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, c
  * been found in the given group.
  */
 gchar *
-nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
+fma_desktop_file_get_locale_string( const FMADesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
 {
-	static const gchar *thisfn = "nadp_desktop_file_get_locale_string";
+	static const gchar *thisfn = "fma_desktop_file_get_locale_string";
 	gchar *value;
 	gchar *read_value;
 	GError *error;
@@ -785,7 +785,7 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 	value = g_strdup( default_value );
 	*key_found = FALSE;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), NULL );
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -810,8 +810,8 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 }
 
 /**
- * nadp_desktop_file_get_string:
- * @ndf: this #NadpDesktopFile instance.
+ * fma_desktop_file_get_string:
+ * @ndf: this #FMADesktopFile instance.
  * @group: the searched group.
  * @entry: the searched entry.
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
@@ -821,9 +821,9 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
  * been found in the given group.
  */
 gchar *
-nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
+fma_desktop_file_get_string( const FMADesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
 {
-	static const gchar *thisfn = "nadp_desktop_file_get_string";
+	static const gchar *thisfn = "fma_desktop_file_get_string";
 	gchar *value;
 	gchar *read_value;
 	gboolean has_entry;
@@ -832,7 +832,7 @@ nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, co
 	value = g_strdup( default_value );
 	*key_found = FALSE;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), NULL );
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -861,8 +861,8 @@ nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, co
 }
 
 /**
- * nadp_desktop_file_get_string_list:
- * @ndf: this #NadpDesktopFile instance.
+ * fma_desktop_file_get_string_list:
+ * @ndf: this #FMADesktopFile instance.
  * @group: the searched group.
  * @entry: the searched entry.
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
@@ -872,9 +872,9 @@ nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, co
  * been found in the given group.
  */
 GSList *
-nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
+fma_desktop_file_get_string_list( const FMADesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
 {
-	static const gchar *thisfn = "nadp_desktop_file_get_string_list";
+	static const gchar *thisfn = "fma_desktop_file_get_string_list";
 	GSList *value;
 	gchar **read_array;
 	gboolean has_entry;
@@ -883,7 +883,7 @@ nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *grou
 	value = g_slist_append( NULL, g_strdup( default_value ));
 	*key_found = FALSE;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), NULL );
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -913,8 +913,8 @@ nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *grou
 }
 
 /**
- * nadp_desktop_file_get_uint:
- * @ndf: this #NadpDesktopFile instance.
+ * fma_desktop_file_get_uint:
+ * @ndf: this #FMADesktopFile instance.
  * @group: the searched group.
  * @entry: the searched entry.
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
@@ -924,9 +924,9 @@ nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *grou
  * been found in the given group.
  */
 guint
-nadp_desktop_file_get_uint( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, guint default_value )
+fma_desktop_file_get_uint( const FMADesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, guint default_value )
 {
-	static const gchar *thisfn = "nadp_desktop_file_get_uint";
+	static const gchar *thisfn = "fma_desktop_file_get_uint";
 	guint value;
 	gboolean has_entry;
 	GError *error;
@@ -934,7 +934,7 @@ nadp_desktop_file_get_uint( const NadpDesktopFile *ndf, const gchar *group, cons
 	value = default_value;
 	*key_found = FALSE;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), 0 );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), 0 );
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -960,8 +960,8 @@ nadp_desktop_file_get_uint( const NadpDesktopFile *ndf, const gchar *group, cons
 }
 
 /**
- * nadp_desktop_file_set_boolean:
- * @ndf: this #NadpDesktopFile object.
+ * fma_desktop_file_set_boolean:
+ * @ndf: this #FMADesktopFile object.
  * @group: the name of the group.
  * @key: the name of the key.
  * @value: the value to be written.
@@ -969,9 +969,9 @@ nadp_desktop_file_get_uint( const NadpDesktopFile *ndf, const gchar *group, cons
  * Write the given boolean value.
  */
 void
-nadp_desktop_file_set_boolean( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean value )
+fma_desktop_file_set_boolean( const FMADesktopFile *ndf, const gchar *group, const gchar *key, gboolean value )
 {
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( ndf ));
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -980,8 +980,8 @@ nadp_desktop_file_set_boolean( const NadpDesktopFile *ndf, const gchar *group, c
 }
 
 /**
- * nadp_desktop_file_set_locale_string:
- * @ndf: this #NadpDesktopFile object.
+ * fma_desktop_file_set_locale_string:
+ * @ndf: this #FMADesktopFile object.
  * @group: the name of the group.
  * @key: the name of the key.
  * @value: the value to be written.
@@ -1010,14 +1010,14 @@ nadp_desktop_file_set_boolean( const NadpDesktopFile *ndf, const gchar *group, c
  * The locale prefix is identified by '_' or '@' character.
  */
 void
-nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value )
+fma_desktop_file_set_locale_string( const FMADesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value )
 {
 	char **locales;
 	guint i;
 	gchar *prefix;
 	gboolean write;
 
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( ndf ));
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -1074,8 +1074,8 @@ nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 }
 
 /**
- * nadp_desktop_file_set_string:
- * @ndf: this #NadpDesktopFile object.
+ * fma_desktop_file_set_string:
+ * @ndf: this #FMADesktopFile object.
  * @group: the name of the group.
  * @key: the name of the key.
  * @value: the value to be written.
@@ -1083,9 +1083,9 @@ nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *gr
  * Write the given string value.
  */
 void
-nadp_desktop_file_set_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value )
+fma_desktop_file_set_string( const FMADesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value )
 {
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( ndf ));
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -1094,8 +1094,8 @@ nadp_desktop_file_set_string( const NadpDesktopFile *ndf, const gchar *group, co
 }
 
 /**
- * nadp_desktop_file_set_string_list:
- * @ndf: this #NadpDesktopFile object.
+ * fma_desktop_file_set_string_list:
+ * @ndf: this #FMADesktopFile object.
  * @group: the name of the group.
  * @key: the name of the key.
  * @value: the value to be written.
@@ -1103,11 +1103,11 @@ nadp_desktop_file_set_string( const NadpDesktopFile *ndf, const gchar *group, co
  * Write the given list value.
  */
 void
-nadp_desktop_file_set_string_list( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, GSList *value )
+fma_desktop_file_set_string_list( const FMADesktopFile *ndf, const gchar *group, const gchar *key, GSList *value )
 {
 	gchar **array;
 
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( ndf ));
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -1118,8 +1118,8 @@ nadp_desktop_file_set_string_list( const NadpDesktopFile *ndf, const gchar *grou
 }
 
 /**
- * nadp_desktop_file_set_uint:
- * @ndf: this #NadpDesktopFile object.
+ * fma_desktop_file_set_uint:
+ * @ndf: this #FMADesktopFile object.
  * @group: the name of the group.
  * @key: the name of the key.
  * @value: the value to be written.
@@ -1127,9 +1127,9 @@ nadp_desktop_file_set_string_list( const NadpDesktopFile *ndf, const gchar *grou
  * Write the given uint value.
  */
 void
-nadp_desktop_file_set_uint( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, guint value )
+fma_desktop_file_set_uint( const FMADesktopFile *ndf, const gchar *group, const gchar *key, guint value )
 {
-	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+	g_return_if_fail( FMA_IS_DESKTOP_FILE( ndf ));
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -1138,8 +1138,8 @@ nadp_desktop_file_set_uint( const NadpDesktopFile *ndf, const gchar *group, cons
 }
 
 /**
- * nadp_desktop_file_write:
- * @ndf: the #NadpDesktopFile instance.
+ * fma_desktop_file_write:
+ * @ndf: the #FMADesktopFile instance.
  *
  * Writes the key file to the disk.
  *
@@ -1150,9 +1150,9 @@ nadp_desktop_file_set_uint( const NadpDesktopFile *ndf, const gchar *group, cons
  * (these were wrongly written between v 2.99 and 3.0.3).
  */
 gboolean
-nadp_desktop_file_write( NadpDesktopFile *ndf )
+fma_desktop_file_write( FMADesktopFile *ndf )
 {
-	static const gchar *thisfn = "nadp_desktop_file_write";
+	static const gchar *thisfn = "fma_desktop_file_write";
 	gboolean ret;
 	gchar *data;
 	GFile *file;
@@ -1162,7 +1162,7 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 
 	ret = FALSE;
 	error = NULL;
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), ret );
 
 	if( !ndf->private->dispose_has_run ){
 
@@ -1217,9 +1217,9 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 }
 
 static void
-remove_encoding_part( NadpDesktopFile *ndf )
+remove_encoding_part( FMADesktopFile *ndf )
 {
-	static const gchar *thisfn = "nadp_desktop_file_remove_encoding_part";
+	static const gchar *thisfn = "fma_desktop_file_remove_encoding_part";
 	gchar **groups;
 	gchar **keys;
 	guint ig, ik;

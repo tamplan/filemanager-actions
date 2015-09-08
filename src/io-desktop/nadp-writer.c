@@ -63,12 +63,12 @@ static ExportFormatFn st_export_format_fn[] = {
 	{ NULL }
 };
 
-static guint           write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, NadpDesktopFile *ndf, GSList **messages );
+static guint           write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, FMADesktopFile *ndf, GSList **messages );
 
-static void            desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
+static void            desktop_weak_notify( FMADesktopFile *ndf, GObject *item );
 
-static void            write_start_write_type( NadpDesktopFile *ndp, FMAObjectItem *item );
-static void            write_done_write_subitems_list( NadpDesktopFile *ndp, FMAObjectItem *item );
+static void            write_start_write_type( FMADesktopFile *ndp, FMAObjectItem *item );
+static void            write_done_write_subitems_list( FMADesktopFile *ndp, FMAObjectItem *item );
 
 static ExportFormatFn *find_export_format_fn( const gchar *format );
 
@@ -128,7 +128,7 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 {
 	static const gchar *thisfn = "nadp_iio_provider_write_item";
 	guint ret;
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 	gchar *path;
 	gchar *userdir;
 	gchar *id;
@@ -147,11 +147,11 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 		return( ret );
 	}
 
-	ndf = ( NadpDesktopFile * ) fma_object_get_provider_data( item );
+	ndf = ( FMADesktopFile * ) fma_object_get_provider_data( item );
 
 	/* write into the current key file and write it to current path */
 	if( ndf ){
-		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
+		g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), ret );
 
 	} else {
 		userdir = nadp_xdg_dirs_get_user_data_dir();
@@ -172,7 +172,7 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 
 		if( dir_ok ){
 			id = fma_object_get_id( item );
-			bname = g_strdup_printf( "%s%s", id, NADP_DESKTOP_FILE_SUFFIX );
+			bname = g_strdup_printf( "%s%s", id, FMA_DESKTOP_FILE_SUFFIX );
 			g_free( id );
 			path = g_build_filename( fulldir, bname, NULL );
 			g_free( bname );
@@ -180,7 +180,7 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 		g_free( fulldir );
 
 		if( dir_ok ){
-			ndf = nadp_desktop_file_new_for_write( path );
+			ndf = fma_desktop_file_new_for_write( path );
 			fma_object_set_provider_data( item, ndf );
 			g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) desktop_weak_notify, ndf );
 			g_free( path );
@@ -195,7 +195,7 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 }
 
 /*
- * actually writes the item to the existing NadpDesktopFile
+ * actually writes the item to the existing FMADesktopFile
  * as we have chosen to take advantage of data factory management system
  * we do not need to enumerate each and every elementary data
  *
@@ -205,7 +205,7 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
  * -> as a side effect, we lose comments inside of these groups :(
  */
 static guint
-write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, NadpDesktopFile *ndf, GSList **messages )
+write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, FMADesktopFile *ndf, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_iio_provider_write_item";
 	guint ret;
@@ -227,7 +227,7 @@ write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, NadpDeskt
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( item ), ret );
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), ret );
 
 	self = NADP_DESKTOP_PROVIDER( provider );
 
@@ -239,7 +239,7 @@ write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, NadpDeskt
 
 	fma_ifactory_provider_write_item( FMA_IFACTORY_PROVIDER( provider ), ndf, FMA_IFACTORY_OBJECT( item ), messages );
 
-	if( !nadp_desktop_file_write( ndf )){
+	if( !fma_desktop_file_write( ndf )){
 		ret = IIO_PROVIDER_CODE_WRITE_ERROR;
 	}
 
@@ -252,7 +252,7 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 	static const gchar *thisfn = "nadp_iio_provider_delete_item";
 	guint ret;
 	NadpDesktopProvider *self;
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 	gchar *uri;
 
 	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
@@ -273,18 +273,18 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
-	ndf = ( NadpDesktopFile * ) fma_object_get_provider_data( item );
+	ndf = ( FMADesktopFile * ) fma_object_get_provider_data( item );
 
 	if( ndf ){
-		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
-		uri = nadp_desktop_file_get_key_file_uri( ndf );
+		g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), ret );
+		uri = fma_desktop_file_get_key_file_uri( ndf );
 		if( nadp_utils_uri_delete( uri )){
 			ret = IIO_PROVIDER_CODE_OK;
 		}
 		g_free( uri );
 
 	} else {
-		g_warning( "%s: NadpDesktopFile is null", thisfn );
+		g_warning( "%s: FMADesktopFile is null", thisfn );
 		ret = IIO_PROVIDER_CODE_OK;
 	}
 
@@ -292,7 +292,7 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 }
 
 static void
-desktop_weak_notify( NadpDesktopFile *ndf, GObject *item )
+desktop_weak_notify( FMADesktopFile *ndf, GObject *item )
 {
 	static const gchar *thisfn = "nadp_writer_desktop_weak_notify";
 
@@ -305,7 +305,7 @@ desktop_weak_notify( NadpDesktopFile *ndf, GObject *item )
 
 /*
  * Implementation of FMAIIOProvider::duplicate_data
- * Add a ref on NadpDesktopFile data, so that unreffing origin object in NACT
+ * Add a ref on FMADesktopFile data, so that unreffing origin object in NACT
  * does not invalid duplicated pointer
  */
 guint
@@ -314,7 +314,7 @@ nadp_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem 
 	static const gchar *thisfn = "nadp_iio_provider_duplicate_data";
 	guint ret;
 	NadpDesktopProvider *self;
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 
 	g_debug( "%s: provider=%p (%s), dest=%p (%s), source=%p (%s), messages=%p",
 			thisfn,
@@ -336,8 +336,8 @@ nadp_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem 
 		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
-	ndf = ( NadpDesktopFile * ) fma_object_get_provider_data( source );
-	g_return_val_if_fail( ndf && NADP_IS_DESKTOP_FILE( ndf ), ret );
+	ndf = ( FMADesktopFile * ) fma_object_get_provider_data( source );
+	g_return_val_if_fail( ndf && FMA_IS_DESKTOP_FILE( ndf ), ret );
 	fma_object_set_provider_data( dest, g_object_ref( ndf ));
 	g_object_weak_ref( G_OBJECT( dest ), ( GWeakNotify ) desktop_weak_notify, ndf );
 
@@ -358,7 +358,7 @@ nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExport
 	guint code, write_code;
 	ExportFormatFn *fmt;
 	GKeyFile *key_file;
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
@@ -385,14 +385,14 @@ nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExport
 			code = FMA_IEXPORTER_CODE_INVALID_FORMAT;
 
 		} else {
-			ndf = nadp_desktop_file_new();
+			ndf = fma_desktop_file_new();
 			write_code = fma_ifactory_provider_write_item( FMA_IFACTORY_PROVIDER( instance ), ndf, FMA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
 
 			if( write_code != IIO_PROVIDER_CODE_OK ){
 				code = FMA_IEXPORTER_CODE_ERROR;
 
 			} else {
-				key_file = nadp_desktop_file_get_key_file( ndf );
+				key_file = fma_desktop_file_get_key_file( ndf );
 				parms->buffer = g_key_file_to_data( key_file, NULL, NULL );
 			}
 
@@ -418,7 +418,7 @@ nadp_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIExporter
 	guint code, write_code;
 	gchar *id, *folder_path, *dest_path;
 	ExportFormatFn *fmt;
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
@@ -446,20 +446,20 @@ nadp_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIExporter
 
 		} else {
 			id = fma_object_get_id( parms->exported );
-			parms->basename = g_strdup_printf( "%s%s", id, NADP_DESKTOP_FILE_SUFFIX );
+			parms->basename = g_strdup_printf( "%s%s", id, FMA_DESKTOP_FILE_SUFFIX );
 			g_free( id );
 
 			folder_path = g_filename_from_uri( parms->folder, NULL, NULL );
 			dest_path = g_strdup_printf( "%s/%s", folder_path, parms->basename );
 			g_free( folder_path );
 
-			ndf = nadp_desktop_file_new_for_write( dest_path );
+			ndf = fma_desktop_file_new_for_write( dest_path );
 			write_code = fma_ifactory_provider_write_item( FMA_IFACTORY_PROVIDER( instance ), ndf, FMA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
 
 			if( write_code != IIO_PROVIDER_CODE_OK ){
 				code = FMA_IEXPORTER_CODE_ERROR;
 
-			} else if( !nadp_desktop_file_write( ndf )){
+			} else if( !fma_desktop_file_write( ndf )){
 				code = FMA_IEXPORTER_CODE_UNABLE_TO_WRITE;
 			}
 
@@ -477,16 +477,16 @@ nadp_writer_ifactory_provider_write_start( const FMAIFactoryProvider *provider, 
 							const FMAIFactoryObject *object, GSList **messages  )
 {
 	if( FMA_IS_OBJECT_ITEM( object )){
-		write_start_write_type( NADP_DESKTOP_FILE( writer_data ), FMA_OBJECT_ITEM( object ));
+		write_start_write_type( FMA_DESKTOP_FILE( writer_data ), FMA_OBJECT_ITEM( object ));
 	}
 
 	return( IIO_PROVIDER_CODE_OK );
 }
 
 static void
-write_start_write_type( NadpDesktopFile *ndp, FMAObjectItem *item )
+write_start_write_type( FMADesktopFile *ndp, FMAObjectItem *item )
 {
-	nadp_desktop_file_set_string(
+	fma_desktop_file_set_string(
 			ndp,
 			NADP_GROUP_DESKTOP,
 			NADP_KEY_TYPE,
@@ -503,7 +503,7 @@ nadp_writer_ifactory_provider_write_data(
 				const FMADataBoxed *boxed, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_writer_ifactory_provider_write_data";
-	NadpDesktopFile *ndf;
+	FMADesktopFile *ndf;
 	guint code;
 	const FMADataDef *def;
 	gchar *profile_id;
@@ -514,11 +514,11 @@ nadp_writer_ifactory_provider_write_data(
 	guint uint_value;
 	gchar *parms, *tmp;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( writer_data ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( writer_data ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	/*g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
 
 	code = IIO_PROVIDER_CODE_OK;
-	ndf = NADP_DESKTOP_FILE( writer_data );
+	ndf = FMA_DESKTOP_FILE( writer_data );
 	def = fma_data_boxed_get_data_def( boxed );
 
 	if( def->desktop_entry && strlen( def->desktop_entry )){
@@ -547,30 +547,30 @@ nadp_writer_ifactory_provider_write_data(
 						str_value = tmp;
 					}
 
-					nadp_desktop_file_set_string( ndf, group_name, def->desktop_entry, str_value );
+					fma_desktop_file_set_string( ndf, group_name, def->desktop_entry, str_value );
 					g_free( str_value );
 					break;
 
 				case FMA_DATA_TYPE_LOCALE_STRING:
 					str_value = fma_boxed_get_string( FMA_BOXED( boxed ));
-					nadp_desktop_file_set_locale_string( ndf, group_name, def->desktop_entry, str_value );
+					fma_desktop_file_set_locale_string( ndf, group_name, def->desktop_entry, str_value );
 					g_free( str_value );
 					break;
 
 				case FMA_DATA_TYPE_BOOLEAN:
 					bool_value = GPOINTER_TO_UINT( fma_boxed_get_as_void( FMA_BOXED( boxed )));
-					nadp_desktop_file_set_boolean( ndf, group_name, def->desktop_entry, bool_value );
+					fma_desktop_file_set_boolean( ndf, group_name, def->desktop_entry, bool_value );
 					break;
 
 				case FMA_DATA_TYPE_STRING_LIST:
 					slist_value = ( GSList * ) fma_boxed_get_as_void( FMA_BOXED( boxed ));
-					nadp_desktop_file_set_string_list( ndf, group_name, def->desktop_entry, slist_value );
+					fma_desktop_file_set_string_list( ndf, group_name, def->desktop_entry, slist_value );
 					fma_core_utils_slist_free( slist_value );
 					break;
 
 				case FMA_DATA_TYPE_UINT:
 					uint_value = GPOINTER_TO_UINT( fma_boxed_get_as_void( FMA_BOXED( boxed )));
-					nadp_desktop_file_set_uint( ndf, group_name, def->desktop_entry, uint_value );
+					fma_desktop_file_set_uint( ndf, group_name, def->desktop_entry, uint_value );
 					break;
 
 				default:
@@ -579,7 +579,7 @@ nadp_writer_ifactory_provider_write_data(
 			}
 
 		} else {
-			nadp_desktop_file_remove_key( ndf, group_name, def->desktop_entry );
+			fma_desktop_file_remove_key( ndf, group_name, def->desktop_entry );
 		}
 
 		g_free( group_name );
@@ -593,14 +593,14 @@ nadp_writer_ifactory_provider_write_done( const FMAIFactoryProvider *provider, v
 							const FMAIFactoryObject *object, GSList **messages  )
 {
 	if( FMA_IS_OBJECT_ITEM( object )){
-		write_done_write_subitems_list( NADP_DESKTOP_FILE( writer_data ), FMA_OBJECT_ITEM( object ));
+		write_done_write_subitems_list( FMA_DESKTOP_FILE( writer_data ), FMA_OBJECT_ITEM( object ));
 	}
 
 	return( IIO_PROVIDER_CODE_OK );
 }
 
 static void
-write_done_write_subitems_list( NadpDesktopFile *ndp, FMAObjectItem *item )
+write_done_write_subitems_list( FMADesktopFile *ndp, FMAObjectItem *item )
 {
 	static const gchar *thisfn = "nadp_writer_write_done_write_subitems_list";
 	GSList *subitems;
@@ -612,13 +612,13 @@ write_done_write_subitems_list( NadpDesktopFile *ndp, FMAObjectItem *item )
 	fma_core_utils_slist_dump( tmp, subitems );
 	g_free( tmp );
 
-	nadp_desktop_file_set_string_list(
+	fma_desktop_file_set_string_list(
 			ndp,
 			NADP_GROUP_DESKTOP,
 			FMA_IS_OBJECT_ACTION( item ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
 			subitems );
 
-	profile_groups = nadp_desktop_file_get_profiles( ndp );
+	profile_groups = fma_desktop_file_get_profiles( ndp );
 	tmp = g_strdup_printf( "%s (existing profiles)", thisfn );
 	fma_core_utils_slist_dump( tmp, profile_groups );
 	g_free( tmp );
@@ -626,7 +626,7 @@ write_done_write_subitems_list( NadpDesktopFile *ndp, FMAObjectItem *item )
 	for( ip = profile_groups ; ip ; ip = ip->next ){
 		if( fma_core_utils_slist_count( subitems, ( const gchar * ) ip->data ) == 0 ){
 			g_debug( "%s: deleting (removed) profile %s", thisfn, ( const gchar * ) ip->data );
-			nadp_desktop_file_remove_profile( ndp, ( const gchar * ) ip->data );
+			fma_desktop_file_remove_profile( ndp, ( const gchar * ) ip->data );
 		}
 	}
 
