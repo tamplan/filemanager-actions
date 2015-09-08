@@ -44,7 +44,7 @@
 #include "fma-desktop-formats.h"
 #include "fma-desktop-keys.h"
 #include "fma-desktop-utils.h"
-#include "nadp-writer.h"
+#include "fma-desktop-writer.h"
 #include "nadp-xdg-dirs.h"
 
 /* the association between an export format and the functions
@@ -80,7 +80,7 @@ static ExportFormatFn *find_export_format_fn_from_quark( GQuark format );
  * This is implementation of FMAIIOProvider::is_willing_to_write method
  */
 gboolean
-nadp_iio_provider_is_willing_to_write( const FMAIIOProvider *provider )
+fma_desktop_writer_iio_provider_is_willing_to_write( const FMAIIOProvider *provider )
 {
 	return( TRUE );
 }
@@ -92,9 +92,9 @@ nadp_iio_provider_is_willing_to_write( const FMAIIOProvider *provider )
  * This is implementation of FMAIIOProvider::is_able_to_write method
  */
 gboolean
-nadp_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
+fma_desktop_writer_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
 {
-	static const gchar *thisfn = "nadp_writer_iio_provider_is_able_to_write";
+	static const gchar *thisfn = "fma_desktop_writer_iio_provider_is_able_to_write";
 	gboolean able_to;
 	gchar *userdir;
 
@@ -124,9 +124,9 @@ nadp_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
  * This is implementation of FMAIIOProvider::write_item method
  */
 guint
-nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
+fma_desktop_writer_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_iio_provider_write_item";
+	static const gchar *thisfn = "fma_desktop_writer_iio_provider_write_item";
 	guint ret;
 	FMADesktopFile *ndf;
 	gchar *path;
@@ -207,7 +207,7 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 static guint
 write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, FMADesktopFile *ndf, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_iio_provider_write_item";
+	static const gchar *thisfn = "fma_desktop_writer_iio_provider_write_item";
 	guint ret;
 	FMADesktopProvider *self;
 
@@ -247,9 +247,9 @@ write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, FMADeskto
 }
 
 guint
-nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
+fma_desktop_writer_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_iio_provider_delete_item";
+	static const gchar *thisfn = "fma_desktop_writer_iio_provider_delete_item";
 	guint ret;
 	FMADesktopProvider *self;
 	FMADesktopFile *ndf;
@@ -294,7 +294,7 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 static void
 desktop_weak_notify( FMADesktopFile *ndf, GObject *item )
 {
-	static const gchar *thisfn = "nadp_writer_desktop_weak_notify";
+	static const gchar *thisfn = "fma_desktop_writer_desktop_weak_notify";
 
 	g_debug( "%s: ndf=%p (%s), item=%p (%s)",
 			thisfn, ( void * ) ndf, G_OBJECT_TYPE_NAME( ndf ),
@@ -309,9 +309,9 @@ desktop_weak_notify( FMADesktopFile *ndf, GObject *item )
  * does not invalid duplicated pointer
  */
 guint
-nadp_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages )
+fma_desktop_writer_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_iio_provider_duplicate_data";
+	static const gchar *thisfn = "fma_desktop_writer_iio_provider_duplicate_data";
 	guint ret;
 	FMADesktopProvider *self;
 	FMADesktopFile *ndf;
@@ -345,16 +345,16 @@ nadp_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem 
 }
 
 /**
- * nadp_writer_iexporter_export_to_buffer:
+ * fma_desktop_writer_iexporter_export_to_buffer:
  * @instance: this #FMAIExporter instance.
  * @parms: a #FMAIExporterBufferParmsv2 structure.
  *
  * Export the specified 'item' to a newly allocated buffer.
  */
 guint
-nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms )
+fma_desktop_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms )
 {
-	static const gchar *thisfn = "nadp_writer_iexporter_export_to_buffer";
+	static const gchar *thisfn = "fma_desktop_writer_iexporter_export_to_buffer";
 	guint code, write_code;
 	ExportFormatFn *fmt;
 	GKeyFile *key_file;
@@ -405,16 +405,16 @@ nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExport
 }
 
 /**
- * nadp_writer_iexporter_export_to_file:
+ * fma_desktop_writer_iexporter_export_to_file:
  * @instance: this #FMAIExporter instance.
  * @parms: a #FMAIExporterFileParmsv2 structure.
  *
  * Export the specified 'item' to a newly created file.
  */
 guint
-nadp_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms )
+fma_desktop_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms )
 {
-	static const gchar *thisfn = "nadp_writer_iexporter_export_to_file";
+	static const gchar *thisfn = "fma_desktop_writer_iexporter_export_to_file";
 	guint code, write_code;
 	gchar *id, *folder_path, *dest_path;
 	ExportFormatFn *fmt;
@@ -473,7 +473,7 @@ nadp_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIExporter
 }
 
 guint
-nadp_writer_ifactory_provider_write_start( const FMAIFactoryProvider *provider, void *writer_data,
+fma_desktop_writer_ifactory_provider_write_start( const FMAIFactoryProvider *provider, void *writer_data,
 							const FMAIFactoryObject *object, GSList **messages  )
 {
 	if( FMA_IS_OBJECT_ITEM( object )){
@@ -498,11 +498,11 @@ write_start_write_type( FMADesktopFile *ndp, FMAObjectItem *item )
  * then concatenate these two fields to the 'Exec' key
  */
 guint
-nadp_writer_ifactory_provider_write_data(
+fma_desktop_writer_ifactory_provider_write_data(
 				const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object,
 				const FMADataBoxed *boxed, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_writer_ifactory_provider_write_data";
+	static const gchar *thisfn = "fma_desktop_writer_ifactory_provider_write_data";
 	FMADesktopFile *ndf;
 	guint code;
 	const FMADataDef *def;
@@ -589,7 +589,7 @@ nadp_writer_ifactory_provider_write_data(
 }
 
 guint
-nadp_writer_ifactory_provider_write_done( const FMAIFactoryProvider *provider, void *writer_data,
+fma_desktop_writer_ifactory_provider_write_done( const FMAIFactoryProvider *provider, void *writer_data,
 							const FMAIFactoryObject *object, GSList **messages  )
 {
 	if( FMA_IS_OBJECT_ITEM( object )){
@@ -602,7 +602,7 @@ nadp_writer_ifactory_provider_write_done( const FMAIFactoryProvider *provider, v
 static void
 write_done_write_subitems_list( FMADesktopFile *ndp, FMAObjectItem *item )
 {
-	static const gchar *thisfn = "nadp_writer_write_done_write_subitems_list";
+	static const gchar *thisfn = "fma_desktop_writer_write_done_write_subitems_list";
 	GSList *subitems;
 	GSList *profile_groups, *ip;
 	gchar *tmp;

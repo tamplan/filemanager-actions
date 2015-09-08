@@ -56,8 +56,8 @@ libna_io_desktop_la_SOURCES = \
 	fma-desktop-reader.h								\
 	fma-desktop-utils.c									\
 	fma-desktop-utils.h									\
-	nadp-writer.c										\
-	nadp-writer.h										\
+	fma-desktop-writer.c								\
+	fma-desktop-writer.h								\
 	nadp-xdg-dirs.c										\
 	nadp-xdg-dirs.h										\
 	$(NULL)

@@ -42,7 +42,7 @@
 #include "fma-desktop-keys.h"
 #include "fma-desktop-monitor.h"
 #include "fma-desktop-reader.h"
-#include "nadp-writer.h"
+#include "fma-desktop-writer.h"
 
 /* private class data
  */
@@ -234,11 +234,11 @@ iio_provider_iface_init( FMAIIOProviderInterface *iface )
 	iface->get_id = iio_provider_get_id;
 	iface->get_name = iio_provider_get_name;
 	iface->read_items = fma_desktop_reader_iio_provider_read_items;
-	iface->is_willing_to_write = nadp_iio_provider_is_willing_to_write;
-	iface->is_able_to_write = nadp_iio_provider_is_able_to_write;
-	iface->write_item = nadp_iio_provider_write_item;
-	iface->delete_item = nadp_iio_provider_delete_item;
-	iface->duplicate_data = nadp_iio_provider_duplicate_data;
+	iface->is_willing_to_write = fma_desktop_writer_iio_provider_is_willing_to_write;
+	iface->is_able_to_write = fma_desktop_writer_iio_provider_is_able_to_write;
+	iface->write_item = fma_desktop_writer_iio_provider_write_item;
+	iface->delete_item = fma_desktop_writer_iio_provider_delete_item;
+	iface->duplicate_data = fma_desktop_writer_iio_provider_duplicate_data;
 }
 
 static guint
@@ -270,9 +270,9 @@ ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 	iface->read_start = fma_desktop_reader_ifactory_provider_read_start;
 	iface->read_data = fma_desktop_reader_ifactory_provider_read_data;
 	iface->read_done = fma_desktop_reader_ifactory_provider_read_done;
-	iface->write_start = nadp_writer_ifactory_provider_write_start;
-	iface->write_data = nadp_writer_ifactory_provider_write_data;
-	iface->write_done = nadp_writer_ifactory_provider_write_done;
+	iface->write_start = fma_desktop_writer_ifactory_provider_write_start;
+	iface->write_data = fma_desktop_writer_ifactory_provider_write_data;
+	iface->write_done = fma_desktop_writer_ifactory_provider_write_done;
 }
 
 static guint
@@ -309,8 +309,8 @@ iexporter_iface_init( FMAIExporterInterface *iface )
 	iface->get_name = iexporter_get_name;
 	iface->get_formats = iexporter_get_formats;
 	iface->free_formats = iexporter_free_formats;
-	iface->to_file = nadp_writer_iexporter_export_to_file;
-	iface->to_buffer = nadp_writer_iexporter_export_to_buffer;
+	iface->to_file = fma_desktop_writer_iexporter_export_to_file;
+	iface->to_buffer = fma_desktop_writer_iexporter_export_to_buffer;
 }
 
 static guint
