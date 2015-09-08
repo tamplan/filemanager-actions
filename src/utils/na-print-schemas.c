@@ -43,7 +43,7 @@
 #include <api/fma-data-types.h>
 #include <api/fma-ifactory-object-data.h>
 
-#include <io-gconf/nagp-keys.h>
+#include <io-gconf/fma-gconf-keys.h>
 
 #include <io-xml/naxml-keys.h>
 
@@ -270,7 +270,7 @@ attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const FMADataDef *def )
 
 	schema_node = xmlNewChild( list_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE ), NULL );
 
-	content = BAD_CAST( g_build_path( "/", NAGP_SCHEMAS_PATH, def->gconf_entry, NULL ));
+	content = BAD_CAST( g_build_path( "/", FMA_GCONF_SCHEMAS_PATH, def->gconf_entry, NULL ));
 	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_KEY ), content );
 	xmlFree( content );
 

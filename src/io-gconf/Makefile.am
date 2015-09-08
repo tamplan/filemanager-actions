@@ -27,7 +27,7 @@
 
 if HAVE_GCONF
 
-pkglib_LTLIBRARIES = libna-io-gconf.la
+pkglib_LTLIBRARIES = libfma-io-gconf.la
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
@@ -36,7 +36,7 @@ AM_CPPFLAGS += \
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_GCONF}\"			\
 	$(NULL)
 
-libna_io_gconf_la_SOURCES = \
+libfma_io_gconf_la_SOURCES = \
 	fma-gconf-provider.c								\
 	fma-gconf-provider.h								\
 	fma-gconf-keys.c									\
@@ -48,12 +48,12 @@ libna_io_gconf_la_SOURCES = \
 	fma-gconf-writer.h									\
 	$(NULL)
 
-libna_io_gconf_la_LIBADD = \
+libfma_io_gconf_la_LIBADD = \
 	$(top_builddir)/src/core/libfma-core.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-libna_io_gconf_la_LDFLAGS = \
+libfma_io_gconf_la_LDFLAGS = \
 	-module 											\
 	-no-undefined										\
 	-avoid-version										\

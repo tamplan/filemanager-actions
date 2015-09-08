@@ -42,7 +42,7 @@
 #include <api/fma-ifactory-provider.h>
 #include <api/fma-iio-provider.h>
 
-#include <io-gconf/nagp-keys.h>
+#include <io-gconf/fma-gconf-keys.h>
 
 #include "naxml-formats.h"
 #include "naxml-keys.h"
@@ -447,7 +447,7 @@ write_start_write_type( NAXMLWriter *writer, FMAObjectItem *object, const FMADat
 	writer->private->schema_node = NULL;
 	writer->private->locale_node = NULL;
 	def = fma_data_def_get_data_def( groups, FMA_FACTORY_OBJECT_ITEM_GROUP, FMAFO_DATA_TYPE );
-	svalue = FMA_IS_OBJECT_ACTION( object ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU;
+	svalue = FMA_IS_OBJECT_ACTION( object ) ? FMA_GCONF_VALUE_TYPE_ACTION : FMA_GCONF_VALUE_TYPE_MENU;
 
 	( *writer->private->fn_str->write_type_fn )( writer, object, def, svalue );
 }
@@ -596,11 +596,11 @@ write_data_schema_v2_element( NAXMLWriter *writer, const FMADataDef *def, const 
 
 	writer->private->schema_node = xmlNewChild( writer->private->list_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE ), NULL );
 
-	content = BAD_CAST( g_build_path( "/", NAGP_SCHEMAS_PATH, def->gconf_entry, NULL ));
+	content = BAD_CAST( g_build_path( "/", FMA_GCONF_SCHEMAS_PATH, def->gconf_entry, NULL ));
 	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_KEY ), content );
 	xmlFree( content );
 
-	content = BAD_CAST( g_build_path( "/", NAGP_CONFIGURATIONS_PATH, object_id, def->gconf_entry, NULL ));
+	content = BAD_CAST( g_build_path( "/", FMA_GCONF_CONFIGURATIONS_PATH, object_id, def->gconf_entry, NULL ));
 	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_APPLYTO ), content );
 	xmlFree( content );
 
@@ -645,7 +645,7 @@ write_list_attribs_dump( NAXMLWriter *writer, const FMAObjectItem *object )
 	gchar *path;
 
 	id = fma_object_get_id( object );
-	path = g_build_path( "/", NAGP_CONFIGURATIONS_PATH, id, NULL );
+	path = g_build_path( "/", FMA_GCONF_CONFIGURATIONS_PATH, id, NULL );
 	xmlNewProp( writer->private->list_node, BAD_CAST( NAXML_KEY_DUMP_LIST_PARM_BASE ), BAD_CAST( path ));
 
 	g_free( path );

@@ -41,7 +41,7 @@
 #include <api/fma-ifactory-provider.h>
 #include <api/fma-object-api.h>
 
-#include <io-gconf/nagp-keys.h>
+#include <io-gconf/fma-gconf-keys.h>
 
 #include "naxml-keys.h"
 #include "naxml-reader.h"
@@ -1061,14 +1061,14 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 
 	gchar *entry = g_path_get_basename(( const gchar * ) text );
 
-	if( !strcmp( entry, NAGP_ENTRY_TYPE )){
+	if( !strcmp( entry, FMA_GCONF_ENTRY_TYPE )){
 		reader->private->type_found = TRUE;
 		gchar *type = get_value_from_child_node( iter->parent, NAXML_KEY_SCHEMA_NODE_DEFAULT );
 
-		if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
+		if( !strcmp( type, FMA_GCONF_VALUE_TYPE_ACTION )){
 			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_action_new());
 
-		} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
+		} else if( !strcmp( type, FMA_GCONF_VALUE_TYPE_MENU )){
 			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_menu_new());
 
 		} else {
@@ -1186,14 +1186,14 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
 {
 	xmlChar *key_content = xmlNodeGetContent( key_node );
 
-	if( !strxcmp( key_content, NAGP_ENTRY_TYPE )){
+	if( !strxcmp( key_content, FMA_GCONF_ENTRY_TYPE )){
 		reader->private->type_found = TRUE;
 		gchar *type = get_value_from_child_child_node( key_node->parent, NAXML_KEY_DUMP_NODE_VALUE, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
 
-		if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
+		if( !strcmp( type, FMA_GCONF_VALUE_TYPE_ACTION )){
 			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_action_new());
 
-		} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
+		} else if( !strcmp( type, FMA_GCONF_VALUE_TYPE_MENU )){
 			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_menu_new());
 
 		} else {
