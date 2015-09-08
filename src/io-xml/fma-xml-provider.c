@@ -35,27 +35,27 @@
 #include <api/fma-iexporter.h>
 #include <api/fma-iimporter.h>
 
-#include "naxml-provider.h"
+#include "fma-xml-provider.h"
 #include "fma-xml-formats.h"
 #include "naxml-reader.h"
 #include "naxml-writer.h"
 
 /* private class data
  */
-struct _NAXMLProviderClassPrivate {
+struct _FMAXMLProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAXMLProviderPrivate {
+struct _FMAXMLProviderPrivate {
 	gboolean dispose_has_run;
 };
 
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 
-static void   class_init( NAXMLProviderClass *klass );
+static void   class_init( FMAXMLProviderClass *klass );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
@@ -73,24 +73,24 @@ static void   ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface 
 static guint  ifactory_provider_get_version( const FMAIFactoryProvider *factory );
 
 GType
-naxml_provider_get_type( void )
+fma_xml_provider_get_type( void )
 {
 	return( st_module_type );
 }
 
 void
-naxml_provider_register_type( GTypeModule *module )
+fma_xml_provider_register_type( GTypeModule *module )
 {
-	static const gchar *thisfn = "naxml_provider_register_type";
+	static const gchar *thisfn = "fma_xml_provider_register_type";
 
 	static GTypeInfo info = {
-		sizeof( NAXMLProviderClass ),
+		sizeof( FMAXMLProviderClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAXMLProvider ),
+		sizeof( FMAXMLProvider ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -115,7 +115,7 @@ naxml_provider_register_type( GTypeModule *module )
 
 	g_debug( "%s", thisfn );
 
-	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NAXMLProvider", &info, 0 );
+	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "FMAXMLProvider", &info, 0 );
 
 	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IIMPORTER, &iimporter_iface_info );
 
@@ -125,9 +125,9 @@ naxml_provider_register_type( GTypeModule *module )
 }
 
 static void
-class_init( NAXMLProviderClass *klass )
+class_init( FMAXMLProviderClass *klass )
 {
-	static const gchar *thisfn = "naxml_provider_class_init";
+	static const gchar *thisfn = "fma_xml_provider_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -138,23 +138,23 @@ class_init( NAXMLProviderClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAXMLProviderClassPrivate, 1 );
+	klass->private = g_new0( FMAXMLProviderClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "naxml_provider_instance_init";
-	NAXMLProvider *self;
+	static const gchar *thisfn = "fma_xml_provider_instance_init";
+	FMAXMLProvider *self;
 
-	g_return_if_fail( NA_IS_XML_PROVIDER( instance ));
+	g_return_if_fail( FMA_IS_XML_PROVIDER( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NAXML_PROVIDER( instance );
+	self = FMA_XML_PROVIDER( instance );
 
-	self->private = g_new0( NAXMLProviderPrivate, 1 );
+	self->private = g_new0( FMAXMLProviderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -162,12 +162,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "naxml_provider_instance_dispose";
-	NAXMLProvider *self;
+	static const gchar *thisfn = "fma_xml_provider_instance_dispose";
+	FMAXMLProvider *self;
 
-	g_return_if_fail( NA_IS_XML_PROVIDER( object ));
+	g_return_if_fail( FMA_IS_XML_PROVIDER( object ));
 
-	self = NAXML_PROVIDER( object );
+	self = FMA_XML_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -185,14 +185,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "naxml_provider_instance_finalize";
-	NAXMLProvider *self;
+	static const gchar *thisfn = "fma_xml_provider_instance_finalize";
+	FMAXMLProvider *self;
 
-	g_return_if_fail( NA_IS_XML_PROVIDER( object ));
+	g_return_if_fail( FMA_IS_XML_PROVIDER( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NAXML_PROVIDER( object );
+	self = FMA_XML_PROVIDER( object );
 
 	g_free( self->private );
 
@@ -205,7 +205,7 @@ instance_finalize( GObject *object )
 static void
 iimporter_iface_init( FMAIImporterInterface *iface )
 {
-	static const gchar *thisfn = "naxml_provider_iimporter_iface_init";
+	static const gchar *thisfn = "fma_xml_provider_iimporter_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -222,7 +222,7 @@ iimporter_get_version( const FMAIImporter *importer )
 static void
 iexporter_iface_init( FMAIExporterInterface *iface )
 {
-	static const gchar *thisfn = "naxml_provider_iexporter_iface_init";
+	static const gchar *thisfn = "fma_xml_provider_iexporter_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -261,7 +261,7 @@ iexporter_free_formats( const FMAIExporter *exporter, GList *format_list )
 static void
 ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 {
-	static const gchar *thisfn = "naxml_provider_ifactory_provider_iface_init";
+	static const gchar *thisfn = "fma_xml_provider_ifactory_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 

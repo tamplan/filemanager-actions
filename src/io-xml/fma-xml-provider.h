@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAXML_PROVIDER_H__
-#define __NAXML_PROVIDER_H__
+#ifndef __IO_XML_FMA_XML_PROVIDER_H__
+#define __IO_XML_FMA_XML_PROVIDER_H__
 
 /**
- * SECTION: naxml_provider
- * @short_description: #NAXMLProvider class definition.
- * @include: naxml-provider.h
+ * SECTION: fma_xml_provider
+ * @short_description: #FMAXMLProvider class definition.
+ * @include: fma-xml-provider.h
  *
  * This class manages I/O in XML formats.
  */
@@ -42,34 +42,34 @@
 
 G_BEGIN_DECLS
 
-#define NAXML_TYPE_PROVIDER                ( naxml_provider_get_type())
-#define NAXML_PROVIDER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NAXML_TYPE_PROVIDER, NAXMLProvider ))
-#define NAXML_PROVIDER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NAXML_TYPE_PROVIDER, NAXMLProviderClass ))
-#define NA_IS_XML_PROVIDER( object )       ( G_TYPE_CHECK_INSTANCE_TYPE( object, NAXML_TYPE_PROVIDER ))
-#define NA_IS_XML_PROVIDER_CLASS( klass )  ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAXML_TYPE_PROVIDER ))
-#define NAXML_PROVIDER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NAXML_TYPE_PROVIDER, NAXMLProviderClass ))
+#define FMA_TYPE_XML_PROVIDER                ( fma_xml_provider_get_type())
+#define FMA_XML_PROVIDER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_XML_PROVIDER, FMAXMLProvider ))
+#define FMA_XML_PROVIDER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_XML_PROVIDER, FMAXMLProviderClass ))
+#define FMA_IS_XML_PROVIDER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_XML_PROVIDER ))
+#define FMA_IS_XML_PROVIDER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_XML_PROVIDER ))
+#define FMA_XML_PROVIDER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_XML_PROVIDER, FMAXMLProviderClass ))
 
-typedef struct _NAXMLProviderPrivate       NAXMLProviderPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject               parent;
-	NAXMLProviderPrivate *private;
-}
-	NAXMLProvider;
-
-typedef struct _NAXMLProviderClassPrivate  NAXMLProviderClassPrivate;
+typedef struct _FMAXMLProviderPrivate        FMAXMLProviderPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass               parent;
-	NAXMLProviderClassPrivate *private;
+	GObject                parent;
+	FMAXMLProviderPrivate *private;
 }
-	NAXMLProviderClass;
+	FMAXMLProvider;
 
-GType naxml_provider_get_type     ( void );
-void  naxml_provider_register_type( GTypeModule *module );
+typedef struct _FMAXMLProviderClassPrivate   FMAXMLProviderClassPrivate;
+
+typedef struct {
+	/*< private >*/
+	GObjectClass                parent;
+	FMAXMLProviderClassPrivate *private;
+}
+	FMAXMLProviderClass;
+
+GType fma_xml_provider_get_type     ( void );
+void  fma_xml_provider_register_type( GTypeModule *module );
 
 G_END_DECLS
 
-#endif /* __NAXML_PROVIDER_H__ */
+#endif /* __IO_XML_FMA_XML_PROVIDER_H__ */
