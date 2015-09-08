@@ -34,20 +34,20 @@ AM_CPPFLAGS += \
 
 nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
 
-nautilus_extension_LTLIBRARIES = libnautilus-actions-menu.la
+nautilus_extension_LTLIBRARIES = libfma-menu.la
 
-libnautilus_actions_menu_la_SOURCES = \
-	nautilus-module.c											\
-	nautilus-actions.c											\
-	nautilus-actions.h											\
+libfma_menu_la_SOURCES = \
+	fma-menu-module.c											\
+	fma-menu-plugin.c											\
+	fma-menu-plugin.h											\
 	$(NULL)
 
-libnautilus_actions_menu_la_LIBADD = \
+libfma_menu_la_LIBADD = \
 	$(top_builddir)/src/core/libfma-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
-libnautilus_actions_menu_la_LDFLAGS = \
+libfma_menu_la_LDFLAGS = \
 	-module 													\
 	-no-undefined												\
 	-avoid-version												\

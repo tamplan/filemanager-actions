@@ -48,17 +48,17 @@
 #include <core/fma-selected-info.h>
 #include <core/fma-tokens.h>
 
-#include "nautilus-actions.h"
+#include "fma-menu-plugin.h"
 
 /* private class data
  */
-struct _NautilusActionsClassPrivate {
+struct _FMAMenuPluginClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NautilusActionsPrivate {
+struct _FMAMenuPluginPrivate {
 	gboolean  dispose_has_run;
 	FMAPivot  *pivot;
 	gulong    items_changed_handler;
@@ -70,7 +70,7 @@ static GObjectClass *st_parent_class  = NULL;
 static GType         st_actions_type  = 0;
 static gint          st_burst_timeout = 100;		/* burst timeout in msec */
 
-static void              class_init( NautilusActionsClass *klass );
+static void              class_init( FMAMenuPluginClass *klass );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
 static void              instance_constructed( GObject *object );
 static void              instance_dispose( GObject *object );
@@ -84,11 +84,11 @@ static GList            *menu_provider_get_file_items( NautilusMenuProvider *pro
 static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 #endif
 
-static GList            *build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection );
+static GList            *build_nautilus_menu( FMAMenuPlugin *plugin, guint target, GList *selection );
 static GList            *build_nautilus_menu_rec( GList *tree, guint target, GList *selection, FMATokens *tokens );
-static FMAObjectItem     *expand_tokens_item( const FMAObjectItem *item, FMATokens *tokens );
+static FMAObjectItem    *expand_tokens_item( const FMAObjectItem *item, FMATokens *tokens );
 static void              expand_tokens_context( FMAIContext *context, FMATokens *tokens );
-static FMAObjectProfile  *get_candidate_profile( FMAObjectAction *action, guint target, GList *files );
+static FMAObjectProfile *get_candidate_profile( FMAObjectAction *action, guint target, GList *files );
 static NautilusMenuItem *create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files, FMATokens *tokens );
 static NautilusMenuItem *create_item_from_menu( FMAObjectMenu *menu, GList *subitems, guint target );
 static NautilusMenuItem *create_menu_item( const FMAObjectItem *item, guint target );
@@ -98,34 +98,34 @@ static void              weak_notify_profile( FMAObjectProfile *profile, Nautilu
 
 static void              execute_action( NautilusMenuItem *item, FMAObjectProfile *profile );
 
-static GList            *create_root_menu( NautilusActions *plugin, GList *nautilus_menu );
-static GList            *add_about_item( NautilusActions *plugin, GList *nautilus_menu );
-static void              execute_about( NautilusMenuItem *item, NautilusActions *plugin );
+static GList            *create_root_menu( FMAMenuPlugin *plugin, GList *nautilus_menu );
+static GList            *add_about_item( FMAMenuPlugin *plugin, GList *nautilus_menu );
+static void              execute_about( NautilusMenuItem *item, FMAMenuPlugin *plugin );
 
-static void              on_pivot_items_changed_handler( FMAPivot *pivot, NautilusActions *plugin );
-static void              on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NautilusActions *plugin );
-static void              on_change_event_timeout( NautilusActions *plugin );
+static void              on_pivot_items_changed_handler( FMAPivot *pivot, FMAMenuPlugin *plugin );
+static void              on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, FMAMenuPlugin *plugin );
+static void              on_change_event_timeout( FMAMenuPlugin *plugin );
 
 GType
-nautilus_actions_get_type( void )
+fma_menu_plugin_get_type( void )
 {
 	g_assert( st_actions_type );
 	return( st_actions_type );
 }
 
 void
-nautilus_actions_register_type( GTypeModule *module )
+fma_menu_plugin_register_type( GTypeModule *module )
 {
-	static const gchar *thisfn = "nautilus_actions_register_type";
+	static const gchar *thisfn = "fma_menu_plugin_register_type";
 
 	static const GTypeInfo info = {
-		sizeof( NautilusActionsClass ),
+		sizeof( FMAMenuPluginClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NautilusActions ),
+		sizeof( FMAMenuPlugin ),
 		0,
 		( GInstanceInitFunc ) instance_init,
 	};
@@ -140,15 +140,15 @@ nautilus_actions_register_type( GTypeModule *module )
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
-	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NautilusActions", &info, 0 );
+	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "FMAMenuPlugin", &info, 0 );
 
 	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
 }
 
 static void
-class_init( NautilusActionsClass *klass )
+class_init( FMAMenuPluginClass *klass )
 {
-	static const gchar *thisfn = "nautilus_actions_class_init";
+	static const gchar *thisfn = "fma_menu_plugin_class_init";
 	GObjectClass *gobject_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -160,23 +160,23 @@ class_init( NautilusActionsClass *klass )
 	gobject_class->dispose = instance_dispose;
 	gobject_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NautilusActionsClassPrivate, 1 );
+	klass->private = g_new0( FMAMenuPluginClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nautilus_actions_instance_init";
-	NautilusActions *self;
+	static const gchar *thisfn = "fma_menu_plugin_instance_init";
+	FMAMenuPlugin *self;
 
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+	g_return_if_fail( FMA_IS_MENU_PLUGIN( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NAUTILUS_ACTIONS( instance );
+	self = FMA_MENU_PLUGIN( instance );
 
-	self->private = g_new0( NautilusActionsPrivate, 1 );
+	self->private = g_new0( FMAMenuPluginPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->change_timeout.timeout = st_burst_timeout;
@@ -199,12 +199,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *object )
 {
-	static const gchar *thisfn = "nautilus_actions_instance_constructed";
-	NautilusActionsPrivate *priv;
+	static const gchar *thisfn = "fma_menu_plugin_instance_constructed";
+	FMAMenuPluginPrivate *priv;
 
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( object ));
+	g_return_if_fail( FMA_IS_MENU_PLUGIN( object ));
 
-	priv = NAUTILUS_ACTIONS( object )->private;
+	priv = FMA_MENU_PLUGIN( object )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -265,12 +265,12 @@ instance_constructed( GObject *object )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nautilus_actions_instance_dispose";
-	NautilusActions *self;
+	static const gchar *thisfn = "fma_menu_plugin_instance_dispose";
+	FMAMenuPlugin *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( object ));
-	self = NAUTILUS_ACTIONS( object );
+	g_return_if_fail( FMA_IS_MENU_PLUGIN( object ));
+	self = FMA_MENU_PLUGIN( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -291,12 +291,12 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "nautilus_actions_instance_finalize";
-	NautilusActions *self;
+	static const gchar *thisfn = "fma_menu_plugin_instance_finalize";
+	FMAMenuPlugin *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( object ));
-	self = NAUTILUS_ACTIONS( object );
+	g_return_if_fail( FMA_IS_MENU_PLUGIN( object ));
+	self = FMA_MENU_PLUGIN( object );
 
 	g_free( self->private );
 
@@ -309,7 +309,7 @@ instance_finalize( GObject *object )
 static void
 menu_provider_iface_init( NautilusMenuProviderIface *iface )
 {
-	static const gchar *thisfn = "nautilus_actions_menu_provider_iface_init";
+	static const gchar *thisfn = "fma_menu_plugin_menu_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -341,14 +341,14 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 static GList *
 menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
 {
-	static const gchar *thisfn = "nautilus_actions_menu_provider_get_background_items";
+	static const gchar *thisfn = "fma_menu_plugin_menu_provider_get_background_items";
 	GList *nautilus_menus_list = NULL;
 	gchar *uri;
 	GList *selected;
 
-	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_MENU_PLUGIN( provider ), NULL );
 
-	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
+	if( !FMA_MENU_PLUGIN( provider )->private->dispose_has_run ){
 
 		selected = fma_selected_info_get_list_from_item( current_folder );
 
@@ -362,7 +362,7 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 			g_free( uri );
 
 			nautilus_menus_list = build_nautilus_menu(
-					NAUTILUS_ACTIONS( provider ),
+					FMA_MENU_PLUGIN( provider ),
 					ITEM_TARGET_LOCATION,
 					selected );
 
@@ -382,13 +382,13 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 static GList *
 menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
-	static const gchar *thisfn = "nautilus_actions_menu_provider_get_file_items";
+	static const gchar *thisfn = "fma_menu_plugin_menu_provider_get_file_items";
 	GList *nautilus_menus_list = NULL;
 	GList *selected;
 
-	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_MENU_PLUGIN( provider ), NULL );
 
-	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
+	if( !FMA_MENU_PLUGIN( provider )->private->dispose_has_run ){
 
 		/* no need to go further if there is no files in the list */
 		if( !g_list_length( files )){
@@ -416,7 +416,7 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 #endif
 
 			nautilus_menus_list = build_nautilus_menu(
-					NAUTILUS_ACTIONS( provider ),
+					FMA_MENU_PLUGIN( provider ),
 					ITEM_TARGET_SELECTION,
 					selected );
 
@@ -438,14 +438,14 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 static GList *
 menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
 {
-	static const gchar *thisfn = "nautilus_actions_menu_provider_get_toolbar_items";
+	static const gchar *thisfn = "fma_menu_plugin_menu_provider_get_toolbar_items";
 	GList *nautilus_menus_list = NULL;
 	gchar *uri;
 	GList *selected;
 
-	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_MENU_PLUGIN( provider ), NULL );
 
-	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
+	if( !FMA_MENU_PLUGIN( provider )->private->dispose_has_run ){
 
 		selected = fma_selected_info_get_list_from_item( current_folder );
 
@@ -459,7 +459,7 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 			g_free( uri );
 
 			nautilus_menus_list = build_nautilus_menu(
-					NAUTILUS_ACTIONS( provider ),
+					FMA_MENU_PLUGIN( provider ),
 					ITEM_TARGET_TOOLBAR,
 					selected );
 
@@ -486,9 +486,9 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
  * Returns: the Nautilus menu
  */
 static GList *
-build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection )
+build_nautilus_menu( FMAMenuPlugin *plugin, guint target, GList *selection )
 {
-	static const gchar *thisfn = "nautilus_actions_build_nautilus_menu";
+	static const gchar *thisfn = "fma_menu_plugin_build_nautilus_menu";
 	GList *nautilus_menu;
 	FMATokens *tokens;
 	GList *tree;
@@ -529,7 +529,7 @@ build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection )
 static GList *
 build_nautilus_menu_rec( GList *tree, guint target, GList *selection, FMATokens *tokens )
 {
-	static const gchar *thisfn = "nautilus_actions_build_nautilus_menu_rec";
+	static const gchar *thisfn = "fma_menu_plugin_build_nautilus_menu_rec";
 	GList *nautilus_menu;
 	GList *it;
 	GList *subitems;
@@ -749,7 +749,7 @@ expand_tokens_context( FMAIContext *context, FMATokens *tokens )
 static FMAObjectProfile *
 get_candidate_profile( FMAObjectAction *action, guint target, GList *files )
 {
-	static const gchar *thisfn = "nautilus_actions_get_candidate_profile";
+	static const gchar *thisfn = "fma_menu_plugin_get_candidate_profile";
 	FMAObjectProfile *candidate = NULL;
 	gchar *action_label;
 	gchar *profile_label;
@@ -811,7 +811,7 @@ create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files,
 static void
 weak_notify_profile( FMAObjectProfile *profile, NautilusMenuItem *item )
 {
-	g_debug( "nautilus_actions_weak_notify_profile: profile=%p (ref_count=%d)",
+	g_debug( "fma_menu_plugin_weak_notify_profile: profile=%p (ref_count=%d)",
 			( void * ) profile, G_OBJECT( profile )->ref_count );
 
 	g_object_unref( profile );
@@ -825,7 +825,7 @@ weak_notify_profile( FMAObjectProfile *profile, NautilusMenuItem *item )
 static NautilusMenuItem *
 create_item_from_menu( FMAObjectMenu *menu, GList *subitems, guint target )
 {
-	/*static const gchar *thisfn = "nautilus_actions_create_item_from_menu";*/
+	/*static const gchar *thisfn = "fma_menu_plugin_create_item_from_menu";*/
 	NautilusMenuItem *item;
 
 	item = create_menu_item( FMA_OBJECT_ITEM( menu ), target );
@@ -875,7 +875,7 @@ create_menu_item( const FMAObjectItem *item, guint target )
 static void
 weak_notify_menu_item( void *user_data /* =NULL */, NautilusMenuItem *item )
 {
-	g_debug( "nautilus_actions_weak_notify_menu_item: item=%p", ( void * ) item );
+	g_debug( "fma_menu_plugin_weak_notify_menu_item: item=%p", ( void * ) item );
 }
 
 static void
@@ -903,7 +903,7 @@ attach_submenu_to_item( NautilusMenuItem *item, GList *subitems )
 static void
 execute_action( NautilusMenuItem *item, FMAObjectProfile *profile )
 {
-	static const gchar *thisfn = "nautilus_actions_execute_action";
+	static const gchar *thisfn = "fma_menu_plugin_execute_action";
 	FMATokens *tokens;
 
 	g_debug( "%s: item=%p, profile=%p", thisfn, ( void * ) item, ( void * ) profile );
@@ -916,9 +916,9 @@ execute_action( NautilusMenuItem *item, FMAObjectProfile *profile )
  * create a root submenu
  */
 static GList *
-create_root_menu( NautilusActions *plugin, GList *menu )
+create_root_menu( FMAMenuPlugin *plugin, GList *menu )
 {
-	static const gchar *thisfn = "nautilus_actions_create_root_menu";
+	static const gchar *thisfn = "fma_menu_plugin_create_root_menu";
 	GList *nautilus_menu;
 	NautilusMenuItem *root_item;
 
@@ -930,7 +930,7 @@ create_root_menu( NautilusActions *plugin, GList *menu )
 	}
 
 	root_item = nautilus_menu_item_new(
-			"NautilusActionsExtensions",
+			"FMAMenuPluginExtensions",
 			/* i18n: label of an automagic root submenu */
 			_( "FileManager-Actions actions" ),
 			/* i18n: tooltip of an automagic root submenu */
@@ -947,9 +947,9 @@ create_root_menu( NautilusActions *plugin, GList *menu )
  * then add the about item to the end of the first level of this menu
  */
 static GList *
-add_about_item( NautilusActions *plugin, GList *menu )
+add_about_item( FMAMenuPlugin *plugin, GList *menu )
 {
-	static const gchar *thisfn = "nautilus_actions_add_about_item";
+	static const gchar *thisfn = "fma_menu_plugin_add_about_item";
 	GList *nautilus_menu;
 	gboolean have_root_menu;
 	NautilusMenuItem *root_item;
@@ -977,7 +977,7 @@ add_about_item( NautilusActions *plugin, GList *menu )
 
 	if( have_root_menu ){
 		about_item = nautilus_menu_item_new(
-				"AboutNautilusActions",
+				"AboutFMAMenuPlugin",
 				_( "About FileManager-Actions" ),
 				_( "Display some information about FileManager-Actions" ),
 				fma_about_get_icon_name());
@@ -997,9 +997,9 @@ add_about_item( NautilusActions *plugin, GList *menu )
 }
 
 static void
-execute_about( NautilusMenuItem *item, NautilusActions *plugin )
+execute_about( NautilusMenuItem *item, FMAMenuPlugin *plugin )
 {
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
+	g_return_if_fail( FMA_IS_MENU_PLUGIN( plugin ));
 
 	fma_about_display( NULL );
 }
@@ -1019,10 +1019,10 @@ execute_about( NautilusMenuItem *item, NautilusActions *plugin )
  * from i/o providers
  */
 static void
-on_pivot_items_changed_handler( FMAPivot *pivot, NautilusActions *plugin )
+on_pivot_items_changed_handler( FMAPivot *pivot, FMAMenuPlugin *plugin )
 {
 	g_return_if_fail( FMA_IS_PIVOT( pivot ));
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
+	g_return_if_fail( FMA_IS_MENU_PLUGIN( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
 
@@ -1035,9 +1035,9 @@ on_pivot_items_changed_handler( FMAPivot *pivot, NautilusActions *plugin )
  * its context menus
  */
 static void
-on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NautilusActions *plugin )
+on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, FMAMenuPlugin *plugin )
 {
-	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
+	g_return_if_fail( FMA_IS_MENU_PLUGIN( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
 
@@ -1049,9 +1049,9 @@ on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpoi
  * automatically reloads the items, then signal the file manager.
  */
 static void
-on_change_event_timeout( NautilusActions *plugin )
+on_change_event_timeout( FMAMenuPlugin *plugin )
 {
-	static const gchar *thisfn = "nautilus_actions_on_change_event_timeout";
+	static const gchar *thisfn = "fma_menu_plugin_on_change_event_timeout";
 	g_debug( "%s: timeout expired", thisfn );
 
 	fma_pivot_load_items( plugin->private->pivot );

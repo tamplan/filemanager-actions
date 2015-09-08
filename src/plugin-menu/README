@@ -2,10 +2,10 @@ src/plugin-menu
 ---------------
 This is the FileManager-Actions plugin.
 
-The plugin is dynamically loaded by the Nautilus file manager.
+The plugin is intended to be dynamically loaded by the file manager.
 
 Please put only here code relevant to the plugin, and to itself only.
 I.e., code shared by the plugin with some other part of the package
-should go to runtime convenience library.
+should go to core/ runtime convenience library.
 
 P. Wieser, last updated on sept. 2015

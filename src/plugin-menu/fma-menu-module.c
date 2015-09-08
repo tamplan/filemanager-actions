@@ -40,7 +40,7 @@
 #include <core/fma-gconf-migration.h>
 #include <core/fma-settings.h>
 
-#include "nautilus-actions.h"
+#include "fma-menu-plugin.h"
 
 static void set_log_handler( void );
 static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
@@ -50,9 +50,9 @@ static GLogFunc st_default_log_func = NULL;
 /*
  * A nautilus extension must implement three functions :
  *
- * - nautilus_module_initialize
- * - nautilus_module_list_types
- * - nautilus_module_shutdown
+ * - fma_menu_module_initialize
+ * - fma_menu_module_list_types
+ * - fma_menu_module_shutdown
  *
  * The first two functions are called at nautilus startup.
  *
@@ -62,9 +62,9 @@ static GLogFunc st_default_log_func = NULL;
 void
 nautilus_module_initialize( GTypeModule *module )
 {
-	static const gchar *thisfn = "nautilus_module_initialize";
+	static const gchar *thisfn = "fma_menu_module_nautilus_module_initialize";
 
-	syslog( LOG_USER | LOG_INFO, "[N-A] %s Menu Extender %s initializing...", PACKAGE_NAME, PACKAGE_VERSION );
+	syslog( LOG_USER | LOG_INFO, "[FMA] %s Menu Extender %s initializing...", PACKAGE_NAME, PACKAGE_VERSION );
 
 	set_log_handler();
 
@@ -78,18 +78,18 @@ nautilus_module_initialize( GTypeModule *module )
 	 */
 	fma_gconf_migration_run();
 
-	nautilus_actions_register_type( module );
+	fma_menu_plugin_register_type( module );
 }
 
 void
 nautilus_module_list_types( const GType **types, int *num_types )
 {
-	static const gchar *thisfn = "nautilus_module_list_types";
+	static const gchar *thisfn = "fma_menu_module_nautilus_module_list_types";
 	static GType type_list[1];
 
 	g_debug( "%s: types=%p, num_types=%p", thisfn, ( void * ) types, ( void * ) num_types );
 
-	type_list[0] = NAUTILUS_ACTIONS_TYPE;
+	type_list[0] = FMA_MENU_PLUGIN_TYPE;
 	*types = type_list;
 	*num_types = 1;
 
@@ -100,7 +100,7 @@ nautilus_module_list_types( const GType **types, int *num_types )
 void
 nautilus_module_shutdown( void )
 {
-	static const gchar *thisfn = "nautilus_module_shutdown";
+	static const gchar *thisfn = "fma_menu_module_nautilus_module_shutdown";
 
 	g_debug( "%s", thisfn );
 

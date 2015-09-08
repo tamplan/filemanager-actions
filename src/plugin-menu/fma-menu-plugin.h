@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __PLUGIN_MENU_NAUTILUS_ACTIONS_H__
-#define __PLUGIN_MENU_NAUTILUS_ACTIONS_H__
+#ifndef __PLUGIN_MENU_FMA_MENU_PLUGIN_H__
+#define __PLUGIN_MENU_FMA_MENU_PLUGIN_H__
 
 /**
  * SECTION: filemanager-actions
- * @title: NautilusActions
- * @short_description: The NautilusActions plugin class definition
- * @include: plugin-menu/filemanager-actions.h
+ * @title: FMAMenuPlugin
+ * @short_description: The FMAMenuPlugin plugin class definition
+ * @include: plugin-menu/fma-menu-plugin.h
  *
  * This is the class which handles the file manager menu plugin.
  */
@@ -43,34 +43,34 @@
 
 G_BEGIN_DECLS
 
-#define NAUTILUS_ACTIONS_TYPE                ( nautilus_actions_get_type())
-#define NAUTILUS_ACTIONS( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), NAUTILUS_ACTIONS_TYPE, NautilusActions ))
-#define NAUTILUS_ACTIONS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass ))
-#define NAUTILUS_IS_ACTIONS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NAUTILUS_ACTIONS_TYPE ))
-#define NAUTILUS_IS_ACTIONS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAUTILUS_ACTIONS_TYPE ))
-#define NAUTILUS_ACTIONS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass ))
+#define FMA_MENU_PLUGIN_TYPE                ( fma_menu_plugin_get_type())
+#define FMA_MENU_PLUGIN( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), FMA_MENU_PLUGIN_TYPE, FMAMenuPlugin ))
+#define FMA_MENU_PLUGIN_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), FMA_MENU_PLUGIN_TYPE, FMAMenuPluginClass ))
+#define FMA_IS_MENU_PLUGIN( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), FMA_MENU_PLUGIN_TYPE ))
+#define FMA_IS_MENU_PLUGIN_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_MENU_PLUGIN_TYPE ))
+#define FMA_MENU_PLUGIN_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_MENU_PLUGIN_TYPE, FMAMenuPluginClass ))
 
-typedef struct _NautilusActionsPrivate       NautilusActionsPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject                 parent;
-	NautilusActionsPrivate *private;
-}
-	NautilusActions;
-
-typedef struct _NautilusActionsClassPrivate  NautilusActionsClassPrivate;
+typedef struct _FMAMenuPluginPrivate        FMAMenuPluginPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass                 parent;
-	NautilusActionsClassPrivate *private;
+	GObject               parent;
+	FMAMenuPluginPrivate *private;
 }
-	NautilusActionsClass;
+	FMAMenuPlugin;
 
-GType    nautilus_actions_get_type     ( void );
-void     nautilus_actions_register_type( GTypeModule *module );
+typedef struct _FMAMenuPluginClassPrivate   FMAMenuPluginClassPrivate;
+
+typedef struct {
+	/*< private >*/
+	GObjectClass               parent;
+	FMAMenuPluginClassPrivate *private;
+}
+	FMAMenuPluginClass;
+
+GType    fma_menu_plugin_get_type     ( void );
+void     fma_menu_plugin_register_type( GTypeModule *module );
 
 G_END_DECLS
 
-#endif /* __PLUGIN_MENU_NAUTILUS_ACTIONS_H__ */
+#endif /* __PLUGIN_MENU_FMA_MENU_PLUGIN_H__ */
