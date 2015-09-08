@@ -45,7 +45,7 @@
 #include <core/fma-settings.h>
 
 #include "fma-application.h"
-#include "nact-assistant-import.h"
+#include "fma-assistant-import.h"
 #include "nact-main-window.h"
 #include "nact-tree-ieditable.h"
 
@@ -89,7 +89,7 @@ struct _FMAAssistantImportPrivate {
 	GList       *overriden;
 };
 
-static const gchar        *st_xmlui_filename = PKGUIDIR "/nact-assistant-import.ui";
+static const gchar        *st_xmlui_filename = PKGUIDIR "/fma-assistant-import.ui";
 static const gchar        *st_toplevel_name  = "ImportAssistant";
 static const gchar        *st_wsp_name       = IPREFS_IMPORT_ASSISTANT_WSP;
 
