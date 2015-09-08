@@ -37,7 +37,7 @@
 #include <api/fma-timeout.h>
 
 #include "fma-io-provider.h"
-#include "na-module.h"
+#include "fma-module.h"
 #include "na-pivot.h"
 
 /* private class data
@@ -241,7 +241,7 @@ instance_constructed( GObject *object )
 
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-		priv->modules = na_module_load_modules();
+		priv->modules = fma_module_load_modules();
 
 		/* force class initialization and io-factory registration
 		 */
@@ -319,7 +319,7 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		/* release modules */
-		na_module_release_modules( self->private->modules );
+		fma_module_release_modules( self->private->modules );
 		self->private->modules = NULL;
 
 		/* release item tree */
@@ -446,7 +446,7 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 
 		g_debug( "%s: pivot=%p, type=%lu (%s)", thisfn, ( void * ) pivot, ( unsigned long ) type, g_type_name( type ));
 
-		list = na_module_get_extensions_for_type( pivot->private->modules, type );
+		list = fma_module_get_extensions_for_type( pivot->private->modules, type );
 		g_debug( "%s: list=%p, count=%d", thisfn, ( void * ) list, list ? g_list_length( list ) : 0 );
 	}
 
@@ -466,7 +466,7 @@ na_pivot_free_providers( GList *providers )
 
 	g_debug( "%s: providers=%p", thisfn, ( void * ) providers );
 
-	na_module_free_extensions_list( providers );
+	fma_module_free_extensions_list( providers );
 }
 
 /*

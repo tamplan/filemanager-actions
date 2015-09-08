@@ -35,17 +35,17 @@
 
 #include <api/fma-core-utils.h>
 
-#include "na-module.h"
+#include "fma-module.h"
 
 /* private class data
  */
-struct _NAModuleClassPrivate {
+struct _FMAModuleClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAModulePrivate {
+struct _FMAModulePrivate {
 	gboolean  dispose_has_run;
 	gchar    *path;						/* full pathname of the plugin */
 	gchar    *name;						/* basename without the extension */
@@ -63,23 +63,23 @@ struct _NAModulePrivate {
 static GTypeModuleClass *st_parent_class = NULL;
 
 static GType     register_type( void );
-static void      class_init( NAModuleClass *klass );
+static void      class_init( FMAModuleClass *klass );
 static void      instance_init( GTypeInstance *instance, gpointer klass );
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
-static NAModule *module_new( const gchar *filename );
+static FMAModule *module_new( const gchar *filename );
 static gboolean  on_module_load( GTypeModule *gmodule );
-static gboolean  is_a_na_plugin( NAModule *module );
-static gboolean  plugin_check( NAModule *module, const gchar *symbol, gpointer *pfn );
-static void      register_module_types( NAModule *module );
-static void      add_module_type( NAModule *module, GType type );
-static void      object_weak_notify( NAModule *module, GObject *object );
+static gboolean  is_a_na_plugin( FMAModule *module );
+static gboolean  plugin_check( FMAModule *module, const gchar *symbol, gpointer *pfn );
+static void      register_module_types( FMAModule *module );
+static void      add_module_type( FMAModule *module, GType type );
+static void      object_weak_notify( FMAModule *module, GObject *object );
 
 static void      on_module_unload( GTypeModule *gmodule );
 
 GType
-na_module_get_type( void )
+fma_module_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -93,32 +93,32 @@ na_module_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_module_register_type";
+	static const gchar *thisfn = "fma_module_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAModuleClass ),
+		sizeof( FMAModuleClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAModule ),
+		sizeof( FMAModule ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_TYPE_MODULE, "NAModule", &info, 0 );
+	type = g_type_register_static( G_TYPE_TYPE_MODULE, "FMAModule", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAModuleClass *klass )
+class_init( FMAModuleClass *klass )
 {
-	static const gchar *thisfn = "na_module_class_init";
+	static const gchar *thisfn = "fma_module_class_init";
 	GObjectClass *object_class;
 	GTypeModuleClass *module_class;
 
@@ -134,23 +134,23 @@ class_init( NAModuleClass *klass )
 	module_class->load = on_module_load;
 	module_class->unload = on_module_unload;
 
-	klass->private = g_new0( NAModuleClassPrivate, 1 );
+	klass->private = g_new0( FMAModuleClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_module_instance_init";
-	NAModule *self;
+	static const gchar *thisfn = "fma_module_instance_init";
+	FMAModule *self;
 
-	g_return_if_fail( NA_IS_MODULE( instance ));
+	g_return_if_fail( FMA_IS_MODULE( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NA_MODULE( instance );
+	self = FMA_MODULE( instance );
 
-	self->private = g_new0( NAModulePrivate, 1 );
+	self->private = g_new0( FMAModulePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -158,12 +158,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_module_instance_dispose";
-	NAModule *self;
+	static const gchar *thisfn = "fma_module_instance_dispose";
+	FMAModule *self;
 
-	g_return_if_fail( NA_IS_MODULE( object ));
+	g_return_if_fail( FMA_IS_MODULE( object ));
 
-	self = NA_MODULE( object );
+	self = FMA_MODULE( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -180,14 +180,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_module_instance_finalize";
-	NAModule *self;
+	static const gchar *thisfn = "fma_module_instance_finalize";
+	FMAModule *self;
 
-	g_return_if_fail( NA_IS_MODULE( object ));
+	g_return_if_fail( FMA_IS_MODULE( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NA_MODULE( object );
+	self = FMA_MODULE( object );
 
 	g_free( self->private->path );
 	g_free( self->private->name );
@@ -201,15 +201,15 @@ instance_finalize( GObject *object )
 }
 
 /*
- * na_module_dump:
- * @module: this #NAModule instance.
+ * fma_module_dump:
+ * @module: this #FMAModule instance.
  *
  * Dumps the content of the module.
  */
 void
-na_module_dump( const NAModule *module )
+fma_module_dump( const FMAModule *module )
 {
-	static const gchar *thisfn = "na_module_dump";
+	static const gchar *thisfn = "fma_module_dump";
 	GList *iobj;
 
 	g_debug( "%s:    path=%s", thisfn, module->private->path );
@@ -222,18 +222,18 @@ na_module_dump( const NAModule *module )
 }
 
 /*
- * na_module_load_modules:
+ * fma_module_load_modules:
  *
  * Load availables dynamically loadable extension libraries (plugins).
  *
- * Returns: a #GList of #NAModule, each object representing a dynamically
- * loaded library. The list should be na_module_release_modules() by the
+ * Returns: a #GList of #FMAModule, each object representing a dynamically
+ * loaded library. The list should be fma_module_release_modules() by the
  * caller after use.
  */
 GList *
-na_module_load_modules( void )
+fma_module_load_modules( void )
 {
-	static const gchar *thisfn = "na_module_load_modules";
+	static const gchar *thisfn = "fma_module_load_modules";
 	const gchar *dirname = PKGLIBDIR;
 	const gchar *suffix = ".so";
 	GList *modules;
@@ -241,7 +241,7 @@ na_module_load_modules( void )
 	GError *error;
 	const gchar *entry;
 	gchar *fname;
-	NAModule *module;
+	FMAModule *module;
 
 	g_debug( "%s", thisfn );
 
@@ -276,12 +276,12 @@ na_module_load_modules( void )
 /*
  * @fname: full pathname of the being-loaded dynamic library.
  */
-static NAModule *
+static FMAModule *
 module_new( const gchar *fname )
 {
-	NAModule *module;
+	FMAModule *module;
 
-	module = g_object_new( NA_TYPE_MODULE, NULL );
+	module = g_object_new( FMA_TYPE_MODULE, NULL );
 	module->private->path = g_strdup( fname );
 
 	if( !g_type_module_use( G_TYPE_MODULE( module )) || !is_a_na_plugin( module )){
@@ -303,8 +303,8 @@ module_new( const gchar *fname )
 static gboolean
 on_module_load( GTypeModule *gmodule )
 {
-	static const gchar *thisfn = "na_module_on_module_load";
-	NAModule *module;
+	static const gchar *thisfn = "fma_module_on_module_load";
+	FMAModule *module;
 	gboolean loaded;
 
 	g_return_val_if_fail( G_IS_TYPE_MODULE( gmodule ), FALSE );
@@ -312,7 +312,7 @@ on_module_load( GTypeModule *gmodule )
 	g_debug( "%s: gmodule=%p", thisfn, ( void * ) gmodule );
 
 	loaded = FALSE;
-	module = NA_MODULE( gmodule );
+	module = FMA_MODULE( gmodule );
 
 	module->private->library = g_module_open(
 			module->private->path, G_MODULE_BIND_LAZY | G_MODULE_BIND_LOCAL );
@@ -338,9 +338,9 @@ on_module_load( GTypeModule *gmodule )
  * - fma_extension_get_version is optional, and defaults to 1.
  */
 static gboolean
-is_a_na_plugin( NAModule *module )
+is_a_na_plugin( FMAModule *module )
 {
-	static const gchar *thisfn = "na_module_is_a_na_plugin";
+	static const gchar *thisfn = "fma_module_is_a_na_plugin";
 	gboolean ok;
 
 	ok =
@@ -357,9 +357,9 @@ is_a_na_plugin( NAModule *module )
 }
 
 static gboolean
-plugin_check( NAModule *module, const gchar *symbol, gpointer *pfn )
+plugin_check( FMAModule *module, const gchar *symbol, gpointer *pfn )
 {
-	static const gchar *thisfn = "na_module_plugin_check";
+	static const gchar *thisfn = "fma_module_plugin_check";
 	gboolean ok;
 
 	ok = g_module_symbol( module->private->library, symbol, pfn );
@@ -381,7 +381,7 @@ plugin_check( NAModule *module, const gchar *symbol, gpointer *pfn )
  * and keep this object in the module's list
  */
 static void
-register_module_types( NAModule *module )
+register_module_types( FMAModule *module )
 {
 	const GType *types;
 	guint count, i;
@@ -397,12 +397,12 @@ register_module_types( NAModule *module )
 }
 
 static void
-add_module_type( NAModule *module, GType type )
+add_module_type( FMAModule *module, GType type )
 {
 	GObject *object;
 
 	object = g_object_new( type, NULL );
-	g_debug( "na_module_add_module_type: allocating object=%p (%s)", ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_debug( "fma_module_add_module_type: allocating object=%p (%s)", ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	g_object_weak_ref( object, ( GWeakNotify ) object_weak_notify, module );
 
@@ -410,9 +410,9 @@ add_module_type( NAModule *module, GType type )
 }
 
 static void
-object_weak_notify( NAModule *module, GObject *object )
+object_weak_notify( FMAModule *module, GObject *object )
 {
-	static const gchar *thisfn = "na_module_object_weak_notify";
+	static const gchar *thisfn = "fma_module_object_weak_notify";
 
 	g_debug( "%s: module=%p, object=%p (%s)",
 			thisfn, ( void * ) module, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
@@ -422,19 +422,19 @@ object_weak_notify( NAModule *module, GObject *object )
 
 /*
  * 'unload' is triggered by the last 'unuse' call
- * which is itself called in na_module::instance_dispose
+ * which is itself called in fma_module::instance_dispose
  */
 static void
 on_module_unload( GTypeModule *gmodule )
 {
-	static const gchar *thisfn = "na_module_on_module_unload";
-	NAModule *module;
+	static const gchar *thisfn = "fma_module_on_module_unload";
+	FMAModule *module;
 
 	g_return_if_fail( G_IS_TYPE_MODULE( gmodule ));
 
 	g_debug( "%s: gmodule=%p", thisfn, ( void * ) gmodule );
 
-	module = NA_MODULE( gmodule );
+	module = FMA_MODULE( gmodule );
 
 	if( module->private->shutdown ){
 		module->private->shutdown();
@@ -451,23 +451,23 @@ on_module_unload( GTypeModule *gmodule )
 }
 
 /*
- * na_module_get_extensions_for_type:
+ * fma_module_get_extensions_for_type:
  * @type: the serched GType.
  *
  * Returns: a list of loaded modules willing to deal with requested @type.
  *
- * The returned list should be na_module_free_extensions_list() by the caller.
+ * The returned list should be fma_module_free_extensions_list() by the caller.
  */
 GList *
-na_module_get_extensions_for_type( GList *modules, GType type )
+fma_module_get_extensions_for_type( GList *modules, GType type )
 {
 	GList *willing_to, *im, *io;
-	NAModule *a_modul;
+	FMAModule *a_modul;
 
 	willing_to = NULL;
 
 	for( im = modules; im ; im = im->next ){
-		a_modul = NA_MODULE( im->data );
+		a_modul = FMA_MODULE( im->data );
 		for( io = a_modul->private->objects ; io ; io = io->next ){
 			if( G_TYPE_CHECK_INSTANCE_TYPE( G_OBJECT( io->data ), type )){
 				willing_to = g_list_prepend( willing_to, g_object_ref( io->data ));
@@ -479,58 +479,58 @@ na_module_get_extensions_for_type( GList *modules, GType type )
 }
 
 /*
- * na_module_free_extensions_list:
- * @extensions: a #GList as returned by #na_module_get_extensions_for_type().
+ * fma_module_free_extensions_list:
+ * @extensions: a #GList as returned by #fma_module_get_extensions_for_type().
  *
  * Free the previously returned list.
  */
 void
-na_module_free_extensions_list( GList *extensions )
+fma_module_free_extensions_list( GList *extensions )
 {
 	g_list_foreach( extensions, ( GFunc ) g_object_unref, NULL );
 	g_list_free( extensions );
 }
 
 /*
- * na_module_has_id:
- * @module: this #NAModule object.
+ * fma_module_has_id:
+ * @module: this #FMAModule object.
  * @id: the searched id.
  *
  * Returns: %TRUE if one of the interfaces advertised by the module has
  * the given id, %FALSE else.
  */
 gboolean
-na_module_has_id( NAModule *module, const gchar *id )
+fma_module_has_id( FMAModule *module, const gchar *id )
 {
 	gboolean id_ok;
 	GList *iobj;
 
 	id_ok = FALSE;
 	for( iobj = module->private->objects ; iobj && !id_ok ; iobj = iobj->next ){
-		g_debug( "na_module_has_id: object=%s", G_OBJECT_TYPE_NAME( iobj->data ));
+		g_debug( "fma_module_has_id: object=%s", G_OBJECT_TYPE_NAME( iobj->data ));
 	}
 
 	return( id_ok );
 }
 
 /*
- * na_module_release_modules:
+ * fma_module_release_modules:
  * @modules: the list of loaded modules.
  *
  * Release resources allocated to the loaded modules on #NAPivot dispose.
  */
 void
-na_module_release_modules( GList *modules )
+fma_module_release_modules( GList *modules )
 {
-	static const gchar *thisfn = "na_modules_release_modules";
-	NAModule *module;
+	static const gchar *thisfn = "fma_modules_release_modules";
+	FMAModule *module;
 	GList *imod;
 	GList *iobj;
 
 	g_debug( "%s: modules=%p (count=%d)", thisfn, ( void * ) modules, g_list_length( modules ));
 
 	for( imod = modules ; imod ; imod = imod->next ){
-		module = NA_MODULE( imod->data );
+		module = FMA_MODULE( imod->data );
 
 		for( iobj = module->private->objects ; iobj ; iobj = iobj->next ){
 			g_object_unref( iobj->data );

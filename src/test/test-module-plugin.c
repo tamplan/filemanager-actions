@@ -87,47 +87,47 @@ say_hello( GModule *module )
 /* version 2
  * define the module as a GTypeModule-derived one
  */
-#define TEST_MODULE_PLUGIN_TYPE                 ( na_module_plugin_get_type())
-#define TEST_MODULE_PLUGIN( object )            ( G_TYPE_CHECK_INSTANCE_CAST( object, TEST_MODULE_PLUGIN_TYPE, NAModulePlugin ))
-#define TEST_MODULE_PLUGIN_CLASS( klass )       ( G_TYPE_CHECK_CLASS_CAST( klass, TEST_MODULE_PLUGIN_TYPE, NAModulePluginClass ))
+#define TEST_MODULE_PLUGIN_TYPE                 ( fma_module_plugin_get_type())
+#define TEST_MODULE_PLUGIN( object )            ( G_TYPE_CHECK_INSTANCE_CAST( object, TEST_MODULE_PLUGIN_TYPE, FMAModulePlugin ))
+#define TEST_MODULE_PLUGIN_CLASS( klass )       ( G_TYPE_CHECK_CLASS_CAST( klass, TEST_MODULE_PLUGIN_TYPE, FMAModulePluginClass ))
 #define TEST_IS_MODULE_PLUGIN( object )         ( G_TYPE_CHECK_INSTANCE_TYPE( object, TEST_MODULE_PLUGIN_TYPE ))
 #define TEST_IS_MODULE_PLUGIN_CLASS( klass )    ( G_TYPE_CHECK_CLASS_TYPE(( klass ), TEST_MODULE_PLUGIN_TYPE ))
-#define TEST_MODULE_PLUGIN_GET_CLASS( object )  ( G_TYPE_INSTANCE_GET_CLASS(( object ), TEST_MODULE_PLUGIN_TYPE, NAModulePluginClass ))
+#define TEST_MODULE_PLUGIN_GET_CLASS( object )  ( G_TYPE_INSTANCE_GET_CLASS(( object ), TEST_MODULE_PLUGIN_TYPE, FMAModulePluginClass ))
 
-typedef struct _NAModulePluginPrivate           NAModulePluginPrivate;
-typedef struct _NAModulePluginClassPrivate      NAModulePluginClassPrivate;
+typedef struct _FMAModulePluginPrivate           FMAModulePluginPrivate;
+typedef struct _FMAModulePluginClassPrivate      FMAModulePluginClassPrivate;
 
 typedef struct {
 	GObject                parent;
-	NAModulePluginPrivate *private;
+	FMAModulePluginPrivate *private;
 }
-	NAModulePlugin;
+	FMAModulePlugin;
 
 typedef struct {
 	GObjectClass                parent;
-	NAModulePluginClassPrivate *private;
+	FMAModulePluginClassPrivate *private;
 }
-	NAModulePluginClass;
+	FMAModulePluginClass;
 
-GType na_module_plugin_get_type( void );
+GType fma_module_plugin_get_type( void );
 
 /* private instance data
  */
-struct _NAModulePluginPrivate {
+struct _FMAModulePluginPrivate {
 	gboolean dispose_has_run;
 };
 
 /* private class data
  */
-struct _NAModulePluginClassPrivate {
+struct _FMAModulePluginClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 static GType             st_module_type = 0;
 static GTypeModuleClass *st_parent_class = NULL;
 
-static void           na_module_plugin_register_type( GTypeModule *module );
-static void class_init( NAModulePluginClass *klass );
+static void           fma_module_plugin_register_type( GTypeModule *module );
+static void class_init( FMAModulePluginClass *klass );
 static void instance_init( GTypeInstance *instance, gpointer klass );
 static void instance_dispose( GObject *object );
 static void instance_finalize( GObject *object );
@@ -135,24 +135,24 @@ static void instance_finalize( GObject *object );
 G_MODULE_EXPORT void plugin_init( GTypeModule *module );
 
 GType
-na_module_plugin_get_type( void )
+fma_module_plugin_get_type( void )
 {
 	return( st_module_type );
 }
 
 static void
-na_module_plugin_register_type( GTypeModule *module )
+fma_module_plugin_register_type( GTypeModule *module )
 {
-	static const gchar *thisfn = "na_module_plugin_register_type";
+	static const gchar *thisfn = "fma_module_plugin_register_type";
 
 	static GTypeInfo info = {
-		sizeof( NAModulePluginClass ),
+		sizeof( FMAModulePluginClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAModulePlugin ),
+		sizeof( FMAModulePlugin ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -165,15 +165,15 @@ na_module_plugin_register_type( GTypeModule *module )
 
 	g_debug( "%s", thisfn );
 
-	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NAModulePlugin", &info, 0 );
+	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "FMAModulePlugin", &info, 0 );
 
 	/*g_type_module_add_interface( module, st_module_type, FMA_TYPE_IIO_PROVIDER, &iio_provider_iface_info );*/
 }
 
 static void
-class_init( NAModulePluginClass *klass )
+class_init( FMAModulePluginClass *klass )
 {
-	static const gchar *thisfn = "na_module_plugin_class_init";
+	static const gchar *thisfn = "fma_module_plugin_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -184,14 +184,14 @@ class_init( NAModulePluginClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAModulePluginClassPrivate, 1 );
+	klass->private = g_new0( FMAModulePluginClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_module_plugin_instance_init";
-	NAModulePlugin *self;
+	static const gchar *thisfn = "fma_module_plugin_instance_init";
+	FMAModulePlugin *self;
 
 	g_return_if_fail( TEST_IS_MODULE_PLUGIN( instance ));
 
@@ -200,7 +200,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self = TEST_MODULE_PLUGIN( instance );
 
-	self->private = g_new0( NAModulePluginPrivate, 1 );
+	self->private = g_new0( FMAModulePluginPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -208,8 +208,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_module_plugin_instance_dispose";
-	NAModulePlugin *self;
+	static const gchar *thisfn = "fma_module_plugin_instance_dispose";
+	FMAModulePlugin *self;
 
 	g_return_if_fail( TEST_IS_MODULE_PLUGIN( object ));
 
@@ -232,7 +232,7 @@ static void
 instance_finalize( GObject *object )
 {
 	static const gchar *thisfn = "na_test_module_plugin_instance_finalize";
-	NAModulePlugin *self;
+	FMAModulePlugin *self;
 
 	g_return_if_fail( TEST_IS_MODULE_PLUGIN( object ));
 
@@ -267,7 +267,7 @@ g_module_unload( GModule *module )
 	g_debug( "in g_module_unload: module=%p", ( void * ) module );
 }
 
-/* module is actually a NAModule, but we do not care of that
+/* module is actually a FMAModule, but we do not care of that
  * registering the type - but do not yet allocate an object
  */
 G_MODULE_EXPORT void
@@ -275,5 +275,5 @@ plugin_init( GTypeModule *module )
 {
 	g_debug( "plugin_init: module=%p", ( void * ) module );
 
-	na_module_plugin_register_type( module );
+	fma_module_plugin_register_type( module );
 }

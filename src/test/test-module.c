@@ -125,13 +125,13 @@ unload_plugin( GModule *module )
 /* version 2
  * Having the plugin register dynamic GTypes require a GTypeModule
  * This GTtypeModule is provided by the program as a GTypeModule-derived object
- * NAModule embeds the GModule
+ * FMAModule embeds the GModule
  *
  * Result:
  *
  * - the main program (the loader) should define a GTypeModule derived class
  *
- * - the GTypeModule derived class (here NAModule) embeds a GModule pointer
+ * - the GTypeModule derived class (here FMAModule) embeds a GModule pointer
  *
  * - when loading plugins:
  *
@@ -166,41 +166,41 @@ unload_plugin( GModule *module )
  * in the same process).
  */
 
-#define NA_TYPE_MODULE                  ( na_module_get_type())
-#define NA_MODULE( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_MODULE, NAModule ))
-#define NA_MODULE_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_MODULE, NAModuleClass ))
-#define NA_IS_MODULE( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_MODULE ))
-#define NA_IS_MODULE_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_MODULE ))
-#define NA_MODULE_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_MODULE, NAModuleClass ))
+#define FMA_TYPE_MODULE                  ( fma_module_get_type())
+#define FMA_MODULE( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_MODULE, FMAModule ))
+#define FMA_MODULE_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_MODULE, FMAModuleClass ))
+#define FMA_IS_MODULE( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_MODULE ))
+#define FMA_IS_MODULE_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_MODULE ))
+#define FMA_MODULE_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_MODULE, FMAModuleClass ))
 
-typedef struct _NAModulePrivate         NAModulePrivate;
-typedef struct _NAModuleClassPrivate    NAModuleClassPrivate;
+typedef struct _FMAModulePrivate         FMAModulePrivate;
+typedef struct _FMAModuleClassPrivate    FMAModuleClassPrivate;
 
 typedef struct {
 	/*< private >*/
 	GTypeModule      parent;
-	NAModulePrivate *private;
+	FMAModulePrivate *private;
 }
-	NAModule;
+	FMAModule;
 
 typedef struct {
 	/*< private >*/
 	GTypeModuleClass      parent;
-	NAModuleClassPrivate *private;
+	FMAModuleClassPrivate *private;
 }
-	NAModuleClass;
+	FMAModuleClass;
 
-GType    na_module_get_type               ( void );
+GType    fma_module_get_type               ( void );
 
 /* private class data
  */
-struct _NAModuleClassPrivate {
+struct _FMAModuleClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAModulePrivate {
+struct _FMAModulePrivate {
 	gboolean  dispose_has_run;
 	GModule  *plugin;
 };
@@ -208,18 +208,18 @@ struct _NAModulePrivate {
 static GTypeModuleClass *st_parent_class = NULL;
 
 static GType     register_type( void );
-static void      class_init( NAModuleClass *klass );
+static void      class_init( FMAModuleClass *klass );
 static void      instance_init( GTypeInstance *instance, gpointer klass );
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
-static NAModule *load_plugin( void );
+static FMAModule *load_plugin( void );
 static gboolean  on_module_load( GTypeModule *module );
-static void      call_plugin_fn( NAModule *module );
+static void      call_plugin_fn( FMAModule *module );
 static void      on_unload_plugin( GTypeModule *module );
 
 GType
-na_module_get_type( void )
+fma_module_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -233,32 +233,32 @@ na_module_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_module_register_type";
+	static const gchar *thisfn = "fma_module_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAModuleClass ),
+		sizeof( FMAModuleClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAModule ),
+		sizeof( FMAModule ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_TYPE_MODULE, "NAModule", &info, 0 );
+	type = g_type_register_static( G_TYPE_TYPE_MODULE, "FMAModule", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAModuleClass *klass )
+class_init( FMAModuleClass *klass )
 {
-	static const gchar *thisfn = "na_module_class_init";
+	static const gchar *thisfn = "fma_module_class_init";
 	GObjectClass *object_class;
 	GTypeModuleClass *module_class;
 
@@ -274,23 +274,23 @@ class_init( NAModuleClass *klass )
 	module_class->load = on_module_load;
 	module_class->unload = on_unload_plugin;
 
-	klass->private = g_new0( NAModuleClassPrivate, 1 );
+	klass->private = g_new0( FMAModuleClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_module_instance_init";
-	NAModule *self;
+	static const gchar *thisfn = "fma_module_instance_init";
+	FMAModule *self;
 
-	g_return_if_fail( NA_IS_MODULE( instance ));
+	g_return_if_fail( FMA_IS_MODULE( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NA_MODULE( instance );
+	self = FMA_MODULE( instance );
 
-	self->private = g_new0( NAModulePrivate, 1 );
+	self->private = g_new0( FMAModulePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -298,12 +298,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_module_instance_dispose";
-	NAModule *self;
+	static const gchar *thisfn = "fma_module_instance_dispose";
+	FMAModule *self;
 
-	g_return_if_fail( NA_IS_MODULE( object ));
+	g_return_if_fail( FMA_IS_MODULE( object ));
 
-	self = NA_MODULE( object );
+	self = FMA_MODULE( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -326,14 +326,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_module_instance_finalize";
-	NAModule *self;
+	static const gchar *thisfn = "fma_module_instance_finalize";
+	FMAModule *self;
 
-	g_return_if_fail( NA_IS_MODULE( object ));
+	g_return_if_fail( FMA_IS_MODULE( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NA_MODULE( object );
+	self = FMA_MODULE( object );
 
 	g_free( self->private );
 
@@ -346,7 +346,7 @@ instance_finalize( GObject *object )
 int
 main( int argc, char **argv )
 {
-	NAModule *module;
+	FMAModule *module;
 
 #if !GLIB_CHECK_VERSION( 2,36, 0 )
 	g_type_init();
@@ -359,7 +359,7 @@ main( int argc, char **argv )
 		/* call a function in the module */
 		call_plugin_fn( module );
 
-		/* try to just unref the NAModule */
+		/* try to just unref the FMAModule */
 		/* not ok */
 		/*g_object_unref( module );*/
 
@@ -378,16 +378,16 @@ main( int argc, char **argv )
 	return( 0 );
 }
 
-static NAModule *
+static FMAModule *
 load_plugin( void )
 {
-	NAModule *module;
+	FMAModule *module;
 
 	module = NULL;
 
 	if( g_module_supported()){
 
-		module = g_object_new( NA_TYPE_MODULE, NULL );
+		module = g_object_new( FMA_TYPE_MODULE, NULL );
 		g_debug( "test_module_load_plugin: module=%p", ( void * ) module );
 
 		if( !g_type_module_use( G_TYPE_MODULE( module ))){
@@ -403,7 +403,7 @@ on_module_load( GTypeModule *module )
 {
 	gboolean ok;
 	gchar *module_path;
-	NAModule *na_module = NA_MODULE( module );
+	FMAModule *fma_module = FMA_MODULE( module );
 
 	g_debug( "test_module_on_module_load" );
 
@@ -411,9 +411,9 @@ on_module_load( GTypeModule *module )
 	module_path = g_module_build_path( PKGLIBDIR, PLUGIN_NAME );
 
 	g_debug( "test_module_on_module_load: opening the library" );
-	na_module->private->plugin = g_module_open( module_path, G_MODULE_BIND_LAZY | G_MODULE_BIND_LOCAL );
+	fma_module->private->plugin = g_module_open( module_path, G_MODULE_BIND_LAZY | G_MODULE_BIND_LOCAL );
 
-	if( !na_module->private->plugin ){
+	if( !fma_module->private->plugin ){
 		g_printerr( "%s: %s\n", module_path, g_module_error());
 		ok = FALSE;
 	}
@@ -424,9 +424,9 @@ on_module_load( GTypeModule *module )
 }
 
 static void
-call_plugin_fn( NAModule *module )
+call_plugin_fn( FMAModule *module )
 {
-	typedef void ( *PluginInit )( NAModule *module );
+	typedef void ( *PluginInit )( FMAModule *module );
 	PluginInit plugin_fn;
 
 	if( !g_module_symbol( module->private->plugin, "plugin_init", ( gpointer * ) &plugin_fn )){
@@ -444,7 +444,7 @@ static void
 on_unload_plugin( GTypeModule *module )
 {
 	g_debug( "test_module_on_unload_plugin" );
-	if( !g_module_close( NA_MODULE( module )->private->plugin )){
+	if( !g_module_close( FMA_MODULE( module )->private->plugin )){
 		g_printerr( "%s\n", g_module_error());
 	}
 }

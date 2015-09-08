@@ -27,22 +27,22 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_MODULE_H__
-#define __CORE_NA_MODULE_H__
+#ifndef __CORE_FMA_MODULE_H__
+#define __CORE_FMA_MODULE_H__
 
-/* @title: NAModule
- * @short_description: The #NAModule Class Definition
- * @include: core/na-module.h
+/* @title: FMAModule
+ * @short_description: The #FMAModule Class Definition
+ * @include: core/fma-module.h
  *
- * The NAModule class manages FileManager-Actions extensions as dynamically
+ * The FMAModule class manages FileManager-Actions extensions as dynamically
  * loadable modules (plugins).
  *
- * NAModule
+ * FMAModule
  *  +- is derived from GTypeModule
  *      +- which itself implements GTypePlugin
  *
- * Each NAModule physically corresponds to a dynamically loadable library
- * (i.e. a plugin). A NAModule implements one or more interfaces, and/or
+ * Each FMAModule physically corresponds to a dynamically loadable library
+ * (i.e. a plugin). A FMAModule implements one or more interfaces, and/or
  * provides one or more services.
  *
  * Interfaces (resp. services) are implemented (resp. provided) by GObjects
@@ -67,43 +67,43 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_MODULE                ( na_module_get_type())
-#define NA_MODULE( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_MODULE, NAModule ))
-#define NA_MODULE_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_MODULE, NAModuleClass ))
-#define NA_IS_MODULE( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_MODULE ))
-#define NA_IS_MODULE_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_MODULE ))
-#define NA_MODULE_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_MODULE, NAModuleClass ))
+#define FMA_TYPE_MODULE                ( fma_module_get_type())
+#define FMA_MODULE( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_MODULE, FMAModule ))
+#define FMA_MODULE_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_MODULE, FMAModuleClass ))
+#define FMA_IS_MODULE( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_MODULE ))
+#define FMA_IS_MODULE_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_MODULE ))
+#define FMA_MODULE_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_MODULE, FMAModuleClass ))
 
-typedef struct _NAModulePrivate       NAModulePrivate;
-
-typedef struct {
-	/*< private >*/
-	GTypeModule      parent;
-	NAModulePrivate *private;
-}
-	NAModule;
-
-typedef struct _NAModuleClassPrivate  NAModuleClassPrivate;
+typedef struct _FMAModulePrivate       FMAModulePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeModuleClass      parent;
-	NAModuleClassPrivate *private;
+	GTypeModule       parent;
+	FMAModulePrivate *private;
 }
-	NAModuleClass;
+	FMAModule;
 
-GType    na_module_get_type               ( void );
+typedef struct _FMAModuleClassPrivate  FMAModuleClassPrivate;
 
-void     na_module_dump                   ( const NAModule *module );
-GList   *na_module_load_modules           ( void );
+typedef struct {
+	/*< private >*/
+	GTypeModuleClass       parent;
+	FMAModuleClassPrivate *private;
+}
+	FMAModuleClass;
 
-GList   *na_module_get_extensions_for_type( GList *modules, GType type );
-void     na_module_free_extensions_list   ( GList *extensions );
+GType    fma_module_get_type               ( void );
 
-gboolean na_module_has_id                 ( NAModule *module, const gchar *id );
+void     fma_module_dump                   ( const FMAModule *module );
+GList   *fma_module_load_modules           ( void );
 
-void     na_module_release_modules        ( GList *modules );
+GList   *fma_module_get_extensions_for_type( GList *modules, GType type );
+void     fma_module_free_extensions_list   ( GList *extensions );
+
+gboolean fma_module_has_id                 ( FMAModule *module, const gchar *id );
+
+void     fma_module_release_modules        ( GList *modules );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_MODULE_H__ */
+#endif /* __CORE_FMA_MODULE_H__ */
