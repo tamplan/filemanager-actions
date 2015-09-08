@@ -34,7 +34,7 @@
  * SECTION: main-window
  * @title: FMAMainWindow
  * @short_description: The Main Window class definition
- * @include: fma-main-window.h
+ * @include: ui/fma-main-window.h
  *
  * This class is derived from GtkApplicationWindow and manages the main
  * window.
@@ -109,7 +109,7 @@ typedef struct _FMAMainWindowPrivate        FMAMainWindowPrivate;
 typedef struct {
 	/*< private >*/
 	GtkApplicationWindow      parent;
-	FMAMainWindowPrivate    *private;
+	FMAMainWindowPrivate     *private;
 }
 	FMAMainWindow;
 
