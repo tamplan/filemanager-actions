@@ -75,8 +75,8 @@ fma_config_tool_SOURCES = \
 	fma-add-scheme-dialog.h							\
 	fma-application.c									\
 	fma-application.h									\
-	nact-assistant-export.c								\
-	nact-assistant-export.h								\
+	fma-assistant-export.c								\
+	fma-assistant-export.h								\
 	nact-assistant-import.c								\
 	nact-assistant-import.h								\
 	nact-clipboard.c									\
@@ -155,7 +155,7 @@ actions_files = \
 ui_files = \
 	nact-add-capability.ui								\
 	nact-add-scheme.ui									\
-	nact-assistant-export.ui							\
+	fma-assistant-export.ui							\
 	nact-assistant-import.ui							\
 	nact-confirm-logout.ui								\
 	nact-export-ask.ui									\

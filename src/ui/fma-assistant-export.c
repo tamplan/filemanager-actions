@@ -44,7 +44,7 @@
 
 #include "fma-application.h"
 #include "nact-main-window.h"
-#include "nact-assistant-export.h"
+#include "fma-assistant-export.h"
 #include "nact-export-ask.h"
 #include "nact-tree-view.h"
 
@@ -88,7 +88,7 @@ typedef struct {
 }
 	ExportStruct;
 
-static const gchar        *st_xmlui_filename = PKGUIDIR "/nact-assistant-export.ui";
+static const gchar        *st_xmlui_filename = PKGUIDIR "/fma-assistant-export.ui";
 static const gchar        *st_toplevel_name  = "ExportAssistant";
 static const gchar        *st_wsp_name       = IPREFS_EXPORT_ASSISTANT_WSP;
 

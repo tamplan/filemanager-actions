@@ -33,7 +33,7 @@
 /**
  * SECTION: fma_assistant_export
  * @short_description: #FMAAssistantExport class definition.
- * @include: nact/nact-assistant-export.h
+ * @include: nact/fma-assistant-export.h
  *
  * Rationale:
  *
