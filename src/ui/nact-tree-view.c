@@ -41,7 +41,7 @@
 #include "fma-application.h"
 #include "fma-main-window.h"
 #include "nact-tree-view.h"
-#include "nact-tree-model.h"
+#include "fma-tree-model.h"
 #include "fma-tree-ieditable.h"
 
 /* private instance data
@@ -475,7 +475,7 @@ initialize_gtk( NactTreeView *view )
 	static const gchar *thisfn = "nact_tree_view_initialize_gtk";
 	NactTreeViewPrivate *priv;
 	GtkWidget *scrolled, *tview;
-	NactTreeModel *model;
+	FMATreeModel *model;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
 	GtkTreeSelection *selection;
@@ -495,8 +495,8 @@ initialize_gtk( NactTreeView *view )
 	priv->tree_view = GTK_TREE_VIEW( tview );
 	gtk_tree_view_set_headers_visible( priv->tree_view, FALSE );
 
-	model = nact_tree_model_new( GTK_TREE_VIEW( tview ));
-	nact_tree_model_set_main_window( model, priv->window );
+	model = fma_tree_model_new( GTK_TREE_VIEW( tview ));
+	fma_tree_model_set_main_window( model, priv->window );
 	gtk_tree_view_set_model( GTK_TREE_VIEW( tview ), GTK_TREE_MODEL( model ));
 	g_object_unref( model );
 
@@ -593,8 +593,8 @@ nact_tree_view_set_edition_mode( NactTreeView *view, guint mode )
 		}
 
 		tmodel = gtk_tree_view_get_model( priv->tree_view );
-		g_return_if_fail( tmodel && NACT_IS_TREE_MODEL( tmodel ));
-		nact_tree_model_set_edition_mode( NACT_TREE_MODEL( tmodel ), mode );
+		g_return_if_fail( tmodel && FMA_IS_TREE_MODEL( tmodel ));
+		fma_tree_model_set_edition_mode( FMA_TREE_MODEL( tmodel ), mode );
 	}
 }
 
@@ -734,7 +734,7 @@ void
 nact_tree_view_fill( NactTreeView *view, GList *items )
 {
 	static const gchar *thisfn = "nact_tree_view_fill";
-	NactTreeModel *model;
+	FMATreeModel *model;
 	gint nb_menus, nb_actions, nb_profiles;
 
 	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
@@ -745,9 +745,9 @@ nact_tree_view_fill( NactTreeView *view, GList *items )
 
 		clear_selection( view );
 		view->private->notify_allowed = FALSE;
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
-		nact_tree_model_fill( model, items );
-		g_debug( "%s: nact_tree_model_ref_count=%d", thisfn, G_OBJECT( model )->ref_count );
+		model = FMA_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
+		fma_tree_model_fill( model, items );
+		g_debug( "%s: fma_tree_model_ref_count=%d", thisfn, G_OBJECT( model )->ref_count );
 
 		view->private->notify_allowed = TRUE;
 		fma_object_count_items( items, &nb_menus, &nb_actions, &nb_profiles );
@@ -845,7 +845,7 @@ FMAObjectItem *
 nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id )
 {
 	FMAObjectItem *item;
-	NactTreeModel *model;
+	FMATreeModel *model;
 
 	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), NULL );
 
@@ -853,8 +853,8 @@ nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id )
 
 	if( !view->private->dispose_has_run ){
 
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
-		item = nact_tree_model_get_item_by_id( model, id );
+		model = FMA_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
+		item = fma_tree_model_get_item_by_id( model, id );
 	}
 
 	return( item );
@@ -885,7 +885,7 @@ GList *
 nact_tree_view_get_items_ex( const NactTreeView *view, guint mode )
 {
 	GList *items;
-	NactTreeModel *model;
+	FMATreeModel *model;
 	GList *deleted;
 
 	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), NULL );
@@ -902,8 +902,8 @@ nact_tree_view_get_items_ex( const NactTreeView *view, guint mode )
 			}
 		}
 
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
-		items = nact_tree_model_get_items( model, mode );
+		model = FMA_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
+		items = fma_tree_model_get_items( model, mode );
 
 		items = g_list_concat( items, deleted );
 	}

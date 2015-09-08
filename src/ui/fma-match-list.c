@@ -1008,7 +1008,7 @@ on_instance_finalized( MatchListData *data, BaseWindow *window )
 	g_object_set_data( G_OBJECT( window ), data->tab_name, NULL );
 
 	/* This function is called when the FMAMainWindow is about to be finalized.
-	 * At this time, the NactTreeModel has already been finalized.
+	 * At this time, the FMATreeModel has already been finalized.
 	 * It is so too late to try to clear it...
 	 */
 #if 0

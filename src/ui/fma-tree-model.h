@@ -28,21 +28,21 @@
  */
 
 /**
- * SECTION: nact_tree_model
- * @short_description: #NactTreeModel class definition.
- * @include: ui/nact-tree-model.h
+ * SECTION: fma_tree_model
+ * @short_description: #FMATreeModel class definition.
+ * @include: ui/fma-tree-model.h
  *
- * NactTreeModel is derived from GtkTreeModelFilter in order to be able
+ * FMATreeModel is derived from GtkTreeModelFilter in order to be able
  * to selectively display profiles, whether an action has one or more
  * profiles.
  *
- * NactTreeModel implements EggTreeMultiDragSource and GtkTreeDragDest
+ * FMATreeModel implements EggTreeMultiDragSource and GtkTreeDragDest
  * interfaces.
  *
  * The GtkTreeModelFilter base class embeds a GtkTreeStore.
  */
-#ifndef __UI_NACT_TREE_MODEL_H__
-#define __UI_NACT_TREE_MODEL_H__
+#ifndef __UI_FMA_TREE_MODEL_H__
+#define __UI_FMA_TREE_MODEL_H__
 
 #include "api/fma-object.h"
 
@@ -50,27 +50,27 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_TREE_MODEL                ( nact_tree_model_get_type())
-#define NACT_TREE_MODEL( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), NACT_TYPE_TREE_MODEL, NactTreeModel ))
-#define NACT_TREE_MODEL_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), NACT_TYPE_TREE_MODEL, NactTreeModelClass ))
-#define NACT_IS_TREE_MODEL( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NACT_TYPE_TREE_MODEL ))
-#define NACT_IS_TREE_MODEL_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_TREE_MODEL ))
-#define NACT_TREE_MODEL_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_TREE_MODEL, NactTreeModelClass ))
+#define FMA_TYPE_TREE_MODEL                ( fma_tree_model_get_type())
+#define FMA_TREE_MODEL( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), FMA_TYPE_TREE_MODEL, FMATreeModel ))
+#define FMA_TREE_MODEL_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), FMA_TYPE_TREE_MODEL, FMATreeModelClass ))
+#define FMA_IS_TREE_MODEL( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), FMA_TYPE_TREE_MODEL ))
+#define FMA_IS_TREE_MODEL_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_TREE_MODEL ))
+#define FMA_TREE_MODEL_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_TREE_MODEL, FMATreeModelClass ))
 
-typedef struct _NactTreeModelPrivate        NactTreeModelPrivate;
+typedef struct _FMATreeModelPrivate        FMATreeModelPrivate;
 
 typedef struct {
 	/*< private >*/
 	GtkTreeModelFilter      parent;
-	NactTreeModelPrivate   *private;
+	FMATreeModelPrivate    *private;
 }
-	NactTreeModel;
+	FMATreeModel;
 
 typedef struct {
 	/*< private >*/
 	GtkTreeModelFilterClass parent;
 }
-	NactTreeModelClass;
+	FMATreeModelClass;
 
 /**
  * Column ordering in the tree view
@@ -82,42 +82,42 @@ enum {
 	TREE_N_COLUMN
 };
 
-GType          nact_tree_model_get_type        ( void );
+GType          fma_tree_model_get_type        ( void );
 
-NactTreeModel *nact_tree_model_new             ( GtkTreeView *treeview );
+FMATreeModel  *fma_tree_model_new             ( GtkTreeView *treeview );
 
-void           nact_tree_model_set_main_window ( NactTreeModel *tmodel,
+void           fma_tree_model_set_main_window ( FMATreeModel *tmodel,
 														FMAMainWindow *main_window );
 
-void           nact_tree_model_set_edition_mode( NactTreeModel *tmodel,
+void           fma_tree_model_set_edition_mode( FMATreeModel *tmodel,
 														guint mode );
 
-GtkTreePath   *nact_tree_model_delete          ( NactTreeModel *model,
+GtkTreePath   *fma_tree_model_delete          ( FMATreeModel *model,
 														FMAObject *object );
 
-void           nact_tree_model_fill            ( NactTreeModel *model,
+void           fma_tree_model_fill            ( FMATreeModel *model,
 														GList *items );
 
-GtkTreePath   *nact_tree_model_insert_before   ( NactTreeModel *model,
+GtkTreePath   *fma_tree_model_insert_before   ( FMATreeModel *model,
 														const FMAObject *object,
 														GtkTreePath *path );
 
-GtkTreePath   *nact_tree_model_insert_into     ( NactTreeModel *model,
+GtkTreePath   *fma_tree_model_insert_into     ( FMATreeModel *model,
 														const FMAObject *object,
 														GtkTreePath *path );
 
-FMAObjectItem  *nact_tree_model_get_item_by_id  ( const NactTreeModel *model,
+FMAObjectItem *fma_tree_model_get_item_by_id  ( const FMATreeModel *model,
 														const gchar *id );
 
-GList         *nact_tree_model_get_items       ( const NactTreeModel *model,
+GList         *fma_tree_model_get_items       ( const FMATreeModel *model,
 														guint mode );
 
-FMAObject      *nact_tree_model_object_at_path  ( const NactTreeModel *model,
+FMAObject     *fma_tree_model_object_at_path  ( const FMATreeModel *model,
 														GtkTreePath *path );
 
-GtkTreePath   *nact_tree_model_object_to_path  ( const NactTreeModel *model,
+GtkTreePath   *fma_tree_model_object_to_path  ( const FMATreeModel *model,
 														const FMAObject *object );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_TREE_MODEL_H__ */
+#endif /* __UI_FMA_TREE_MODEL_H__ */

@@ -41,7 +41,7 @@
 #include "fma-application.h"
 #include "fma-main-window.h"
 #include "fma-tree-ieditable.h"
-#include "nact-tree-model.h"
+#include "fma-tree-model.h"
 #include "nact-tree-view.h"
 
 /* private interface data
@@ -56,7 +56,7 @@ typedef struct {
 	FMAUpdater     *updater;
 	FMAMainWindow  *main_window;
 	GtkTreeView    *treeview;
-	NactTreeModel  *model;
+	FMATreeModel  *model;
 	gulong          modified_handler_id;
 	gulong          valid_handler_id;
 	guint           count_modified;
@@ -188,7 +188,7 @@ fma_tree_ieditable_initialize( FMATreeIEditable *instance, GtkTreeView *treeview
 	ied = get_instance_data( instance );
 	ied->main_window = main_window;
 	ied->treeview = treeview;
-	ied->model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
+	ied->model = FMA_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 
 	application = gtk_window_get_application( GTK_WINDOW( main_window ));
 	g_return_if_fail( application && FMA_IS_APPLICATION( application ));
@@ -286,7 +286,7 @@ on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gch
 	if( nact_tree_view_are_notify_allowed( items_view )){
 		ied = ( IEditableData * ) g_object_get_data( G_OBJECT( items_view ), VIEW_DATA_IEDITABLE );
 		path = gtk_tree_path_new_from_string( path_str );
-		object = nact_tree_model_object_at_path( ied->model, path );
+		object = fma_tree_model_object_at_path( ied->model, path );
 		fma_object_set_label( object, text );
 
 		g_signal_emit_by_name( ied->main_window, MAIN_SIGNAL_ITEM_UPDATED, object );
@@ -453,7 +453,7 @@ fma_tree_ieditable_delete( FMATreeIEditable *instance, GList *items, TreeIEditab
 		 * so potentially update the modification status
 		 */
 		parent = fma_object_get_parent( it->data );
-		path = nact_tree_model_delete( ied->model, FMA_OBJECT( it->data ));
+		path = fma_tree_model_delete( ied->model, FMA_OBJECT( it->data ));
 		if( parent ){
 			fma_object_check_status( parent );
 		} else {
@@ -666,11 +666,11 @@ fma_tree_ieditable_insert_items( FMATreeIEditable *instance, GList *items, FMAOb
 	ied = get_instance_data( instance );
 
 	if( sibling ){
-		insert_path = nact_tree_model_object_to_path( ied->model, sibling );
+		insert_path = fma_tree_model_object_to_path( ied->model, sibling );
 
 	} else {
 		insert_path = get_selection_first_path( ied->treeview );
-		object = nact_tree_model_object_at_path( ied->model, insert_path );
+		object = fma_tree_model_object_at_path( ied->model, insert_path );
 		g_debug( "%s: current object at insertion path is %p", thisfn, ( void * ) object );
 
 		/* as a particular case, insert a new profile _into_ current action
@@ -686,7 +686,7 @@ fma_tree_ieditable_insert_items( FMATreeIEditable *instance, GList *items, FMAOb
 		if( FMA_IS_OBJECT_PROFILE( object ) && FMA_IS_OBJECT_ITEM( items->data )){
 			parent = ( FMAObject * ) fma_object_get_parent( object );
 			gtk_tree_path_free( insert_path );
-			insert_path = nact_tree_model_object_to_path( ied->model, parent );
+			insert_path = fma_tree_model_object_to_path( ied->model, parent );
 		}
 	}
 
@@ -828,7 +828,7 @@ do_insert_before( IEditableData *ied, GList *items, GtkTreePath *asked_path )
 		} else {
 			path = gtk_tree_path_copy( asked_path );
 		}
-		actual_path = nact_tree_model_insert_before( ied->model, FMA_OBJECT( it->data ), path );
+		actual_path = fma_tree_model_insert_before( ied->model, FMA_OBJECT( it->data ), path );
 		gtk_tree_path_free( path );
 		g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
 				( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
@@ -873,7 +873,7 @@ do_insert_into( IEditableData *ied, GList *items, GtkTreePath *asked_path )
 		/* insert the last child into the wished path
 		 * and recursively all its children
 		 */
-		actual_path = nact_tree_model_insert_into( ied->model, FMA_OBJECT( last->data ), asked_path );
+		actual_path = fma_tree_model_insert_into( ied->model, FMA_OBJECT( last->data ), asked_path );
 		gtk_tree_view_expand_to_path( ied->treeview, actual_path );
 
 		if( FMA_IS_OBJECT_ITEM( last->data )){
@@ -973,8 +973,8 @@ fma_tree_ieditable_set_items( FMATreeIEditable *instance, GList *items )
 			 * only children of the old item are its own profiles, which are to be
 			 * replaced with the profiles provided by the new item
 			 */
-			path = nact_tree_model_delete( ied->model, FMA_OBJECT( old_item ));
-			insert_path = nact_tree_model_insert_before( ied->model, FMA_OBJECT( new_item ), path );
+			path = fma_tree_model_delete( ied->model, FMA_OBJECT( old_item ));
+			insert_path = fma_tree_model_insert_before( ied->model, FMA_OBJECT( new_item ), path );
 			gtk_tree_path_free( path );
 			gtk_tree_path_free( insert_path );
 

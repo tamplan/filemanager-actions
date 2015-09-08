@@ -45,8 +45,8 @@
 #include "fma-clipboard.h"
 #include "fma-status-bar.h"
 #include "fma-main-window.h"
-#include "nact-tree-model.h"
-#include "nact-tree-model-priv.h"
+#include "fma-tree-model.h"
+#include "fma-tree-model-priv.h"
 #include "fma-tree-ieditable.h"
 
 /*
@@ -59,25 +59,25 @@
  *
  * as soon as mouse has quitted the selected area
  *   call once egg_tree_multi_dnd_stop_drag_check( treeview )
- *   call once nact_tree_model_dnd_imulti_drag_source_row_draggable: drag_source=0x92a0d70, path_list=0x9373c90
- *   call once nact_tree_model_dnd_on_drag_begin
+ *   call once fma_tree_model_dnd_imulti_drag_source_row_draggable: drag_source=0x92a0d70, path_list=0x9373c90
+ *   call once fma_tree_model_dnd_on_drag_begin
  *     fma_clipboard_dnd_clear()
  *   call once fma_clipboard_on_drag_begin( treeview, context, main_window )
  *
  * when we drop (e.g. in Nautilus)
  *   call once egg_tree_multi_dnd_on_drag_data_get( treeview, context, selection_data, info=0, time )
- *   call once nact_tree_model_dnd_imulti_drag_source_drag_data_get( drag_source, context, selection_data, path_list, atom=XdndDirectSave0 )
+ *   call once fma_tree_model_dnd_imulti_drag_source_drag_data_get( drag_source, context, selection_data, path_list, atom=XdndDirectSave0 )
  *     fma_clipboard_dnd_set()
- *   call once nact_tree_model_dnd_on_drag_end
+ *   call once fma_tree_model_dnd_on_drag_end
  *     fma_clipboard_dnd_drag_end
  *       fma_clipboard_get_from_dnd_clipboard_callback
  *     fma_clipboard_dnd_clear
  *
  * when we drop in FileManager-Actions
  *   call once egg_tree_multi_dnd_on_drag_data_get( treeview, context, selection_data, info=0, time )
- *   call once nact_tree_model_imulti_drag_source_drag_data_get( drag_source, context, selection_data, path_list, atom=XdndNautilusActions )
+ *   call once fma_tree_model_imulti_drag_source_drag_data_get( drag_source, context, selection_data, path_list, atom=XdndFileManagerActions )
  *   call once fma_clipboard_get_data_for_intern_use
- *   call once nact_tree_model_idrag_dest_drag_data_received
+ *   call once fma_tree_model_idrag_dest_drag_data_received
  *   call once fma_clipboard_on_drag_end( treeview, context, main_window )
  */
 
@@ -86,7 +86,7 @@
 #define XDS_ATOM						gdk_atom_intern( "XdndDirectSave0", FALSE )
 #define XDS_FILENAME					"xds.txt"
 
-#define NACT_ATOM						gdk_atom_intern( "XdndNautilusActions", FALSE )
+#define NACT_ATOM						gdk_atom_intern( "XdndFileManagerActions", FALSE )
 
 /* as a dnd source, we provide
  * - a special XdndNautilusAction format for internal move/copy
@@ -96,10 +96,10 @@
  * - a text (xml) format, to go to clipboard or a text editor
  */
 static GtkTargetEntry dnd_source_formats[] = {
-	{ "XdndNautilusActions", GTK_TARGET_SAME_WIDGET, FMA_XCHANGE_FORMAT_NACT },
-	{ "XdndDirectSave0",     GTK_TARGET_OTHER_APP,   FMA_XCHANGE_FORMAT_XDS },
-	{ "application/xml",     GTK_TARGET_OTHER_APP,   FMA_XCHANGE_FORMAT_APPLICATION_XML },
-	{ "text/plain",          GTK_TARGET_OTHER_APP,   FMA_XCHANGE_FORMAT_TEXT_PLAIN },
+	{ "XdndFileManagerActions", GTK_TARGET_SAME_WIDGET, FMA_XCHANGE_FORMAT_FMA },
+	{ "XdndDirectSave0",        GTK_TARGET_OTHER_APP,   FMA_XCHANGE_FORMAT_XDS },
+	{ "application/xml",        GTK_TARGET_OTHER_APP,   FMA_XCHANGE_FORMAT_APPLICATION_XML },
+	{ "text/plain",             GTK_TARGET_OTHER_APP,   FMA_XCHANGE_FORMAT_TEXT_PLAIN },
 };
 
 /* as a dnd dest, we accept
@@ -109,10 +109,10 @@ static GtkTargetEntry dnd_source_formats[] = {
  * - a plain text, which we are going to try to import as a XML description
  */
 GtkTargetEntry tree_model_dnd_dest_formats[] = {
-	{ "XdndNautilusActions", 0, FMA_XCHANGE_FORMAT_NACT },
-	{ "text/uri-list",       0, FMA_XCHANGE_FORMAT_URI_LIST },
-	{ "application/xml",     0, FMA_XCHANGE_FORMAT_APPLICATION_XML },
-	{ "text/plain",          0, FMA_XCHANGE_FORMAT_TEXT_PLAIN },
+	{ "XdndFileManagerActions", 0, FMA_XCHANGE_FORMAT_FMA },
+	{ "text/uri-list",          0, FMA_XCHANGE_FORMAT_URI_LIST },
+	{ "application/xml",        0, FMA_XCHANGE_FORMAT_APPLICATION_XML },
+	{ "text/plain",             0, FMA_XCHANGE_FORMAT_TEXT_PLAIN },
 };
 
 guint tree_model_dnd_dest_formats_count = G_N_ELEMENTS( tree_model_dnd_dest_formats );
@@ -122,19 +122,19 @@ static const gchar *st_refuse_drop_item = N_( "Unable to drop an action or a men
 static const gchar *st_parent_not_writable = N_( "Unable to drop here as parent is not writable" );
 static const gchar *st_level_zero_not_writable = N_( "Unable to drop here as level zero is not writable" );
 
-static gboolean      drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
-static gboolean      is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **parent );
-static gboolean      is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, FMAMainWindow *window, FMAObjectItem **parent );
-static gboolean      is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, FMAMainWindow *window, FMAObjectItem **parent );
-static void          drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest );
-static gboolean      drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
+static gboolean       drop_inside( FMATreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
+static gboolean       is_drop_possible( FMATreeModel *model, GtkTreePath *dest, FMAObjectItem **parent );
+static gboolean       is_drop_possible_before_iter( FMATreeModel *model, GtkTreeIter *iter, FMAMainWindow *window, FMAObjectItem **parent );
+static gboolean       is_drop_possible_into_dest( FMATreeModel *model, GtkTreePath *dest, FMAMainWindow *window, FMAObjectItem **parent );
+static void           drop_inside_move_dest( FMATreeModel *model, GList *rows, GtkTreePath **dest );
+static gboolean       drop_uri_list( FMATreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
 static FMAObjectItem *is_dropped_already_exists( const FMAObjectItem *importing, const FMAMainWindow *window );
-static char         *get_xds_atom_value( GdkDragContext *context );
-static gboolean      is_parent_accept_new_children( FMAApplication *application, FMAMainWindow *window, FMAObjectItem *parent );
-static guint         target_atom_to_id( GdkAtom atom );
+static char          *get_xds_atom_value( GdkDragContext *context );
+static gboolean       is_parent_accept_new_children( FMAApplication *application, FMAMainWindow *window, FMAObjectItem *parent );
+static guint          target_atom_to_id( GdkAtom atom );
 
 /**
- * nact_tree_model_dnd_idrag_dest_drag_data_received:
+ * fma_tree_model_dnd_idrag_dest_drag_data_received:
  * @drag_dest:
  * @dest:
  * @selection_data:
@@ -153,15 +153,15 @@ static guint         target_atom_to_id( GdkAtom atom );
  *
  * When moving/copy from the treeview to the treeview:
  * - selection=XdndSelection
- * - target=XdndNautilusActions
- * - type=XdndNautilusActions
+ * - target=XdndFileManagerActions
+ * - type=XdndFileManagerActions
  */
 gboolean
-nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, GtkSelectionData  *selection_data )
+fma_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, GtkSelectionData  *selection_data )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_idrag_dest_drag_data_received";
+	static const gchar *thisfn = "fma_tree_model_dnd_idrag_dest_drag_data_received";
 	gboolean result = FALSE;
-	NactTreeModel *model;
+	FMATreeModel *model;
 	gchar *atom_name;
 	guint info;
 	gchar *path_str;
@@ -171,9 +171,9 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 	gint selection_data_format;
 	gint selection_data_length;
 
-	g_return_val_if_fail( NACT_IS_TREE_MODEL( drag_dest ), result );
+	g_return_val_if_fail( FMA_IS_TREE_MODEL( drag_dest ), result );
 
-	model = NACT_TREE_MODEL( drag_dest );
+	model = FMA_TREE_MODEL( drag_dest );
 
 	if( !model->private->dispose_has_run ){
 
@@ -210,7 +210,7 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 		g_free( path_str );
 
 		switch( info ){
-			case FMA_XCHANGE_FORMAT_NACT:
+			case FMA_XCHANGE_FORMAT_FMA:
 				result = drop_inside( model, dest, selection_data );
 				break;
 
@@ -230,7 +230,7 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 }
 
 /**
- * nact_tree_model_dnd_idrag_dest_row_drop_possible:
+ * fma_tree_model_dnd_idrag_dest_row_drop_possible:
  * @drag_dest:
  * @dest_path:
  * @selection_data:
@@ -240,9 +240,9 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
  * nor during the motion.
  */
 gboolean
-nact_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, GtkTreePath *dest_path, GtkSelectionData *selection_data )
+fma_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, GtkTreePath *dest_path, GtkSelectionData *selection_data )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_idrag_dest_row_drop_possible";
+	static const gchar *thisfn = "fma_tree_model_dnd_idrag_dest_row_drop_possible";
 
 	g_debug( "%s: drag_dest=%p, dest_path=%p, selection_data=%p", thisfn, ( void * ) drag_dest, ( void * ) dest_path, ( void * ) selection_data );
 
@@ -250,7 +250,7 @@ nact_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, Gt
 }
 
 /**
- * nact_tree_model_dnd_imulti_drag_source_drag_data_get:
+ * fma_tree_model_dnd_imulti_drag_source_drag_data_get:
  * @context: contains
  *  - the suggested action, as chosen by the drop site,
  *    between those we have provided in imulti_drag_source_get_drag_actions()
@@ -263,7 +263,7 @@ nact_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, Gt
  * This function is called when we release the selected items onto the
  * destination
  *
- * FMA_XCHANGE_FORMAT_NACT:
+ * FMA_XCHANGE_FORMAT_FMA:
  * internal format for drag and drop inside the treeview:
  * - copy in the clipboard the list of row references
  * - selection data is empty
@@ -284,15 +284,15 @@ nact_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, Gt
  * %FALSE else.
  */
 gboolean
-nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source,
+fma_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source,
 				   GdkDragContext         *context,
 				   GtkSelectionData       *selection_data,
 				   GList                  *rows,
 				   guint                   info )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_imulti_drag_source_drag_data_get";
+	static const gchar *thisfn = "fma_tree_model_dnd_imulti_drag_source_drag_data_get";
 	gchar *atom_name;
-	NactTreeModel *model;
+	FMATreeModel *model;
 	gchar *data;
 	gboolean ret = FALSE;
 	gchar *dest_folder, *folder;
@@ -323,7 +323,7 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 			atom_name );
 	g_free( atom_name );
 
-	model = NACT_TREE_MODEL( drag_source );
+	model = FMA_TREE_MODEL( drag_source );
 	g_return_val_if_fail( model->private->window, FALSE );
 
 	if( !model->private->dispose_has_run ){
@@ -333,7 +333,7 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 		}
 
 		switch( info ){
-			case FMA_XCHANGE_FORMAT_NACT:
+			case FMA_XCHANGE_FORMAT_FMA:
 				copy_data = ( context_selected_action == GDK_ACTION_COPY );
 				gtk_selection_data_set( selection_data,
 						selection_data_target, 8, ( guchar * ) "", 0 );
@@ -382,14 +382,14 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 }
 
 /**
- * nact_tree_model_dnd_imulti_drag_source_drag_data_delete:
+ * fma_tree_model_dnd_imulti_drag_source_drag_data_delete:
  * @drag_source:
  * @rows:
  */
 gboolean
-nact_tree_model_dnd_imulti_drag_source_drag_data_delete( EggTreeMultiDragSource *drag_source, GList *rows )
+fma_tree_model_dnd_imulti_drag_source_drag_data_delete( EggTreeMultiDragSource *drag_source, GList *rows )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_imulti_drag_source_drag_data_delete";
+	static const gchar *thisfn = "fma_tree_model_dnd_imulti_drag_source_drag_data_delete";
 
 	g_debug( "%s: drag_source=%p, path_list=%p", thisfn, ( void * ) drag_source, ( void * ) rows );
 
@@ -397,17 +397,17 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_delete( EggTreeMultiDragSource 
 }
 
 /**
- * nact_tree_model_dnd_imulti_drag_source_get_drag_actions:
+ * fma_tree_model_dnd_imulti_drag_source_get_drag_actions:
  * @drag_source:
  */
 GdkDragAction
-nact_tree_model_dnd_imulti_drag_source_get_drag_actions( EggTreeMultiDragSource *drag_source )
+fma_tree_model_dnd_imulti_drag_source_get_drag_actions( EggTreeMultiDragSource *drag_source )
 {
 	return( GDK_ACTION_COPY | GDK_ACTION_MOVE );
 }
 
 GtkTargetList *
-nact_tree_model_dnd_imulti_drag_source_get_format_list( EggTreeMultiDragSource *drag_source )
+fma_tree_model_dnd_imulti_drag_source_get_format_list( EggTreeMultiDragSource *drag_source )
 {
 	GtkTargetList *target_list;
 
@@ -417,7 +417,7 @@ nact_tree_model_dnd_imulti_drag_source_get_format_list( EggTreeMultiDragSource *
 }
 
 /**
- * nact_tree_model_dnd_imulti_drag_source_row_draggable:
+ * fma_tree_model_dnd_imulti_drag_source_row_draggable:
  * @drag_source:
  * @rows:
  *
@@ -426,10 +426,10 @@ nact_tree_model_dnd_imulti_drag_source_get_format_list( EggTreeMultiDragSource *
  * We only make use of them in on_drag_motion handler.
  */
 gboolean
-nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *drag_source, GList *rows )
+fma_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *drag_source, GList *rows )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_imulti_drag_source_row_draggable";
-	NactTreeModel *model;
+	static const gchar *thisfn = "fma_tree_model_dnd_imulti_drag_source_row_draggable";
+	FMATreeModel *model;
 	GtkTreeModel *store;
 	GtkTreePath *path;
 	GtkTreeIter iter;
@@ -441,8 +441,8 @@ nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *dr
 			( void * ) drag_source, G_OBJECT( drag_source )->ref_count,
 			( void * ) rows, g_list_length( rows ));
 
-	g_return_val_if_fail( NACT_IS_TREE_MODEL( drag_source ), FALSE );
-	model = NACT_TREE_MODEL( drag_source );
+	g_return_val_if_fail( FMA_IS_TREE_MODEL( drag_source ), FALSE );
+	model = FMA_TREE_MODEL( drag_source );
 
 	if( !model->private->dispose_has_run ){
 
@@ -468,7 +468,7 @@ nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *dr
 }
 
 /**
- * nact_tree_model_dnd_on_drag_begin:
+ * fma_tree_model_dnd_on_drag_begin:
  * @widget: the GtkTreeView from which item is to be dragged.
  * @context:
  * @window: the parent #FMAMainWindow instance.
@@ -477,15 +477,15 @@ nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *dr
  * when we are dragging from the IActionsList treeview.
  */
 void
-nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, BaseWindow *window )
+fma_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_on_drag_begin";
-	NactTreeModel *model;
+	static const gchar *thisfn = "fma_tree_model_dnd_on_drag_begin";
+	FMATreeModel *model;
 	GdkWindow *context_source_window;
 
 	g_return_if_fail( GTK_IS_TREE_VIEW( widget ));
-	model = ( NactTreeModel * ) gtk_tree_view_get_model( GTK_TREE_VIEW( widget ));
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+	model = ( FMATreeModel * ) gtk_tree_view_get_model( GTK_TREE_VIEW( widget ));
+	g_return_if_fail( FMA_IS_TREE_MODEL( model ));
 
 	if( !model->private->dispose_has_run ){
 
@@ -514,21 +514,21 @@ nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, B
 }
 
 /**
- * nact_tree_model_dnd_on_drag_end:
+ * fma_tree_model_dnd_on_drag_end:
  * @widget:
  * @context:
  * @window:
  */
 void
-nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, BaseWindow *window )
+fma_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_on_drag_end";
-	NactTreeModel *model;
+	static const gchar *thisfn = "fma_tree_model_dnd_on_drag_end";
+	FMATreeModel *model;
 	GdkWindow *context_source_window;
 
 	g_return_if_fail( GTK_IS_TREE_VIEW( widget ));
-	model = ( NactTreeModel * ) gtk_tree_view_get_model( GTK_TREE_VIEW( widget ));
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+	model = ( FMATreeModel * ) gtk_tree_view_get_model( GTK_TREE_VIEW( widget ));
+	g_return_if_fail( FMA_IS_TREE_MODEL( model ));
 
 	if( !model->private->dispose_has_run ){
 
@@ -560,9 +560,9 @@ nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, Bas
  * the given dest, %FALSE else.
  */
 static gboolean
-drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
+drop_inside( FMATreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_inside_drag_and_drop";
+	static const gchar *thisfn = "fma_tree_model_dnd_inside_drag_and_drop";
 	FMAApplication *application;
 	FMAUpdater *updater;
 	FMAMainWindow *main_window;
@@ -660,9 +660,9 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
  * dest
  */
 static gboolean
-is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **parent )
+is_drop_possible( FMATreeModel *model, GtkTreePath *dest, FMAObjectItem **parent )
 {
-	NactTreeModelPrivate *priv;
+	FMATreeModelPrivate *priv;
 	gboolean drop_ok;
 	GtkApplication *application;
 	FMAMainWindow *main_window;
@@ -720,9 +720,9 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **paren
 }
 
 static gboolean
-is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, FMAMainWindow *window, FMAObjectItem **parent )
+is_drop_possible_before_iter( FMATreeModel *model, GtkTreeIter *iter, FMAMainWindow *window, FMAObjectItem **parent )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_is_drop_possible_before_iter";
+	static const gchar *thisfn = "fma_tree_model_dnd_is_drop_possible_before_iter";
 	gboolean drop_ok;
 	FMAObject *object;
 	FMAStatusBar *bar;
@@ -761,9 +761,9 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, FMAMainWi
 }
 
 static gboolean
-is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, FMAMainWindow *window, FMAObjectItem **parent )
+is_drop_possible_into_dest( FMATreeModel *model, GtkTreePath *dest, FMAMainWindow *window, FMAObjectItem **parent )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_is_drop_possible_into_dest";
+	static const gchar *thisfn = "fma_tree_model_dnd_is_drop_possible_into_dest";
 	gboolean drop_ok;
 	GtkTreePath *path;
 	GtkTreeIter iter;
@@ -810,7 +810,7 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, FMAMainWind
 }
 
 static void
-drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest )
+drop_inside_move_dest( FMATreeModel *model, GList *rows, GtkTreePath **dest )
 {
 	GList *it;
 	GtkTreePath *path;
@@ -859,10 +859,10 @@ drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest )
  *  so ony valid dest in outside (besides of) an action
  */
 static gboolean
-drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
+drop_uri_list( FMATreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
 {
-	static const gchar *thisfn = "nact_tree_model_dnd_drop_uri_list";
-	NactTreeModelPrivate *priv;
+	static const gchar *thisfn = "fma_tree_model_dnd_drop_uri_list";
+	FMATreeModelPrivate *priv;
 	gboolean drop_done;
 	GtkApplication *application;
 	FMAUpdater *updater;
@@ -1007,7 +1007,7 @@ is_dropped_already_exists( const FMAObjectItem *importing, const FMAMainWindow *
  * this function works well, but only called from on_drag_motion handler...
  */
 /*static gboolean
-is_row_drop_possible( NactTreeModel *model, GtkTreePath *path, GtkTreeViewDropPosition pos )
+is_row_drop_possible( FMATreeModel *model, GtkTreePath *path, GtkTreeViewDropPosition pos )
 {
 	gboolean ok = FALSE;
 	GtkTreeModel *store;
@@ -1042,13 +1042,13 @@ is_row_drop_possible( NactTreeModel *model, GtkTreePath *path, GtkTreeViewDropPo
 static gboolean
 on_drag_motion( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, BaseWindow *window )
 {
-	NactTreeModel *model;
+	FMATreeModel *model;
 	gboolean ok = FALSE;
 	GtkTreePath *path;
 	GtkTreeViewDropPosition pos;
 
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
-	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), FALSE );
+	model = FMA_TREE_MODEL( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
+	g_return_val_if_fail( FMA_IS_TREE_MODEL( model ), FALSE );
 
 	if( !model->private->dispose_has_run ){
 
@@ -1072,7 +1072,7 @@ on_drag_motion( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guin
 		}
 
 		gtk_tree_path_free( path );
-		g_debug( "nact_tree_model_on_drag_motion: ok=%s, pos=%d", ok ? "True":"False", pos );
+		g_debug( "fma_tree_model_on_drag_motion: ok=%s, pos=%d", ok ? "True":"False", pos );
 	}
 
 	return( ok );
@@ -1086,10 +1086,10 @@ on_drag_motion( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guin
 /*static gboolean
 on_drag_drop( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, BaseWindow *window )
 {
-	NactTreeModel *model;
+	FMATreeModel *model;
 
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
-	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), FALSE );
+	model = FMA_TREE_MODEL( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
+	g_return_val_if_fail( FMA_IS_TREE_MODEL( model ), FALSE );
 
 	if( !model->private->dispose_has_run ){
 

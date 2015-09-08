@@ -134,10 +134,10 @@ fma_config_tool_SOURCES = \
 	fma-status-bar.h									\
 	fma-tree-ieditable.c								\
 	fma-tree-ieditable.h								\
-	nact-tree-model.c									\
-	nact-tree-model.h									\
-	nact-tree-model-priv.h								\
-	nact-tree-model-dnd.c								\
+	fma-tree-model.c									\
+	fma-tree-model.h									\
+	fma-tree-model-priv.h								\
+	fma-tree-model-dnd.c								\
 	nact-tree-view.c									\
 	nact-tree-view.h									\
 	$(BUILT_SOURCES)									\

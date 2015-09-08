@@ -28,13 +28,13 @@
  */
 
 /**
- * SECTION: nact_tree_model
- * @short_description: #NactTreeModel private data definition.
- * @include: ui/nact-tree-model-priv.h
+ * SECTION: fma_tree_model
+ * @short_description: #FMATreeModel private data definition.
+ * @include: ui/fma-tree-model-priv.h
  */
 
-#ifndef __UI_NACT_TREE_MODEL_PRIV_H__
-#define __UI_NACT_TREE_MODEL_PRIV_H__
+#ifndef __UI_FMA_TREE_MODEL_PRIV_H__
+#define __UI_FMA_TREE_MODEL_PRIV_H__
 
 #include "egg-tree-multi-dnd.h"
 #include "fma-clipboard.h"
@@ -43,7 +43,7 @@ G_BEGIN_DECLS
 
 /* private instance data
  */
-struct _NactTreeModelPrivate {
+struct _FMATreeModelPrivate {
 	gboolean        dispose_has_run;
 
 	/* data set at instanciation time
@@ -54,8 +54,8 @@ struct _NactTreeModelPrivate {
 
 	/* must be initialized right after the instanciation
 	 */
-	FMAMainWindow *window;
-	FMAClipboard  *clipboard;
+	FMAMainWindow  *window;
+	FMAClipboard   *clipboard;
 	guint           mode;
 
 	/* runtime data
@@ -65,22 +65,22 @@ struct _NactTreeModelPrivate {
 	gboolean        drag_drop;			/* defined for on_drag_motion handler */
 };
 
-#define TREE_MODEL_STATUSBAR_CONTEXT	"nact-tree-model-statusbar-context"
+#define TREE_MODEL_STATUSBAR_CONTEXT	"fma-tree-model-statusbar-context"
 
-gboolean       nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, GtkSelectionData  *selection_data );
-gboolean       nact_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, GtkTreePath *dest_path, GtkSelectionData *selection_data );
+gboolean       fma_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, GtkSelectionData  *selection_data );
+gboolean       fma_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, GtkTreePath *dest_path, GtkSelectionData *selection_data );
 
-gboolean       nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source, GdkDragContext *context, GtkSelectionData *selection_data, GList *path_list, guint info );
-gboolean       nact_tree_model_dnd_imulti_drag_source_drag_data_delete( EggTreeMultiDragSource *drag_source, GList *path_list );
-GdkDragAction  nact_tree_model_dnd_imulti_drag_source_get_drag_actions( EggTreeMultiDragSource *drag_source );
-GtkTargetList *nact_tree_model_dnd_imulti_drag_source_get_format_list( EggTreeMultiDragSource *drag_source );
-gboolean       nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *drag_source, GList *path_list );
+gboolean       fma_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source, GdkDragContext *context, GtkSelectionData *selection_data, GList *path_list, guint info );
+gboolean       fma_tree_model_dnd_imulti_drag_source_drag_data_delete( EggTreeMultiDragSource *drag_source, GList *path_list );
+GdkDragAction  fma_tree_model_dnd_imulti_drag_source_get_drag_actions( EggTreeMultiDragSource *drag_source );
+GtkTargetList *fma_tree_model_dnd_imulti_drag_source_get_format_list( EggTreeMultiDragSource *drag_source );
+gboolean       fma_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *drag_source, GList *path_list );
 
-void           nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, BaseWindow *window );
+void           fma_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, BaseWindow *window );
 /*gboolean       on_drag_motion( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, BaseWindow *window );*/
 /*gboolean       on_drag_drop( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, BaseWindow *window );*/
-void           nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, BaseWindow *window );
+void           fma_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, BaseWindow *window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_TREE_MODEL_PRIV_H__ */
+#endif /* __UI_FMA_TREE_MODEL_PRIV_H__ */

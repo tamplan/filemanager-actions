@@ -42,7 +42,7 @@
 #include "fma-application.h"
 #include "fma-export-ask.h"
 #include "fma-main-window.h"
-#include "nact-tree-model.h"
+#include "fma-tree-model.h"
 #include "fma-clipboard.h"
 
 /* private class data
