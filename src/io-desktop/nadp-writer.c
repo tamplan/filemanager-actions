@@ -43,7 +43,7 @@
 #include "fma-desktop-provider.h"
 #include "fma-desktop-formats.h"
 #include "fma-desktop-keys.h"
-#include "nadp-utils.h"
+#include "fma-desktop-utils.h"
 #include "nadp-writer.h"
 #include "nadp-xdg-dirs.h"
 
@@ -278,7 +278,7 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 	if( ndf ){
 		g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), ret );
 		uri = fma_desktop_file_get_key_file_uri( ndf );
-		if( fma_utils_uri_delete( uri )){
+		if( fma_desktop_utils_uri_delete( uri )){
 			ret = IIO_PROVIDER_CODE_OK;
 		}
 		g_free( uri );

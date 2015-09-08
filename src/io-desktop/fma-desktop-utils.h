@@ -27,18 +27,18 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __IO_DESKTOP_FMA_UTILS_H__
-#define __IO_DESKTOP_FMA_UTILS_H__
+#ifndef __IO_DESKTOP_FMA_DESKTOP_UTILS_H__
+#define __IO_DESKTOP_FMA_DESKTOP_UTILS_H__
 
 #include <glib.h>
 
 G_BEGIN_DECLS
 
-GSList  *fma_utils_gslist_remove_from( GSList *list, const gchar *string );
+GSList  *fma_desktop_utils_gslist_remove_from( GSList *list, const gchar *string );
 
-gboolean fma_utils_uri_delete     ( const gchar *uri );
-gboolean fma_utils_uri_is_writable( const gchar *uri );
+gboolean fma_desktop_utils_uri_delete     ( const gchar *uri );
+gboolean fma_desktop_utils_uri_is_writable( const gchar *uri );
 
 G_END_DECLS
 
-#endif /* __IO_DESKTOP_FMA_UTILS_H__ */
+#endif /* __IO_DESKTOP_FMA_DESKTOP_UTILS_H__ */

@@ -39,17 +39,17 @@
 #include <api/fma-core-utils.h>
 
 #include "fma-desktop-provider.h"
-#include "nadp-utils.h"
+#include "fma-desktop-utils.h"
 
 /**
- * fma_utils_gslist_remove_from:
+ * fma_desktop_utils_gslist_remove_from:
  * @list: the #GSList from which remove the @string.
  * @string: the string to be removed.
  *
  * Removes a @string from a string list, then frees the removed @string.
  */
 GSList *
-fma_utils_gslist_remove_from( GSList *list, const gchar *string )
+fma_desktop_utils_gslist_remove_from( GSList *list, const gchar *string )
 {
 	GSList *is;
 
@@ -69,7 +69,7 @@ fma_utils_gslist_remove_from( GSList *list, const gchar *string )
  *
  */
 gboolean
-fma_utils_uri_delete( const gchar *uri )
+fma_desktop_utils_uri_delete( const gchar *uri )
 {
 	gboolean deleted;
 	gchar *scheme;
@@ -93,7 +93,7 @@ fma_utils_uri_delete( const gchar *uri )
 }
 
 /**
- * fma_utils_uri_is_writable:
+ * fma_desktop_utils_uri_is_writable:
  * @uri: the URI of the file to be tested.
  *
  * Returns: %TRUE if the file is writable, %FALSE else.
@@ -105,9 +105,9 @@ fma_utils_uri_delete( const gchar *uri )
  * There is no "super-test". Just try...
  */
 gboolean
-fma_utils_uri_is_writable( const gchar *uri )
+fma_desktop_utils_uri_is_writable( const gchar *uri )
 {
-	static const gchar *thisfn = "fma_utils_uri_is_writable";
+	static const gchar *thisfn = "fma_desktop_utils_uri_is_writable";
 	GFile *file;
 	GError *error = NULL;
 	GFileInfo *info;

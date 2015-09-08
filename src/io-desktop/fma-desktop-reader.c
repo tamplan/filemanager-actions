@@ -44,7 +44,7 @@
 #include "fma-desktop-provider.h"
 #include "fma-desktop-keys.h"
 #include "fma-desktop-reader.h"
-#include "nadp-utils.h"
+#include "fma-desktop-utils.h"
 #include "nadp-xdg-dirs.h"
 
 typedef struct {
@@ -621,7 +621,7 @@ read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *
 
 	ndf = reader_data->ndf;
 	uri = fma_desktop_file_get_key_file_uri( ndf );
-	writable = fma_utils_uri_is_writable( uri );
+	writable = fma_desktop_utils_uri_is_writable( uri );
 	g_free( uri );
 
 	return( writable );
