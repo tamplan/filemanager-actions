@@ -32,7 +32,7 @@
 #endif
 
 #include "core/fma-gtk-utils.h"
-#include "core/na-iprefs.h"
+#include "core/fma-iprefs.h"
 
 #include "nact-main-window.h"
 #include "nact-menu.h"
@@ -283,7 +283,7 @@ setup_notebook_tab_position_submenu( NactMainWindow *window )
 	sNotebookTabsProps *props;
 	GAction *action;
 
-	pos = na_iprefs_get_tabs_pos( NULL );
+	pos = fma_iprefs_get_tabs_pos( NULL );
 	props = get_notebook_tabs_properties_by_pos( pos );
 	g_return_if_fail( props );
 
@@ -379,5 +379,5 @@ set_notebook_tabs_position( NactMainWindow *main_window, guint pos )
 
 	notebook = GTK_NOTEBOOK( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "main-notebook" ));
 	gtk_notebook_set_tab_pos( notebook, pos );
-	na_iprefs_set_tabs_pos( pos );
+	fma_iprefs_set_tabs_pos( pos );
 }

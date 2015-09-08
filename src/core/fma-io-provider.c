@@ -38,7 +38,7 @@
 #include <api/fma-object-api.h>
 #include <api/fma-core-utils.h>
 
-#include "na-iprefs.h"
+#include "fma-iprefs.h"
 #include "fma-io-provider.h"
 
 /* private class data
@@ -880,7 +880,7 @@ fma_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **m
 
 	if( flat || !level_zero || !g_slist_length( level_zero )){
 		g_debug( "%s: rewriting level-zero", thisfn );
-		if( !na_iprefs_write_level_zero( hierarchy, messages )){
+		if( !fma_iprefs_write_level_zero( hierarchy, messages )){
 			g_warning( "%s: unable to update level-zero", thisfn );
 		}
 	}
@@ -889,7 +889,7 @@ fma_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **m
 
 	/* sort the hierarchy according to preferences
 	 */
-	order_mode = na_iprefs_get_order_mode( NULL );
+	order_mode = fma_iprefs_get_order_mode( NULL );
 	switch( order_mode ){
 		case IPREFS_ORDER_ALPHA_ASCENDING:
 			hierarchy = load_items_hierarchy_sort( pivot, hierarchy, ( GCompareFunc ) fma_object_id_sort_alpha_asc );

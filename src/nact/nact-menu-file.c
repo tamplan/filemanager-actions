@@ -38,7 +38,7 @@
 #include <api/fma-timeout.h>
 
 #include <core/fma-io-provider.h>
-#include <core/na-iprefs.h>
+#include <core/fma-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-statusbar.h"
@@ -250,7 +250,7 @@ nact_menu_file_save_items( NactMainWindow *window )
 	messages = NULL;
 
 	if( nact_tree_ieditable_is_level_zero_modified( NACT_TREE_IEDITABLE( items_view ))){
-		if( !na_iprefs_write_level_zero( items, &messages )){
+		if( !fma_iprefs_write_level_zero( items, &messages )){
 			if( g_slist_length( messages )){
 				msg = fma_core_utils_slist_join_at_end( messages, "\n" );
 			} else {

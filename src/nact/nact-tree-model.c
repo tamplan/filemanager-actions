@@ -36,7 +36,7 @@
 
 #include "api/fma-object-api.h"
 
-#include "core/na-iprefs.h"
+#include "core/fma-iprefs.h"
 
 #include "nact-application.h"
 #include "nact-clipboard.h"
@@ -396,7 +396,7 @@ nact_tree_model_new( GtkTreeView *treeview )
 	model->private->treeview = treeview;
 
 	/* initialize the sortable interface */
-	order_mode = na_iprefs_get_order_mode( NULL );
+	order_mode = fma_iprefs_get_order_mode( NULL );
 	display_order_change( model, order_mode );
 
 	return( model );
@@ -511,7 +511,7 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 	if( !model->private->dispose_has_run ){
 
 		order_mode_str = ( const gchar * ) new_value;
-		order_mode = na_iprefs_get_order_mode_by_label( order_mode_str );
+		order_mode = fma_iprefs_get_order_mode_by_label( order_mode_str );
 
 		g_debug( "%s: group=%s, key=%s, order_mode=%u (%s), mandatory=%s, model=%p (%s)",
 				thisfn, group, key, order_mode, order_mode_str,

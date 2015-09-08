@@ -32,7 +32,7 @@
 #endif
 
 #include "core/fma-gtk-utils.h"
-#include "core/na-iprefs.h"
+#include "core/fma-iprefs.h"
 #include "core/na-updater.h"
 
 #include "nact-application.h"
@@ -286,7 +286,7 @@ on_toggle_button_toggled( GtkToggleButton *toggled_button, NactSortButtons *butt
 			}
 			gtk_toggle_button_set_active( toggled_button, TRUE );
 			priv->active = ibtn;
-			na_iprefs_set_order_mode( st_toggle_group[ibtn].order_mode );
+			fma_iprefs_set_order_mode( st_toggle_group[ibtn].order_mode );
 		}
 
 		priv->toggling = FALSE;
@@ -320,7 +320,7 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 	if( !priv->dispose_has_run ){
 
 		order_mode_str = ( const gchar * ) new_value;
-		order_mode = na_iprefs_get_order_mode_by_label( order_mode_str );
+		order_mode = fma_iprefs_get_order_mode_by_label( order_mode_str );
 
 		g_debug( "%s: group=%s, key=%s, order_mode=%u (%s), mandatory=%s, sort_buttons=%p (%s)",
 				thisfn, group, key, order_mode, order_mode_str,
@@ -380,7 +380,7 @@ enable_buttons( const NactSortButtons *sort_buttons, gboolean enabled )
 	}
 
 	if( finally_enabled && priv->active == -1 ){
-		order_mode = na_iprefs_get_order_mode( NULL );
+		order_mode = fma_iprefs_get_order_mode( NULL );
 		i = toggle_group_get_from_mode( order_mode );
 		gtk_toggle_button_set_active( st_toggle_group[i].button, TRUE );
 	}

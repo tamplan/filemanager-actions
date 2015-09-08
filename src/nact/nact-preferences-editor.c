@@ -43,7 +43,7 @@
 #include <core/fma-import-mode.h>
 #include <core/fma-importer.h>
 #include <core/fma-ioptions-list.h>
-#include <core/na-iprefs.h>
+#include <core/fma-iprefs.h>
 #include <core/na-tokens.h>
 
 #include "nact-application.h"
@@ -625,7 +625,7 @@ order_mode_setup( NactPreferencesEditor *editor )
 	GtkWidget *active_button;
 	GCallback active_handler;
 
-	editor->private->order_mode = na_iprefs_get_order_mode( &editor->private->order_mode_mandatory );
+	editor->private->order_mode = fma_iprefs_get_order_mode( &editor->private->order_mode_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->order_mode_mandatory;
 
 	alpha_asc_button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
@@ -1198,7 +1198,7 @@ on_dialog_ok( BaseDialog *dialog )
 		/* first tab: runtime preferences
 		 */
 		if( !editor->private->order_mode_mandatory ){
-			na_iprefs_set_order_mode( editor->private->order_mode );
+			fma_iprefs_set_order_mode( editor->private->order_mode );
 		}
 		if( !editor->private->root_menu_mandatory ){
 			na_settings_set_boolean( NA_IPREFS_ITEMS_CREATE_ROOT_MENU, editor->private->root_menu );

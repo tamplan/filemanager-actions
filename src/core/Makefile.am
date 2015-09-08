@@ -96,8 +96,8 @@ libna_core_la_SOURCES = \
 	fma-ioption.h										\
 	fma-ioptions-list.c									\
 	fma-ioptions-list.h									\
-	na-iprefs.c											\
-	na-iprefs.h											\
+	fma-iprefs.c											\
+	fma-iprefs.h											\
 	na-module.c											\
 	na-module.h											\
 	fma-object.c											\

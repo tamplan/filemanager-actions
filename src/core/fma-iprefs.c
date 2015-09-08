@@ -36,7 +36,7 @@
 #include <api/fma-core-utils.h>
 
 #include "fma-importer.h"
-#include "na-iprefs.h"
+#include "fma-iprefs.h"
 #include "na-settings.h"
 
 typedef struct {
@@ -46,7 +46,7 @@ typedef struct {
 	EnumMap;
 
 /* sort mode of the items in the file manager context menu
- * enum is defined in core/na-iprefs.h
+ * enum is defined in core/fma-iprefs.h
  */
 #define ORDER_ALPHA_ASC_STR					"AscendingOrder"
 #define ORDER_ALPHA_DESC_STR				"DescendingOrder"
@@ -71,14 +71,14 @@ static const gchar *enum_map_string_from_id( const EnumMap *map, guint id );
 static guint        enum_map_id_from_string( const EnumMap *map, const gchar *str );
 
 /*
- * na_iprefs_get_order_mode:
+ * fma_iprefs_get_order_mode:
  * @mandatory: if not %NULL, a pointer to a boolean which will receive the
  *  mandatory property.
  *
  * Returns: the order mode currently set.
  */
 guint
-na_iprefs_get_order_mode( gboolean *mandatory )
+fma_iprefs_get_order_mode( gboolean *mandatory )
 {
 	gchar *order_mode_str;
 	guint order_mode;
@@ -91,7 +91,7 @@ na_iprefs_get_order_mode( gboolean *mandatory )
 }
 
 /*
- * na_iprefs_get_order_mode_by_label:
+ * fma_iprefs_get_order_mode_by_label:
  * @label: the label.
  *
  * This function converts a label (e.g. 'ManualOrder') stored in user preferences
@@ -101,7 +101,7 @@ na_iprefs_get_order_mode( gboolean *mandatory )
  * Returns: the order mode currently set.
  */
 guint
-na_iprefs_get_order_mode_by_label( const gchar *label )
+fma_iprefs_get_order_mode_by_label( const gchar *label )
 {
 	guint order_mode;
 
@@ -111,14 +111,14 @@ na_iprefs_get_order_mode_by_label( const gchar *label )
 }
 
 /*
- * na_iprefs_set_order_mode:
+ * fma_iprefs_set_order_mode:
  * @mode: the new value to be written.
  *
  * Writes the current status of 'alphabetical order' to the GConf
  * preference system.
  */
 void
-na_iprefs_set_order_mode( guint mode )
+fma_iprefs_set_order_mode( guint mode )
 {
 	const gchar *order_str;
 
@@ -127,14 +127,14 @@ na_iprefs_set_order_mode( guint mode )
 }
 
 /*
- * na_iprefs_get_tabs_pos:
+ * fma_iprefs_get_tabs_pos:
  * @mandatory: if not %NULL, a pointer to a boolean which will receive the
  *  mandatory property.
  *
  * Returns: the tabs position of the main window.
  */
 guint
-na_iprefs_get_tabs_pos( gboolean *mandatory )
+fma_iprefs_get_tabs_pos( gboolean *mandatory )
 {
 	gchar *tabs_pos_str;
 	guint tabs_pos;
@@ -147,13 +147,13 @@ na_iprefs_get_tabs_pos( gboolean *mandatory )
 }
 
 /*
- * na_iprefs_set_tabs_pos:
+ * fma_iprefs_set_tabs_pos:
  * @position: the new value to be written.
  *
  * Writes the current status of 'tabs position' to the preference system.
  */
 void
-na_iprefs_set_tabs_pos( guint position )
+fma_iprefs_set_tabs_pos( guint position )
 {
 	const gchar *tabs_pos_str;
 
@@ -162,7 +162,7 @@ na_iprefs_set_tabs_pos( guint position )
 }
 
 /*
- * na_iprefs_write_level_zero:
+ * fma_iprefs_write_level_zero:
  * @items: the #GList of items whose first level is to be written.
  * @messages: a pointer to a #GSList in which we will add happening
  *  error messages;
@@ -176,12 +176,12 @@ na_iprefs_set_tabs_pos( guint position )
  * and so on), %FALSE else.
  *
  * @messages #GSList is only filled up in case of an error has occured.
- * If there is no error (na_iprefs_write_level_zero() returns %TRUE), then
+ * If there is no error (fma_iprefs_write_level_zero() returns %TRUE), then
  * the caller may safely assume that @messages is returned in the same
  * state that it has been provided.
  */
 gboolean
-na_iprefs_write_level_zero( const GList *items, GSList **messages )
+fma_iprefs_write_level_zero( const GList *items, GSList **messages )
 {
 	gboolean written;
 	const GList *it;

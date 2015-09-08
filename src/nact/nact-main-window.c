@@ -39,7 +39,7 @@
 
 #include "core/fma-about.h"
 #include "core/fma-gtk-utils.h"
-#include "core/na-iprefs.h"
+#include "core/fma-iprefs.h"
 #include "core/na-pivot.h"
 
 #include "nact-iaction-tab.h"
@@ -620,7 +620,7 @@ instance_dispose( GObject *window )
 
 		notebook = GTK_NOTEBOOK( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( window ), "main-notebook" ));
 		pos = gtk_notebook_get_tab_pos( notebook );
-		na_iprefs_set_tabs_pos( pos );
+		fma_iprefs_set_tabs_pos( pos );
 
 		fma_gtk_utils_save_window_position( GTK_WINDOW( window ), st_wsp_name );
 	}
@@ -731,7 +731,7 @@ setup_main_ui( NactMainWindow *main_window )
 	 */
 	notebook = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( top_widget ), "main-notebook" );
 	g_return_if_fail( notebook && GTK_IS_NOTEBOOK( notebook ));
-	pos = na_iprefs_get_tabs_pos( NULL );
+	pos = fma_iprefs_get_tabs_pos( NULL );
 	gtk_notebook_set_tab_pos( GTK_NOTEBOOK( notebook ), pos );
 	gtk_notebook_popup_enable( GTK_NOTEBOOK( notebook ));
 

@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_IPREFS_H__
-#define __CORE_NA_IPREFS_H__
+#ifndef __CORE_FMA_IPREFS_H__
+#define __CORE_FMA_IPREFS_H__
 
 /*
  * Starting with 3.1.0, NAIPrefs interface is deprecated.
@@ -51,15 +51,15 @@ enum {
 	IPREFS_ORDER_MANUAL
 };
 
-guint    na_iprefs_get_order_mode         ( gboolean *mandatory );
-guint    na_iprefs_get_order_mode_by_label( const gchar *label );
-void     na_iprefs_set_order_mode         ( guint mode );
+guint    fma_iprefs_get_order_mode         ( gboolean *mandatory );
+guint    fma_iprefs_get_order_mode_by_label( const gchar *label );
+void     fma_iprefs_set_order_mode         ( guint mode );
 
-guint    na_iprefs_get_tabs_pos           ( gboolean *mandatory );
-void     na_iprefs_set_tabs_pos           ( guint pos );
+guint    fma_iprefs_get_tabs_pos           ( gboolean *mandatory );
+void     fma_iprefs_set_tabs_pos           ( guint pos );
 
-gboolean na_iprefs_write_level_zero       ( const GList *items, GSList **messages );
+gboolean fma_iprefs_write_level_zero       ( const GList *items, GSList **messages );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_IPREFS_H__ */
+#endif /* __CORE_FMA_IPREFS_H__ */
