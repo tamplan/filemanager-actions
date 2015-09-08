@@ -41,13 +41,13 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libna_io_xml_la_SOURCES = \
-	naxml-module.c										\
-	naxml-provider.c									\
-	naxml-provider.h									\
-	fma-xml-keys.c										\
-	fma-xml-keys.h										\
 	fma-xml-formats.c									\
 	fma-xml-formats.h									\
+	fma-xml-keys.c										\
+	fma-xml-keys.h										\
+	fma-xml-module.c									\
+	naxml-provider.c									\
+	naxml-provider.h									\
 	naxml-reader.c										\
 	naxml-reader.h										\
 	naxml-writer.c										\
