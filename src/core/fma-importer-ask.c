@@ -40,7 +40,7 @@
 #include "fma-import-mode.h"
 #include "fma-importer.h"
 #include "fma-importer-ask.h"
-#include "na-ioptions-list.h"
+#include "fma-ioptions-list.h"
 #include "na-settings.h"
 
 /* private class data
@@ -66,9 +66,9 @@ static const gchar   *st_uixml        = PKGUIDIR "/fma-importer-ask.ui";
 
 static GType          register_type( void );
 static void           class_init( FMAImporterAskClass *klass );
-static void           ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data );
-static GList         *ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container );
-static void           ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes );
+static void           ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
+static GList         *ioptions_list_get_modes( const FMAIOptionsList *instance, GtkWidget *container );
+static void           ioptions_list_free_modes( const FMAIOptionsList *instance, GtkWidget *container, GList *modes );
 static void           instance_init( GTypeInstance *instance, gpointer klass );
 static void           instance_dispose( GObject *dialog );
 static void           instance_finalize( GObject *dialog );
@@ -119,7 +119,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_OBJECT, "FMAImporterAsk", &info, 0 );
 
-	g_type_add_interface_static( type, NA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
 	return( type );
 }
@@ -142,7 +142,7 @@ class_init( FMAImporterAskClass *klass )
 }
 
 static void
-ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
+ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_assistant_import_ioptions_list_iface_init";
 
@@ -153,7 +153,7 @@ ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
 }
 
 static GList *
-ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
+ioptions_list_get_modes( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	GList *modes;
 
@@ -165,7 +165,7 @@ ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
 }
 
 static void
-ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes )
+ioptions_list_free_modes( const FMAIOptionsList *instance, GtkWidget *container, GList *modes )
 {
 	g_return_if_fail( FMA_IS_IMPORTER_ASK( instance ));
 
@@ -375,7 +375,7 @@ initialize_gtk( FMAImporterAsk *dialog, GtkWindow *toplevel )
 	g_debug( "%s: dialog=%p, toplevel=%p", thisfn, ( void * ) dialog, ( void * ) toplevel );
 
 	container = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
-	na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( dialog ), container, FALSE );
+	fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( dialog ), container, FALSE );
 }
 
 static void
@@ -414,7 +414,7 @@ initialize_window( FMAImporterAsk *editor, GtkWindow *toplevel )
 
 	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
 	mode_id = na_settings_get_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
-	na_ioptions_list_set_default( NA_IOPTIONS_LIST( editor ), widget, mode_id );
+	fma_ioptions_list_set_default( FMA_IOPTIONS_LIST( editor ), widget, mode_id );
 	g_free( mode_id );
 
 	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskKeepChoiceButton" );
@@ -428,15 +428,15 @@ static void
 get_selected_mode( FMAImporterAsk *editor )
 {
 	GtkWidget *widget;
-	NAIOption *mode;
+	FMAIOption *mode;
 	gchar *mode_id;
 	GtkWidget *button;
 	gboolean keep;
 
 	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskModeVBox" );
-	mode = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), widget );
+	mode = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), widget );
 
-	mode_id = na_ioption_get_id( mode );
+	mode_id = fma_ioption_get_id( mode );
 	na_settings_set_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, mode_id );
 	g_free( mode_id );
 

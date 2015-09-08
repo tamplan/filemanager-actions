@@ -92,10 +92,10 @@ libna_core_la_SOURCES = \
 	fma-importer-ask.h									\
 	fma-io-provider.c									\
 	fma-io-provider.h									\
-	na-ioption.c										\
-	na-ioption.h										\
-	na-ioptions-list.c									\
-	na-ioptions-list.h									\
+	fma-ioption.c										\
+	fma-ioption.h										\
+	fma-ioptions-list.c									\
+	fma-ioptions-list.h									\
 	na-iprefs.c											\
 	na-iprefs.h											\
 	na-module.c											\

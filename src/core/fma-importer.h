@@ -60,7 +60,7 @@
 #include <api/fma-iimporter.h>
 #include <api/fma-object-item.h>
 
-#include "na-ioption.h"
+#include "fma-ioption.h"
 #include "na-pivot.h"
 
 G_BEGIN_DECLS
@@ -148,7 +148,7 @@ void        fma_importer_free_result     ( FMAImporterResult *result );
 GList      *fma_importer_get_modes       ( void );
 void        fma_importer_free_modes      ( GList *modes );
 
-NAIOption *fma_importer_get_ask_mode    ( void );
+FMAIOption *fma_importer_get_ask_mode    ( void );
 
 G_END_DECLS
 

@@ -31,11 +31,11 @@
 #include <config.h>
 #endif
 
-#include "na-ioption.h"
+#include "fma-ioption.h"
 
 /* private interface data
  */
-struct _NAIOptionInterfacePrivate {
+struct _FMAIOptionInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -53,20 +53,20 @@ typedef struct {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType        register_type( void );
-static void         interface_base_init( NAIOptionInterface *iface );
-static void         interface_base_finalize( NAIOptionInterface *iface );
+static void         interface_base_init( FMAIOptionInterface *iface );
+static void         interface_base_finalize( FMAIOptionInterface *iface );
 
-static guint        ioption_get_version( const NAIOption *instance );
-static IOptionData *get_ioption_data( NAIOption *instance );
-static void         on_instance_finalized( gpointer user_data, NAIOption *instance );
+static guint        ioption_get_version( const FMAIOption *instance );
+static IOptionData *get_ioption_data( FMAIOption *instance );
+static void         on_instance_finalized( gpointer user_data, FMAIOption *instance );
 
 /**
- * na_ioption_get_type:
+ * fma_ioption_get_type:
  *
  * Returns: the #GType type of this interface.
  */
 GType
-na_ioption_get_type( void )
+fma_ioption_get_type( void )
 {
 	static GType type = 0;
 
@@ -78,18 +78,18 @@ na_ioption_get_type( void )
 }
 
 /*
- * na_ioption_register_type:
+ * fma_ioption_register_type:
  *
  * Registers this interface.
  */
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_ioption_register_type";
+	static const gchar *thisfn = "fma_ioption_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIOptionInterface ),
+		sizeof( FMAIOptionInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -102,7 +102,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIOption", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIOption", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -110,15 +110,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIOptionInterface *iface )
+interface_base_init( FMAIOptionInterface *iface )
 {
-	static const gchar *thisfn = "na_ioption_interface_base_init";
+	static const gchar *thisfn = "fma_ioption_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: iface=%p (%s)", thisfn, ( void * ) iface, G_OBJECT_CLASS_NAME( iface ));
 
-		iface->private = g_new0( NAIOptionInterfacePrivate, 1 );
+		iface->private = g_new0( FMAIOptionInterfacePrivate, 1 );
 
 		iface->get_version = ioption_get_version;
 	}
@@ -127,9 +127,9 @@ interface_base_init( NAIOptionInterface *iface )
 }
 
 static void
-interface_base_finalize( NAIOptionInterface *iface )
+interface_base_finalize( FMAIOptionInterface *iface )
 {
-	static const gchar *thisfn = "na_ioption_interface_base_finalize";
+	static const gchar *thisfn = "fma_ioption_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -142,13 +142,13 @@ interface_base_finalize( NAIOptionInterface *iface )
 }
 
 static guint
-ioption_get_version( const NAIOption *instance )
+ioption_get_version( const FMAIOption *instance )
 {
 	return( 1 );
 }
 
 static IOptionData *
-get_ioption_data( NAIOption *instance )
+get_ioption_data( FMAIOption *instance )
 {
 	IOptionData *data;
 
@@ -166,9 +166,9 @@ get_ioption_data( NAIOption *instance )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NAIOption *instance )
+on_instance_finalized( gpointer user_data, FMAIOption *instance )
 {
-	static const gchar *thisfn = "na_ioption_on_instance_finalized";
+	static const gchar *thisfn = "fma_ioption_on_instance_finalized";
 	IOptionData *data;
 
 	g_debug( "%s: user_data=%p, instance=%p", thisfn, ( void * ) user_data, ( void * ) instance );
@@ -179,96 +179,96 @@ on_instance_finalized( gpointer user_data, NAIOption *instance )
 }
 
 /*
- * na_ioption_get_id:
- * @option: this #NAIOption instance.
+ * fma_ioption_get_id:
+ * @option: this #FMAIOption instance.
  *
  * Returns: the string identifier of the format, as a newly
  * allocated string which should be g_free() by the caller.
  */
 gchar *
-na_ioption_get_id( const NAIOption *option )
+fma_ioption_get_id( const FMAIOption *option )
 {
 	gchar *id;
 
-	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
+	g_return_val_if_fail( FMA_IS_IOPTION( option ), NULL );
 
-	get_ioption_data( NA_IOPTION( option ));
+	get_ioption_data( FMA_IOPTION( option ));
 	id = NULL;
 
-	if( NA_IOPTION_GET_INTERFACE( option )->get_id ){
-		id = NA_IOPTION_GET_INTERFACE( option )->get_id( option );
+	if( FMA_IOPTION_GET_INTERFACE( option )->get_id ){
+		id = FMA_IOPTION_GET_INTERFACE( option )->get_id( option );
 	}
 
 	return( id );
 }
 
 /*
- * na_ioption_get_label:
- * @option: this #NAIOption instance.
+ * fma_ioption_get_label:
+ * @option: this #FMAIOption instance.
  *
  * Returns: the UTF-8 localizable label of the format, as a newly
  * allocated string which should be g_free() by the caller.
  */
 gchar *
-na_ioption_get_label( const NAIOption *option )
+fma_ioption_get_label( const FMAIOption *option )
 {
 	gchar *label;
 
-	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
+	g_return_val_if_fail( FMA_IS_IOPTION( option ), NULL );
 
-	get_ioption_data( NA_IOPTION( option ));
+	get_ioption_data( FMA_IOPTION( option ));
 	label = NULL;
 
-	if( NA_IOPTION_GET_INTERFACE( option )->get_label ){
-		label = NA_IOPTION_GET_INTERFACE( option )->get_label( option );
+	if( FMA_IOPTION_GET_INTERFACE( option )->get_label ){
+		label = FMA_IOPTION_GET_INTERFACE( option )->get_label( option );
 	}
 
 	return( label );
 }
 
 /*
- * na_ioption_get_description:
+ * fma_ioption_get_description:
  * @format: this #FMAExportFormat object.
  *
  * Returns: the UTF-8 localizable description of the format, as a newly
  * allocated string which should be g_free() by the caller.
  */
 gchar *
-na_ioption_get_description( const NAIOption *option )
+fma_ioption_get_description( const FMAIOption *option )
 {
 	gchar *description;
 
-	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
+	g_return_val_if_fail( FMA_IS_IOPTION( option ), NULL );
 
-	get_ioption_data( NA_IOPTION( option ));
+	get_ioption_data( FMA_IOPTION( option ));
 	description = NULL;
 
-	if( NA_IOPTION_GET_INTERFACE( option )->get_description ){
-		description = NA_IOPTION_GET_INTERFACE( option )->get_description( option );
+	if( FMA_IOPTION_GET_INTERFACE( option )->get_description ){
+		description = FMA_IOPTION_GET_INTERFACE( option )->get_description( option );
 	}
 
 	return( description );
 }
 
 /*
- * na_ioption_get_pixbuf:
- * @option: this #NAIOption instance.
+ * fma_ioption_get_pixbuf:
+ * @option: this #FMAIOption instance.
  *
  * Returns: a new reference to the #GdkPixbuf image associated with this format,
  * or %NULL.
  */
 GdkPixbuf *
-na_ioption_get_pixbuf( const NAIOption *option )
+fma_ioption_get_pixbuf( const FMAIOption *option )
 {
 	GdkPixbuf *pixbuf;
 
-	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
+	g_return_val_if_fail( FMA_IS_IOPTION( option ), NULL );
 
-	get_ioption_data( NA_IOPTION( option ));
+	get_ioption_data( FMA_IOPTION( option ));
 	pixbuf = NULL;
 
-	if( NA_IOPTION_GET_INTERFACE( option )->get_pixbuf ){
-		pixbuf = NA_IOPTION_GET_INTERFACE( option )->get_pixbuf( option );
+	if( FMA_IOPTION_GET_INTERFACE( option )->get_pixbuf ){
+		pixbuf = FMA_IOPTION_GET_INTERFACE( option )->get_pixbuf( option );
 	}
 
 	return( pixbuf );

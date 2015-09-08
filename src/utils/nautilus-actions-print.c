@@ -43,7 +43,7 @@
 
 #include <core/fma-exporter.h>
 #include <core/fma-export-format.h>
-#include <core/na-ioption.h>
+#include <core/fma-ioption.h>
 
 #include "console-utils.h"
 

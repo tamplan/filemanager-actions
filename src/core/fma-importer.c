@@ -95,7 +95,7 @@ static FMAObjectItem     *is_importing_already_exists( FMAImporterParms *parms, 
 static void              renumber_label_item( FMAObjectItem *item );
 static guint             ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, FMAImporterAskUserParms *parms );
 static guint             get_id_from_string( const gchar *str );
-static NAIOption        *get_mode_from_struct( const FMAImportModeStr *str );
+static FMAIOption        *get_mode_from_struct( const FMAImportModeStr *str );
 
 /* i18n: '%s' stands for the file URI */
 #define ERR_NOT_LOADABLE	_( "%s is not loadable (empty or too big or not a regular file)" )
@@ -473,7 +473,7 @@ fma_importer_get_modes( void )
 {
 	static const gchar *thisfn = "fma_importer_get_modes";
 	GList *modes;
-	NAIOption *mode;
+	FMAIOption *mode;
 	guint i;
 
 	g_debug( "%s", thisfn );
@@ -488,7 +488,7 @@ fma_importer_get_modes( void )
 	return( modes );
 }
 
-static NAIOption *
+static FMAIOption *
 get_mode_from_struct( const FMAImportModeStr *str )
 {
 	FMAImportMode *mode;
@@ -515,7 +515,7 @@ get_mode_from_struct( const FMAImportModeStr *str )
 		FMA_IMPORT_PROP_IMAGE,       pixbuf,
 		NULL );
 
-	return( NA_IOPTION( mode ));
+	return( FMA_IOPTION( mode ));
 }
 
 /*
@@ -540,7 +540,7 @@ fma_importer_free_modes( GList *modes )
  *
  * Returns: a #FMAImportMode object which describes the 'Ask me' option.
  */
-NAIOption *
+FMAIOption *
 fma_importer_get_ask_mode( void )
 {
 	static const gchar *thisfn = "fma_importer_get_ask_mode";

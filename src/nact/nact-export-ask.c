@@ -38,7 +38,7 @@
 #include "core/fma-exporter.h"
 #include "core/fma-export-format.h"
 #include "core/fma-gtk-utils.h"
-#include "core/na-ioptions-list.h"
+#include "core/fma-ioptions-list.h"
 
 #include "base-gtk-utils.h"
 #include "nact-application.h"
@@ -65,9 +65,9 @@ static BaseDialogClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactExportAskClass *klass );
-static void     ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data );
-static GList   *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
-static void     ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats );
+static void     ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
+static GList   *ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container );
+static void     ioptions_list_free_formats( const FMAIOptionsList *instance, GtkWidget *container, GList *formats );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_constructed( GObject *dialog );
 static void     instance_dispose( GObject *dialog );
@@ -120,7 +120,7 @@ register_type( void )
 
 	type = g_type_register_static( BASE_TYPE_DIALOG, "NactExportAsk", &info, 0 );
 
-	g_type_add_interface_static( type, NA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
 	return( type );
 }
@@ -142,7 +142,7 @@ class_init( NactExportAskClass *klass )
 }
 
 static void
-ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
+ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
 
@@ -153,7 +153,7 @@ ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
 }
 
 static GList *
-ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container )
+ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	NactExportAsk *window;
 	NactApplication *application;
@@ -171,7 +171,7 @@ ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container 
 }
 
 static void
-ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats )
+ioptions_list_free_formats( const FMAIOptionsList *instance, GtkWidget *container, GList *formats )
 {
 	fma_exporter_free_formats( formats );
 }
@@ -360,7 +360,7 @@ on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel, gpointer use
 				thisfn, ( void * ) editor, ( void * ) toplevel, ( void * ) user_data );
 
 		container = base_window_get_widget( BASE_WINDOW( editor ), "export-format-ask" );
-		na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( editor ), container, FALSE );
+		fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( editor ), container, FALSE );
 	}
 }
 
@@ -396,11 +396,11 @@ on_base_initialize_window( NactExportAsk *editor, gpointer user_data )
 		g_free( item_label );
 
 		widget = base_window_get_widget( BASE_WINDOW( editor ), "export-format-ask" );
-		na_ioptions_list_set_editable(
-				NA_IOPTIONS_LIST( editor ), widget,
+		fma_ioptions_list_set_editable(
+				FMA_IOPTIONS_LIST( editor ), widget,
 				!priv->format_mandatory && !priv->preferences_locked );
-		na_ioptions_list_set_default(
-				NA_IOPTIONS_LIST( editor ), widget,
+		fma_ioptions_list_set_default(
+				FMA_IOPTIONS_LIST( editor ), widget,
 				priv->format );
 
 		base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -467,18 +467,18 @@ static gchar *
 get_export_format( NactExportAsk *editor )
 {
 	GtkWidget *widget;
-	NAIOption *format;
+	FMAIOption *format;
 	gchar *format_id;
 
 	widget = base_window_get_widget( BASE_WINDOW( editor ), "export-format-ask" );
-	format = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), widget );
+	format = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), widget );
 	g_return_val_if_fail( FMA_IS_EXPORT_FORMAT( format ), 0 );
 
 	if( !editor->private->keep_last_choice_mandatory ){
 		na_settings_set_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, editor->private->keep_last_choice );
 	}
 
-	format_id = na_ioption_get_id( format );
+	format_id = fma_ioption_get_id( format );
 	na_settings_set_string( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_id );
 
 	return( format_id );

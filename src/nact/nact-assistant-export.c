@@ -40,7 +40,7 @@
 #include "core/fma-exporter.h"
 #include "core/fma-export-format.h"
 #include "core/fma-gtk-utils.h"
-#include "core/na-ioptions-list.h"
+#include "core/fma-ioptions-list.h"
 
 #include "nact-application.h"
 #include "nact-main-window.h"
@@ -96,10 +96,10 @@ static BaseAssistantClass *st_parent_class   = NULL;
 
 static GType      register_type( void );
 static void       class_init( NactAssistantExportClass *klass );
-static void       ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data );
-static GList     *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
-static void       ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats );
-static NAIOption *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
+static void       ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
+static GList     *ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container );
+static void       ioptions_list_free_formats( const FMAIOptionsList *instance, GtkWidget *container, GList *formats );
+static FMAIOption *ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_constructed( GObject *instance );
 static void       instance_dispose( GObject *instance );
@@ -158,7 +158,7 @@ register_type( void )
 
 	type = g_type_register_static( BASE_TYPE_ASSISTANT, "NactAssistantExport", &info, 0 );
 
-	g_type_add_interface_static( type, NA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
 	return( type );
 }
@@ -185,7 +185,7 @@ class_init( NactAssistantExportClass *klass )
 }
 
 static void
-ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
+ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
 
@@ -197,7 +197,7 @@ ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
 }
 
 static GList *
-ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container )
+ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	NactAssistantExport *window;
 	NactApplication *application;
@@ -215,13 +215,13 @@ ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container 
 }
 
 static void
-ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats )
+ioptions_list_free_formats( const FMAIOptionsList *instance, GtkWidget *container, GList *formats )
 {
 	fma_exporter_free_formats( formats );
 }
 
-static NAIOption *
-ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container )
+static FMAIOption *
+ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	return( fma_exporter_get_ask_option());
 }
@@ -459,7 +459,7 @@ format_tree_view_initialize_gtk( NactAssistantExport *window )
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
 	tree_view = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" );
 
-	na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( window ), tree_view, TRUE );
+	fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( window ), tree_view, TRUE );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
@@ -502,11 +502,11 @@ on_base_initialize_base_window( NactAssistantExport *window, void *empty )
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
 		tree_view = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" );
 		format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, &mandatory );
-		na_ioptions_list_set_editable(
-				NA_IOPTIONS_LIST( window ), tree_view,
+		fma_ioptions_list_set_editable(
+				FMA_IOPTIONS_LIST( window ), tree_view,
 				!mandatory && !window->private->preferences_locked );
-		na_ioptions_list_set_default(
-				NA_IOPTIONS_LIST( window ), tree_view, format );
+		fma_ioptions_list_set_default(
+				FMA_IOPTIONS_LIST( window ), tree_view, format );
 		g_free( format );
 	}
 }
@@ -666,7 +666,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	gchar *format_description, *format_description2;
 	gchar *format_id;
 	GtkWidget *label;
-	NAIOption *format;
+	FMAIOption *format;
 	GList *it;
 	GtkWidget *format_page, *tree_view;
 
@@ -714,10 +714,10 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	format_page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
 	tree_view = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( format_page ), "p3-ExportFormatTreeView" );
 	g_return_if_fail( GTK_IS_TREE_VIEW( tree_view ));
-	format = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( window ), tree_view );
+	format = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( window ), tree_view );
 	g_return_if_fail( FMA_IS_EXPORT_FORMAT( format ));
 
-	format_label = na_ioption_get_label( format );
+	format_label = fma_ioption_get_label( format );
 	format_label2 = fma_core_utils_str_remove_char( format_label, "_" );
 	text = g_strdup_printf( "%s:", format_label2 );
 	label = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmExportFormat" );
@@ -727,7 +727,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	g_free( format_label2 );
 	g_free( text );
 
-	format_description = na_ioption_get_description( format );
+	format_description = fma_ioption_get_description( format );
 	format_description2 = fma_core_utils_str_remove_char( format_description, "_" );
 	label = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmExportTooltip" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
@@ -735,7 +735,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	g_free( format_description );
 	g_free( format_description2 );
 
-	format_id = na_ioption_get_id( format );
+	format_id = fma_ioption_get_id( format );
 	na_settings_set_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, format_id );
 	g_free( format_id );
 

@@ -42,7 +42,7 @@
 #include <core/fma-gtk-utils.h>
 #include <core/fma-import-mode.h>
 #include <core/fma-importer.h>
-#include <core/na-ioptions-list.h>
+#include <core/fma-ioptions-list.h>
 #include <core/na-iprefs.h>
 #include <core/na-tokens.h>
 
@@ -127,10 +127,10 @@ static guint              st_last_tab       = 0;
 
 static GType      register_type( void );
 static void       class_init( NactPreferencesEditorClass *klass );
-static void       ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data );
-static GList     *ioptions_list_get_options( const NAIOptionsList *instance, GtkWidget *container );
-static void       ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container, GList *options );
-static NAIOption *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
+static void       ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
+static GList     *ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container );
+static void       ioptions_list_free_options( const FMAIOptionsList *instance, GtkWidget *container, GList *options );
+static FMAIOption *ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_constructed( GObject *dialog );
 static void       instance_dispose( GObject *dialog );
@@ -211,7 +211,7 @@ register_type( void )
 
 	type = g_type_register_static( BASE_TYPE_DIALOG, "NactPreferencesEditor", &info, 0 );
 
-	g_type_add_interface_static( type, NA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
 	return( type );
 }
@@ -237,7 +237,7 @@ class_init( NactPreferencesEditorClass *klass )
 }
 
 static void
-ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
+ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
 
@@ -254,7 +254,7 @@ ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
  * current container
  */
 static GList *
-ioptions_list_get_options( const NAIOptionsList *instance, GtkWidget *container )
+ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_get_options";
 	GList *options;
@@ -283,7 +283,7 @@ ioptions_list_get_options( const NAIOptionsList *instance, GtkWidget *container 
 }
 
 static void
-ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container, GList *options )
+ioptions_list_free_options( const FMAIOptionsList *instance, GtkWidget *container, GList *options )
 {
 	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_free_options";
 
@@ -302,11 +302,11 @@ ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container
 	}
 }
 
-static NAIOption *
-ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container )
+static FMAIOption *
+ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_get_ask_option";
-	NAIOption *option;
+	FMAIOption *option;
 
 	g_return_val_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ), NULL );
 
@@ -489,10 +489,10 @@ on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel, gpoi
 		desktop_create_model( editor );
 
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
-		na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( editor ), container, TRUE );
+		fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( editor ), container, TRUE );
 
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-		na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( editor ), container, TRUE );
+		fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( editor ), container, TRUE );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
 		nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
@@ -546,11 +546,11 @@ on_base_initialize_window( NactPreferencesEditor *editor, gpointer user_data )
 		 */
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
 		import_mode = na_settings_get_string( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL, &editor->private->import_mode_mandatory );
-		na_ioptions_list_set_editable(
-				NA_IOPTIONS_LIST( editor ), container,
+		fma_ioptions_list_set_editable(
+				FMA_IOPTIONS_LIST( editor ), container,
 				!editor->private->import_mode_mandatory && !editor->private->preferences_locked );
-		na_ioptions_list_set_default(
-				NA_IOPTIONS_LIST( editor ), container,
+		fma_ioptions_list_set_default(
+				FMA_IOPTIONS_LIST( editor ), container,
 				import_mode );
 		g_free( import_mode );
 
@@ -558,11 +558,11 @@ on_base_initialize_window( NactPreferencesEditor *editor, gpointer user_data )
 		 */
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 		export_format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, &editor->private->export_format_mandatory );
-		na_ioptions_list_set_editable(
-				NA_IOPTIONS_LIST( editor ), container,
+		fma_ioptions_list_set_editable(
+				FMA_IOPTIONS_LIST( editor ), container,
 				!editor->private->export_format_mandatory && !editor->private->preferences_locked );
-		na_ioptions_list_set_default(
-				NA_IOPTIONS_LIST( editor ), container,
+		fma_ioptions_list_set_default(
+				FMA_IOPTIONS_LIST( editor ), container,
 				export_format );
 		g_free( export_format );
 
@@ -1185,7 +1185,7 @@ on_dialog_ok( BaseDialog *dialog )
 {
 	NactPreferencesEditor *editor;
 	GtkWidget *container;
-	NAIOption *option;
+	FMAIOption *option;
 	gchar *import_mode;
 	gchar *export_format;
 
@@ -1244,9 +1244,9 @@ on_dialog_ok( BaseDialog *dialog )
 		 */
 		if( !editor->private->import_mode_mandatory ){
 			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
-			option = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), container );
+			option = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), container );
 			g_return_if_fail( FMA_IS_IMPORT_MODE( option ));
-			import_mode = na_ioption_get_id( option );
+			import_mode = fma_ioption_get_id( option );
 			na_settings_set_string( NA_IPREFS_IMPORT_PREFERRED_MODE, import_mode );
 			g_free( import_mode );
 		}
@@ -1255,10 +1255,10 @@ on_dialog_ok( BaseDialog *dialog )
 		 */
 		if( !editor->private->export_format_mandatory ){
 			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-			option = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), container );
+			option = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), container );
 			g_debug( "nact_preferences_editor_on_dialog_ok: option=%p", ( void * ) option );
 			g_return_if_fail( FMA_IS_EXPORT_FORMAT( option ));
-			export_format = na_ioption_get_id( option );
+			export_format = fma_ioption_get_id( option );
 			na_settings_set_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, export_format );
 			g_free( export_format );
 		}

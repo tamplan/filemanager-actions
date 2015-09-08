@@ -36,11 +36,11 @@
 #include <api/fma-core-utils.h>
 
 #include "fma-gtk-utils.h"
-#include "na-ioptions-list.h"
+#include "fma-ioptions-list.h"
 
 /* private interface data
  */
-struct _NAIOptionsListInterfacePrivate {
+struct _FMAIOptionsListInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -71,52 +71,52 @@ enum {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType        register_type( void );
-static void         interface_base_init( NAIOptionsListInterface *iface );
-static void         interface_base_finalize( NAIOptionsListInterface *iface );
+static void         interface_base_init( FMAIOptionsListInterface *iface );
+static void         interface_base_finalize( FMAIOptionsListInterface *iface );
 
-static guint        ioptions_list_get_version( const NAIOptionsList *instance );
-static void         ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container_parent, GList *options );
-static void         ioptions_list_free_ask_option( const NAIOptionsList *instance, GtkWidget *container_parent, NAIOption *option );
-static GList       *options_list_get_options( const NAIOptionsList *instance, GtkWidget *container_parent );
-static void         options_list_free_options( const NAIOptionsList *instance, GtkWidget *container_parent, GList *options );
-static NAIOption   *options_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container_parent );
-static void         options_list_free_ask_option( const NAIOptionsList *instance, GtkWidget *container_parent, NAIOption *ask_option );
+static guint        ioptions_list_get_version( const FMAIOptionsList *instance );
+static void         ioptions_list_free_options( const FMAIOptionsList *instance, GtkWidget *container_parent, GList *options );
+static void         ioptions_list_free_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent, FMAIOption *option );
+static GList       *options_list_get_options( const FMAIOptionsList *instance, GtkWidget *container_parent );
+static void         options_list_free_options( const FMAIOptionsList *instance, GtkWidget *container_parent, GList *options );
+static FMAIOption   *options_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent );
+static void         options_list_free_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent, FMAIOption *ask_option );
 static gboolean     get_options_list_container_initialized( GtkWidget *container_parent );
 static void         set_options_list_container_initialized( GtkWidget *container_parent, gboolean initialized );
 static gboolean     get_options_list_editable( GtkWidget *container_parent );
 static void         set_options_list_editable( GtkWidget *container_parent, gboolean editable );
 static GtkWidget   *get_options_list_first_button( GtkWidget *container );
 static void         set_options_list_first_button( GtkWidget *container, GtkWidget *button );
-static gboolean     get_options_list_instance_initialized( const NAIOptionsList *instance );
-static void         set_options_list_instance_initialized( const NAIOptionsList *instance, gboolean initialized );
-static NAIOption   *get_options_list_option( GtkWidget *container );
-static void         set_options_list_option( GtkWidget *container, NAIOption *option );
+static gboolean     get_options_list_instance_initialized( const FMAIOptionsList *instance );
+static void         set_options_list_instance_initialized( const FMAIOptionsList *instance, gboolean initialized );
+static FMAIOption   *get_options_list_option( GtkWidget *container );
+static void         set_options_list_option( GtkWidget *container, FMAIOption *option );
 static const gchar *get_options_list_option_id( GtkWidget *container );
 static void         set_options_list_option_id( GtkWidget *container, const gchar *id );
 static gboolean     get_options_list_sensitive( GtkWidget *container_parent );
 static void         set_options_list_sensitive( GtkWidget *container_parent, gboolean sensitive );
-static void         check_for_initializations( const NAIOptionsList *instance, GtkWidget *container_parent );
+static void         check_for_initializations( const FMAIOptionsList *instance, GtkWidget *container_parent );
 static void         on_parent_container_finalized( gpointer user_data, GObject *container );
 static void         on_instance_finalized( gpointer user_data, GObject *instance );
-static void         radio_button_create_group( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask );
-static void         radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option );
-static void         radio_button_weak_notify( NAIOption *option, GObject *vbox );
-static void         tree_view_create_model( const NAIOptionsList *instance, GtkWidget *container_parent );
-static void         tree_view_populate( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask );
-static void         tree_view_add_item( GtkTreeView *listview, GtkTreeModel *model, const NAIOption *option );
+static void         radio_button_create_group( const FMAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask );
+static void         radio_button_draw_vbox( GtkWidget *container_parent, const FMAIOption *option );
+static void         radio_button_weak_notify( FMAIOption *option, GObject *vbox );
+static void         tree_view_create_model( const FMAIOptionsList *instance, GtkWidget *container_parent );
+static void         tree_view_populate( const FMAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask );
+static void         tree_view_add_item( GtkTreeView *listview, GtkTreeModel *model, const FMAIOption *option );
 static void         tree_view_weak_notify( GtkTreeModel *model, GObject *tree_view );
 static void         radio_button_select_iter( GtkWidget *container_option, GtkWidget *container_parent );
 static gboolean     tree_view_select_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkWidget *container_parent );
 static void         radio_button_get_selected_iter( GtkWidget *container_option, GtkWidget *container_parent );
-static void         tree_view_get_selected( const NAIOptionsList *instance, GtkWidget *container_parent );
+static void         tree_view_get_selected( const FMAIOptionsList *instance, GtkWidget *container_parent );
 
 /**
- * na_ioptions_list_get_type:
+ * fma_ioptions_list_get_type:
  *
  * Returns: the #GType type of this interface.
  */
 GType
-na_ioptions_list_get_type( void )
+fma_ioptions_list_get_type( void )
 {
 	static GType type = 0;
 
@@ -128,18 +128,18 @@ na_ioptions_list_get_type( void )
 }
 
 /*
- * na_ioptions_list_register_type:
+ * fma_ioptions_list_register_type:
  *
  * Registers this interface.
  */
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_ioptions_list_register_type";
+	static const gchar *thisfn = "fma_ioptions_list_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIOptionsListInterface ),
+		sizeof( FMAIOptionsListInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -152,7 +152,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIOptionsList", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIOptionsList", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -160,15 +160,15 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIOptionsListInterface *iface )
+interface_base_init( FMAIOptionsListInterface *iface )
 {
-	static const gchar *thisfn = "na_ioptions_list_interface_base_init";
+	static const gchar *thisfn = "fma_ioptions_list_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: iface=%p (%s)", thisfn, ( void * ) iface, G_OBJECT_CLASS_NAME( iface ));
 
-		iface->private = g_new0( NAIOptionsListInterfacePrivate, 1 );
+		iface->private = g_new0( FMAIOptionsListInterfacePrivate, 1 );
 
 		iface->get_version = ioptions_list_get_version;
 		iface->get_options = NULL;
@@ -181,9 +181,9 @@ interface_base_init( NAIOptionsListInterface *iface )
 }
 
 static void
-interface_base_finalize( NAIOptionsListInterface *iface )
+interface_base_finalize( FMAIOptionsListInterface *iface )
 {
-	static const gchar *thisfn = "na_ioptions_list_interface_base_finalize";
+	static const gchar *thisfn = "fma_ioptions_list_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -199,15 +199,15 @@ interface_base_finalize( NAIOptionsListInterface *iface )
  * defaults implemented by the interface
  */
 static guint
-ioptions_list_get_version( const NAIOptionsList *instance )
+ioptions_list_get_version( const FMAIOptionsList *instance )
 {
 	return( 1 );
 }
 
 static void
-ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container_parent, GList *options )
+ioptions_list_free_options( const FMAIOptionsList *instance, GtkWidget *container_parent, GList *options )
 {
-	static const gchar *thisfn = "na_ioptions_list_free_options";
+	static const gchar *thisfn = "fma_ioptions_list_free_options";
 
 	g_debug( "%s: instance=%p, container_parent=%p, options=%p",
 			thisfn, ( void * ) instance, ( void * ) container_parent, ( void * ) options );
@@ -217,9 +217,9 @@ ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container
 }
 
 static void
-ioptions_list_free_ask_option( const NAIOptionsList *instance, GtkWidget *container_parent, NAIOption *ask_option )
+ioptions_list_free_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent, FMAIOption *ask_option )
 {
-	static const gchar *thisfn = "na_ioptions_list_free_ask_option";
+	static const gchar *thisfn = "fma_ioptions_list_free_ask_option";
 
 	g_debug( "%s: instance=%p, container_parent=%p, ask_option=%p",
 			thisfn, ( void * ) instance, ( void * ) container_parent, ( void * ) ask_option );
@@ -232,46 +232,46 @@ ioptions_list_free_ask_option( const NAIOptionsList *instance, GtkWidget *contai
  * or the default provided by the interface
  */
 static GList *
-options_list_get_options( const NAIOptionsList *instance, GtkWidget *container_parent )
+options_list_get_options( const FMAIOptionsList *instance, GtkWidget *container_parent )
 {
 	GList *options;
 
 	options = NULL;
 
-	if( NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_options ){
-		options = NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_options( instance, container_parent );
+	if( FMA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_options ){
+		options = FMA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_options( instance, container_parent );
 	}
 
 	return( options );
 }
 
 static void
-options_list_free_options( const NAIOptionsList *instance, GtkWidget *container_parent, GList *options )
+options_list_free_options( const FMAIOptionsList *instance, GtkWidget *container_parent, GList *options )
 {
-	if( NA_IOPTIONS_LIST_GET_INTERFACE( instance )->free_options ){
-		NA_IOPTIONS_LIST_GET_INTERFACE( instance )->free_options( instance, container_parent, options );
+	if( FMA_IOPTIONS_LIST_GET_INTERFACE( instance )->free_options ){
+		FMA_IOPTIONS_LIST_GET_INTERFACE( instance )->free_options( instance, container_parent, options );
 	}
 }
 
-static NAIOption *
-options_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container_parent )
+static FMAIOption *
+options_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent )
 {
-	NAIOption *option;
+	FMAIOption *option;
 
 	option = NULL;
 
-	if( NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_ask_option ){
-		option = NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_ask_option( instance, container_parent );
+	if( FMA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_ask_option ){
+		option = FMA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_ask_option( instance, container_parent );
 	}
 
 	return( option );
 }
 
 static void
-options_list_free_ask_option( const NAIOptionsList *instance, GtkWidget *container_parent, NAIOption *ask_option )
+options_list_free_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent, FMAIOption *ask_option )
 {
-	if( NA_IOPTIONS_LIST_GET_INTERFACE( instance )->free_ask_option ){
-		NA_IOPTIONS_LIST_GET_INTERFACE( instance )->free_ask_option( instance, container_parent, ask_option );
+	if( FMA_IOPTIONS_LIST_GET_INTERFACE( instance )->free_ask_option ){
+		FMA_IOPTIONS_LIST_GET_INTERFACE( instance )->free_ask_option( instance, container_parent, ask_option );
 	}
 }
 
@@ -347,7 +347,7 @@ set_options_list_first_button( GtkWidget *container_parent, GtkWidget *button )
  * finalized
  */
 static gboolean
-get_options_list_instance_initialized( const NAIOptionsList *instance )
+get_options_list_instance_initialized( const FMAIOptionsList *instance )
 {
 	gboolean initialized;
 
@@ -357,7 +357,7 @@ get_options_list_instance_initialized( const NAIOptionsList *instance )
 }
 
 static void
-set_options_list_instance_initialized( const NAIOptionsList *instance, gboolean initialized )
+set_options_list_instance_initialized( const FMAIOptionsList *instance, gboolean initialized )
 {
 	g_object_set_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_INITIALIZED, GUINT_TO_POINTER( initialized ));
 }
@@ -365,14 +365,14 @@ set_options_list_instance_initialized( const NAIOptionsList *instance, gboolean 
 /* the parent container: the current option
  * the option container: the option attached to this container (VBox only)
  */
-static NAIOption *
+static FMAIOption *
 get_options_list_option( GtkWidget *container )
 {
-	return(( NAIOption * ) g_object_get_data( G_OBJECT( container ), IOPTIONS_LIST_DATA_OPTION ));
+	return(( FMAIOption * ) g_object_get_data( G_OBJECT( container ), IOPTIONS_LIST_DATA_OPTION ));
 }
 
 static void
-set_options_list_option( GtkWidget *container, NAIOption *option )
+set_options_list_option( GtkWidget *container, FMAIOption *option )
 {
 	g_object_set_data( G_OBJECT( container ), IOPTIONS_LIST_DATA_OPTION, option );
 }
@@ -433,9 +433,9 @@ set_options_list_sensitive( GtkWidget *container_parent, gboolean sensitive )
  * valid values.
  */
 static void
-check_for_initializations( const NAIOptionsList *instance, GtkWidget *container_parent )
+check_for_initializations( const FMAIOptionsList *instance, GtkWidget *container_parent )
 {
-	static const gchar *thisfn = "na_ioptions_list_check_for_initializations";
+	static const gchar *thisfn = "fma_ioptions_list_check_for_initializations";
 
 	if( !get_options_list_instance_initialized( instance )){
 
@@ -462,7 +462,7 @@ check_for_initializations( const NAIOptionsList *instance, GtkWidget *container_
 static void
 on_parent_container_finalized( gpointer user_data, GObject *container )
 {
-	static const gchar *thisfn = "na_ioptions_list_on_parent_container_finalized";
+	static const gchar *thisfn = "fma_ioptions_list_on_parent_container_finalized";
 
 	g_debug( "%s: user_data=%p, container=%p", thisfn, ( void * ) user_data, ( void * ) container );
 }
@@ -470,14 +470,14 @@ on_parent_container_finalized( gpointer user_data, GObject *container )
 static void
 on_instance_finalized( gpointer user_data, GObject *instance )
 {
-	static const gchar *thisfn = "na_ioptions_list_on_instance_finalized";
+	static const gchar *thisfn = "fma_ioptions_list_on_instance_finalized";
 
 	g_debug( "%s: user_data=%p, instance=%p", thisfn, ( void * ) user_data, ( void * ) instance );
 }
 
 /*
- * na_ioptions_list_gtk_init:
- * @instance: the object which implements this #NAIOptionsList interface.
+ * fma_ioptions_list_gtk_init:
+ * @instance: the object which implements this #FMAIOptionsList interface.
  * @container_parent: the #GtkWidget parent container in which we are going to setup the
  *  list of values. @container_parent may be a #GtkVBox or a #GtkTreeView.
  * @with_ask: whether we should also display an 'Ask me' option.
@@ -485,11 +485,11 @@ on_instance_finalized( gpointer user_data, GObject *instance )
  * Initialize the gtk objects which will be used to display the selection.
  */
 void
-na_ioptions_list_gtk_init( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
+fma_ioptions_list_gtk_init( const FMAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
 {
-	static const gchar *thisfn = "na_ioptions_list_gtk_init";
+	static const gchar *thisfn = "fma_ioptions_list_gtk_init";
 
-	g_return_if_fail( NA_IS_IOPTIONS_LIST( instance ));
+	g_return_if_fail( FMA_IS_IOPTIONS_LIST( instance ));
 
 	check_for_initializations( instance, container_parent );
 
@@ -512,11 +512,11 @@ na_ioptions_list_gtk_init( const NAIOptionsList *instance, GtkWidget *container_
 }
 
 static void
-radio_button_create_group( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
+radio_button_create_group( const FMAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
 {
-	static const gchar *thisfn = "na_ioptions_list_radio_button_create_group";
+	static const gchar *thisfn = "fma_ioptions_list_radio_button_create_group";
 	GList *options, *iopt;
-	NAIOption *option;
+	FMAIOption *option;
 
 	g_debug( "%s: instance=%p, container_parent=%p (%s), with_ask=%s",
 			thisfn,
@@ -529,7 +529,7 @@ radio_button_create_group( const NAIOptionsList *instance, GtkWidget *container_
 	/* draw the formats as a group of radio buttons
 	 */
 	for( iopt = options ; iopt ; iopt = iopt->next ){
-		radio_button_draw_vbox( container_parent, NA_IOPTION( iopt->data ));
+		radio_button_draw_vbox( container_parent, FMA_IOPTION( iopt->data ));
 	}
 
 	options_list_free_options( instance, container_parent, options );
@@ -551,10 +551,10 @@ radio_button_create_group( const NAIOptionsList *instance, GtkWidget *container_
  *  |   +- radio button + label
  */
 static void
-radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option )
+radio_button_draw_vbox( GtkWidget *container_parent, const FMAIOption *option )
 {
 #if 0
-	static const gchar *thisfn = "na_ioptions_list_radio_button_draw_vbox";
+	static const gchar *thisfn = "fma_ioptions_list_radio_button_draw_vbox";
 #endif
 	gchar *description;
 	GtkWidget *button;
@@ -563,7 +563,7 @@ radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option )
 
 	/* first button of the group does not have the property set
 	 */
-	label = na_ioption_get_label( option );
+	label = fma_ioption_get_label( option );
 	first = get_options_list_first_button( container_parent );
 	if( first ){
 		button = gtk_radio_button_new_with_label_from_widget( GTK_RADIO_BUTTON( first ), label );
@@ -574,7 +574,7 @@ radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option )
 	g_free( label );
 	gtk_button_set_use_underline( GTK_BUTTON( button ), TRUE );
 
-	description = na_ioption_get_description( option );
+	description = fma_ioption_get_description( option );
 	g_object_set( G_OBJECT( button ), "tooltip-text", description, NULL );
 	g_free( description );
 
@@ -589,9 +589,9 @@ radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option )
  * when destroying the window
  */
 static void
-radio_button_weak_notify( NAIOption *option, GObject *vbox )
+radio_button_weak_notify( FMAIOption *option, GObject *vbox )
 {
-	static const gchar *thisfn = "na_ioptions_list_radio_button_weak_notify";
+	static const gchar *thisfn = "fma_ioptions_list_radio_button_weak_notify";
 
 	g_debug( "%s: option=%p, vbox=%p", thisfn, ( void * ) option, ( void * ) vbox );
 
@@ -599,9 +599,9 @@ radio_button_weak_notify( NAIOption *option, GObject *vbox )
 }
 
 static void
-tree_view_create_model( const NAIOptionsList *instance, GtkWidget *container_parent )
+tree_view_create_model( const FMAIOptionsList *instance, GtkWidget *container_parent )
 {
-	static const gchar *thisfn = "na_ioptions_list_tree_view_create_model";
+	static const gchar *thisfn = "fma_ioptions_list_tree_view_create_model";
 	GtkListStore *model;
 	GtkTreeViewColumn *column;
 	GtkTreeSelection *selection;
@@ -641,11 +641,11 @@ tree_view_create_model( const NAIOptionsList *instance, GtkWidget *container_par
 }
 
 static void
-tree_view_populate( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
+tree_view_populate( const FMAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
 {
-	static const gchar *thisfn = "na_ioptions_list_tree_view_populate";
+	static const gchar *thisfn = "fma_ioptions_list_tree_view_populate";
 	GtkTreeModel *model;
-	NAIOption *option;
+	FMAIOption *option;
 	GList *options, *iopt;
 
 	g_return_if_fail( GTK_IS_TREE_VIEW( container_parent ));
@@ -659,7 +659,7 @@ tree_view_populate( const NAIOptionsList *instance, GtkWidget *container_parent,
 	options = options_list_get_options( instance, container_parent );
 
 	for( iopt = options ; iopt ; iopt = iopt->next ){
-		option = NA_IOPTION( iopt->data );
+		option = FMA_IOPTION( iopt->data );
 		tree_view_add_item( GTK_TREE_VIEW( container_parent ), model, option );
 	}
 
@@ -675,16 +675,16 @@ tree_view_populate( const NAIOptionsList *instance, GtkWidget *container_parent,
 }
 
 static void
-tree_view_add_item( GtkTreeView *listview, GtkTreeModel *model, const NAIOption *option )
+tree_view_add_item( GtkTreeView *listview, GtkTreeModel *model, const FMAIOption *option )
 {
 	GtkTreeIter iter;
 	gchar *label, *label2, *description;
 	GdkPixbuf *pixbuf;
 
-	label = na_ioption_get_label( option );
+	label = fma_ioption_get_label( option );
 	label2 = fma_core_utils_str_remove_char( label, "_" );
-	description = na_ioption_get_description( option );
-	pixbuf = na_ioption_get_pixbuf( option );
+	description = fma_ioption_get_description( option );
+	pixbuf = fma_ioption_get_pixbuf( option );
 	gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
 	gtk_list_store_set(
 			GTK_LIST_STORE( model ),
@@ -715,21 +715,21 @@ tree_view_weak_notify( GtkTreeModel *model, GObject *tree_view )
 }
 
 /*
- * na_ioptions_list_set_default:
- * @instance: the object which implements this #NAIOptionsList interface.
+ * fma_ioptions_list_set_default:
+ * @instance: the object which implements this #FMAIOptionsList interface.
  * @container_parent: the #GtkWidget which embeds our list of values.
- * @default_id: the string identifier of the #NAIOption to be set as the default.
+ * @default_id: the string identifier of the #FMAIOption to be set as the default.
  *
  * Set the default, either of the radio button group or of the tree view.
  */
 void
-na_ioptions_list_set_default(
-		const NAIOptionsList *instance, GtkWidget *container_parent, const gchar *default_id )
+fma_ioptions_list_set_default(
+		const FMAIOptionsList *instance, GtkWidget *container_parent, const gchar *default_id )
 {
-	static const gchar *thisfn = "na_ioptions_list_set_default";
+	static const gchar *thisfn = "fma_ioptions_list_set_default";
 	GtkTreeModel *model;
 
-	g_return_if_fail( NA_IS_IOPTIONS_LIST( instance ));
+	g_return_if_fail( FMA_IS_IOPTIONS_LIST( instance ));
 
 	check_for_initializations( instance, container_parent );
 
@@ -768,19 +768,19 @@ static void
 radio_button_select_iter( GtkWidget *button, GtkWidget *container_parent )
 {
 	const gchar *default_id;
-	NAIOption *option;
+	FMAIOption *option;
 	gboolean editable, sensitive;
 	gchar *option_id;
 
 	default_id = get_options_list_option_id( container_parent );
 	option = get_options_list_option( button );
-	option_id = na_ioption_get_id( option );
+	option_id = fma_ioption_get_id( option );
 
 	if( !strcmp( default_id, option_id )){
 		editable = get_options_list_editable( container_parent );
 		sensitive = get_options_list_sensitive( container_parent );
 		fma_gtk_utils_radio_set_initial_state( GTK_RADIO_BUTTON( button ), NULL, NULL, editable, sensitive );
-		g_debug( "na_ioptions_list_radio_button_select_iter: container_parent=%p, set active button=%p",
+		g_debug( "fma_ioptions_list_radio_button_select_iter: container_parent=%p, set active button=%p",
 				( void * ) container_parent, ( void * ) button );
 	}
 
@@ -795,7 +795,7 @@ tree_view_select_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter
 {
 	gboolean stop;
 	GtkTreeView *tree_view;
-	NAIOption *option;
+	FMAIOption *option;
 	const gchar *default_id;
 	gchar *option_id;
 	GtkTreeSelection *selection;
@@ -807,7 +807,7 @@ tree_view_select_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter
 
 	gtk_tree_model_get( model, iter, OBJECT_COLUMN, &option, -1 );
 	g_object_unref( option );
-	option_id = na_ioption_get_id( option );
+	option_id = fma_ioption_get_id( option );
 
 	if( !strcmp( default_id, option_id )){
 		selection = gtk_tree_view_get_selection( tree_view );
@@ -821,21 +821,21 @@ tree_view_select_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter
 }
 
 /*
- * na_ioptions_list_set_editable:
- * @instance: the object which implements this #NAIOptionsList interface.
+ * fma_ioptions_list_set_editable:
+ * @instance: the object which implements this #FMAIOptionsList interface.
  * @container_parent: the #GtkWidget which embeds our list of values.
  * @editable: whether the selectable user's preference is editable;
  *  Most of time, a user's preference is not editable if it is set as mandatory,
  *  or if the whole user's preferences are not writable.
  *
- * Set the @editable pseudo-property on the @instance #NAIOptionsList instance.
+ * Set the @editable pseudo-property on the @instance #FMAIOptionsList instance.
  */
 void
-na_ioptions_list_set_editable( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean editable )
+fma_ioptions_list_set_editable( const FMAIOptionsList *instance, GtkWidget *container_parent, gboolean editable )
 {
-	static const gchar *thisfn = "na_ioptions_list_set_editable";
+	static const gchar *thisfn = "fma_ioptions_list_set_editable";
 
-	g_return_if_fail( NA_IS_IOPTIONS_LIST( instance ));
+	g_return_if_fail( FMA_IS_IOPTIONS_LIST( instance ));
 
 	check_for_initializations( instance, container_parent );
 
@@ -849,21 +849,21 @@ na_ioptions_list_set_editable( const NAIOptionsList *instance, GtkWidget *contai
 }
 
 /*
- * na_ioptions_list_set_sensitive:
- * @instance: the object which implements this #NAIOptionsList interface.
+ * fma_ioptions_list_set_sensitive:
+ * @instance: the object which implements this #FMAIOptionsList interface.
  * @container_parent: the #GtkWidget which embeds our list of values.
  * @sensitive: whether the radio button group is to be sensitive;
  *  a widget should not be sensitive if the selectable option is not relevant
  *  in the considered case.
  *
- * Set the @sensitive pseudo-property on the @instance #NAIOptionsList instance.
+ * Set the @sensitive pseudo-property on the @instance #FMAIOptionsList instance.
  */
 void
-na_ioptions_list_set_sensitive( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean sensitive )
+fma_ioptions_list_set_sensitive( const FMAIOptionsList *instance, GtkWidget *container_parent, gboolean sensitive )
 {
-	static const gchar *thisfn = "na_ioptions_list_set_sensitive";
+	static const gchar *thisfn = "fma_ioptions_list_set_sensitive";
 
-	g_return_if_fail( NA_IS_IOPTIONS_LIST( instance ));
+	g_return_if_fail( FMA_IS_IOPTIONS_LIST( instance ));
 
 	check_for_initializations( instance, container_parent );
 
@@ -877,19 +877,19 @@ na_ioptions_list_set_sensitive( const NAIOptionsList *instance, GtkWidget *conta
 }
 
 /*
- * na_ioptions_list_get_selected:
- * @instance: the object which implements this #NAIOptionsList interface.
+ * fma_ioptions_list_get_selected:
+ * @instance: the object which implements this #FMAIOptionsList interface.
  * @container_parent: the #GtkWidget which embeds our list of values.
  *
- * Returns: the currently selected #NAIOption.
+ * Returns: the currently selected #FMAIOption.
  */
-NAIOption *
-na_ioptions_list_get_selected( const NAIOptionsList *instance, GtkWidget *container_parent )
+FMAIOption *
+fma_ioptions_list_get_selected( const FMAIOptionsList *instance, GtkWidget *container_parent )
 {
-	static const gchar *thisfn = "na_ioptions_list_get_selected";
-	NAIOption *option;
+	static const gchar *thisfn = "fma_ioptions_list_get_selected";
+	FMAIOption *option;
 
-	g_return_val_if_fail( NA_IS_IOPTIONS_LIST( instance ), NULL );
+	g_return_val_if_fail( FMA_IS_IOPTIONS_LIST( instance ), NULL );
 
 	check_for_initializations( instance, container_parent );
 
@@ -919,24 +919,24 @@ na_ioptions_list_get_selected( const NAIOptionsList *instance, GtkWidget *contai
 static void
 radio_button_get_selected_iter( GtkWidget *button, GtkWidget *container_parent )
 {
-	NAIOption *option;
+	FMAIOption *option;
 
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
 		option = get_options_list_option( button );
 		set_options_list_option( container_parent, option );
-		g_debug( "na_ioptions_list_radio_button_get_selected_iter: container_parent=%p, active button=%p",
+		g_debug( "fma_ioptions_list_radio_button_get_selected_iter: container_parent=%p, active button=%p",
 				( void * ) container_parent, ( void * ) button );
 	}
 }
 
 static void
-tree_view_get_selected( const NAIOptionsList *instance, GtkWidget *container_parent )
+tree_view_get_selected( const FMAIOptionsList *instance, GtkWidget *container_parent )
 {
 	GtkTreeSelection *selection;
 	GList *rows;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	NAIOption *option;
+	FMAIOption *option;
 
 	selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( container_parent ));
 	rows = gtk_tree_selection_get_selected_rows( selection, &model );

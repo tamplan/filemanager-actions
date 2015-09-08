@@ -40,7 +40,7 @@
 
 #include <core/fma-import-mode.h>
 #include <core/fma-importer.h>
-#include <core/na-ioptions-list.h>
+#include <core/fma-ioptions-list.h>
 #include <core/fma-gtk-utils.h>
 #include <core/na-settings.h>
 
@@ -84,7 +84,7 @@ struct _NactAssistantImportPrivate {
 	gboolean     dispose_has_run;
 	GtkWidget   *file_chooser;
 	GtkTreeView *duplicates_listview;
-	NAIOption   *mode;
+	FMAIOption   *mode;
 	GList       *results;
 	GList       *overriden;
 };
@@ -97,10 +97,10 @@ static BaseAssistantClass *st_parent_class   = NULL;
 
 static GType         register_type( void );
 static void          class_init( NactAssistantImportClass *klass );
-static void          ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data );
-static GList        *ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container );
-static void          ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes );
-static NAIOption    *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
+static void          ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
+static GList        *ioptions_list_get_modes( const FMAIOptionsList *instance, GtkWidget *container );
+static void          ioptions_list_free_modes( const FMAIOptionsList *instance, GtkWidget *container, GList *modes );
+static FMAIOption    *ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container );
 static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_dispose( GObject *application );
 static void          instance_finalize( GObject *application );
@@ -165,7 +165,7 @@ register_type( void )
 
 	type = g_type_register_static( BASE_TYPE_ASSISTANT, "NactAssistantImport", &info, 0 );
 
-	g_type_add_interface_static( type, NA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
 	return( type );
 }
@@ -191,7 +191,7 @@ class_init( NactAssistantImportClass *klass )
 }
 
 static void
-ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
+ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_assistant_import_ioptions_list_iface_init";
 
@@ -203,7 +203,7 @@ ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
 }
 
 static GList *
-ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
+ioptions_list_get_modes( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	GList *modes;
 
@@ -215,13 +215,13 @@ ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
 }
 
 static void
-ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes )
+ioptions_list_free_modes( const FMAIOptionsList *instance, GtkWidget *container, GList *modes )
 {
 	fma_importer_free_modes( modes );
 }
 
-static NAIOption *
-ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container )
+static FMAIOption *
+ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	return( fma_importer_get_ask_mode());
 }
@@ -380,7 +380,7 @@ create_duplicates_treeview_model( NactAssistantImport *dialog )
 	dialog->private->duplicates_listview = get_duplicates_treeview_from_assistant_import( dialog );
 	g_return_if_fail( GTK_IS_TREE_VIEW( dialog->private->duplicates_listview ));
 
-	na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( dialog ), GTK_WIDGET( dialog->private->duplicates_listview ), TRUE );
+	fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( dialog ), GTK_WIDGET( dialog->private->duplicates_listview ), TRUE );
 }
 
 static void
@@ -535,11 +535,11 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 			thisfn, ( void * ) window, ( void * ) assistant );
 
 	import_mode = na_settings_get_string( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL, &mandatory );
-	na_ioptions_list_set_editable(
-			NA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ),
+	fma_ioptions_list_set_editable(
+			FMA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ),
 			!mandatory );
-	na_ioptions_list_set_default(
-			NA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ),
+	fma_ioptions_list_set_default(
+			FMA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ),
 			import_mode );
 	g_free( import_mode );
 
@@ -619,12 +619,12 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	 */
 	label = find_widget_from_page( page, "p3-ConfirmImportMode" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
-	window->private->mode = na_ioptions_list_get_selected(
-			NA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ));
+	window->private->mode = fma_ioptions_list_get_selected(
+			FMA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ));
 	g_return_if_fail( FMA_IS_IMPORT_MODE( window->private->mode ));
-	mode_label = na_ioption_get_label( window->private->mode );
+	mode_label = fma_ioption_get_label( window->private->mode );
 	label2 = fma_core_utils_str_remove_char( mode_label, "_" );
-	mode_description = na_ioption_get_description( window->private->mode );
+	mode_description = fma_ioption_get_description( window->private->mode );
 	text = g_markup_printf_escaped( "%s\n\n<span style=\"italic\">%s</span>", label2, mode_description );
 	gtk_label_set_markup( GTK_LABEL( label ), text );
 	g_free( text );
@@ -831,7 +831,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		gtk_box_pack_start( GTK_BOX( file_vbox ), file_report, FALSE, FALSE, 0 );
 	}
 
-	mode_id = na_ioption_get_id( window->private->mode );
+	mode_id = fma_ioption_get_id( window->private->mode );
 	na_settings_set_string( NA_IPREFS_IMPORT_PREFERRED_MODE, mode_id );
 	g_free( mode_id );
 

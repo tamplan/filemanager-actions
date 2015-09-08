@@ -38,7 +38,7 @@
 #include <api/fma-iexporter.h>
 #include <api/fma-object-api.h>
 
-#include "na-ioption.h"
+#include "fma-ioption.h"
 #include "na-pivot.h"
 
 G_BEGIN_DECLS
@@ -48,7 +48,7 @@ G_BEGIN_DECLS
 
 GList        *fma_exporter_get_formats    ( const NAPivot *pivot );
 void          fma_exporter_free_formats   ( GList *formats );
-NAIOption   *fma_exporter_get_ask_option ( void );
+FMAIOption   *fma_exporter_get_ask_option ( void );
 
 gchar        *fma_exporter_to_buffer      ( const NAPivot *pivot,
                                             const FMAObjectItem *item,

@@ -34,7 +34,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "fma-import-mode.h"
-#include "na-ioption.h"
+#include "fma-ioption.h"
 
 /* private class data
  */
@@ -73,11 +73,11 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType      register_type( void );
 static void       class_init( FMAImportModeClass *klass );
-static void       ioption_iface_init( NAIOptionInterface *iface, void *user_data );
-static gchar     *ioption_get_id( const NAIOption *option );
-static gchar     *ioption_get_label( const NAIOption *option );
-static gchar     *ioption_get_description( const NAIOption *option );
-static GdkPixbuf *ioption_get_pixbuf( const NAIOption *option );
+static void       ioption_iface_init( FMAIOptionInterface *iface, void *user_data );
+static gchar     *ioption_get_id( const FMAIOption *option );
+static gchar     *ioption_get_label( const FMAIOption *option );
+static gchar     *ioption_get_description( const FMAIOption *option );
+static GdkPixbuf *ioption_get_pixbuf( const FMAIOption *option );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -124,7 +124,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_OBJECT, "FMAImportMode", &info, 0 );
 
-	g_type_add_interface_static( type, NA_TYPE_IOPTION, &ioption_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IOPTION, &ioption_iface_info );
 
 	return( type );
 }
@@ -180,7 +180,7 @@ class_init( FMAImportModeClass *klass )
 }
 
 static void
-ioption_iface_init( NAIOptionInterface *iface, void *user_data )
+ioption_iface_init( FMAIOptionInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "fma_import_mode_ioption_iface_init";
 
@@ -194,13 +194,13 @@ ioption_iface_init( NAIOptionInterface *iface, void *user_data )
 
 /*
  * ioption_get_id:
- * @option: this #NAIOption instance.
+ * @option: this #FMAIOption instance.
  *
  * Returns: the ASCII id of the @option, as a newly allocated string which
  * should be g_free() by the caller.
  */
 static gchar *
-ioption_get_id( const NAIOption *option )
+ioption_get_id( const FMAIOption *option )
 {
 	gchar *id;
 	FMAImportMode *mode;
@@ -219,13 +219,13 @@ ioption_get_id( const NAIOption *option )
 
 /*
  * ioption_get_label:
- * @option: this #NAIOption instance.
+ * @option: this #FMAIOption instance.
  *
  * Returns: the label associated to @option, as a newly allocated string
  * which should be g_free() by the caller.
  */
 static gchar *
-ioption_get_label( const NAIOption *option )
+ioption_get_label( const FMAIOption *option )
 {
 	gchar *label;
 	FMAImportMode *mode;
@@ -244,13 +244,13 @@ ioption_get_label( const NAIOption *option )
 
 /*
  * ioption_get_description:
- * @option: this #NAIOption instance.
+ * @option: this #FMAIOption instance.
  *
  * Returns: the description associated to @option, as a newly allocated string
  * which should be g_free() by the caller.
  */
 static gchar *
-ioption_get_description( const NAIOption *option )
+ioption_get_description( const FMAIOption *option )
 {
 	gchar *description;
 	FMAImportMode *mode;
@@ -269,13 +269,13 @@ ioption_get_description( const NAIOption *option )
 
 /*
  * ioption_get_pixbuf:
- * @option: this #NAIOption instance.
+ * @option: this #FMAIOption instance.
  *
  * Returns: a new reference to the pixbuf associated to @option;
  * which should later be g_object_unref() by the caller.
  */
 static GdkPixbuf *
-ioption_get_pixbuf( const NAIOption *option )
+ioption_get_pixbuf( const FMAIOption *option )
 {
 	GdkPixbuf *pixbuf;
 	FMAImportMode *mode;

@@ -27,22 +27,22 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_IOPTION_H__
-#define __CORE_NA_IOPTION_H__
+#ifndef __CORE_FMA_IOPTION_H__
+#define __CORE_FMA_IOPTION_H__
 
 /*
  * SECTION: ioptions
- * @title: NAIOption
+ * @title: FMAIOption
  * @short_description: The Option Interface v 1
- * @include: core/na-ioption.h
+ * @include: core/fma-ioption.h
  *
- * The #NAIOption interface is to be implemented by #GObject -derived object which
- * are part of a #NAIOptionsList interface.
+ * The #FMAIOption interface is to be implemented by #GObject -derived object which
+ * are part of a #FMAIOptionsList interface.
  *
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIOption interface</title>
+ *    <title>Historic of the versions of the #FMAIOption interface</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -50,7 +50,7 @@
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIOption interface version</entry>
+ *          <entry>#FMAIOption interface version</entry>
  *          <entry></entry>
  *        </row>
  *      </thead>
@@ -70,18 +70,18 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_IOPTION                      ( na_ioption_get_type())
-#define NA_IOPTION( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IOPTION, NAIOption ))
-#define NA_IS_IOPTION( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IOPTION ))
-#define NA_IOPTION_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IOPTION, NAIOptionInterface ))
+#define FMA_TYPE_IOPTION                      ( fma_ioption_get_type())
+#define FMA_IOPTION( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IOPTION, FMAIOption ))
+#define FMA_IS_IOPTION( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IOPTION ))
+#define FMA_IOPTION_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IOPTION, FMAIOptionInterface ))
 
-typedef struct _NAIOption                      NAIOption;
-typedef struct _NAIOptionInterfacePrivate      NAIOptionInterfacePrivate;
-typedef struct _NAIOptionImportFromUriParms    NAIOptionImportFromUriParms;
-typedef struct _NAIOptionManageImportModeParms NAIOptionManageImportModeParms;
+typedef struct _FMAIOption                      FMAIOption;
+typedef struct _FMAIOptionInterfacePrivate      FMAIOptionInterfacePrivate;
+typedef struct _FMAIOptionImportFromUriParms    FMAIOptionImportFromUriParms;
+typedef struct _FMAIOptionManageImportModeParms FMAIOptionManageImportModeParms;
 
 /*
- * NAIOptionInterface:
+ * FMAIOptionInterface:
  * @get_version:     returns the version of this interface that the
  *                   instance implements.
  * @get_id:          returns the string identifier of the option.
@@ -89,17 +89,17 @@ typedef struct _NAIOptionManageImportModeParms NAIOptionManageImportModeParms;
  * @get_description: returns the description of the option.
  * @get_pixbuf:      returns the image associated to the option.
  *
- * This defines the interface that a #NAIOption implementation should provide.
+ * This defines the interface that a #FMAIOption implementation should provide.
  */
 typedef struct {
 	/*< private >*/
-	GTypeInterface             parent;
-	NAIOptionInterfacePrivate *private;
+	GTypeInterface              parent;
+	FMAIOptionInterfacePrivate *private;
 
 	/*< public >*/
 	/*
 	 * get_version:
-	 * @instance: the #NAIOption instance of the implementation.
+	 * @instance: the #FMAIOption instance of the implementation.
 	 *
 	 * This method is supposed to let know to any caller which version of this
 	 * interface the implementation provides. This may be useful when this
@@ -112,61 +112,61 @@ typedef struct {
 	 *
 	 * Since: 3.2
 	 */
-	guint       ( *get_version )    ( const NAIOption *instance );
+	guint       ( *get_version )    ( const FMAIOption *instance );
 
 	/*
 	 * get_id:
-	 * @instance: the #NAIOption instance of the implementation.
+	 * @instance: the #FMAIOption instance of the implementation.
 	 *
 	 * Returns: the string identifier of the option, as a newly allocated string
 	 * which should be g_free() by the caller.
 	 *
 	 * Since: 3.2
 	 */
-	gchar *     ( *get_id )         ( const NAIOption *instance );
+	gchar *     ( *get_id )         ( const FMAIOption *instance );
 
 	/*
 	 * get_label:
-	 * @instance: the #NAIOption instance of the implementation.
+	 * @instance: the #FMAIOption instance of the implementation.
 	 *
 	 * Returns: the label of the option, as a newly allocated string
 	 * which should be g_free() by the caller.
 	 *
 	 * Since: 3.2
 	 */
-	gchar *     ( *get_label )      ( const NAIOption *instance );
+	gchar *     ( *get_label )      ( const FMAIOption *instance );
 
 	/*
 	 * get_description:
-	 * @instance: the #NAIOption instance of the implementation.
+	 * @instance: the #FMAIOption instance of the implementation.
 	 *
 	 * Returns: the description of the option, as a newly allocated string
 	 * which should be g_free() by the caller.
 	 *
 	 * Since: 3.2
 	 */
-	gchar *     ( *get_description )( const NAIOption *instance );
+	gchar *     ( *get_description )( const FMAIOption *instance );
 
 	/*
 	 * get_pixbuf:
-	 * @instance: the #NAIOption instance of the implementation.
+	 * @instance: the #FMAIOption instance of the implementation.
 	 *
 	 * Returns: the image assocated to the option, as a newly allocated string
 	 * which should be g_object_unref() by the caller.
 	 *
 	 * Since: 3.2
 	 */
-	GdkPixbuf * ( *get_pixbuf )     ( const NAIOption *instance );
+	GdkPixbuf * ( *get_pixbuf )     ( const FMAIOption *instance );
 }
-	NAIOptionInterface;
+	FMAIOptionInterface;
 
-GType      na_ioption_get_type       ( void );
+GType      fma_ioption_get_type       ( void );
 
-gchar     *na_ioption_get_id         ( const NAIOption *option );
-gchar     *na_ioption_get_label      ( const NAIOption *option );
-gchar     *na_ioption_get_description( const NAIOption *option );
-GdkPixbuf *na_ioption_get_pixbuf     ( const NAIOption *option );
+gchar     *fma_ioption_get_id         ( const FMAIOption *option );
+gchar     *fma_ioption_get_label      ( const FMAIOption *option );
+gchar     *fma_ioption_get_description( const FMAIOption *option );
+GdkPixbuf *fma_ioption_get_pixbuf     ( const FMAIOption *option );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_IOPTION_H__ */
+#endif /* __CORE_FMA_IOPTION_H__ */

@@ -197,7 +197,7 @@ fma_exporter_free_formats( GList *formats )
  *
  * Since: 3.2
  */
-NAIOption *
+FMAIOption *
 fma_exporter_get_ask_option( void )
 {
 	static const gchar *thisfn = "fma_exporter_get_ask_option";
@@ -236,7 +236,7 @@ fma_exporter_get_ask_option( void )
 	g_free( str->format );
 	g_free( str );
 
-	return( NA_IOPTION( format ));
+	return( FMA_IOPTION( format ));
 }
 
 static void
@@ -428,7 +428,7 @@ fma_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
 	for( ifmt = formats ; ifmt && !exporter ; ifmt = ifmt->next ){
 
 		export_format = FMA_EXPORT_FORMAT( ifmt->data );
-		id = na_ioption_get_id( NA_IOPTION( export_format ));
+		id = fma_ioption_get_id( FMA_IOPTION( export_format ));
 		if( !strcmp( id, format )){
 			exporter = fma_export_format_get_provider( FMA_EXPORT_FORMAT( ifmt->data ));
 		}

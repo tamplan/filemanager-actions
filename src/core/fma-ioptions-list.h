@@ -27,16 +27,16 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_IOPTIONS_LIST_H__
-#define __CORE_NA_IOPTIONS_LIST_H__
+#ifndef __CORE_FMA_IOPTIONS_LIST_H__
+#define __CORE_FMA_IOPTIONS_LIST_H__
 
 /*
  * SECTION: ioptions_list
- * @title: NAIOptionsList
+ * @title: FMAIOptionsList
  * @short_description: The OptionsList Interface v 1
- * @include: core/na-ioptions-list.h
+ * @include: core/fma-ioptions-list.h
  *
- * The #NAIOptionsList interface is to be used when we have one option to choose
+ * The #FMAIOptionsList interface is to be used when we have one option to choose
  * among several. The interface takes care of:
  * <itemizedlist>
  *   <listitem>
@@ -64,7 +64,7 @@
  * </itemizedlist>
  *
  * In order this interface to work, each option has to be seen as a #GObject
- * -derived object, which itself should implement the #NAIOption companion
+ * -derived object, which itself should implement the #FMAIOption companion
  * interface.
  *
  * Note that the instance which implements this interface is able to provide
@@ -73,12 +73,12 @@
  *
  * Instance initialization
  *
- * Rather that having to call a na_ioptions_list_instance_init() on each
+ * Rather that having to call a fma_ioptions_list_instance_init() on each
  * instance implementation, we prefer to check when entering in each public
  * method for an 'initialized' flag both at the instance level and at the
  * container level.
  *
- * Alternative might be be to have the na_ioptions_list_instance_init()
+ * Alternative might be be to have the fma_ioptions_list_instance_init()
  * initialization interface method, which itself connect to #BaseWindow
  * signals. But this would not prevent of initializing for both managed
  * containers...
@@ -89,7 +89,7 @@
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIOptionsList interface</title>
+ *    <title>Historic of the versions of the #FMAIOptionsList interface</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -97,7 +97,7 @@
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIOptionsList interface version</entry>
+ *          <entry>#FMAIOptionsList interface version</entry>
  *          <entry></entry>
  *        </row>
  *      </thead>
@@ -115,40 +115,40 @@
 
 #include <gtk/gtk.h>
 
-#include "na-ioption.h"
+#include "fma-ioption.h"
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_IOPTIONS_LIST                      ( na_ioptions_list_get_type())
-#define NA_IOPTIONS_LIST( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IOPTIONS_LIST, NAIOptionsList ))
-#define NA_IS_IOPTIONS_LIST( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IOPTIONS_LIST ))
-#define NA_IOPTIONS_LIST_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IOPTIONS_LIST, NAIOptionsListInterface ))
+#define FMA_TYPE_IOPTIONS_LIST                      ( fma_ioptions_list_get_type())
+#define FMA_IOPTIONS_LIST( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IOPTIONS_LIST, FMAIOptionsList ))
+#define FMA_IS_IOPTIONS_LIST( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IOPTIONS_LIST ))
+#define FMA_IOPTIONS_LIST_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IOPTIONS_LIST, FMAIOptionsListInterface ))
 
-typedef struct _NAIOptionsList                      NAIOptionsList;
-typedef struct _NAIOptionsListInterfacePrivate      NAIOptionsListInterfacePrivate;
-typedef struct _NAIOptionsListImportFromUriParms    NAIOptionsListImportFromUriParms;
-typedef struct _NAIOptionsListManageImportModeParms NAIOptionsListManageImportModeParms;
+typedef struct _FMAIOptionsList                      FMAIOptionsList;
+typedef struct _FMAIOptionsListInterfacePrivate      FMAIOptionsListInterfacePrivate;
+typedef struct _FMAIOptionsListImportFromUriParms    FMAIOptionsListImportFromUriParms;
+typedef struct _FMAIOptionsListManageImportModeParms FMAIOptionsListManageImportModeParms;
 
 /*
- * NAIOptionsListInterface:
+ * FMAIOptionsListInterface:
  * @get_version:     returns the version of this interface that the
  *                   instance implements.
- * @get_options:     returns the list of #NAIOption.
- * @free_options:    releases the list of #NAIOption.
- * @get_ask_option:  returns the 'Ask me' #NAIOption.
- * @free_ask_option: releases the 'Ask me' #NAIOption.
+ * @get_options:     returns the list of #FMAIOption.
+ * @free_options:    releases the list of #FMAIOption.
+ * @get_ask_option:  returns the 'Ask me' #FMAIOption.
+ * @free_ask_option: releases the 'Ask me' #FMAIOption.
  *
- * This defines the interface that a #NAIOptionsList implementation should provide.
+ * This defines the interface that a #FMAIOptionsList implementation should provide.
  */
 typedef struct {
 	/*< private >*/
-	GTypeInterface                  parent;
-	NAIOptionsListInterfacePrivate *private;
+	GTypeInterface                   parent;
+	FMAIOptionsListInterfacePrivate *private;
 
 	/*< public >*/
 	/*
 	 * get_version:
-	 * @instance: the #NAIOptionsList instance of the implementation.
+	 * @instance: the #FMAIOptionsList instance of the implementation.
 	 *
 	 * This method is supposed to let know to any caller which version of this
 	 * interface the implementation provides. This may be useful when this
@@ -161,26 +161,26 @@ typedef struct {
 	 *
 	 * Since: 3.2
 	 */
-	guint       ( *get_version ) ( const NAIOptionsList *instance );
+	guint       ( *get_version ) ( const FMAIOptionsList *instance );
 
 	/*
 	 * get_options:
-	 * @instance: the #NAIOptionsList instance of the implementation.
+	 * @instance: the #FMAIOptionsList instance of the implementation.
 	 * @container: the #GtkWidget which embeds the list of values.
 	 *
 	 * This method may be called at more or less early stage of the build
 	 * of the display, either rather early when displaying a radio button
 	 * group, or later in the case of a tree view.
 	 *
-	 * Returns: a #GList list of #NAIOptions object instances.
+	 * Returns: a #GList list of #FMAIOptions object instances.
 	 *
 	 * Since: 3.2
 	 */
-	GList *     ( *get_options ) ( const NAIOptionsList *instance, GtkWidget *container );
+	GList *     ( *get_options ) ( const FMAIOptionsList *instance, GtkWidget *container );
 
 	/*
 	 * free_options:
-	 * @instance: the #NAIOptionsList instance of the implementation.
+	 * @instance: the #FMAIOptionsList instance of the implementation.
 	 * @container: the #GtkWidget which embeds the list of values.
 	 * @options: a #GList of #NAIoption objects as returned by get_options() method.
 	 *
@@ -193,25 +193,25 @@ typedef struct {
 	 *
 	 * Since: 3.2
 	 */
-	void        ( *free_options )( const NAIOptionsList *instance, GtkWidget *container, GList *options );
+	void        ( *free_options )( const FMAIOptionsList *instance, GtkWidget *container, GList *options );
 
 	/*
 	 * get_ask_option:
-	 * @instance: the #NAIOptionsList instance of the implementation.
+	 * @instance: the #FMAIOptionsList instance of the implementation.
 	 * @container: the #GtkWidget which embeds the list of values.
 	 *
-	 * Ask the implementation to provide a #NAIOption which defines the
+	 * Ask the implementation to provide a #FMAIOption which defines the
 	 * 'Ask me' option.
 	 *
-	 * Returns: a #NAIOption which defines the 'Ask me' option.
+	 * Returns: a #FMAIOption which defines the 'Ask me' option.
 	 *
 	 * Since: 3.2
 	 */
-	NAIOption * ( *get_ask_option ) ( const NAIOptionsList *instance, GtkWidget *container );
+	FMAIOption * ( *get_ask_option ) ( const FMAIOptionsList *instance, GtkWidget *container );
 
 	/*
 	 * free_ask_option:
-	 * @instance: the #NAIOptionsList instance of the implementation.
+	 * @instance: the #FMAIOptionsList instance of the implementation.
 	 * @container: the #GtkWidget which embeds the list of values.
 	 * @ask_option: the #NAIoption to be released.
 	 *
@@ -223,20 +223,20 @@ typedef struct {
 	 *
 	 * Since: 3.2
 	 */
-	void        ( *free_ask_option )( const NAIOptionsList *instance, GtkWidget *container, NAIOption *ask_option );
+	void        ( *free_ask_option )( const FMAIOptionsList *instance, GtkWidget *container, FMAIOption *ask_option );
 }
-	NAIOptionsListInterface;
+	FMAIOptionsListInterface;
 
-GType      na_ioptions_list_get_type( void );
+GType       fma_ioptions_list_get_type     ( void );
 
-void       na_ioptions_list_gtk_init     ( const NAIOptionsList *instance, GtkWidget *container, gboolean with_ask );
+void        fma_ioptions_list_gtk_init     ( const FMAIOptionsList *instance, GtkWidget *container, gboolean with_ask );
 
-void       na_ioptions_list_set_default  ( const NAIOptionsList *instance, GtkWidget *container, const gchar *default_id );
-void       na_ioptions_list_set_editable ( const NAIOptionsList *instance, GtkWidget *container, gboolean editable );
-void       na_ioptions_list_set_sensitive( const NAIOptionsList *instance, GtkWidget *container, gboolean sensitive );
+void        fma_ioptions_list_set_default  ( const FMAIOptionsList *instance, GtkWidget *container, const gchar *default_id );
+void        fma_ioptions_list_set_editable ( const FMAIOptionsList *instance, GtkWidget *container, gboolean editable );
+void        fma_ioptions_list_set_sensitive( const FMAIOptionsList *instance, GtkWidget *container, gboolean sensitive );
 
-NAIOption *na_ioptions_list_get_selected ( const NAIOptionsList *instance, GtkWidget *container );
+FMAIOption *fma_ioptions_list_get_selected ( const FMAIOptionsList *instance, GtkWidget *container );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_IOPTIONS_LIST_H__ */
+#endif /* __CORE_FMA_IOPTIONS_LIST_H__ */
