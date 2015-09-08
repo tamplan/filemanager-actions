@@ -43,7 +43,7 @@
 
 #include "fma-desktop-provider.h"
 #include "fma-keys.h"
-#include "nadp-reader.h"
+#include "fma-reader.h"
 #include "nadp-utils.h"
 #include "nadp-xdg-dirs.h"
 
@@ -59,7 +59,7 @@ typedef struct {
 	FMADesktopFile *ndf;
 	FMAObjectAction  *action;
 }
-	NadpReaderData;
+	FMAReaderData;
 
 #define ERR_NOT_DESKTOP		_( "The Desktop I/O Provider is not able to handle the URI" )
 
@@ -72,12 +72,12 @@ static FMAIFactoryObject *item_from_desktop_file( const FMADesktopProvider *prov
 static void              desktop_weak_notify( FMADesktopFile *ndf, GObject *item );
 static void              free_desktop_paths( GList *paths );
 
-static void              read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
-static void              read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages );
+static void              read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, FMAReaderData *reader_data, GSList **messages );
+static void              read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, FMAReaderData *reader_data, GSList **messages );
 
-static gboolean          read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
-static void              read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, NadpReaderData *data, GSList **messages );
-static void              read_done_action_load_profile( const FMAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages );
+static gboolean          read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, FMAReaderData *reader_data, GSList **messages );
+static void              read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, FMAReaderData *data, GSList **messages );
+static void              read_done_action_load_profile( const FMAIFactoryProvider *provider, FMAReaderData *reader_data, const gchar *profile_id, GSList **messages );
 
 /*
  * Returns an unordered list of FMAIFactoryObject-derived objects
@@ -85,9 +85,9 @@ static void              read_done_action_load_profile( const FMAIFactoryProvide
  * This is implementation of FMAIIOProvider::read_items method
  */
 GList *
-nadp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
+fma_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_iio_provider_read_items";
+	static const gchar *thisfn = "io-desktop/fma_iio_provider_read_items";
 	GList *items;
 	GList *desktop_paths, *ip;
 	FMAIFactoryObject *item;
@@ -167,7 +167,7 @@ get_list_of_desktop_paths( FMADesktopProvider *provider, GSList **messages )
 static void
 get_list_of_desktop_files( const FMADesktopProvider *provider, GList **files, const gchar *dir, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_reader_get_list_of_desktop_files";
+	static const gchar *thisfn = "fma_reader_get_list_of_desktop_files";
 	GDir *dir_handle;
 	GError *error;
 	const gchar *name;
@@ -272,10 +272,10 @@ item_from_desktop_path( const FMADesktopProvider *provider, DesktopPath *dps, GS
 static FMAIFactoryObject *
 item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf, GSList **messages )
 {
-	/*static const gchar *thisfn = "nadp_reader_item_from_desktop_file";*/
+	/*static const gchar *thisfn = "fma_reader_item_from_desktop_file";*/
 	FMAIFactoryObject *item;
 	gchar *type;
-	NadpReaderData *reader_data;
+	FMAReaderData *reader_data;
 	gchar *id;
 
 	item = NULL;
@@ -297,7 +297,7 @@ item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf,
 		fma_object_set_id( item, id );
 		g_free( id );
 
-		reader_data = g_new0( NadpReaderData, 1 );
+		reader_data = g_new0( FMAReaderData, 1 );
 		reader_data->ndf = ndf;
 
 		fma_ifactory_provider_read_item( FMA_IFACTORY_PROVIDER( provider ), reader_data, item, messages );
@@ -316,7 +316,7 @@ item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf,
 static void
 desktop_weak_notify( FMADesktopFile *ndf, GObject *item )
 {
-	static const gchar *thisfn = "nadp_reader_desktop_weak_notify";
+	static const gchar *thisfn = "fma_reader_desktop_weak_notify";
 
 	g_debug( "%s: ndf=%p (%s), item=%p (%s)",
 			thisfn, ( void * ) ndf, G_OBJECT_TYPE_NAME( ndf ),
@@ -342,7 +342,7 @@ free_desktop_paths( GList *paths )
 }
 
 /**
- * nadp_reader_iimporter_import_from_uri:
+ * fma_reader_iimporter_import_from_uri:
  * @instance: the #FMAIImporter provider.
  * @parms: a #FMAIImporterUriParms structure.
  *
@@ -361,9 +361,9 @@ free_desktop_paths( GList *paths )
  * thus no more checking here against possible duplicate identifiers.
  */
 guint
-nadp_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
+fma_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
 {
-	static const gchar *thisfn = "nadp_reader_iimporter_import_from_uri";
+	static const gchar *thisfn = "fma_reader_iimporter_import_from_uri";
 	guint code;
 	FMAIImporterImportFromUriParmsv2 *parms;
 	FMADesktopFile *ndf;
@@ -419,9 +419,9 @@ nadp_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms
  * depending of the exact class of the FMAObjectItem
  */
 void
-nadp_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
+fma_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_start";
+	static const gchar *thisfn = "fma_reader_ifactory_provider_read_start";
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( reader ));
@@ -437,18 +437,18 @@ nadp_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, voi
 				( void * ) messages );
 
 		if( FMA_IS_OBJECT_ITEM( serializable )){
-			read_start_read_subitems_key( reader, FMA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
+			read_start_read_subitems_key( reader, FMA_OBJECT_ITEM( serializable ), ( FMAReaderData * ) reader_data, messages );
 			fma_object_set_iversion( serializable, 3 );
 		}
 
 		if( FMA_IS_OBJECT_PROFILE( serializable )){
-			read_start_profile_attach_profile( reader, FMA_OBJECT_PROFILE( serializable ), ( NadpReaderData * ) reader_data, messages );
+			read_start_profile_attach_profile( reader, FMA_OBJECT_PROFILE( serializable ), ( FMAReaderData * ) reader_data, messages );
 		}
 	}
 }
 
 static void
-read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
+read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, FMAReaderData *reader_data, GSList **messages )
 {
 	GSList *subitems;
 	gboolean key_found;
@@ -467,7 +467,7 @@ read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem
 }
 
 static void
-read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages )
+read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, FMAReaderData *reader_data, GSList **messages )
 {
 	fma_object_attach_profile( reader_data->action, profile );
 }
@@ -483,12 +483,12 @@ read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjec
  * letting the caller deal with default values
  */
 FMADataBoxed *
-nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
+fma_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_data";
+	static const gchar *thisfn = "fma_reader_ifactory_provider_read_data";
 	FMADataBoxed *boxed;
 	gboolean found;
-	NadpReaderData *nrd;
+	FMAReaderData *nrd;
 	gchar *group, *id;
 	gchar *msg;
 	gchar *str_value;
@@ -504,7 +504,7 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 
 	if( !FMA_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
-		nrd = ( NadpReaderData * ) reader_data;
+		nrd = ( FMAReaderData * ) reader_data;
 		g_return_val_if_fail( FMA_IS_DESKTOP_FILE( nrd->ndf ), NULL );
 
 		if( def->desktop_entry ){
@@ -581,9 +581,9 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
  * called when each FMAIFactoryObject object has been read
  */
 void
-nadp_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
+fma_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_done";
+	static const gchar *thisfn = "fma_reader_ifactory_provider_read_done";
 	gboolean writable;
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ));
@@ -600,12 +600,12 @@ nadp_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void
 				( void * ) messages );
 
 		if( FMA_IS_OBJECT_ITEM( serializable )){
-			writable = read_done_item_is_writable( reader, FMA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
+			writable = read_done_item_is_writable( reader, FMA_OBJECT_ITEM( serializable ), ( FMAReaderData * ) reader_data, messages );
 			fma_object_set_readonly( serializable, !writable );
 		}
 
 		if( FMA_IS_OBJECT_ACTION( serializable )){
-			read_done_action_read_profiles( reader, FMA_OBJECT_ACTION( serializable ), ( NadpReaderData * ) reader_data, messages );
+			read_done_action_read_profiles( reader, FMA_OBJECT_ACTION( serializable ), ( FMAReaderData * ) reader_data, messages );
 		}
 
 		g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( serializable ), ( void * ) serializable );
@@ -613,7 +613,7 @@ nadp_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void
 }
 
 static gboolean
-read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
+read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, FMAReaderData *reader_data, GSList **messages )
 {
 	FMADesktopFile *ndf;
 	gchar *uri;
@@ -636,9 +636,9 @@ read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *
  * - ensure that there is at least one profile attached to the action
  */
 static void
-read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, NadpReaderData *reader_data, GSList **messages )
+read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, FMAReaderData *reader_data, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_reader_read_done_action_read_profiles";
+	static const gchar *thisfn = "fma_reader_read_done_action_read_profiles";
 	GSList *order;
 	GSList *ip;
 	gchar *profile_id;
@@ -666,9 +666,9 @@ read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAc
 }
 
 static void
-read_done_action_load_profile( const FMAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages )
+read_done_action_load_profile( const FMAIFactoryProvider *provider, FMAReaderData *reader_data, const gchar *profile_id, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_reader_read_done_action_load_profile";
+	static const gchar *thisfn = "fma_reader_read_done_action_load_profile";
 	FMAObjectProfile *profile;
 
 	g_debug( "%s: loading profile=%s", thisfn, profile_id );
