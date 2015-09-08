@@ -37,7 +37,7 @@
 
 #include "fma-xml-provider.h"
 #include "fma-xml-formats.h"
-#include "naxml-reader.h"
+#include "fma-xml-reader.h"
 #include "naxml-writer.h"
 
 /* private class data
@@ -210,7 +210,7 @@ iimporter_iface_init( FMAIImporterInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = iimporter_get_version;
-	iface->import_from_uri = naxml_reader_import_from_uri;
+	iface->import_from_uri = fma_xml_reader_import_from_uri;
 }
 
 static guint
@@ -266,9 +266,9 @@ ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = ifactory_provider_get_version;
-	iface->read_start = naxml_reader_read_start;
-	iface->read_data = naxml_reader_read_data;
-	iface->read_done = naxml_reader_read_done;
+	iface->read_start = fma_xml_reader_read_start;
+	iface->read_data = fma_xml_reader_read_data;
+	iface->read_done = fma_xml_reader_read_done;
 	iface->write_start = naxml_writer_write_start;
 	iface->write_data = naxml_writer_write_data;
 	iface->write_done = naxml_writer_write_done;

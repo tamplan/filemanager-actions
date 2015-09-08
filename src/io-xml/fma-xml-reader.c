@@ -44,11 +44,11 @@
 #include <io-gconf/fma-gconf-keys.h>
 
 #include "fma-xml-keys.h"
-#include "naxml-reader.h"
+#include "fma-xml-reader.h"
 
 /* private class data
  */
-struct _NAXMLReaderClassPrivate {
+struct _FMAXMLReaderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -60,19 +60,19 @@ typedef struct {
 	gchar     *element_key;
 	gchar     *key_entry;
 	guint      key_length;
-	guint   ( *fn_root_parms )     ( NAXMLReader *, xmlNode * );
-	guint   ( *fn_list_parms )     ( NAXMLReader *, xmlNode * );
-	guint   ( *fn_element_parms )  ( NAXMLReader *, xmlNode * );
-	guint   ( *fn_element_content )( NAXMLReader *, xmlNode * );
-	gchar * ( *fn_get_value )      ( NAXMLReader *, xmlNode *, const FMADataDef *def );
+	guint   ( *fn_root_parms )     ( FMAXMLReader *, xmlNode * );
+	guint   ( *fn_list_parms )     ( FMAXMLReader *, xmlNode * );
+	guint   ( *fn_element_parms )  ( FMAXMLReader *, xmlNode * );
+	guint   ( *fn_element_content )( FMAXMLReader *, xmlNode * );
+	gchar * ( *fn_get_value )      ( FMAXMLReader *, xmlNode *, const FMADataDef *def );
 }
 	RootNodeStr;
 
 /* private instance data
- * main naxml_reader_import_from_uri() function is called once for each file
- * to import. We thus have one NAXMLReader object per import operation.
+ * main fma_xml_reader_import_from_uri() function is called once for each file
+ * to import. We thus have one FMAXMLReader object per import operation.
  */
-struct _NAXMLReaderPrivate {
+struct _FMAXMLReaderPrivate {
 	gboolean                         dispose_has_run;
 
 	/* data provided by the caller
@@ -100,22 +100,22 @@ extern FMAXMLKeyStr fma_xml_dump_key_entry_str[];
 static GObjectClass *st_parent_class = NULL;
 
 static GType         register_type( void );
-static void          class_init( NAXMLReaderClass *klass );
+static void          class_init( FMAXMLReaderClass *klass );
 static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_dispose( GObject *object );
 static void          instance_finalize( GObject *object );
 
-static NAXMLReader  *reader_new( void );
+static FMAXMLReader *reader_new( void );
 
-static guint         schema_parse_schema_content( NAXMLReader *reader, xmlNode *node );
-static void          schema_check_for_id( NAXMLReader *reader, xmlNode *iter );
-static void          schema_check_for_type( NAXMLReader *reader, xmlNode *iter );
-static gchar        *schema_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def );
+static guint         schema_parse_schema_content( FMAXMLReader *reader, xmlNode *node );
+static void          schema_check_for_id( FMAXMLReader *reader, xmlNode *iter );
+static void          schema_check_for_type( FMAXMLReader *reader, xmlNode *iter );
+static gchar        *schema_read_value( FMAXMLReader *reader, xmlNode *node, const FMADataDef *def );
 
-static guint         dump_parse_list_parms( NAXMLReader *reader, xmlNode *node );
-static guint         dump_parse_entry_content( NAXMLReader *reader, xmlNode *node );
-static void          dump_check_for_type( NAXMLReader *reader, xmlNode *key_node );
-static gchar        *dump_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def );
+static guint         dump_parse_list_parms( FMAXMLReader *reader, xmlNode *node );
+static guint         dump_parse_entry_content( FMAXMLReader *reader, xmlNode *node );
+static void          dump_check_for_type( FMAXMLReader *reader, xmlNode *key_node );
+static gchar        *dump_read_value( FMAXMLReader *reader, xmlNode *node, const FMADataDef *def );
 
 static RootNodeStr st_root_node_str[] = {
 
@@ -153,31 +153,31 @@ static RootNodeStr st_root_node_str[] = {
 #define ERR_NODE_UNKNOWN_TYPE		_( "Unknown type %s found at line %d, while waiting for Action or Menu." )
 #define ERR_NOT_IOXML				_( "The XML I/O Provider is not able to handle the URI" )
 
-static void          read_start_profile_attach_profile( NAXMLReader *reader, FMAObjectProfile *profile );
-static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const FMAIFactoryObject *object, xmlChar *text );
-static FMADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const FMADataDef *def );
-static void          read_done_item_set_localized_icon( NAXMLReader *reader, FMAObjectItem *item );
-static void          read_done_action_read_profiles( NAXMLReader *reader, FMAObjectAction *action );
-static gchar        *read_done_action_get_next_profile_id( NAXMLReader *reader );
-static void          read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id );
-static void          read_done_profile_set_localized_label( NAXMLReader *reader, FMAObjectProfile *profile );
+static void          read_start_profile_attach_profile( FMAXMLReader *reader, FMAObjectProfile *profile );
+static gboolean      read_data_is_path_adhoc_for_object( FMAXMLReader *reader, const FMAIFactoryObject *object, xmlChar *text );
+static FMADataBoxed  *read_data_boxed_from_node( FMAXMLReader *reader, xmlChar *text, xmlNode *parent, const FMADataDef *def );
+static void          read_done_item_set_localized_icon( FMAXMLReader *reader, FMAObjectItem *item );
+static void          read_done_action_read_profiles( FMAXMLReader *reader, FMAObjectAction *action );
+static gchar        *read_done_action_get_next_profile_id( FMAXMLReader *reader );
+static void          read_done_action_load_profile( FMAXMLReader *reader, const gchar *profile_id );
+static void          read_done_profile_set_localized_label( FMAXMLReader *reader, FMAObjectProfile *profile );
 
-static guint         reader_parse_xmldoc( NAXMLReader *reader );
-static guint         iter_on_root_children( NAXMLReader *reader, xmlNode *root );
-static guint         iter_on_list_children( NAXMLReader *reader, xmlNode *first );
+static guint         reader_parse_xmldoc( FMAXMLReader *reader );
+static guint         iter_on_root_children( FMAXMLReader *reader, xmlNode *root );
+static guint         iter_on_list_children( FMAXMLReader *reader, xmlNode *first );
 
 static gchar        *slist_to_string( GSList *slist );
 static gchar        *build_key_node_list( FMAXMLKeyStr *strlist );
 static gchar        *build_root_node_list( void );
 static gchar        *get_value_from_child_node( xmlNode *node, const gchar *child );
 static gchar        *get_value_from_child_child_node( xmlNode *node, const gchar *first, const gchar *second );
-static gboolean      is_profile_path( NAXMLReader *reader, xmlChar *text );
-static void          reset_node_data( NAXMLReader *reader );
+static gboolean      is_profile_path( FMAXMLReader *reader, xmlChar *text );
+static void          reset_node_data( FMAXMLReader *reader );
 static xmlNode      *search_for_child_node( xmlNode *node, const gchar *key );
 static int           strxcmp( const xmlChar *a, const char *b );
 
 GType
-naxml_reader_get_type( void )
+fma_xml_reader_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -191,32 +191,32 @@ naxml_reader_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "naxml_reader_register_type";
+	static const gchar *thisfn = "fma_xml_reader_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAXMLReaderClass ),
+		sizeof( FMAXMLReaderClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAXMLReader ),
+		sizeof( FMAXMLReader ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NAXMLReader", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMAXMLReader", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAXMLReaderClass *klass )
+class_init( FMAXMLReaderClass *klass )
 {
-	static const gchar *thisfn = "naxml_reader_class_init";
+	static const gchar *thisfn = "fma_xml_reader_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -227,20 +227,20 @@ class_init( NAXMLReaderClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAXMLReaderClassPrivate, 1 );
+	klass->private = g_new0( FMAXMLReaderClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "naxml_reader_instance_init";
-	NAXMLReader *self;
+	static const gchar *thisfn = "fma_xml_reader_instance_init";
+	FMAXMLReader *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-	g_return_if_fail( NAXML_IS_READER( instance ));
-	self = NAXML_READER( instance );
+	g_return_if_fail( FMA_IS_XML_READER( instance ));
+	self = FMA_XML_READER( instance );
 
-	self->private = g_new0( NAXMLReaderPrivate, 1 );
+	self->private = g_new0( FMAXMLReaderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->importer = NULL;
@@ -254,12 +254,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "naxml_reader_instance_dispose";
-	NAXMLReader *self;
+	static const gchar *thisfn = "fma_xml_reader_instance_dispose";
+	FMAXMLReader *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NAXML_IS_READER( object ));
-	self = NAXML_READER( object );
+	g_return_if_fail( FMA_IS_XML_READER( object ));
+	self = FMA_XML_READER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -278,12 +278,12 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "naxml_reader_instance_finalize";
-	NAXMLReader *self;
+	static const gchar *thisfn = "fma_xml_reader_instance_finalize";
+	FMAXMLReader *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NAXML_IS_READER( object ));
-	self = NAXML_READER( object );
+	g_return_if_fail( FMA_IS_XML_READER( object ));
+	self = FMA_XML_READER( object );
 
 	g_free( self->private->item_id );
 
@@ -297,14 +297,14 @@ instance_finalize( GObject *object )
 	}
 }
 
-static NAXMLReader *
+static FMAXMLReader *
 reader_new( void )
 {
-	return( g_object_new( NAXML_READER_TYPE, NULL ));
+	return( g_object_new( FMA_XML_READER_TYPE, NULL ));
 }
 
 /**
- * naxml_reader_import_uri:
+ * fma_xml_reader_import_uri:
  * @instance: the #FMAIImporter provider.
  * @parms: a #FMAIImporterImportFromUriParmsv2 structure.
  *
@@ -320,10 +320,10 @@ reader_new( void )
  * thus no more checking here against possible duplicate identifiers.
  */
 guint
-naxml_reader_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
+fma_xml_reader_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
 {
-	static const gchar *thisfn = "naxml_reader_import_from_uri";
-	NAXMLReader *reader;
+	static const gchar *thisfn = "fma_xml_reader_import_from_uri";
+	FMAXMLReader *reader;
 	FMAIImporterImportFromUriParmsv2* parms;
 	guint code;
 
@@ -372,7 +372,7 @@ naxml_reader_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
  * So just keep ride of error messages here.
  */
 static guint
-reader_parse_xmldoc( NAXMLReader *reader )
+reader_parse_xmldoc( FMAXMLReader *reader )
 {
 	RootNodeStr *istr;
 	gboolean found;
@@ -430,9 +430,9 @@ reader_parse_xmldoc( NAXMLReader *reader )
  * <entrylist> child.
  */
 static guint
-iter_on_root_children( NAXMLReader *reader, xmlNode *root )
+iter_on_root_children( FMAXMLReader *reader, xmlNode *root )
 {
-	static const gchar *thisfn = "naxml_reader_iter_on_root_children";
+	static const gchar *thisfn = "fma_xml_reader_iter_on_root_children";
 	xmlNodePtr iter;
 	gboolean found;
 	guint code;
@@ -507,9 +507,9 @@ iter_on_root_children( NAXMLReader *reader, xmlNode *root )
  * each schema 'applyto' node let us identify a data and its value
  */
 static guint
-iter_on_list_children( NAXMLReader *reader, xmlNode *list )
+iter_on_list_children( FMAXMLReader *reader, xmlNode *list )
 {
-	static const gchar *thisfn = "naxml_reader_iter_on_list_children";
+	static const gchar *thisfn = "fma_xml_reader_iter_on_list_children";
 	guint code;
 	xmlNode *iter;
 
@@ -596,9 +596,9 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 }
 
 void
-naxml_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
+fma_xml_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
-	static const gchar *thisfn = "naxml_reader_read_start";
+	static const gchar *thisfn = "fma_xml_reader_read_start";
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
@@ -611,12 +611,12 @@ naxml_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data,
 			( void * ) messages );
 
 	if( FMA_IS_OBJECT_PROFILE( object )){
-		read_start_profile_attach_profile( NAXML_READER( reader_data ), FMA_OBJECT_PROFILE( object ));
+		read_start_profile_attach_profile( FMA_XML_READER( reader_data ), FMA_OBJECT_PROFILE( object ));
 	}
 }
 
 static void
-read_start_profile_attach_profile( NAXMLReader *reader, FMAObjectProfile *profile )
+read_start_profile_attach_profile( FMAXMLReader *reader, FMAObjectProfile *profile )
 {
 	fma_object_attach_profile( reader->private->parms->imported, profile );
 }
@@ -630,9 +630,9 @@ read_start_profile_attach_profile( NAXMLReader *reader, FMAObjectProfile *profil
  * versions). So do not remove dealt-with nodes here
  */
 FMADataBoxed *
-naxml_reader_read_data( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
+fma_xml_reader_read_data( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
-	static const gchar *thisfn = "naxml_reader_read_data";
+	static const gchar *thisfn = "fma_xml_reader_read_data";
 	xmlNode *parent_node;
 	GList *ielt;
 
@@ -648,9 +648,9 @@ naxml_reader_read_data( const FMAIFactoryProvider *provider, void *reader_data, 
 	}
 
 	FMADataBoxed *boxed = NULL;
-	NAXMLReader *reader = NAXML_READER( reader_data );
+	FMAXMLReader *reader = FMA_XML_READER( reader_data );
 
-	/*g_debug( "naxml_reader_read_data: nodes=%p (count=%d)",
+	/*g_debug( "fma_xml_reader_read_data: nodes=%p (count=%d)",
 				 ( void * ) reader->private->nodes, g_list_length( reader->private->nodes ));*/
 	for( ielt = reader->private->nodes ; ielt && !boxed ; ielt = ielt->next ){
 
@@ -680,7 +680,7 @@ naxml_reader_read_data( const FMAIFactoryProvider *provider, void *reader_data, 
 }
 
 static gboolean
-read_data_is_path_adhoc_for_object( NAXMLReader *reader, const FMAIFactoryObject *object, xmlChar *text )
+read_data_is_path_adhoc_for_object( FMAXMLReader *reader, const FMAIFactoryObject *object, xmlChar *text )
 {
 	gboolean adhoc;
 	GSList *path_slist;
@@ -724,7 +724,7 @@ read_data_is_path_adhoc_for_object( NAXMLReader *reader, const FMAIFactoryObject
 }
 
 static FMADataBoxed *
-read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, const FMADataDef *def )
+read_data_boxed_from_node( FMAXMLReader *reader, xmlChar *path, xmlNode *parent, const FMADataDef *def )
 {
 	FMADataBoxed *boxed;
 	gchar *entry;
@@ -757,9 +757,9 @@ read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, 
  * all serializable data of the object has been read
  */
 void
-naxml_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
+fma_xml_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  )
 {
-	static const gchar *thisfn = "naxml_reader_read_done";
+	static const gchar *thisfn = "fma_xml_reader_read_done";
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
@@ -772,15 +772,15 @@ naxml_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, 
 			( void * ) messages );
 
 	if( FMA_IS_OBJECT_ITEM( object )){
-		read_done_item_set_localized_icon( NAXML_READER( reader_data ), FMA_OBJECT_ITEM( object ));
+		read_done_item_set_localized_icon( FMA_XML_READER( reader_data ), FMA_OBJECT_ITEM( object ));
 	}
 
 	if( FMA_IS_OBJECT_ACTION( object )){
-		read_done_action_read_profiles( NAXML_READER( reader_data ), FMA_OBJECT_ACTION( object ));
+		read_done_action_read_profiles( FMA_XML_READER( reader_data ), FMA_OBJECT_ACTION( object ));
 	}
 
 	if( FMA_IS_OBJECT_PROFILE( object )){
-		read_done_profile_set_localized_label( NAXML_READER( reader_data ), FMA_OBJECT_PROFILE( object ));
+		read_done_profile_set_localized_label( FMA_XML_READER( reader_data ), FMA_OBJECT_PROFILE( object ));
 	}
 
 	g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
@@ -791,7 +791,7 @@ naxml_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, 
  * so deals with unlocalized/localized icon name/path
  */
 static void
-read_done_item_set_localized_icon( NAXMLReader *reader, FMAObjectItem *item )
+read_done_item_set_localized_icon( FMAXMLReader *reader, FMAObjectItem *item )
 {
 	gchar *icon, *unloc_icon;
 
@@ -821,9 +821,9 @@ read_done_item_set_localized_icon( NAXMLReader *reader, FMAObjectItem *item )
  * Also note that profiles order has been introduced in 2.29 serie
  */
 static void
-read_done_action_read_profiles( NAXMLReader *reader, FMAObjectAction *action )
+read_done_action_read_profiles( FMAXMLReader *reader, FMAObjectAction *action )
 {
-	static const gchar *thisfn = "naxml_reader_read_done_action_read_profiles";
+	static const gchar *thisfn = "fma_xml_reader_read_done_action_read_profiles";
 	GSList *order, *ip;
 	gchar *profile_id;
 	FMAObjectProfile *profile;
@@ -865,7 +865,7 @@ read_done_action_read_profiles( NAXMLReader *reader, FMAObjectAction *action )
  * return the first profile id found in the nodes
  */
 static gchar *
-read_done_action_get_next_profile_id( NAXMLReader *reader )
+read_done_action_get_next_profile_id( FMAXMLReader *reader )
 {
 	gchar *profile_id;
 	GList *ip;
@@ -901,9 +901,9 @@ read_done_action_get_next_profile_id( NAXMLReader *reader )
 }
 
 static void
-read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
+read_done_action_load_profile( FMAXMLReader *reader, const gchar *profile_id )
 {
-	/*g_debug( "naxml_reader_read_done_action_load_profile: profile_id=%s", profile_id );*/
+	/*g_debug( "fma_xml_reader_read_done_action_load_profile: profile_id=%s", profile_id );*/
 
 	FMAObjectProfile *profile = fma_object_profile_new_with_defaults();
 
@@ -921,7 +921,7 @@ read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
  * so deals with unlocalized/localized desc-name
  */
 static void
-read_done_profile_set_localized_label( NAXMLReader *reader, FMAObjectProfile *profile )
+read_done_profile_set_localized_label( FMAXMLReader *reader, FMAObjectProfile *profile )
 {
 	gchar *descname, *unloc_descname;
 
@@ -951,7 +951,7 @@ read_done_profile_set_localized_label( NAXMLReader *reader, FMAObjectProfile *pr
  * - there is an applyto key
  */
 static guint
-schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
+schema_parse_schema_content( FMAXMLReader *reader, xmlNode *schema )
 {
 	xmlNode *iter;
 	FMAXMLKeyStr *str;
@@ -1023,7 +1023,7 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
  * check the id on 'applyto' key
  */
 static void
-schema_check_for_id( NAXMLReader *reader, xmlNode *iter )
+schema_check_for_id( FMAXMLReader *reader, xmlNode *iter )
 {
 	guint idx = 0;
 
@@ -1055,7 +1055,7 @@ schema_check_for_id( NAXMLReader *reader, xmlNode *iter )
  * check 'applyto' key for 'Type'
  */
 static void
-schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
+schema_check_for_type( FMAXMLReader *reader, xmlNode *iter )
 {
 	xmlChar *text = xmlNodeGetContent( iter );
 
@@ -1084,7 +1084,7 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 }
 
 static gchar *
-schema_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def )
+schema_read_value( FMAXMLReader *reader, xmlNode *node, const FMADataDef *def )
 {
 	gchar *value;
 
@@ -1103,7 +1103,7 @@ schema_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def )
  * second run: get the id
  */
 static guint
-dump_parse_list_parms( NAXMLReader *reader, xmlNode *node )
+dump_parse_list_parms( FMAXMLReader *reader, xmlNode *node )
 {
 	guint code;
 
@@ -1121,7 +1121,7 @@ dump_parse_list_parms( NAXMLReader *reader, xmlNode *node )
  * second run: load data
  */
 static guint
-dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
+dump_parse_entry_content( FMAXMLReader *reader, xmlNode *entry )
 {
 	xmlNode *iter;
 	FMAXMLKeyStr *str;
@@ -1182,7 +1182,7 @@ dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
  * check for 'Type'
  */
 static void
-dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
+dump_check_for_type( FMAXMLReader *reader, xmlNode *key_node )
 {
 	xmlChar *key_content = xmlNodeGetContent( key_node );
 
@@ -1211,7 +1211,7 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
  * string list is converted to GSList, then to a FMABoxed string list 'value;value'
  */
 static gchar *
-dump_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def )
+dump_read_value( FMAXMLReader *reader, xmlNode *node, const FMADataDef *def )
 {
 	gchar *string;
 	GSList *slist;
@@ -1373,7 +1373,7 @@ get_value_from_child_child_node( xmlNode *node, const gchar *first, const gchar 
 }
 
 static gboolean
-is_profile_path( NAXMLReader *reader, xmlChar *text )
+is_profile_path( FMAXMLReader *reader, xmlChar *text )
 {
 	gboolean is_profile;
 	GSList *path_slist;
@@ -1393,7 +1393,7 @@ is_profile_path( NAXMLReader *reader, xmlChar *text )
  * data are reset before first run on nodes for an item
  */
 static void
-reset_node_data( NAXMLReader *reader )
+reset_node_data( FMAXMLReader *reader )
 {
 	int i;
 
