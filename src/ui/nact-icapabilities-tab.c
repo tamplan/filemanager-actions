@@ -229,7 +229,7 @@ on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance )
 
 	if( context ){
 		capabilities = nact_match_list_get_rows( NACT_MAIN_WINDOW( instance ), ITAB_NAME );
-		new_cap = nact_add_capability_dialog_run( NACT_MAIN_WINDOW( instance ), capabilities );
+		new_cap = fma_add_capability_dialog_run( NACT_MAIN_WINDOW( instance ), capabilities );
 
 		if( new_cap ){
 			nact_match_list_insert_row( NACT_MAIN_WINDOW( instance ), ITAB_NAME, new_cap, FALSE, FALSE );
