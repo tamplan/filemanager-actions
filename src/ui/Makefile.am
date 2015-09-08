@@ -153,8 +153,8 @@ actions_files = \
 	$(NULL)
 
 ui_files = \
-	nact-add-capability.ui								\
-	nact-add-scheme.ui									\
+	fma-add-capability.ui								\
+	fma-add-scheme.ui									\
 	fma-assistant-export.ui							\
 	fma-assistant-import.ui							\
 	fma-confirm-logout.ui								\

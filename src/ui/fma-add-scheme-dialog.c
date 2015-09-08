@@ -49,7 +49,7 @@ struct _FMAAddSchemeDialogPrivate {
 	gchar   *scheme;
 };
 
-static const gchar  *st_xmlui_filename = PKGUIDIR "/nact-add-scheme.ui";
+static const gchar  *st_xmlui_filename = PKGUIDIR "/fma-add-scheme.ui";
 static const gchar  *st_toplevel_name  = "AddSchemeDialog";
 static const gchar  *st_wsp_name       = IPREFS_SCHEME_ADD_SCHEME_WSP;
 
