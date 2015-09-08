@@ -40,7 +40,7 @@
 #include "core/fma-gtk-utils.h"
 
 #include "base-gtk-utils.h"
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"

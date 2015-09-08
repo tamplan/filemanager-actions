@@ -44,7 +44,7 @@
 #include <core/fma-gtk-utils.h>
 #include <core/fma-settings.h>
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-assistant-import.h"
 #include "nact-main-window.h"
 #include "nact-tree-ieditable.h"

@@ -46,7 +46,7 @@
 #include <core/fma-iprefs.h>
 #include <core/fma-tokens.h>
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "base-gtk-utils.h"
 #include "nact-main-window.h"
 #include "nact-schemes-list.h"

@@ -39,7 +39,7 @@
 
 #include <core/fma-io-provider.h>
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "base-gtk-utils.h"
 #include "nact-providers-list.h"
 

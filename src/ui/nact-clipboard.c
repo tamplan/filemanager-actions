@@ -39,7 +39,7 @@
 #include "core/fma-exporter.h"
 #include "core/fma-export-format.h"
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-export-ask.h"
 #include "nact-main-window.h"
 #include "nact-tree-model.h"

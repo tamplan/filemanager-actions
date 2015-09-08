@@ -33,7 +33,7 @@
 
 #include <core/fma-gconf-migration.h>
 
-#include "nact-application.h"
+#include "fma-application.h"
 
 /*
  * The 'configure' script may define a NA_MAINTAINER_MODE variable when

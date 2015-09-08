@@ -35,7 +35,7 @@
 #include "core/fma-iprefs.h"
 #include "core/fma-updater.h"
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-main-window.h"
 #include "nact-sort-buttons.h"
 #include "nact-tree-view.h"

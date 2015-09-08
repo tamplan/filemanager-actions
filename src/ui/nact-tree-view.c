@@ -38,7 +38,7 @@
 #include "core/fma-gtk-utils.h"
 
 #include "base-keysyms.h"
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-main-window.h"
 #include "nact-tree-view.h"
 #include "nact-tree-model.h"

@@ -36,7 +36,7 @@
 
 #include "base-assistant.h"
 #include "base-keysyms.h"
-#include "nact-application.h"
+#include "fma-application.h"
 
 /* private instance data
  */

@@ -39,7 +39,7 @@
 #include "core/fma-about.h"
 
 #include "base-isession.h"
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-main-window.h"
 #include "nact-menu.h"
 

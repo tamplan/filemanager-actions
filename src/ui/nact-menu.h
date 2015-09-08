@@ -39,7 +39,7 @@
 
 #include "core/fma-updater.h"
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-main-window-def.h"
 
 G_BEGIN_DECLS

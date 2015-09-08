@@ -32,7 +32,7 @@
 #endif
 
 #include "base-dialog.h"
-#include "nact-application.h"
+#include "fma-application.h"
 
 /* private class data
  */

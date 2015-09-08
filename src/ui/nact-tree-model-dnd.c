@@ -41,7 +41,7 @@
 #include <core/fma-gnome-vfs-uri.h>
 #include <core/fma-importer.h>
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-clipboard.h"
 #include "nact-statusbar.h"
 #include "nact-main-window.h"

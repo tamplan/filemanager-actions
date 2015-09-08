@@ -42,7 +42,7 @@
 #include "core/fma-gtk-utils.h"
 #include "core/fma-ioptions-list.h"
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-main-window.h"
 #include "nact-assistant-export.h"
 #include "nact-export-ask.h"

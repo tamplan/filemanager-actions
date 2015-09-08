@@ -34,7 +34,7 @@
 #include <core/fma-gtk-utils.h>
 
 #include "base-keysyms.h"
-#include "nact-application.h"
+#include "fma-application.h"
 #include "base-gtk-utils.h"
 #include "nact-icon-chooser.h"
 #include "nact-main-window.h"

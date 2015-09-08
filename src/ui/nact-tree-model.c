@@ -38,7 +38,7 @@
 
 #include "core/fma-iprefs.h"
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-clipboard.h"
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"

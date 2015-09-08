@@ -37,7 +37,7 @@
 
 #include "core/fma-io-provider.h"
 
-#include "nact-application.h"
+#include "fma-application.h"
 #include "nact-clipboard.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
