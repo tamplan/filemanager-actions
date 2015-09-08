@@ -64,48 +64,48 @@ typedef struct _FMAApplicationPrivate       FMAApplicationPrivate;
 
 typedef struct {
 	/*< private >*/
-	GtkApplicationClass     parent;
+	GtkApplicationClass    parent;
 }
 	FMAApplicationClass;
 
 typedef struct {
 	/*< private >*/
-	GtkApplication          parent;
+	GtkApplication         parent;
 	FMAApplicationPrivate *private;
 }
 	FMAApplication;
 
 /**
- * NactExitCode:
+ * FMAExitCode:
  *
  * The code returned by the application.
  *
- * @NACT_EXIT_CODE_PROGRAM = -1: this is a program error code.
- * @NACT_EXIT_CODE_OK = 0:       the program has successfully run, and returns zero.
- * @NACT_EXIT_CODE_ARGS = 1:     unable to interpret command-line options
- * @NACT_EXIT_CODE_WINDOW = 2:   unable to create a window
+ * @FMA_EXIT_CODE_PROGRAM = -1: this is a program error code.
+ * @FMA_EXIT_CODE_OK = 0:       the program has successfully run, and returns zero.
+ * @FMA_EXIT_CODE_ARGS = 1:     unable to interpret command-line options
+ * @FMA_EXIT_CODE_WINDOW = 2:   unable to create a window
  */
 typedef enum {
-	NACT_EXIT_CODE_PROGRAM = -1,
-	NACT_EXIT_CODE_OK = 0,
-	NACT_EXIT_CODE_ARGS,
-	NACT_EXIT_CODE_WINDOW,
+	FMA_EXIT_CODE_PROGRAM = -1,
+	FMA_EXIT_CODE_OK = 0,
+	FMA_EXIT_CODE_ARGS,
+	FMA_EXIT_CODE_WINDOW,
 }
-	NactExitCode;
+	FMAExitCode;
 
-GType            fma_application_get_type            ( void );
+GType           fma_application_get_type            ( void );
 
 FMAApplication *fma_application_new                 ( void );
 
-int              fma_application_run_with_args       ( FMAApplication *application,
+int             fma_application_run_with_args       ( FMAApplication *application,
 																int argc,
 																GStrv argv );
 
-gchar           *fma_application_get_application_name( const FMAApplication *application );
+gchar          *fma_application_get_application_name( const FMAApplication *application );
 
-FMAUpdater       *fma_application_get_updater         ( const FMAApplication *application );
+FMAUpdater     *fma_application_get_updater         ( const FMAApplication *application );
 
-gboolean         fma_application_is_willing_to_quit  ( const FMAApplication *application );
+gboolean        fma_application_is_willing_to_quit  ( const FMAApplication *application );
 
 G_END_DECLS
 

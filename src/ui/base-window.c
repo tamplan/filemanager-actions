@@ -915,15 +915,15 @@ do_show_widgets( BaseWindow *window )
  * implement the run() virtual method.
  *
  * Returns: the exit code as set by the derived class, or:
- * - %NACT_EXIT_CODE_PROGRAM if the window has already been disposed,
- * - %NACT_EXIT_CODE_WINDOW if the window was not and cannot be
+ * - %FMA_EXIT_CODE_PROGRAM if the window has already been disposed,
+ * - %FMA_EXIT_CODE_WINDOW if the window was not and cannot be
  *   loaded and initialized.
  */
 int
 base_window_run( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_run";
-	int code = NACT_EXIT_CODE_PROGRAM;
+	int code = FMA_EXIT_CODE_PROGRAM;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), code );
 
@@ -931,13 +931,13 @@ base_window_run( BaseWindow *window )
 
 		if( !base_window_init( window )){
 			g_debug( "%s: base_window_init() returns False", thisfn );
-			code = NACT_EXIT_CODE_WINDOW;
+			code = FMA_EXIT_CODE_WINDOW;
 
 		} else {
-			g_return_val_if_fail( GTK_IS_WINDOW( window->private->gtk_toplevel ), NACT_EXIT_CODE_PROGRAM );
+			g_return_val_if_fail( GTK_IS_WINDOW( window->private->gtk_toplevel ), FMA_EXIT_CODE_PROGRAM );
 			g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-			code = NACT_EXIT_CODE_OK;
+			code = FMA_EXIT_CODE_OK;
 
 			if( BASE_WINDOW_GET_CLASS( window )->run ){
 				code = BASE_WINDOW_GET_CLASS( window )->run( window );

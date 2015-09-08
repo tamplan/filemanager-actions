@@ -262,7 +262,7 @@ fma_application_run_with_args( FMAApplication *application, int argc, GStrv argv
 			( void * ) application, G_OBJECT_TYPE_NAME( application ),
 			argc );
 
-	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), NACT_EXIT_CODE_PROGRAM );
+	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), FMA_EXIT_CODE_PROGRAM );
 
 	priv = application->private;
 
@@ -270,7 +270,7 @@ fma_application_run_with_args( FMAApplication *application, int argc, GStrv argv
 
 		priv->argc = argc;
 		priv->argv = g_strdupv( argv );
-		priv->code = NACT_EXIT_CODE_OK;
+		priv->code = FMA_EXIT_CODE_OK;
 
 		init_i18n( application );
 		g_set_application_name( priv->application_name );
@@ -344,7 +344,7 @@ init_gtk_args( FMAApplication *application )
 		g_warning( "%s: %s", thisfn, error->message );
 		g_error_free( error );
 		ret = FALSE;
-		priv->code = NACT_EXIT_CODE_ARGS;
+		priv->code = FMA_EXIT_CODE_ARGS;
 	}
 	g_free( parameter_string );
 

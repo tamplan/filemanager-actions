@@ -368,9 +368,9 @@ do_run( BaseWindow *window )
 	static const gchar *thisfn = "base_assistant_do_run";
 	int code;
 
-	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), NACT_EXIT_CODE_PROGRAM );
+	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), FMA_EXIT_CODE_PROGRAM );
 
-	code = NACT_EXIT_CODE_WINDOW;
+	code = FMA_EXIT_CODE_WINDOW;
 
 	if( !BASE_ASSISTANT( window )->private->dispose_has_run ){
 
@@ -380,7 +380,7 @@ do_run( BaseWindow *window )
 
 		gtk_main();
 
-		code = NACT_EXIT_CODE_OK;
+		code = FMA_EXIT_CODE_OK;
 	}
 
 	return( code );
