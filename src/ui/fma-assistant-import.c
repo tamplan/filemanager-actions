@@ -80,7 +80,7 @@ enum {
 
 /* private instance data
  */
-struct _NactAssistantImportPrivate {
+struct _FMAAssistantImportPrivate {
 	gboolean     dispose_has_run;
 	GtkWidget   *file_chooser;
 	GtkTreeView *duplicates_listview;
@@ -96,7 +96,7 @@ static const gchar        *st_wsp_name       = IPREFS_IMPORT_ASSISTANT_WSP;
 static BaseAssistantClass *st_parent_class   = NULL;
 
 static GType         register_type( void );
-static void          class_init( NactAssistantImportClass *klass );
+static void          class_init( FMAAssistantImportClass *klass );
 static void          ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
 static GList        *ioptions_list_get_modes( const FMAIOptionsList *instance, GtkWidget *container );
 static void          ioptions_list_free_modes( const FMAIOptionsList *instance, GtkWidget *container, GList *modes );
@@ -105,28 +105,28 @@ static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_dispose( GObject *application );
 static void          instance_finalize( GObject *application );
 
-static void          on_base_initialize_gtk( NactAssistantImport *dialog );
-static void          create_duplicates_treeview_model( NactAssistantImport *dialog );
-static void          on_base_initialize_base_window( NactAssistantImport *dialog );
-static void          runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant );
-static void          runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant );
+static void          on_base_initialize_gtk( FMAAssistantImport *dialog );
+static void          create_duplicates_treeview_model( FMAAssistantImport *dialog );
+static void          on_base_initialize_base_window( FMAAssistantImport *dialog );
+static void          runtime_init_intro( FMAAssistantImport *window, GtkAssistant *assistant );
+static void          runtime_init_file_selector( FMAAssistantImport *window, GtkAssistant *assistant );
 static void          on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
 static gboolean      has_loadable_files( GSList *uris );
-static void          runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant );
+static void          runtime_init_duplicates( FMAAssistantImport *window, GtkAssistant *assistant );
 
 static void          assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
-static void          prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
+static void          prepare_confirm( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void          assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
 static FMAObjectItem *check_for_existence( const FMAObjectItem *, NactMainWindow *window );
-static void          prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
+static void          prepare_importdone( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void          free_results( GList *list );
 
 static GtkWidget    *find_widget_from_page( GtkWidget *page, const gchar *name );
-static GtkTreeView  *get_duplicates_treeview_from_assistant_import( NactAssistantImport *window );
+static GtkTreeView  *get_duplicates_treeview_from_assistant_import( FMAAssistantImport *window );
 static GtkTreeView  *get_duplicates_treeview_from_page( GtkWidget *page );
 
 GType
-nact_assistant_import_get_type( void )
+fma_assistant_import_get_type( void )
 {
 	static GType window_type = 0;
 
@@ -140,17 +140,17 @@ nact_assistant_import_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_assistant_import_register_type";
+	static const gchar *thisfn = "fma_assistant_import_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactAssistantImportClass ),
+		sizeof( FMAAssistantImportClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactAssistantImport ),
+		sizeof( FMAAssistantImport ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -163,7 +163,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_ASSISTANT, "NactAssistantImport", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_ASSISTANT, "FMAAssistantImport", &info, 0 );
 
 	g_type_add_interface_static( type, FMA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
@@ -171,9 +171,9 @@ register_type( void )
 }
 
 static void
-class_init( NactAssistantImportClass *klass )
+class_init( FMAAssistantImportClass *klass )
 {
-	static const gchar *thisfn = "nact_assistant_import_class_init";
+	static const gchar *thisfn = "fma_assistant_import_class_init";
 	GObjectClass *object_class;
 	BaseAssistantClass *assist_class;
 
@@ -193,7 +193,7 @@ class_init( NactAssistantImportClass *klass )
 static void
 ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_assistant_import_ioptions_list_iface_init";
+	static const gchar *thisfn = "fma_assistant_import_ioptions_list_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
@@ -207,7 +207,7 @@ ioptions_list_get_modes( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	GList *modes;
 
-	g_return_val_if_fail( NACT_IS_ASSISTANT_IMPORT( instance ), NULL );
+	g_return_val_if_fail( FMA_IS_ASSISTANT_IMPORT( instance ), NULL );
 
 	modes = fma_importer_get_modes();
 
@@ -229,17 +229,17 @@ ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *contai
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_assistant_import_instance_init";
-	NactAssistantImport *self;
+	static const gchar *thisfn = "fma_assistant_import_instance_init";
+	FMAAssistantImport *self;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( instance ));
+	g_return_if_fail( FMA_IS_ASSISTANT_IMPORT( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NACT_ASSISTANT_IMPORT( instance );
+	self = FMA_ASSISTANT_IMPORT( instance );
 
-	self->private = g_new0( NactAssistantImportPrivate, 1 );
+	self->private = g_new0( FMAAssistantImportPrivate, 1 );
 
 	self->private->results = NULL;
 
@@ -261,12 +261,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *window )
 {
-	static const gchar *thisfn = "nact_assistant_import_instance_dispose";
-	NactAssistantImport *self;
+	static const gchar *thisfn = "fma_assistant_import_instance_dispose";
+	FMAAssistantImport *self;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_IMPORT( window ));
 
-	self = NACT_ASSISTANT_IMPORT( window );
+	self = FMA_ASSISTANT_IMPORT( window );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
@@ -283,14 +283,14 @@ instance_dispose( GObject *window )
 static void
 instance_finalize( GObject *window )
 {
-	static const gchar *thisfn = "nact_assistant_import_instance_finalize";
-	NactAssistantImport *self;
+	static const gchar *thisfn = "fma_assistant_import_instance_finalize";
+	FMAAssistantImport *self;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_IMPORT( window ));
 
 	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-	self = NACT_ASSISTANT_IMPORT( window );
+	self = FMA_ASSISTANT_IMPORT( window );
 
 	free_results( self->private->results );
 
@@ -303,15 +303,15 @@ instance_finalize( GObject *window )
 }
 
 /**
- * nact_assistant_import_run:
+ * fma_assistant_import_run:
  * @main: the #NactMainWindow parent window of this assistant.
  *
  * Run the assistant.
  */
 void
-nact_assistant_import_run( NactMainWindow *main_window )
+fma_assistant_import_run( NactMainWindow *main_window )
 {
-	NactAssistantImport *assistant;
+	FMAAssistantImport *assistant;
 	gboolean esc_quit, esc_confirm;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( main_window ));
@@ -319,7 +319,7 @@ nact_assistant_import_run( NactMainWindow *main_window )
 	esc_quit = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
 	esc_confirm = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 
-	assistant = g_object_new( NACT_TYPE_ASSISTANT_IMPORT,
+	assistant = g_object_new( FMA_TYPE_ASSISTANT_IMPORT,
 			BASE_PROP_MAIN_WINDOW,     main_window,
 			BASE_PROP_HAS_OWN_BUILDER, TRUE,
 			BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
@@ -333,11 +333,11 @@ nact_assistant_import_run( NactMainWindow *main_window )
 }
 
 static void
-on_base_initialize_gtk( NactAssistantImport *dialog )
+on_base_initialize_gtk( FMAAssistantImport *dialog )
 {
-	static const gchar *thisfn = "nact_assistant_import_on_base_initialize_gtk";
+	static const gchar *thisfn = "fma_assistant_import_on_base_initialize_gtk";
 
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( dialog ));
+	g_return_if_fail( FMA_IS_ASSISTANT_IMPORT( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
 		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
@@ -368,11 +368,11 @@ on_base_initialize_gtk( NactAssistantImport *dialog )
 }
 
 static void
-create_duplicates_treeview_model( NactAssistantImport *dialog )
+create_duplicates_treeview_model( FMAAssistantImport *dialog )
 {
-	static const gchar *thisfn = "nact_assistant_import_create_duplicates_treeview_model";
+	static const gchar *thisfn = "fma_assistant_import_create_duplicates_treeview_model";
 
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( dialog ));
+	g_return_if_fail( FMA_IS_ASSISTANT_IMPORT( dialog ));
 	g_return_if_fail( !dialog->private->dispose_has_run );
 
 	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
@@ -384,12 +384,12 @@ create_duplicates_treeview_model( NactAssistantImport *dialog )
 }
 
 static void
-on_base_initialize_base_window( NactAssistantImport *dialog )
+on_base_initialize_base_window( FMAAssistantImport *dialog )
 {
-	static const gchar *thisfn = "nact_assistant_import_on_base_initialize_base_window";
+	static const gchar *thisfn = "fma_assistant_import_on_base_initialize_base_window";
 	GtkAssistant *assistant;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( dialog ));
+	g_return_if_fail( FMA_IS_ASSISTANT_IMPORT( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
 		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
@@ -403,9 +403,9 @@ on_base_initialize_base_window( NactAssistantImport *dialog )
 }
 
 static void
-runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant )
+runtime_init_intro( FMAAssistantImport *window, GtkAssistant *assistant )
 {
-	static const gchar *thisfn = "nact_assistant_import_runtime_init_intro";
+	static const gchar *thisfn = "fma_assistant_import_runtime_init_intro";
 	GtkWidget *page;
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_INTRO );
@@ -421,9 +421,9 @@ runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant )
  * to the GtkAssistant, but only to the page.
  */
 static void
-runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant )
+runtime_init_file_selector( FMAAssistantImport *window, GtkAssistant *assistant )
 {
-	static const gchar *thisfn = "nact_assistant_import_runtime_init_file_selector";
+	static const gchar *thisfn = "fma_assistant_import_runtime_init_file_selector";
 	GtkWidget *page;
 	GtkWidget *chooser;
 	gchar *uri;
@@ -458,7 +458,7 @@ runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant
 static void
 on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_assistant_import_on_file_selection_changed";
+	static const gchar *thisfn = "fma_assistant_import_on_file_selection_changed";
 	GtkAssistant *assistant;
 	gint pos;
 	GSList *uris;
@@ -466,7 +466,7 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	gchar *folder;
 	GtkWidget *content;
 
-	g_assert( NACT_IS_ASSISTANT_IMPORT( user_data ));
+	g_assert( FMA_IS_ASSISTANT_IMPORT( user_data ));
 	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( user_data )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_FILES_SELECTION ){
@@ -522,9 +522,9 @@ has_loadable_files( GSList *uris )
 }
 
 static void
-runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
+runtime_init_duplicates( FMAAssistantImport *window, GtkAssistant *assistant )
 {
-	static const gchar *thisfn = "nact_assistant_import_runtime_init_duplicates";
+	static const gchar *thisfn = "fma_assistant_import_runtime_init_duplicates";
 	gchar *import_mode;
 	GtkWidget *page;
 	gboolean mandatory;
@@ -550,7 +550,7 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 static void
 assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page )
 {
-	static const gchar *thisfn = "nact_assistant_import_assistant_prepare";
+	static const gchar *thisfn = "fma_assistant_import_assistant_prepare";
 	GtkAssistantPageType type;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
@@ -560,11 +560,11 @@ assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *pa
 
 	switch( type ){
 		case GTK_ASSISTANT_PAGE_CONFIRM:
-			prepare_confirm( NACT_ASSISTANT_IMPORT( window ), assistant, page );
+			prepare_confirm( FMA_ASSISTANT_IMPORT( window ), assistant, page );
 			break;
 
 		case GTK_ASSISTANT_PAGE_SUMMARY:
-			prepare_importdone( NACT_ASSISTANT_IMPORT( window ), assistant, page );
+			prepare_importdone( FMA_ASSISTANT_IMPORT( window ), assistant, page );
 			break;
 
 		default:
@@ -573,9 +573,9 @@ assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *pa
 }
 
 static void
-prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page )
+prepare_confirm( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page )
 {
-	static const gchar *thisfn = "nact_assistant_import_prepare_confirm";
+	static const gchar *thisfn = "fma_assistant_import_prepare_confirm";
 	gchar *text, *tmp;
 	GSList *uris, *is;
 	GtkWidget *label;
@@ -641,8 +641,8 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 static void
 assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 {
-	static const gchar *thisfn = "nact_assistant_import_assistant_apply";
-	NactAssistantImport *window;
+	static const gchar *thisfn = "fma_assistant_import_assistant_apply";
+	FMAAssistantImport *window;
 	FMAImporterParms importer_parms;
 	BaseWindow *main_window;
 	GList *import_results, *it;
@@ -652,10 +652,10 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	FMAUpdater *updater;
 	NactTreeView *items_view;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( wnd ));
+	g_return_if_fail( FMA_IS_ASSISTANT_IMPORT( wnd ));
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
-	window = NACT_ASSISTANT_IMPORT( wnd );
+	window = FMA_ASSISTANT_IMPORT( wnd );
 	g_object_get( G_OBJECT( window ), BASE_PROP_MAIN_WINDOW, &main_window, NULL );
 	application = FMA_APPLICATION( base_window_get_application( main_window ));
 	updater = fma_application_get_updater( application );
@@ -715,7 +715,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 static FMAObjectItem *
 check_for_existence( const FMAObjectItem *item, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_assistant_import_check_for_existence";
+	static const gchar *thisfn = "fma_assistant_import_check_for_existence";
 	NactTreeView *items_view;
 	FMAObjectItem *exists;
 	gchar *importing_id;
@@ -739,9 +739,9 @@ check_for_existence( const FMAObjectItem *item, NactMainWindow *window )
  * in blue.
  */
 static void
-prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page )
+prepare_importdone( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page )
 {
-	static const gchar *thisfn = "nact_assistant_import_prepare_importdone";
+	static const gchar *thisfn = "fma_assistant_import_prepare_importdone";
 	guint width;
 	GtkWidget *vbox;
 	GtkWidget *file_vbox, *file_uri, *file_report;
@@ -871,12 +871,12 @@ find_widget_from_page( GtkWidget *page, const gchar *name )
 }
 
 static GtkTreeView *
-get_duplicates_treeview_from_assistant_import( NactAssistantImport *window )
+get_duplicates_treeview_from_assistant_import( FMAAssistantImport *window )
 {
 	GtkAssistant *assistant;
 	GtkWidget *page;
 
-	g_return_val_if_fail( NACT_IS_ASSISTANT_IMPORT( window ), NULL );
+	g_return_val_if_fail( FMA_IS_ASSISTANT_IMPORT( window ), NULL );
 
 	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
