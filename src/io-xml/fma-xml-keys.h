@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAXML_KEYS_H__
-#define __NAXML_KEYS_H__
+#ifndef __IO_XML_FMA_XML_KEYS_H__
+#define __IO_XML_FMA_XML_KEYS_H__
 
 #include <api/fma-data-def.h>
 
@@ -44,23 +44,23 @@ G_BEGIN_DECLS
  * Starting with 1.11, we have introduced a lighter export schema
  * (without owner and short and long descriptions)
  */
-#define NAXML_KEY_SCHEMA_ROOT					"gconfschemafile"
-#define NAXML_KEY_SCHEMA_LIST					"schemalist"
-#define NAXML_KEY_SCHEMA_NODE					"schema"
+#define FMA_XML_KEY_SCHEMA_ROOT					"gconfschemafile"
+#define FMA_XML_KEY_SCHEMA_LIST					"schemalist"
+#define FMA_XML_KEY_SCHEMA_NODE					"schema"
 
-#define NAXML_KEY_SCHEMA_NODE_KEY				"key"
-#define NAXML_KEY_SCHEMA_NODE_APPLYTO			"applyto"
-#define NAXML_KEY_SCHEMA_NODE_OWNER				"owner"			/* v1 only */
-#define NAXML_KEY_SCHEMA_NODE_TYPE				"type"
-#define NAXML_KEY_SCHEMA_NODE_LISTTYPE			"list_type"
-#define NAXML_KEY_SCHEMA_NODE_LOCALE			"locale"
-#define NAXML_KEY_SCHEMA_NODE_DEFAULT			"default"
+#define FMA_XML_KEY_SCHEMA_NODE_KEY				"key"
+#define FMA_XML_KEY_SCHEMA_NODE_APPLYTO			"applyto"
+#define FMA_XML_KEY_SCHEMA_NODE_OWNER			"owner"			/* v1 only */
+#define FMA_XML_KEY_SCHEMA_NODE_TYPE			"type"
+#define FMA_XML_KEY_SCHEMA_NODE_LISTTYPE		"list_type"
+#define FMA_XML_KEY_SCHEMA_NODE_LOCALE			"locale"
+#define FMA_XML_KEY_SCHEMA_NODE_DEFAULT			"default"
 
-#define NAXML_KEY_SCHEMA_NODE_LOCALE_DEFAULT	"default"
-#define NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT		"short"			/* v1 only */
-#define NAXML_KEY_SCHEMA_NODE_LOCALE_LONG		"long"			/* v1 only */
+#define FMA_XML_KEY_SCHEMA_NODE_LOCALE_DEFAULT	"default"
+#define FMA_XML_KEY_SCHEMA_NODE_LOCALE_SHORT	"short"			/* v1 only */
+#define FMA_XML_KEY_SCHEMA_NODE_LOCALE_LONG		"long"			/* v1 only */
 
-/* this structure is statically allocated (cf. naxml-keys.c)
+/* this structure is statically allocated (cf. fma-xml-keys.c)
  * and let us check the validity of each element node
  */
 typedef struct {
@@ -70,24 +70,24 @@ typedef struct {
 
 	gboolean reader_found;				/* dynamic data */
 }
-	NAXMLKeyStr;
+	FMAXMLKeyStr;
 
 /* XML element names (GConf dump)
  * used in FORMAT_GCONF_ENTRY
  */
-#define NAXML_KEY_DUMP_ROOT							"gconfentryfile"
-#define NAXML_KEY_DUMP_LIST							"entrylist"
-#define NAXML_KEY_DUMP_NODE							"entry"
+#define FMA_XML_KEY_DUMP_ROOT						"gconfentryfile"
+#define FMA_XML_KEY_DUMP_LIST						"entrylist"
+#define FMA_XML_KEY_DUMP_NODE						"entry"
 
-#define NAXML_KEY_DUMP_LIST_PARM_BASE				"base"
+#define FMA_XML_KEY_DUMP_LIST_PARM_BASE				"base"
 
-#define NAXML_KEY_DUMP_NODE_KEY						"key"
-#define NAXML_KEY_DUMP_NODE_VALUE					"value"
+#define FMA_XML_KEY_DUMP_NODE_KEY					"key"
+#define FMA_XML_KEY_DUMP_NODE_VALUE					"value"
 
-#define NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING		"string"
-#define NAXML_KEY_DUMP_NODE_VALUE_LIST				"list"
-#define NAXML_KEY_DUMP_NODE_VALUE_LIST_PARM_TYPE	"type"
+#define FMA_XML_KEY_DUMP_NODE_VALUE_TYPE_STRING		"string"
+#define FMA_XML_KEY_DUMP_NODE_VALUE_LIST			"list"
+#define FMA_XML_KEY_DUMP_NODE_VALUE_LIST_PARM_TYPE	"type"
 
 G_END_DECLS
 
-#endif /* __NAXML_KEYS_H__ */
+#endif /* __IO_XML_FMA_XML_KEYS_H__ */

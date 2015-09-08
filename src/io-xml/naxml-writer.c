@@ -45,7 +45,7 @@
 #include <io-gconf/fma-gconf-keys.h>
 
 #include "fma-xml-formats.h"
-#include "naxml-keys.h"
+#include "fma-xml-keys.h"
 #include "naxml-writer.h"
 
 typedef struct ExportFormatFn ExportFormatFn;
@@ -128,26 +128,26 @@ static guint           writer_to_buffer( NAXMLWriter *writer );
 static ExportFormatFn st_export_format_fn[] = {
 
 	{ FMA_XML_FORMAT_GCONF_SCHEMA_V1,
-					NAXML_KEY_SCHEMA_ROOT,
-					NAXML_KEY_SCHEMA_LIST,
+					FMA_XML_KEY_SCHEMA_ROOT,
+					FMA_XML_KEY_SCHEMA_LIST,
 					NULL,
-					NAXML_KEY_SCHEMA_NODE,
+					FMA_XML_KEY_SCHEMA_NODE,
 					write_data_schema_v1,
 					write_type_schema_v1 },
 
 	{ FMA_XML_FORMAT_GCONF_SCHEMA_V2,
-					NAXML_KEY_SCHEMA_ROOT,
-					NAXML_KEY_SCHEMA_LIST,
+					FMA_XML_KEY_SCHEMA_ROOT,
+					FMA_XML_KEY_SCHEMA_LIST,
 					NULL,
-					NAXML_KEY_SCHEMA_NODE,
+					FMA_XML_KEY_SCHEMA_NODE,
 					write_data_schema_v2,
 					write_type_schema_v2 },
 
 	{ FMA_XML_FORMAT_GCONF_ENTRY,
-					NAXML_KEY_DUMP_ROOT,
-					NAXML_KEY_DUMP_LIST,
+					FMA_XML_KEY_DUMP_ROOT,
+					FMA_XML_KEY_DUMP_LIST,
 					write_list_attribs_dump,
-					NAXML_KEY_DUMP_NODE,
+					FMA_XML_KEY_DUMP_NODE,
 					write_data_dump,
 					write_type_dump },
 
@@ -514,13 +514,13 @@ static void
 write_data_schema_v1_element( NAXMLWriter *writer, const FMADataDef *def )
 {
 	if( !writer->private->locale_node ){
-		writer->private->locale_node = xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE ), NULL );
+		writer->private->locale_node = xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LOCALE ), NULL );
 		xmlNewProp( writer->private->locale_node, BAD_CAST( "name" ), BAD_CAST( "C" ));
 	}
 
-	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
-	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( gettext( def->short_label )));
-	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( gettext( def->long_label )));
+	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
+	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( gettext( def->short_label )));
+	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( gettext( def->long_label )));
 }
 
 static void
@@ -594,31 +594,31 @@ write_data_schema_v2_element( NAXMLWriter *writer, const FMADataDef *def, const 
 	xmlChar *content;
 	xmlNodePtr parent_value_node;
 
-	writer->private->schema_node = xmlNewChild( writer->private->list_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE ), NULL );
+	writer->private->schema_node = xmlNewChild( writer->private->list_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE ), NULL );
 
 	content = BAD_CAST( g_build_path( "/", FMA_GCONF_SCHEMAS_PATH, def->gconf_entry, NULL ));
-	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_KEY ), content );
+	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_KEY ), content );
 	xmlFree( content );
 
 	content = BAD_CAST( g_build_path( "/", FMA_GCONF_CONFIGURATIONS_PATH, object_id, def->gconf_entry, NULL ));
-	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_APPLYTO ), content );
+	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_APPLYTO ), content );
 	xmlFree( content );
 
-	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_TYPE ), BAD_CAST( fma_data_types_get_gconf_dump_key( def->type )));
+	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_TYPE ), BAD_CAST( fma_data_types_get_gconf_dump_key( def->type )));
 	if( def->type == FMA_DATA_TYPE_STRING_LIST ){
-		xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LISTTYPE ), BAD_CAST( "string" ));
+		xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LISTTYPE ), BAD_CAST( "string" ));
 	}
 
 	parent_value_node = writer->private->schema_node;
 
 	if( def->localizable ){
-		writer->private->locale_node = xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE ), NULL );
+		writer->private->locale_node = xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LOCALE ), NULL );
 		xmlNewProp( writer->private->locale_node, BAD_CAST( "name" ), BAD_CAST( "C" ));
 		parent_value_node = writer->private->locale_node;
 	}
 
 	content = xmlEncodeSpecialChars( writer->private->doc, BAD_CAST( value_str ));
-	xmlNewChild( parent_value_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_DEFAULT ), content );
+	xmlNewChild( parent_value_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_DEFAULT ), content );
 	xmlFree( content );
 }
 
@@ -646,7 +646,7 @@ write_list_attribs_dump( NAXMLWriter *writer, const FMAObjectItem *object )
 
 	id = fma_object_get_id( object );
 	path = g_build_path( "/", FMA_GCONF_CONFIGURATIONS_PATH, id, NULL );
-	xmlNewProp( writer->private->list_node, BAD_CAST( NAXML_KEY_DUMP_LIST_PARM_BASE ), BAD_CAST( path ));
+	xmlNewProp( writer->private->list_node, BAD_CAST( FMA_XML_KEY_DUMP_LIST_PARM_BASE ), BAD_CAST( path ));
 
 	g_free( path );
 	g_free( id );
@@ -703,19 +703,19 @@ write_data_dump_element( NAXMLWriter *writer, const FMADataDef *def, const FMADa
 
 	entry_node = xmlNewChild( writer->private->list_node, NULL, BAD_CAST( writer->private->fn_str->element_node ), NULL );
 
-	xmlNewChild( entry_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_KEY ), BAD_CAST( entry ));
+	xmlNewChild( entry_node, NULL, BAD_CAST( FMA_XML_KEY_DUMP_NODE_KEY ), BAD_CAST( entry ));
 
-	value_node = xmlNewChild( entry_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE ), NULL );
+	value_node = xmlNewChild( entry_node, NULL, BAD_CAST( FMA_XML_KEY_DUMP_NODE_VALUE ), NULL );
 
 	if( def->type == FMA_DATA_TYPE_STRING_LIST ){
-		value_list_node = xmlNewChild( value_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_LIST ), NULL );
-		xmlNewProp( value_list_node, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_LIST_PARM_TYPE ), BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING ));
-		value_list_value_node = xmlNewChild( value_list_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE ), NULL );
+		value_list_node = xmlNewChild( value_node, NULL, BAD_CAST( FMA_XML_KEY_DUMP_NODE_VALUE_LIST ), NULL );
+		xmlNewProp( value_list_node, BAD_CAST( FMA_XML_KEY_DUMP_NODE_VALUE_LIST_PARM_TYPE ), BAD_CAST( FMA_XML_KEY_DUMP_NODE_VALUE_TYPE_STRING ));
+		value_list_value_node = xmlNewChild( value_list_node, NULL, BAD_CAST( FMA_XML_KEY_DUMP_NODE_VALUE ), NULL );
 		list = ( GSList * ) fma_boxed_get_as_void( FMA_BOXED( boxed ));
 
 		for( is = list ; is ; is = is->next ){
 			encoded_content = xmlEncodeSpecialChars( writer->private->doc, BAD_CAST(( gchar * ) is->data ));
-			xmlNewChild( value_list_value_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING ), encoded_content );
+			xmlNewChild( value_list_value_node, NULL, BAD_CAST( FMA_XML_KEY_DUMP_NODE_VALUE_TYPE_STRING ), encoded_content );
 			xmlFree( encoded_content );
 		}
 

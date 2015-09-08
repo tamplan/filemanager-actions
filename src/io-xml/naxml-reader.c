@@ -43,7 +43,7 @@
 
 #include <io-gconf/fma-gconf-keys.h>
 
-#include "naxml-keys.h"
+#include "fma-xml-keys.h"
 #include "naxml-reader.h"
 
 /* private class data
@@ -94,8 +94,8 @@ struct _NAXMLReaderPrivate {
 	gboolean                         node_ok;
 };
 
-extern NAXMLKeyStr naxml_schema_key_schema_str[];
-extern NAXMLKeyStr naxml_dump_key_entry_str[];
+extern FMAXMLKeyStr naxml_schema_key_schema_str[];
+extern FMAXMLKeyStr naxml_dump_key_entry_str[];
 
 static GObjectClass *st_parent_class = NULL;
 
@@ -119,10 +119,10 @@ static gchar        *dump_read_value( NAXMLReader *reader, xmlNode *node, const 
 
 static RootNodeStr st_root_node_str[] = {
 
-	{ NAXML_KEY_SCHEMA_ROOT,
-			NAXML_KEY_SCHEMA_LIST,
-			NAXML_KEY_SCHEMA_NODE,
-			NAXML_KEY_SCHEMA_NODE_APPLYTO,
+	{ FMA_XML_KEY_SCHEMA_ROOT,
+			FMA_XML_KEY_SCHEMA_LIST,
+			FMA_XML_KEY_SCHEMA_NODE,
+			FMA_XML_KEY_SCHEMA_NODE_APPLYTO,
 			6,
 			NULL,
 			NULL,
@@ -130,10 +130,10 @@ static RootNodeStr st_root_node_str[] = {
 			schema_parse_schema_content,
 			schema_read_value },
 
-	{ NAXML_KEY_DUMP_ROOT,
-			NAXML_KEY_DUMP_LIST,
-			NAXML_KEY_DUMP_NODE,
-			NAXML_KEY_DUMP_NODE_KEY,
+	{ FMA_XML_KEY_DUMP_ROOT,
+			FMA_XML_KEY_DUMP_LIST,
+			FMA_XML_KEY_DUMP_NODE,
+			FMA_XML_KEY_DUMP_NODE_KEY,
 			1,
 			NULL,
 			dump_parse_list_parms,
@@ -167,7 +167,7 @@ static guint         iter_on_root_children( NAXMLReader *reader, xmlNode *root )
 static guint         iter_on_list_children( NAXMLReader *reader, xmlNode *first );
 
 static gchar        *slist_to_string( GSList *slist );
-static gchar        *build_key_node_list( NAXMLKeyStr *strlist );
+static gchar        *build_key_node_list( FMAXMLKeyStr *strlist );
 static gchar        *build_root_node_list( void );
 static gchar        *get_value_from_child_node( xmlNode *node, const gchar *child );
 static gchar        *get_value_from_child_child_node( xmlNode *node, const gchar *first, const gchar *second );
@@ -954,7 +954,7 @@ static guint
 schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 {
 	xmlNode *iter;
-	NAXMLKeyStr *str;
+	FMAXMLKeyStr *str;
 	int i;
 	guint code;
 
@@ -999,7 +999,7 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 		 *   each item)
 		 * - starting with v 3, only <applyto> key has this id
 		 */
-		if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_APPLYTO )){
+		if( !strxcmp( iter->name, FMA_XML_KEY_SCHEMA_NODE_APPLYTO )){
 			schema_check_for_id( reader, iter );
 			if( !reader->private->node_ok ){
 				continue;
@@ -1008,7 +1008,7 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 
 		/* search for the type of the item
 		 */
-		if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_APPLYTO )){
+		if( !strxcmp( iter->name, FMA_XML_KEY_SCHEMA_NODE_APPLYTO )){
 			schema_check_for_type( reader, iter );
 			if( !reader->private->node_ok ){
 				continue;
@@ -1027,7 +1027,7 @@ schema_check_for_id( NAXMLReader *reader, xmlNode *iter )
 {
 	guint idx = 0;
 
-	if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_KEY )){
+	if( !strxcmp( iter->name, FMA_XML_KEY_SCHEMA_NODE_KEY )){
 		idx = 1;
 	}
 
@@ -1063,7 +1063,7 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 
 	if( !strcmp( entry, FMA_GCONF_ENTRY_TYPE )){
 		reader->private->type_found = TRUE;
-		gchar *type = get_value_from_child_node( iter->parent, NAXML_KEY_SCHEMA_NODE_DEFAULT );
+		gchar *type = get_value_from_child_node( iter->parent, FMA_XML_KEY_SCHEMA_NODE_DEFAULT );
 
 		if( !strcmp( type, FMA_GCONF_VALUE_TYPE_ACTION )){
 			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_action_new());
@@ -1089,9 +1089,9 @@ schema_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def )
 	gchar *value;
 
 	if( def->localizable ){
-		value = get_value_from_child_child_node( node, NAXML_KEY_SCHEMA_NODE_LOCALE, NAXML_KEY_SCHEMA_NODE_LOCALE_DEFAULT );
+		value = get_value_from_child_child_node( node, FMA_XML_KEY_SCHEMA_NODE_LOCALE, FMA_XML_KEY_SCHEMA_NODE_LOCALE_DEFAULT );
 	} else {
-		value = get_value_from_child_node( node, NAXML_KEY_SCHEMA_NODE_DEFAULT );
+		value = get_value_from_child_node( node, FMA_XML_KEY_SCHEMA_NODE_DEFAULT );
 	}
 
 	/*g_debug( "name=%s, localizable=%s, value=%s", def->name, def->localizable ? "True":"False", value );*/
@@ -1109,7 +1109,7 @@ dump_parse_list_parms( NAXMLReader *reader, xmlNode *node )
 
 	code = IMPORTER_CODE_OK;
 
-	xmlChar *path = xmlGetProp( node, ( const xmlChar * ) NAXML_KEY_DUMP_LIST_PARM_BASE );
+	xmlChar *path = xmlGetProp( node, ( const xmlChar * ) FMA_XML_KEY_DUMP_LIST_PARM_BASE );
 	reader->private->item_id = g_path_get_basename(( const gchar * ) path );
 	xmlFree( path );
 
@@ -1124,7 +1124,7 @@ static guint
 dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
 {
 	xmlNode *iter;
-	NAXMLKeyStr *str;
+	FMAXMLKeyStr *str;
 	int i;
 	guint code;
 
@@ -1165,7 +1165,7 @@ dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
 
 		/* search for the type of the item
 		 */
-		if( !strxcmp( iter->name, NAXML_KEY_DUMP_NODE_KEY )){
+		if( !strxcmp( iter->name, FMA_XML_KEY_DUMP_NODE_KEY )){
 
 			dump_check_for_type( reader, iter );
 
@@ -1188,7 +1188,7 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
 
 	if( !strxcmp( key_content, FMA_GCONF_ENTRY_TYPE )){
 		reader->private->type_found = TRUE;
-		gchar *type = get_value_from_child_child_node( key_node->parent, NAXML_KEY_DUMP_NODE_VALUE, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
+		gchar *type = get_value_from_child_child_node( key_node->parent, FMA_XML_KEY_DUMP_NODE_VALUE, FMA_XML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
 
 		if( !strcmp( type, FMA_GCONF_VALUE_TYPE_ACTION )){
 			reader->private->parms->imported = FMA_OBJECT_ITEM( fma_object_action_new());
@@ -1228,23 +1228,23 @@ dump_read_value( NAXMLReader *reader, xmlNode *node, const FMADataDef *def )
 		case FMA_DATA_TYPE_LOCALE_STRING:
 		case FMA_DATA_TYPE_UINT:
 		case FMA_DATA_TYPE_BOOLEAN:
-			string = get_value_from_child_child_node( node, NAXML_KEY_DUMP_NODE_VALUE, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
+			string = get_value_from_child_child_node( node, FMA_XML_KEY_DUMP_NODE_VALUE, FMA_XML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
 			break;
 
 		case FMA_DATA_TYPE_STRING_LIST:
 			slist = NULL;
-			value_node = search_for_child_node( node, NAXML_KEY_DUMP_NODE_VALUE );
+			value_node = search_for_child_node( node, FMA_XML_KEY_DUMP_NODE_VALUE );
 
 			if( value_node ){
-				list_node = search_for_child_node( value_node, NAXML_KEY_DUMP_NODE_VALUE_LIST );
+				list_node = search_for_child_node( value_node, FMA_XML_KEY_DUMP_NODE_VALUE_LIST );
 
 				if( list_node ){
-					vv_node = search_for_child_node( list_node, NAXML_KEY_DUMP_NODE_VALUE );
+					vv_node = search_for_child_node( list_node, FMA_XML_KEY_DUMP_NODE_VALUE );
 
 					for( it = vv_node->children ; it ; it = it->next ){
 
 						if( it->type == XML_ELEMENT_NODE &&
-								!strxcmp( it->name, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING )){
+								!strxcmp( it->name, FMA_XML_KEY_DUMP_NODE_VALUE_TYPE_STRING )){
 
 							text = xmlNodeGetContent( it );
 							slist = g_slist_append( slist, ( gchar * ) text );
@@ -1288,11 +1288,11 @@ slist_to_string( GSList *slist )
 }
 
 static gchar *
-build_key_node_list( NAXMLKeyStr *strlist )
+build_key_node_list( FMAXMLKeyStr *strlist )
 {
-	NAXMLKeyStr *next;
+	FMAXMLKeyStr *next;
 
-	NAXMLKeyStr *istr = strlist;
+	FMAXMLKeyStr *istr = strlist;
 	GString *string = g_string_new( "" );
 
 	while( istr->key ){

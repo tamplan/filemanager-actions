@@ -31,28 +31,28 @@
 #include <config.h>
 #endif
 
-#include "naxml-keys.h"
+#include "fma-xml-keys.h"
 
-NAXMLKeyStr naxml_schema_key_schema_str [] = {
-		{ NAXML_KEY_SCHEMA_NODE_KEY,             TRUE,  TRUE, FALSE },
-		{ NAXML_KEY_SCHEMA_NODE_APPLYTO,         TRUE,  TRUE, FALSE },
-		{ NAXML_KEY_SCHEMA_NODE_OWNER,           TRUE, FALSE, FALSE },
-		{ NAXML_KEY_SCHEMA_NODE_TYPE,            TRUE,  TRUE, FALSE },
-		{ NAXML_KEY_SCHEMA_NODE_LISTTYPE,        TRUE,  TRUE, FALSE },
-		{ NAXML_KEY_SCHEMA_NODE_LOCALE,          TRUE,  TRUE, FALSE },
-		{ NAXML_KEY_SCHEMA_NODE_DEFAULT,         TRUE,  TRUE, FALSE },
+FMAXMLKeyStr naxml_schema_key_schema_str [] = {
+		{ FMA_XML_KEY_SCHEMA_NODE_KEY,             TRUE,  TRUE, FALSE },
+		{ FMA_XML_KEY_SCHEMA_NODE_APPLYTO,         TRUE,  TRUE, FALSE },
+		{ FMA_XML_KEY_SCHEMA_NODE_OWNER,           TRUE, FALSE, FALSE },
+		{ FMA_XML_KEY_SCHEMA_NODE_TYPE,            TRUE,  TRUE, FALSE },
+		{ FMA_XML_KEY_SCHEMA_NODE_LISTTYPE,        TRUE,  TRUE, FALSE },
+		{ FMA_XML_KEY_SCHEMA_NODE_LOCALE,          TRUE,  TRUE, FALSE },
+		{ FMA_XML_KEY_SCHEMA_NODE_DEFAULT,         TRUE,  TRUE, FALSE },
 		{ NULL }
 };
 
-NAXMLKeyStr naxml_schema_key_locale_str [] = {
-		{ NAXML_KEY_SCHEMA_NODE_LOCALE_DEFAULT,  TRUE,  TRUE, FALSE },
-		{ NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT,    TRUE, FALSE, FALSE },
-		{ NAXML_KEY_SCHEMA_NODE_LOCALE_LONG,     TRUE, FALSE, FALSE },
+FMAXMLKeyStr naxml_schema_key_locale_str [] = {
+		{ FMA_XML_KEY_SCHEMA_NODE_LOCALE_DEFAULT,  TRUE,  TRUE, FALSE },
+		{ FMA_XML_KEY_SCHEMA_NODE_LOCALE_SHORT,    TRUE, FALSE, FALSE },
+		{ FMA_XML_KEY_SCHEMA_NODE_LOCALE_LONG,     TRUE, FALSE, FALSE },
 		{ NULL }
 };
 
-NAXMLKeyStr naxml_dump_key_entry_str [] = {
-		{ NAXML_KEY_DUMP_NODE_KEY,               TRUE,  TRUE, FALSE },
-		{ NAXML_KEY_DUMP_NODE_VALUE,             TRUE,  TRUE, FALSE },
+FMAXMLKeyStr naxml_dump_key_entry_str [] = {
+		{ FMA_XML_KEY_DUMP_NODE_KEY,               TRUE,  TRUE, FALSE },
+		{ FMA_XML_KEY_DUMP_NODE_VALUE,             TRUE,  TRUE, FALSE },
 		{ NULL }
 };
