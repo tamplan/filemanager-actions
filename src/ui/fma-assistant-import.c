@@ -46,7 +46,7 @@
 
 #include "fma-application.h"
 #include "fma-assistant-import.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-tree-ieditable.h"
 
 /* Import Assistant
@@ -117,7 +117,7 @@ static void           runtime_init_duplicates( FMAAssistantImport *window, GtkAs
 static void           assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 static void           prepare_confirm( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void           assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
-static FMAObjectItem *check_for_existence( const FMAObjectItem *, NactMainWindow *window );
+static FMAObjectItem *check_for_existence( const FMAObjectItem *, FMAMainWindow *window );
 static void           prepare_importdone( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void           free_results( GList *list );
 
@@ -304,17 +304,17 @@ instance_finalize( GObject *window )
 
 /**
  * fma_assistant_import_run:
- * @main: the #NactMainWindow parent window of this assistant.
+ * @main: the #FMAMainWindow parent window of this assistant.
  *
  * Run the assistant.
  */
 void
-fma_assistant_import_run( NactMainWindow *main_window )
+fma_assistant_import_run( FMAMainWindow *main_window )
 {
 	FMAAssistantImport *assistant;
 	gboolean esc_quit, esc_confirm;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( main_window ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( main_window ));
 
 	esc_quit = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
 	esc_confirm = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
@@ -697,7 +697,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	 */
 	if( insertable_items ){
 		insertable_items = g_list_reverse( insertable_items );
-		items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
+		items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( main_window ));
 		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), insertable_items, NULL );
 		fma_object_free_items( insertable_items );
 	}
@@ -706,14 +706,14 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	 * items, so do not release it here
 	 */
 	if( overriden_items ){
-		items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
+		items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( main_window ));
 		nact_tree_ieditable_set_items( NACT_TREE_IEDITABLE( items_view ), overriden_items );
 		window->private->overriden = overriden_items;
 	}
 }
 
 static FMAObjectItem *
-check_for_existence( const FMAObjectItem *item, NactMainWindow *window )
+check_for_existence( const FMAObjectItem *item, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "fma_assistant_import_check_for_existence";
 	NactTreeView *items_view;
@@ -724,7 +724,7 @@ check_for_existence( const FMAObjectItem *item, NactMainWindow *window )
 	g_debug( "%s: item=%p (%s), importing_id=%s",
 			thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ), importing_id );
 
-	items_view = nact_main_window_get_items_view( window );
+	items_view = fma_main_window_get_items_view( window );
 	exists = nact_tree_view_get_item_by_id( items_view, importing_id );
 
 	g_free( importing_id );

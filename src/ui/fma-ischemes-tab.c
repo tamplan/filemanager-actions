@@ -40,7 +40,7 @@
 
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-match-list.h"
 #include "fma-add-scheme-dialog.h"
 #include "fma-ischemes-tab.h"
@@ -155,7 +155,7 @@ fma_ischemes_tab_init( FMAISchemesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES );
+	fma_main_tab_init( FMA_MAIN_WINDOW( instance ), TAB_SCHEMES );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -173,7 +173,7 @@ initialize_gtk( FMAISchemesTab *instance )
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			NACT_MAIN_WINDOW( instance ),
+			FMA_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_SCHEMES,
 			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "SchemesTreeView" ),
@@ -199,7 +199,7 @@ initialize_window( FMAISchemesTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	tview = fma_main_window_get_items_view( FMA_MAIN_WINDOW( instance ));
 
 	g_signal_connect(
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
@@ -223,7 +223,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAISchem
 			NULL );
 
 	enable_tab = ( context != NULL );
-	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES, enable_tab );
+	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_SCHEMES, enable_tab );
 
 	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "AddFromDefaultButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
@@ -239,12 +239,12 @@ on_add_from_defaults( GtkButton *button, FMAISchemesTab *instance )
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 	g_return_if_fail( context );
 
-	schemes = nact_match_list_get_rows( NACT_MAIN_WINDOW( instance ), ITAB_NAME );
-	new_scheme = fma_add_scheme_dialog_run( NACT_MAIN_WINDOW( instance ), schemes );
+	schemes = nact_match_list_get_rows( FMA_MAIN_WINDOW( instance ), ITAB_NAME );
+	new_scheme = fma_add_scheme_dialog_run( FMA_MAIN_WINDOW( instance ), schemes );
 	fma_core_utils_slist_free( schemes );
 
 	if( new_scheme ){
-		nact_match_list_insert_row( NACT_MAIN_WINDOW( instance ), ITAB_NAME, new_scheme, FALSE, FALSE );
+		nact_match_list_insert_row( FMA_MAIN_WINDOW( instance ), ITAB_NAME, new_scheme, FALSE, FALSE );
 		g_free( new_scheme );
 	}
 }

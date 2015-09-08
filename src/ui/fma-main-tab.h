@@ -32,7 +32,7 @@
 
 #include <api/fma-icontext.h>
 
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 /**
  * SECTION: fma_main_tab
@@ -57,9 +57,9 @@ enum {
 	TAB_PROPERTIES
 };
 
-void     fma_main_tab_init           ( NactMainWindow *window, gint page );
-void     fma_main_tab_enable_page    ( NactMainWindow *window, gint page, gboolean enabled );
-gboolean fma_main_tab_is_page_enabled( NactMainWindow *window, gint page );
+void     fma_main_tab_init           ( FMAMainWindow *window, gint page );
+void     fma_main_tab_enable_page    ( FMAMainWindow *window, gint page, gboolean enabled );
+gboolean fma_main_tab_is_page_enabled( FMAMainWindow *window, gint page );
 
 G_END_DECLS
 

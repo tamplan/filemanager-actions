@@ -40,7 +40,7 @@
 #include "base-keysyms.h"
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-match-list.h"
 
 /* column ordering
@@ -62,7 +62,7 @@ typedef struct {
  * addressed with the tab name
  */
 typedef struct {
-	NactMainWindow  *window;
+	FMAMainWindow  *window;
 	gchar           *tab_name;
 	guint            tab_id;
 	GtkTreeView     *listview;
@@ -126,7 +126,7 @@ static void         on_instance_finalized( MatchListData *data, BaseWindow *wind
 
 /**
  * nact_match_list_init_with_args:
- * @window: the #NactMainWindow window which contains the view.
+ * @window: the #FMAMainWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  * @tab_id: our id for this page.
  * @listview: the #GtkTreeView widget.
@@ -145,7 +145,7 @@ static void         on_instance_finalized( MatchListData *data, BaseWindow *wind
  * here pointers to GtkTreeView and GtkButton widgets.
  */
 void
-nact_match_list_init_with_args( NactMainWindow *window, const gchar *tab_name,
+nact_match_list_init_with_args( FMAMainWindow *window, const gchar *tab_name,
 				guint tab_id,
 				GtkWidget *listview,
 				GtkWidget *addbutton,
@@ -161,7 +161,7 @@ nact_match_list_init_with_args( NactMainWindow *window, const gchar *tab_name,
 	static const gchar *thisfn = "nact_match_list_init_with_args";
 	MatchListData *data;
 
-	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
 
 	g_debug( "%s: window=%p, tab_name=%s", thisfn, ( void * ) window, tab_name );
 
@@ -308,7 +308,7 @@ initialize_window( MatchListData *data )
 	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
 	sort_on_column( column, data, ITEM_COLUMN );
 
-	treeview = nact_main_window_get_items_view( data->window );
+	treeview = fma_main_window_get_items_view( data->window );
 	g_signal_connect( treeview, TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_selection_changed ), data );
 }
 
@@ -379,7 +379,7 @@ on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchL
 
 /**
  * nact_match_list_insert_row:
- * @window: the #NactMainWindow window which contains the view.
+ * @window: the #FMAMainWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  * @filter: the item to add.
  * @match: whether the 'must match' column is checked.
@@ -388,7 +388,7 @@ on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchL
  * Add a new row to the list view.
  */
 void
-nact_match_list_insert_row( NactMainWindow *window, const gchar *tab_name, const gchar *filter, gboolean match, gboolean not_match )
+nact_match_list_insert_row( FMAMainWindow *window, const gchar *tab_name, const gchar *filter, gboolean match, gboolean not_match )
 {
 	MatchListData *data;
 
@@ -400,14 +400,14 @@ nact_match_list_insert_row( NactMainWindow *window, const gchar *tab_name, const
 
 /**
  * nact_match_list_get_rows:
- * @window: the #NactMainWindow window which contains the view.
+ * @window: the #FMAMainWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  *
  * Returns the list of rows as a newly allocated string list which should
  * be fma_core_utils_slist_free() by the caller.
  */
 GSList *
-nact_match_list_get_rows( NactMainWindow *window, const gchar *tab_name )
+nact_match_list_get_rows( FMAMainWindow *window, const gchar *tab_name )
 {
 	GSList *filters;
 	MatchListData *data;
@@ -1007,7 +1007,7 @@ on_instance_finalized( MatchListData *data, BaseWindow *window )
 
 	g_object_set_data( G_OBJECT( window ), data->tab_name, NULL );
 
-	/* This function is called when the NactMainWindow is about to be finalized.
+	/* This function is called when the FMAMainWindow is about to be finalized.
 	 * At this time, the NactTreeModel has already been finalized.
 	 * It is so too late to try to clear it...
 	 */

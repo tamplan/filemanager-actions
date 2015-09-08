@@ -40,7 +40,7 @@
 #include "core/fma-updater.h"
 
 #include "fma-application.h"
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -108,13 +108,13 @@ enum {
 
 void       nact_menu_app        ( FMAApplication *application );
 
-void       nact_menu_win        ( NactMainWindow *main_window );
+void       nact_menu_win        ( FMAMainWindow *main_window );
 
-void       nact_menu_enable_item( NactMainWindow *main_window,
+void       nact_menu_enable_item( FMAMainWindow *main_window,
 										const gchar *action_name,
 										gboolean enable );
 
-sMenuData *nact_menu_get_data   ( NactMainWindow *main_window );
+sMenuData *nact_menu_get_data   ( FMAMainWindow *main_window );
 
 G_END_DECLS
 

@@ -46,7 +46,7 @@
 
 #include "api/fma-object.h"
 
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -87,7 +87,7 @@ GType          nact_tree_model_get_type        ( void );
 NactTreeModel *nact_tree_model_new             ( GtkTreeView *treeview );
 
 void           nact_tree_model_set_main_window ( NactTreeModel *tmodel,
-														NactMainWindow *main_window );
+														FMAMainWindow *main_window );
 
 void           nact_tree_model_set_edition_mode( NactTreeModel *tmodel,
 														guint mode );

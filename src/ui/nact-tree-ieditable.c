@@ -39,7 +39,7 @@
 
 #include "base-keysyms.h"
 #include "fma-application.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-tree-ieditable.h"
 #include "nact-tree-model.h"
 #include "nact-tree-view.h"
@@ -54,7 +54,7 @@ struct _NactTreeIEditableInterfacePrivate {
  */
 typedef struct {
 	FMAUpdater      *updater;
-	NactMainWindow *main_window;
+	FMAMainWindow *main_window;
 	GtkTreeView    *treeview;
 	NactTreeModel  *model;
 	gulong          modified_handler_id;
@@ -170,7 +170,7 @@ interface_base_finalize( NactTreeIEditableInterface *klass )
  * Initialize the interface, mainly connecting to signals of interest.
  */
 void
-nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treeview, NactMainWindow *main_window )
+nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treeview, FMAMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_tree_ieditable_initialize";
 	IEditableData *ied;

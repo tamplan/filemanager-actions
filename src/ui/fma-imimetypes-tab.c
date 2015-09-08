@@ -38,7 +38,7 @@
 #include "core/fma-gtk-utils.h"
 
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-match-list.h"
 #include "fma-imimetypes-tab.h"
 
@@ -151,7 +151,7 @@ fma_imimetypes_tab_init( FMAIMimetypesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_MIMETYPES );
+	fma_main_tab_init( FMA_MAIN_WINDOW( instance ), TAB_MIMETYPES );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -175,7 +175,7 @@ initialize_gtk( FMAIMimetypesTab *instance )
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			NACT_MAIN_WINDOW( instance ),
+			FMA_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_MIMETYPES,
 			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "MimetypesTreeView" ),
@@ -208,7 +208,7 @@ initialize_window( FMAIMimetypesTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	tview = fma_main_window_get_items_view( FMA_MAIN_WINDOW( instance ));
 
 	g_signal_connect(
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
@@ -227,7 +227,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIMimet
 			NULL );
 
 	enable_tab = ( context != NULL );
-	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_MIMETYPES, enable_tab );
+	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_MIMETYPES, enable_tab );
 }
 
 static GSList *

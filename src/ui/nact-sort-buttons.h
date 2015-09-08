@@ -48,7 +48,7 @@
  * - sort order mode is not a mandatory preference.
  */
 
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -76,7 +76,7 @@ typedef struct {
 
 GType            nact_sort_buttons_get_type( void );
 
-NactSortButtons *nact_sort_buttons_new     ( NactMainWindow *window );
+NactSortButtons *nact_sort_buttons_new     ( FMAMainWindow *window );
 
 G_END_DECLS
 

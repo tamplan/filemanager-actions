@@ -48,7 +48,7 @@
 
 #include "fma-application.h"
 #include "base-gtk-utils.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-schemes-list.h"
 #include "nact-providers-list.h"
 #include "nact-preferences-editor.h"
@@ -430,19 +430,19 @@ instance_finalize( GObject *dialog )
 
 /**
  * nact_preferences_editor_run:
- * @parent: the NactMainWindow main window
+ * @parent: the FMAMainWindow main window
  *
  * Initializes and runs the dialog.
  */
 void
-nact_preferences_editor_run( NactMainWindow *parent )
+nact_preferences_editor_run( FMAMainWindow *parent )
 {
 	static const gchar *thisfn = "nact_preferences_editor_run";
 	NactPreferencesEditor *editor;
 	gboolean are_locked, mandatory;
 	GtkNotebook *notebook;
 
-	g_return_if_fail( parent && NACT_IS_MAIN_WINDOW( parent ));
+	g_return_if_fail( parent && FMA_IS_MAIN_WINDOW( parent ));
 
 	g_debug( "%s: parent=%p (%s)", thisfn, ( void * ) parent, G_OBJECT_TYPE_NAME( parent ));
 

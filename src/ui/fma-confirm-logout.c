@@ -34,7 +34,7 @@
 #include "core/fma-settings.h"
 
 #include "fma-confirm-logout.h"
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 #include "nact-menu-file.h"
 
 /* private instance data
@@ -206,19 +206,19 @@ instance_finalize( GObject *dialog )
 
 /**
  * fma_confirm_logout_run:
- * @parent: the NactMainWindow parent of this dialog
- * (usually the NactMainWindow).
+ * @parent: the FMAMainWindow parent of this dialog
+ * (usually the FMAMainWindow).
  *
  * Initializes and runs the dialog.
  */
 gboolean
-fma_confirm_logout_run( NactMainWindow *parent )
+fma_confirm_logout_run( FMAMainWindow *parent )
 {
 	static const gchar *thisfn = "fma_confirm_logout_run";
 	FMAConfirmLogout *dialog;
 	gboolean willing_to;
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( parent ), TRUE );
+	g_return_val_if_fail( FMA_IS_MAIN_WINDOW( parent ), TRUE );
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 
@@ -293,11 +293,11 @@ static void
 on_save_and_quit_clicked( GtkButton *button, FMAConfirmLogout *editor )
 {
 	static const gchar *thisfn = "fma_confirm_logout_on_cancel_clicked";
-	NactMainWindow *main_window;
+	FMAMainWindow *main_window;
 
 	g_debug( "%s: button=%p, editor=%p", thisfn, ( void * ) button, ( void * ) editor );
 
-	main_window = NACT_MAIN_WINDOW( base_window_get_main_window( BASE_WINDOW( editor )));
+	main_window = FMA_MAIN_WINDOW( base_window_get_main_window( BASE_WINDOW( editor )));
 	nact_menu_file_save_items( main_window );
 
 	close_dialog( editor, TRUE );

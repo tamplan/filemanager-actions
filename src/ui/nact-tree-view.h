@@ -41,16 +41,16 @@
  * The NactTreeView encapsulates the GtkTreeView which displays the items
  * list on the left of the main pane.
  *
- * It is instanciated from NactMainWindow::on_initialize_gtk().
+ * It is instanciated from FMAMainWindow::on_initialize_gtk().
  *
- * A pointer to this NactTreeView is attached to the NactMainWindow at
+ * A pointer to this NactTreeView is attached to the FMAMainWindow at
  * construction time.
  */
 
 #include "api/fma-object-item.h"
 
 #include "base-window.h"
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -107,7 +107,7 @@ enum {
 
 GType         nact_tree_view_get_type( void );
 
-NactTreeView *nact_tree_view_new               ( NactMainWindow *main_window );
+NactTreeView *nact_tree_view_new               ( FMAMainWindow *main_window );
 
 void          nact_tree_view_set_mnemonic      ( NactTreeView *view,
 														GtkContainer *parent,

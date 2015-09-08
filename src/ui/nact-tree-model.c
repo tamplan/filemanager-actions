@@ -42,7 +42,7 @@
 #include "fma-clipboard.h"
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-priv.h"
 
@@ -405,20 +405,20 @@ nact_tree_model_new( GtkTreeView *treeview )
 /**
  * nact_tree_model_set_main_window:
  * @tmodel: this #NactTreeModel instance
- * @main_window: the #NactMainWindow.
+ * @main_window: the #FMAMainWindow.
  *
  * Attach the main window to the tree model, which is required to get
  * a clipboard object, which is required to have a functional drag and
  * drop.
  */
 void
-nact_tree_model_set_main_window( NactTreeModel *tmodel, NactMainWindow *window )
+nact_tree_model_set_main_window( NactTreeModel *tmodel, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "nact_tree_model_set_main_window";
 	NactTreeModelPrivate *priv;
 
 	g_return_if_fail( tmodel && NACT_IS_TREE_MODEL( tmodel ));
-	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
 
 	g_debug( "%s: tmodel=%p, window=%p", thisfn, ( void * ) tmodel, ( void * ) window );
 

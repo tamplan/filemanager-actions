@@ -37,7 +37,7 @@
 #include "fma-application.h"
 #include "base-gtk-utils.h"
 #include "fma-icon-chooser.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 
 /* private class data
  */
@@ -307,7 +307,7 @@ instance_finalize( GObject *dialog )
  * by the caller.
  */
 gchar *
-fma_icon_chooser_choose_icon( NactMainWindow *parent, const gchar *icon_name )
+fma_icon_chooser_choose_icon( FMAMainWindow *parent, const gchar *icon_name )
 {
 	static const gchar *thisfn = "fma_icon_chooser_choose_icon";
 	FMAIconChooser *editor;

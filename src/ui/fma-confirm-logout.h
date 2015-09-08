@@ -40,7 +40,7 @@
  */
 
 #include "base-dialog.h"
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -68,7 +68,7 @@ typedef struct {
 
 GType    fma_confirm_logout_get_type( void );
 
-gboolean fma_confirm_logout_run     ( NactMainWindow *parent );
+gboolean fma_confirm_logout_run     ( FMAMainWindow *parent );
 
 G_END_DECLS
 

@@ -30,23 +30,23 @@
 #ifndef __UI_NACT_MENU_EDIT_H__
 #define __UI_NACT_MENU_EDIT_H__
 
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
-void nact_menu_edit_update_sensitivities( NactMainWindow *main_window );
+void nact_menu_edit_update_sensitivities( FMAMainWindow *main_window );
 
-void nact_menu_edit_cut                 ( NactMainWindow *main_window );
+void nact_menu_edit_cut                 ( FMAMainWindow *main_window );
 
-void nact_menu_edit_copy                ( NactMainWindow *main_window );
+void nact_menu_edit_copy                ( FMAMainWindow *main_window );
 
-void nact_menu_edit_paste               ( NactMainWindow *main_window );
+void nact_menu_edit_paste               ( FMAMainWindow *main_window );
 
-void nact_menu_edit_paste_into          ( NactMainWindow *main_window );
+void nact_menu_edit_paste_into          ( FMAMainWindow *main_window );
 
-void nact_menu_edit_duplicate           ( NactMainWindow *main_window );
+void nact_menu_edit_duplicate           ( FMAMainWindow *main_window );
 
-void nact_menu_edit_delete              ( NactMainWindow *main_window );
+void nact_menu_edit_delete              ( FMAMainWindow *main_window );
 
 G_END_DECLS
 

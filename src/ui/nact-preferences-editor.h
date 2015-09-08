@@ -40,7 +40,7 @@
  */
 
 #include "base-dialog.h"
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -68,7 +68,7 @@ typedef struct {
 
 GType nact_preferences_editor_get_type( void );
 
-void  nact_preferences_editor_run     ( NactMainWindow *main_window );
+void  nact_preferences_editor_run     ( FMAMainWindow *main_window );
 
 G_END_DECLS
 

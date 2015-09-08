@@ -43,7 +43,7 @@
 #include "core/fma-ioptions-list.h"
 
 #include "fma-application.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "fma-assistant-export.h"
 #include "fma-export-ask.h"
 #include "nact-tree-view.h"
@@ -350,12 +350,12 @@ instance_finalize( GObject *window )
  * Run the assistant.
  */
 void
-fma_assistant_export_run( NactMainWindow *main_window )
+fma_assistant_export_run( FMAMainWindow *main_window )
 {
 	FMAAssistantExport *assistant;
 	gboolean esc_quit, esc_confirm;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( main_window ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( main_window ));
 
 	esc_quit = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
 	esc_confirm = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
@@ -405,7 +405,7 @@ items_tree_view_initialize_gtk( FMAAssistantExport *window, GtkAssistant *assist
 
 	priv = window->private;
 	priv->items_view = nact_tree_view_new(
-			NACT_MAIN_WINDOW( base_window_get_main_window( BASE_WINDOW( window ))));
+			FMA_MAIN_WINDOW( base_window_get_main_window( BASE_WINDOW( window ))));
 
 	parent = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( assistant ), "ActionsList" );
 	g_return_if_fail( parent && GTK_IS_CONTAINER( parent ));
@@ -532,8 +532,8 @@ on_base_all_widgets_showed( FMAAssistantExport *window, void *empty )
 		/* fill up the items tree view
 		 */
 		main_window = base_window_get_main_window( BASE_WINDOW( window ));
-		g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
-		main_items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
+		g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
+		main_items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( main_window ));
 		items = nact_tree_view_get_items( main_items_view );
 		nact_tree_view_fill( window->private->items_view, items );
 

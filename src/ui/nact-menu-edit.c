@@ -40,21 +40,21 @@
 #include "fma-application.h"
 #include "fma-clipboard.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-menu.h"
 #include "nact-menu-edit.h"
 #include "nact-tree-ieditable.h"
 #include "nact-tree-view.h"
 
-static GList  *prepare_for_paste( NactMainWindow *window, sMenuData *sdata );
+static GList  *prepare_for_paste( FMAMainWindow *window, sMenuData *sdata );
 static GList  *get_deletables( FMAUpdater *updater, GList *tree, GSList **not_deletable );
 static GSList *get_deletables_rec( FMAUpdater *updater, GList *tree );
 static gchar  *add_ndeletable_msg( const FMAObjectItem *item, gint reason );
-static void    update_clipboard_counters( NactMainWindow *window, sMenuData *sdata );
+static void    update_clipboard_counters( FMAMainWindow *window, sMenuData *sdata );
 
 /**
  * nact_menu_edit_update_sensitivities:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  *
  * Update sensitivity of items of the Edit menu.
  *
@@ -64,7 +64,7 @@ static void    update_clipboard_counters( NactMainWindow *window, sMenuData *sda
  * Menubar rule).
  */
 void
-nact_menu_edit_update_sensitivities( NactMainWindow *main_window )
+nact_menu_edit_update_sensitivities( FMAMainWindow *main_window )
 {
 	sMenuData *sdata;
 	gboolean cut_enabled;
@@ -180,7 +180,7 @@ nact_menu_edit_update_sensitivities( NactMainWindow *main_window )
 
 /**
  * nact_menu_edit_cut:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  *
  * Cut objects are installed both in the clipboard and in the deleted list.
  * Parent pointer is reset to %NULL.
@@ -199,7 +199,7 @@ nact_menu_edit_update_sensitivities( NactMainWindow *main_window )
  * - (tree) remove selected items, unreffing objects
  */
 void
-nact_menu_edit_cut( NactMainWindow *main_window )
+nact_menu_edit_cut( FMAMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_menu_edit_cut";
 	sMenuData *sdata;
@@ -210,7 +210,7 @@ nact_menu_edit_cut( NactMainWindow *main_window )
 	NactTreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
-	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
+	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
 	sdata = nact_menu_get_data( main_window );
 	items = fma_object_copyref_items( sdata->selected_items );
@@ -228,10 +228,10 @@ nact_menu_edit_cut( NactMainWindow *main_window )
 	}
 
 	if( to_delete ){
-		clipboard = nact_main_window_get_clipboard( NACT_MAIN_WINDOW( main_window ));
+		clipboard = fma_main_window_get_clipboard( FMA_MAIN_WINDOW( main_window ));
 		fma_clipboard_primary_set( clipboard, to_delete, CLIPBOARD_MODE_CUT );
 		update_clipboard_counters( main_window, sdata );
-		view = nact_main_window_get_items_view( main_window );
+		view = fma_main_window_get_items_view( main_window );
 		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
 	}
 
@@ -240,7 +240,7 @@ nact_menu_edit_cut( NactMainWindow *main_window )
 
 /**
  * nact_menu_edit_copy:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  *
  * copies the visible selection
  * - (tree) get new refs on selected items
@@ -250,18 +250,18 @@ nact_menu_edit_cut( NactMainWindow *main_window )
  * - (menu) refresh actions sensitivy (as selection doesn't change)
  */
 void
-nact_menu_edit_copy( NactMainWindow *main_window )
+nact_menu_edit_copy( FMAMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_menu_edit_copy";
 	sMenuData *sdata;
 	FMAClipboard *clipboard;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
-	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
+	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
 	sdata = nact_menu_get_data( main_window );
 
-	clipboard = nact_main_window_get_clipboard( main_window );
+	clipboard = fma_main_window_get_clipboard( main_window );
 	fma_clipboard_primary_set( clipboard, sdata->selected_items, CLIPBOARD_MODE_COPY );
 	update_clipboard_counters( main_window, sdata );
 
@@ -270,7 +270,7 @@ nact_menu_edit_copy( NactMainWindow *main_window )
 
 /**
  * nact_menu_edit_paste:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  *
  * pastes the current content of the clipboard at the current position
  * (same path, same level)
@@ -284,7 +284,7 @@ nact_menu_edit_copy( NactMainWindow *main_window )
  * - (menu) unreffing the copy got from clipboard
  */
 void
-nact_menu_edit_paste( NactMainWindow *main_window )
+nact_menu_edit_paste( FMAMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_menu_edit_paste";
 	sMenuData *sdata;
@@ -292,13 +292,13 @@ nact_menu_edit_paste( NactMainWindow *main_window )
 	NactTreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
-	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
+	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
 	sdata = nact_menu_get_data( main_window );
 	items = prepare_for_paste( main_window, sdata );
 
 	if( items ){
-		view = nact_main_window_get_items_view( main_window );
+		view = fma_main_window_get_items_view( main_window );
 		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( view ), items, NULL );
 		fma_object_free_items( items );
 	}
@@ -306,7 +306,7 @@ nact_menu_edit_paste( NactMainWindow *main_window )
 
 /**
  * nact_menu_edit_paste_into:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  *
  * pastes the current content of the clipboard as the first child of
  * currently selected item
@@ -320,7 +320,7 @@ nact_menu_edit_paste( NactMainWindow *main_window )
  * - (menu) unreffing the copy got from clipboard
  */
 void
-nact_menu_edit_paste_into( NactMainWindow *main_window )
+nact_menu_edit_paste_into( FMAMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_menu_edit_paste_into";
 	sMenuData *sdata;
@@ -328,20 +328,20 @@ nact_menu_edit_paste_into( NactMainWindow *main_window )
 	NactTreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
-	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
+	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
 	sdata = nact_menu_get_data( main_window );
 	items = prepare_for_paste( main_window, sdata );
 
 	if( items ){
-		view = nact_main_window_get_items_view( main_window );
+		view = fma_main_window_get_items_view( main_window );
 		nact_tree_ieditable_insert_into( NACT_TREE_IEDITABLE( view ), items );
 		fma_object_free_items( items );
 	}
 }
 
 static GList *
-prepare_for_paste( NactMainWindow *window, sMenuData *sdata )
+prepare_for_paste( FMAMainWindow *window, sMenuData *sdata )
 {
 	static const gchar *thisfn = "nact_menu_edit_prepare_for_paste";
 	GList *items, *it;
@@ -350,7 +350,7 @@ prepare_for_paste( NactMainWindow *window, sMenuData *sdata )
 	gboolean relabel;
 	gboolean renumber;
 
-	clipboard = nact_main_window_get_clipboard( window );
+	clipboard = fma_main_window_get_clipboard( window );
 	items = fma_clipboard_primary_get( clipboard, &renumber );
 	action = NULL;
 
@@ -378,7 +378,7 @@ prepare_for_paste( NactMainWindow *window, sMenuData *sdata )
 
 /**
  * nact_menu_edit_duplicate:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  *
  * duplicate is just as paste, with the difference that content comes
  * from the current selection, instead of coming from the clipboard
@@ -388,7 +388,7 @@ prepare_for_paste( NactMainWindow *window, sMenuData *sdata )
  * items just besides the original ones...
  */
 void
-nact_menu_edit_duplicate( NactMainWindow *main_window )
+nact_menu_edit_duplicate( FMAMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_menu_edit_duplicate";
 	sMenuData *sdata;
@@ -400,7 +400,7 @@ nact_menu_edit_duplicate( NactMainWindow *main_window )
 	NactTreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
-	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
+	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
 	sdata = nact_menu_get_data( main_window );
 	items = fma_object_copyref_items( sdata->selected_items );
@@ -421,7 +421,7 @@ nact_menu_edit_duplicate( NactMainWindow *main_window )
 		fma_object_set_origin( obj, NULL );
 		fma_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );
-		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
+		view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( main_window ));
 		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( view ), dup, it->data );
 		fma_object_free_items( dup );
 	}
@@ -431,7 +431,7 @@ nact_menu_edit_duplicate( NactMainWindow *main_window )
 
 /**
  * nact_menu_edit_delete:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  *
  * deletes the visible selection
  * - (tree) get new refs on selected items
@@ -446,7 +446,7 @@ nact_menu_edit_duplicate( NactMainWindow *main_window )
  * this branch itself be deleted
  */
 void
-nact_menu_edit_delete( NactMainWindow *main_window )
+nact_menu_edit_delete( FMAMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_menu_edit_delete";
 	sMenuData *sdata;
@@ -456,7 +456,7 @@ nact_menu_edit_delete( NactMainWindow *main_window )
 	NactTreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
-	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
+	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
 	sdata = nact_menu_get_data( main_window );
 	items = fma_object_copyref_items( sdata->selected_items );
@@ -474,7 +474,7 @@ nact_menu_edit_delete( NactMainWindow *main_window )
 	}
 
 	if( to_delete ){
-		view = nact_main_window_get_items_view( main_window );
+		view = fma_main_window_get_items_view( main_window );
 		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
 	}
 
@@ -571,7 +571,7 @@ add_ndeletable_msg( const FMAObjectItem *item, gint reason )
  * counters to clipboard ones
  */
 static void
-update_clipboard_counters( NactMainWindow *main_window, sMenuData *sdata )
+update_clipboard_counters( FMAMainWindow *main_window, sMenuData *sdata )
 {
 	sdata->clipboard_menus = sdata->selected_menus;
 	sdata->clipboard_actions = sdata->selected_actions;

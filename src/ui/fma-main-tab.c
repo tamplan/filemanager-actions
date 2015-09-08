@@ -36,24 +36,24 @@
 #include "core/fma-gtk-utils.h"
 
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 
 /**
  * fma_main_tab_init:
- * @window: the #NactMainWindow.
+ * @window: the #FMAMainWindow.
  * @num_page: the page number, starting from zero.
  *
  * Common initialization of each page of the notebook.
  * (provided that the page has itself called fma_main_tab_init())
  */
 void
-fma_main_tab_init( NactMainWindow *main_window, gint num_page )
+fma_main_tab_init( FMAMainWindow *main_window, gint num_page )
 {
 	GtkWidget *notebook;
 	GtkWidget *page;
 	const gchar *text;
 
-	/* popup menu is enabled in NactMainWindow::setup_main_ui()
+	/* popup menu is enabled in FMAMainWindow::setup_main_ui()
 	 * but the displayed labels default to be those of the tab, i.e. embed
 	 * an underscore as an accelerator - so get rid of this
 	 */
@@ -66,14 +66,14 @@ fma_main_tab_init( NactMainWindow *main_window, gint num_page )
 
 /**
  * fma_main_tab_enable_page:
- * @window: the #NactMainWindow.
+ * @window: the #FMAMainWindow.
  * @num_page: the page number, starting from zero.
  * @enabled: whether the tab should be set sensitive or not.
  *
  * Set the sensitivity of the tab.
  */
 void
-fma_main_tab_enable_page( NactMainWindow *window, gint num_page, gboolean enabled )
+fma_main_tab_enable_page( FMAMainWindow *window, gint num_page, gboolean enabled )
 {
 	GtkWidget *notebook;
 	GtkWidget *page, *label;
@@ -89,13 +89,13 @@ fma_main_tab_enable_page( NactMainWindow *window, gint num_page, gboolean enable
 
 /**
  * fma_main_tab_is_page_enabled:
- * @window: the #NactMainWindow.
+ * @window: the #FMAMainWindow.
  * @num_page: the page number, starting from zero.
  *
  * Returns: %TRUE if the tab is sensitive, %FALSE else.
  */
 gboolean
-fma_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
+fma_main_tab_is_page_enabled( FMAMainWindow *window, gint num_page )
 {
 	gboolean is_sensitive;
 	GtkWidget *notebook, *page;

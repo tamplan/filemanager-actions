@@ -53,7 +53,7 @@
 #include "fma-iexecution-tab.h"
 #include "fma-iproperties-tab.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-menu.h"
 #include "nact-statusbar.h"
 #include "nact-tree-view.h"
@@ -62,10 +62,10 @@
 
 /* private instance data
  */
-struct _NactMainWindowPrivate {
+struct _FMAMainWindowPrivate {
 	gboolean         dispose_has_run;
 
-	FMAUpdater       *updater;
+	FMAUpdater      *updater;
 
 	/**
 	 * Current action or menu.
@@ -81,8 +81,8 @@ struct _NactMainWindowPrivate {
 	 * This is the actual current writability status of the item at this time.
 	 */
 	FMAObjectItem    *current_item;
-	gboolean         editable;
-	guint            reason;
+	gboolean          editable;
+	guint             reason;
 
 	/**
 	 * Current profile.
@@ -112,13 +112,13 @@ struct _NactMainWindowPrivate {
 	/**
 	 * Some convenience objects and data.
 	 */
-	NactTreeView    *items_view;
-	gboolean         is_tree_modified;
-	FMAClipboard   *clipboard;
-	NactStatusbar   *statusbar;
-	NactSortButtons *sort_buttons;
+	NactTreeView      *items_view;
+	gboolean          is_tree_modified;
+	FMAClipboard     *clipboard;
+	NactStatusbar     *statusbar;
+	NactSortButtons   *sort_buttons;
 
-	gulong           pivot_handler_id;
+	gulong            pivot_handler_id;
 	FMATimeout        pivot_timeout;
 };
 
@@ -145,7 +145,7 @@ enum {
 	LAST_SIGNAL
 };
 
-static const gchar     *st_xmlui_filename         = PKGUIDIR "/nact-main-window.ui";
+static const gchar     *st_xmlui_filename         = PKGUIDIR "/fma-main-window.ui";
 static const gchar     *st_toplevel_name          = "MainWindow";
 static const gchar     *st_wsp_name               = IPREFS_MAIN_WINDOW_WSP;
 
@@ -154,7 +154,7 @@ static BaseWindowClass *st_parent_class           = NULL;
 static guint            st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType      register_type( void );
-static void       class_init( NactMainWindowClass *klass );
+static void       class_init( FMAMainWindowClass *klass );
 static void       iaction_tab_iface_init( FMAIActionTabInterface *iface, void *user_data );
 static void       icommand_tab_iface_init( FMAICommandTabInterface *iface, void *user_data );
 static void       ibasenames_tab_iface_init( FMAIBasenamesTabInterface *iface, void *user_data );
@@ -170,30 +170,30 @@ static void       instance_get_property( GObject *object, guint property_id, GVa
 static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void       instance_dispose( GObject *window );
 static void       instance_finalize( GObject *window );
-static void       setup_main_ui( NactMainWindow *main_window );
-static void       setup_treeview( NactMainWindow *main_window );
-static void       setup_monitor_pivot( NactMainWindow *main_window );
-static void       on_block_items_changed_timeout( NactMainWindow *window );
-static void       on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, NactMainWindow *window );
-static void       on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, NactMainWindow *window );
-static void       on_tab_item_updated( NactMainWindow *window, FMAIContext *context, guint data, void *empty );
-static void       raz_selection_properties( NactMainWindow *window );
-static void       setup_current_selection( NactMainWindow *window, FMAObjectId *selected_row );
-static void       setup_dialog_title( NactMainWindow *window );
-static void       setup_writability_status( NactMainWindow *window );
+static void       setup_main_ui( FMAMainWindow *main_window );
+static void       setup_treeview( FMAMainWindow *main_window );
+static void       setup_monitor_pivot( FMAMainWindow *main_window );
+static void       on_block_items_changed_timeout( FMAMainWindow *window );
+static void       on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, FMAMainWindow *window );
+static void       on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, FMAMainWindow *window );
+static void       on_tab_item_updated( FMAMainWindow *window, FMAIContext *context, guint data, void *empty );
+static void       raz_selection_properties( FMAMainWindow *window );
+static void       setup_current_selection( FMAMainWindow *window, FMAObjectId *selected_row );
+static void       setup_dialog_title( FMAMainWindow *window );
+static void       setup_writability_status( FMAMainWindow *window );
 
 /* items have changed */
-static void       on_pivot_items_changed( FMAUpdater *updater, NactMainWindow *window );
-static gboolean   confirm_for_giveup_from_pivot( const NactMainWindow *window );
-static gboolean   confirm_for_giveup_from_menu( const NactMainWindow *window );
-static void       load_or_reload_items( NactMainWindow *window );
+static void       on_pivot_items_changed( FMAUpdater *updater, FMAMainWindow *window );
+static gboolean   confirm_for_giveup_from_pivot( const FMAMainWindow *window );
+static gboolean   confirm_for_giveup_from_menu( const FMAMainWindow *window );
+static void       load_or_reload_items( FMAMainWindow *window );
 
 /* application termination */
 static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, void *empty );
-static gboolean   warn_modified( NactMainWindow *window );
+static gboolean   warn_modified( FMAMainWindow *window );
 
 GType
-nact_main_window_get_type( void )
+fma_main_window_get_type( void )
 {
 	static GType window_type = 0;
 
@@ -207,17 +207,17 @@ nact_main_window_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_main_window_register_type";
+	static const gchar *thisfn = "fma_main_window_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactMainWindowClass ),
+		sizeof( FMAMainWindowClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactMainWindow ),
+		sizeof( FMAMainWindow ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -284,7 +284,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( GTK_TYPE_APPLICATION_WINDOW, "NactMainWindow", &info, 0 );
+	type = g_type_register_static( GTK_TYPE_APPLICATION_WINDOW, "FMAMainWindow", &info, 0 );
 
 	g_type_add_interface_static( type, FMA_TYPE_IACTION_TAB, &iaction_tab_iface_info );
 
@@ -310,9 +310,9 @@ register_type( void )
 }
 
 static void
-class_init( NactMainWindowClass *klass )
+class_init( FMAMainWindowClass *klass )
 {
-	static const gchar *thisfn = "nact_main_window_class_init";
+	static const gchar *thisfn = "fma_main_window_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -363,7 +363,7 @@ class_init( NactMainWindowClass *klass )
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	/**
-	 * NactMainWindow::main-item-updated:
+	 * FMAMainWindow::main-item-updated:
 	 *
 	 * This signal is emitted on the main window when an item is
 	 * modified from the user interface
@@ -372,14 +372,14 @@ class_init( NactMainWindowClass *klass )
 	 * - an OR-ed list of the modified data, or 0 if not relevant.
 	 *
 	 * Handler:
-	 *   void handler( NactMainWindow *main_window,
+	 *   void handler( FMAMainWindow *main_window,
 	 *   				FMAIContext *updated_context,
 	 *   				guint       updated_data,
 	 *   				void       *user_data );
 	 */
 	st_signals[ ITEM_UPDATED ] = g_signal_new(
 			MAIN_SIGNAL_ITEM_UPDATED,
-			NACT_TYPE_MAIN_WINDOW,
+			FMA_TYPE_MAIN_WINDOW,
 			G_SIGNAL_RUN_LAST,
 			0,					/* no default handler */
 			NULL,
@@ -391,19 +391,19 @@ class_init( NactMainWindowClass *klass )
 			G_TYPE_UINT );
 
 	/**
-	 * NactMainWindow::main-signal-update-sensitivities
+	 * FMAMainWindow::main-signal-update-sensitivities
 	 *
-	 * This signal is emitted on the NactMainWindow when any menu item
+	 * This signal is emitted on the FMAMainWindow when any menu item
 	 *  sensitivity has to be refreshed.
 	 *
 	 * Signal arg.: None
 	 *
 	 * Handler prototype:
-	 * void handler( NactMainWindow *main_window, gpointer user_data );
+	 * void handler( FMAMainWindow *main_window, gpointer user_data );
 	 */
 	st_signals[ UPDATE_SENSITIVITIES ] = g_signal_new(
 			MAIN_SIGNAL_UPDATE_SENSITIVITIES,
-			NACT_TYPE_MAIN_WINDOW,
+			FMA_TYPE_MAIN_WINDOW,
 			G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 			0,					/* no default handler */
 			NULL,
@@ -416,7 +416,7 @@ class_init( NactMainWindowClass *klass )
 static void
 iaction_tab_iface_init( FMAIActionTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_iaction_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_iaction_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -424,7 +424,7 @@ iaction_tab_iface_init( FMAIActionTabInterface *iface, void *user_data )
 static void
 icommand_tab_iface_init( FMAICommandTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_icommand_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_icommand_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -432,7 +432,7 @@ icommand_tab_iface_init( FMAICommandTabInterface *iface, void *user_data )
 static void
 ibasenames_tab_iface_init( FMAIBasenamesTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_ibasenames_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_ibasenames_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -440,7 +440,7 @@ ibasenames_tab_iface_init( FMAIBasenamesTabInterface *iface, void *user_data )
 static void
 imimetypes_tab_iface_init( FMAIMimetypesTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_imimetypes_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_imimetypes_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -448,7 +448,7 @@ imimetypes_tab_iface_init( FMAIMimetypesTabInterface *iface, void *user_data )
 static void
 ifolders_tab_iface_init( FMAIFoldersTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_ifolders_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_ifolders_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -456,7 +456,7 @@ ifolders_tab_iface_init( FMAIFoldersTabInterface *iface, void *user_data )
 static void
 ischemes_tab_iface_init( FMAISchemesTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_ischemes_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_ischemes_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -464,7 +464,7 @@ ischemes_tab_iface_init( FMAISchemesTabInterface *iface, void *user_data )
 static void
 icapabilities_tab_iface_init( FMAICapabilitiesTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_icapabilities_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_icapabilities_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -472,7 +472,7 @@ icapabilities_tab_iface_init( FMAICapabilitiesTabInterface *iface, void *user_da
 static void
 ienvironment_tab_iface_init( FMAIEnvironmentTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_ienvironment_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_ienvironment_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -480,7 +480,7 @@ ienvironment_tab_iface_init( FMAIEnvironmentTabInterface *iface, void *user_data
 static void
 iexecution_tab_iface_init( FMAIExecutionTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_iexecution_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_iexecution_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -488,7 +488,7 @@ iexecution_tab_iface_init( FMAIExecutionTabInterface *iface, void *user_data )
 static void
 iproperties_tab_iface_init( FMAIPropertiesTabInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_iproperties_tab_iface_init";
+	static const gchar *thisfn = "fma_main_window_iproperties_tab_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -496,17 +496,17 @@ iproperties_tab_iface_init( FMAIPropertiesTabInterface *iface, void *user_data )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_main_window_instance_init";
-	NactMainWindow *self;
-	NactMainWindowPrivate *priv;
+	static const gchar *thisfn = "fma_main_window_instance_init";
+	FMAMainWindow *self;
+	FMAMainWindowPrivate *priv;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NACT_MAIN_WINDOW( instance );
-	self->private = g_new0( NactMainWindowPrivate, 1 );
+	self = FMA_MAIN_WINDOW( instance );
+	self->private = g_new0( FMAMainWindowPrivate, 1 );
 	priv = self->private;
 	priv->dispose_has_run = FALSE;
 
@@ -521,10 +521,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
 {
-	NactMainWindow *self;
+	FMAMainWindow *self;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( object ));
-	self = NACT_MAIN_WINDOW( object );
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( object ));
+	self = FMA_MAIN_WINDOW( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -559,10 +559,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 static void
 instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
 {
-	NactMainWindow *self;
+	FMAMainWindow *self;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( object ));
-	self = NACT_MAIN_WINDOW( object );
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( object ));
+	self = FMA_MAIN_WINDOW( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -597,15 +597,15 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 static void
 instance_dispose( GObject *window )
 {
-	static const gchar *thisfn = "nact_main_window_instance_dispose";
-	NactMainWindow *self;
+	static const gchar *thisfn = "fma_main_window_instance_dispose";
+	FMAMainWindow *self;
 	GtkWidget *pane;
 	gint pos;
 	GtkNotebook *notebook;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( window ));
 
-	self = NACT_MAIN_WINDOW( window );
+	self = FMA_MAIN_WINDOW( window );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
@@ -632,14 +632,14 @@ instance_dispose( GObject *window )
 static void
 instance_finalize( GObject *window )
 {
-	static const gchar *thisfn = "nact_main_window_instance_finalize";
-	NactMainWindow *self;
+	static const gchar *thisfn = "fma_main_window_instance_finalize";
+	FMAMainWindow *self;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( window ));
 
 	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-	self = NACT_MAIN_WINDOW( window );
+	self = FMA_MAIN_WINDOW( window );
 
 	g_free( self->private );
 
@@ -648,16 +648,16 @@ instance_finalize( GObject *window )
 }
 
 /**
- * Returns a newly allocated NactMainWindow object.
+ * Returns a newly allocated FMAMainWindow object.
  */
-NactMainWindow *
-nact_main_window_new( FMAApplication *application )
+FMAMainWindow *
+fma_main_window_new( FMAApplication *application )
 {
-	NactMainWindow *window;
+	FMAMainWindow *window;
 
 	g_return_val_if_fail( FMA_IS_APPLICATION( application ), NULL );
 
-	window = g_object_new( NACT_TYPE_MAIN_WINDOW,
+	window = g_object_new( FMA_TYPE_MAIN_WINDOW,
 			"application", application,		/* GtkWindow property */
 			NULL );
 
@@ -698,7 +698,7 @@ nact_main_window_new( FMAApplication *application )
  * Load and initialize the user interface
  */
 static void
-setup_main_ui( NactMainWindow *main_window )
+setup_main_ui( FMAMainWindow *main_window )
 {
 	GtkBuilder *builder;
 	GObject *top_window;
@@ -761,9 +761,9 @@ setup_main_ui( NactMainWindow *main_window )
  * setup the ActionsList treeview, and connect to management signals
  */
 static void
-setup_treeview( NactMainWindow *main_window )
+setup_treeview( FMAMainWindow *main_window )
 {
-	NactMainWindowPrivate *priv;
+	FMAMainWindowPrivate *priv;
 	GtkWidget *top_widget;
 
 	priv = main_window->private;
@@ -792,9 +792,9 @@ setup_treeview( NactMainWindow *main_window )
  *  from outside of this application
  */
 static void
-setup_monitor_pivot( NactMainWindow *main_window )
+setup_monitor_pivot( FMAMainWindow *main_window )
 {
-	NactMainWindowPrivate *priv;
+	FMAMainWindowPrivate *priv;
 	GtkApplication *application;
 
 	priv = main_window->private;
@@ -809,17 +809,17 @@ setup_monitor_pivot( NactMainWindow *main_window )
 }
 
 /**
- * nact_main_window_get_clipboard:
- * @window: this #NactMainWindow instance.
+ * fma_main_window_get_clipboard:
+ * @window: this #FMAMainWindow instance.
  *
  * Returns: the #FMAClipboard convenience object.
  */
 FMAClipboard *
-nact_main_window_get_clipboard( const NactMainWindow *window )
+fma_main_window_get_clipboard( const FMAMainWindow *window )
 {
 	FMAClipboard *clipboard;
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), NULL );
+	g_return_val_if_fail( FMA_IS_MAIN_WINDOW( window ), NULL );
 
 	clipboard = NULL;
 
@@ -832,17 +832,17 @@ nact_main_window_get_clipboard( const NactMainWindow *window )
 }
 
 /**
- * nact_main_window_get_sort_buttons:
- * @window: this #NactMainWindow instance.
+ * fma_main_window_get_sort_buttons:
+ * @window: this #FMAMainWindow instance.
  *
  * Returns: the #NactSortButtons object.
  */
 NactSortButtons *
-nact_main_window_get_sort_buttons( const NactMainWindow *window )
+fma_main_window_get_sort_buttons( const FMAMainWindow *window )
 {
 	NactSortButtons *buttons;
 
-	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), NULL );
+	g_return_val_if_fail( window && FMA_IS_MAIN_WINDOW( window ), NULL );
 
 	buttons = NULL;
 
@@ -855,17 +855,17 @@ nact_main_window_get_sort_buttons( const NactMainWindow *window )
 }
 
 /**
- * nact_main_window_get_statusbar:
- * @window: this #NactMainWindow instance.
+ * fma_main_window_get_statusbar:
+ * @window: this #FMAMainWindow instance.
  *
  * Returns: the #NactStatusbar object.
  */
 NactStatusbar *
-nact_main_window_get_statusbar( const NactMainWindow *window )
+fma_main_window_get_statusbar( const FMAMainWindow *window )
 {
 	NactStatusbar *bar;
 
-	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), NULL );
+	g_return_val_if_fail( window && FMA_IS_MAIN_WINDOW( window ), NULL );
 
 	bar = NULL;
 
@@ -878,17 +878,17 @@ nact_main_window_get_statusbar( const NactMainWindow *window )
 }
 
 /**
- * nact_main_window_get_items_view:
- * @window: this #NactMainWindow instance.
+ * fma_main_window_get_items_view:
+ * @window: this #FMAMainWindow instance.
  *
  * Returns: The #NactTreeView convenience object.
  */
 NactTreeView *
-nact_main_window_get_items_view( const NactMainWindow *window )
+fma_main_window_get_items_view( const FMAMainWindow *window )
 {
 	NactTreeView *view;
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), NULL );
+	g_return_val_if_fail( FMA_IS_MAIN_WINDOW( window ), NULL );
 
 	view = NULL;
 
@@ -901,19 +901,19 @@ nact_main_window_get_items_view( const NactMainWindow *window )
 }
 
 /**
- * nact_main_window_reload:
- * @window: this #NactMainWindow instance.
+ * fma_main_window_reload:
+ * @window: this #FMAMainWindow instance.
  *
  * Refresh the list of items.
  * If there is some non-yet saved modifications, a confirmation is
  * required before giving up with them.
  */
 void
-nact_main_window_reload( NactMainWindow *window )
+fma_main_window_reload( FMAMainWindow *window )
 {
 	gboolean reload_ok;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 
@@ -926,17 +926,17 @@ nact_main_window_reload( NactMainWindow *window )
 }
 
 /**
- * nact_main_window_block_reload:
- * @window: this #NactMainWindow instance.
+ * fma_main_window_block_reload:
+ * @window: this #FMAMainWindow instance.
  *
  * Temporarily blocks the handling of pivot-items-changed signal.
  */
 void
-nact_main_window_block_reload( NactMainWindow *window )
+fma_main_window_block_reload( FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_block_reload";
+	static const gchar *thisfn = "fma_main_window_block_reload";
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 
@@ -947,11 +947,11 @@ nact_main_window_block_reload( NactMainWindow *window )
 }
 
 static void
-on_block_items_changed_timeout( NactMainWindow *window )
+on_block_items_changed_timeout( FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_on_block_items_changed_timeout";
+	static const gchar *thisfn = "fma_main_window_on_block_items_changed_timeout";
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( window ));
 
 	g_debug( "%s: unblocking %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
 	g_signal_handler_unblock( window->private->updater, window->private->pivot_handler_id );
@@ -961,9 +961,9 @@ on_block_items_changed_timeout( NactMainWindow *window )
  * the modification status of the items view has changed
  */
 static void
-on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, NactMainWindow *window )
+on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_on_tree_view_modified_status_changed";
+	static const gchar *thisfn = "fma_main_window_on_tree_view_modified_status_changed";
 
 	g_debug( "%s: treeview=%p, is_modified=%s, window=%p",
 			thisfn, ( void * ) treeview, is_modified ? "True":"False", ( void * ) window );
@@ -979,9 +979,9 @@ on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modifi
  * tree view selection has changed
  */
 static void
-on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, NactMainWindow *window )
+on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_on_tree_view_selection_changed";
+	static const gchar *thisfn = "fma_main_window_on_tree_view_selection_changed";
 	guint count;
 
 	count = g_list_length( selected_items );
@@ -1004,11 +1004,11 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, N
 }
 
 static void
-on_tab_item_updated( NactMainWindow *window, FMAIContext *context, guint data, void *empty )
+on_tab_item_updated( FMAMainWindow *window, FMAIContext *context, guint data, void *empty )
 {
-	static const gchar *thisfn = "nact_main_window_on_tab_item_updated";
+	static const gchar *thisfn = "fma_main_window_on_tab_item_updated";
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: window=%p, context=%p (%s), data=%u, empty=%p",
@@ -1022,7 +1022,7 @@ on_tab_item_updated( NactMainWindow *window, FMAIContext *context, guint data, v
 }
 
 static void
-raz_selection_properties( NactMainWindow *window )
+raz_selection_properties( FMAMainWindow *window )
 {
 	window->private->current_item = NULL;
 	window->private->current_profile = NULL;
@@ -1038,7 +1038,7 @@ raz_selection_properties( NactMainWindow *window )
  * only called when only one selected row
  */
 static void
-setup_current_selection( NactMainWindow *window, FMAObjectId *selected_row )
+setup_current_selection( FMAMainWindow *window, FMAObjectId *selected_row )
 {
 	guint nb_profiles;
 	GList *profiles;
@@ -1072,10 +1072,10 @@ setup_current_selection( NactMainWindow *window, FMAObjectId *selected_row )
  * - an asterisk if anything has been modified
  */
 static void
-setup_dialog_title( NactMainWindow *window )
+setup_dialog_title( FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_setup_dialog_title";
-	NactMainWindowPrivate *priv;
+	static const gchar *thisfn = "fma_main_window_setup_dialog_title";
+	FMAMainWindowPrivate *priv;
 	GtkApplication *application;
 	gchar *title;
 	gchar *label;
@@ -1103,7 +1103,7 @@ setup_dialog_title( NactMainWindow *window )
 }
 
 static void
-setup_writability_status( NactMainWindow *window )
+setup_writability_status( FMAMainWindow *window )
 {
 	g_return_if_fail( FMA_IS_OBJECT_ITEM( window->private->current_item ));
 
@@ -1116,13 +1116,13 @@ setup_writability_status( NactMainWindow *window )
  * in the underlying storage subsystems
  */
 static void
-on_pivot_items_changed( FMAUpdater *updater, NactMainWindow *window )
+on_pivot_items_changed( FMAUpdater *updater, FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_on_pivot_items_changed";
+	static const gchar *thisfn = "fma_main_window_on_pivot_items_changed";
 	gboolean reload_ok;
 
 	g_return_if_fail( FMA_IS_UPDATER( updater ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( FMA_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: updater=%p (%s), window=%p (%s)", thisfn,
@@ -1143,7 +1143,7 @@ on_pivot_items_changed( FMAUpdater *updater, NactMainWindow *window )
  *
  */
 static gboolean
-confirm_for_giveup_from_pivot( const NactMainWindow *window )
+confirm_for_giveup_from_pivot( const FMAMainWindow *window )
 {
 	gboolean reload_ok;
 	gchar *first, *second;
@@ -1177,7 +1177,7 @@ confirm_for_giveup_from_pivot( const NactMainWindow *window )
  * the actions via the Edit menu
  */
 static gboolean
-confirm_for_giveup_from_menu( const NactMainWindow *window )
+confirm_for_giveup_from_menu( const FMAMainWindow *window )
 {
 	gboolean reload_ok = TRUE;
 	gchar *first, *second;
@@ -1200,9 +1200,9 @@ confirm_for_giveup_from_menu( const NactMainWindow *window )
 }
 
 static void
-load_or_reload_items( NactMainWindow *window )
+load_or_reload_items( FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_load_or_reload_items";
+	static const gchar *thisfn = "fma_main_window_load_or_reload_items";
 	GList *tree;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
@@ -1215,22 +1215,22 @@ load_or_reload_items( NactMainWindow *window )
 }
 
 /**
- * nact_main_window_dispose_has_run:
- * @window: the #NactMainWindow main window.
+ * fma_main_window_dispose_has_run:
+ * @window: the #FMAMainWindow main window.
  *
  * Returns: %TRUE if the main window is terminating.
  */
 gboolean
-nact_main_window_dispose_has_run( const NactMainWindow *window )
+fma_main_window_dispose_has_run( const FMAMainWindow *window )
 {
-	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), TRUE );
+	g_return_val_if_fail( window && FMA_IS_MAIN_WINDOW( window ), TRUE );
 
 	return( window->private->dispose_has_run );
 }
 
 /**
- * nact_main_window_quit:
- * @window: the #NactMainWindow main window.
+ * fma_main_window_quit:
+ * @window: the #FMAMainWindow main window.
  *
  * Quit the window, thus terminating the application.
  *
@@ -1238,12 +1238,12 @@ nact_main_window_dispose_has_run( const NactMainWindow *window )
  * is no more valid; %FALSE if the application will continue to run.
  */
 gboolean
-nact_main_window_quit( NactMainWindow *window )
+fma_main_window_quit( FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_quit";
+	static const gchar *thisfn = "fma_main_window_quit";
 	gboolean terminated;
 
-	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), FALSE );
+	g_return_val_if_fail( window && FMA_IS_MAIN_WINDOW( window ), FALSE );
 
 	terminated = FALSE;
 
@@ -1266,12 +1266,12 @@ nact_main_window_quit( NactMainWindow *window )
  * this will also stop the emission of the signal (i.e. the first FALSE wins)
  */
 static gboolean
-on_base_quit_requested( FMAApplication *application, NactMainWindow *window )
+on_base_quit_requested( FMAApplication *application, FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_on_base_quit_requested";
+	static const gchar *thisfn = "fma_main_window_on_base_quit_requested";
 	gboolean willing_to;
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), TRUE );
+	g_return_val_if_fail( FMA_IS_MAIN_WINDOW( window ), TRUE );
 
 	willing_to = TRUE;
 
@@ -1296,14 +1296,14 @@ on_base_quit_requested( FMAApplication *application, NactMainWindow *window )
 static gboolean
 on_delete_event( GtkWidget *toplevel, GdkEvent *event, void *empty )
 {
-	static const gchar *thisfn = "nact_main_window_on_delete_event";
+	static const gchar *thisfn = "fma_main_window_on_delete_event";
 
 	g_debug( "%s: toplevel=%p, event=%p, empty=%p",
 			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) empty );
 
-	g_return_val_if_fail( toplevel && NACT_IS_MAIN_WINDOW( toplevel ), FALSE );
+	g_return_val_if_fail( toplevel && FMA_IS_MAIN_WINDOW( toplevel ), FALSE );
 
-	nact_main_window_quit( NACT_MAIN_WINDOW( toplevel ));
+	fma_main_window_quit( FMA_MAIN_WINDOW( toplevel ));
 
 	return( TRUE );
 }
@@ -1317,7 +1317,7 @@ on_delete_event( GtkWidget *toplevel, GdkEvent *event, void *empty )
  * Returns: %TRUE if the user confirms he wants to quit.
  */
 static gboolean
-warn_modified( NactMainWindow *window )
+warn_modified( FMAMainWindow *window )
 {
 	gboolean confirm = FALSE;
 	gchar *first;

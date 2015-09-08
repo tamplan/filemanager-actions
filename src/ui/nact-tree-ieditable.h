@@ -48,7 +48,7 @@
 
 #include "api/fma-object.h"
 
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -80,7 +80,7 @@ GType    nact_tree_ieditable_get_type              ( void );
 
 void     nact_tree_ieditable_initialize            ( NactTreeIEditable *instance,
 															GtkTreeView *treeview,
-															NactMainWindow *main_window );
+															FMAMainWindow *main_window );
 
 void     nact_tree_ieditable_terminate             ( NactTreeIEditable *instance );
 

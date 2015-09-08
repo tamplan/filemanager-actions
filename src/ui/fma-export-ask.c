@@ -43,7 +43,7 @@
 #include "base-gtk-utils.h"
 #include "fma-application.h"
 #include "fma-export-ask.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 
 /* private instance data
  */

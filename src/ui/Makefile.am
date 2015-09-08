@@ -109,9 +109,9 @@ fma_config_tool_SOURCES = \
 	fma-ischemes-tab.h									\
 	fma-main-tab.c										\
 	fma-main-tab.h										\
-	nact-main-window.c									\
-	nact-main-window.h									\
-	nact-main-window-def.h								\
+	fma-main-window.c									\
+	fma-main-window.h									\
+	fma-main-window-def.h								\
 	nact-match-list.c									\
 	nact-match-list.h									\
 	nact-menu.c											\
@@ -161,7 +161,7 @@ ui_files = \
 	fma-export-ask.ui									\
 	fma-icon-chooser.ui								\
 	nact-legend.ui										\
-	nact-main-window.ui									\
+	fma-main-window.ui									\
 	nact-preferences.ui									\
 	nact-toolbar.ui										\
 	$(NULL)

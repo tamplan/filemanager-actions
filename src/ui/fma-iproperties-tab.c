@@ -43,7 +43,7 @@
 #include "base-gtk-utils.h"
 #include "fma-iproperties-tab.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 
 /* private interface data
  */
@@ -168,7 +168,7 @@ fma_iproperties_tab_init( FMAIPropertiesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES );
+	fma_main_tab_init( FMA_MAIN_WINDOW( instance ), TAB_PROPERTIES );
 	initialize_window( instance );
 
 	data = get_iproperties_data( instance );
@@ -191,7 +191,7 @@ initialize_window( FMAIPropertiesTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	tview = fma_main_window_get_items_view( FMA_MAIN_WINDOW( instance ));
 
 	g_signal_connect(
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
@@ -252,7 +252,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIPrope
 	g_return_if_fail( !item || FMA_IS_OBJECT_ITEM( item ));
 
 	enable_tab = ( count_selected == 1 );
-	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES, enable_tab );
+	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_PROPERTIES, enable_tab );
 
 	data = get_iproperties_data( instance );
 	data->on_selection_change = TRUE;

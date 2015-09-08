@@ -40,7 +40,7 @@
 #include "base-gtk-utils.h"
 #include "fma-ibasenames-tab.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-match-list.h"
 
 /* private interface data
@@ -164,7 +164,7 @@ fma_ibasenames_tab_init( FMAIBasenamesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES );
+	fma_main_tab_init( FMA_MAIN_WINDOW( instance ), TAB_BASENAMES );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -191,7 +191,7 @@ initialize_gtk( FMAIBasenamesTab *instance )
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			NACT_MAIN_WINDOW( instance ),
+			FMA_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_BASENAMES,
 			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "BasenamesTreeView" ),
@@ -224,7 +224,7 @@ initialize_window( FMAIBasenamesTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	tview = fma_main_window_get_items_view( FMA_MAIN_WINDOW( instance ));
 	g_signal_connect(
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
 			G_CALLBACK( on_tree_selection_changed ), instance );
@@ -249,7 +249,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIBasen
 			NULL );
 
 	enable_tab = ( context != NULL );
-	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES, enable_tab );
+	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_BASENAMES, enable_tab );
 
 	data = get_ibasenames_data( FMA_IBASENAMES_TAB( instance ));
 	data->on_selection_change = TRUE;

@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_MAIN_WINDOW_DEF_H__
-#define __UI_NACT_MAIN_WINDOW_DEF_H__
+#ifndef __UI_FMA_MAIN_WINDOW_DEF_H__
+#define __UI_FMA_MAIN_WINDOW_DEF_H__
 
 /**
  * SECTION: main-window
- * @title: NactMainWindow
+ * @title: FMAMainWindow
  * @short_description: The Main Window class definition
- * @include: nact-main-window.h
+ * @include: fma-main-window.h
  *
  * This class is derived from GtkApplicationWindow and manages the main
  * window.
@@ -61,7 +61,7 @@
  *  |
  *  |    on_activate()
  *  |      |
- *  |      +-> nact_main_window_new()
+ *  |      +-> fma_main_window_new()
  *  |           |
  *  |           +-> setup_main_ui()
  *  |               setup_treeview()
@@ -91,30 +91,30 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_MAIN_WINDOW                ( nact_main_window_get_type())
-#define NACT_MAIN_WINDOW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_MAIN_WINDOW, NactMainWindow ))
-#define NACT_MAIN_WINDOW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_MAIN_WINDOW, NactMainWindowClass ))
-#define NACT_IS_MAIN_WINDOW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_MAIN_WINDOW ))
-#define NACT_IS_MAIN_WINDOW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_MAIN_WINDOW ))
-#define NACT_MAIN_WINDOW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_MAIN_WINDOW, NactMainWindowClass ))
+#define FMA_TYPE_MAIN_WINDOW                ( fma_main_window_get_type())
+#define FMA_MAIN_WINDOW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_MAIN_WINDOW, FMAMainWindow ))
+#define FMA_MAIN_WINDOW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_MAIN_WINDOW, FMAMainWindowClass ))
+#define FMA_IS_MAIN_WINDOW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_MAIN_WINDOW ))
+#define FMA_IS_MAIN_WINDOW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_MAIN_WINDOW ))
+#define FMA_MAIN_WINDOW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_MAIN_WINDOW, FMAMainWindowClass ))
 
-typedef struct _NactMainWindowPrivate        NactMainWindowPrivate;
+typedef struct _FMAMainWindowPrivate        FMAMainWindowPrivate;
 
  typedef struct {
  	/*< private >*/
  	GtkApplicationWindowClass parent;
  }
- 	NactMainWindowClass;
+ 	FMAMainWindowClass;
 
 typedef struct {
 	/*< private >*/
 	GtkApplicationWindow      parent;
-	NactMainWindowPrivate    *private;
+	FMAMainWindowPrivate    *private;
 }
-	NactMainWindow;
+	FMAMainWindow;
 
-GType nact_main_window_get_type( void );
+GType fma_main_window_get_type( void );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_MAIN_WINDOW_DEF_H__ */
+#endif /* __UI_FMA_MAIN_WINDOW_DEF_H__ */

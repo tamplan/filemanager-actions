@@ -36,7 +36,7 @@
 #include "core/fma-updater.h"
 
 #include "fma-application.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-sort-buttons.h"
 #include "nact-tree-view.h"
 
@@ -69,7 +69,7 @@ static void  class_init( NactSortButtonsClass *klass );
 static void  instance_init( GTypeInstance *instance, gpointer klass );
 static void  instance_dispose( GObject *application );
 static void  instance_finalize( GObject *application );
-static void  initialize_buttons( NactSortButtons *buttons, NactMainWindow *window );
+static void  initialize_buttons( NactSortButtons *buttons, FMAMainWindow *window );
 static void  on_toggle_button_toggled( GtkToggleButton *button, NactSortButtons *buttons );
 static void  on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactSortButtons *sort_buttons );
 static void  on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, NactSortButtons *sort_buttons );
@@ -199,12 +199,12 @@ instance_finalize( GObject *instance )
  * Returns: a new #NactSortButtons object.
  */
 NactSortButtons *
-nact_sort_buttons_new( NactMainWindow *window )
+nact_sort_buttons_new( FMAMainWindow *window )
 {
 	NactSortButtons *obj;
 	GtkApplication *application;
 
-	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), NULL );
+	g_return_val_if_fail( window && FMA_IS_MAIN_WINDOW( window ), NULL );
 	application = gtk_window_get_application( GTK_WINDOW( window ));
 	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), NULL );
 
@@ -218,7 +218,7 @@ nact_sort_buttons_new( NactMainWindow *window )
 
 /*
  * initialize_buttons:
- * @window: the #NactMainWindow.
+ * @window: the #FMAMainWindow.
  *
  * Initialization of the UI each time it is displayed.
  *
@@ -228,12 +228,12 @@ nact_sort_buttons_new( NactMainWindow *window )
  * - enabled (sensitive) if sort order mode is modifiable.
  */
 static void
-initialize_buttons( NactSortButtons *buttons, NactMainWindow *window )
+initialize_buttons( NactSortButtons *buttons, FMAMainWindow *window )
 {
 	NactTreeView *treeview;
 	gint i;
 
-	treeview = nact_main_window_get_items_view( window );
+	treeview = fma_main_window_get_items_view( window );
 	g_signal_connect(
 			treeview, TREE_SIGNAL_COUNT_CHANGED,
 			G_CALLBACK( on_tree_view_count_changed ), buttons );

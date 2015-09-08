@@ -39,7 +39,7 @@
 #include "core/fma-gtk-utils.h"
 
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-match-list.h"
 #include "fma-add-capability-dialog.h"
 #include "fma-icapabilities-tab.h"
@@ -152,7 +152,7 @@ fma_icapabilities_tab_init( FMAICapabilitiesTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_CAPABILITIES );
+	fma_main_tab_init( FMA_MAIN_WINDOW( instance ), TAB_CAPABILITIES );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -170,7 +170,7 @@ initialize_gtk( FMAICapabilitiesTab *instance )
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			NACT_MAIN_WINDOW( instance ),
+			FMA_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_CAPABILITIES,
 			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CapabilitiesTreeView" ),
@@ -196,7 +196,7 @@ initialize_window( FMAICapabilitiesTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	tview = fma_main_window_get_items_view( FMA_MAIN_WINDOW( instance ));
 
 	g_signal_connect(
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
@@ -215,7 +215,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAICapab
 			NULL );
 
 	enable_tab = ( context != NULL );
-	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_CAPABILITIES, enable_tab );
+	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_CAPABILITIES, enable_tab );
 }
 
 static void
@@ -228,11 +228,11 @@ on_add_clicked( GtkButton *button, FMAICapabilitiesTab *instance )
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 
 	if( context ){
-		capabilities = nact_match_list_get_rows( NACT_MAIN_WINDOW( instance ), ITAB_NAME );
-		new_cap = fma_add_capability_dialog_run( NACT_MAIN_WINDOW( instance ), capabilities );
+		capabilities = nact_match_list_get_rows( FMA_MAIN_WINDOW( instance ), ITAB_NAME );
+		new_cap = fma_add_capability_dialog_run( FMA_MAIN_WINDOW( instance ), capabilities );
 
 		if( new_cap ){
-			nact_match_list_insert_row( NACT_MAIN_WINDOW( instance ), ITAB_NAME, new_cap, FALSE, FALSE );
+			nact_match_list_insert_row( FMA_MAIN_WINDOW( instance ), ITAB_NAME, new_cap, FALSE, FALSE );
 			g_free( new_cap );
 		}
 

@@ -40,7 +40,7 @@
 
 #include "base-isession.h"
 #include "fma-application.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-menu.h"
 
 /* private instance data
@@ -457,7 +457,7 @@ application_activate( GApplication *application )
 {
 	static const gchar *thisfn = "fma_application_activate";
 	GList *windows_list;
-	NactMainWindow *main_window;
+	FMAMainWindow *main_window;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
@@ -468,18 +468,18 @@ application_activate( GApplication *application )
 	/* if the application is unique, have only one main window */
 	if( !st_non_unique_opt ){
 		if( !g_list_length( windows_list )){
-			main_window = nact_main_window_new( FMA_APPLICATION( application ));
+			main_window = fma_main_window_new( FMA_APPLICATION( application ));
 			g_debug( "%s: main window instanciated at %p", thisfn, main_window );
 		} else {
-			main_window = ( NactMainWindow * ) windows_list->data;
+			main_window = ( FMAMainWindow * ) windows_list->data;
 		}
 
 	/* have as many main windows we want */
 	} else {
-		main_window = nact_main_window_new( FMA_APPLICATION( application ));
+		main_window = fma_main_window_new( FMA_APPLICATION( application ));
 	}
 
-	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
+	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 	gtk_window_present( GTK_WINDOW( main_window ));
 }
 

@@ -40,7 +40,7 @@
  * - a read-only indicator.
  */
 
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 

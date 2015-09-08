@@ -42,7 +42,7 @@
 
 #include <gtk/gtk.h>
 
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -90,7 +90,7 @@ enum {
 
 GType          fma_clipboard_get_type      ( void );
 
-FMAClipboard *fma_clipboard_new           ( NactMainWindow *window );
+FMAClipboard *fma_clipboard_new           ( FMAMainWindow *window );
 
 void           fma_clipboard_dnd_set       ( FMAClipboard *clipboard,
 													guint target,

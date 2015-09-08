@@ -34,7 +34,7 @@
 #include "core/fma-gtk-utils.h"
 #include "core/fma-iprefs.h"
 
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-menu.h"
 #include "nact-menu-view.h"
 
@@ -74,26 +74,26 @@ static sNotebookTabsProps st_notebook_tabs_props[] = {
 	{ "left",   GTK_POS_LEFT },
 };
 
-static void                setup_toolbars_submenu( NactMainWindow *window );
-static void                setup_toolbar( NactMainWindow *window, GtkBuilder *builder, guint toolbar_id );
+static void                setup_toolbars_submenu( FMAMainWindow *window );
+static void                setup_toolbar( FMAMainWindow *window, GtkBuilder *builder, guint toolbar_id );
 static sToolbarProps      *get_toolbar_properties_by_id( guint toolbar_id );
 static sToolbarProps      *get_toolbar_properties_by_name( const gchar *action_name );
 #if 0
 static void                reorder_toolbars( GtkWidget *hbox, sToolbarProps *props );
 #endif
-static void                setup_notebook_tab_position_submenu( NactMainWindow *window );
+static void                setup_notebook_tab_position_submenu( FMAMainWindow *window );
 static sNotebookTabsProps *get_notebook_tabs_properties_by_target( const gchar *target );
 static sNotebookTabsProps *get_notebook_tabs_properties_by_pos( guint pos );
-void                       set_notebook_tabs_position( NactMainWindow *main_window, guint pos );
+void                       set_notebook_tabs_position( FMAMainWindow *main_window, guint pos );
 
 /**
  * nact_menu_view_init:
- * @window: the #NactMainWindow main window.
+ * @window: the #FMAMainWindow main window.
  *
  * Setup the toolbars menu at creation time.
  */
 void
-nact_menu_view_init( NactMainWindow *window )
+nact_menu_view_init( FMAMainWindow *window )
 {
 	setup_toolbars_submenu( window );
 	setup_notebook_tab_position_submenu( window );
@@ -101,12 +101,12 @@ nact_menu_view_init( NactMainWindow *window )
 
 /**
  * nact_menu_view_update_sensitivities:
- * @window: the #NactMainWindow main window.
+ * @window: the #FMAMainWindow main window.
  *
  * Update sensitivity of items of the View menu.
  */
 void
-nact_menu_view_update_sensitivities( NactMainWindow *window )
+nact_menu_view_update_sensitivities( FMAMainWindow *window )
 {
 	sMenuData *sdata;
 	guint count_list;
@@ -128,7 +128,7 @@ nact_menu_view_update_sensitivities( NactMainWindow *window )
  * toolbar.
  */
 void
-setup_toolbars_submenu( NactMainWindow *window )
+setup_toolbars_submenu( FMAMainWindow *window )
 {
 	GtkBuilder *builder;
 
@@ -143,7 +143,7 @@ setup_toolbars_submenu( NactMainWindow *window )
 }
 
 static void
-setup_toolbar( NactMainWindow *window, GtkBuilder *builder, guint toolbar_id )
+setup_toolbar( FMAMainWindow *window, GtkBuilder *builder, guint toolbar_id )
 {
 	sToolbarProps *props;
 	gboolean is_active;
@@ -182,12 +182,12 @@ get_toolbar_properties_by_id( guint toolbar_id )
 
 /**
  * nact_menu_view_toolbar_display:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  * @action_name: the action name.
  * @visible: whether the toolbar must be displayed or hidden.
  */
 void
-nact_menu_view_toolbar_display( NactMainWindow *main_window, const gchar *action_name, gboolean visible )
+nact_menu_view_toolbar_display( FMAMainWindow *main_window, const gchar *action_name, gboolean visible )
 {
 	sToolbarProps *props;
 	GtkWidget *parent;
@@ -277,7 +277,7 @@ reorder_toolbars( GtkWidget *hbox, sToolbarProps *props )
  * ***
  */
 void
-setup_notebook_tab_position_submenu( NactMainWindow *window )
+setup_notebook_tab_position_submenu( FMAMainWindow *window )
 {
 	guint pos;
 	sNotebookTabsProps *props;
@@ -316,12 +316,12 @@ nact_menu_view_on_tabs_pos_changed( GtkRadioAction *action, GtkRadioAction *curr
 
 /**
  * nact_menu_view_notebook_tab_display:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  * @action_name: the action name.
  * @target: the targeted position.
  */
 void
-nact_menu_view_notebook_tab_display( NactMainWindow *main_window, const gchar *action_name, const gchar *target )
+nact_menu_view_notebook_tab_display( FMAMainWindow *main_window, const gchar *action_name, const gchar *target )
 {
 	sNotebookTabsProps *props;
 
@@ -373,7 +373,7 @@ get_notebook_tabs_properties_by_pos( guint pos )
  * Set the position of the main notebook tabs
  */
 void
-set_notebook_tabs_position( NactMainWindow *main_window, guint pos )
+set_notebook_tabs_position( FMAMainWindow *main_window, guint pos )
 {
 	GtkNotebook *notebook;
 

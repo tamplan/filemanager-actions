@@ -39,7 +39,7 @@
 
 #include "nact-schemes-list.h"
 #include "fma-add-scheme-dialog.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 
 /* private instance data
  */
@@ -245,7 +245,7 @@ instance_finalize( GObject *dialog )
 /**
  * fma_add_scheme_dialog_run:
  * @parent: the BaseWindow parent of this dialog
- *  (usually the NactMainWindow).
+ *  (usually the FMAMainWindow).
  * @schemes: list of already used schemes.
  *
  * Initializes and runs the dialog.
@@ -254,7 +254,7 @@ instance_finalize( GObject *dialog )
  * be g_free() by the caller, or NULL.
  */
 gchar *
-fma_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
+fma_add_scheme_dialog_run( FMAMainWindow *parent, GSList *schemes )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_run";
 	FMAAddSchemeDialog *dialog;

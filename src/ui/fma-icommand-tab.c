@@ -45,7 +45,7 @@
 #include "nact-statusbar.h"
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "fma-icommand-tab.h"
 #include "fma-ischemes-tab.h"
 
@@ -190,7 +190,7 @@ fma_icommand_tab_init( FMAICommandTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_COMMAND );
+	fma_main_tab_init( FMA_MAIN_WINDOW( instance ), TAB_COMMAND );
 	data = get_icommand_data( instance );
 	data->on_selection_change = FALSE;
 	data->tokens = NULL;
@@ -268,7 +268,7 @@ initialize_window( FMAICommandTab *instance )
 				GTK_CONTAINER( instance ), "CommandWorkingDirectoryButton",
 			"clicked", G_CALLBACK( on_wdir_browse ), instance );
 
-	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	tview = fma_main_window_get_items_view( FMA_MAIN_WINDOW( instance ));
 
 	g_signal_connect(
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
@@ -333,7 +333,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIComma
 			thisfn, ( void * ) profile, G_OBJECT_TYPE_NAME( profile ));
 
 	enable_tab = ( profile != NULL );
-	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_COMMAND, enable_tab );
+	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_COMMAND, enable_tab );
 
 	data = get_icommand_data( instance );
 	data->on_selection_change = TRUE;

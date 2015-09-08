@@ -39,7 +39,7 @@
  */
 
 #include "base-dialog.h"
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -70,7 +70,7 @@ typedef struct {
 
 GType  fma_icon_chooser_get_type   ( void );
 
-gchar *fma_icon_chooser_choose_icon( NactMainWindow *main_window, const gchar *icon_name );
+gchar *fma_icon_chooser_choose_icon( FMAMainWindow *main_window, const gchar *icon_name );
 
 G_END_DECLS
 

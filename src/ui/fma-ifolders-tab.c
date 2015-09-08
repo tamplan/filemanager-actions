@@ -42,7 +42,7 @@
 #include "base-gtk-utils.h"
 #include "fma-application.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-match-list.h"
 #include "fma-ifolders-tab.h"
 
@@ -156,7 +156,7 @@ fma_ifolders_tab_init( FMAIFoldersTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS );
+	fma_main_tab_init( FMA_MAIN_WINDOW( instance ), TAB_FOLDERS );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -174,7 +174,7 @@ initialize_gtk( FMAIFoldersTab *instance )
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	nact_match_list_init_with_args(
-			NACT_MAIN_WINDOW( instance ),
+			FMA_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_FOLDERS,
 			fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "FoldersTreeView" ),
@@ -200,7 +200,7 @@ initialize_window( FMAIFoldersTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	tview = fma_main_window_get_items_view( FMA_MAIN_WINDOW( instance ));
 
 	g_signal_connect(
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
@@ -224,7 +224,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIFolde
 			NULL );
 
 	enable_tab = ( context != NULL );
-	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS, enable_tab );
+	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_FOLDERS, enable_tab );
 
 	button = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "FolderBrowseButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
@@ -260,7 +260,7 @@ on_browse_folder_clicked( GtkButton *button, FMAIFoldersTab *instance )
 		uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
 		fma_settings_set_string( IPREFS_FOLDER_CHOOSER_URI, uri );
 		path = g_filename_from_uri( uri, NULL, NULL );
-		nact_match_list_insert_row( NACT_MAIN_WINDOW( instance ), ITAB_NAME, path, FALSE, FALSE );
+		nact_match_list_insert_row( FMA_MAIN_WINDOW( instance ), ITAB_NAME, path, FALSE, FALSE );
 		g_free( path );
 		g_free( uri );
 	}

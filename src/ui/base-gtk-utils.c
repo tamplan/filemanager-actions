@@ -336,7 +336,7 @@ base_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
 
 /**
  * base_gtk_utils_select_file:
- * @window: the #NactMainWindow which will be the parent of the dialog box.
+ * @window: the #FMAMainWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
  * @wsp_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
@@ -362,7 +362,7 @@ base_gtk_utils_select_file( GtkApplicationWindow *window,
 
 /**
  * base_gtk_utils_select_file_with_preview:
- * @window: the #NactMainWindow which will be the parent of the dialog box.
+ * @window: the #FMAMainWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
  * @wsp_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
@@ -437,7 +437,7 @@ base_gtk_utils_select_file_with_preview( GtkApplicationWindow *window,
 
 /**
  * base_gtk_utils_select_dir:
- * @window: the #NactMainWindow which will be the parent of the dialog box.
+ * @window: the #FMAMainWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
  * @wsp_name: the name of the dialog box in Preferences to read/write
  *  its size and position.

@@ -27,19 +27,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_MAIN_WINDOW_H__
-#define __UI_NACT_MAIN_WINDOW_H__
+#ifndef __UI_FMA_MAIN_WINDOW_H__
+#define __UI_FMA_MAIN_WINDOW_H__
 
 /**
  * SECTION: main-window
- * @title: NactMainWindow
+ * @title: FMAMainWindow
  * @short_description: The Main Window class definition
- * @include: nact-main-window.h
+ * @include: ui/fma-main-window.h
  */
 
 #include "fma-application.h"
 #include "fma-clipboard.h"
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 #include "nact-sort-buttons.h"
 #include "nact-statusbar.h"
 #include "nact-tree-view.h"
@@ -71,24 +71,24 @@ enum {
 #define MAIN_PROP_EDITABLE					"main-editable"
 #define MAIN_PROP_REASON					"main-reason"
 
-NactMainWindow  *nact_main_window_new             ( FMAApplication *application );
+FMAMainWindow  *fma_main_window_new             ( FMAApplication *application );
 
-FMAClipboard   *nact_main_window_get_clipboard   ( const NactMainWindow *window );
+FMAClipboard   *fma_main_window_get_clipboard   ( const FMAMainWindow *window );
 
-NactSortButtons *nact_main_window_get_sort_buttons( const NactMainWindow *window );
+NactSortButtons *fma_main_window_get_sort_buttons( const FMAMainWindow *window );
 
-NactStatusbar   *nact_main_window_get_statusbar   ( const NactMainWindow *window );
+NactStatusbar   *fma_main_window_get_statusbar   ( const FMAMainWindow *window );
 
-NactTreeView    *nact_main_window_get_items_view  ( const NactMainWindow *window );
+NactTreeView    *fma_main_window_get_items_view  ( const FMAMainWindow *window );
 
-void             nact_main_window_reload          ( NactMainWindow *window );
+void            fma_main_window_reload          ( FMAMainWindow *window );
 
-void             nact_main_window_block_reload    ( NactMainWindow *window );
+void            fma_main_window_block_reload    ( FMAMainWindow *window );
 
-gboolean         nact_main_window_dispose_has_run ( const NactMainWindow *window );
+gboolean        fma_main_window_dispose_has_run ( const FMAMainWindow *window );
 
-gboolean         nact_main_window_quit            ( NactMainWindow *window );
+gboolean        fma_main_window_quit            ( FMAMainWindow *window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_MAIN_WINDOW_H__ */
+#endif /* __UI_FMA_MAIN_WINDOW_H__ */

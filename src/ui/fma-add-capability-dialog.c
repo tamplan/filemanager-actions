@@ -280,7 +280,7 @@ instance_finalize( GObject *dialog )
 /**
  * fma_add_capability_dialog_run:
  * @parent: the BaseWindow parent of this dialog
- *  (usually the NactMainWindow).
+ *  (usually the FMAMainWindow).
  * @capabilities: list of already used capabilities.
  *
  * Initializes and runs the dialog.
@@ -289,7 +289,7 @@ instance_finalize( GObject *dialog )
  * be g_free() by the caller, or NULL.
  */
 gchar *
-fma_add_capability_dialog_run( NactMainWindow *parent, GSList *capabilities )
+fma_add_capability_dialog_run( FMAMainWindow *parent, GSList *capabilities )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_run";
 	FMAAddCapabilityDialog *dialog;

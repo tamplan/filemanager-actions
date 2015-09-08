@@ -36,7 +36,7 @@
 #include "core/fma-about.h"
 #include "core/fma-io-provider.h"
 
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-menu.h"
 #include "nact-menu-edit.h"
 #include "nact-menu-file.h"
@@ -180,14 +180,14 @@ static sActionEntry st_menubar_entries[] = {
 };
 
 static void       free_menu_data( sMenuData *sdata );
-static void       on_open_context_menu( NactTreeView *treeview, GdkEventButton *event, NactMainWindow *window );
-static void       on_popup_selection_done( GtkMenuShell *menushell, NactMainWindow *window );
-static void       on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, gint actions, gint profiles, NactMainWindow *window );
-static void       on_tree_view_focus_in( NactTreeView *treeview, NactMainWindow *window );
-static void       on_tree_view_focus_out( NactTreeView *treeview, NactMainWindow *window );
-static void       on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, NactMainWindow *window );
-static void       on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, NactMainWindow *window );
-static void       on_update_sensitivities( NactMainWindow *window, void *empty );
+static void       on_open_context_menu( NactTreeView *treeview, GdkEventButton *event, FMAMainWindow *window );
+static void       on_popup_selection_done( GtkMenuShell *menushell, FMAMainWindow *window );
+static void       on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, gint actions, gint profiles, FMAMainWindow *window );
+static void       on_tree_view_focus_in( NactTreeView *treeview, FMAMainWindow *window );
+static void       on_tree_view_focus_out( NactTreeView *treeview, FMAMainWindow *window );
+static void       on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, FMAMainWindow *window );
+static void       on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, FMAMainWindow *window );
+static void       on_update_sensitivities( FMAMainWindow *window, void *empty );
 
 /**
  * nact_menu_app:
@@ -249,7 +249,7 @@ on_app_about( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
-	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
 
 	fma_about_display( window );
 }
@@ -278,9 +278,9 @@ on_app_preferences( GSimpleAction *action, GVariant *parameter, gpointer user_da
 	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
-	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
 
-	nact_preferences_editor_run( NACT_MAIN_WINDOW( window ));
+	nact_preferences_editor_run( FMA_MAIN_WINDOW( window ));
 }
 
 static void
@@ -291,19 +291,19 @@ on_app_quit( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
-	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
 
-	nact_main_window_quit( NACT_MAIN_WINDOW( window ));
+	fma_main_window_quit( FMA_MAIN_WINDOW( window ));
 }
 
 /**
  * nact_menu_win:
- * @main_window: the #NactMainWindow.
+ * @main_window: the #FMAMainWindow.
  *
  * Define the window menubar and attach it to the main window.
  */
 void
-nact_menu_win( NactMainWindow *main_window )
+nact_menu_win( FMAMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_menu_win";
 	gint i;
@@ -336,7 +336,7 @@ nact_menu_win( NactMainWindow *main_window )
 	/* connect to all signal which may have an influence on the menu
 	 * items sensitivity
 	 */
-	treeview = nact_main_window_get_items_view( main_window );
+	treeview = fma_main_window_get_items_view( main_window );
 	g_signal_connect(
 			treeview, TREE_SIGNAL_CONTEXT_MENU,
 			G_CALLBACK( on_open_context_menu ), main_window );
@@ -376,10 +376,10 @@ nact_menu_win( NactMainWindow *main_window )
 
 /**
  * nact_menu_get_data:
- * @main_window: the #NactMainWindow main window.
+ * @main_window: the #FMAMainWindow main window.
  */
 sMenuData *
-nact_menu_get_data( NactMainWindow *main_window )
+nact_menu_get_data( FMAMainWindow *main_window )
 {
 	sMenuData *sdata;
 
@@ -402,7 +402,7 @@ free_menu_data( sMenuData *sdata )
  * Opens a popup menu.
  */
 static void
-on_open_context_menu( NactTreeView *treeview, GdkEventButton *event, NactMainWindow *window )
+on_open_context_menu( NactTreeView *treeview, GdkEventButton *event, FMAMainWindow *window )
 {
 	sMenuData *sdata;
 
@@ -421,7 +421,7 @@ on_open_context_menu( NactTreeView *treeview, GdkEventButton *event, NactMainWin
 }
 
 static void
-on_popup_selection_done( GtkMenuShell *menushell, NactMainWindow *window )
+on_popup_selection_done( GtkMenuShell *menushell, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "nact_menu_on_popup_selection_done";
 	sMenuData *sdata;
@@ -438,7 +438,7 @@ on_popup_selection_done( GtkMenuShell *menushell, NactMainWindow *window )
  * that we are knowing if we have some exportables
  */
 static void
-on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, gint actions, gint profiles, NactMainWindow *window )
+on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, gint actions, gint profiles, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "nact_menu_on_tree_view_count_changed";
 	sMenuData *sdata;
@@ -469,7 +469,7 @@ on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, 
 			_( " %d menu(s), %d action(s), %d profile(s) are currently loaded" ),
 			sdata->count_menus, sdata->count_actions, sdata->count_profiles );
 
-	bar = nact_main_window_get_statusbar( window );
+	bar = fma_main_window_get_statusbar( window );
 	nact_statusbar_display_status( bar, "menu-status-context", status );
 	g_free( status );
 
@@ -477,7 +477,7 @@ on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, 
 }
 
 static void
-on_tree_view_focus_in( NactTreeView *treeview, NactMainWindow *window )
+on_tree_view_focus_in( NactTreeView *treeview, FMAMainWindow *window )
 {
 	sMenuData *sdata;
 
@@ -488,7 +488,7 @@ on_tree_view_focus_in( NactTreeView *treeview, NactMainWindow *window )
 }
 
 static void
-on_tree_view_focus_out( NactTreeView *treeview, NactMainWindow *window )
+on_tree_view_focus_out( NactTreeView *treeview, FMAMainWindow *window )
 {
 	sMenuData *sdata;
 
@@ -502,7 +502,7 @@ on_tree_view_focus_out( NactTreeView *treeview, NactMainWindow *window )
  * the count of modified FMAObjectItem has changed
  */
 static void
-on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, NactMainWindow *window )
+on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "nact_menu_on_tree_view_modified_status_changed";
 	sMenuData *sdata;
@@ -529,7 +529,7 @@ on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modifi
  * of applying to valid candidates, and rejecting the others.
  */
 static void
-on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, NactMainWindow *window )
+on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "nact_menu_on_tree_view_selection_changed";
 	sMenuData *sdata;
@@ -651,13 +651,13 @@ on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, NactMai
 }
 
 static void
-on_update_sensitivities( NactMainWindow *window, void *empty )
+on_update_sensitivities( FMAMainWindow *window, void *empty )
 {
 	static const gchar *thisfn = "nact_menu_on_update_sensitivities";
 
 	g_debug( "%s: window=%p, empty=%p", thisfn, ( void * ) window, empty );
 
-	if( !nact_main_window_dispose_has_run( window )){
+	if( !fma_main_window_dispose_has_run( window )){
 
 		nact_menu_file_update_sensitivities( window );
 		nact_menu_edit_update_sensitivities( window );
@@ -671,7 +671,7 @@ on_update_sensitivities( NactMainWindow *window, void *empty )
 static void
 on_win_brief_tree_store_dump( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 }
 
 static void
@@ -679,50 +679,50 @@ on_win_collapse_all( GSimpleAction *action, GVariant *parameter, gpointer user_d
 {
 	NactTreeView *items_view;
 
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 
-	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( user_data ));
+	items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( user_data ));
 	nact_tree_view_collapse_all( items_view );
 }
 
 static void
 on_win_copy( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_edit_copy( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_edit_copy( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_cut( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_edit_cut( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_edit_cut( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_delete( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_edit_delete( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_edit_delete( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_dump_clipboard( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_dump_selection( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_duplicate( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_edit_duplicate( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_edit_duplicate( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
@@ -730,83 +730,83 @@ on_win_expand_all( GSimpleAction *action, GVariant *parameter, gpointer user_dat
 {
 	NactTreeView *items_view;
 
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 
-	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( user_data ));
+	items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( user_data ));
 	nact_tree_view_expand_all( items_view );
 }
 
 static void
 on_win_export( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_import( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_list_modified_items( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_new_action( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_file_new_action( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_file_new_action( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_new_menu( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_file_new_menu( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_file_new_menu( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_new_profile( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_file_new_profile( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_file_new_profile( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_paste( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_edit_paste( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_edit_paste( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_paste_into( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_edit_paste_into( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_edit_paste_into( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_reload( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_main_window_reload( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	fma_main_window_reload( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_save( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
-	nact_menu_file_save_items( NACT_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	nact_menu_file_save_items( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_test_function( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 }
 
 /*
@@ -818,7 +818,7 @@ on_win_toolbar_activate( GSimpleAction *action, GVariant *parameter, gpointer us
 {
 	GVariant *state;
 
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 
 	state = g_action_get_state( G_ACTION( action ));
 	g_action_change_state( G_ACTION( action ),
@@ -833,10 +833,10 @@ on_win_toolbar_activate( GSimpleAction *action, GVariant *parameter, gpointer us
 static void
 on_win_toolbar_changed_state( GSimpleAction *action, GVariant *state, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 
 	nact_menu_view_toolbar_display(
-			NACT_MAIN_WINDOW( user_data ),
+			FMA_MAIN_WINDOW( user_data ),
 			g_action_get_name( G_ACTION( action )),
 			g_variant_get_boolean( state ));
 
@@ -850,7 +850,7 @@ on_win_toolbar_changed_state( GSimpleAction *action, GVariant *state, gpointer u
 static void
 on_win_notebook_tab_position_activate( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 
 	g_action_change_state( G_ACTION( action ),
 			g_variant_new_string( g_variant_get_string( parameter, NULL )));
@@ -863,10 +863,10 @@ on_win_notebook_tab_position_activate( GSimpleAction *action, GVariant *paramete
 static void
 on_win_notebook_tab_position_changed_state( GSimpleAction *action, GVariant *state, gpointer user_data )
 {
-	g_return_if_fail( user_data && NACT_IS_MAIN_WINDOW( user_data ));
+	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 
 	nact_menu_view_notebook_tab_display(
-			NACT_MAIN_WINDOW( user_data ),
+			FMA_MAIN_WINDOW( user_data ),
 			g_action_get_name( G_ACTION( action )),
 			g_variant_get_string( state, NULL ));
 
@@ -875,14 +875,14 @@ on_win_notebook_tab_position_changed_state( GSimpleAction *action, GVariant *sta
 
 /**
  * nact_menu_enable_item:
- * @main_window: this #NactMainWindow main window.
+ * @main_window: this #FMAMainWindow main window.
  * @name: the name of the item in a menu.
  * @enabled: whether this item should be enabled or not.
  *
  * Enable/disable an item in an menu.
  */
 void
-nact_menu_enable_item( NactMainWindow *main_window, const gchar *name, gboolean enabled )
+nact_menu_enable_item( FMAMainWindow *main_window, const gchar *name, gboolean enabled )
 {
 	GAction *action;
 

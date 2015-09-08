@@ -39,7 +39,7 @@
 
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "fma-iexecution-tab.h"
 
 /* private interface data
@@ -163,7 +163,7 @@ fma_iexecution_tab_init( FMAIExecutionTab *instance )
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION );
+	fma_main_tab_init( FMA_MAIN_WINDOW( instance ), TAB_EXECUTION );
 	initialize_window( instance );
 
 	data = get_iexecution_data( instance );
@@ -190,7 +190,7 @@ initialize_window( FMAIExecutionTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	tview = fma_main_window_get_items_view( FMA_MAIN_WINDOW( instance ));
 
 	g_signal_connect(
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
@@ -254,7 +254,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIExecu
 			NULL );
 
 	enable_tab = ( profile != NULL );
-	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
+	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
 
 	data = get_iexecution_data( instance );
 	data->on_selection_change = TRUE;

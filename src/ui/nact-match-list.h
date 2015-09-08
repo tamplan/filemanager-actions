@@ -39,8 +39,8 @@
  * etc. interfaces.
  * In GObject world however, one cannot derived an interface, nor an interface
  * can implement another interface. The GObject solution would be for FMAISchemesTab
- * to requires NactIMatchList, and for NactMainWindow to implement this same
- * NactIMatchList interface. This is not very practical as NactMainWindow is
+ * to requires NactIMatchList, and for FMAMainWindow to implement this same
+ * NactIMatchList interface. This is not very practical as FMAMainWindow is
  * already some big bunch of code...
  * And, nonetheless, we need three/four instances of this interface, which
  * is not possible while Schemes, etc. are already interfaces themselves.
@@ -48,7 +48,7 @@
  * So we stay with just a piece of helper functions...
  */
 
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -62,7 +62,7 @@ enum {
 	MATCH_LIST_MUST_MATCH_ALL_OF,
 };
 
-void    nact_match_list_init_with_args( NactMainWindow *window,
+void    nact_match_list_init_with_args( FMAMainWindow *window,
 												const gchar  *tab_name,
 												guint         tab_id,
 												GtkWidget    *listview,
@@ -76,13 +76,13 @@ void    nact_match_list_init_with_args( NactMainWindow *window,
 												const gchar  *item_header,
 												gboolean      editable_filter );
 
-void    nact_match_list_insert_row    ( NactMainWindow *window,
+void    nact_match_list_insert_row    ( FMAMainWindow *window,
 												const gchar  *tab_name,
 												const gchar  *filter,
 												gboolean      match,
 												gboolean      not_match );
 
-GSList *nact_match_list_get_rows      ( NactMainWindow *window,
+GSList *nact_match_list_get_rows      ( FMAMainWindow *window,
 												const gchar  *tab_name );
 
 G_END_DECLS

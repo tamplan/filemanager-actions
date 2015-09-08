@@ -62,7 +62,7 @@
  */
 
 #include "base-assistant.h"
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -90,7 +90,7 @@ typedef struct {
 
 GType fma_assistant_export_get_type( void );
 
-void  fma_assistant_export_run     ( NactMainWindow *main_window );
+void  fma_assistant_export_run     ( FMAMainWindow *main_window );
 
 G_END_DECLS
 

@@ -44,7 +44,7 @@
 #include "nact-statusbar.h"
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "fma-iaction-tab.h"
 #include "fma-icon-chooser.h"
 #include "nact-tree-view.h"
@@ -181,7 +181,7 @@ fma_iaction_tab_init( FMAIActionTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	fma_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_ACTION );
+	fma_main_tab_init( FMA_MAIN_WINDOW( instance ), TAB_ACTION );
 	initialize_gtk( instance );
 	initialize_window( instance );
 
@@ -241,7 +241,7 @@ initialize_window( FMAIActionTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	tview = nact_main_window_get_items_view( NACT_MAIN_WINDOW( instance ));
+	tview = fma_main_window_get_items_view( FMA_MAIN_WINDOW( instance ));
 
 	g_signal_connect(
 			tview, TREE_SIGNAL_SELECTION_CHANGED,
@@ -346,7 +346,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIActio
 	GtkToggleButton *toggle;
 	IActionData *data;
 
-	g_return_if_fail( instance && NACT_IS_MAIN_WINDOW( instance ));
+	g_return_if_fail( instance && FMA_IS_MAIN_WINDOW( instance ));
 	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	count_selected = g_list_length( selected_items );
@@ -356,7 +356,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIActio
 			instance, G_OBJECT_TYPE_NAME( instance ));
 
 	enable_tab = ( count_selected == 1 );
-	fma_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );
+	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );
 
 	data = get_iaction_data( instance );
 	data->on_selection_change = TRUE;
@@ -547,7 +547,7 @@ check_for_label( FMAIActionTab *instance, GtkEntry *entry, const gchar *label )
 	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 	g_return_if_fail( GTK_IS_ENTRY( entry ));
 
-	bar = nact_main_window_get_statusbar( NACT_MAIN_WINDOW( instance ));
+	bar = fma_main_window_get_statusbar( FMA_MAIN_WINDOW( instance ));
 	nact_statusbar_hide_status( bar, IACTION_TAB_CONTEXT );
 	set_label_label( instance, "black" );
 
@@ -843,7 +843,7 @@ on_icon_browse( GtkButton *button, FMAIActionTab *instance )
 
 	if( item ){
 		icon_name = fma_object_get_icon( item );
-		new_icon_name = fma_icon_chooser_choose_icon( NACT_MAIN_WINDOW( instance ), icon_name );
+		new_icon_name = fma_icon_chooser_choose_icon( FMA_MAIN_WINDOW( instance ), icon_name );
 
 		if( g_utf8_collate( icon_name, new_icon_name ) != 0 ){
 			icon_entry = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconEntry" );

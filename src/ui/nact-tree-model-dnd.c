@@ -44,7 +44,7 @@
 #include "fma-application.h"
 #include "fma-clipboard.h"
 #include "nact-statusbar.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-priv.h"
 #include "nact-tree-ieditable.h"
@@ -124,13 +124,13 @@ static const gchar *st_level_zero_not_writable = N_( "Unable to drop here as lev
 
 static gboolean      drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
 static gboolean      is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **parent );
-static gboolean      is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainWindow *window, FMAObjectItem **parent );
-static gboolean      is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWindow *window, FMAObjectItem **parent );
+static gboolean      is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, FMAMainWindow *window, FMAObjectItem **parent );
+static gboolean      is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, FMAMainWindow *window, FMAObjectItem **parent );
 static void          drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest );
 static gboolean      drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
-static FMAObjectItem *is_dropped_already_exists( const FMAObjectItem *importing, const NactMainWindow *window );
+static FMAObjectItem *is_dropped_already_exists( const FMAObjectItem *importing, const FMAMainWindow *window );
 static char         *get_xds_atom_value( GdkDragContext *context );
-static gboolean      is_parent_accept_new_children( FMAApplication *application, NactMainWindow *window, FMAObjectItem *parent );
+static gboolean      is_parent_accept_new_children( FMAApplication *application, FMAMainWindow *window, FMAObjectItem *parent );
 static guint         target_atom_to_id( GdkAtom atom );
 
 /**
@@ -471,7 +471,7 @@ nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *dr
  * nact_tree_model_dnd_on_drag_begin:
  * @widget: the GtkTreeView from which item is to be dragged.
  * @context:
- * @window: the parent #NactMainWindow instance.
+ * @window: the parent #FMAMainWindow instance.
  *
  * This function is called once, at the beginning of the drag operation,
  * when we are dragging from the IActionsList treeview.
@@ -565,7 +565,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	static const gchar *thisfn = "nact_tree_model_dnd_inside_drag_and_drop";
 	FMAApplication *application;
 	FMAUpdater *updater;
-	NactMainWindow *main_window;
+	FMAMainWindow *main_window;
 	FMAObjectItem *parent;
 	gboolean copy_data;
 	GList *rows;
@@ -582,9 +582,9 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	application = FMA_APPLICATION( gtk_window_get_application( GTK_WINDOW( model->private->window )));
 	updater = fma_application_get_updater( application );
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( model->private->window ), FALSE );
-	main_window = NACT_MAIN_WINDOW( model->private->window );
-	items_view = nact_main_window_get_items_view( main_window );
+	g_return_val_if_fail( FMA_IS_MAIN_WINDOW( model->private->window ), FALSE );
+	main_window = FMA_MAIN_WINDOW( model->private->window );
+	items_view = fma_main_window_get_items_view( main_window );
 
 	/*
 	 * NACT format (may embed profiles, or not)
@@ -665,7 +665,7 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **paren
 	NactTreeModelPrivate *priv;
 	gboolean drop_ok;
 	GtkApplication *application;
-	NactMainWindow *main_window;
+	FMAMainWindow *main_window;
 	GtkTreeIter iter;
 	FMAObjectItem *parent_dest;
 	NactStatusbar *bar;
@@ -676,8 +676,8 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **paren
 	application = gtk_window_get_application( GTK_WINDOW( priv->window ));
 	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), FALSE );
 
-	g_return_val_if_fail( priv->window && NACT_IS_MAIN_WINDOW( priv->window ), FALSE );
-	main_window = NACT_MAIN_WINDOW( priv->window );
+	g_return_val_if_fail( priv->window && FMA_IS_MAIN_WINDOW( priv->window ), FALSE );
+	main_window = FMA_MAIN_WINDOW( priv->window );
 
 	/* if we can have an iter on given dest, then the dest already exists
 	 * so dropped items should be of the same type that already existing
@@ -691,7 +691,7 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **paren
 	} else if( gtk_tree_path_get_depth( dest ) == 1 ){
 
 		if( priv->drag_has_profiles ){
-			bar = nact_main_window_get_statusbar( main_window );
+			bar = fma_main_window_get_statusbar( main_window );
 			nact_statusbar_display_with_timeout(
 						bar, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 
@@ -720,7 +720,7 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **paren
 }
 
 static gboolean
-is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainWindow *window, FMAObjectItem **parent )
+is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, FMAMainWindow *window, FMAObjectItem **parent )
 {
 	static const gchar *thisfn = "nact_tree_model_dnd_is_drop_possible_before_iter";
 	gboolean drop_ok;
@@ -729,7 +729,7 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainW
 
 	drop_ok = FALSE;
 	*parent = NULL;
-	bar = nact_main_window_get_statusbar( window );
+	bar = fma_main_window_get_statusbar( window );
 
 	gtk_tree_model_get( GTK_TREE_MODEL( model ), iter, TREE_COLUMN_NAOBJECT, &object, -1 );
 	g_object_unref( object );
@@ -761,7 +761,7 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainW
 }
 
 static gboolean
-is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWindow *window, FMAObjectItem **parent )
+is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, FMAMainWindow *window, FMAObjectItem **parent )
 {
 	static const gchar *thisfn = "nact_tree_model_dnd_is_drop_possible_into_dest";
 	gboolean drop_ok;
@@ -772,7 +772,7 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWin
 
 	drop_ok = FALSE;
 	*parent = NULL;
-	bar = nact_main_window_get_statusbar( window );
+	bar = fma_main_window_get_statusbar( window );
 
 	path = gtk_tree_path_copy( dest );
 
@@ -866,7 +866,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	gboolean drop_done;
 	GtkApplication *application;
 	FMAUpdater *updater;
-	NactMainWindow *main_window;
+	FMAMainWindow *main_window;
 	FMAImporterParms parms;
 	GList *import_results, *it;
 	guint count;
@@ -896,8 +896,8 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), FALSE );
 	updater = fma_application_get_updater( FMA_APPLICATION( application ));
 
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( priv->window ), FALSE );
-	main_window = NACT_MAIN_WINDOW( priv->window );
+	g_return_val_if_fail( FMA_IS_MAIN_WINDOW( priv->window ), FALSE );
+	main_window = FMA_MAIN_WINDOW( priv->window );
 
 	selection_data_data = ( const gchar * ) gtk_selection_data_get_data( selection_data );
 	g_debug( "%s", selection_data_data );
@@ -941,7 +941,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	count = g_slist_length( messages );
 	g_debug( "%s: count=%d", thisfn, count );
 	if( count == 1 ){
-		bar = nact_main_window_get_statusbar( main_window );
+		bar = fma_main_window_get_statusbar( main_window );
 		nact_statusbar_display_with_timeout(
 				bar, TREE_MODEL_STATUSBAR_CONTEXT, messages->data );
 	}
@@ -963,7 +963,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	 */
 	if( imported ){
 		fma_object_dump_tree( imported );
-		view = nact_main_window_get_items_view( main_window );
+		view = fma_main_window_get_items_view( main_window );
 		nact_tree_ieditable_insert_at_path( NACT_TREE_IEDITABLE( view ), imported, dest );
 	}
 
@@ -972,7 +972,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	 */
 	if( overriden ){
 		fma_object_dump_tree( overriden );
-		view = nact_main_window_get_items_view( main_window );
+		view = fma_main_window_get_items_view( main_window );
 		nact_tree_ieditable_set_items( NACT_TREE_IEDITABLE( view ), overriden );
 		fma_object_free_items( overriden );
 	}
@@ -991,12 +991,12 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 }
 
 static FMAObjectItem *
-is_dropped_already_exists( const FMAObjectItem *importing, const NactMainWindow *window )
+is_dropped_already_exists( const FMAObjectItem *importing, const FMAMainWindow *window )
 {
 	NactTreeView *items_view;
 
 	gchar *id = fma_object_get_id( importing );
-	items_view = nact_main_window_get_items_view( window );
+	items_view = fma_main_window_get_items_view( window );
 	FMAObjectItem *exists = nact_tree_view_get_item_by_id( items_view, id );
 	g_free( id );
 
@@ -1150,7 +1150,7 @@ get_xds_atom_value( GdkDragContext *context )
  * to register the new child
  */
 static gboolean
-is_parent_accept_new_children( FMAApplication *application, NactMainWindow *window, FMAObjectItem *parent )
+is_parent_accept_new_children( FMAApplication *application, FMAMainWindow *window, FMAObjectItem *parent )
 {
 	gboolean accept_ok;
 	FMAUpdater *updater;
@@ -1158,7 +1158,7 @@ is_parent_accept_new_children( FMAApplication *application, NactMainWindow *wind
 
 	accept_ok = FALSE;
 	updater = fma_application_get_updater( application );
-	bar = nact_main_window_get_statusbar( window );
+	bar = fma_main_window_get_statusbar( window );
 
 	/* inserting as a level zero item
 	 * ensure that level zero is writable

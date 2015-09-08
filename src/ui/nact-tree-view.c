@@ -39,7 +39,7 @@
 
 #include "base-keysyms.h"
 #include "fma-application.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-tree-view.h"
 #include "nact-tree-model.h"
 #include "nact-tree-ieditable.h"
@@ -51,7 +51,7 @@ struct _NactTreeViewPrivate {
 
 	/* properties set at instanciation time
 	 */
-	NactMainWindow *window;
+	FMAMainWindow *window;
 
 	/* initialization
 	 */
@@ -377,7 +377,7 @@ class_init( NactTreeViewClass *klass )
 static void
 tree_ieditable_iface_init( NactTreeIEditableInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_main_window_tree_ieditable_iface_init";
+	static const gchar *thisfn = "fma_main_window_tree_ieditable_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
@@ -454,7 +454,7 @@ instance_finalize( GObject *instance )
  * destroyed at @window finalization.
  */
 NactTreeView *
-nact_tree_view_new( NactMainWindow *main_window )
+nact_tree_view_new( FMAMainWindow *main_window )
 {
 	NactTreeView *view;
 

@@ -40,7 +40,7 @@
  */
 
 #include "base-dialog.h"
-#include "nact-main-window-def.h"
+#include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
@@ -68,7 +68,7 @@ typedef struct {
 
 GType  fma_add_scheme_dialog_get_type( void );
 
-gchar *fma_add_scheme_dialog_run     ( NactMainWindow *parent,
+gchar *fma_add_scheme_dialog_run     ( FMAMainWindow *parent,
 												GSList *schemes );
 
 G_END_DECLS

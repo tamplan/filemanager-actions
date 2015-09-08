@@ -54,7 +54,7 @@ struct _NactTreeModelPrivate {
 
 	/* must be initialized right after the instanciation
 	 */
-	NactMainWindow *window;
+	FMAMainWindow *window;
 	FMAClipboard  *clipboard;
 	guint           mode;
 

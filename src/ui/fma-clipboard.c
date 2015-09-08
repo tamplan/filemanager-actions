@@ -41,7 +41,7 @@
 
 #include "fma-application.h"
 #include "fma-export-ask.h"
-#include "nact-main-window.h"
+#include "fma-main-window.h"
 #include "nact-tree-model.h"
 #include "fma-clipboard.h"
 
@@ -72,7 +72,7 @@ typedef struct {
 
 struct _FMAClipboardPrivate {
 	gboolean        dispose_has_run;
-	NactMainWindow  *window;
+	FMAMainWindow  *window;
 	GtkClipboard   *dnd;
 	GtkClipboard   *primary;
 	PrimaryData    *primary_data;
@@ -258,7 +258,7 @@ instance_finalize( GObject *instance )
  * Returns: a new #FMAClipboard object.
  */
 FMAClipboard *
-fma_clipboard_new( NactMainWindow *window )
+fma_clipboard_new( FMAMainWindow *window )
 {
 	FMAClipboard *clipboard;
 
