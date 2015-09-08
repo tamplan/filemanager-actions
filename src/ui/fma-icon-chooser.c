@@ -36,18 +36,18 @@
 #include "base-keysyms.h"
 #include "fma-application.h"
 #include "base-gtk-utils.h"
-#include "nact-icon-chooser.h"
+#include "fma-icon-chooser.h"
 #include "nact-main-window.h"
 
 /* private class data
  */
-struct _NactIconChooserClassPrivate {
+struct _FMAIconChooserClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NactIconChooserPrivate {
+struct _FMAIconChooserPrivate {
 	gboolean        dispose_has_run;
 	const gchar    *initial_icon;
 	gchar          *current_icon;
@@ -89,46 +89,46 @@ enum {
 	THEME_ICON_N_COLUMN
 };
 
-static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-icon-chooser.ui";
+static const gchar     *st_xmlui_filename = PKGUIDIR "/fma-icon-chooser.ui";
 static const gchar     *st_toplevel_name  = "IconChooserDialog";
 static const gchar     *st_wsp_name       = IPREFS_ICON_CHOOSER_WSP;
 
 static BaseDialogClass *st_parent_class   = NULL;
 
 static GType         register_type( void );
-static void          class_init( NactIconChooserClass *klass );
+static void          class_init( FMAIconChooserClass *klass );
 static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_constructed( GObject *dialog );
 static void          instance_dispose( GObject *dialog );
 static void          instance_finalize( GObject *dialog );
 
-static void          on_base_initialize_gtk( NactIconChooser *editor, GtkDialog *toplevel, gpointer user_data );
-static void          do_initialize_themed_icons( NactIconChooser *editor );
-static void          do_initialize_icons_by_path( NactIconChooser *editor );
-static void          on_base_initialize_window( NactIconChooser *editor, gpointer user_data );
-static void          fillup_themed_icons( NactIconChooser *editor );
-static void          fillup_icons_by_path( NactIconChooser *editor );
-static void          on_base_show_widgets( NactIconChooser *editor, gpointer user_data );
+static void          on_base_initialize_gtk( FMAIconChooser *editor, GtkDialog *toplevel, gpointer user_data );
+static void          do_initialize_themed_icons( FMAIconChooser *editor );
+static void          do_initialize_icons_by_path( FMAIconChooser *editor );
+static void          on_base_initialize_window( FMAIconChooser *editor, gpointer user_data );
+static void          fillup_themed_icons( FMAIconChooser *editor );
+static void          fillup_icons_by_path( FMAIconChooser *editor );
+static void          on_base_show_widgets( FMAIconChooser *editor, gpointer user_data );
 
-static void          on_cancel_clicked( GtkButton *button, NactIconChooser *editor );
-static void          on_ok_clicked( GtkButton *button, NactIconChooser *editor );
+static void          on_cancel_clicked( GtkButton *button, FMAIconChooser *editor );
+static void          on_ok_clicked( GtkButton *button, FMAIconChooser *editor );
 static void          on_dialog_cancel( BaseDialog *dialog );
 
-static void          on_current_icon_changed( const NactIconChooser *editor );
+static void          on_current_icon_changed( const FMAIconChooser *editor );
 static gboolean      on_destroy( GtkWidget *widget, GdkEvent *event, void *foo );
-static gboolean      on_icon_view_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIconChooser *editor );
-static gboolean      on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIconChooser *editor );
-static void          on_themed_context_changed( GtkTreeSelection *selection, NactIconChooser *editor );
-static void          on_themed_icon_changed( GtkIconView *icon_view, NactIconChooser *editor );
-static void          on_themed_apply_button_clicked( GtkButton *button, NactIconChooser *editor );
-static void          on_themed_apply_triggered( NactIconChooser *editor );
-static void          on_path_selection_changed( GtkFileChooser *chooser, NactIconChooser *editor );
-static void          on_path_update_preview( GtkFileChooser *chooser, NactIconChooser *editor );
-static void          on_path_apply_button_clicked( GtkButton *button, NactIconChooser *editor );
-static GtkListStore *theme_context_load_icons( NactIconChooser *editor, const gchar *context );
+static gboolean      on_icon_view_button_press_event( GtkWidget *widget, GdkEventButton *event, FMAIconChooser *editor );
+static gboolean      on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, FMAIconChooser *editor );
+static void          on_themed_context_changed( GtkTreeSelection *selection, FMAIconChooser *editor );
+static void          on_themed_icon_changed( GtkIconView *icon_view, FMAIconChooser *editor );
+static void          on_themed_apply_button_clicked( GtkButton *button, FMAIconChooser *editor );
+static void          on_themed_apply_triggered( FMAIconChooser *editor );
+static void          on_path_selection_changed( GtkFileChooser *chooser, FMAIconChooser *editor );
+static void          on_path_update_preview( GtkFileChooser *chooser, FMAIconChooser *editor );
+static void          on_path_apply_button_clicked( GtkButton *button, FMAIconChooser *editor );
+static GtkListStore *theme_context_load_icons( FMAIconChooser *editor, const gchar *context );
 
 GType
-nact_icon_chooser_get_type( void )
+fma_icon_chooser_get_type( void )
 {
 	static GType dialog_type = 0;
 
@@ -142,32 +142,32 @@ nact_icon_chooser_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_icon_chooser_register_type";
+	static const gchar *thisfn = "fma_icon_chooser_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactIconChooserClass ),
+		sizeof( FMAIconChooserClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactIconChooser ),
+		sizeof( FMAIconChooser ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_DIALOG, "NactIconChooser", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_DIALOG, "FMAIconChooser", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactIconChooserClass *klass )
+class_init( FMAIconChooserClass *klass )
 {
-	static const gchar *thisfn = "nact_icon_chooser_class_init";
+	static const gchar *thisfn = "fma_icon_chooser_class_init";
 	GObjectClass *object_class;
 	BaseDialogClass *dialog_class;
 
@@ -180,7 +180,7 @@ class_init( NactIconChooserClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NactIconChooserClassPrivate, 1 );
+	klass->private = g_new0( FMAIconChooserClassPrivate, 1 );
 
 	dialog_class = BASE_DIALOG_CLASS( klass );
 	dialog_class->cancel = on_dialog_cancel;
@@ -189,17 +189,17 @@ class_init( NactIconChooserClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_icon_chooser_instance_init";
-	NactIconChooser *self;
+	static const gchar *thisfn = "fma_icon_chooser_instance_init";
+	FMAIconChooser *self;
 
-	g_return_if_fail( NACT_IS_ICON_CHOOSER( instance ));
+	g_return_if_fail( FMA_IS_ICON_CHOOSER( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NACT_ICON_CHOOSER( instance );
+	self = FMA_ICON_CHOOSER( instance );
 
-	self->private = g_new0( NactIconChooserPrivate, 1 );
+	self->private = g_new0( FMAIconChooserPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -207,12 +207,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_icon_chooser_instance_constructed";
-	NactIconChooserPrivate *priv;
+	static const gchar *thisfn = "fma_icon_chooser_instance_constructed";
+	FMAIconChooserPrivate *priv;
 
-	g_return_if_fail( NACT_IS_ICON_CHOOSER( dialog ));
+	g_return_if_fail( FMA_IS_ICON_CHOOSER( dialog ));
 
-	priv = NACT_ICON_CHOOSER( dialog )->private;
+	priv = FMA_ICON_CHOOSER( dialog )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -246,14 +246,14 @@ instance_constructed( GObject *dialog )
 static void
 instance_dispose( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_icon_chooser_instance_dispose";
-	NactIconChooser *self;
+	static const gchar *thisfn = "fma_icon_chooser_instance_dispose";
+	FMAIconChooser *self;
 	guint pos;
 	GtkWidget *paned;
 
-	g_return_if_fail( NACT_IS_ICON_CHOOSER( dialog ));
+	g_return_if_fail( FMA_IS_ICON_CHOOSER( dialog ));
 
-	self = NACT_ICON_CHOOSER( dialog );
+	self = FMA_ICON_CHOOSER( dialog );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
@@ -274,14 +274,14 @@ instance_dispose( GObject *dialog )
 static void
 instance_finalize( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_icon_chooser_instance_finalize";
-	NactIconChooser *self;
+	static const gchar *thisfn = "fma_icon_chooser_instance_finalize";
+	FMAIconChooser *self;
 
-	g_return_if_fail( NACT_IS_ICON_CHOOSER( dialog ));
+	g_return_if_fail( FMA_IS_ICON_CHOOSER( dialog ));
 
 	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
-	self = NACT_ICON_CHOOSER( dialog );
+	self = FMA_ICON_CHOOSER( dialog );
 
 	g_free( self->private->current_icon );
 
@@ -294,7 +294,7 @@ instance_finalize( GObject *dialog )
 }
 
 /**
- * nact_icon_chooser_choose_icon:
+ * fma_icon_chooser_choose_icon:
  * @parent: the #BaseWindow parent of this dialog.
  * @icon_name: the current icon at startup.
  *
@@ -307,17 +307,17 @@ instance_finalize( GObject *dialog )
  * by the caller.
  */
 gchar *
-nact_icon_chooser_choose_icon( NactMainWindow *parent, const gchar *icon_name )
+fma_icon_chooser_choose_icon( NactMainWindow *parent, const gchar *icon_name )
 {
-	static const gchar *thisfn = "nact_icon_chooser_choose_icon";
-	NactIconChooser *editor;
+	static const gchar *thisfn = "fma_icon_chooser_choose_icon";
+	FMAIconChooser *editor;
 	gchar *new_name;
 
 	g_return_val_if_fail( parent && GTK_IS_APPLICATION_WINDOW( parent ), NULL );
 
 	g_debug( "%s: parent=%p, icon_name=%s", thisfn, ( void * ) parent, icon_name );
 
-	editor = g_object_new( NACT_TYPE_ICON_CHOOSER,
+	editor = g_object_new( FMA_TYPE_ICON_CHOOSER,
 			BASE_PROP_MAIN_WINDOW,    parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
@@ -339,11 +339,11 @@ nact_icon_chooser_choose_icon( NactMainWindow *parent, const gchar *icon_name )
 }
 
 static void
-on_base_initialize_gtk( NactIconChooser *editor, GtkDialog *toplevel, gpointer user_data )
+on_base_initialize_gtk( FMAIconChooser *editor, GtkDialog *toplevel, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_base_initialize_gtk";
+	static const gchar *thisfn = "fma_icon_chooser_on_base_initialize_gtk";
 
-	g_return_if_fail( NACT_IS_ICON_CHOOSER( editor ));
+	g_return_if_fail( FMA_IS_ICON_CHOOSER( editor ));
 
 	if( !editor->private->dispose_has_run ){
 
@@ -374,7 +374,7 @@ on_base_initialize_gtk( NactIconChooser *editor, GtkDialog *toplevel, gpointer u
  * this store is initialized the first time the context is selected
  */
 static void
-do_initialize_themed_icons( NactIconChooser *editor )
+do_initialize_themed_icons( FMAIconChooser *editor )
 {
 	GtkTreeView *context_view;
 	GtkTreeModel *context_model;
@@ -429,7 +429,7 @@ do_initialize_themed_icons( NactIconChooser *editor )
 }
 
 static void
-do_initialize_icons_by_path( NactIconChooser *editor )
+do_initialize_icons_by_path( FMAIconChooser *editor )
 {
 	GtkFileChooser *file_chooser;
 
@@ -439,13 +439,13 @@ do_initialize_icons_by_path( NactIconChooser *editor )
 }
 
 static void
-on_base_initialize_window( NactIconChooser *editor, gpointer user_data )
+on_base_initialize_window( FMAIconChooser *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_base_initialize_window";
+	static const gchar *thisfn = "fma_icon_chooser_on_base_initialize_window";
 	guint pos;
 	GtkWidget *paned;
 
-	g_return_if_fail( NACT_IS_ICON_CHOOSER( editor ));
+	g_return_if_fail( FMA_IS_ICON_CHOOSER( editor ));
 
 	if( !editor->private->dispose_has_run ){
 
@@ -492,7 +492,7 @@ on_base_initialize_window( NactIconChooser *editor, gpointer user_data )
 }
 
 static void
-fillup_themed_icons( NactIconChooser *editor )
+fillup_themed_icons( FMAIconChooser *editor )
 {
 	GtkTreeView *context_view;
 	GtkTreeSelection *selection;
@@ -532,7 +532,7 @@ fillup_themed_icons( NactIconChooser *editor )
 }
 
 static void
-fillup_icons_by_path( NactIconChooser *editor )
+fillup_icons_by_path( FMAIconChooser *editor )
 {
 	GtkFileChooser *file_chooser;
 	gchar *uri;
@@ -571,12 +571,12 @@ fillup_icons_by_path( NactIconChooser *editor )
 }
 
 static void
-on_base_show_widgets( NactIconChooser *editor, gpointer user_data )
+on_base_show_widgets( FMAIconChooser *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_base_show_widgets";
+	static const gchar *thisfn = "fma_icon_chooser_on_base_show_widgets";
 	GtkWidget *about_button;
 
-	g_return_if_fail( NACT_IS_ICON_CHOOSER( editor ));
+	g_return_if_fail( FMA_IS_ICON_CHOOSER( editor ));
 
 	if( !editor->private->dispose_has_run ){
 
@@ -590,14 +590,14 @@ on_base_show_widgets( NactIconChooser *editor, gpointer user_data )
 }
 
 static void
-on_cancel_clicked( GtkButton *button, NactIconChooser *editor )
+on_cancel_clicked( GtkButton *button, FMAIconChooser *editor )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static void
-on_ok_clicked( GtkButton *button, NactIconChooser *editor )
+on_ok_clicked( GtkButton *button, FMAIconChooser *editor )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
@@ -606,12 +606,12 @@ on_ok_clicked( GtkButton *button, NactIconChooser *editor )
 static void
 on_dialog_cancel( BaseDialog *dialog )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_dialog_cancel";
-	NactIconChooser *editor;
+	static const gchar *thisfn = "fma_icon_chooser_on_dialog_cancel";
+	FMAIconChooser *editor;
 
-	g_return_if_fail( NACT_IS_ICON_CHOOSER( dialog ));
+	g_return_if_fail( FMA_IS_ICON_CHOOSER( dialog ));
 
-	editor = NACT_ICON_CHOOSER( dialog );
+	editor = FMA_ICON_CHOOSER( dialog );
 
 	if( !editor->private->dispose_has_run ){
 		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
@@ -627,7 +627,7 @@ on_dialog_cancel( BaseDialog *dialog )
  * this dialog
  */
 static void
-on_current_icon_changed( const NactIconChooser *editor )
+on_current_icon_changed( const FMAIconChooser *editor )
 {
 	GtkImage *image;
 	gchar *icon_label;
@@ -651,7 +651,7 @@ on_current_icon_changed( const NactIconChooser *editor )
 static gboolean
 on_destroy( GtkWidget *widget, GdkEvent *event, void *foo )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_destroy";
+	static const gchar *thisfn = "fma_icon_chooser_on_destroy";
 	GtkTreeView *context_view;
 	GtkListStore *context_store;
 	GtkTreeIter context_iter;
@@ -696,7 +696,7 @@ on_destroy( GtkWidget *widget, GdkEvent *event, void *foo )
  * mouse click on the themed icons icon view
  */
 static gboolean
-on_icon_view_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIconChooser *editor )
+on_icon_view_button_press_event( GtkWidget *widget, GdkEventButton *event, FMAIconChooser *editor )
 {
 	gboolean stop = FALSE;
 
@@ -712,11 +712,11 @@ on_icon_view_button_press_event( GtkWidget *widget, GdkEventButton *event, NactI
 }
 
 static gboolean
-on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIconChooser *editor )
+on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, FMAIconChooser *editor )
 {
 	gboolean stop = FALSE;
 
-	g_return_val_if_fail( NACT_IS_ICON_CHOOSER( editor ), FALSE );
+	g_return_val_if_fail( FMA_IS_ICON_CHOOSER( editor ), FALSE );
 
 	if( !editor->private->dispose_has_run ){
 
@@ -730,7 +730,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIconChooser *ed
 }
 
 static void
-on_themed_context_changed( GtkTreeSelection *selection, NactIconChooser *editor )
+on_themed_context_changed( GtkTreeSelection *selection, FMAIconChooser *editor )
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -773,7 +773,7 @@ on_themed_context_changed( GtkTreeSelection *selection, NactIconChooser *editor 
 }
 
 static void
-on_themed_icon_changed( GtkIconView *icon_view, NactIconChooser *editor )
+on_themed_icon_changed( GtkIconView *icon_view, FMAIconChooser *editor )
 {
 	GList *selected;
 	GtkTreeModel *model;
@@ -819,13 +819,13 @@ on_themed_icon_changed( GtkIconView *icon_view, NactIconChooser *editor )
 }
 
 static void
-on_themed_apply_button_clicked( GtkButton *button, NactIconChooser *editor )
+on_themed_apply_button_clicked( GtkButton *button, FMAIconChooser *editor )
 {
 	on_themed_apply_triggered( editor );
 }
 
 static void
-on_themed_apply_triggered( NactIconChooser *editor )
+on_themed_apply_triggered( FMAIconChooser *editor )
 {
 	GtkWidget *icon_label;
 	const gchar *icon_name;
@@ -839,7 +839,7 @@ on_themed_apply_triggered( NactIconChooser *editor )
 }
 
 static void
-on_path_selection_changed( GtkFileChooser *file_chooser, NactIconChooser *editor )
+on_path_selection_changed( GtkFileChooser *file_chooser, FMAIconChooser *editor )
 {
 	gchar *uri;
 
@@ -851,9 +851,9 @@ on_path_selection_changed( GtkFileChooser *file_chooser, NactIconChooser *editor
 }
 
 static void
-on_path_update_preview( GtkFileChooser *file_chooser, NactIconChooser *editor )
+on_path_update_preview( GtkFileChooser *file_chooser, FMAIconChooser *editor )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_path_update_preview";
+	static const gchar *thisfn = "fma_icon_chooser_on_path_update_preview";
 	char *filename;
 	GdkPixbuf *pixbuf;
 	gboolean have_preview;
@@ -884,7 +884,7 @@ on_path_update_preview( GtkFileChooser *file_chooser, NactIconChooser *editor )
 }
 
 static void
-on_path_apply_button_clicked( GtkButton *button, NactIconChooser *editor )
+on_path_apply_button_clicked( GtkButton *button, FMAIconChooser *editor )
 {
 	GtkFileChooser *file_chooser = GTK_FILE_CHOOSER( base_window_get_widget( BASE_WINDOW( editor ), "FileChooser" ));
 
@@ -897,9 +897,9 @@ on_path_apply_button_clicked( GtkButton *button, NactIconChooser *editor )
 }
 
 static GtkListStore *
-theme_context_load_icons( NactIconChooser *editor, const gchar *context )
+theme_context_load_icons( FMAIconChooser *editor, const gchar *context )
 {
-	static const gchar *thisfn = "nact_icon_chooser_theme_context_load_icons";
+	static const gchar *thisfn = "fma_icon_chooser_theme_context_load_icons";
 	GtkTreeIter iter;
 	GList *ic;
 	GError *error;

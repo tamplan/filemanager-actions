@@ -46,7 +46,7 @@
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 #include "fma-iaction-tab.h"
-#include "nact-icon-chooser.h"
+#include "fma-icon-chooser.h"
 #include "nact-tree-view.h"
 
 /* private interface data
@@ -843,7 +843,7 @@ on_icon_browse( GtkButton *button, FMAIActionTab *instance )
 
 	if( item ){
 		icon_name = fma_object_get_icon( item );
-		new_icon_name = nact_icon_chooser_choose_icon( NACT_MAIN_WINDOW( instance ), icon_name );
+		new_icon_name = fma_icon_chooser_choose_icon( NACT_MAIN_WINDOW( instance ), icon_name );
 
 		if( g_utf8_collate( icon_name, new_icon_name ) != 0 ){
 			icon_entry = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconEntry" );

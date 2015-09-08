@@ -93,8 +93,8 @@ fma_config_tool_SOURCES = \
 	fma-icapabilities-tab.h							\
 	fma-icommand-tab.c									\
 	fma-icommand-tab.h									\
-	nact-icon-chooser.c									\
-	nact-icon-chooser.h									\
+	fma-icon-chooser.c									\
+	fma-icon-chooser.h									\
 	fma-ienvironment-tab.c								\
 	fma-ienvironment-tab.h								\
 	fma-iexecution-tab.c								\
@@ -159,7 +159,7 @@ ui_files = \
 	fma-assistant-import.ui							\
 	fma-confirm-logout.ui								\
 	fma-export-ask.ui									\
-	nact-icon-chooser.ui								\
+	fma-icon-chooser.ui								\
 	nact-legend.ui										\
 	nact-main-window.ui									\
 	nact-preferences.ui									\
