@@ -47,7 +47,7 @@
 #include "fma-main-window.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-priv.h"
-#include "nact-tree-ieditable.h"
+#include "fma-tree-ieditable.h"
 
 /*
  * call once egg_tree_multi_drag_add_drag_support( treeview ) at init time (before gtk_main)
@@ -621,7 +621,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 				} else {
 					inserted = fma_object_ref( current );
 					deletable = g_list_prepend( NULL, inserted );
-					nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( items_view ), deletable, TREE_OPE_MOVE );
+					fma_tree_ieditable_delete( FMA_TREE_IEDITABLE( items_view ), deletable, TREE_OPE_MOVE );
 					g_list_free( deletable );
 					relabel = FALSE;
 				}
@@ -635,7 +635,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	}
 	object_list = g_list_reverse( object_list );
 
-	nact_tree_ieditable_insert_at_path( NACT_TREE_IEDITABLE( items_view ), object_list, new_dest );
+	fma_tree_ieditable_insert_at_path( FMA_TREE_IEDITABLE( items_view ), object_list, new_dest );
 
 	fma_object_free_items( object_list );
 	gtk_tree_path_free( new_dest );
@@ -964,7 +964,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	if( imported ){
 		fma_object_dump_tree( imported );
 		view = fma_main_window_get_items_view( main_window );
-		nact_tree_ieditable_insert_at_path( NACT_TREE_IEDITABLE( view ), imported, dest );
+		fma_tree_ieditable_insert_at_path( FMA_TREE_IEDITABLE( view ), imported, dest );
 	}
 
 	/* override items if needed
@@ -973,7 +973,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	if( overriden ){
 		fma_object_dump_tree( overriden );
 		view = fma_main_window_get_items_view( main_window );
-		nact_tree_ieditable_set_items( NACT_TREE_IEDITABLE( view ), overriden );
+		fma_tree_ieditable_set_items( FMA_TREE_IEDITABLE( view ), overriden );
 		fma_object_free_items( overriden );
 	}
 

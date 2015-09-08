@@ -132,8 +132,8 @@ fma_config_tool_SOURCES = \
 	fma-sort-buttons.h									\
 	fma-statusbar.c									\
 	fma-statusbar.h									\
-	nact-tree-ieditable.c								\
-	nact-tree-ieditable.h								\
+	fma-tree-ieditable.c								\
+	fma-tree-ieditable.h								\
 	nact-tree-model.c									\
 	nact-tree-model.h									\
 	nact-tree-model-priv.h								\

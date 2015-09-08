@@ -32,15 +32,15 @@
 
 /**
  * SECTION: nact-tree_ieditable
- * @title: NactTreeIEditable
- * @short_description: The NactTreeIEditable interface definition
- * @include: nact-tree_ieditable.h
+ * @title: FMATreeIEditable
+ * @short_description: The FMATreeIEditable interface definition
+ * @include: ui/fma-tree-ieditable.h
  *
  * This interface is to be implemented by a NactTreeView which would
  * want get edition features, such as inline edition, insert, delete,
  * and so on.
  *
- * NactTreeIEditable maintains the count of modified items.
+ * FMATreeIEditable maintains the count of modified items.
  * Starting with zero when the tree view is filled up, it is incremented
  * each time an item is modified, inserted or deleted.
  * The modified count is fully recomputed after a save.
@@ -52,20 +52,20 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TREE_IEDITABLE_TYPE                      ( nact_tree_ieditable_get_type())
-#define NACT_TREE_IEDITABLE( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TREE_IEDITABLE_TYPE, NactTreeIEditable ))
-#define NACT_IS_TREE_IEDITABLE( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TREE_IEDITABLE_TYPE ))
-#define NACT_TREE_IEDITABLE_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TREE_IEDITABLE_TYPE, NactTreeIEditableInterface ))
+#define FMA_TREE_IEDITABLE_TYPE                      ( fma_tree_ieditable_get_type())
+#define FMA_TREE_IEDITABLE( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TREE_IEDITABLE_TYPE, FMATreeIEditable ))
+#define FMA_IS_TREE_IEDITABLE( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TREE_IEDITABLE_TYPE ))
+#define FMA_TREE_IEDITABLE_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TREE_IEDITABLE_TYPE, FMATreeIEditableInterface ))
 
-typedef struct _NactTreeIEditable                     NactTreeIEditable;
-typedef struct _NactTreeIEditableInterfacePrivate     NactTreeIEditableInterfacePrivate;
+typedef struct _FMATreeIEditable                     FMATreeIEditable;
+typedef struct _FMATreeIEditableInterfacePrivate     FMATreeIEditableInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                     parent;
-	NactTreeIEditableInterfacePrivate *private;
+	GTypeInterface                    parent;
+	FMATreeIEditableInterfacePrivate *private;
 }
-	NactTreeIEditableInterface;
+	FMATreeIEditableInterface;
 
 /**
  * Delete operations
@@ -76,40 +76,40 @@ typedef enum {
 }
 	TreeIEditableDeleteOpe;
 
-GType    nact_tree_ieditable_get_type              ( void );
+GType    fma_tree_ieditable_get_type              ( void );
 
-void     nact_tree_ieditable_initialize            ( NactTreeIEditable *instance,
+void     fma_tree_ieditable_initialize            ( FMATreeIEditable *instance,
 															GtkTreeView *treeview,
 															FMAMainWindow *main_window );
 
-void     nact_tree_ieditable_terminate             ( NactTreeIEditable *instance );
+void     fma_tree_ieditable_terminate             ( FMATreeIEditable *instance );
 
-void     nact_tree_ieditable_delete                ( NactTreeIEditable *instance,
+void     fma_tree_ieditable_delete                ( FMATreeIEditable *instance,
 															GList *items,
 															TreeIEditableDeleteOpe ope );
 
-gboolean nact_tree_ieditable_remove_deleted        ( NactTreeIEditable *instance,
+gboolean fma_tree_ieditable_remove_deleted        ( FMATreeIEditable *instance,
 															GSList **messages );
 
-GList   *nact_tree_ieditable_get_deleted           ( NactTreeIEditable *instance );
+GList   *fma_tree_ieditable_get_deleted           ( FMATreeIEditable *instance );
 
-void     nact_tree_ieditable_insert_items          ( NactTreeIEditable *instance,
+void     fma_tree_ieditable_insert_items          ( FMATreeIEditable *instance,
 															GList *items,
 															FMAObject *sibling );
 
-void     nact_tree_ieditable_insert_at_path        ( NactTreeIEditable *instance,
+void     fma_tree_ieditable_insert_at_path        ( FMATreeIEditable *instance,
 															GList *items,
 															GtkTreePath *path );
 
-void     nact_tree_ieditable_insert_into           ( NactTreeIEditable *instance,
+void     fma_tree_ieditable_insert_into           ( FMATreeIEditable *instance,
 															GList *items );
 
-void     nact_tree_ieditable_set_items             ( NactTreeIEditable *instance,
+void     fma_tree_ieditable_set_items             ( FMATreeIEditable *instance,
 															GList *items );
 
-void     nact_tree_ieditable_dump_modified         ( const NactTreeIEditable *instance );
+void     fma_tree_ieditable_dump_modified         ( const FMATreeIEditable *instance );
 
-gboolean nact_tree_ieditable_is_level_zero_modified( const NactTreeIEditable *instance );
+gboolean fma_tree_ieditable_is_level_zero_modified( const FMATreeIEditable *instance );
 
 G_END_DECLS
 

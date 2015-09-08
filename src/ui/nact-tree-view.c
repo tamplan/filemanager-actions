@@ -42,7 +42,7 @@
 #include "fma-main-window.h"
 #include "nact-tree-view.h"
 #include "nact-tree-model.h"
-#include "nact-tree-ieditable.h"
+#include "fma-tree-ieditable.h"
 
 /* private instance data
  */
@@ -96,7 +96,7 @@ static GObjectClass *st_parent_class           = NULL;
 
 static GType      register_type( void );
 static void       class_init( NactTreeViewClass *klass );
-static void       tree_ieditable_iface_init( NactTreeIEditableInterface *iface, void *user_data );
+static void       tree_ieditable_iface_init( FMATreeIEditableInterface *iface, void *user_data );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_dispose( GObject *application );
 static void       instance_finalize( GObject *application );
@@ -135,7 +135,7 @@ nact_tree_view_get_type( void )
 
 	if( !type ){
 		type = register_type();
-		g_type_add_interface_static( type, NACT_TREE_IEDITABLE_TYPE, &tree_ieditable_iface_info );
+		g_type_add_interface_static( type, FMA_TREE_IEDITABLE_TYPE, &tree_ieditable_iface_info );
 	}
 
 	return( type );
@@ -295,7 +295,7 @@ class_init( NactTreeViewClass *klass )
 	 * the count of modified FMAObjectItems has changed, when an item is
 	 * deleted, or when the level zero is changed.
 	 *
-	 * The signal is actually emitted by the NactTreeIEditable interface
+	 * The signal is actually emitted by the FMATreeIEditable interface
 	 * which takes care of all edition features.
 	 *
 	 * Signal args:
@@ -375,7 +375,7 @@ class_init( NactTreeViewClass *klass )
 }
 
 static void
-tree_ieditable_iface_init( NactTreeIEditableInterface *iface, void *user_data )
+tree_ieditable_iface_init( FMATreeIEditableInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "fma_main_window_tree_ieditable_iface_init";
 
@@ -416,7 +416,7 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		if( self->private->mode == TREE_MODE_EDITION ){
-			nact_tree_ieditable_terminate( NACT_TREE_IEDITABLE( self ));
+			fma_tree_ieditable_terminate( FMA_TREE_IEDITABLE( self ));
 		}
 
 		/* chain up to the parent class */
@@ -588,8 +588,8 @@ nact_tree_view_set_edition_mode( NactTreeView *view, guint mode )
 			gtk_tree_view_column_set_cell_data_func(
 					column, renderer, ( GtkTreeCellDataFunc ) display_label, view, NULL );
 
-			nact_tree_ieditable_initialize(
-					NACT_TREE_IEDITABLE( view ), priv->tree_view, priv->window );
+			fma_tree_ieditable_initialize(
+					FMA_TREE_IEDITABLE( view ), priv->tree_view, priv->window );
 		}
 
 		tmodel = gtk_tree_view_get_model( priv->tree_view );
@@ -898,7 +898,7 @@ nact_tree_view_get_items_ex( const NactTreeView *view, guint mode )
 
 		if( view->private->mode == TREE_MODE_EDITION ){
 			if( mode & TREE_LIST_DELETED ){
-				deleted = nact_tree_ieditable_get_deleted( NACT_TREE_IEDITABLE( view ));
+				deleted = fma_tree_ieditable_get_deleted( FMA_TREE_IEDITABLE( view ));
 			}
 		}
 

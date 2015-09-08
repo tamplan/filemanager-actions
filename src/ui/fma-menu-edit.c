@@ -43,7 +43,7 @@
 #include "fma-main-window.h"
 #include "fma-menu.h"
 #include "fma-menu-edit.h"
-#include "nact-tree-ieditable.h"
+#include "fma-tree-ieditable.h"
 #include "nact-tree-view.h"
 
 static GList  *prepare_for_paste( FMAMainWindow *window, sMenuData *sdata );
@@ -232,7 +232,7 @@ fma_menu_edit_cut( FMAMainWindow *main_window )
 		fma_clipboard_primary_set( clipboard, to_delete, CLIPBOARD_MODE_CUT );
 		update_clipboard_counters( main_window, sdata );
 		view = fma_main_window_get_items_view( main_window );
-		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
+		fma_tree_ieditable_delete( FMA_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
 	}
 
 	fma_object_free_items( items );
@@ -299,7 +299,7 @@ fma_menu_edit_paste( FMAMainWindow *main_window )
 
 	if( items ){
 		view = fma_main_window_get_items_view( main_window );
-		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( view ), items, NULL );
+		fma_tree_ieditable_insert_items( FMA_TREE_IEDITABLE( view ), items, NULL );
 		fma_object_free_items( items );
 	}
 }
@@ -335,7 +335,7 @@ fma_menu_edit_paste_into( FMAMainWindow *main_window )
 
 	if( items ){
 		view = fma_main_window_get_items_view( main_window );
-		nact_tree_ieditable_insert_into( NACT_TREE_IEDITABLE( view ), items );
+		fma_tree_ieditable_insert_into( FMA_TREE_IEDITABLE( view ), items );
 		fma_object_free_items( items );
 	}
 }
@@ -422,7 +422,7 @@ fma_menu_edit_duplicate( FMAMainWindow *main_window )
 		fma_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );
 		view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( main_window ));
-		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( view ), dup, it->data );
+		fma_tree_ieditable_insert_items( FMA_TREE_IEDITABLE( view ), dup, it->data );
 		fma_object_free_items( dup );
 	}
 
@@ -475,7 +475,7 @@ fma_menu_edit_delete( FMAMainWindow *main_window )
 
 	if( to_delete ){
 		view = fma_main_window_get_items_view( main_window );
-		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
+		fma_tree_ieditable_delete( FMA_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
 	}
 
 	fma_object_free_items( items );

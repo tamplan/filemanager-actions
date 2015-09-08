@@ -46,7 +46,7 @@
 #include "fma-main-window.h"
 #include "fma-menu.h"
 #include "fma-menu-file.h"
-#include "nact-tree-ieditable.h"
+#include "fma-tree-ieditable.h"
 
 static FMATimeout st_autosave_prefs_timeout = { 0 };
 static guint     st_event_autosave         = 0;
@@ -135,7 +135,7 @@ fma_menu_file_new_menu( FMAMainWindow *main_window )
 	fma_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( menu ));
 	items = g_list_prepend( NULL, menu );
 	items_view = fma_main_window_get_items_view( main_window );
-	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
+	fma_tree_ieditable_insert_items( FMA_TREE_IEDITABLE( items_view ), items, NULL );
 	fma_object_free_items( items );
 }
 
@@ -159,7 +159,7 @@ fma_menu_file_new_action( FMAMainWindow *main_window )
 	fma_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( action ));
 	items = g_list_prepend( NULL, action );
 	items_view = fma_main_window_get_items_view( main_window );
-	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
+	fma_tree_ieditable_insert_items( FMA_TREE_IEDITABLE( items_view ), items, NULL );
 	fma_object_free_items( items );
 }
 
@@ -192,7 +192,7 @@ fma_menu_file_new_profile( FMAMainWindow *main_window )
 
 	items = g_list_prepend( NULL, profile );
 	items_view = fma_main_window_get_items_view( main_window );
-	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
+	fma_tree_ieditable_insert_items( FMA_TREE_IEDITABLE( items_view ), items, NULL );
 	fma_object_free_items( items );
 }
 
@@ -249,7 +249,7 @@ fma_menu_file_save_items( FMAMainWindow *window )
 	fma_object_dump_tree( items );
 	messages = NULL;
 
-	if( nact_tree_ieditable_is_level_zero_modified( NACT_TREE_IEDITABLE( items_view ))){
+	if( fma_tree_ieditable_is_level_zero_modified( FMA_TREE_IEDITABLE( items_view ))){
 		if( !fma_iprefs_write_level_zero( items, &messages )){
 			if( g_slist_length( messages )){
 				msg = fma_core_utils_slist_join_at_end( messages, "\n" );
@@ -270,7 +270,7 @@ fma_menu_file_save_items( FMAMainWindow *window )
 	 * so that new actions with same id do not risk to be deleted later
 	 * not deleted items are reinserted in the tree
 	 */
-	if( !nact_tree_ieditable_remove_deleted( NACT_TREE_IEDITABLE( items_view ), &messages )){
+	if( !fma_tree_ieditable_remove_deleted( FMA_TREE_IEDITABLE( items_view ), &messages )){
 		if( g_slist_length( messages )){
 			msg = fma_core_utils_slist_join_at_end( messages, "\n" );
 		} else {

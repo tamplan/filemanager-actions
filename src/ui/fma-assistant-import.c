@@ -47,7 +47,7 @@
 #include "fma-application.h"
 #include "fma-assistant-import.h"
 #include "fma-main-window.h"
-#include "nact-tree-ieditable.h"
+#include "fma-tree-ieditable.h"
 
 /* Import Assistant
  *
@@ -698,7 +698,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	if( insertable_items ){
 		insertable_items = g_list_reverse( insertable_items );
 		items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( main_window ));
-		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), insertable_items, NULL );
+		fma_tree_ieditable_insert_items( FMA_TREE_IEDITABLE( items_view ), insertable_items, NULL );
 		fma_object_free_items( insertable_items );
 	}
 
@@ -707,7 +707,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	 */
 	if( overriden_items ){
 		items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( main_window ));
-		nact_tree_ieditable_set_items( NACT_TREE_IEDITABLE( items_view ), overriden_items );
+		fma_tree_ieditable_set_items( FMA_TREE_IEDITABLE( items_view ), overriden_items );
 		window->private->overriden = overriden_items;
 	}
 }
