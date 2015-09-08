@@ -44,7 +44,7 @@
 #include <core/fma-gconf-migration.h>
 #include <core/fma-pivot.h>
 #include <core/fma-selected-info.h>
-#include <core/na-tokens.h>
+#include <core/fma-tokens.h>
 
 #include "console-utils.h"
 #include "nautilus-actions-run-bindings.h"
@@ -404,10 +404,10 @@ static void
 execute_action( FMAObjectAction *action, FMAObjectProfile *profile, GList *targets )
 {
 	/*static const gchar *thisfn = "nautilus_action_run_execute_action";*/
-	NATokens *tokens;
+	FMATokens *tokens;
 
-	tokens = na_tokens_new_from_selection( targets );
-	na_tokens_execute_action( tokens, profile );
+	tokens = fma_tokens_new_from_selection( targets );
+	fma_tokens_execute_action( tokens, profile );
 }
 
 /*

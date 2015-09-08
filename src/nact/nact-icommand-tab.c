@@ -39,7 +39,7 @@
 
 #include "core/fma-factory-object.h"
 #include "core/fma-gtk-utils.h"
-#include "core/na-tokens.h"
+#include "core/fma-tokens.h"
 
 #include "nact-application.h"
 #include "nact-statusbar.h"
@@ -63,7 +63,7 @@ struct _NactICommandTabInterfacePrivate {
  */
 typedef struct {
 	gboolean   on_selection_change;
-	NATokens  *tokens;
+	FMATokens  *tokens;
 	GtkWindow *legend;
 }
 	ICommandData;
@@ -277,13 +277,13 @@ initialize_window( NactICommandTab *instance )
 	g_signal_connect( instance,
 			MAIN_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_main_item_updated ), NULL );
 
-	/* allocate a static fake NATokens object which will be used to build
+	/* allocate a static fake FMATokens object which will be used to build
 	 * the example label - this object will be g_object_unref() on instance
 	 * finalization
 	 */
 	data = get_icommand_data( instance );
 	if( !data->tokens ){
-		data->tokens = na_tokens_new_for_example();
+		data->tokens = fma_tokens_new_for_example();
 		g_debug( "%s: data=%p, tokens=%p", thisfn, ( void * ) data, ( void * ) data->tokens );
 	}
 }
@@ -611,7 +611,7 @@ on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 }
 
 /*
- * See core/na-tokens.c for valid parameters
+ * See core/fma-tokens.c for valid parameters
  */
 static gchar *
 parse_parameters( NactICommandTab *instance )
@@ -627,7 +627,7 @@ parse_parameters( NactICommandTab *instance )
 	exec = g_strdup_printf( "%s %s", command, param_template );
 	g_debug( "%s: data=%p, tokens=%p, exec=%s",
 			thisfn, ( void * ) data, ( void * ) data->tokens, exec );
-	returned = na_tokens_parse_for_display( data->tokens, exec, FALSE );
+	returned = fma_tokens_parse_for_display( data->tokens, exec, FALSE );
 	g_free( exec );
 
 	return( returned );

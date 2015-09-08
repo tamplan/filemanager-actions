@@ -44,7 +44,7 @@
 #include <core/fma-importer.h>
 #include <core/fma-ioptions-list.h>
 #include <core/fma-iprefs.h>
-#include <core/na-tokens.h>
+#include <core/fma-tokens.h>
 
 #include "nact-application.h"
 #include "base-gtk-utils.h"
@@ -810,7 +810,7 @@ terminal_pattern_on_changed( GtkEntry *entry, NactPreferencesEditor *editor )
 		editor->private->terminal_pattern = g_strdup( gtk_entry_get_text( entry ));
 
 		example_widget = base_window_get_widget( BASE_WINDOW( editor ), "TerminalPrefixExample" );
-		example_label = na_tokens_command_for_terminal( editor->private->terminal_pattern, "ls -l" );
+		example_label = fma_tokens_command_for_terminal( editor->private->terminal_pattern, "ls -l" );
 
 		/* i18n: command-line example: Ex.: gnome-terminal -c "ls -l" */
 		example_markup = g_markup_printf_escaped(

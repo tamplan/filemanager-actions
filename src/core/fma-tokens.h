@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_TOKENS_H__
-#define __CORE_NA_TOKENS_H__
+#ifndef __CORE_FMA_TOKENS_H__
+#define __CORE_FMA_TOKENS_H__
 
-/* @title: NATokens
- * @short_description: The #NATokens Class Definition
- * @include: core/na-tokens.h
+/* @title: FMATokens
+ * @short_description: The #FMATokens Class Definition
+ * @include: core/fma-tokens.h
  *
- * The #NATokens class manages the tokens which are to be replaced with
+ * The #FMATokens class manages the tokens which are to be replaced with
  * elements of the current selection at runtime.
  *
  * Note that until v2.30, tokens were parsed against selection list only
@@ -48,8 +48,8 @@
  * Adding a parameter requires updating of:
  * - doc/nact/C/figures/nact-legend.png screenshot
  * - doc/nact/C/nact-execution.xml "Multiple execution" paragraph
- * - src/core/na-tokens.c::is_singular_exec() function
- * - src/core/na-tokens.c::parse_singular() function
+ * - src/core/fma-tokens.c::is_singular_exec() function
+ * - src/core/fma-tokens.c::parse_singular() function
  * - src/nact/file-manager-actions-config-tool.ui:LegendDialog labels
  * - src/core/fma-object-profile-factory.c:FMAFO_DATA_PARAMETERS comment
  *
@@ -83,41 +83,41 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_TOKENS                ( na_tokens_get_type())
-#define NA_TOKENS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_TOKENS, NATokens ))
-#define NA_TOKENS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_TOKENS, NATokensClass ))
-#define NA_IS_TOKENS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_TOKENS ))
-#define NA_IS_TOKENS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_TOKENS ))
-#define NA_TOKENS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_TOKENS, NATokensClass ))
+#define FMA_TYPE_TOKENS                ( fma_tokens_get_type())
+#define FMA_TOKENS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_TOKENS, FMATokens ))
+#define FMA_TOKENS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_TOKENS, FMATokensClass ))
+#define FMA_IS_TOKENS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_TOKENS ))
+#define FMA_IS_TOKENS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_TOKENS ))
+#define FMA_TOKENS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_TOKENS, FMATokensClass ))
 
-typedef struct _NATokensPrivate       NATokensPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject          parent;
-	NATokensPrivate *private;
-}
-	NATokens;
-
-typedef struct _NATokensClassPrivate  NATokensClassPrivate;
+typedef struct _FMATokensPrivate       FMATokensPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass          parent;
-	NATokensClassPrivate *private;
+	GObject           parent;
+	FMATokensPrivate *private;
 }
-	NATokensClass;
+	FMATokens;
 
-GType     na_tokens_get_type            ( void );
+typedef struct _FMATokensClassPrivate  FMATokensClassPrivate;
 
-NATokens *na_tokens_new_for_example     ( void );
-NATokens *na_tokens_new_from_selection  ( GList *selection );
+typedef struct {
+	/*< private >*/
+	GObjectClass           parent;
+	FMATokensClassPrivate *private;
+}
+	FMATokensClass;
 
-gchar    *na_tokens_parse_for_display   ( const NATokens *tokens, const gchar *string, gboolean utf8 );
-void      na_tokens_execute_action      ( const NATokens *tokens, const FMAObjectProfile *profile );
+GType      fma_tokens_get_type            ( void );
 
-gchar    *na_tokens_command_for_terminal( const gchar *pattern, const gchar *command );
+FMATokens *fma_tokens_new_for_example     ( void );
+FMATokens *fma_tokens_new_from_selection  ( GList *selection );
+
+gchar     *fma_tokens_parse_for_display   ( const FMATokens *tokens, const gchar *string, gboolean utf8 );
+void       fma_tokens_execute_action      ( const FMATokens *tokens, const FMAObjectProfile *profile );
+
+gchar     *fma_tokens_command_for_terminal( const gchar *pattern, const gchar *command );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_TOKENS_H__ */
+#endif /* __CORE_FMA_TOKENS_H__ */

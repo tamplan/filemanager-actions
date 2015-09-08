@@ -42,17 +42,17 @@
 #include "fma-gnome-vfs-uri.h"
 #include "fma-selected-info.h"
 #include "fma-settings.h"
-#include "na-tokens.h"
+#include "fma-tokens.h"
 
 /* private class data
  */
-struct _NATokensClassPrivate {
+struct _FMATokensClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NATokensPrivate {
+struct _FMATokensPrivate {
 	gboolean dispose_has_run;
 	guint    count;
 	GSList  *uris;
@@ -81,7 +81,7 @@ typedef struct {
 static GObjectClass *st_parent_class = NULL;
 
 static GType     register_type( void );
-static void      class_init( NATokensClass *klass );
+static void      class_init( FMATokensClass *klass );
 static void      instance_init( GTypeInstance *instance, gpointer klass );
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
@@ -89,18 +89,18 @@ static void      instance_finalize( GObject *object );
 static void      child_watch_fn( GPid pid, gint status, ChildStr *child_str );
 static void      display_output( const gchar *command, int fd_stdout, int fd_stderr );
 static gchar    *display_output_get_content( int fd );
-static void      execute_action_command( gchar *command, const FMAObjectProfile *profile, const NATokens *tokens );
+static void      execute_action_command( gchar *command, const FMAObjectProfile *profile, const FMATokens *tokens );
 static gchar    *get_command_execution_display_output( const gchar *command );
 static gchar    *get_command_execution_embedded( const gchar *command );
 static gchar    *get_command_execution_normal( const gchar *command );
 static gchar    *get_command_execution_terminal( const gchar *command );
-static gboolean  is_singular_exec( const NATokens *tokens, const gchar *exec );
-static gchar    *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted );
+static gboolean  is_singular_exec( const FMATokens *tokens, const gchar *exec );
+static gchar    *parse_singular( const FMATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted );
 static GString  *quote_string( GString *input, const gchar *name, gboolean quoted );
 static GString  *quote_string_list( GString *input, GSList *names, gboolean quoted );
 
 GType
-na_tokens_get_type( void )
+fma_tokens_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -114,32 +114,32 @@ na_tokens_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_tokens_register_type";
+	static const gchar *thisfn = "fma_tokens_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NATokensClass ),
+		sizeof( FMATokensClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NATokens ),
+		sizeof( FMATokens ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NATokens", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMATokens", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NATokensClass *klass )
+class_init( FMATokensClass *klass )
 {
-	static const gchar *thisfn = "na_tokens_class_init";
+	static const gchar *thisfn = "fma_tokens_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -150,23 +150,23 @@ class_init( NATokensClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NATokensClassPrivate, 1 );
+	klass->private = g_new0( FMATokensClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_tokens_instance_init";
-	NATokens *self;
+	static const gchar *thisfn = "fma_tokens_instance_init";
+	FMATokens *self;
 
-	g_return_if_fail( NA_IS_TOKENS( instance ));
+	g_return_if_fail( FMA_IS_TOKENS( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NA_TOKENS( instance );
+	self = FMA_TOKENS( instance );
 
-	self->private = g_new0( NATokensPrivate, 1 );
+	self->private = g_new0( FMATokensPrivate, 1 );
 
 	self->private->uris = NULL;
 	self->private->filenames = NULL;
@@ -186,12 +186,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_tokens_instance_dispose";
-	NATokens *self;
+	static const gchar *thisfn = "fma_tokens_instance_dispose";
+	FMATokens *self;
 
-	g_return_if_fail( NA_IS_TOKENS( object ));
+	g_return_if_fail( FMA_IS_TOKENS( object ));
 
-	self = NA_TOKENS( object );
+	self = FMA_TOKENS( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -208,14 +208,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_tokens_instance_finalize";
-	NATokens *self;
+	static const gchar *thisfn = "fma_tokens_instance_finalize";
+	FMATokens *self;
 
-	g_return_if_fail( NA_IS_TOKENS( object ));
+	g_return_if_fail( FMA_IS_TOKENS( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NA_TOKENS( object );
+	self = FMA_TOKENS( object );
 
 	g_free( self->private->scheme );
 	g_free( self->private->username );
@@ -237,17 +237,17 @@ instance_finalize( GObject *object )
 }
 
 /*
- * na_tokens_new_for_example:
+ * fma_tokens_new_for_example:
  *
- * Returns: a new #NATokens object initialized with fake values for two
+ * Returns: a new #FMATokens object initialized with fake values for two
  * regular files, in order to be used as an example of an expanded command
  * line.
  */
-NATokens *
-na_tokens_new_for_example( void )
+FMATokens *
+fma_tokens_new_for_example( void )
 {
-	static const gchar *thisfn = "na_tokens_new_for_example";
-	NATokens *tokens;
+	static const gchar *thisfn = "fma_tokens_new_for_example";
+	FMATokens *tokens;
 	const gchar *ex_uri1 = _( "file:///path/to/file1.mid" );
 	const gchar *ex_uri2 = _( "file:///path/to/file2.jpeg" );
 	const gchar *ex_mimetype1 = _( "audio/x-midi" );
@@ -262,7 +262,7 @@ na_tokens_new_for_example( void )
 
 	g_debug( "%s:", thisfn );
 
-	tokens = g_object_new( NA_TYPE_TOKENS, NULL );
+	tokens = g_object_new( FMA_TYPE_TOKENS, NULL );
 	first = TRUE;
 	tokens->private->count = 2;
 
@@ -301,16 +301,16 @@ na_tokens_new_for_example( void )
 }
 
 /*
- * na_tokens_new_from_selection:
+ * fma_tokens_new_from_selection:
  * @selection: a #GList list of #FMASelectedInfo objects.
  *
- * Returns: a new #NATokens object which holds all possible tokens.
+ * Returns: a new #FMATokens object which holds all possible tokens.
  */
-NATokens *
-na_tokens_new_from_selection( GList *selection )
+FMATokens *
+fma_tokens_new_from_selection( GList *selection )
 {
-	static const gchar *thisfn = "na_tokens_new_from_selection";
-	NATokens *tokens;
+	static const gchar *thisfn = "fma_tokens_new_from_selection";
+	FMATokens *tokens;
 	GList *it;
 	gchar *uri, *filename, *basedir, *basename, *bname_woext, *ext, *mimetype;
 	gboolean first;
@@ -318,7 +318,7 @@ na_tokens_new_from_selection( GList *selection )
 	g_debug( "%s: selection=%p (count=%d)", thisfn, ( void * ) selection, g_list_length( selection ));
 
 	first = TRUE;
-	tokens = g_object_new( NA_TYPE_TOKENS, NULL );
+	tokens = g_object_new( FMA_TYPE_TOKENS, NULL );
 
 	tokens->private->count = g_list_length( selection );
 
@@ -352,8 +352,8 @@ na_tokens_new_from_selection( GList *selection )
 }
 
 /*
- * na_tokens_parse_for_display:
- * @tokens: a #NATokens object.
+ * fma_tokens_parse_for_display:
+ * @tokens: a #FMATokens object.
  * @string: the input string, may or may not contain tokens.
  * @utf8: whether the @input string is UTF-8 encoded, or a standard ASCII string.
  *
@@ -366,20 +366,20 @@ na_tokens_new_from_selection( GList *selection )
  * allocated string which should be g_free() by the caller.
  */
 gchar *
-na_tokens_parse_for_display( const NATokens *tokens, const gchar *string, gboolean utf8 )
+fma_tokens_parse_for_display( const FMATokens *tokens, const gchar *string, gboolean utf8 )
 {
 	return( parse_singular( tokens, string, 0, utf8, FALSE ));
 }
 
 /*
- * na_tokens_execute_action:
- * @tokens: a #NATokens object.
+ * fma_tokens_execute_action:
+ * @tokens: a #FMATokens object.
  * @profile: the #FMAObjectProfile to be executed.
  *
  * Execute the given action, regarding the context described by @tokens.
  */
 void
-na_tokens_execute_action( const NATokens *tokens, const FMAObjectProfile *profile )
+fma_tokens_execute_action( const FMATokens *tokens, const FMAObjectProfile *profile )
 {
 	gchar *path, *parameters, *exec;
 	gboolean singular;
@@ -413,7 +413,7 @@ na_tokens_execute_action( const NATokens *tokens, const FMAObjectProfile *profil
 static void
 child_watch_fn( GPid pid, gint status, ChildStr *child_str )
 {
-	static const gchar *thisfn = "na_tokens_child_watch_fn";
+	static const gchar *thisfn = "fma_tokens_child_watch_fn";
 
 	g_debug( "%s: pid=%u, status=%d", thisfn, ( guint ) pid, status );
 	g_spawn_close_pid( pid );
@@ -453,7 +453,7 @@ display_output( const gchar *command, int fd_stdout, int fd_stderr )
 static gchar *
 display_output_get_content( int fd )
 {
-	static const gchar *thisfn = "na_tokens_display_output_get_content";
+	static const gchar *thisfn = "fma_tokens_display_output_get_content";
 	GInputStream *stream;
 	GString *string;
 	gchar buf[1024];
@@ -492,7 +492,7 @@ display_output_get_content( int fd )
  * - DisplayOutput: execute in a shell
  */
 static void
-execute_action_command( gchar *command, const FMAObjectProfile *profile, const NATokens *tokens )
+execute_action_command( gchar *command, const FMAObjectProfile *profile, const FMATokens *tokens )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action_command";
 	GError *error;
@@ -602,7 +602,7 @@ static gchar *
 get_command_execution_display_output( const gchar *command )
 {
 	static const gchar *bin_sh = "/bin/sh -c COMMAND";
-	return( na_tokens_command_for_terminal( bin_sh, command ));
+	return( fma_tokens_command_for_terminal( bin_sh, command ));
 }
 
 static gchar *
@@ -624,14 +624,14 @@ get_command_execution_terminal( const gchar *command )
 	gchar *pattern;
 
 	pattern = fma_settings_get_string( IPREFS_TERMINAL_PATTERN, NULL, NULL );
-	run_command = na_tokens_command_for_terminal( pattern, command );
+	run_command = fma_tokens_command_for_terminal( pattern, command );
 	g_free( pattern );
 
 	return( run_command );
 }
 
 /**
- * na_tokens_command_for_terminal:
+ * fma_tokens_command_for_terminal:
  * @pattern: the command pattern; should include a 'COMMAND' keyword
  * @command: the command to be actually run in the terminal
  *
@@ -639,7 +639,7 @@ get_command_execution_terminal( const gchar *command )
  * be g_free() by the caller.
  */
 gchar *
-na_tokens_command_for_terminal( const gchar *pattern, const gchar *command )
+fma_tokens_command_for_terminal( const gchar *pattern, const gchar *command )
 {
 	gchar *run_command;
 	gchar *quoted;
@@ -657,15 +657,15 @@ na_tokens_command_for_terminal( const gchar *pattern, const gchar *command )
 }
 
 /*
- * na_tokens_is_singular_exec:
- * @tokens: the current #NATokens object.
+ * fma_tokens_is_singular_exec:
+ * @tokens: the current #FMATokens object.
  * @exec: the to be executed command-line before having been parsed
  *
  * Returns: %TRUE if the first relevant parameter found in @exec
  * command-line is of singular form, %FALSE else.
  */
 static gboolean
-is_singular_exec( const NATokens *tokens, const gchar *exec )
+is_singular_exec( const FMATokens *tokens, const gchar *exec )
 {
 	gboolean singular;
 	gboolean found;
@@ -720,7 +720,7 @@ is_singular_exec( const NATokens *tokens, const gchar *exec )
 
 /*
  * parse_singular:
- * @tokens: a #NATokens object.
+ * @tokens: a #FMATokens object.
  * @input: the input string, may or may not contain tokens.
  * @i: the number of the iteration in a multiple selection, starting with zero.
  * @utf8: whether the @input string is UTF-8 encoded, or a standard ASCII
@@ -736,9 +736,9 @@ is_singular_exec( const NATokens *tokens, const gchar *exec )
  * The returned #GSList should be fma_core_utils_slist_free() by the caller.
  */
 static gchar *
-parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted )
+parse_singular( const FMATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted )
 {
-	static const gchar *thisfn = "na_tokens_parse_singular";
+	static const gchar *thisfn = "fma_tokens_parse_singular";
 	GString *output;
 	gchar *iter, *prev_iter;
 	const gchar *nth;
