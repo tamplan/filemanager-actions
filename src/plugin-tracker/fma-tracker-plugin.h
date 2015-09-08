@@ -27,23 +27,23 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_TRACKER_H__
-#define __NA_TRACKER_H__
+#ifndef __PLUGIN_TRACKER_FMA_TRACKER_PLUGIN_H__
+#define __PLUGIN_TRACKER_FMA_TRACKER_PLUGIN_H__
 
 /**
- * SECTION: na_tracker
- * @short_description: #NATracker class definition.
- * @include: tracker/na-tracker.h
+ * SECTION: fma_tracker_plugin
+ * @short_description: #FMATrackerPlugin class definition.
+ * @include: tracker/fma-tracker-plugin.h
  *
- * The #NATracker object is instanciated when Nautilus file manager loads
+ * The #FMATrackerPlugin object is instanciated when Nautilus file manager loads
  * this plugin (this is the normal behavior of Nautilus to instanciate one
  * object of each plugin type).
  *
- * There is so only one #NATracker object in the process. As any Nautilus
+ * There is so only one #FMATrackerPlugin object in the process. As any Nautilus
  * extension, it is instantiated when the module is loaded by the file
  * manager, usually at startup time.
  *
- * The #NATracker object instanciates and keeps a new GDBusObjectManagerServer
+ * The #FMATrackerPlugin object instanciates and keeps a new GDBusObjectManagerServer
  * rooted on our D-Bus path.
  * It then allocates an object at this same path, and another object which
  * implements the .Properties1 interface. Last connects to the method signal
@@ -54,34 +54,34 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_TRACKER                ( na_tracker_get_type())
-#define NA_TRACKER( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), NA_TYPE_TRACKER, NATracker ))
-#define NA_TRACKER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), NA_TYPE_TRACKER, NATrackerClass ))
-#define NA_IS_TRACKER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NA_TYPE_TRACKER ))
-#define NA_IS_TRACKER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_TRACKER ))
-#define NA_TRACKER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_TRACKER, NATrackerClass ))
+#define FMA_TYPE_TRACKER_PLUGIN                ( fma_tracker_plugin_get_type())
+#define FMA_TRACKER_PLUGIN( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), FMA_TYPE_TRACKER_PLUGIN, FMATrackerPlugin ))
+#define FMA_TRACKER_PLUGIN_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), FMA_TYPE_TRACKER_PLUGIN, FMATrackerPluginClass ))
+#define FMA_IS_TRACKER_PLUGIN( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), FMA_TYPE_TRACKER_PLUGIN ))
+#define FMA_IS_TRACKER_PLUGIN_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_TRACKER_PLUGIN ))
+#define FMA_TRACKER_PLUGIN_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_TRACKER_PLUGIN, FMATrackerPluginClass ))
 
-typedef struct _NATrackerPrivate       NATrackerPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject           parent;
-	NATrackerPrivate *private;
-}
-	NATracker;
-
-typedef struct _NATrackerClassPrivate  NATrackerClassPrivate;
+typedef struct _FMATrackerPluginPrivate        FMATrackerPluginPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass           parent;
-	NATrackerClassPrivate *private;
+	GObject                  parent;
+	FMATrackerPluginPrivate *private;
 }
-	NATrackerClass;
+	FMATrackerPlugin;
 
-GType    na_tracker_get_type          ( void );
-void     na_tracker_register_type     ( GTypeModule *module );
+typedef struct _FMATrackerPluginClassPrivate   FMATrackerPluginClassPrivate;
+
+typedef struct {
+	/*< private >*/
+	GObjectClass                  parent;
+	FMATrackerPluginClassPrivate *private;
+}
+	FMATrackerPluginClass;
+
+GType    fma_tracker_plugin_get_type          ( void );
+void     fma_tracker_plugin_register_type     ( GTypeModule *module );
 
 G_END_DECLS
 
-#endif /* __NA_TRACKER_H__ */
+#endif /* __PLUGIN_TRACKER_FMA_TRACKER_PLUGIN_H__ */

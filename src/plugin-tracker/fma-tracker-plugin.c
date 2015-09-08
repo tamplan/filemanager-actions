@@ -32,7 +32,6 @@
 #endif
 
 #include <gio/gio.h>
-#include "na-tracker-gdbus.h"
 
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
@@ -40,17 +39,18 @@
 
 #include <api/fma-dbus.h>
 
-#include "na-tracker.h"
+#include "fma-tracker-plugin.h"
+#include "fma-tracker-gdbus.h"
 
 /* private class data
  */
-struct _NATrackerClassPrivate {
+struct _FMATrackerPluginClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NATrackerPrivate {
+struct _FMATrackerPluginPrivate {
 	gboolean                  dispose_has_run;
 	guint                     owner_id;	/* the identifier returns by g_bus_own_name */
 	GDBusObjectManagerServer *manager;
@@ -60,44 +60,44 @@ struct _NATrackerPrivate {
 static GObjectClass *st_parent_class = NULL;
 static GType         st_module_type = 0;
 
-static void    class_init( NATrackerClass *klass );
-static void    instance_init( GTypeInstance *instance, gpointer klass );
-static void    initialize_dbus_connection( NATracker *tracker );
-static void    on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *tracker );
-static void    on_name_acquired( GDBusConnection *connection, const gchar *name, NATracker *tracker );
-static void    on_name_lost( GDBusConnection *connection, const gchar *name, NATracker *tracker );
-static gboolean on_properties1_get_selected_paths( NATrackerProperties1 *tracker_properties, GDBusMethodInvocation *invocation, NATracker *tracker );
-static void    instance_dispose( GObject *object );
-static void    instance_finalize( GObject *object );
+static void     class_init( FMATrackerPluginClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     initialize_dbus_connection( FMATrackerPlugin *tracker );
+static void     on_bus_acquired( GDBusConnection *connection, const gchar *name, FMATrackerPlugin *tracker );
+static void     on_name_acquired( GDBusConnection *connection, const gchar *name, FMATrackerPlugin *tracker );
+static void     on_name_lost( GDBusConnection *connection, const gchar *name, FMATrackerPlugin *tracker );
+static gboolean on_properties1_get_selected_paths( FMATrackerGDBusProperties1 *properties, GDBusMethodInvocation *invocation, FMATrackerPlugin *tracker );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
 
-static void    menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static GList  *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder );
-static GList  *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
+static void     menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static GList   *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder );
+static GList   *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
 
-static void    set_uris( NATracker *tracker, GList *files );
-static gchar **get_selected_paths( NATracker *tracker );
-static GList  *free_selected( GList *selected );
+static void     set_uris( FMATrackerPlugin *tracker, GList *files );
+static gchar  **get_selected_paths( FMATrackerPlugin *tracker );
+static GList   *free_selected( GList *selected );
 
 GType
-na_tracker_get_type( void )
+fma_tracker_plugin_get_type( void )
 {
 	g_assert( st_module_type );
 	return( st_module_type );
 }
 
 void
-na_tracker_register_type( GTypeModule *module )
+fma_tracker_plugin_register_type( GTypeModule *module )
 {
-	static const gchar *thisfn = "na_tracker_register_type";
+	static const gchar *thisfn = "fma_tracker_plugin_register_type";
 
 	static const GTypeInfo info = {
-		sizeof( NATrackerClass ),
+		sizeof( FMATrackerPluginClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NATracker ),
+		sizeof( FMATrackerPlugin ),
 		0,
 		( GInstanceInitFunc ) instance_init,
 	};
@@ -111,15 +111,15 @@ na_tracker_register_type( GTypeModule *module )
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 	g_assert( st_module_type == 0 );
 
-	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NATracker", &info, 0 );
+	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "FMATrackerPlugin", &info, 0 );
 
 	g_type_module_add_interface( module, st_module_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
 }
 
 static void
-class_init( NATrackerClass *klass )
+class_init( FMATrackerPluginClass *klass )
 {
-	static const gchar *thisfn = "na_tracker_class_init";
+	static const gchar *thisfn = "fma_tracker_plugin_class_init";
 	GObjectClass *gobject_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -130,21 +130,21 @@ class_init( NATrackerClass *klass )
 	gobject_class->dispose = instance_dispose;
 	gobject_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NATrackerClassPrivate, 1 );
+	klass->private = g_new0( FMATrackerPluginClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_tracker_instance_init";
-	NATracker *self;
+	static const gchar *thisfn = "fma_tracker_plugin_instance_init";
+	FMATrackerPlugin *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-	g_return_if_fail( NA_IS_TRACKER( instance ));
+	g_return_if_fail( FMA_IS_TRACKER_PLUGIN( instance ));
 
-	self = NA_TRACKER( instance );
+	self = FMA_TRACKER_PLUGIN( instance );
 
-	self->private = g_new0( NATrackerPrivate, 1 );
+	self->private = g_new0( FMATrackerPluginPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
 
 	initialize_dbus_connection( self );
@@ -155,9 +155,9 @@ instance_init( GTypeInstance *instance, gpointer klass )
  * & instantiate the object which will do effective tracking
  */
 static void
-initialize_dbus_connection( NATracker *tracker )
+initialize_dbus_connection( FMATrackerPlugin *tracker )
 {
-	NATrackerPrivate *priv = tracker->private;
+	FMATrackerPluginPrivate *priv = tracker->private;
 
 	priv->owner_id = g_bus_own_name(
 			G_BUS_TYPE_SESSION,
@@ -171,13 +171,13 @@ initialize_dbus_connection( NATracker *tracker )
 }
 
 static void
-on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *tracker )
+on_bus_acquired( GDBusConnection *connection, const gchar *name, FMATrackerPlugin *tracker )
 {
-	static const gchar *thisfn = "na_tracker_on_bus_acquired";
-	NATrackerObjectSkeleton *tracker_object;
-	NATrackerProperties1 *tracker_properties1;
+	static const gchar *thisfn = "fma_tracker_plugin_on_bus_acquired";
+	FMATrackerGDBusObjectSkeleton *tracker_object;
+	FMATrackerGDBusProperties1 *tracker_properties1;
 
-	/*NATrackerDBus *tracker_object;*/
+	/*FMATrackerGDBusDBus *tracker_object;*/
 
 	g_debug( "%s: connection=%p, name=%s, tracker=%p",
 			thisfn,
@@ -194,14 +194,14 @@ on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *trac
 	 *  /org/filemanager_actions/DBus/Tracker
 	 *  (which must be same or below than that of object manager server)
 	 */
-	tracker_object = na_tracker_object_skeleton_new( FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH "/0" );
+	tracker_object = fma_tracker_gdbus_object_skeleton_new( FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH "/0" );
 
 	/* make a newly created object export the interface
 	 *  org.filemanager_actions.DBus.Tracker.Properties1
 	 *  and attach it to the D-Bus object, which takes its own reference on it
 	 */
-	tracker_properties1 = na_tracker_properties1_skeleton_new();
-	na_tracker_object_skeleton_set_properties1( tracker_object, tracker_properties1 );
+	tracker_properties1 = fma_tracker_gdbus_properties1_skeleton_new();
+	fma_tracker_gdbus_object_skeleton_set_properties1( tracker_object, tracker_properties1 );
 	g_object_unref( tracker_properties1 );
 
 	/* handle GetSelectedPaths method invocation on the .Properties1 interface
@@ -225,9 +225,9 @@ on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *trac
 }
 
 static void
-on_name_acquired( GDBusConnection *connection, const gchar *name, NATracker *tracker )
+on_name_acquired( GDBusConnection *connection, const gchar *name, FMATrackerPlugin *tracker )
 {
-	static const gchar *thisfn = "na_tracker_on_name_acquired";
+	static const gchar *thisfn = "fma_tracker_plugin_on_name_acquired";
 
 	g_debug( "%s: connection=%p, name=%s, tracker=%p",
 			thisfn,
@@ -237,9 +237,9 @@ on_name_acquired( GDBusConnection *connection, const gchar *name, NATracker *tra
 }
 
 static void
-on_name_lost( GDBusConnection *connection, const gchar *name, NATracker *tracker )
+on_name_lost( GDBusConnection *connection, const gchar *name, FMATrackerPlugin *tracker )
 {
-	static const gchar *thisfn = "na_tracker_on_name_lost";
+	static const gchar *thisfn = "fma_tracker_plugin_on_name_lost";
 
 	g_debug( "%s: connection=%p, name=%s, tracker=%p",
 			thisfn,
@@ -251,13 +251,13 @@ on_name_lost( GDBusConnection *connection, const gchar *name, NATracker *tracker
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_tracker_instance_dispose";
-	NATrackerPrivate *priv;
+	static const gchar *thisfn = "fma_tracker_plugin_instance_dispose";
+	FMATrackerPluginPrivate *priv;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NA_IS_TRACKER( object ));
+	g_return_if_fail( FMA_IS_TRACKER_PLUGIN( object ));
 
-	priv = NA_TRACKER( object )->private;
+	priv = FMA_TRACKER_PLUGIN( object )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -282,12 +282,12 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_tracker_instance_finalize";
-	NATracker *self;
+	static const gchar *thisfn = "fma_tracker_plugin_instance_finalize";
+	FMATrackerPlugin *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NA_IS_TRACKER( object ));
-	self = NA_TRACKER( object );
+	g_return_if_fail( FMA_IS_TRACKER_PLUGIN( object ));
+	self = FMA_TRACKER_PLUGIN( object );
 
 	g_free( self->private );
 
@@ -300,7 +300,7 @@ instance_finalize( GObject *object )
 static void
 menu_provider_iface_init( NautilusMenuProviderIface *iface )
 {
-	static const gchar *thisfn = "na_tracker_menu_provider_iface_init";
+	static const gchar *thisfn = "fma_tracker_plugin_menu_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -311,14 +311,14 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 static GList *
 menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder )
 {
-	static const gchar *thisfn = "na_tracker_menu_provider_get_background_items";
-	NATracker *tracker;
+	static const gchar *thisfn = "fma_tracker_plugin_menu_provider_get_background_items";
+	FMATrackerPlugin *tracker;
 	gchar *uri;
 	GList *selected;
 
-	g_return_val_if_fail( NA_IS_TRACKER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_TRACKER_PLUGIN( provider ), NULL );
 
-	tracker = NA_TRACKER( provider );
+	tracker = FMA_TRACKER_PLUGIN( provider );
 
 	if( !tracker->private->dispose_has_run ){
 
@@ -347,12 +347,12 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 static GList *
 menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
-	static const gchar *thisfn = "na_tracker_menu_provider_get_file_items";
-	NATracker *tracker;
+	static const gchar *thisfn = "fma_tracker_plugin_menu_provider_get_file_items";
+	FMATrackerPlugin *tracker;
 
-	g_return_val_if_fail( NA_IS_TRACKER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_TRACKER_PLUGIN( provider ), NULL );
 
-	tracker = NA_TRACKER( provider );
+	tracker = FMA_TRACKER_PLUGIN( provider );
 
 	if( !tracker->private->dispose_has_run ){
 
@@ -370,15 +370,15 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 
 /*
  * set_uris:
- * @tracker: this #NATracker instance.
+ * @tracker: this #FMATrackerPlugin instance.
  * @files: the list of currently selected items.
  *
  * Maintains our own list of uris.
  */
 static void
-set_uris( NATracker *tracker, GList *files )
+set_uris( FMATrackerPlugin *tracker, GList *files )
 {
-	NATrackerPrivate *priv;
+	FMATrackerPluginPrivate *priv;
 
 	priv = tracker->private;
 
@@ -390,16 +390,16 @@ set_uris( NATracker *tracker, GList *files )
  * Returns: %TRUE if the method has been handled.
  */
 static gboolean
-on_properties1_get_selected_paths( NATrackerProperties1 *tracker_properties, GDBusMethodInvocation *invocation, NATracker *tracker )
+on_properties1_get_selected_paths( FMATrackerGDBusProperties1 *properties, GDBusMethodInvocation *invocation, FMATrackerPlugin *tracker )
 {
 	gchar **paths;
 
-	g_return_val_if_fail( NA_IS_TRACKER( tracker ), FALSE );
+	g_return_val_if_fail( FMA_IS_TRACKER_PLUGIN( tracker ), FALSE );
 
 	paths = get_selected_paths( tracker );
 
-	na_tracker_properties1_complete_get_selected_paths(
-			tracker_properties,
+	fma_tracker_gdbus_properties1_complete_get_selected_paths(
+			properties,
 			invocation,
 			( const gchar * const * ) paths );
 
@@ -408,7 +408,7 @@ on_properties1_get_selected_paths( NATrackerProperties1 *tracker_properties, GDB
 
 /*
  * get_selected_paths:
- * @tracker: this #NATracker object.
+ * @tracker: this #FMATrackerPlugin object.
  *
  * Sends on session D-Bus the list of currently selected items, as two
  * strings for each item :
@@ -422,10 +422,10 @@ on_properties1_get_selected_paths( NATrackerProperties1 *tracker_properties, GDB
  * Exported as GetSelectedPaths method on Tracker.Properties1 interface.
  */
 static gchar **
-get_selected_paths( NATracker *tracker )
+get_selected_paths( FMATrackerPlugin *tracker )
 {
-	static const gchar *thisfn = "na_tracker_get_selected_paths";
-	NATrackerPrivate *priv;
+	static const gchar *thisfn = "fma_tracker_plugin_get_selected_paths";
+	FMATrackerPluginPrivate *priv;
 	gchar **paths;
 	GList *it;
 	int count;

@@ -72,15 +72,15 @@ nautilus_actions_print_LDADD = \
 BUILT_SOURCES =
 
 BUILT_SOURCES += \
-	nautilus-actions-run-bindings.c								\
-	nautilus-actions-run-bindings.h								\
+	fma-run-bindings.c											\
+	fma-run-bindings.h											\
 	$(NULL)
 
-nautilus-actions-run-bindings.c nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-gdbus.xml
+fma-run-bindings.c fma-run-bindings.h: $(top_srcdir)/src/plugin-tracker/fma-tracker-gdbus.xml
 	gdbus-codegen \
 		--interface-prefix org.filemanager_actions.DBus.Tracker.	\
-		--generate-c-code nautilus-actions-run-bindings			\
-		--c-namespace NA_Tracker								\
+		--generate-c-code fma-run-bindings						\
+		--c-namespace FMA_Tracker_GDBus							\
 		--c-generate-object-manager								\
 		$<
 

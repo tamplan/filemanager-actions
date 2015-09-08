@@ -34,50 +34,50 @@ AM_CPPFLAGS += \
 
 nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
 
-nautilus_extension_LTLIBRARIES = libnautilus-actions-tracker.la
+nautilus_extension_LTLIBRARIES = libfma-tracker.la
 
 BUILT_SOURCES =
 
 BUILT_SOURCES += \
-	na-tracker-gdbus.c											\
-	na-tracker-gdbus.h											\
+	fma-tracker-gdbus.c											\
+	fma-tracker-gdbus.h											\
 	$(NULL)
 
-na-tracker-gdbus.c na-tracker-gdbus.h: na-tracker-gdbus.xml
+fma-tracker-gdbus.c fma-tracker-gdbus.h: fma-tracker-gdbus.xml
 	gdbus-codegen \
 		--interface-prefix org.filemanager_actions.DBus.Tracker.	\
-		--generate-c-code na-tracker-gdbus						\
-		--c-namespace NA_Tracker								\
-		--c-generate-object-manager								\
-		--generate-docbook na-tracker-gdbus-docs				\
+		--generate-c-code fma-tracker-gdbus							\
+		--c-namespace FMA_Tracker_GDBus								\
+		--c-generate-object-manager									\
+		--generate-docbook fma-tracker-gdbus-docs					\
 		$<
 
 DISTCLEANFILES = \
-	na-tracker-gdbus-docs-org.filemanager_actions.DBus.Tracker.Properties1.xml
+	fma-tracker-gdbus-docs-org.filemanager_actions.DBus.Tracker.Properties1.xml
 
-nodist_libnautilus_actions_tracker_la_SOURCES = \
+nodist_libfma_tracker_la_SOURCES = \
 	$(BUILT_SOURCES)											\
 	$(NULL)
 
-libnautilus_actions_tracker_la_SOURCES = \
-	na-tracker.c												\
-	na-tracker.h												\
-	na-tracker-plugin.c											\
+libfma_tracker_la_SOURCES = \
+	fma-tracker-module.c										\
+	fma-tracker-plugin.h										\
+	fma-tracker-plugin.c										\
 	$(NULL)
 
-libnautilus_actions_tracker_la_LIBADD = \
+libfma_tracker_la_LIBADD = \
 	$(top_builddir)/src/core/libfma-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
-libnautilus_actions_tracker_la_LDFLAGS = \
+libfma_tracker_la_LDFLAGS = \
 	-module 													\
 	-no-undefined												\
 	-avoid-version												\
 	$(NULL)
 
 EXTRA_DIST = \
-	na-tracker-gdbus.xml										\
+	fma-tracker-gdbus.xml										\
 	$(NULL)
 
 CLEANFILES = \

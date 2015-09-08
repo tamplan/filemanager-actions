@@ -47,7 +47,7 @@
 #include <core/fma-tokens.h>
 
 #include "console-utils.h"
-#include "nautilus-actions-run-bindings.h"
+#include "fma-run-bindings.h"
 
 static gchar     *id               = "";
 static gchar    **targets_array    = NULL;
@@ -276,7 +276,7 @@ targets_from_selection( void )
 	error = NULL;
 	paths = NULL;
 
-	manager = na_tracker_object_manager_client_new_for_bus_sync(
+	manager = fma_tracker_gdbus_object_manager_client_new_for_bus_sync(
 			G_BUS_TYPE_SESSION,
 			G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_NONE,
 			FILEMANAGER_ACTIONS_DBUS_SERVICE,
@@ -312,8 +312,8 @@ targets_from_selection( void )
 	/* note that @iface is really a GDBusProxy instance
 	 * and additionally also a NATrackerProperties1 instance
 	 */
-	na_tracker_properties1_call_get_selected_paths_sync(
-			NA_TRACKER_PROPERTIES1( iface ),
+	fma_tracker_gdbus_properties1_call_get_selected_paths_sync(
+			FMA_TRACKER_GDBUS_PROPERTIES1( iface ),
 			&paths,
 			NULL,
 			&error );
