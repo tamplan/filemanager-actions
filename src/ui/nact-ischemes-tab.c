@@ -240,7 +240,7 @@ on_add_from_defaults( GtkButton *button, NactISchemesTab *instance )
 	g_return_if_fail( context );
 
 	schemes = nact_match_list_get_rows( NACT_MAIN_WINDOW( instance ), ITAB_NAME );
-	new_scheme = nact_add_scheme_dialog_run( NACT_MAIN_WINDOW( instance ), schemes );
+	new_scheme = fma_add_scheme_dialog_run( NACT_MAIN_WINDOW( instance ), schemes );
 	fma_core_utils_slist_free( schemes );
 
 	if( new_scheme ){

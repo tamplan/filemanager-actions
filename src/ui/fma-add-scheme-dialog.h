@@ -27,11 +27,11 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_ADD_SCHEME_DIALOG_H__
-#define __UI_NACT_ADD_SCHEME_DIALOG_H__
+#ifndef __UI_FMA_ADD_SCHEME_DIALOG_H__
+#define __UI_FMA_ADD_SCHEME_DIALOG_H__
 
 /**
- * SECTION: nact_add_scheme_dialog
+ * SECTION: fma_add_scheme_dialog
  * @short_description: #NactAddSchemeDialog class definition.
  * @include: nact/nact-add-scheme-dialog.h
  *
@@ -44,12 +44,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_ADD_SCHEME_DIALOG                ( nact_add_scheme_dialog_get_type())
-#define NACT_ADD_SCHEME_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_ADD_SCHEME_DIALOG, NactAddSchemeDialog ))
-#define NACT_ADD_SCHEME_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_ADD_SCHEME_DIALOG, NactAddSchemeDialogClass ))
-#define NACT_IS_ADD_SCHEME_DIALOG( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_ADD_SCHEME_DIALOG ))
-#define NACT_IS_ADD_SCHEME_DIALOG_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_ADD_SCHEME_DIALOG ))
-#define NACT_ADD_SCHEME_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_ADD_SCHEME_DIALOG, NactAddSchemeDialogClass ))
+#define FMA_TYPE_ADD_SCHEME_DIALOG                ( fma_add_scheme_dialog_get_type())
+#define FMA_ADD_SCHEME_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_ADD_SCHEME_DIALOG, NactAddSchemeDialog ))
+#define FMA_ADD_SCHEME_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_ADD_SCHEME_DIALOG, NactAddSchemeDialogClass ))
+#define FMA_IS_ADD_SCHEME_DIALOG( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_ADD_SCHEME_DIALOG ))
+#define FMA_IS_ADD_SCHEME_DIALOG_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_ADD_SCHEME_DIALOG ))
+#define FMA_ADD_SCHEME_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_ADD_SCHEME_DIALOG, NactAddSchemeDialogClass ))
 
 typedef struct _NactAddSchemeDialogPrivate         NactAddSchemeDialogPrivate;
 
@@ -66,11 +66,11 @@ typedef struct {
 }
 	NactAddSchemeDialogClass;
 
-GType  nact_add_scheme_dialog_get_type( void );
+GType  fma_add_scheme_dialog_get_type( void );
 
-gchar *nact_add_scheme_dialog_run     ( NactMainWindow *parent,
+gchar *fma_add_scheme_dialog_run     ( NactMainWindow *parent,
 												GSList *schemes );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_ADD_SCHEME_DIALOG_H__ */
+#endif /* __UI_FMA_ADD_SCHEME_DIALOG_H__ */

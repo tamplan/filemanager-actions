@@ -74,7 +74,7 @@ static void     send_ok( NactAddSchemeDialog *dialog );
 static void     on_dialog_ok( BaseDialog *dialog );
 
 GType
-nact_add_scheme_dialog_get_type( void )
+fma_add_scheme_dialog_get_type( void )
 {
 	static GType dialog_type = 0;
 
@@ -88,7 +88,7 @@ nact_add_scheme_dialog_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_register_type";
+	static const gchar *thisfn = "fma_add_scheme_dialog_register_type";
 	GType type;
 
 	static GTypeInfo info = {
@@ -113,7 +113,7 @@ register_type( void )
 static void
 class_init( NactAddSchemeDialogClass *klass )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_class_init";
+	static const gchar *thisfn = "fma_add_scheme_dialog_class_init";
 	GObjectClass *object_class;
 	BaseDialogClass *dialog_class;
 
@@ -133,14 +133,14 @@ class_init( NactAddSchemeDialogClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_instance_init";
+	static const gchar *thisfn = "fma_add_scheme_dialog_instance_init";
 	NactAddSchemeDialog *self;
 
-	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( instance ));
+	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( instance ));
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
-	self = NACT_ADD_SCHEME_DIALOG( instance );
+	self = FMA_ADD_SCHEME_DIALOG( instance );
 
 	self->private = g_new0( NactAddSchemeDialogPrivate, 1 );
 
@@ -151,12 +151,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_instance_constructed";
+	static const gchar *thisfn = "fma_add_scheme_dialog_instance_constructed";
 	NactAddSchemeDialogPrivate *priv;
 
-	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
+	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( dialog ));
 
-	priv = NACT_ADD_SCHEME_DIALOG( dialog )->private;
+	priv = FMA_ADD_SCHEME_DIALOG( dialog )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -190,17 +190,17 @@ instance_constructed( GObject *dialog )
 static void
 instance_dispose( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_instance_dispose";
+	static const gchar *thisfn = "fma_add_scheme_dialog_instance_dispose";
 	NactAddSchemeDialog *self;
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
 
-	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
+	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( dialog ));
 
 	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
-	self = NACT_ADD_SCHEME_DIALOG( dialog );
+	self = FMA_ADD_SCHEME_DIALOG( dialog );
 
 	if( !self->private->dispose_has_run ){
 
@@ -222,14 +222,14 @@ instance_dispose( GObject *dialog )
 static void
 instance_finalize( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_instance_finalize";
+	static const gchar *thisfn = "fma_add_scheme_dialog_instance_finalize";
 	NactAddSchemeDialog *self;
 
-	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
+	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( dialog ));
 
 	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
-	self = NACT_ADD_SCHEME_DIALOG( dialog );
+	self = FMA_ADD_SCHEME_DIALOG( dialog );
 
 	fma_core_utils_slist_free( self->private->already_used );
 	g_free( self->private->scheme );
@@ -243,7 +243,7 @@ instance_finalize( GObject *dialog )
 }
 
 /**
- * nact_add_scheme_dialog_run:
+ * fma_add_scheme_dialog_run:
  * @parent: the BaseWindow parent of this dialog
  *  (usually the NactMainWindow).
  * @schemes: list of already used schemes.
@@ -254,9 +254,9 @@ instance_finalize( GObject *dialog )
  * be g_free() by the caller, or NULL.
  */
 gchar *
-nact_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
+fma_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_run";
+	static const gchar *thisfn = "fma_add_scheme_dialog_run";
 	NactAddSchemeDialog *dialog;
 	gchar *scheme;
 
@@ -264,7 +264,7 @@ nact_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
 
 	g_return_val_if_fail( GTK_IS_APPLICATION_WINDOW( parent ), NULL );
 
-	dialog = g_object_new( NACT_TYPE_ADD_SCHEME_DIALOG,
+	dialog = g_object_new( FMA_TYPE_ADD_SCHEME_DIALOG,
 			BASE_PROP_MAIN_WINDOW,    parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
@@ -286,10 +286,10 @@ nact_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
 static void
 on_base_initialize_gtk( NactAddSchemeDialog *dialog, GtkDialog *toplevel, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_on_base_initialize_gtk";
+	static const gchar *thisfn = "fma_add_scheme_dialog_on_base_initialize_gtk";
 	GtkTreeView *listview;
 
-	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
+	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
 
@@ -304,10 +304,10 @@ on_base_initialize_gtk( NactAddSchemeDialog *dialog, GtkDialog *toplevel, gpoint
 static void
 on_base_initialize_window( NactAddSchemeDialog *dialog, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_on_base_initialize_window";
+	static const gchar *thisfn = "fma_add_scheme_dialog_on_base_initialize_window";
 	GtkTreeView *listview;
 
-	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
+	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
 
@@ -344,9 +344,9 @@ on_base_initialize_window( NactAddSchemeDialog *dialog, gpointer user_data )
 static void
 on_base_show_widgets( NactAddSchemeDialog *dialog, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_on_base_show_widgets";
+	static const gchar *thisfn = "fma_add_scheme_dialog_on_base_show_widgets";
 
-	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
+	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
 
@@ -423,6 +423,6 @@ send_ok( NactAddSchemeDialog *dialog )
 static void
 on_dialog_ok( BaseDialog *dialog )
 {
-	NactAddSchemeDialog *editor = NACT_ADD_SCHEME_DIALOG( dialog );
+	NactAddSchemeDialog *editor = FMA_ADD_SCHEME_DIALOG( dialog );
 	editor->private->scheme = nact_schemes_list_get_current_scheme( BASE_WINDOW( dialog ));
 }
