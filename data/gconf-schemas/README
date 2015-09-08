@@ -3,7 +3,7 @@ data/gconf-schemas
 This directory contains schemas to be installed in GConf.
 
 None of these schemas has been translated to new FileManager-Actions
-naming scheme, as these are part of the GConf subsystemn, which we have
+naming scheme, as these are part of the GConf subsystem, which we have
 chosen to no more use. 
 
 Note to translators.
