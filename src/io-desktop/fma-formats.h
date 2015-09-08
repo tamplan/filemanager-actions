@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NADP_FORMATS_H__
-#define __NADP_FORMATS_H__
+#ifndef __FMA_FORMATS_H__
+#define __FMA_FORMATS_H__
 
 #include <glib.h>
 
@@ -38,9 +38,9 @@ G_BEGIN_DECLS
 
 #define NADP_FORMAT_DESKTOP_V1			"Desktop1"
 
-GList *nadp_formats_get_formats ( const FMAIExporter *exporter );
-void   nadp_formats_free_formats( GList *formats );
+GList *fma_formats_get_formats ( const FMAIExporter *exporter );
+void   fma_formats_free_formats( GList *formats );
 
 G_END_DECLS
 
-#endif /* __NADP_FORMATS_H__ */
+#endif /* __FMA_FORMATS_H__ */

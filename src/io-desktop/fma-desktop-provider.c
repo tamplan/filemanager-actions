@@ -38,7 +38,7 @@
 #include <api/fma-ifactory-provider.h>
 
 #include "fma-desktop-provider.h"
-#include "nadp-formats.h"
+#include "fma-formats.h"
 #include "nadp-keys.h"
 #include "nadp-monitor.h"
 #include "nadp-reader.h"
@@ -328,13 +328,13 @@ iexporter_get_name( const FMAIExporter *exporter )
 static void *
 iexporter_get_formats( const FMAIExporter *exporter )
 {
-	return(( void * ) nadp_formats_get_formats( exporter ));
+	return(( void * ) fma_formats_get_formats( exporter ));
 }
 
 static void
 iexporter_free_formats( const FMAIExporter *exporter, GList *format_list )
 {
-	nadp_formats_free_formats( format_list );
+	fma_formats_free_formats( format_list );
 }
 
 /**

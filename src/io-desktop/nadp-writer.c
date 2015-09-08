@@ -41,7 +41,7 @@
 
 #include "fma-desktop-file.h"
 #include "fma-desktop-provider.h"
-#include "nadp-formats.h"
+#include "fma-formats.h"
 #include "nadp-keys.h"
 #include "nadp-utils.h"
 #include "nadp-writer.h"
