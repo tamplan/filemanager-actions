@@ -50,8 +50,8 @@ libna_io_xml_la_SOURCES = \
 	fma-xml-provider.h									\
 	fma-xml-reader.c									\
 	fma-xml-reader.h									\
-	naxml-writer.c										\
-	naxml-writer.h										\
+	fma-xml-writer.c									\
+	fma-xml-writer.h									\
 	$(NULL)
 
 libna_io_xml_la_LIBADD = \

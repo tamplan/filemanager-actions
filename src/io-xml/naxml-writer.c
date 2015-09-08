@@ -46,22 +46,22 @@
 
 #include "fma-xml-formats.h"
 #include "fma-xml-keys.h"
-#include "naxml-writer.h"
+#include "fma-xml-writer.h"
 
 typedef struct ExportFormatFn ExportFormatFn;
 
 /* private class data
  */
-struct _NAXMLWriterClassPrivate {
+struct _FMAXMLWriterClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAXMLWriterPrivate {
+struct _FMAXMLWriterPrivate {
 	gboolean         dispose_has_run;
-	FMAIExporter     *provider;
-	FMAObjectItem    *exported;
+	FMAIExporter    *provider;
+	FMAObjectItem   *exported;
 	GSList          *messages;
 
 	/* positionning these at document level
@@ -85,35 +85,35 @@ struct ExportFormatFn {
 	gchar  *format;
 	gchar  *root_node;
 	gchar  *list_node;
-	void ( *write_list_attribs_fn )( NAXMLWriter *, const FMAObjectItem * );
+	void ( *write_list_attribs_fn )( FMAXMLWriter *, const FMAObjectItem * );
 	gchar  *element_node;
-	void ( *write_data_fn )( NAXMLWriter *, const FMAObjectId *, const FMADataBoxed *, const FMADataDef * );
-	void ( *write_type_fn )( NAXMLWriter *, const FMAObjectItem *, const FMADataDef *, const gchar * );
+	void ( *write_data_fn )( FMAXMLWriter *, const FMAObjectId *, const FMADataBoxed *, const FMADataDef * );
+	void ( *write_type_fn )( FMAXMLWriter *, const FMAObjectItem *, const FMADataDef *, const gchar * );
 };
 
 static GObjectClass *st_parent_class = NULL;
 
 static GType           register_type( void );
-static void            class_init( NAXMLWriterClass *klass );
+static void            class_init( FMAXMLWriterClass *klass );
 static void            instance_init( GTypeInstance *instance, gpointer klass );
 static void            instance_dispose( GObject *object );
 static void            instance_finalize( GObject *object );
 
-static void            write_start_write_type( NAXMLWriter *writer, FMAObjectItem *object, const FMADataGroup *groups );
-static void            write_start_write_version( NAXMLWriter *writer, FMAObjectItem *object, const FMADataGroup *groups );
+static void            write_start_write_type( FMAXMLWriter *writer, FMAObjectItem *object, const FMADataGroup *groups );
+static void            write_start_write_version( FMAXMLWriter *writer, FMAObjectItem *object, const FMADataGroup *groups );
 
-static void            write_data_schema_v1( NAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def );
-static void            write_data_schema_v1_element( NAXMLWriter *writer, const FMADataDef *def );
-static void            write_type_schema_v1( NAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value );
-static void            write_data_schema_v2( NAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def );
-static void            write_data_schema_v2_element( NAXMLWriter *writer, const FMADataDef *def, const gchar *object_id, const gchar *value_str );
-static void            write_type_schema_v2( NAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value );
-static void            write_list_attribs_dump( NAXMLWriter *writer, const FMAObjectItem *object );
-static void            write_data_dump( NAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def );
-static void            write_data_dump_element( NAXMLWriter *writer, const FMADataDef *def, const FMADataBoxed *boxed, const gchar *entry, const gchar *value_str );
-static void            write_type_dump( NAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value );
+static void            write_data_schema_v1( FMAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def );
+static void            write_data_schema_v1_element( FMAXMLWriter *writer, const FMADataDef *def );
+static void            write_type_schema_v1( FMAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value );
+static void            write_data_schema_v2( FMAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def );
+static void            write_data_schema_v2_element( FMAXMLWriter *writer, const FMADataDef *def, const gchar *object_id, const gchar *value_str );
+static void            write_type_schema_v2( FMAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value );
+static void            write_list_attribs_dump( FMAXMLWriter *writer, const FMAObjectItem *object );
+static void            write_data_dump( FMAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def );
+static void            write_data_dump_element( FMAXMLWriter *writer, const FMADataDef *def, const FMADataBoxed *boxed, const gchar *entry, const gchar *value_str );
+static void            write_type_dump( FMAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value );
 
-static xmlDocPtr       build_xml_doc( NAXMLWriter *writer );
+static xmlDocPtr       build_xml_doc( FMAXMLWriter *writer );
 static gchar          *convert_to_gconf_slist( const gchar *str );
 static ExportFormatFn *find_export_format_fn( const gchar *format );
 
@@ -123,7 +123,7 @@ static ExportFormatFn *find_export_format_fn_from_quark( GQuark format );
 
 static gchar          *get_output_fname( const FMAObjectItem *item, const gchar *folder, const gchar *format );
 static void            output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg );
-static guint           writer_to_buffer( NAXMLWriter *writer );
+static guint           writer_to_buffer( FMAXMLWriter *writer );
 
 static ExportFormatFn st_export_format_fn[] = {
 
@@ -155,7 +155,7 @@ static ExportFormatFn st_export_format_fn[] = {
 };
 
 GType
-naxml_writer_get_type( void )
+fma_xml_writer_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -169,32 +169,32 @@ naxml_writer_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "naxml_writer_register_type";
+	static const gchar *thisfn = "fma_xml_writer_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAXMLWriterClass ),
+		sizeof( FMAXMLWriterClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAXMLWriter ),
+		sizeof( FMAXMLWriter ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NAXMLWriter", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMAXMLWriter", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAXMLWriterClass *klass )
+class_init( FMAXMLWriterClass *klass )
 {
-	static const gchar *thisfn = "naxml_writer_class_init";
+	static const gchar *thisfn = "fma_xml_writer_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -205,20 +205,20 @@ class_init( NAXMLWriterClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAXMLWriterClassPrivate, 1 );
+	klass->private = g_new0( FMAXMLWriterClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "naxml_writer_instance_init";
-	NAXMLWriter *self;
+	static const gchar *thisfn = "fma_xml_writer_instance_init";
+	FMAXMLWriter *self;
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
-	g_return_if_fail( NAXML_IS_WRITER( instance ));
-	self = NAXML_WRITER( instance );
+	g_return_if_fail( FMA_IS_XML_WRITER( instance ));
+	self = FMA_XML_WRITER( instance );
 
-	self->private = g_new0( NAXMLWriterPrivate, 1 );
+	self->private = g_new0( FMAXMLWriterPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -226,12 +226,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "naxml_writer_instance_dispose";
-	NAXMLWriter *self;
+	static const gchar *thisfn = "fma_xml_writer_instance_dispose";
+	FMAXMLWriter *self;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NAXML_IS_WRITER( object ));
-	self = NAXML_WRITER( object );
+	g_return_if_fail( FMA_IS_XML_WRITER( object ));
+	self = FMA_XML_WRITER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -247,10 +247,10 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	NAXMLWriter *self;
+	FMAXMLWriter *self;
 
-	g_return_if_fail( NAXML_IS_WRITER( object ));
-	self = NAXML_WRITER( object );
+	g_return_if_fail( FMA_IS_XML_WRITER( object ));
+	self = FMA_XML_WRITER( object );
 
 	/* do not release self->private->buffer as the pointer has been
 	 * returned to the caller
@@ -265,17 +265,17 @@ instance_finalize( GObject *object )
 }
 
 /**
- * naxml_writer_export_to_buffer:
+ * fma_xml_writer_export_to_buffer:
  * @instance: this #FMAIExporter instance.
  * @parms: a #FMAIExporterBufferParmsv2 structure.
  *
  * Export the specified 'item' to a newly allocated buffer.
  */
 guint
-naxml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms )
+fma_xml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms )
 {
-	static const gchar *thisfn = "naxml_writer_export_to_buffer";
-	NAXMLWriter *writer;
+	static const gchar *thisfn = "fma_xml_writer_export_to_buffer";
+	FMAXMLWriter *writer;
 	guint code;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
@@ -287,7 +287,7 @@ naxml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferP
 	}
 
 	if( code == FMA_IEXPORTER_CODE_OK ){
-		writer = NAXML_WRITER( g_object_new( NAXML_WRITER_TYPE, NULL ));
+		writer = FMA_XML_WRITER( g_object_new( FMA_XML_WRITER_TYPE, NULL ));
 
 		writer->private->provider = ( FMAIExporter * ) instance;
 		writer->private->exported = parms->exported;
@@ -321,17 +321,17 @@ naxml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferP
 }
 
 /**
- * naxml_writer_export_to_file:
+ * fma_xml_writer_export_to_file:
  * @instance: this #FMAIExporter instance.
  * @parms: a #FMAIExporterFileParmsv2 structure.
  *
  * Export the specified 'item' to a newly created file.
  */
 guint
-naxml_writer_export_to_file( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms )
+fma_xml_writer_export_to_file( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms )
 {
-	static const gchar *thisfn = "naxml_writer_export_to_file";
-	NAXMLWriter *writer;
+	static const gchar *thisfn = "fma_xml_writer_export_to_file";
+	FMAXMLWriter *writer;
 	gchar *filename;
 	guint code;
 	const gchar *format2;
@@ -345,7 +345,7 @@ naxml_writer_export_to_file( const FMAIExporter *instance, FMAIExporterFileParms
 	}
 
 	if( code == FMA_IEXPORTER_CODE_OK ){
-		writer = NAXML_WRITER( g_object_new( NAXML_WRITER_TYPE, NULL ));
+		writer = FMA_XML_WRITER( g_object_new( FMA_XML_WRITER_TYPE, NULL ));
 
 		writer->private->provider = ( FMAIExporter * ) instance;
 		writer->private->exported = parms->exported;
@@ -392,7 +392,7 @@ naxml_writer_export_to_file( const FMAIExporter *instance, FMAIExporterFileParms
 }
 
 static xmlDocPtr
-build_xml_doc( NAXMLWriter *writer )
+build_xml_doc( FMAXMLWriter *writer )
 {
 	writer->private->doc = xmlNewDoc( BAD_CAST( "1.0" ));
 
@@ -409,17 +409,17 @@ build_xml_doc( NAXMLWriter *writer )
 }
 
 guint
-naxml_writer_write_start( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
+fma_xml_writer_write_start( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
 {
-	NAXMLWriter *writer;
+	FMAXMLWriter *writer;
 	FMADataGroup *groups;
 
-	g_debug( "naxml_writer_write_start: object=%p (%s)", ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_debug( "fma_xml_writer_write_start: object=%p (%s)", ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	if( FMA_IS_OBJECT_ITEM( object )){
 		fma_object_dump( object );
 
-		writer = NAXML_WRITER( writer_data );
+		writer = FMA_XML_WRITER( writer_data );
 
 		writer->private->list_node = xmlNewChild( writer->private->root_node, NULL, BAD_CAST( writer->private->fn_str->list_node ), NULL );
 
@@ -439,7 +439,7 @@ naxml_writer_write_start( const FMAIFactoryProvider *provider, void *writer_data
  * explicitly write the 'Type' node
  */
 static void
-write_start_write_type( NAXMLWriter *writer, FMAObjectItem *object, const FMADataGroup *groups )
+write_start_write_type( FMAXMLWriter *writer, FMAObjectItem *object, const FMADataGroup *groups )
 {
 	const FMADataDef *def;
 	const gchar *svalue;
@@ -453,7 +453,7 @@ write_start_write_type( NAXMLWriter *writer, FMAObjectItem *object, const FMADat
 }
 
 static void
-write_start_write_version( NAXMLWriter *writer, FMAObjectItem *object, const FMADataGroup *groups )
+write_start_write_version( FMAXMLWriter *writer, FMAObjectItem *object, const FMADataGroup *groups )
 {
 	const FMADataDef *def;
 	guint iversion;
@@ -471,13 +471,13 @@ write_start_write_version( NAXMLWriter *writer, FMAObjectItem *object, const FMA
 }
 
 guint
-naxml_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages )
+fma_xml_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages )
 {
-	NAXMLWriter *writer;
+	FMAXMLWriter *writer;
 	const FMADataDef *def;
 
 	/*FMADataDef *def = fma_data_boxed_get_data_def( boxed );
-	g_debug( "naxml_writer_write_data: def=%s", def->name );*/
+	g_debug( "fma_xml_writer_write_data: def=%s", def->name );*/
 
 	def = fma_data_boxed_get_data_def( boxed );
 
@@ -485,7 +485,7 @@ naxml_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 	 */
 	if( !fma_data_boxed_is_default( boxed ) || def->write_if_default ){
 
-		writer = NAXML_WRITER( writer_data );
+		writer = FMA_XML_WRITER( writer_data );
 
 		writer->private->schema_node = NULL;
 		writer->private->locale_node = NULL;
@@ -497,13 +497,13 @@ naxml_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 }
 
 guint
-naxml_writer_write_done( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
+fma_xml_writer_write_done( const FMAIFactoryProvider *provider, void *writer_data, const FMAIFactoryObject *object, GSList **messages  )
 {
 	return( IIO_PROVIDER_CODE_OK );
 }
 
 static void
-write_data_schema_v1( NAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def )
+write_data_schema_v1( FMAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def )
 {
 	write_data_schema_v2( writer, object, boxed, def );
 
@@ -511,7 +511,7 @@ write_data_schema_v1( NAXMLWriter *writer, const FMAObjectId *object, const FMAD
 }
 
 static void
-write_data_schema_v1_element( NAXMLWriter *writer, const FMADataDef *def )
+write_data_schema_v1_element( FMAXMLWriter *writer, const FMADataDef *def )
 {
 	if( !writer->private->locale_node ){
 		writer->private->locale_node = xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LOCALE ), NULL );
@@ -524,7 +524,7 @@ write_data_schema_v1_element( NAXMLWriter *writer, const FMADataDef *def )
 }
 
 static void
-write_type_schema_v1( NAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value )
+write_type_schema_v1( FMAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value )
 {
 	gchar *object_id;
 
@@ -541,7 +541,7 @@ write_type_schema_v1( NAXMLWriter *writer, const FMAObjectItem *object, const FM
  *  <applyto>/apps/filemanager-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
-write_data_schema_v2( NAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def )
+write_data_schema_v2( FMAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def )
 {
 	gchar *object_id;
 	gchar *value_str;
@@ -589,7 +589,7 @@ write_data_schema_v2( NAXMLWriter *writer, const FMAObjectId *object, const FMAD
  *  <applyto>/apps/filemanager-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
-write_data_schema_v2_element( NAXMLWriter *writer, const FMADataDef *def, const gchar *object_id, const gchar *value_str )
+write_data_schema_v2_element( FMAXMLWriter *writer, const FMADataDef *def, const gchar *object_id, const gchar *value_str )
 {
 	xmlChar *content;
 	xmlNodePtr parent_value_node;
@@ -628,7 +628,7 @@ write_data_schema_v2_element( NAXMLWriter *writer, const FMADataDef *def, const 
  *  <applyto>/apps/filemanager-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
-write_type_schema_v2( NAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value )
+write_type_schema_v2( FMAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value )
 {
 	gchar *object_id;
 
@@ -639,7 +639,7 @@ write_type_schema_v2( NAXMLWriter *writer, const FMAObjectItem *object, const FM
 }
 
 static void
-write_list_attribs_dump( NAXMLWriter *writer, const FMAObjectItem *object )
+write_list_attribs_dump( FMAXMLWriter *writer, const FMAObjectItem *object )
 {
 	gchar *id;
 	gchar *path;
@@ -653,7 +653,7 @@ write_list_attribs_dump( NAXMLWriter *writer, const FMAObjectItem *object )
 }
 
 static void
-write_data_dump( NAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def )
+write_data_dump( FMAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def )
 {
 	gchar *entry;
 	gchar *value_str;
@@ -693,7 +693,7 @@ write_data_dump( NAXMLWriter *writer, const FMAObjectId *object, const FMADataBo
 }
 
 static void
-write_data_dump_element( NAXMLWriter *writer, const FMADataDef *def, const FMADataBoxed *boxed, const gchar *entry, const gchar *value_str )
+write_data_dump_element( FMAXMLWriter *writer, const FMADataDef *def, const FMADataBoxed *boxed, const gchar *entry, const gchar *value_str )
 {
 	xmlNodePtr entry_node;
 	xmlNodePtr value_node;
@@ -729,7 +729,7 @@ write_data_dump_element( NAXMLWriter *writer, const FMADataDef *def, const FMADa
 }
 
 static void
-write_type_dump( NAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value )
+write_type_dump( FMAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value )
 {
 	write_data_dump_element( writer, def, NULL, def->gconf_entry, value );
 }
@@ -822,7 +822,7 @@ find_export_format_fn_from_quark( GQuark format )
 static gchar *
 get_output_fname( const FMAObjectItem *item, const gchar *folder, const gchar *format )
 {
-	static const gchar *thisfn = "naxml_writer_get_output_fname";
+	static const gchar *thisfn = "fma_xml_writer_get_output_fname";
 	gchar *item_id;
 	gchar *canonical_fname = NULL;
 	gchar *canonical_ext = NULL;
@@ -887,7 +887,7 @@ get_output_fname( const FMAObjectItem *item, const gchar *folder, const gchar *f
 static void
 output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg )
 {
-	static const gchar *thisfn = "naxml_writer_output_xml_to_file";
+	static const gchar *thisfn = "fma_xml_writer_output_xml_to_file";
 	GFile *file;
 	GFileOutputStream *stream;
 	GError *error = NULL;
@@ -946,7 +946,7 @@ output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg )
 }
 
 static guint
-writer_to_buffer( NAXMLWriter *writer )
+writer_to_buffer( FMAXMLWriter *writer )
 {
 	guint code;
 	xmlDocPtr doc;

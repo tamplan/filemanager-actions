@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAXML_WRITER_H__
-#define __NAXML_WRITER_H__
+#ifndef __IO_XML_FMA_XML_WRITER_H__
+#define __IO_XML_FMA_XML_WRITER_H__
 
 /**
- * SECTION: naxml_writer
- * @short_description: #NAXMLWriter class definition.
- * @include: io-xml/naxml-writer.h
+ * SECTION: fma_xml_writer
+ * @short_description: #FMAXMLWriter class definition.
+ * @include: io-xml/fma-xml-writer.h
  *
  * This class exports FileManager-Actions actions and menus as XML files.
  */
@@ -44,40 +44,40 @@
 
 G_BEGIN_DECLS
 
-#define NAXML_WRITER_TYPE                ( naxml_writer_get_type())
-#define NAXML_WRITER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NAXML_WRITER_TYPE, NAXMLWriter ))
-#define NAXML_WRITER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NAXML_WRITER_TYPE, NAXMLWriterClass ))
-#define NAXML_IS_WRITER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NAXML_WRITER_TYPE ))
-#define NAXML_IS_WRITER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAXML_WRITER_TYPE ))
-#define NAXML_WRITER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NAXML_WRITER_TYPE, NAXMLWriterClass ))
+#define FMA_XML_WRITER_TYPE                ( fma_xml_writer_get_type())
+#define FMA_XML_WRITER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_XML_WRITER_TYPE, FMAXMLWriter ))
+#define FMA_XML_WRITER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_XML_WRITER_TYPE, FMAXMLWriterClass ))
+#define FMA_IS_XML_WRITER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_XML_WRITER_TYPE ))
+#define FMA_IS_XML_WRITER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_XML_WRITER_TYPE ))
+#define FMA_XML_WRITER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_XML_WRITER_TYPE, FMAXMLWriterClass ))
 
-typedef struct _NAXMLWriterPrivate       NAXMLWriterPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject             parent;
-	NAXMLWriterPrivate *private;
-}
-	NAXMLWriter;
-
-typedef struct _NAXMLWriterClassPrivate  NAXMLWriterClassPrivate;
+typedef struct _FMAXMLWriterPrivate        FMAXMLWriterPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass             parent;
-	NAXMLWriterClassPrivate *private;
+	GObject              parent;
+	FMAXMLWriterPrivate *private;
 }
-	NAXMLWriterClass;
+	FMAXMLWriter;
 
-GType  naxml_writer_get_type( void );
+typedef struct _FMAXMLWriterClassPrivate   FMAXMLWriterClassPrivate;
 
-guint  naxml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms );
-guint  naxml_writer_export_to_file  ( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms );
+typedef struct {
+	/*< private >*/
+	GObjectClass              parent;
+	FMAXMLWriterClassPrivate *private;
+}
+	FMAXMLWriterClass;
 
-guint  naxml_writer_write_start( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
-guint  naxml_writer_write_data ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
-guint  naxml_writer_write_done ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
+GType  fma_xml_writer_get_type        ( void );
+
+guint  fma_xml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBufferParmsv2 *parms );
+guint  fma_xml_writer_export_to_file  ( const FMAIExporter *instance, FMAIExporterFileParmsv2 *parms );
+
+guint  fma_xml_writer_write_start     ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
+guint  fma_xml_writer_write_data      ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
+guint  fma_xml_writer_write_done      ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
 
 G_END_DECLS
 
-#endif /* __NAXML_WRITER_H__ */
+#endif /* __IO_XML_FMA_XML_WRITER_H__ */
