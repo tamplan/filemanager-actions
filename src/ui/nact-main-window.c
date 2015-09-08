@@ -651,11 +651,11 @@ instance_finalize( GObject *window )
  * Returns a newly allocated NactMainWindow object.
  */
 NactMainWindow *
-nact_main_window_new( NactApplication *application )
+nact_main_window_new( FMAApplication *application )
 {
 	NactMainWindow *window;
 
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
+	g_return_val_if_fail( FMA_IS_APPLICATION( application ), NULL );
 
 	window = g_object_new( NACT_TYPE_MAIN_WINDOW,
 			"application", application,		/* GtkWindow property */
@@ -800,9 +800,9 @@ setup_monitor_pivot( NactMainWindow *main_window )
 	priv = main_window->private;
 
 	application = gtk_window_get_application( GTK_WINDOW( main_window ));
-	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
+	g_return_if_fail( application && FMA_IS_APPLICATION( application ));
 
-	priv->updater = nact_application_get_updater( NACT_APPLICATION ( application ));
+	priv->updater = fma_application_get_updater( FMA_APPLICATION ( application ));
 
 	priv->pivot_handler_id = g_signal_connect( priv->updater,
 			PIVOT_SIGNAL_ITEMS_CHANGED, G_CALLBACK( on_pivot_items_changed ), main_window );
@@ -1086,8 +1086,8 @@ setup_dialog_title( NactMainWindow *window )
 
 	priv = window->private;
 	application = gtk_window_get_application( GTK_WINDOW( window ));
-	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
-	title = nact_application_get_application_name( NACT_APPLICATION( application ));
+	g_return_if_fail( application && FMA_IS_APPLICATION( application ));
+	title = fma_application_get_application_name( FMA_APPLICATION( application ));
 
 	if( priv->current_item ){
 		label = fma_object_get_label( priv->current_item );
@@ -1266,7 +1266,7 @@ nact_main_window_quit( NactMainWindow *window )
  * this will also stop the emission of the signal (i.e. the first FALSE wins)
  */
 static gboolean
-on_base_quit_requested( NactApplication *application, NactMainWindow *window )
+on_base_quit_requested( FMAApplication *application, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_quit_requested";
 	gboolean willing_to;

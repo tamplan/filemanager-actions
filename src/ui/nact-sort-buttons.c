@@ -206,10 +206,10 @@ nact_sort_buttons_new( NactMainWindow *window )
 
 	g_return_val_if_fail( window && NACT_IS_MAIN_WINDOW( window ), NULL );
 	application = gtk_window_get_application( GTK_WINDOW( window ));
-	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), NULL );
+	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), NULL );
 
 	obj = g_object_new( NACT_TYPE_SORT_BUTTONS, NULL );
-	obj->private->updater = nact_application_get_updater( NACT_APPLICATION( application ));
+	obj->private->updater = fma_application_get_updater( FMA_APPLICATION( application ));
 
 	initialize_buttons( obj, window );
 

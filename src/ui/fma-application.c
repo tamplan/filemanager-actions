@@ -45,7 +45,7 @@
 
 /* private instance data
  */
-struct _NactApplicationPrivate {
+struct _FMAApplicationPrivate {
 	gboolean        dispose_has_run;
 
 	const gchar    *application_name;	/* new: st_application_name localized version */
@@ -76,20 +76,20 @@ static GOptionEntry st_option_entries[] = {
 static GtkApplicationClass *st_parent_class = NULL;
 
 static GType    register_type( void );
-static void     class_init( NactApplicationClass *klass );
+static void     class_init( FMAApplicationClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
-static void     init_i18n( NactApplication *application );
-static gboolean init_gtk_args( NactApplication *application );
-static gboolean manage_options( NactApplication *application );
+static void     init_i18n( FMAApplication *application );
+static gboolean init_gtk_args( FMAApplication *application );
+static gboolean manage_options( FMAApplication *application );
 static void     application_startup( GApplication *application );
 static void     application_activate( GApplication *application );
 static void     application_open( GApplication *application, GFile **files, gint n_files, const gchar *hint );
 static void     isession_iface_init( BaseISessionInterface *iface, void *user_data );
 
 GType
-nact_application_get_type( void )
+fma_application_get_type( void )
 {
 	static GType application_type = 0;
 
@@ -103,17 +103,17 @@ nact_application_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_application_register_type";
+	static const gchar *thisfn = "fma_application_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactApplicationClass ),
+		sizeof( FMAApplicationClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactApplication ),
+		sizeof( FMAApplication ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -126,7 +126,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( GTK_TYPE_APPLICATION, "NactApplication", &info, 0 );
+	type = g_type_register_static( GTK_TYPE_APPLICATION, "FMAApplication", &info, 0 );
 
 	g_type_add_interface_static( type, BASE_TYPE_ISESSION, &isession_iface_info );
 
@@ -134,9 +134,9 @@ register_type( void )
 }
 
 static void
-class_init( NactApplicationClass *klass )
+class_init( FMAApplicationClass *klass )
 {
-	static const gchar *thisfn = "nact_application_class_init";
+	static const gchar *thisfn = "fma_application_class_init";
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -153,17 +153,17 @@ class_init( NactApplicationClass *klass )
 static void
 instance_init( GTypeInstance *application, gpointer klass )
 {
-	static const gchar *thisfn = "nact_application_instance_init";
-	NactApplication *self;
+	static const gchar *thisfn = "fma_application_instance_init";
+	FMAApplication *self;
 
-	g_return_if_fail( NACT_IS_APPLICATION( application ));
+	g_return_if_fail( FMA_IS_APPLICATION( application ));
 
 	g_debug( "%s: application=%p (%s), klass=%p",
 			thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ), ( void * ) klass );
 
-	self = NACT_APPLICATION( application );
+	self = FMA_APPLICATION( application );
 
-	self->private = g_new0( NactApplicationPrivate, 1 );
+	self->private = g_new0( FMAApplicationPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -171,12 +171,12 @@ instance_init( GTypeInstance *application, gpointer klass )
 static void
 instance_dispose( GObject *application )
 {
-	static const gchar *thisfn = "nact_application_instance_dispose";
-	NactApplicationPrivate *priv;
+	static const gchar *thisfn = "fma_application_instance_dispose";
+	FMAApplicationPrivate *priv;
 
-	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
+	g_return_if_fail( application && FMA_IS_APPLICATION( application ));
 
-	priv = NACT_APPLICATION( application )->private;
+	priv = FMA_APPLICATION( application )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -196,14 +196,14 @@ instance_dispose( GObject *application )
 static void
 instance_finalize( GObject *application )
 {
-	static const gchar *thisfn = "nact_application_instance_finalize";
-	NactApplication *self;
+	static const gchar *thisfn = "fma_application_instance_finalize";
+	FMAApplication *self;
 
-	g_return_if_fail( NACT_IS_APPLICATION( application ));
+	g_return_if_fail( FMA_IS_APPLICATION( application ));
 
 	g_debug( "%s: application=%p (%s)", thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ));
 
-	self = NACT_APPLICATION( application );
+	self = FMA_APPLICATION( application );
 
 	g_free( self->private );
 
@@ -212,17 +212,17 @@ instance_finalize( GObject *application )
 }
 
 /**
- * nact_application_new:
+ * fma_application_new:
  *
- * Returns: a newly allocated NactApplication object.
+ * Returns: a newly allocated FMAApplication object.
  */
-NactApplication *
-nact_application_new( void )
+FMAApplication *
+fma_application_new( void )
 {
-	NactApplication *application;
-	NactApplicationPrivate *priv;
+	FMAApplication *application;
+	FMAApplicationPrivate *priv;
 
-	application = g_object_new( NACT_TYPE_APPLICATION,
+	application = g_object_new( FMA_TYPE_APPLICATION,
 			"application-id", st_application_id,
 			NULL );
 
@@ -235,7 +235,7 @@ nact_application_new( void )
 }
 
 /**
- * nact_application_run_with_args:
+ * fma_application_run_with_args:
  * @application: this #GtkApplication -derived instance.
  * @argc:
  * @argv:
@@ -252,17 +252,17 @@ nact_application_new( void )
  * seldomly needed to override this in a derived class.
  */
 int
-nact_application_run_with_args( NactApplication *application, int argc, GStrv argv )
+fma_application_run_with_args( FMAApplication *application, int argc, GStrv argv )
 {
-	static const gchar *thisfn = "nact_application_run_with_args";
-	NactApplicationPrivate *priv;
+	static const gchar *thisfn = "fma_application_run_with_args";
+	FMAApplicationPrivate *priv;
 
 	g_debug( "%s: application=%p (%s), argc=%d",
 			thisfn,
 			( void * ) application, G_OBJECT_TYPE_NAME( application ),
 			argc );
 
-	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), NACT_EXIT_CODE_PROGRAM );
+	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), NACT_EXIT_CODE_PROGRAM );
 
 	priv = application->private;
 
@@ -295,9 +295,9 @@ nact_application_run_with_args( NactApplication *application, int argc, GStrv ar
  * The program exit code will be taken from @code.
  */
 static void
-init_i18n( NactApplication *application )
+init_i18n( FMAApplication *application )
 {
-	static const gchar *thisfn = "nact_application_init_i18n";
+	static const gchar *thisfn = "fma_application_init_i18n";
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
@@ -319,10 +319,10 @@ init_i18n( NactApplication *application )
  * "eat" its own arguments, and only have to handle our owns...
  */
 static gboolean
-init_gtk_args( NactApplication *application )
+init_gtk_args( FMAApplication *application )
 {
-	static const gchar *thisfn = "nact_application_init_gtk_args";
-	NactApplicationPrivate *priv;
+	static const gchar *thisfn = "fma_application_init_gtk_args";
+	FMAApplicationPrivate *priv;
 	gboolean ret;
 	char *parameter_string;
 	GError *error;
@@ -352,9 +352,9 @@ init_gtk_args( NactApplication *application )
 }
 
 static gboolean
-manage_options( NactApplication *application )
+manage_options( FMAApplication *application )
 {
-	static const gchar *thisfn = "nact_application_manage_options";
+	static const gchar *thisfn = "fma_application_manage_options";
 	gboolean ret;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
@@ -404,13 +404,13 @@ manage_options( NactApplication *application )
 static void
 application_startup( GApplication *application )
 {
-	static const gchar *thisfn = "nact_application_startup";
-	NactApplicationPrivate *priv;
+	static const gchar *thisfn = "fma_application_startup";
+	FMAApplicationPrivate *priv;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
-	priv = NACT_APPLICATION( application )->private;
+	g_return_if_fail( application && FMA_IS_APPLICATION( application ));
+	priv = FMA_APPLICATION( application )->private;
 
 	/* chain up to the parent class */
 	if( G_APPLICATION_CLASS( st_parent_class )->startup ){
@@ -424,7 +424,7 @@ application_startup( GApplication *application )
 	fma_pivot_set_loadable( FMA_PIVOT( priv->updater ), PIVOT_LOAD_ALL );
 
 	/* define the application menu */
-	nact_menu_app( NACT_APPLICATION( application ));
+	nact_menu_app( FMA_APPLICATION( application ));
 }
 
 /*
@@ -455,20 +455,20 @@ application_startup( GApplication *application )
 static void
 application_activate( GApplication *application )
 {
-	static const gchar *thisfn = "nact_application_activate";
+	static const gchar *thisfn = "fma_application_activate";
 	GList *windows_list;
 	NactMainWindow *main_window;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
+	g_return_if_fail( application && FMA_IS_APPLICATION( application ));
 
 	windows_list = gtk_application_get_windows( GTK_APPLICATION( application ));
 
 	/* if the application is unique, have only one main window */
 	if( !st_non_unique_opt ){
 		if( !g_list_length( windows_list )){
-			main_window = nact_main_window_new( NACT_APPLICATION( application ));
+			main_window = nact_main_window_new( FMA_APPLICATION( application ));
 			g_debug( "%s: main window instanciated at %p", thisfn, main_window );
 		} else {
 			main_window = ( NactMainWindow * ) windows_list->data;
@@ -476,7 +476,7 @@ application_activate( GApplication *application )
 
 	/* have as many main windows we want */
 	} else {
-		main_window = nact_main_window_new( NACT_APPLICATION( application ));
+		main_window = nact_main_window_new( FMA_APPLICATION( application ));
 	}
 
 	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
@@ -503,26 +503,26 @@ application_activate( GApplication *application )
 static void
 application_open( GApplication *application, GFile **files, gint n_files, const gchar *hint )
 {
-	static const gchar *thisfn = "nact_application_open";
+	static const gchar *thisfn = "fma_application_open";
 
 	g_warning( "%s: application=%p, n_files=%d, hint=%s: unexpected run here",
 			thisfn, ( void * ) application, n_files, hint );
 }
 
 /**
- * nact_application_get_application_name:
- * @application: this #NactApplication instance.
+ * fma_application_get_application_name:
+ * @application: this #FMAApplication instance.
  *
  * Returns: the application name as a newly allocated string which should
  * be be g_free() by the caller.
  */
 gchar *
-nact_application_get_application_name( const NactApplication *application )
+fma_application_get_application_name( const FMAApplication *application )
 {
-	NactApplicationPrivate *priv;
+	FMAApplicationPrivate *priv;
 	gchar *name = NULL;
 
-	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), NULL );
+	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), NULL );
 
 	priv = application->private;
 
@@ -535,21 +535,21 @@ nact_application_get_application_name( const NactApplication *application )
 }
 
 /**
- * nact_application_get_updater:
- * @application: this NactApplication object.
+ * fma_application_get_updater:
+ * @application: this FMAApplication object.
  *
  * Returns a pointer on the #FMAUpdater object.
  *
- * The returned pointer is owned by the #NactApplication object.
+ * The returned pointer is owned by the #FMAApplication object.
  * It should not be g_free() not g_object_unref() by the caller.
  */
 FMAUpdater *
-nact_application_get_updater( const NactApplication *application )
+fma_application_get_updater( const FMAApplication *application )
 {
-	NactApplicationPrivate *priv;
+	FMAApplicationPrivate *priv;
 	FMAUpdater *updater = NULL;
 
-	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), NULL );
+	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), NULL );
 
 	priv = application->private;
 
@@ -562,9 +562,9 @@ nact_application_get_updater( const NactApplication *application )
 }
 
 gboolean
-nact_application_is_willing_to_quit( const NactApplication *application )
+fma_application_is_willing_to_quit( const FMAApplication *application )
 {
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), TRUE );
+	g_return_val_if_fail( FMA_IS_APPLICATION( application ), TRUE );
 	g_return_val_if_fail( BASE_IS_ISESSION( application ), TRUE );
 
 	return( base_isession_is_willing_to_quit( BASE_ISESSION( application )));
@@ -573,7 +573,7 @@ nact_application_is_willing_to_quit( const NactApplication *application )
 static void
 isession_iface_init( BaseISessionInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_application_isession_iface_init";
+	static const gchar *thisfn = "fma_application_isession_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }

@@ -258,7 +258,7 @@ ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container
 {
 	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_get_options";
 	GList *options;
-	NactApplication *application;
+	FMAApplication *application;
 	FMAUpdater *updater;
 
 	g_return_val_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ), NULL );
@@ -266,8 +266,8 @@ ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container
 	options = NULL;
 
 	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-		updater = nact_application_get_updater( application );
+		application = FMA_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+		updater = fma_application_get_updater( application );
 		options = fma_exporter_get_formats( FMA_PIVOT( updater ));
 
 	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){

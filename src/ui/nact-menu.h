@@ -106,7 +106,7 @@ enum {
 	TOOLBAR_HELP_ID,
 };
 
-void       nact_menu_app        ( NactApplication *application );
+void       nact_menu_app        ( FMAApplication *application );
 
 void       nact_menu_win        ( NactMainWindow *main_window );
 

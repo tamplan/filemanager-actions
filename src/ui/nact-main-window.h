@@ -71,7 +71,7 @@ enum {
 #define MAIN_PROP_EDITABLE					"main-editable"
 #define MAIN_PROP_REASON					"main-reason"
 
-NactMainWindow  *nact_main_window_new             ( NactApplication *application );
+NactMainWindow  *nact_main_window_new             ( FMAApplication *application );
 
 NactClipboard   *nact_main_window_get_clipboard   ( const NactMainWindow *window );
 

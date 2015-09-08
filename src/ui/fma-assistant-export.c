@@ -200,15 +200,15 @@ static GList *
 ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	NactAssistantExport *window;
-	NactApplication *application;
+	FMAApplication *application;
 	FMAUpdater *updater;
 	GList *formats;
 
 	g_return_val_if_fail( NACT_IS_ASSISTANT_EXPORT( instance ), NULL );
 	window = NACT_ASSISTANT_EXPORT( instance );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
+	application = FMA_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = fma_application_get_updater( application );
 	formats = fma_exporter_get_formats( FMA_PIVOT( updater ));
 
 	return( formats );
@@ -754,7 +754,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	NactAssistantExport *window;
 	GList *ia;
 	ExportStruct *str;
-	NactApplication *application;
+	FMAApplication *application;
 	FMAUpdater *updater;
 	gboolean first;
 
@@ -764,8 +764,8 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	window = NACT_ASSISTANT_EXPORT( wnd );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
+	application = FMA_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = fma_application_get_updater( application );
 	first = TRUE;
 
 	g_return_if_fail( window->private->uri && strlen( window->private->uri ));

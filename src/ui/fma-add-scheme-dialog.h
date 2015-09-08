@@ -55,14 +55,14 @@ typedef struct _FMAAddSchemeDialogPrivate         FMAAddSchemeDialogPrivate;
 
 typedef struct {
 	/*< private >*/
-	BaseDialog                  parent;
+	BaseDialog                 parent;
 	FMAAddSchemeDialogPrivate *private;
 }
 	FMAAddSchemeDialog;
 
 typedef struct {
 	/*< private >*/
-	BaseDialogClass             parent;
+	BaseDialogClass            parent;
 }
 	FMAAddSchemeDialogClass;
 

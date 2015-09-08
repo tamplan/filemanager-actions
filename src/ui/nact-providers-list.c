@@ -198,7 +198,7 @@ nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 {
 	static const gchar *thisfn = "nact_providers_list_init_view";
 	ProvidersListData *data;
-	NactApplication *application;
+	FMAApplication *application;
 	FMAUpdater *updater;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
@@ -210,8 +210,8 @@ nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 
 	data = get_providers_list_data( treeview );
 	data->window = window;
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
+	application = FMA_APPLICATION( base_window_get_application( window ));
+	updater = fma_application_get_updater( application );
 	data->preferences_locked = fma_updater_are_preferences_locked( updater );
 
 	init_view_setup_providers( treeview, window );
@@ -224,7 +224,7 @@ static void
 init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_providers_list_init_view_setup_providers";
-	NactApplication *application;
+	FMAApplication *application;
 	FMAUpdater *updater;
 	GtkListStore *model;
 	const GList *providers;
@@ -237,8 +237,8 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 
 	model = GTK_LIST_STORE( gtk_tree_view_get_model( treeview ));
 
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
+	application = FMA_APPLICATION( base_window_get_application( window ));
+	updater = fma_application_get_updater( application );
 	providers = fma_io_provider_get_io_providers_list( FMA_PIVOT( updater ));
 
 	for( iter = providers ; iter ; iter = iter->next ){

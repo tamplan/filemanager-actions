@@ -156,15 +156,15 @@ static GList *
 ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container )
 {
 	NactExportAsk *window;
-	NactApplication *application;
+	FMAApplication *application;
 	FMAUpdater *updater;
 	GList *formats;
 
 	g_return_val_if_fail( NACT_IS_EXPORT_ASK( instance ), NULL );
 	window = NACT_EXPORT_ASK( instance );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
+	application = FMA_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = fma_application_get_updater( application );
 	formats = fma_exporter_get_formats( FMA_PIVOT( updater ));
 
 	return( formats );

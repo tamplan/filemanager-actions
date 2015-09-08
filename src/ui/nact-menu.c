@@ -191,7 +191,7 @@ static void       on_update_sensitivities( NactMainWindow *window, void *empty )
 
 /**
  * nact_menu_app:
- * @application: the #NactApplication.
+ * @application: the #FMAApplication.
  *
  * Define the application menu and attach it to the application.
  *
@@ -200,7 +200,7 @@ static void       on_update_sensitivities( NactMainWindow *window, void *empty )
  * Quit, etc.)
  */
 void
-nact_menu_app( NactApplication *application )
+nact_menu_app( FMAApplication *application )
 {
 	static const gchar *thisfn = "nact_menu_app";
 	GError *error;
@@ -246,7 +246,7 @@ on_app_about( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	GtkWindow *window;
 
-	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
+	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
 	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
@@ -260,7 +260,7 @@ on_app_help( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 	static const gchar *thisfn = "nact_menu_on_app_help";
 	GError *error;
 
-	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
+	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
 	error = NULL;
 	gtk_show_uri( NULL, "ghelp:filemanager-actions-config-tool", GDK_CURRENT_TIME, &error );
@@ -275,7 +275,7 @@ on_app_preferences( GSimpleAction *action, GVariant *parameter, gpointer user_da
 {
 	GtkWindow *window;
 
-	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
+	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
 	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
@@ -288,7 +288,7 @@ on_app_quit( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	GtkWindow *window;
 
-	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
+	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
 	g_return_if_fail( window && NACT_IS_MAIN_WINDOW( window ));
@@ -322,8 +322,8 @@ nact_menu_win( NactMainWindow *main_window )
 	/* initialize the private data
 	 */
 	application = gtk_window_get_application( GTK_WINDOW( main_window ));
-	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
-	sdata->updater = nact_application_get_updater( NACT_APPLICATION( application ));
+	g_return_if_fail( application && FMA_IS_APPLICATION( application ));
+	sdata->updater = fma_application_get_updater( FMA_APPLICATION( application ));
 	sdata->is_level_zero_writable = fma_updater_is_level_zero_writable( sdata->updater );
 	sdata->has_writable_providers =
 			( fma_io_provider_find_writable_io_provider( FMA_PIVOT( sdata->updater )) != NULL );

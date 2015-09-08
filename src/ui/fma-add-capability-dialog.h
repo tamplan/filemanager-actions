@@ -51,20 +51,20 @@ G_BEGIN_DECLS
 #define FMA_IS_ADD_CAPABILITY_DIALOG_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_ADD_CAPABILITY_DIALOG ))
 #define FMA_ADD_CAPABILITY_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_ADD_CAPABILITY_DIALOG, FMAAddCapabilityDialogClass ))
 
-typedef struct _FMAAddCapabilityDialogPrivate        FMAAddCapabilityDialogPrivate;
+typedef struct _FMAAddCapabilityDialogPrivate         FMAAddCapabilityDialogPrivate;
 
 typedef struct {
 	/*< private >*/
-	BaseDialog                      parent;
+	BaseDialog                     parent;
 	FMAAddCapabilityDialogPrivate *private;
 }
 	FMAAddCapabilityDialog;
 
-typedef struct _FMAAddCapabilityDialogClassPrivate   FMAAddCapabilityDialogClassPrivate;
+typedef struct _FMAAddCapabilityDialogClassPrivate    FMAAddCapabilityDialogClassPrivate;
 
 typedef struct {
 	/*< private >*/
-	BaseDialogClass                      parent;
+	BaseDialogClass                     parent;
 	FMAAddCapabilityDialogClassPrivate *private;
 }
 	FMAAddCapabilityDialogClass;

@@ -27,21 +27,21 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_APPLICATION_H__
-#define __UI_NACT_APPLICATION_H__
+#ifndef __UI_FMA_APPLICATION_H__
+#define __UI_FMA_APPLICATION_H__
 
 /**
- * SECTION: nact_application
- * @short_description: #NactApplication class definition.
+ * SECTION: fma_application
+ * @short_description: #FMAApplication class definition.
  * @include: nact/nact-application.h
  *
  * This is the main class for filemanager-actions-config-tool program.
  *
- * The #NactApplication object is instanciated from main() function,
- * then later #g_object_unref() after nact_application_run() has
+ * The #FMAApplication object is instanciated from main() function,
+ * then later #g_object_unref() after fma_application_run() has
  * returned.
  *
- * NactApplication is a non-unique application e.g. the user is able
+ * FMAApplication is a non-unique application e.g. the user is able
  * to run several instance of the applications, all pointing to the
  * same actions set, potentially being able to simultaneously have
  * different views or to simultaneously act on different subsets.
@@ -53,27 +53,27 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_APPLICATION                ( nact_application_get_type())
-#define NACT_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_APPLICATION, NactApplication ))
-#define NACT_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_APPLICATION, NactApplicationClass ))
-#define NACT_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_APPLICATION ))
-#define NACT_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_APPLICATION ))
-#define NACT_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_APPLICATION, NactApplicationClass ))
+#define FMA_TYPE_APPLICATION                ( fma_application_get_type())
+#define FMA_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_APPLICATION, FMAApplication ))
+#define FMA_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_APPLICATION, FMAApplicationClass ))
+#define FMA_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_APPLICATION ))
+#define FMA_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_APPLICATION ))
+#define FMA_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_APPLICATION, FMAApplicationClass ))
 
-typedef struct _NactApplicationPrivate       NactApplicationPrivate;
+typedef struct _FMAApplicationPrivate       FMAApplicationPrivate;
 
 typedef struct {
 	/*< private >*/
 	GtkApplicationClass     parent;
 }
-	NactApplicationClass;
+	FMAApplicationClass;
 
 typedef struct {
 	/*< private >*/
 	GtkApplication          parent;
-	NactApplicationPrivate *private;
+	FMAApplicationPrivate *private;
 }
-	NactApplication;
+	FMAApplication;
 
 /**
  * NactExitCode:
@@ -93,20 +93,20 @@ typedef enum {
 }
 	NactExitCode;
 
-GType            nact_application_get_type            ( void );
+GType            fma_application_get_type            ( void );
 
-NactApplication *nact_application_new                 ( void );
+FMAApplication *fma_application_new                 ( void );
 
-int              nact_application_run_with_args       ( NactApplication *application,
+int              fma_application_run_with_args       ( FMAApplication *application,
 																int argc,
 																GStrv argv );
 
-gchar           *nact_application_get_application_name( const NactApplication *application );
+gchar           *fma_application_get_application_name( const FMAApplication *application );
 
-FMAUpdater       *nact_application_get_updater         ( const NactApplication *application );
+FMAUpdater       *fma_application_get_updater         ( const FMAApplication *application );
 
-gboolean         nact_application_is_willing_to_quit  ( const NactApplication *application );
+gboolean         fma_application_is_willing_to_quit  ( const FMAApplication *application );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_APPLICATION_H__ */
+#endif /* __UI_FMA_APPLICATION_H__ */

@@ -53,7 +53,7 @@ static GLogFunc st_default_log_func = NULL;
 int
 main( int argc, char *argv[] )
 {
-	NactApplication *appli;
+	FMAApplication *appli;
 	int ret;
 
 	set_log_handler();
@@ -66,8 +66,8 @@ main( int argc, char *argv[] )
 
 	/* create and run the application
 	 */
-	appli = nact_application_new();
-	ret = nact_application_run_with_args( appli, argc, argv );
+	appli = fma_application_new();
+	ret = fma_application_run_with_args( appli, argc, argv );
 	g_object_unref( appli );
 
 	return( ret );

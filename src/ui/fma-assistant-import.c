@@ -648,7 +648,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	GList *import_results, *it;
 	GList *insertable_items, *overriden_items;
 	FMAImporterResult *result;
-	NactApplication *application;
+	FMAApplication *application;
 	FMAUpdater *updater;
 	NactTreeView *items_view;
 
@@ -657,8 +657,8 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	window = NACT_ASSISTANT_IMPORT( wnd );
 	g_object_get( G_OBJECT( window ), BASE_PROP_MAIN_WINDOW, &main_window, NULL );
-	application = NACT_APPLICATION( base_window_get_application( main_window ));
-	updater = nact_application_get_updater( application );
+	application = FMA_APPLICATION( base_window_get_application( main_window ));
+	updater = fma_application_get_updater( application );
 
 	memset( &importer_parms, '\0', sizeof( FMAImporterParms ));
 	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));

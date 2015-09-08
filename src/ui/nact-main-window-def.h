@@ -50,10 +50,10 @@
  *
  * [main]
  *  set_log_handler()
- *  nact_application_new()
- *  nact_application_run_with_args()
+ *  fma_application_new()
+ *  fma_application_run_with_args()
  *  |
- *  +-> [NactApplication]
+ *  +-> [FMAApplication]
  *  |    on_startup()
  *  |      |
  *  |      +-> fma_updater_new()

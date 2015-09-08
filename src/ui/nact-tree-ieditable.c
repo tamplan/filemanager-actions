@@ -191,8 +191,8 @@ nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treevi
 	ied->model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 
 	application = gtk_window_get_application( GTK_WINDOW( main_window ));
-	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
-	ied->updater = nact_application_get_updater( NACT_APPLICATION( application ));
+	g_return_if_fail( application && FMA_IS_APPLICATION( application ));
+	ied->updater = fma_application_get_updater( FMA_APPLICATION( application ));
 
 	/* inline label edition with F2 */
 	g_signal_connect( treeview, "key-press-event", G_CALLBACK( on_key_pressed_event ), instance );

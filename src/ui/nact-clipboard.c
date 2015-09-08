@@ -567,7 +567,7 @@ export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *des
 {
 	static const gchar *thisfn = "nact_clipboard_export_row_object";
 	GList *subitems, *isub;
-	NactApplication *application;
+	FMAApplication *application;
 	FMAUpdater *updater;
 	FMAObjectItem *item;
 	gchar *item_label;
@@ -604,9 +604,9 @@ export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *des
 		item = FMA_OBJECT_ITEM( fma_object_get_parent( object ));
 	}
 
-	application = NACT_APPLICATION(
+	application = FMA_APPLICATION(
 			gtk_window_get_application( GTK_WINDOW( clipboard->private->window )));
-	updater = nact_application_get_updater( application );
+	updater = fma_application_get_updater( application );
 
 	index = g_list_index( *exported, ( gconstpointer ) item );
 	if( index == -1 ){

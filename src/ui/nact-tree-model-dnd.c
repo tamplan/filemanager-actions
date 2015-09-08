@@ -130,7 +130,7 @@ static void          drop_inside_move_dest( NactTreeModel *model, GList *rows, G
 static gboolean      drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
 static FMAObjectItem *is_dropped_already_exists( const FMAObjectItem *importing, const NactMainWindow *window );
 static char         *get_xds_atom_value( GdkDragContext *context );
-static gboolean      is_parent_accept_new_children( NactApplication *application, NactMainWindow *window, FMAObjectItem *parent );
+static gboolean      is_parent_accept_new_children( FMAApplication *application, NactMainWindow *window, FMAObjectItem *parent );
 static guint         target_atom_to_id( GdkAtom atom );
 
 /**
@@ -563,7 +563,7 @@ static gboolean
 drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
 {
 	static const gchar *thisfn = "nact_tree_model_dnd_inside_drag_and_drop";
-	NactApplication *application;
+	FMAApplication *application;
 	FMAUpdater *updater;
 	NactMainWindow *main_window;
 	FMAObjectItem *parent;
@@ -579,8 +579,8 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	gboolean relabel;
 	NactTreeView *items_view;
 
-	application = NACT_APPLICATION( gtk_window_get_application( GTK_WINDOW( model->private->window )));
-	updater = nact_application_get_updater( application );
+	application = FMA_APPLICATION( gtk_window_get_application( GTK_WINDOW( model->private->window )));
+	updater = fma_application_get_updater( application );
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( model->private->window ), FALSE );
 	main_window = NACT_MAIN_WINDOW( model->private->window );
@@ -674,7 +674,7 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **paren
 	drop_ok = FALSE;
 	parent_dest = NULL;
 	application = gtk_window_get_application( GTK_WINDOW( priv->window ));
-	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), FALSE );
+	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), FALSE );
 
 	g_return_val_if_fail( priv->window && NACT_IS_MAIN_WINDOW( priv->window ), FALSE );
 	main_window = NACT_MAIN_WINDOW( priv->window );
@@ -709,7 +709,7 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, FMAObjectItem **paren
 
 	if( drop_ok ){
 		drop_ok = is_parent_accept_new_children(
-				NACT_APPLICATION( application ), main_window, parent_dest );
+				FMA_APPLICATION( application ), main_window, parent_dest );
 	}
 
 	if( drop_ok && parent ){
@@ -893,8 +893,8 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	}
 
 	application = gtk_window_get_application( GTK_WINDOW( priv->window ));
-	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), FALSE );
-	updater = nact_application_get_updater( NACT_APPLICATION( application ));
+	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), FALSE );
+	updater = fma_application_get_updater( FMA_APPLICATION( application ));
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( priv->window ), FALSE );
 	main_window = NACT_MAIN_WINDOW( priv->window );
@@ -1150,14 +1150,14 @@ get_xds_atom_value( GdkDragContext *context )
  * to register the new child
  */
 static gboolean
-is_parent_accept_new_children( NactApplication *application, NactMainWindow *window, FMAObjectItem *parent )
+is_parent_accept_new_children( FMAApplication *application, NactMainWindow *window, FMAObjectItem *parent )
 {
 	gboolean accept_ok;
 	FMAUpdater *updater;
 	NactStatusbar *bar;
 
 	accept_ok = FALSE;
-	updater = nact_application_get_updater( application );
+	updater = fma_application_get_updater( application );
 	bar = nact_main_window_get_statusbar( window );
 
 	/* inserting as a level zero item
