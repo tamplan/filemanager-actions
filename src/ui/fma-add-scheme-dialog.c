@@ -43,7 +43,7 @@
 
 /* private instance data
  */
-struct _NactAddSchemeDialogPrivate {
+struct _FMAAddSchemeDialogPrivate {
 	gboolean dispose_has_run;
 	GSList  *already_used;
 	gchar   *scheme;
@@ -56,21 +56,21 @@ static const gchar  *st_wsp_name       = IPREFS_SCHEME_ADD_SCHEME_WSP;
 static GObjectClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
-static void     class_init( NactAddSchemeDialogClass *klass );
+static void     class_init( FMAAddSchemeDialogClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_constructed( GObject *dialog );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static void     on_base_initialize_gtk( NactAddSchemeDialog *editor, GtkDialog *toplevel, gpointer user_data );
-static void     on_base_initialize_window( NactAddSchemeDialog *editor, gpointer user_data );
-static void     on_base_show_widgets( NactAddSchemeDialog *editor, gpointer user_data );
-static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddSchemeDialog *dialog );
-static void     on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *editor );
-static void     on_ok_clicked( GtkButton *button, NactAddSchemeDialog *editor );
-static void     on_selection_changed( const gchar *scheme, gboolean used, NactAddSchemeDialog *dialog );
-static void     try_for_send_ok( NactAddSchemeDialog *dialog );
-static void     send_ok( NactAddSchemeDialog *dialog );
+static void     on_base_initialize_gtk( FMAAddSchemeDialog *editor, GtkDialog *toplevel, gpointer user_data );
+static void     on_base_initialize_window( FMAAddSchemeDialog *editor, gpointer user_data );
+static void     on_base_show_widgets( FMAAddSchemeDialog *editor, gpointer user_data );
+static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, FMAAddSchemeDialog *dialog );
+static void     on_cancel_clicked( GtkButton *button, FMAAddSchemeDialog *editor );
+static void     on_ok_clicked( GtkButton *button, FMAAddSchemeDialog *editor );
+static void     on_selection_changed( const gchar *scheme, gboolean used, FMAAddSchemeDialog *dialog );
+static void     try_for_send_ok( FMAAddSchemeDialog *dialog );
+static void     send_ok( FMAAddSchemeDialog *dialog );
 static void     on_dialog_ok( BaseDialog *dialog );
 
 GType
@@ -92,26 +92,26 @@ register_type( void )
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactAddSchemeDialogClass ),
+		sizeof( FMAAddSchemeDialogClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactAddSchemeDialog ),
+		sizeof( FMAAddSchemeDialog ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_DIALOG, "NactAddSchemeDialog", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_DIALOG, "FMAAddSchemeDialog", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactAddSchemeDialogClass *klass )
+class_init( FMAAddSchemeDialogClass *klass )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_class_init";
 	GObjectClass *object_class;
@@ -134,7 +134,7 @@ static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_instance_init";
-	NactAddSchemeDialog *self;
+	FMAAddSchemeDialog *self;
 
 	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( instance ));
 
@@ -142,7 +142,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self = FMA_ADD_SCHEME_DIALOG( instance );
 
-	self->private = g_new0( NactAddSchemeDialogPrivate, 1 );
+	self->private = g_new0( FMAAddSchemeDialogPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->scheme = NULL;
@@ -152,7 +152,7 @@ static void
 instance_constructed( GObject *dialog )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_instance_constructed";
-	NactAddSchemeDialogPrivate *priv;
+	FMAAddSchemeDialogPrivate *priv;
 
 	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( dialog ));
 
@@ -191,7 +191,7 @@ static void
 instance_dispose( GObject *dialog )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_instance_dispose";
-	NactAddSchemeDialog *self;
+	FMAAddSchemeDialog *self;
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
@@ -223,7 +223,7 @@ static void
 instance_finalize( GObject *dialog )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_instance_finalize";
-	NactAddSchemeDialog *self;
+	FMAAddSchemeDialog *self;
 
 	g_return_if_fail( FMA_IS_ADD_SCHEME_DIALOG( dialog ));
 
@@ -257,7 +257,7 @@ gchar *
 fma_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_run";
-	NactAddSchemeDialog *dialog;
+	FMAAddSchemeDialog *dialog;
 	gchar *scheme;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
@@ -284,7 +284,7 @@ fma_add_scheme_dialog_run( NactMainWindow *parent, GSList *schemes )
 }
 
 static void
-on_base_initialize_gtk( NactAddSchemeDialog *dialog, GtkDialog *toplevel, gpointer user_data )
+on_base_initialize_gtk( FMAAddSchemeDialog *dialog, GtkDialog *toplevel, gpointer user_data )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_on_base_initialize_gtk";
 	GtkTreeView *listview;
@@ -302,7 +302,7 @@ on_base_initialize_gtk( NactAddSchemeDialog *dialog, GtkDialog *toplevel, gpoint
 }
 
 static void
-on_base_initialize_window( NactAddSchemeDialog *dialog, gpointer user_data )
+on_base_initialize_window( FMAAddSchemeDialog *dialog, gpointer user_data )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_on_base_initialize_window";
 	GtkTreeView *listview;
@@ -342,7 +342,7 @@ on_base_initialize_window( NactAddSchemeDialog *dialog, gpointer user_data )
 }
 
 static void
-on_base_show_widgets( NactAddSchemeDialog *dialog, gpointer user_data )
+on_base_show_widgets( FMAAddSchemeDialog *dialog, gpointer user_data )
 {
 	static const gchar *thisfn = "fma_add_scheme_dialog_on_base_show_widgets";
 
@@ -357,7 +357,7 @@ on_base_show_widgets( NactAddSchemeDialog *dialog, gpointer user_data )
 }
 
 static gboolean
-on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddSchemeDialog *dialog )
+on_button_press_event( GtkWidget *widget, GdkEventButton *event, FMAAddSchemeDialog *dialog )
 {
 	gboolean stop = FALSE;
 
@@ -371,7 +371,7 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddSchemeDi
 }
 
 static void
-on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *dialog )
+on_cancel_clicked( GtkButton *button, FMAAddSchemeDialog *dialog )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( dialog ));
 
@@ -379,7 +379,7 @@ on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *dialog )
 }
 
 static void
-on_ok_clicked( GtkButton *button, NactAddSchemeDialog *dialog )
+on_ok_clicked( GtkButton *button, FMAAddSchemeDialog *dialog )
 {
 	send_ok( dialog );
 }
@@ -389,7 +389,7 @@ on_ok_clicked( GtkButton *button, NactAddSchemeDialog *dialog )
  * this let us validate/invalidate the OK button
  */
 static void
-on_selection_changed( const gchar *scheme, gboolean used, NactAddSchemeDialog *dialog )
+on_selection_changed( const gchar *scheme, gboolean used, FMAAddSchemeDialog *dialog )
 {
 	GtkWidget *button;
 
@@ -398,7 +398,7 @@ on_selection_changed( const gchar *scheme, gboolean used, NactAddSchemeDialog *d
 }
 
 static void
-try_for_send_ok( NactAddSchemeDialog *dialog )
+try_for_send_ok( FMAAddSchemeDialog *dialog )
 {
 	GtkWidget *button;
 	gboolean is_sensitive;
@@ -413,7 +413,7 @@ try_for_send_ok( NactAddSchemeDialog *dialog )
 }
 
 static void
-send_ok( NactAddSchemeDialog *dialog )
+send_ok( FMAAddSchemeDialog *dialog )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( dialog ));
 
@@ -423,6 +423,6 @@ send_ok( NactAddSchemeDialog *dialog )
 static void
 on_dialog_ok( BaseDialog *dialog )
 {
-	NactAddSchemeDialog *editor = FMA_ADD_SCHEME_DIALOG( dialog );
+	FMAAddSchemeDialog *editor = FMA_ADD_SCHEME_DIALOG( dialog );
 	editor->private->scheme = nact_schemes_list_get_current_scheme( BASE_WINDOW( dialog ));
 }

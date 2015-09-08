@@ -32,7 +32,7 @@
 
 /**
  * SECTION: fma_add_scheme_dialog
- * @short_description: #NactAddSchemeDialog class definition.
+ * @short_description: #FMAAddSchemeDialog class definition.
  * @include: nact/nact-add-scheme-dialog.h
  *
  * The dialog let the user pick a scheme from the default list
@@ -45,26 +45,26 @@
 G_BEGIN_DECLS
 
 #define FMA_TYPE_ADD_SCHEME_DIALOG                ( fma_add_scheme_dialog_get_type())
-#define FMA_ADD_SCHEME_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_ADD_SCHEME_DIALOG, NactAddSchemeDialog ))
-#define FMA_ADD_SCHEME_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_ADD_SCHEME_DIALOG, NactAddSchemeDialogClass ))
+#define FMA_ADD_SCHEME_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_ADD_SCHEME_DIALOG, FMAAddSchemeDialog ))
+#define FMA_ADD_SCHEME_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_ADD_SCHEME_DIALOG, FMAAddSchemeDialogClass ))
 #define FMA_IS_ADD_SCHEME_DIALOG( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_ADD_SCHEME_DIALOG ))
 #define FMA_IS_ADD_SCHEME_DIALOG_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_ADD_SCHEME_DIALOG ))
-#define FMA_ADD_SCHEME_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_ADD_SCHEME_DIALOG, NactAddSchemeDialogClass ))
+#define FMA_ADD_SCHEME_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_ADD_SCHEME_DIALOG, FMAAddSchemeDialogClass ))
 
-typedef struct _NactAddSchemeDialogPrivate         NactAddSchemeDialogPrivate;
+typedef struct _FMAAddSchemeDialogPrivate         FMAAddSchemeDialogPrivate;
 
 typedef struct {
 	/*< private >*/
 	BaseDialog                  parent;
-	NactAddSchemeDialogPrivate *private;
+	FMAAddSchemeDialogPrivate *private;
 }
-	NactAddSchemeDialog;
+	FMAAddSchemeDialog;
 
 typedef struct {
 	/*< private >*/
 	BaseDialogClass             parent;
 }
-	NactAddSchemeDialogClass;
+	FMAAddSchemeDialogClass;
 
 GType  fma_add_scheme_dialog_get_type( void );
 

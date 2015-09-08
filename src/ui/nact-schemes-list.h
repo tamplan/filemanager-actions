@@ -59,7 +59,7 @@
  *  b) to select a scheme from the default list
  *     schemes already used by the current #FMAIContext are marked as used
  *     edition of the current list is not available
- *     In this mode, widget is embedded in a dedicated #NactAddSchemeDialog
+ *     In this mode, widget is embedded in a dedicated #FMAAddSchemeDialog
  *     dialog box
  *     OK returns the current selection (only available if current scheme
  *     is not already used)
