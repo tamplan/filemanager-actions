@@ -138,8 +138,8 @@ fma_config_tool_SOURCES = \
 	fma-tree-model.h									\
 	fma-tree-model-priv.h								\
 	fma-tree-model-dnd.c								\
-	fma-tree-view.c									\
-	fma-tree-view.h									\
+	fma-tree-view.c										\
+	fma-tree-view.h										\
 	$(BUILT_SOURCES)									\
 	$(NULL)
 
@@ -181,7 +181,7 @@ ui_data_DATA = \
 
 @INTLTOOL_DESKTOP_RULE@
 
-applications_in_files = nact.desktop.in
+applications_in_files = fma-ui.desktop.in
 
 applications_files = $(applications_in_files:.desktop.in=.desktop)
 
@@ -197,6 +197,4 @@ CLEANFILES = \
 EXTRA_DIST = \
 	$(applications_in_files)							\
 	$(ui_data_DATA)										\
-	base-marshal.def									\
-	nact-marshal.def									\
 	$(NULL)
