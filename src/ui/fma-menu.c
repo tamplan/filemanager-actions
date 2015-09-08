@@ -45,7 +45,7 @@
 #include "fma-menu-maintainer.h"
 #include "fma-menu-tools.h"
 */
-#include "nact-preferences-editor.h"
+#include "fma-preferences-editor.h"
 #include "nact-tree-view.h"
 
 static const gchar *st_uixml_actions    = PKGUIDIR "/fma-ui.actions";
@@ -280,7 +280,7 @@ on_app_preferences( GSimpleAction *action, GVariant *parameter, gpointer user_da
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
 	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
 
-	nact_preferences_editor_run( FMA_MAIN_WINDOW( window ));
+	fma_preferences_editor_run( FMA_MAIN_WINDOW( window ));
 }
 
 static void

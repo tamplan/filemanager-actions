@@ -122,8 +122,8 @@ fma_config_tool_SOURCES = \
 	fma-menu-file.h										\
 	fma-menu-view.c										\
 	fma-menu-view.h										\
-	nact-preferences-editor.c							\
-	nact-preferences-editor.h							\
+	fma-preferences-editor.c							\
+	fma-preferences-editor.h							\
 	nact-providers-list.c								\
 	nact-providers-list.h								\
 	nact-schemes-list.c									\
@@ -162,7 +162,7 @@ ui_files = \
 	fma-icon-chooser.ui									\
 	nact-legend.ui										\
 	fma-main-window.ui									\
-	nact-preferences.ui									\
+	fma-preferences.ui									\
 	nact-toolbar.ui										\
 	$(NULL)
 

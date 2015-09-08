@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_PREFERENCES_EDITOR_H__
-#define __UI_NACT_PREFERENCES_EDITOR_H__
+#ifndef __UI_FMA_PREFERENCES_EDITOR_H__
+#define __UI_FMA_PREFERENCES_EDITOR_H__
 
 /**
- * SECTION: nact_preferences_editor
- * @short_description: #NactPreferencesEditor class definition.
- * @include: ui/nact-preferences-editor.h
+ * SECTION: fma_preferences_editor
+ * @short_description: #FMAPreferencesEditor class definition.
+ * @include: ui/fma-preferences-editor.h
  *
  * This class is derived from NactWindow.
  * It encapsulates the "PreferencesDialog" widget dialog.
@@ -44,32 +44,32 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_PREFERENCES_EDITOR                ( nact_preferences_editor_get_type())
-#define NACT_PREFERENCES_EDITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_PREFERENCES_EDITOR, NactPreferencesEditor ))
-#define NACT_PREFERENCES_EDITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_PREFERENCES_EDITOR, NactPreferencesEditorClass ))
-#define NACT_IS_PREFERENCES_EDITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_PREFERENCES_EDITOR ))
-#define NACT_IS_PREFERENCES_EDITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_PREFERENCES_EDITOR ))
-#define NACT_PREFERENCES_EDITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_PREFERENCES_EDITOR, NactPreferencesEditorClass ))
+#define FMA_TYPE_PREFERENCES_EDITOR                ( fma_preferences_editor_get_type())
+#define FMA_PREFERENCES_EDITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_PREFERENCES_EDITOR, FMAPreferencesEditor ))
+#define FMA_PREFERENCES_EDITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_PREFERENCES_EDITOR, FMAPreferencesEditorClass ))
+#define FMA_IS_PREFERENCES_EDITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_PREFERENCES_EDITOR ))
+#define FMA_IS_PREFERENCES_EDITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_PREFERENCES_EDITOR ))
+#define FMA_PREFERENCES_EDITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_PREFERENCES_EDITOR, FMAPreferencesEditorClass ))
 
-typedef struct _NactPreferencesEditorPrivate        NactPreferencesEditorPrivate;
-
-typedef struct {
-	/*< private >*/
-	BaseDialog                    parent;
-	NactPreferencesEditorPrivate *private;
-}
-	NactPreferencesEditor;
+typedef struct _FMAPreferencesEditorPrivate        FMAPreferencesEditorPrivate;
 
 typedef struct {
 	/*< private >*/
-	BaseDialogClass               parent;
+	BaseDialog                   parent;
+	FMAPreferencesEditorPrivate *private;
 }
-	NactPreferencesEditorClass;
+	FMAPreferencesEditor;
 
-GType nact_preferences_editor_get_type( void );
+typedef struct {
+	/*< private >*/
+	BaseDialogClass              parent;
+}
+	FMAPreferencesEditorClass;
 
-void  nact_preferences_editor_run     ( FMAMainWindow *main_window );
+GType fma_preferences_editor_get_type( void );
+
+void  fma_preferences_editor_run     ( FMAMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_PREFERENCES_EDITOR_H__ */
+#endif /* __UI_FMA_PREFERENCES_EDITOR_H__ */

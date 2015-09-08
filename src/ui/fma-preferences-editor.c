@@ -51,17 +51,17 @@
 #include "fma-main-window.h"
 #include "nact-schemes-list.h"
 #include "nact-providers-list.h"
-#include "nact-preferences-editor.h"
+#include "fma-preferences-editor.h"
 
 /* private class data
  */
-struct _NactPreferencesEditorClassPrivate {
+struct _FMAPreferencesEditorClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NactPreferencesEditorPrivate {
+struct _FMAPreferencesEditorPrivate {
 	gboolean dispose_has_run;
 	gboolean preferences_locked;
 
@@ -118,61 +118,61 @@ enum {
  *       and prefers rely on the runtime detection */
 static const FMADesktopEnv st_no_desktop     = { "None", N_( "Rely on runtime detection" ) };
 
-#define                   st_xmlui_filename   PKGUIDIR "/nact-preferences.ui"
-static const gchar       *st_toplevel_name  = "PreferencesDialog";
-static const gchar       *st_wsp_name       = IPREFS_PREFERENCES_WSP;
+#define                    st_xmlui_filename   PKGUIDIR "/fma-preferences.ui"
+static const gchar        *st_toplevel_name  = "PreferencesDialog";
+static const gchar        *st_wsp_name       = IPREFS_PREFERENCES_WSP;
 
-static GObjectClass      *st_parent_class   = NULL;
-static guint              st_last_tab       = 0;
+static GObjectClass       *st_parent_class   = NULL;
+static guint               st_last_tab       = 0;
 
-static GType      register_type( void );
-static void       class_init( NactPreferencesEditorClass *klass );
-static void       ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
-static GList     *ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container );
-static void       ioptions_list_free_options( const FMAIOptionsList *instance, GtkWidget *container, GList *options );
+static GType       register_type( void );
+static void        class_init( FMAPreferencesEditorClass *klass );
+static void        ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
+static GList      *ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container );
+static void        ioptions_list_free_options( const FMAIOptionsList *instance, GtkWidget *container, GList *options );
 static FMAIOption *ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container );
-static void       instance_init( GTypeInstance *instance, gpointer klass );
-static void       instance_constructed( GObject *dialog );
-static void       instance_dispose( GObject *dialog );
-static void       instance_finalize( GObject *dialog );
+static void        instance_init( GTypeInstance *instance, gpointer klass );
+static void        instance_constructed( GObject *dialog );
+static void        instance_dispose( GObject *dialog );
+static void        instance_finalize( GObject *dialog );
 
-static void       on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel, gpointer user_data );
-static void       on_base_initialize_window( NactPreferencesEditor *editor, gpointer user_data );
-static void       on_base_show_widgets( NactPreferencesEditor *editor, gpointer user_data );
-static void       order_mode_setup( NactPreferencesEditor *editor );
-static void       order_mode_on_alpha_asc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void       order_mode_on_alpha_desc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void       order_mode_on_manual_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void       order_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *togglebutton, GCallback cb, guint order_mode );
-static void       root_menu_setup( NactPreferencesEditor *editor );
-static void       root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void       about_item_setup( NactPreferencesEditor *editor );
-static void       about_item_set_sensitive( NactPreferencesEditor *editor );
-static void       about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void       terminal_pattern_setup( NactPreferencesEditor *editor );
-static void       terminal_pattern_on_changed( GtkEntry *entry, NactPreferencesEditor *editor );
-static void       desktop_create_model( NactPreferencesEditor *editor );
-static void       desktop_setup( NactPreferencesEditor *editor );
-static void       desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor );
-static void       relabel_menu_setup( NactPreferencesEditor *editor );
-static void       relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void       relabel_action_setup( NactPreferencesEditor *editor );
-static void       relabel_action_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void       relabel_profile_setup( NactPreferencesEditor *editor );
-static void       relabel_profile_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void       esc_quit_setup( NactPreferencesEditor *editor );
-static void       esc_quit_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void       esc_confirm_setup( NactPreferencesEditor *editor );
-static void       esc_confirm_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void       auto_save_setup( NactPreferencesEditor *editor );
-static void       auto_save_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void       auto_save_period_on_change_value( GtkSpinButton *spinbutton, NactPreferencesEditor *editor );
-static void       on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
-static void       on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
-static void       on_dialog_ok( BaseDialog *dialog );
+static void        on_base_initialize_gtk( FMAPreferencesEditor *editor, GtkDialog *toplevel, gpointer user_data );
+static void        on_base_initialize_window( FMAPreferencesEditor *editor, gpointer user_data );
+static void        on_base_show_widgets( FMAPreferencesEditor *editor, gpointer user_data );
+static void        order_mode_setup( FMAPreferencesEditor *editor );
+static void        order_mode_on_alpha_asc_toggled( GtkToggleButton *togglebutton, FMAPreferencesEditor *editor );
+static void        order_mode_on_alpha_desc_toggled( GtkToggleButton *togglebutton, FMAPreferencesEditor *editor );
+static void        order_mode_on_manual_toggled( GtkToggleButton *togglebutton, FMAPreferencesEditor *editor );
+static void        order_mode_on_toggled( FMAPreferencesEditor *editor, GtkToggleButton *togglebutton, GCallback cb, guint order_mode );
+static void        root_menu_setup( FMAPreferencesEditor *editor );
+static void        root_menu_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor );
+static void        about_item_setup( FMAPreferencesEditor *editor );
+static void        about_item_set_sensitive( FMAPreferencesEditor *editor );
+static void        about_item_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor );
+static void        terminal_pattern_setup( FMAPreferencesEditor *editor );
+static void        terminal_pattern_on_changed( GtkEntry *entry, FMAPreferencesEditor *editor );
+static void        desktop_create_model( FMAPreferencesEditor *editor );
+static void        desktop_setup( FMAPreferencesEditor *editor );
+static void        desktop_on_changed( GtkComboBox *combo, FMAPreferencesEditor *editor );
+static void        relabel_menu_setup( FMAPreferencesEditor *editor );
+static void        relabel_menu_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor );
+static void        relabel_action_setup( FMAPreferencesEditor *editor );
+static void        relabel_action_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor );
+static void        relabel_profile_setup( FMAPreferencesEditor *editor );
+static void        relabel_profile_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor );
+static void        esc_quit_setup( FMAPreferencesEditor *editor );
+static void        esc_quit_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor );
+static void        esc_confirm_setup( FMAPreferencesEditor *editor );
+static void        esc_confirm_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor );
+static void        auto_save_setup( FMAPreferencesEditor *editor );
+static void        auto_save_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor );
+static void        auto_save_period_on_change_value( GtkSpinButton *spinbutton, FMAPreferencesEditor *editor );
+static void        on_cancel_clicked( GtkButton *button, FMAPreferencesEditor *editor );
+static void        on_ok_clicked( GtkButton *button, FMAPreferencesEditor *editor );
+static void        on_dialog_ok( BaseDialog *dialog );
 
 GType
-nact_preferences_editor_get_type( void )
+fma_preferences_editor_get_type( void )
 {
 	static GType dialog_type = 0;
 
@@ -186,17 +186,17 @@ nact_preferences_editor_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_preferences_editor_register_type";
+	static const gchar *thisfn = "fma_preferences_editor_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactPreferencesEditorClass ),
+		sizeof( FMAPreferencesEditorClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactPreferencesEditor ),
+		sizeof( FMAPreferencesEditor ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -209,7 +209,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_DIALOG, "NactPreferencesEditor", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_DIALOG, "FMAPreferencesEditor", &info, 0 );
 
 	g_type_add_interface_static( type, FMA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
@@ -217,9 +217,9 @@ register_type( void )
 }
 
 static void
-class_init( NactPreferencesEditorClass *klass )
+class_init( FMAPreferencesEditorClass *klass )
 {
-	static const gchar *thisfn = "nact_preferences_editor_class_init";
+	static const gchar *thisfn = "fma_preferences_editor_class_init";
 	GObjectClass *object_class;
 	BaseDialogClass *dialog_class;
 
@@ -256,12 +256,12 @@ ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 static GList *
 ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container )
 {
-	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_get_options";
+	static const gchar *thisfn = "fma_preferences_editor_ioptions_list_get_options";
 	GList *options;
 	FMAApplication *application;
 	FMAUpdater *updater;
 
-	g_return_val_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ), NULL );
+	g_return_val_if_fail( FMA_IS_PREFERENCES_EDITOR( instance ), NULL );
 
 	options = NULL;
 
@@ -285,9 +285,9 @@ ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container
 static void
 ioptions_list_free_options( const FMAIOptionsList *instance, GtkWidget *container, GList *options )
 {
-	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_free_options";
+	static const gchar *thisfn = "fma_preferences_editor_ioptions_list_free_options";
 
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ));
+	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( instance ));
 
 	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
 		fma_exporter_free_formats( options );
@@ -305,10 +305,10 @@ ioptions_list_free_options( const FMAIOptionsList *instance, GtkWidget *containe
 static FMAIOption *
 ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container )
 {
-	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_get_ask_option";
+	static const gchar *thisfn = "fma_preferences_editor_ioptions_list_get_ask_option";
 	FMAIOption *option;
 
-	g_return_val_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ), NULL );
+	g_return_val_if_fail( FMA_IS_PREFERENCES_EDITOR( instance ), NULL );
 
 	option = NULL;
 
@@ -330,16 +330,16 @@ ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *contai
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_preferences_editor_instance_init";
-	NactPreferencesEditor *self;
+	static const gchar *thisfn = "fma_preferences_editor_instance_init";
+	FMAPreferencesEditor *self;
 
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ));
+	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( instance ));
 
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
-	self = NACT_PREFERENCES_EDITOR( instance );
+	self = FMA_PREFERENCES_EDITOR( instance );
 
-	self->private = g_new0( NactPreferencesEditorPrivate, 1 );
+	self->private = g_new0( FMAPreferencesEditorPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -347,12 +347,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_preferences_editor_instance_constructed";
-	NactPreferencesEditorPrivate *priv;
+	static const gchar *thisfn = "fma_preferences_editor_instance_constructed";
+	FMAPreferencesEditorPrivate *priv;
 
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
+	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( dialog ));
 
-	priv = NACT_PREFERENCES_EDITOR( dialog )->private;
+	priv = FMA_PREFERENCES_EDITOR( dialog )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -386,12 +386,12 @@ instance_constructed( GObject *dialog )
 static void
 instance_dispose( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_preferences_editor_instance_dispose";
-	NactPreferencesEditor *self;
+	static const gchar *thisfn = "fma_preferences_editor_instance_dispose";
+	FMAPreferencesEditor *self;
 
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
+	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( dialog ));
 
-	self = NACT_PREFERENCES_EDITOR( dialog );
+	self = FMA_PREFERENCES_EDITOR( dialog );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
@@ -411,14 +411,14 @@ instance_dispose( GObject *dialog )
 static void
 instance_finalize( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_preferences_editor_instance_finalize";
-	NactPreferencesEditor *self;
+	static const gchar *thisfn = "fma_preferences_editor_instance_finalize";
+	FMAPreferencesEditor *self;
 
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
+	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( dialog ));
 
 	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
-	self = NACT_PREFERENCES_EDITOR( dialog );
+	self = FMA_PREFERENCES_EDITOR( dialog );
 
 	g_free( self->private );
 
@@ -429,16 +429,16 @@ instance_finalize( GObject *dialog )
 }
 
 /**
- * nact_preferences_editor_run:
+ * fma_preferences_editor_run:
  * @parent: the FMAMainWindow main window
  *
  * Initializes and runs the dialog.
  */
 void
-nact_preferences_editor_run( FMAMainWindow *parent )
+fma_preferences_editor_run( FMAMainWindow *parent )
 {
-	static const gchar *thisfn = "nact_preferences_editor_run";
-	NactPreferencesEditor *editor;
+	static const gchar *thisfn = "fma_preferences_editor_run";
+	FMAPreferencesEditor *editor;
 	gboolean are_locked, mandatory;
 	GtkNotebook *notebook;
 
@@ -446,7 +446,7 @@ nact_preferences_editor_run( FMAMainWindow *parent )
 
 	g_debug( "%s: parent=%p (%s)", thisfn, ( void * ) parent, G_OBJECT_TYPE_NAME( parent ));
 
-	editor = g_object_new( NACT_TYPE_PREFERENCES_EDITOR,
+	editor = g_object_new( FMA_TYPE_PREFERENCES_EDITOR,
 					BASE_PROP_MAIN_WINDOW,     parent,
 					BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
 					/*
@@ -473,13 +473,13 @@ nact_preferences_editor_run( FMAMainWindow *parent )
 }
 
 static void
-on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel, gpointer user_data )
+on_base_initialize_gtk( FMAPreferencesEditor *editor, GtkDialog *toplevel, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_gtk";
+	static const gchar *thisfn = "fma_preferences_editor_on_base_initialize_gtk";
 	GtkWidget *container;
 	GtkTreeView *listview;
 
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
+	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( editor ));
 
 	if( !editor->private->dispose_has_run ){
 
@@ -507,16 +507,16 @@ on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel, gpoi
 }
 
 static void
-on_base_initialize_window( NactPreferencesEditor *editor, gpointer user_data )
+on_base_initialize_window( FMAPreferencesEditor *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_window";
+	static const gchar *thisfn = "fma_preferences_editor_on_base_initialize_window";
 	GtkWidget *container;
 	GtkTreeView *listview;
 	GtkWidget *ok_button;
 	gchar *export_format;
 	gchar *import_mode;
 
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
+	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( editor ));
 
 	if( !editor->private->dispose_has_run ){
 
@@ -589,12 +589,12 @@ on_base_initialize_window( NactPreferencesEditor *editor, gpointer user_data )
 }
 
 static void
-on_base_show_widgets( NactPreferencesEditor *editor, gpointer user_data )
+on_base_show_widgets( FMAPreferencesEditor *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_preferences_editor_on_base_show_widgets";
+	static const gchar *thisfn = "fma_preferences_editor_on_base_show_widgets";
 	GtkNotebook *notebook;
 
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
+	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( editor ));
 
 	if( !editor->private->dispose_has_run ){
 
@@ -618,7 +618,7 @@ on_base_show_widgets( NactPreferencesEditor *editor, gpointer user_data )
  * then the radio group is sensitive, but not editable.
  */
 static void
-order_mode_setup( NactPreferencesEditor *editor )
+order_mode_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *alpha_asc_button, *alpha_desc_button, *manual_button;
@@ -659,25 +659,25 @@ order_mode_setup( NactPreferencesEditor *editor )
 }
 
 static void
-order_mode_on_alpha_asc_toggled( GtkToggleButton *toggle_button, NactPreferencesEditor *editor )
+order_mode_on_alpha_asc_toggled( GtkToggleButton *toggle_button, FMAPreferencesEditor *editor )
 {
 	order_mode_on_toggled( editor, toggle_button, G_CALLBACK( order_mode_on_alpha_asc_toggled ), IPREFS_ORDER_ALPHA_ASCENDING );
 }
 
 static void
-order_mode_on_alpha_desc_toggled( GtkToggleButton *toggle_button, NactPreferencesEditor *editor )
+order_mode_on_alpha_desc_toggled( GtkToggleButton *toggle_button, FMAPreferencesEditor *editor )
 {
 	order_mode_on_toggled( editor, toggle_button, G_CALLBACK( order_mode_on_alpha_desc_toggled ), IPREFS_ORDER_ALPHA_DESCENDING );
 }
 
 static void
-order_mode_on_manual_toggled( GtkToggleButton *toggle_button, NactPreferencesEditor *editor )
+order_mode_on_manual_toggled( GtkToggleButton *toggle_button, FMAPreferencesEditor *editor )
 {
 	order_mode_on_toggled( editor, toggle_button, G_CALLBACK( order_mode_on_manual_toggled ), IPREFS_ORDER_MANUAL );
 }
 
 static void
-order_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *toggle_button, GCallback cb, guint order_mode )
+order_mode_on_toggled( FMAPreferencesEditor *editor, GtkToggleButton *toggle_button, GCallback cb, guint order_mode )
 {
 	gboolean editable;
 	gboolean active;
@@ -698,7 +698,7 @@ order_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *toggle_bu
  * create a root menu
  */
 static void
-root_menu_setup( NactPreferencesEditor *editor )
+root_menu_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -711,7 +711,7 @@ root_menu_setup( NactPreferencesEditor *editor )
 }
 
 static void
-root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+root_menu_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -732,7 +732,7 @@ root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
  * The About item is only added if the FileManager-Actions root menu exists
  */
 static void
-about_item_setup( NactPreferencesEditor *editor )
+about_item_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -747,7 +747,7 @@ about_item_setup( NactPreferencesEditor *editor )
 }
 
 static void
-about_item_set_sensitive( NactPreferencesEditor *editor )
+about_item_set_sensitive( FMAPreferencesEditor *editor )
 {
 	GtkWidget *add_about;
 
@@ -756,7 +756,7 @@ about_item_set_sensitive( NactPreferencesEditor *editor )
 }
 
 static void
-about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+about_item_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -776,7 +776,7 @@ about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
  * should have a 'COMMAND' keyword inside
  */
 static void
-terminal_pattern_setup( NactPreferencesEditor *editor )
+terminal_pattern_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *entry;
@@ -796,7 +796,7 @@ terminal_pattern_setup( NactPreferencesEditor *editor )
 }
 
 static void
-terminal_pattern_on_changed( GtkEntry *entry, NactPreferencesEditor *editor )
+terminal_pattern_on_changed( GtkEntry *entry, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 	gchar *example_label;
@@ -828,7 +828,7 @@ terminal_pattern_on_changed( GtkEntry *entry, NactPreferencesEditor *editor )
  * for OnlyShowIn and NotshowIn contexts
  */
 static void
-desktop_create_model( NactPreferencesEditor *editor )
+desktop_create_model( FMAPreferencesEditor *editor )
 {
 	GtkWidget *combo;
 	GtkListStore *model;
@@ -876,7 +876,7 @@ desktop_create_model( NactPreferencesEditor *editor )
 }
 
 static void
-desktop_setup( NactPreferencesEditor *editor )
+desktop_setup( FMAPreferencesEditor *editor )
 {
 	GtkWidget *combo;
 	const FMADesktopEnv *desktops;
@@ -922,7 +922,7 @@ desktop_setup( NactPreferencesEditor *editor )
 }
 
 static void
-desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor )
+desktop_on_changed( GtkComboBox *combo, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 	gint active;
@@ -946,7 +946,7 @@ desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor )
  * relabel copied/paster menu ?
  */
 static void
-relabel_menu_setup( NactPreferencesEditor *editor )
+relabel_menu_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -959,7 +959,7 @@ relabel_menu_setup( NactPreferencesEditor *editor )
 }
 
 static void
-relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+relabel_menu_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -977,7 +977,7 @@ relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor 
  * add an about item
  */
 static void
-relabel_action_setup( NactPreferencesEditor *editor )
+relabel_action_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -990,7 +990,7 @@ relabel_action_setup( NactPreferencesEditor *editor )
 }
 
 static void
-relabel_action_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+relabel_action_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -1008,7 +1008,7 @@ relabel_action_on_toggled( GtkToggleButton *button, NactPreferencesEditor *edito
  * add an about item
  */
 static void
-relabel_profile_setup( NactPreferencesEditor *editor )
+relabel_profile_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -1021,7 +1021,7 @@ relabel_profile_setup( NactPreferencesEditor *editor )
 }
 
 static void
-relabel_profile_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+relabel_profile_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -1039,7 +1039,7 @@ relabel_profile_on_toggled( GtkToggleButton *button, NactPreferencesEditor *edit
  * whether Esc key quits the assistants
  */
 static void
-esc_quit_setup( NactPreferencesEditor *editor )
+esc_quit_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -1052,7 +1052,7 @@ esc_quit_setup( NactPreferencesEditor *editor )
 }
 
 static void
-esc_quit_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+esc_quit_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *confirm_button;
@@ -1074,7 +1074,7 @@ esc_quit_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
  * on 'Esc' key
  */
 static void
-esc_confirm_setup( NactPreferencesEditor *editor )
+esc_confirm_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -1087,7 +1087,7 @@ esc_confirm_setup( NactPreferencesEditor *editor )
 }
 
 static void
-esc_confirm_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+esc_confirm_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 
@@ -1105,13 +1105,13 @@ esc_confirm_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
  * add an about item
  */
 static void
-auto_save_setup( NactPreferencesEditor *editor )
+auto_save_setup( FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *spin_button;
 	GtkAdjustment *adjustment;
 
-	g_debug( "nact_preferences_editor_auto_save_setup" );
+	g_debug( "fma_preferences_editor_auto_save_setup" );
 	editor->private->auto_save = fma_settings_get_boolean( IPREFS_MAIN_SAVE_AUTO, NULL, &editor->private->auto_save_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->auto_save_mandatory;
 
@@ -1132,7 +1132,7 @@ auto_save_setup( NactPreferencesEditor *editor )
 }
 
 static void
-auto_save_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+auto_save_on_toggled( GtkToggleButton *button, FMAPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *widget;
@@ -1160,21 +1160,21 @@ auto_save_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 }
 
 static void
-auto_save_period_on_change_value( GtkSpinButton *spinbutton, NactPreferencesEditor *editor )
+auto_save_period_on_change_value( GtkSpinButton *spinbutton, FMAPreferencesEditor *editor )
 {
-	g_debug( "nact_preferences_editor_auto_save_period_on_change_value" );
+	g_debug( "fma_preferences_editor_auto_save_period_on_change_value" );
 	editor->private->auto_save_period = gtk_spin_button_get_value_as_int( spinbutton );
 }
 
 static void
-on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
+on_cancel_clicked( GtkButton *button, FMAPreferencesEditor *editor )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static void
-on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor )
+on_ok_clicked( GtkButton *button, FMAPreferencesEditor *editor )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
@@ -1183,15 +1183,15 @@ on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor )
 static void
 on_dialog_ok( BaseDialog *dialog )
 {
-	NactPreferencesEditor *editor;
+	FMAPreferencesEditor *editor;
 	GtkWidget *container;
 	FMAIOption *option;
 	gchar *import_mode;
 	gchar *export_format;
 
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
+	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( dialog ));
 
-	editor = NACT_PREFERENCES_EDITOR( dialog );
+	editor = FMA_PREFERENCES_EDITOR( dialog );
 
 	if( !editor->private->preferences_locked ){
 
@@ -1256,7 +1256,7 @@ on_dialog_ok( BaseDialog *dialog )
 		if( !editor->private->export_format_mandatory ){
 			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 			option = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), container );
-			g_debug( "nact_preferences_editor_on_dialog_ok: option=%p", ( void * ) option );
+			g_debug( "fma_preferences_editor_on_dialog_ok: option=%p", ( void * ) option );
 			g_return_if_fail( FMA_IS_EXPORT_FORMAT( option ));
 			export_format = fma_ioption_get_id( option );
 			fma_settings_set_string( IPREFS_EXPORT_PREFERRED_FORMAT, export_format );
