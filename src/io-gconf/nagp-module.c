@@ -33,7 +33,7 @@
 
 #include <api/fma-extension.h>
 
-#include "nagp-gconf-provider.h"
+#include "fma-gconf-provider.h"
 
 /* the count of GType types provided by this extension
  * each new GType type must
@@ -54,7 +54,7 @@ fma_extension_startup( GTypeModule *module )
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
-	nagp_gconf_provider_register_type( module );
+	fma_gconf_provider_register_type( module );
 
 	return( TRUE );
 }
@@ -90,7 +90,7 @@ fma_extension_list_types( const GType **types )
 
 	g_debug( "%s: types=%p", thisfn, ( void * ) types );
 
-	types_list[0] = NAGP_GCONF_PROVIDER_TYPE;
+	types_list[0] = FMA_GCONF_PROVIDER_TYPE;
 
 	types_list[NAGP_TYPES_COUNT] = 0;
 	*types = types_list;

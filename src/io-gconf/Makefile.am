@@ -37,8 +37,8 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libna_io_gconf_la_SOURCES = \
-	nagp-gconf-provider.c								\
-	nagp-gconf-provider.h								\
+	fma-gconf-provider.c								\
+	fma-gconf-provider.h								\
 	nagp-keys.h											\
 	nagp-module.c										\
 	nagp-reader.c										\

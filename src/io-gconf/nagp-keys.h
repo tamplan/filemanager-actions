@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_GCONF_PROVIDER_KEYS_H__
-#define __NAGP_GCONF_PROVIDER_KEYS_H__
+#ifndef __FMA_GCONF_PROVIDER_KEYS_H__
+#define __FMA_GCONF_PROVIDER_KEYS_H__
 
 #define NAGP_CONFIGURATIONS_PATH		"/apps/filemanager-actions/configurations"
 #define NAGP_SCHEMAS_PATH				"/schemas/apps/filemanager-actions/configurations"
@@ -39,4 +39,4 @@
 
 #define NAGP_ENTRY_IVERSION				"iversion"
 
-#endif /* __NAGP_GCONF_PROVIDER_KEYS_H__ */
+#endif /* __FMA_GCONF_PROVIDER_KEYS_H__ */

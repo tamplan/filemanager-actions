@@ -38,14 +38,14 @@
 #include <api/fma-iio-provider.h>
 #include <api/fma-gconf-monitor.h>
 
-#include "nagp-gconf-provider.h"
+#include "fma-gconf-provider.h"
 #include "nagp-reader.h"
 #include "nagp-writer.h"
 #include "nagp-keys.h"
 
 /* private class data
  */
-struct _NagpGConfProviderClassPrivate {
+struct _FMAGConfProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -56,7 +56,7 @@ static GObjectClass *st_parent_class = NULL;
 static gint          st_burst_timeout = 100;		/* burst timeout in msec */
 #endif
 
-static void     class_init( NagpGConfProviderClass *klass );
+static void     class_init( FMAGConfProviderClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
@@ -70,31 +70,31 @@ static void     ifactory_provider_iface_init( FMAIFactoryProviderInterface *ifac
 static guint    ifactory_provider_get_version( const FMAIFactoryProvider *provider );
 
 #ifdef NA_ENABLE_DEPRECATED
-static GList   *install_monitors( NagpGConfProvider *provider );
-static void     config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
-static gboolean config_path_changed_trigger_interface( NagpGConfProvider *provider );
+static GList   *install_monitors( FMAGConfProvider *provider );
+static void     config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, FMAGConfProvider *provider );
+static gboolean config_path_changed_trigger_interface( FMAGConfProvider *provider );
 static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 #endif
 
 GType
-nagp_gconf_provider_get_type( void )
+fma_gconf_provider_get_type( void )
 {
 	return( st_module_type );
 }
 
 void
-nagp_gconf_provider_register_type( GTypeModule *module )
+fma_gconf_provider_register_type( GTypeModule *module )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_register_type";
+	static const gchar *thisfn = "fma_gconf_provider_register_type";
 
 	static GTypeInfo info = {
-		sizeof( NagpGConfProviderClass ),
+		sizeof( FMAGConfProviderClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NagpGConfProvider ),
+		sizeof( FMAGConfProvider ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -113,7 +113,7 @@ nagp_gconf_provider_register_type( GTypeModule *module )
 
 	g_debug( "%s", thisfn );
 
-	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NagpGConfProvider", &info, 0 );
+	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "FMAGConfProvider", &info, 0 );
 
 	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IIO_PROVIDER, &iio_provider_iface_info );
 
@@ -121,9 +121,9 @@ nagp_gconf_provider_register_type( GTypeModule *module )
 }
 
 static void
-class_init( NagpGConfProviderClass *klass )
+class_init( FMAGConfProviderClass *klass )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_class_init";
+	static const gchar *thisfn = "fma_gconf_provider_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -134,23 +134,23 @@ class_init( NagpGConfProviderClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NagpGConfProviderClassPrivate, 1 );
+	klass->private = g_new0( FMAGConfProviderClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_instance_init";
-	NagpGConfProvider *self;
+	static const gchar *thisfn = "fma_gconf_provider_instance_init";
+	FMAGConfProvider *self;
 
-	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( instance ));
+	g_return_if_fail( FMA_IS_GCONF_PROVIDER( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NAGP_GCONF_PROVIDER( instance );
+	self = FMA_GCONF_PROVIDER( instance );
 
-	self->private = g_new0( NagpGConfProviderPrivate, 1 );
+	self->private = g_new0( FMAGConfProviderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 
@@ -164,12 +164,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_instance_dispose";
-	NagpGConfProvider *self;
+	static const gchar *thisfn = "fma_gconf_provider_instance_dispose";
+	FMAGConfProvider *self;
 
-	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( object ));
+	g_return_if_fail( FMA_IS_GCONF_PROVIDER( object ));
 
-	self = NAGP_GCONF_PROVIDER( object );
+	self = FMA_GCONF_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -195,14 +195,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn =" nagp_gconf_provider_instance_finalize";
-	NagpGConfProvider *self;
+	static const gchar *thisfn =" fma_gconf_provider_instance_finalize";
+	FMAGConfProvider *self;
 
-	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( object ));
+	g_return_if_fail( FMA_IS_GCONF_PROVIDER( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NAGP_GCONF_PROVIDER( object );
+	self = FMA_GCONF_PROVIDER( object );
 
 	g_free( self->private );
 
@@ -215,7 +215,7 @@ instance_finalize( GObject *object )
 static void
 iio_provider_iface_init( FMAIIOProviderInterface *iface )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_iface_init";
+	static const gchar *thisfn = "fma_gconf_provider_iio_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -256,7 +256,7 @@ iio_provider_get_version( const FMAIIOProvider *provider )
 static void
 ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_ifactory_provider_iface_init";
+	static const gchar *thisfn = "fma_gconf_provider_ifactory_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -283,11 +283,11 @@ ifactory_provider_get_version( const FMAIFactoryProvider *provider )
 
 #ifdef NA_ENABLE_DEPRECATED
 static GList *
-install_monitors( NagpGConfProvider *provider )
+install_monitors( FMAGConfProvider *provider )
 {
 	GList *list = NULL;
 
-	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_GCONF_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
@@ -350,9 +350,9 @@ install_monitors( NagpGConfProvider *provider )
  * individual notifications themselves grouped by object.
  */
 static void
-config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider )
+config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, FMAGConfProvider *provider )
 {
-	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_GCONF_PROVIDER( provider ));
 	g_return_if_fail( FMA_IS_IIO_PROVIDER( provider ));
 
 	if( !provider->private->dispose_has_run ){
@@ -377,9 +377,9 @@ config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, N
  * or .. is there ?
  */
 static gboolean
-config_path_changed_trigger_interface( NagpGConfProvider *provider )
+config_path_changed_trigger_interface( FMAGConfProvider *provider )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_config_path_changed_trigger_interface";
+	static const gchar *thisfn = "fma_gconf_provider_config_path_changed_trigger_interface";
 	GTimeVal now;
 	gulong diff;
 	gulong timeout_usec = 1000*st_burst_timeout;

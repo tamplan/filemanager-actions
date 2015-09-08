@@ -41,13 +41,13 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-gconf-utils.h>
 
-#include "nagp-gconf-provider.h"
+#include "fma-gconf-provider.h"
 #include "nagp-writer.h"
 #include "nagp-keys.h"
 
 #ifdef NA_ENABLE_DEPRECATED
-static void write_start_write_type( NagpGConfProvider *provider, FMAObjectItem *item );
-static void write_start_write_version( NagpGConfProvider *provider, FMAObjectItem *item );
+static void write_start_write_type( FMAGConfProvider *provider, FMAObjectItem *item );
+static void write_start_write_version( FMAGConfProvider *provider, FMAObjectItem *item );
 #endif
 
 /*
@@ -80,14 +80,14 @@ nagp_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
 #ifdef NA_ENABLE_DEPRECATED
 	static const gchar *thisfn = "nagp_iio_provider_is_able_to_write";
 	static const gchar *path = "/apps/filemanager-actions/foo";
-	NagpGConfProvider *self;
+	FMAGConfProvider *self;
 	gboolean able_to = FALSE;
 
 	/*g_debug( "%s: provider=%p", thisfn, ( void * ) provider );*/
-	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), FALSE );
+	g_return_val_if_fail( FMA_IS_GCONF_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), FALSE );
 
-	self = NAGP_GCONF_PROVIDER( provider );
+	self = FMA_GCONF_PROVIDER( provider );
 
 	if( !self->private->dispose_has_run ){
 
@@ -128,8 +128,8 @@ nagp_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
 guint
 nagp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_write_item";
-	NagpGConfProvider *self;
+	static const gchar *thisfn = "fma_gconf_provider_iio_provider_write_item";
+	FMAGConfProvider *self;
 	guint ret;
 
 	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
@@ -140,11 +140,11 @@ nagp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 
 	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
-	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), ret );
+	g_return_val_if_fail( FMA_IS_GCONF_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 
-	self = NAGP_GCONF_PROVIDER( provider );
+	self = FMA_GCONF_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
 		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
@@ -168,8 +168,8 @@ nagp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 guint
 nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_delete_item";
-	NagpGConfProvider *self;
+	static const gchar *thisfn = "fma_gconf_provider_iio_provider_delete_item";
+	FMAGConfProvider *self;
 	guint ret;
 	gchar *uuid, *path;
 	GError *error = NULL;
@@ -183,10 +183,10 @@ nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
-	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), ret );
+	g_return_val_if_fail( FMA_IS_GCONF_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 
-	self = NAGP_GCONF_PROVIDER( provider );
+	self = FMA_GCONF_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
 		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
@@ -237,15 +237,15 @@ nagp_writer_write_start( const FMAIFactoryProvider *writer, void *writer_data,
 							const FMAIFactoryObject *object, GSList **messages  )
 {
 	if( FMA_IS_OBJECT_ITEM( object )){
-		write_start_write_type( NAGP_GCONF_PROVIDER( writer ), FMA_OBJECT_ITEM( object ));
-		write_start_write_version( NAGP_GCONF_PROVIDER( writer ), FMA_OBJECT_ITEM( object ));
+		write_start_write_type( FMA_GCONF_PROVIDER( writer ), FMA_OBJECT_ITEM( object ));
+		write_start_write_version( FMA_GCONF_PROVIDER( writer ), FMA_OBJECT_ITEM( object ));
 	}
 
 	return( IIO_PROVIDER_CODE_OK );
 }
 
 static void
-write_start_write_type( NagpGConfProvider *provider, FMAObjectItem *item )
+write_start_write_type( FMAGConfProvider *provider, FMAObjectItem *item )
 {
 	gchar *id, *path;
 
@@ -263,7 +263,7 @@ write_start_write_type( NagpGConfProvider *provider, FMAObjectItem *item )
 }
 
 static void
-write_start_write_version( NagpGConfProvider *provider, FMAObjectItem *item )
+write_start_write_version( FMAGConfProvider *provider, FMAObjectItem *item )
 {
 	gchar *id, *path;
 	guint iversion;
@@ -318,7 +318,7 @@ nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 		this_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, this_id );
 		path = gconf_concat_dir_and_key( this_path, def->gconf_entry );
 
-		gconf = NAGP_GCONF_PROVIDER( provider )->private->gconf;
+		gconf = FMA_GCONF_PROVIDER( provider )->private->gconf;
 
 		switch( def->type ){
 

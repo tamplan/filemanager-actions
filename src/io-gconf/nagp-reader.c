@@ -41,7 +41,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-gconf-utils.h>
 
-#include "nagp-gconf-provider.h"
+#include "fma-gconf-provider.h"
 #include "nagp-keys.h"
 #include "nagp-reader.h"
 
@@ -52,7 +52,7 @@ typedef struct {
 }
 	ReaderData;
 
-static FMAObjectItem *read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages );
+static FMAObjectItem *read_item( FMAGConfProvider *provider, const gchar *path, GSList **messages );
 
 static void          read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, ReaderData *data, GSList **messages );
 
@@ -60,8 +60,8 @@ static gboolean      read_done_item_is_writable( const FMAIFactoryProvider *prov
 static void          read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, ReaderData *data, GSList **messages );
 static void          read_done_action_load_profile( const FMAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
 
-static FMADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const FMADataDef *def );
-static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key );
+static FMADataBoxed  *get_boxed_from_path( const FMAGConfProvider *provider, const gchar *path, ReaderData *reader_data, const FMADataDef *def );
+static gboolean      is_key_writable( FMAGConfProvider *gconf, const gchar *key );
 
 /*
  * nagp_iio_provider_read_items:
@@ -74,7 +74,7 @@ GList *
 nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_nagp_iio_provider_read_items";
-	NagpGConfProvider *self;
+	FMAGConfProvider *self;
 	GList *items_list = NULL;
 	GSList *listpath, *ip;
 	FMAObjectItem *item;
@@ -82,8 +82,8 @@ nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages 
 	g_debug( "%s: provider=%p, messages=%p", thisfn, ( void * ) provider, ( void * ) messages );
 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), NULL );
-	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
-	self = NAGP_GCONF_PROVIDER( provider );
+	g_return_val_if_fail( FMA_IS_GCONF_PROVIDER( provider ), NULL );
+	self = FMA_GCONF_PROVIDER( provider );
 
 	if( !self->private->dispose_has_run ){
 
@@ -109,7 +109,7 @@ nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages 
  * path is here the full path to an item
  */
 static FMAObjectItem *
-read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
+read_item( FMAGConfProvider *provider, const gchar *path, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_reader_read_item";
 	FMAObjectItem *item;
@@ -119,7 +119,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 	ReaderData *data;
 
 	g_debug( "%s: provider=%p, path=%s", thisfn, ( void * ) provider, path );
-	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), NULL );
+	g_return_val_if_fail( FMA_IS_GCONF_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
@@ -171,10 +171,10 @@ nagp_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, 
 	static const gchar *thisfn = "nagp_reader_read_start";
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ));
-	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_GCONF_PROVIDER( provider ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	if( !NAGP_GCONF_PROVIDER( provider )->private->dispose_has_run ){
+	if( !FMA_GCONF_PROVIDER( provider )->private->dispose_has_run ){
 
 		g_debug( "%s: provider=%p (%s), reader_data=%p, object=%p (%s), messages=%p",
 				thisfn,
@@ -216,7 +216,7 @@ nagp_reader_read_data( const FMAIFactoryProvider *provider, void *reader_data, c
 	}
 
 	boxed = get_boxed_from_path(
-			NAGP_GCONF_PROVIDER( provider ), (( ReaderData * ) reader_data )->path, reader_data, def );
+			FMA_GCONF_PROVIDER( provider ), (( ReaderData * ) reader_data )->path, reader_data, def );
 
 	return( boxed );
 }
@@ -228,10 +228,10 @@ nagp_reader_read_done( const FMAIFactoryProvider *provider, void *reader_data, c
 	gboolean writable;
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ));
-	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_GCONF_PROVIDER( provider ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( object ));
 
-	if( !NAGP_GCONF_PROVIDER( provider )->private->dispose_has_run ){
+	if( !FMA_GCONF_PROVIDER( provider )->private->dispose_has_run ){
 
 		g_debug( "%s: provider=%p (%s), reader_data=%p, object=%p (%s), messages=%p",
 				thisfn,
@@ -268,7 +268,7 @@ read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *
 	for( ie = data->entries ; ie && writable ; ie = ie->next ){
 		gconf_entry = ( GConfEntry * ) ie->data;
 		key = gconf_entry_get_key( gconf_entry );
-		writable = is_key_writable( NAGP_GCONF_PROVIDER( provider ), key );
+		writable = is_key_writable( FMA_GCONF_PROVIDER( provider ), key );
 	}
 
 	g_debug( "nagp_reader_read_done_item: writable=%s", writable ? "True":"False" );
@@ -289,7 +289,7 @@ read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAc
 
 	data->parent = FMA_OBJECT_ITEM( action );
 	order = fma_object_get_items_slist( action );
-	list_profiles = fma_gconf_utils_get_subdirs( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
+	list_profiles = fma_gconf_utils_get_subdirs( FMA_GCONF_PROVIDER( provider )->private->gconf, data->path );
 
 	/* read profiles in the specified order
 	 * as a protection against bugs in NACT, we check that profile has not
@@ -343,7 +343,7 @@ read_done_action_load_profile( const FMAIFactoryProvider *provider, ReaderData *
 	profile_data = g_new0( ReaderData, 1 );
 	profile_data->parent = data->parent;
 	profile_data->path = ( gchar * ) path;
-	profile_data->entries = fma_gconf_utils_get_entries( NAGP_GCONF_PROVIDER( provider )->private->gconf, path );
+	profile_data->entries = fma_gconf_utils_get_entries( FMA_GCONF_PROVIDER( provider )->private->gconf, path );
 
 	fma_ifactory_provider_read_item(
 			FMA_IFACTORY_PROVIDER( provider ),
@@ -356,7 +356,7 @@ read_done_action_load_profile( const FMAIFactoryProvider *provider, ReaderData *
 }
 
 static FMADataBoxed *
-get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const FMADataDef *def )
+get_boxed_from_path( const FMAGConfProvider *provider, const gchar *path, ReaderData *reader_data, const FMADataDef *def )
 {
 	static const gchar *thisfn = "nagp_reader_get_boxed_from_path";
 	FMADataBoxed *boxed;
@@ -416,7 +416,7 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
  * value ; else we get FALSE
  */
 static gboolean
-is_key_writable( NagpGConfProvider *gconf, const gchar *key )
+is_key_writable( FMAGConfProvider *gconf, const gchar *key )
 {
 	static const gchar *thisfn = "nagp_read_is_key_writable";
 	GError *error = NULL;

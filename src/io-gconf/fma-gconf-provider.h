@@ -27,19 +27,19 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_GCONF_PROVIDER_H__
-#define __NAGP_GCONF_PROVIDER_H__
+#ifndef __IO_GCONF_FMA_GCONF_PROVIDER_H__
+#define __IO_GCONF_FMA_GCONF_PROVIDER_H__
 
 /**
- * SECTION: nagp_gconf_provider
- * @short_description: #NagpGConfProvider class definition.
+ * SECTION: fma_gconf_provider
+ * @short_description: #FMAGConfProvider class definition.
  * @include: fma-gconf-provider.h
  *
  * This class manages the GConf I/O storage subsystem, or, in other words,
  * the GConf subsystem as an #FMAIIOProvider. As this, it should only be
  * used through the #FMAIIOProvider interface.
  *
- * #NagpGConfProvider uses #FMAGConfMonitor to watch at the configuration
+ * #FMAGConfProvider uses #FMAGConfMonitor to watch at the configuration
  * tree. Modifications are notified to the #FMAIIOProvider interface.
  */
 
@@ -48,16 +48,16 @@
 
 G_BEGIN_DECLS
 
-#define NAGP_GCONF_PROVIDER_TYPE				( nagp_gconf_provider_get_type())
-#define NAGP_GCONF_PROVIDER( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NAGP_GCONF_PROVIDER_TYPE, NagpGConfProvider ))
-#define NAGP_GCONF_PROVIDER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NAGP_GCONF_PROVIDER_TYPE, NagpGConfProviderClass ))
-#define NAGP_IS_GCONF_PROVIDER( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NAGP_GCONF_PROVIDER_TYPE ))
-#define NAGP_IS_GCONF_PROVIDER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAGP_GCONF_PROVIDER_TYPE ))
-#define NAGP_GCONF_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAGP_GCONF_PROVIDER_TYPE, NagpGConfProviderClass ))
+#define FMA_GCONF_PROVIDER_TYPE                ( fma_gconf_provider_get_type())
+#define FMA_GCONF_PROVIDER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_GCONF_PROVIDER_TYPE, FMAGConfProvider ))
+#define FMA_GCONF_PROVIDER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_GCONF_PROVIDER_TYPE, FMAGConfProviderClass ))
+#define FMA_IS_GCONF_PROVIDER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_GCONF_PROVIDER_TYPE ))
+#define FMA_IS_GCONF_PROVIDER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_GCONF_PROVIDER_TYPE ))
+#define FMA_GCONF_PROVIDER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_GCONF_PROVIDER_TYPE, FMAGConfProviderClass ))
 
 /* private instance data
  */
-typedef struct _NagpGConfProviderPrivate {
+typedef struct _FMAGConfProviderPrivate {
 	/*< private >*/
 	gboolean     dispose_has_run;
 	GConfClient *gconf;
@@ -65,27 +65,27 @@ typedef struct _NagpGConfProviderPrivate {
 	guint        event_source_id;
 	GTimeVal     last_event;
 }
-	NagpGConfProviderPrivate;
+	FMAGConfProviderPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObject                   parent;
-	NagpGConfProviderPrivate *private;
+	GObject                  parent;
+	FMAGConfProviderPrivate *private;
 }
-	NagpGConfProvider;
+	FMAGConfProvider;
 
-typedef struct _NagpGConfProviderClassPrivate   NagpGConfProviderClassPrivate;
+typedef struct _FMAGConfProviderClassPrivate   FMAGConfProviderClassPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass                   parent;
-	NagpGConfProviderClassPrivate *private;
+	GObjectClass                  parent;
+	FMAGConfProviderClassPrivate *private;
 }
-	NagpGConfProviderClass;
+	FMAGConfProviderClass;
 
-GType nagp_gconf_provider_get_type     ( void );
-void  nagp_gconf_provider_register_type( GTypeModule *module );
+GType fma_gconf_provider_get_type     ( void );
+void  fma_gconf_provider_register_type( GTypeModule *module );
 
 G_END_DECLS
 
-#endif /* __NAGP_GCONF_PROVIDER_H__ */
+#endif /* __IO_GCONF_FMA_GCONF_PROVIDER_H__ */
