@@ -58,7 +58,7 @@
 #include "nact-statusbar.h"
 #include "nact-tree-view.h"
 #include "fma-confirm-logout.h"
-#include "nact-sort-buttons.h"
+#include "fma-sort-buttons.h"
 
 /* private instance data
  */
@@ -116,7 +116,7 @@ struct _FMAMainWindowPrivate {
 	gboolean          is_tree_modified;
 	FMAClipboard     *clipboard;
 	NactStatusbar     *statusbar;
-	NactSortButtons   *sort_buttons;
+	FMASortButtons   *sort_buttons;
 
 	gulong            pivot_handler_id;
 	FMATimeout        pivot_timeout;
@@ -666,7 +666,7 @@ fma_main_window_new( FMAApplication *application )
 	fma_menu_win( window );
 
 	window->private->clipboard = fma_clipboard_new( window );
-	window->private->sort_buttons = nact_sort_buttons_new( window );
+	window->private->sort_buttons = fma_sort_buttons_new( window );
 
 	/* initialize the notebook interfaces
 	 *  and monitor the updates which originates from each property tab
@@ -835,12 +835,12 @@ fma_main_window_get_clipboard( const FMAMainWindow *window )
  * fma_main_window_get_sort_buttons:
  * @window: this #FMAMainWindow instance.
  *
- * Returns: the #NactSortButtons object.
+ * Returns: the #FMASortButtons object.
  */
-NactSortButtons *
+FMASortButtons *
 fma_main_window_get_sort_buttons( const FMAMainWindow *window )
 {
-	NactSortButtons *buttons;
+	FMASortButtons *buttons;
 
 	g_return_val_if_fail( window && FMA_IS_MAIN_WINDOW( window ), NULL );
 

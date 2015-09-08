@@ -37,10 +37,10 @@
 
 #include "fma-application.h"
 #include "fma-main-window.h"
-#include "nact-sort-buttons.h"
+#include "fma-sort-buttons.h"
 #include "nact-tree-view.h"
 
-struct _NactSortButtonsPrivate {
+struct _FMASortButtonsPrivate {
 	gboolean        dispose_has_run;
 	FMAUpdater      *updater;
 	gboolean        toggling;
@@ -65,20 +65,20 @@ static ToggleGroup st_toggle_group [] = {
 static GObjectClass *st_parent_class = NULL;
 
 static GType register_type( void );
-static void  class_init( NactSortButtonsClass *klass );
+static void  class_init( FMASortButtonsClass *klass );
 static void  instance_init( GTypeInstance *instance, gpointer klass );
 static void  instance_dispose( GObject *application );
 static void  instance_finalize( GObject *application );
-static void  initialize_buttons( NactSortButtons *buttons, FMAMainWindow *window );
-static void  on_toggle_button_toggled( GtkToggleButton *button, NactSortButtons *buttons );
-static void  on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactSortButtons *sort_buttons );
-static void  on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, NactSortButtons *sort_buttons );
-static void  enable_buttons( const NactSortButtons *sort_buttons, gboolean enabled );
+static void  initialize_buttons( FMASortButtons *buttons, FMAMainWindow *window );
+static void  on_toggle_button_toggled( GtkToggleButton *button, FMASortButtons *buttons );
+static void  on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, FMASortButtons *sort_buttons );
+static void  on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, FMASortButtons *sort_buttons );
+static void  enable_buttons( const FMASortButtons *sort_buttons, gboolean enabled );
 static gint  toggle_group_get_from_mode( guint mode );
 static gint  toggle_group_get_from_button( GtkToggleButton *toggled_button );
 
 GType
-nact_sort_buttons_get_type( void )
+fma_sort_buttons_get_type( void )
 {
 	static GType type = 0;
 
@@ -92,32 +92,32 @@ nact_sort_buttons_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_sort_buttons_register_type";
+	static const gchar *thisfn = "fma_sort_buttons_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactSortButtonsClass ),
+		sizeof( FMASortButtonsClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactSortButtons ),
+		sizeof( FMASortButtons ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NactSortButtons", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMASortButtons", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactSortButtonsClass *klass )
+class_init( FMASortButtonsClass *klass )
 {
-	static const gchar *thisfn = "nact_sort_buttons_class_init";
+	static const gchar *thisfn = "fma_sort_buttons_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -132,17 +132,17 @@ class_init( NactSortButtonsClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_sort_buttons_instance_init";
-	NactSortButtons *self;
+	static const gchar *thisfn = "fma_sort_buttons_instance_init";
+	FMASortButtons *self;
 
-	g_return_if_fail( NACT_IS_SORT_BUTTONS( instance ));
+	g_return_if_fail( FMA_IS_SORT_BUTTONS( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NACT_SORT_BUTTONS( instance );
+	self = FMA_SORT_BUTTONS( instance );
 
-	self->private = g_new0( NactSortButtonsPrivate, 1 );
+	self->private = g_new0( FMASortButtonsPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->toggling = FALSE;
@@ -153,12 +153,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nact_sort_buttons_instance_dispose";
-	NactSortButtons *self;
+	static const gchar *thisfn = "fma_sort_buttons_instance_dispose";
+	FMASortButtons *self;
 
-	g_return_if_fail( NACT_IS_SORT_BUTTONS( object ));
+	g_return_if_fail( FMA_IS_SORT_BUTTONS( object ));
 
-	self = NACT_SORT_BUTTONS( object );
+	self = FMA_SORT_BUTTONS( object );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
@@ -175,14 +175,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *instance )
 {
-	static const gchar *thisfn = "nact_sort_buttons_instance_finalize";
-	NactSortButtons *self;
+	static const gchar *thisfn = "fma_sort_buttons_instance_finalize";
+	FMASortButtons *self;
 
-	g_return_if_fail( NACT_IS_SORT_BUTTONS( instance ));
+	g_return_if_fail( FMA_IS_SORT_BUTTONS( instance ));
 
 	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	self = NACT_SORT_BUTTONS( instance );
+	self = FMA_SORT_BUTTONS( instance );
 
 	g_free( self->private );
 
@@ -193,22 +193,22 @@ instance_finalize( GObject *instance )
 }
 
 /**
- * nact_sort_buttons_new:
+ * fma_sort_buttons_new:
  * @window: the main window.
  *
- * Returns: a new #NactSortButtons object.
+ * Returns: a new #FMASortButtons object.
  */
-NactSortButtons *
-nact_sort_buttons_new( FMAMainWindow *window )
+FMASortButtons *
+fma_sort_buttons_new( FMAMainWindow *window )
 {
-	NactSortButtons *obj;
+	FMASortButtons *obj;
 	GtkApplication *application;
 
 	g_return_val_if_fail( window && FMA_IS_MAIN_WINDOW( window ), NULL );
 	application = gtk_window_get_application( GTK_WINDOW( window ));
 	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), NULL );
 
-	obj = g_object_new( NACT_TYPE_SORT_BUTTONS, NULL );
+	obj = g_object_new( FMA_TYPE_SORT_BUTTONS, NULL );
 	obj->private->updater = fma_application_get_updater( FMA_APPLICATION( application ));
 
 	initialize_buttons( obj, window );
@@ -228,7 +228,7 @@ nact_sort_buttons_new( FMAMainWindow *window )
  * - enabled (sensitive) if sort order mode is modifiable.
  */
 static void
-initialize_buttons( NactSortButtons *buttons, FMAMainWindow *window )
+initialize_buttons( FMASortButtons *buttons, FMAMainWindow *window )
 {
 	NactTreeView *treeview;
 	gint i;
@@ -261,9 +261,9 @@ initialize_buttons( NactSortButtons *buttons, FMAMainWindow *window )
  * if the user re-clicks on the already active buttons, reset it active
  */
 static void
-on_toggle_button_toggled( GtkToggleButton *toggled_button, NactSortButtons *buttons )
+on_toggle_button_toggled( GtkToggleButton *toggled_button, FMASortButtons *buttons )
 {
-	NactSortButtonsPrivate *priv;
+	FMASortButtonsPrivate *priv;
 	gint i, ibtn;
 
 	priv = buttons->private;
@@ -305,15 +305,15 @@ on_toggle_button_toggled( GtkToggleButton *toggled_button, NactSortButtons *butt
  * we already have reset 'toggling' to FALSE when we are coming here
  */
 static void
-on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactSortButtons *sort_buttons )
+on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, FMASortButtons *sort_buttons )
 {
-	static const gchar *thisfn = "nact_sort_buttons_on_settings_order_mode_changed";
-	NactSortButtonsPrivate *priv;
+	static const gchar *thisfn = "fma_sort_buttons_on_settings_order_mode_changed";
+	FMASortButtonsPrivate *priv;
 	const gchar *order_mode_str;
 	guint order_mode;
 	gint ibtn;
 
-	g_return_if_fail( NACT_IS_SORT_BUTTONS( sort_buttons ));
+	g_return_if_fail( FMA_IS_SORT_BUTTONS( sort_buttons ));
 
 	priv = sort_buttons->private;
 
@@ -337,10 +337,10 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 }
 
 static void
-on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, NactSortButtons *buttons )
+on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, FMASortButtons *buttons )
 {
-	static const gchar *thisfn = "nact_sort_buttons_on_tree_view_count_changed";
-	NactSortButtonsPrivate *priv;
+	static const gchar *thisfn = "fma_sort_buttons_on_tree_view_count_changed";
+	FMASortButtonsPrivate *priv;
 
 	priv = buttons->private;
 
@@ -361,9 +361,9 @@ on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_c
 }
 
 static void
-enable_buttons( const NactSortButtons *sort_buttons, gboolean enabled )
+enable_buttons( const FMASortButtons *sort_buttons, gboolean enabled )
 {
-	NactSortButtonsPrivate *priv;
+	FMASortButtonsPrivate *priv;
 	gboolean level_zero_writable;
 	gboolean preferences_locked;
 	gboolean finally_enabled;

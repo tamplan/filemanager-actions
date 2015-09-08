@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_SORT_BUTTONS_H__
-#define __UI_NACT_SORT_BUTTONS_H__
+#ifndef __UI_FMA_SORT_BUTTONS_H__
+#define __UI_FMA_SORT_BUTTONS_H__
 
 /**
- * SECTION: nact-sort-buttons
- * @title: NactSortButtons
+ * SECTION: fma-sort-buttons
+ * @title: FMASortButtons
  * @short_description: The Sort Buttons class definition
- * @include: nact-sort-buttons.h
+ * @include: ui/fma-sort-buttons.h
  *
  * A convenience class to manager sort buttons in the user interface.
  *
@@ -52,32 +52,32 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_SORT_BUTTONS                ( nact_sort_buttons_get_type())
-#define NACT_SORT_BUTTONS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_SORT_BUTTONS, NactSortButtons ))
-#define NACT_SORT_BUTTONS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_SORT_BUTTONS, NactSortButtonsClass ))
-#define NACT_IS_SORT_BUTTONS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_SORT_BUTTONS ))
-#define NACT_IS_SORT_BUTTONS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_SORT_BUTTONS ))
-#define NACT_SORT_BUTTONS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_SORT_BUTTONS, NactSortButtonsClass ))
+#define FMA_TYPE_SORT_BUTTONS                ( fma_sort_buttons_get_type())
+#define FMA_SORT_BUTTONS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_SORT_BUTTONS, FMASortButtons ))
+#define FMA_SORT_BUTTONS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_SORT_BUTTONS, FMASortButtonsClass ))
+#define FMA_IS_SORT_BUTTONS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_SORT_BUTTONS ))
+#define FMA_IS_SORT_BUTTONS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_SORT_BUTTONS ))
+#define FMA_SORT_BUTTONS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_SORT_BUTTONS, FMASortButtonsClass ))
 
-typedef struct _NactSortButtonsPrivate        NactSortButtonsPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject                 parent;
-	NactSortButtonsPrivate *private;
-}
-	NactSortButtons;
+typedef struct _FMASortButtonsPrivate        FMASortButtonsPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass            parent;
+	GObject                parent;
+	FMASortButtonsPrivate *private;
 }
-	NactSortButtonsClass;
+	FMASortButtons;
 
-GType            nact_sort_buttons_get_type( void );
+typedef struct {
+	/*< private >*/
+	GObjectClass           parent;
+}
+	FMASortButtonsClass;
 
-NactSortButtons *nact_sort_buttons_new     ( FMAMainWindow *window );
+GType           fma_sort_buttons_get_type( void );
+
+FMASortButtons *fma_sort_buttons_new     ( FMAMainWindow *window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_SORT_BUTTONS_H__ */
+#endif /* __UI_FMA_SORT_BUTTONS_H__ */

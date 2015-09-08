@@ -66,7 +66,7 @@
  *  |           +-> setup_main_ui()
  *  |               setup_treeview()
  *  |               fma_clipboard_new()
- *  |               nact_sort_buttons_new()
+ *  |               fma_sort_buttons_new()
  *  |
  *  |               fma_iaction_tab_init()
  *  |               fma_icommand_tab_init()
