@@ -41,7 +41,7 @@
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
-#include "nact-match-list.h"
+#include "fma-match-list.h"
 #include "fma-add-scheme-dialog.h"
 #include "fma-ischemes-tab.h"
 
@@ -172,7 +172,7 @@ initialize_gtk( FMAISchemesTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_match_list_init_with_args(
+	fma_match_list_init_with_args(
 			FMA_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_SCHEMES,
@@ -239,12 +239,12 @@ on_add_from_defaults( GtkButton *button, FMAISchemesTab *instance )
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 	g_return_if_fail( context );
 
-	schemes = nact_match_list_get_rows( FMA_MAIN_WINDOW( instance ), ITAB_NAME );
+	schemes = fma_match_list_get_rows( FMA_MAIN_WINDOW( instance ), ITAB_NAME );
 	new_scheme = fma_add_scheme_dialog_run( FMA_MAIN_WINDOW( instance ), schemes );
 	fma_core_utils_slist_free( schemes );
 
 	if( new_scheme ){
-		nact_match_list_insert_row( FMA_MAIN_WINDOW( instance ), ITAB_NAME, new_scheme, FALSE, FALSE );
+		fma_match_list_insert_row( FMA_MAIN_WINDOW( instance ), ITAB_NAME, new_scheme, FALSE, FALSE );
 		g_free( new_scheme );
 	}
 }

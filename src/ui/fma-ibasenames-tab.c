@@ -41,7 +41,7 @@
 #include "fma-ibasenames-tab.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
-#include "nact-match-list.h"
+#include "fma-match-list.h"
 
 /* private interface data
  */
@@ -190,7 +190,7 @@ initialize_gtk( FMAIBasenamesTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_match_list_init_with_args(
+	fma_match_list_init_with_args(
 			FMA_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_BASENAMES,

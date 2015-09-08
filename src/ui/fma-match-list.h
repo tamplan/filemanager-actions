@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_MATCH_LIST_H__
-#define __UI_NACT_MATCH_LIST_H__
+#ifndef __UI_FMA_MATCH_LIST_H__
+#define __UI_FMA_MATCH_LIST_H__
 
 /**
- * SECTION: nact_match_list
+ * SECTION: fma_match_list
  * @short_description: Implementation of a list match/does not match.
- * @include: ui/nact-match-list.h
+ * @include: ui/fma-match-list.h
  *
  * In an ideal world, this would be a base interface for FMAISchemesTab,
  * etc. interfaces.
@@ -62,7 +62,7 @@ enum {
 	MATCH_LIST_MUST_MATCH_ALL_OF,
 };
 
-void    nact_match_list_init_with_args( FMAMainWindow *window,
+void    fma_match_list_init_with_args( FMAMainWindow *window,
 												const gchar  *tab_name,
 												guint         tab_id,
 												GtkWidget    *listview,
@@ -76,15 +76,15 @@ void    nact_match_list_init_with_args( FMAMainWindow *window,
 												const gchar  *item_header,
 												gboolean      editable_filter );
 
-void    nact_match_list_insert_row    ( FMAMainWindow *window,
+void    fma_match_list_insert_row    ( FMAMainWindow *window,
 												const gchar  *tab_name,
 												const gchar  *filter,
 												gboolean      match,
 												gboolean      not_match );
 
-GSList *nact_match_list_get_rows      ( FMAMainWindow *window,
+GSList *fma_match_list_get_rows      ( FMAMainWindow *window,
 												const gchar  *tab_name );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_MATCH_LIST_H__ */
+#endif /* __UI_FMA_MATCH_LIST_H__ */

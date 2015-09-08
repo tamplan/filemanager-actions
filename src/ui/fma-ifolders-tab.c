@@ -43,7 +43,7 @@
 #include "fma-application.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
-#include "nact-match-list.h"
+#include "fma-match-list.h"
 #include "fma-ifolders-tab.h"
 
 /* private interface data
@@ -173,7 +173,7 @@ initialize_gtk( FMAIFoldersTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_match_list_init_with_args(
+	fma_match_list_init_with_args(
 			FMA_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_FOLDERS,
@@ -260,7 +260,7 @@ on_browse_folder_clicked( GtkButton *button, FMAIFoldersTab *instance )
 		uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
 		fma_settings_set_string( IPREFS_FOLDER_CHOOSER_URI, uri );
 		path = g_filename_from_uri( uri, NULL, NULL );
-		nact_match_list_insert_row( FMA_MAIN_WINDOW( instance ), ITAB_NAME, path, FALSE, FALSE );
+		fma_match_list_insert_row( FMA_MAIN_WINDOW( instance ), ITAB_NAME, path, FALSE, FALSE );
 		g_free( path );
 		g_free( uri );
 	}

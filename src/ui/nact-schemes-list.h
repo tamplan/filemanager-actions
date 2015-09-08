@@ -49,7 +49,7 @@
  *   adding/removing a scheme is possible
  *
  * Starting with 2.31.x serie (future 3.0), the scheme conditions of a
- * #FMAIContext are handled by nact-match-list.{c,h} set of function.
+ * #FMAIContext are handled by fma-match-list.{c,h} set of function.
  * This set of functions is only used:
  *  a) to edit the preferences
  *     add/remove scheme

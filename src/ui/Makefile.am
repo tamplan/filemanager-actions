@@ -112,8 +112,8 @@ fma_config_tool_SOURCES = \
 	fma-main-window.c									\
 	fma-main-window.h									\
 	fma-main-window-def.h								\
-	nact-match-list.c									\
-	nact-match-list.h									\
+	fma-match-list.c									\
+	fma-match-list.h									\
 	nact-menu.c											\
 	nact-menu.h											\
 	nact-menu-edit.c									\

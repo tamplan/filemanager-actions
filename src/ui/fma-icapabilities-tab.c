@@ -40,7 +40,7 @@
 
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
-#include "nact-match-list.h"
+#include "fma-match-list.h"
 #include "fma-add-capability-dialog.h"
 #include "fma-icapabilities-tab.h"
 
@@ -169,7 +169,7 @@ initialize_gtk( FMAICapabilitiesTab *instance )
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	nact_match_list_init_with_args(
+	fma_match_list_init_with_args(
 			FMA_MAIN_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_CAPABILITIES,
@@ -228,11 +228,11 @@ on_add_clicked( GtkButton *button, FMAICapabilitiesTab *instance )
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 
 	if( context ){
-		capabilities = nact_match_list_get_rows( FMA_MAIN_WINDOW( instance ), ITAB_NAME );
+		capabilities = fma_match_list_get_rows( FMA_MAIN_WINDOW( instance ), ITAB_NAME );
 		new_cap = fma_add_capability_dialog_run( FMA_MAIN_WINDOW( instance ), capabilities );
 
 		if( new_cap ){
-			nact_match_list_insert_row( FMA_MAIN_WINDOW( instance ), ITAB_NAME, new_cap, FALSE, FALSE );
+			fma_match_list_insert_row( FMA_MAIN_WINDOW( instance ), ITAB_NAME, new_cap, FALSE, FALSE );
 			g_free( new_cap );
 		}
 

@@ -41,7 +41,7 @@
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
-#include "nact-match-list.h"
+#include "fma-match-list.h"
 
 /* column ordering
  */
@@ -62,7 +62,7 @@ typedef struct {
  * addressed with the tab name
  */
 typedef struct {
-	FMAMainWindow  *window;
+	FMAMainWindow   *window;
 	gchar           *tab_name;
 	guint            tab_id;
 	GtkTreeView     *listview;
@@ -125,7 +125,7 @@ static void         sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchList
 static void         on_instance_finalized( MatchListData *data, BaseWindow *window );
 
 /**
- * nact_match_list_init_with_args:
+ * fma_match_list_init_with_args:
  * @window: the #FMAMainWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  * @tab_id: our id for this page.
@@ -145,7 +145,7 @@ static void         on_instance_finalized( MatchListData *data, BaseWindow *wind
  * here pointers to GtkTreeView and GtkButton widgets.
  */
 void
-nact_match_list_init_with_args( FMAMainWindow *window, const gchar *tab_name,
+fma_match_list_init_with_args( FMAMainWindow *window, const gchar *tab_name,
 				guint tab_id,
 				GtkWidget *listview,
 				GtkWidget *addbutton,
@@ -158,7 +158,7 @@ nact_match_list_init_with_args( FMAMainWindow *window, const gchar *tab_name,
 				const gchar *item_header,
 				gboolean editable_filter )
 {
-	static const gchar *thisfn = "nact_match_list_init_with_args";
+	static const gchar *thisfn = "fma_match_list_init_with_args";
 	MatchListData *data;
 
 	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
@@ -326,7 +326,7 @@ initialize_window( MatchListData *data )
 static void
 on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchListData *data )
 {
-	static const gchar *thisfn = "nact_match_list_on_tree_selection_changed";
+	static const gchar *thisfn = "fma_match_list_on_tree_selection_changed";
 	FMAIContext *context;
 	gboolean enable_tab;
 	GSList *filters;
@@ -378,7 +378,7 @@ on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchL
 }
 
 /**
- * nact_match_list_insert_row:
+ * fma_match_list_insert_row:
  * @window: the #FMAMainWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  * @filter: the item to add.
@@ -388,7 +388,7 @@ on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchL
  * Add a new row to the list view.
  */
 void
-nact_match_list_insert_row( FMAMainWindow *window, const gchar *tab_name, const gchar *filter, gboolean match, gboolean not_match )
+fma_match_list_insert_row( FMAMainWindow *window, const gchar *tab_name, const gchar *filter, gboolean match, gboolean not_match )
 {
 	MatchListData *data;
 
@@ -399,7 +399,7 @@ nact_match_list_insert_row( FMAMainWindow *window, const gchar *tab_name, const 
 }
 
 /**
- * nact_match_list_get_rows:
+ * fma_match_list_get_rows:
  * @window: the #FMAMainWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  *
@@ -407,7 +407,7 @@ nact_match_list_insert_row( FMAMainWindow *window, const gchar *tab_name, const 
  * be fma_core_utils_slist_free() by the caller.
  */
 GSList *
-nact_match_list_get_rows( FMAMainWindow *window, const gchar *tab_name )
+fma_match_list_get_rows( FMAMainWindow *window, const gchar *tab_name )
 {
 	GSList *filters;
 	MatchListData *data;
@@ -442,7 +442,7 @@ on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data )
 static void
 on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, MatchListData *data )
 {
-	static const gchar *thisfn = "nact_match_list_on_filter_edited";
+	static const gchar *thisfn = "fma_match_list_on_filter_edited";
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreePath *path;
@@ -564,7 +564,7 @@ on_must_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data )
 static void
 on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, MatchListData *data )
 {
-	/*static const gchar *thisfn = "nact_match_list_on_must_match_toggled";*/
+	/*static const gchar *thisfn = "fma_match_list_on_must_match_toggled";*/
 	gchar *filter;
 	FMAIContext *context;
 	GSList *filters;
@@ -616,7 +616,7 @@ on_must_not_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *dat
 static void
 on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, MatchListData *data )
 {
-	/*static const gchar *thisfn = "nact_match_list_on_must_not_match_toggled";*/
+	/*static const gchar *thisfn = "fma_match_list_on_must_not_match_toggled";*/
 	gchar *filter;
 	FMAIContext *context;
 	GSList *filters;
@@ -779,7 +779,7 @@ dump_current_rows( MatchListData *data )
 	model = gtk_tree_view_get_model( data->listview );
 	filters = NULL;
 	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) get_rows_iter, &filters );
-	fma_core_utils_slist_dump( "nact_match_list_dump_current_rows", filters );
+	fma_core_utils_slist_dump( "fma_match_list_dump_current_rows", filters );
 	fma_core_utils_slist_free( filters );
 #endif
 }
@@ -996,7 +996,7 @@ sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListData *data, guint ne
 static void
 on_instance_finalized( MatchListData *data, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_match_list_on_instance_finalized";
+	static const gchar *thisfn = "fma_match_list_on_instance_finalized";
 
 	g_return_if_fail( data != NULL );
 
