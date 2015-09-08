@@ -26,10 +26,10 @@
 #   ... and many others (see AUTHORS)
 
 actions_files = \
-	my-first-na-action.desktop			\
-	my-first-na-menu.desktop			\
+	my-first-action.desktop			\
+	my-first-menu.desktop			\
 	open-terminal-here.desktop			\
-	show-na-parameters.desktop			\
+	show-parameters.desktop			\
 	$(NULL)
 
 actionsdir = $(pkgdatadir)/samples
