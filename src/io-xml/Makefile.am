@@ -66,9 +66,9 @@ libna_io_xml_la_LDFLAGS = \
 	$(NULL)
 
 images_files = \
-	export-dump.png										\
-	export-schemas-v1.png								\
-	export-schemas-v2.png								\
+	fma-xml-export-dump.png								\
+	fma-xml-export-schemas-v1.png						\
+	fma-xml-export-schemas-v2.png						\
 	$(NULL)
 
 provider_data_DATA = \

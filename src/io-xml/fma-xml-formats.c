@@ -58,7 +58,7 @@ static NaxmlExportFormat fma_xml_formats[] = {
 				"- Import assistant of the FileManager-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ),
-			"export-schemas-v1.png" },
+			"fma-xml-export-schemas-v1.png" },
 
 	/* GCONF_SCHEMA_V2: the lightest schema still compatible with gconftool-2 --install-schema-file
 	 * (no owner, no short nor long descriptions) - introduced in v 1.11
@@ -73,7 +73,7 @@ static NaxmlExportFormat fma_xml_formats[] = {
 				"- Import assistant of the FileManager-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ),
-			"export-schemas-v2.png" },
+			"fma-xml-export-schemas-v2.png" },
 
 	/* GCONF_ENTRY: not a schema, but a dump of the GConf entry
 	 * introduced in v 1.11
@@ -88,7 +88,7 @@ static NaxmlExportFormat fma_xml_formats[] = {
 				"- Import assistant of the FileManager-Actions Configuration Tool (1.11 and above),\n" \
 				"- drag-n-drop into the FileManager-Actions Configuration Tool (1.11 and above),\n" \
 				"- or via the gconftool-2 --load command-line tool." ),
-			"export-dump.png" },
+			"fma-xml-export-dump.png" },
 
 	{ NULL }
 };
