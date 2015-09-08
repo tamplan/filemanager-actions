@@ -63,7 +63,7 @@ struct _FMAPivotPrivate {
 
 	/* timeout to manage i/o providers 'item-changed' burst
 	 */
-	FMATimeout   change_timeout;
+	FMATimeout  change_timeout;
 };
 
 /* FMAPivot properties
@@ -85,23 +85,23 @@ enum {
 	LAST_SIGNAL
 };
 
-static GObjectClass *st_parent_class           = NULL;
-static gint          st_burst_timeout          = 100;		/* burst timeout in msec */
-static gint          st_signals[ LAST_SIGNAL ] = { 0 };
+static GObjectClass  *st_parent_class           = NULL;
+static gint           st_burst_timeout          = 100;		/* burst timeout in msec */
+static gint           st_signals[ LAST_SIGNAL ] = { 0 };
 
-static GType         register_type( void );
-static void          class_init( FMAPivotClass *klass );
-static void          instance_init( GTypeInstance *instance, gpointer klass );
-static void          instance_constructed( GObject *object );
-static void          instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void          instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void          instance_dispose( GObject *object );
-static void          instance_finalize( GObject *object );
+static GType          register_type( void );
+static void           class_init( FMAPivotClass *klass );
+static void           instance_init( GTypeInstance *instance, gpointer klass );
+static void           instance_constructed( GObject *object );
+static void           instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void           instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void           instance_dispose( GObject *object );
+static void           instance_finalize( GObject *object );
 
 static FMAObjectItem *get_item_from_tree( const FMAPivot *pivot, GList *tree, const gchar *id );
 
 /* FMAIIOProvider management */
-static void          on_items_changed_timeout( FMAPivot *pivot );
+static void           on_items_changed_timeout( FMAPivot *pivot );
 
 GType
 fma_pivot_get_type( void )

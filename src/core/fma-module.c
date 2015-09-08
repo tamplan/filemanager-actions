@@ -62,21 +62,21 @@ struct _FMAModulePrivate {
 
 static GTypeModuleClass *st_parent_class = NULL;
 
-static GType     register_type( void );
-static void      class_init( FMAModuleClass *klass );
-static void      instance_init( GTypeInstance *instance, gpointer klass );
-static void      instance_dispose( GObject *object );
-static void      instance_finalize( GObject *object );
+static GType      register_type( void );
+static void       class_init( FMAModuleClass *klass );
+static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_dispose( GObject *object );
+static void       instance_finalize( GObject *object );
 
 static FMAModule *module_new( const gchar *filename );
-static gboolean  on_module_load( GTypeModule *gmodule );
-static gboolean  is_a_na_plugin( FMAModule *module );
-static gboolean  plugin_check( FMAModule *module, const gchar *symbol, gpointer *pfn );
-static void      register_module_types( FMAModule *module );
-static void      add_module_type( FMAModule *module, GType type );
-static void      object_weak_notify( FMAModule *module, GObject *object );
+static gboolean   on_module_load( GTypeModule *gmodule );
+static gboolean   is_a_na_plugin( FMAModule *module );
+static gboolean   plugin_check( FMAModule *module, const gchar *symbol, gpointer *pfn );
+static void       register_module_types( FMAModule *module );
+static void       add_module_type( FMAModule *module, GType type );
+static void       object_weak_notify( FMAModule *module, GObject *object );
 
-static void      on_module_unload( GTypeModule *gmodule );
+static void       on_module_unload( GTypeModule *gmodule );
 
 GType
 fma_module_get_type( void )

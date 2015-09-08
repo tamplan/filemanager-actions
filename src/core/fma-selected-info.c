@@ -67,17 +67,17 @@ struct _FMASelectedInfoPrivate {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType           register_type( void );
-static void            class_init( FMASelectedInfoClass *klass );
-static void            instance_init( GTypeInstance *instance, gpointer klass );
-static void            instance_dispose( GObject *object );
-static void            instance_finalize( GObject *object );
+static GType            register_type( void );
+static void             class_init( FMASelectedInfoClass *klass );
+static void             instance_init( GTypeInstance *instance, gpointer klass );
+static void             instance_dispose( GObject *object );
+static void             instance_finalize( GObject *object );
 
-static void            dump( const FMASelectedInfo *nsi );
-static const char     *dump_file_type( GFileType type );
+static void             dump( const FMASelectedInfo *nsi );
+static const char      *dump_file_type( GFileType type );
 static FMASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
 static FMASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg );
-static void            query_file_attributes( FMASelectedInfo *info, GFile *location, gchar **errmsg );
+static void             query_file_attributes( FMASelectedInfo *info, GFile *location, gchar **errmsg );
 
 GType
 fma_selected_info_get_type( void )

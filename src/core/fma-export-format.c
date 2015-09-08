@@ -43,11 +43,11 @@ struct _FMAExportFormatClassPrivate {
 /* private instance data
  */
 struct _FMAExportFormatPrivate {
-	gboolean     dispose_has_run;
-	gchar       *format;
-	gchar       *label;
-	gchar       *description;
-	GdkPixbuf   *pixbuf;
+	gboolean      dispose_has_run;
+	gchar        *format;
+	gchar        *label;
+	gchar        *description;
+	GdkPixbuf    *pixbuf;
 	FMAIExporter *provider;
 };
 

@@ -68,35 +68,35 @@ extern FMADataGroup profile_data_groups [];	/* defined in na-item-profile-factor
 
 static FMAObjectIdClass *st_parent_class = NULL;
 
-static GType        register_type( void );
-static void         class_init( FMAObjectProfileClass *klass );
-static void         instance_init( GTypeInstance *instance, gpointer klass );
-static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void         instance_dispose( GObject *object );
-static void         instance_finalize( GObject *object );
+static GType         register_type( void );
+static void          class_init( FMAObjectProfileClass *klass );
+static void          instance_init( GTypeInstance *instance, gpointer klass );
+static void          instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void          instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void          instance_dispose( GObject *object );
+static void          instance_finalize( GObject *object );
 
-static void         object_dump( const FMAObject *object );
-static gboolean     object_is_valid( const FMAObject *object );
+static void          object_dump( const FMAObject *object );
+static gboolean      object_is_valid( const FMAObject *object );
 
-static void         ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
-static guint        ifactory_object_get_version( const FMAIFactoryObject *instance );
+static void          ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
+static guint         ifactory_object_get_version( const FMAIFactoryObject *instance );
 static FMADataGroup *ifactory_object_get_groups( const FMAIFactoryObject *instance );
-static void         ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void          ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint         ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static void         icontext_iface_init( FMAIContextInterface *iface, void *user_data );
-static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
+static void          icontext_iface_init( FMAIContextInterface *iface, void *user_data );
+static gboolean      icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
 
-static gboolean     convert_pre_v3_parameters( FMAObjectProfile *profile );
-static gboolean     convert_pre_v3_parameters_str( gchar *str );
-static gboolean     convert_pre_v3_multiple( FMAObjectProfile *profile );
-static gboolean     convert_pre_v3_isfiledir( FMAObjectProfile *profile );
-static void         read_done_ending( FMAObjectProfile *profile );
-static void         split_path_parameters( FMAObjectProfile *profile );
-static gboolean     is_valid_path_parameters( const FMAObjectProfile *profile );
+static gboolean      convert_pre_v3_parameters( FMAObjectProfile *profile );
+static gboolean      convert_pre_v3_parameters_str( gchar *str );
+static gboolean      convert_pre_v3_multiple( FMAObjectProfile *profile );
+static gboolean      convert_pre_v3_isfiledir( FMAObjectProfile *profile );
+static void          read_done_ending( FMAObjectProfile *profile );
+static void          split_path_parameters( FMAObjectProfile *profile );
+static gboolean      is_valid_path_parameters( const FMAObjectProfile *profile );
 
-static gchar       *object_id_new_id( const FMAObjectId *item, const FMAObjectId *new_parent );
+static gchar        *object_id_new_id( const FMAObjectId *item, const FMAObjectId *new_parent );
 
 GType
 fma_object_profile_get_type( void )

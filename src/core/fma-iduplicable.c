@@ -43,8 +43,8 @@ struct _FMAIDuplicableInterfacePrivate {
  */
 typedef struct {
 	FMAIDuplicable *origin;
-	gboolean       modified;
-	gboolean       valid;
+	gboolean        modified;
+	gboolean        valid;
 }
 	DuplicableStr;
 
@@ -59,8 +59,8 @@ enum {
 };
 
 static FMAIDuplicableInterface *st_interface = NULL;
-static guint                   st_initializations = 0;
-static gint                    st_signals[ LAST_SIGNAL ] = { 0 };
+static guint                    st_initializations = 0;
+static gint                     st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType          register_type( void );
 static void           interface_base_init( FMAIDuplicableInterface *klass );

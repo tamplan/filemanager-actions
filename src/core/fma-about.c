@@ -65,6 +65,7 @@ fma_about_display( GtkWindow *toplevel )
 	};
 
 	static const gchar *documenters[] = {
+		"Pierre Wieser <pwieser@trychlos.org>",
 		NULL
 	};
 

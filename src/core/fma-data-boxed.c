@@ -62,7 +62,7 @@ typedef struct {
  */
 struct _FMADataBoxedPrivate {
 	gboolean            dispose_has_run;
-	const FMADataDef    *data_def ;
+	const FMADataDef   *data_def ;
 	const DataBoxedDef *boxed_def;
 };
 

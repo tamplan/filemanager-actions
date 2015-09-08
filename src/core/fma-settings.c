@@ -54,7 +54,7 @@ typedef struct _FMASettingsPrivate       FMASettingsPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObject            parent;
+	GObject             parent;
 	FMASettingsPrivate *private;
 }
 	FMASettings;
@@ -63,7 +63,7 @@ typedef struct _FMASettingsClassPrivate  FMASettingsClassPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass            parent;
+	GObjectClass             parent;
 	FMASettingsClassPrivate *private;
 }
 	FMASettingsClass;
@@ -109,11 +109,11 @@ typedef struct {
 /* private instance data
  */
 struct _FMASettingsPrivate {
-	gboolean  dispose_has_run;
-	KeyFile  *mandatory;
-	KeyFile  *user;
-	GList    *content;
-	GList    *consumers;
+	gboolean   dispose_has_run;
+	KeyFile   *mandatory;
+	KeyFile   *user;
+	GList     *content;
+	GList     *consumers;
 	FMATimeout timeout;
 };
 
@@ -198,7 +198,7 @@ typedef struct {
 	const KeyDef *def;
 	const gchar  *group;
 	gboolean      mandatory;
-	FMABoxed      *boxed;
+	FMABoxed     *boxed;
 }
 	KeyValue;
 

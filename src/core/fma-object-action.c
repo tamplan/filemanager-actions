@@ -63,35 +63,35 @@ extern FMADataDef   data_def_action_v1 [];		/* defined in fma-object-action-fact
 
 static FMAObjectItemClass *st_parent_class = NULL;
 
-static GType        register_type( void );
-static void         class_init( FMAObjectActionClass *klass );
-static void         instance_init( GTypeInstance *instance, gpointer klass );
-static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void         instance_dispose( GObject *object );
-static void         instance_finalize( GObject *object );
+static GType         register_type( void );
+static void          class_init( FMAObjectActionClass *klass );
+static void          instance_init( GTypeInstance *instance, gpointer klass );
+static void          instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void          instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void          instance_dispose( GObject *object );
+static void          instance_finalize( GObject *object );
 
-static void         object_dump( const FMAObject *object );
-static gboolean     object_are_equal( const FMAObject *a, const FMAObject *b );
-static gboolean     object_is_valid( const FMAObject *object );
+static void          object_dump( const FMAObject *object );
+static gboolean      object_are_equal( const FMAObject *a, const FMAObject *b );
+static gboolean      object_is_valid( const FMAObject *object );
 
-static void         ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
-static guint        ifactory_object_get_version( const FMAIFactoryObject *instance );
+static void          ifactory_object_iface_init( FMAIFactoryObjectInterface *iface, void *user_data );
+static guint         ifactory_object_get_version( const FMAIFactoryObject *instance );
 static FMADataGroup *ifactory_object_get_groups( const FMAIFactoryObject *instance );
-static void         ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        ifactory_object_write_start( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
-static guint        ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static void          ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint         ifactory_object_write_start( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static guint         ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static void         icontext_iface_init( FMAIContextInterface *iface, void *user_data );
-static gboolean     icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
+static void          icontext_iface_init( FMAIContextInterface *iface, void *user_data );
+static gboolean      icontext_is_candidate( FMAIContext *object, guint target, GList *selection );
 
 static FMAObjectProfile *read_done_convert_v1_to_v2( FMAIFactoryObject *instance );
-static void             read_done_deals_with_toolbar_label( FMAIFactoryObject *instance );
+static void              read_done_deals_with_toolbar_label( FMAIFactoryObject *instance );
 
-static guint        write_done_write_profiles( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
+static guint         write_done_write_profiles( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static gboolean     is_valid_label( const FMAObjectAction *action );
-static gboolean     is_valid_toolbar_label( const FMAObjectAction *action );
+static gboolean      is_valid_label( const FMAObjectAction *action );
+static gboolean      is_valid_toolbar_label( const FMAObjectAction *action );
 
 GType
 fma_object_action_get_type( void )

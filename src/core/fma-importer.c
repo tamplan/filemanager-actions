@@ -90,11 +90,11 @@ static FMAImportModeStr st_import_ask_mode = {
 };
 
 static FMAImporterResult *import_from_uri( const FMAPivot *pivot, GList *modules, const gchar *uri );
-static void              manage_import_mode( FMAImporterParms *parms, GList *results, FMAImporterAskUserParms *ask_parms, FMAImporterResult *result );
+static void               manage_import_mode( FMAImporterParms *parms, GList *results, FMAImporterAskUserParms *ask_parms, FMAImporterResult *result );
 static FMAObjectItem     *is_importing_already_exists( FMAImporterParms *parms, GList *results, FMAImporterResult *result );
-static void              renumber_label_item( FMAObjectItem *item );
-static guint             ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, FMAImporterAskUserParms *parms );
-static guint             get_id_from_string( const gchar *str );
+static void               renumber_label_item( FMAObjectItem *item );
+static guint              ask_user_for_mode( const FMAObjectItem *importing, const FMAObjectItem *existing, FMAImporterAskUserParms *parms );
+static guint              get_id_from_string( const gchar *str );
 static FMAIOption        *get_mode_from_struct( const FMAImportModeStr *str );
 
 /* i18n: '%s' stands for the file URI */

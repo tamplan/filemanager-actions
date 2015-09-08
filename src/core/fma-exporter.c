@@ -48,7 +48,6 @@ typedef struct {
 	NAExporterFormatStr;
 
 static NAExporterFormatStr st_format_ask = {
-
 		EXPORTER_FORMAT_ASK,
 		N_( "_Ask me" ),
 		N_( "You will be asked for the format to choose each time an item " \

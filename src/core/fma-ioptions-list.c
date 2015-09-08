@@ -79,7 +79,7 @@ static void         ioptions_list_free_options( const FMAIOptionsList *instance,
 static void         ioptions_list_free_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent, FMAIOption *option );
 static GList       *options_list_get_options( const FMAIOptionsList *instance, GtkWidget *container_parent );
 static void         options_list_free_options( const FMAIOptionsList *instance, GtkWidget *container_parent, GList *options );
-static FMAIOption   *options_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent );
+static FMAIOption  *options_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent );
 static void         options_list_free_ask_option( const FMAIOptionsList *instance, GtkWidget *container_parent, FMAIOption *ask_option );
 static gboolean     get_options_list_container_initialized( GtkWidget *container_parent );
 static void         set_options_list_container_initialized( GtkWidget *container_parent, gboolean initialized );
@@ -89,7 +89,7 @@ static GtkWidget   *get_options_list_first_button( GtkWidget *container );
 static void         set_options_list_first_button( GtkWidget *container, GtkWidget *button );
 static gboolean     get_options_list_instance_initialized( const FMAIOptionsList *instance );
 static void         set_options_list_instance_initialized( const FMAIOptionsList *instance, gboolean initialized );
-static FMAIOption   *get_options_list_option( GtkWidget *container );
+static FMAIOption  *get_options_list_option( GtkWidget *container );
 static void         set_options_list_option( GtkWidget *container, FMAIOption *option );
 static const gchar *get_options_list_option_id( GtkWidget *container );
 static void         set_options_list_option_id( GtkWidget *container, const gchar *id );

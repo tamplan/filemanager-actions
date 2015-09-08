@@ -59,8 +59,8 @@ enum {
 typedef struct {
 	FMAIFactoryObject   *object;
 	FMAIFactoryProvider *reader;
-	void               *reader_data;
-	GSList            **messages;
+	void                *reader_data;
+	GSList             **messages;
 }
 	NafoReadIter;
 
@@ -68,16 +68,16 @@ typedef struct {
  */
 typedef struct {
 	FMAIFactoryProvider *writer;
-	void               *writer_data;
-	GSList            **messages;
-	guint               code;
+	void                *writer_data;
+	GSList             **messages;
+	guint                code;
 }
 	NafoWriteIter;
 
 /* while iterating on is_valid
  */
 typedef struct {
-	FMAIFactoryObject  *object;
+	FMAIFactoryObject *object;
 	gboolean           is_valid;
 }
 	NafoValidIter;
@@ -92,24 +92,24 @@ typedef struct {
 extern gboolean                   ifactory_object_initialized;
 extern gboolean                   ifactory_object_finalized;
 
-static gboolean     define_class_properties_iter( const FMADataDef *def, GObjectClass *class );
-static gboolean     set_defaults_iter( FMADataDef *def, NafoDefaultIter *data );
-static gboolean     is_valid_mandatory_iter( const FMADataDef *def, NafoValidIter *data );
-static gboolean     read_data_iter( FMADataDef *def, NafoReadIter *iter );
-static gboolean     write_data_iter( const FMAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteIter *iter );
+static gboolean      define_class_properties_iter( const FMADataDef *def, GObjectClass *class );
+static gboolean      set_defaults_iter( FMADataDef *def, NafoDefaultIter *data );
+static gboolean      is_valid_mandatory_iter( const FMADataDef *def, NafoValidIter *data );
+static gboolean      read_data_iter( FMADataDef *def, NafoReadIter *iter );
+static gboolean      write_data_iter( const FMAIFactoryObject *object, FMADataBoxed *boxed, NafoWriteIter *iter );
 
 static FMADataGroup *v_get_groups( const FMAIFactoryObject *object );
-static void         v_copy( FMAIFactoryObject *target, const FMAIFactoryObject *source );
-static gboolean     v_are_equal( const FMAIFactoryObject *a, const FMAIFactoryObject *b );
-static gboolean     v_is_valid( const FMAIFactoryObject *object );
-static void         v_read_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static void         v_read_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        v_write_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
-static guint        v_write_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void          v_copy( FMAIFactoryObject *target, const FMAIFactoryObject *source );
+static gboolean      v_are_equal( const FMAIFactoryObject *a, const FMAIFactoryObject *b );
+static gboolean      v_is_valid( const FMAIFactoryObject *object );
+static void          v_read_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static void          v_read_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint         v_write_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+static guint         v_write_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
-static void         attach_boxed_to_object( FMAIFactoryObject *object, FMADataBoxed *boxed );
-static void         free_data_boxed_list( FMAIFactoryObject *object );
-static void         iter_on_data_defs( const FMADataGroup *idgroups, guint mode, FMADataDefIterFunc pfn, void *user_data );
+static void          attach_boxed_to_object( FMAIFactoryObject *object, FMADataBoxed *boxed );
+static void          free_data_boxed_list( FMAIFactoryObject *object );
+static void          iter_on_data_defs( const FMADataGroup *idgroups, guint mode, FMADataDefIterFunc pfn, void *user_data );
 
 /*
  * fma_factory_object_define_properties:

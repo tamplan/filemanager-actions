@@ -32,7 +32,7 @@
 
 /* @title NAAbout
  * @short_description: The #NAAbout API
- * @include: runtime/fma-about.h
+ * @include: core/fma-about.h
  *
  * These functions displays the 'About FileManager-Actions' dialog box,
  * and provides contant informations about the application.

@@ -50,12 +50,12 @@ struct _FMAIOProviderClassPrivate {
 /* private instance data
  */
 struct _FMAIOProviderPrivate {
-	gboolean       dispose_has_run;
-	gchar         *id;
+	gboolean        dispose_has_run;
+	gchar          *id;
 	FMAIIOProvider *provider;
-	gulong         item_changed_handler;
-	gboolean       writable;
-	guint          reason;
+	gulong          item_changed_handler;
+	gboolean        writable;
+	guint           reason;
 };
 
 /* FMAIOProvider properties
@@ -66,40 +66,40 @@ enum {
 
 #define IO_PROVIDER_PROP_ID				"fma-io-provider-prop-id"
 
-static const gchar  *st_enter_bug    = N_( "Please, be kind enough to fill out a bug report on "
+static const gchar   *st_enter_bug    = N_( "Please, be kind enough to fill out a bug report on "
 											"https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions." );
 
-static GObjectClass *st_parent_class = NULL;
-static GList        *st_io_providers = NULL;
+static GObjectClass  *st_parent_class = NULL;
+static GList         *st_io_providers = NULL;
 
-static GType         register_type( void );
-static void          class_init( FMAIOProviderClass *klass );
-static void          instance_init( GTypeInstance *instance, gpointer klass );
-static void          instance_constructed( GObject *object );
-static void          instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void          instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void          instance_dispose( GObject *object );
-static void          instance_finalize( GObject *object );
+static GType          register_type( void );
+static void           class_init( FMAIOProviderClass *klass );
+static void           instance_init( GTypeInstance *instance, gpointer klass );
+static void           instance_constructed( GObject *object );
+static void           instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void           instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void           instance_dispose( GObject *object );
+static void           instance_finalize( GObject *object );
 
 #if 0
-static void          dump( const FMAIOProvider *provider );
-static void          dump_providers_list( GList *providers );
+static void           dump( const FMAIOProvider *provider );
+static void           dump_providers_list( GList *providers );
 #endif
 static FMAIOProvider *io_provider_new( const FMAPivot *pivot, FMAIIOProvider *module, const gchar *id );
-static GList        *io_providers_list_add_from_plugins( const FMAPivot *pivot, GList *list );
-static GList        *io_providers_list_add_from_prefs( const FMAPivot *pivot, GList *objects_list );
-static GSList       *io_providers_get_from_prefs( void );
-static GList        *io_providers_list_add_from_write_order( const FMAPivot *pivot, GList *objects_list );
-static GList        *io_providers_list_append_object( const FMAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id );
-static void          io_providers_list_set_module( const FMAPivot *pivot, FMAIOProvider *provider_object, FMAIIOProvider *provider_module );
-static gboolean      is_conf_writable( const FMAIOProvider *provider, const FMAPivot *pivot, gboolean *mandatory );
-static gboolean      is_finally_writable( const FMAIOProvider *provider, const FMAPivot *pivot, guint *reason );
-static GList        *load_items_filter_unwanted_items( const FMAPivot *pivot, GList *merged, guint loadable_set );
-static GList        *load_items_filter_unwanted_items_rec( GList *merged, guint loadable_set );
-static GList        *load_items_get_merged_list( const FMAPivot *pivot, guint loadable_set, GSList **messages );
-static GList        *load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_empty, FMAObjectItem *parent );
-static GList        *load_items_hierarchy_sort( const FMAPivot *pivot, GList *tree, GCompareFunc fn );
-static gint          peek_item_by_id_compare( const FMAObject *obj, const gchar *id );
+static GList         *io_providers_list_add_from_plugins( const FMAPivot *pivot, GList *list );
+static GList         *io_providers_list_add_from_prefs( const FMAPivot *pivot, GList *objects_list );
+static GSList        *io_providers_get_from_prefs( void );
+static GList         *io_providers_list_add_from_write_order( const FMAPivot *pivot, GList *objects_list );
+static GList         *io_providers_list_append_object( const FMAPivot *pivot, GList *list, FMAIIOProvider *module, const gchar *id );
+static void           io_providers_list_set_module( const FMAPivot *pivot, FMAIOProvider *provider_object, FMAIIOProvider *provider_module );
+static gboolean       is_conf_writable( const FMAIOProvider *provider, const FMAPivot *pivot, gboolean *mandatory );
+static gboolean       is_finally_writable( const FMAIOProvider *provider, const FMAPivot *pivot, guint *reason );
+static GList         *load_items_filter_unwanted_items( const FMAPivot *pivot, GList *merged, guint loadable_set );
+static GList         *load_items_filter_unwanted_items_rec( GList *merged, guint loadable_set );
+static GList         *load_items_get_merged_list( const FMAPivot *pivot, guint loadable_set, GSList **messages );
+static GList         *load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_empty, FMAObjectItem *parent );
+static GList         *load_items_hierarchy_sort( const FMAPivot *pivot, GList *tree, GCompareFunc fn );
+static gint           peek_item_by_id_compare( const FMAObject *obj, const gchar *id );
 static FMAIOProvider *peek_provider_by_id( const GList *providers, const gchar *id );
 
 GType
