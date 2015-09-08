@@ -41,7 +41,7 @@
 #include "fma-desktop-formats.h"
 #include "fma-keys.h"
 #include "fma-monitor.h"
-#include "fma-reader.h"
+#include "fma-desktop-reader.h"
 #include "nadp-writer.h"
 
 /* private class data
@@ -233,7 +233,7 @@ iio_provider_iface_init( FMAIIOProviderInterface *iface )
 	iface->get_version = iio_provider_get_version;
 	iface->get_id = iio_provider_get_id;
 	iface->get_name = iio_provider_get_name;
-	iface->read_items = fma_iio_provider_read_items;
+	iface->read_items = fma_desktop_reader_iio_provider_read_items;
 	iface->is_willing_to_write = nadp_iio_provider_is_willing_to_write;
 	iface->is_able_to_write = nadp_iio_provider_is_able_to_write;
 	iface->write_item = nadp_iio_provider_write_item;
@@ -267,9 +267,9 @@ ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = ifactory_provider_get_version;
-	iface->read_start = fma_reader_ifactory_provider_read_start;
-	iface->read_data = fma_reader_ifactory_provider_read_data;
-	iface->read_done = fma_reader_ifactory_provider_read_done;
+	iface->read_start = fma_desktop_reader_ifactory_provider_read_start;
+	iface->read_data = fma_desktop_reader_ifactory_provider_read_data;
+	iface->read_done = fma_desktop_reader_ifactory_provider_read_done;
 	iface->write_start = nadp_writer_ifactory_provider_write_start;
 	iface->write_data = nadp_writer_ifactory_provider_write_data;
 	iface->write_done = nadp_writer_ifactory_provider_write_done;
@@ -289,7 +289,7 @@ iimporter_iface_init( FMAIImporterInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = iimporter_get_version;
-	iface->import_from_uri = fma_reader_iimporter_import_from_uri;
+	iface->import_from_uri = fma_desktop_reader_iimporter_import_from_uri;
 }
 
 static guint

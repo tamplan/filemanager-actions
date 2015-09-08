@@ -43,7 +43,7 @@
 
 #include "fma-desktop-provider.h"
 #include "fma-keys.h"
-#include "fma-reader.h"
+#include "fma-desktop-reader.h"
 #include "nadp-utils.h"
 #include "nadp-xdg-dirs.h"
 
@@ -51,33 +51,33 @@ typedef struct {
 	gchar *path;
 	gchar *id;
 }
-	DesktopPath;
+	sDesktopPath;
 
 /* the structure passed as reader data to FMAIFactoryObject
  */
 typedef struct {
-	FMADesktopFile *ndf;
-	FMAObjectAction  *action;
+	FMADesktopFile  *ndf;
+	FMAObjectAction *action;
 }
-	FMAReaderData;
+	sReaderData;
 
 #define ERR_NOT_DESKTOP		_( "The Desktop I/O Provider is not able to handle the URI" )
 
-static GList            *get_list_of_desktop_paths( FMADesktopProvider *provider, GSList **mesages );
-static void              get_list_of_desktop_files( const FMADesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
-static gboolean          is_already_loaded( const FMADesktopProvider *provider, GList *files, const gchar *desktop_id );
-static GList            *desktop_path_from_id( const FMADesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
-static FMAIFactoryObject *item_from_desktop_path( const FMADesktopProvider *provider, DesktopPath *dps, GSList **messages );
+static GList             *get_list_of_desktop_paths( FMADesktopProvider *provider, GSList **mesages );
+static void               get_list_of_desktop_files( const FMADesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
+static gboolean           is_already_loaded( const FMADesktopProvider *provider, GList *files, const gchar *desktop_id );
+static GList             *desktop_path_from_id( const FMADesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
+static FMAIFactoryObject *item_from_desktop_path( const FMADesktopProvider *provider, sDesktopPath *dps, GSList **messages );
 static FMAIFactoryObject *item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf, GSList **messages );
-static void              desktop_weak_notify( FMADesktopFile *ndf, GObject *item );
-static void              free_desktop_paths( GList *paths );
+static void               desktop_weak_notify( FMADesktopFile *ndf, GObject *item );
+static void               free_desktop_paths( GList *paths );
 
-static void              read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, FMAReaderData *reader_data, GSList **messages );
-static void              read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, FMAReaderData *reader_data, GSList **messages );
+static void               read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, sReaderData *reader_data, GSList **messages );
+static void               read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, sReaderData *reader_data, GSList **messages );
 
-static gboolean          read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, FMAReaderData *reader_data, GSList **messages );
-static void              read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, FMAReaderData *data, GSList **messages );
-static void              read_done_action_load_profile( const FMAIFactoryProvider *provider, FMAReaderData *reader_data, const gchar *profile_id, GSList **messages );
+static gboolean           read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, sReaderData *reader_data, GSList **messages );
+static void               read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, sReaderData *data, GSList **messages );
+static void               read_done_action_load_profile( const FMAIFactoryProvider *provider, sReaderData *reader_data, const gchar *profile_id, GSList **messages );
 
 /*
  * Returns an unordered list of FMAIFactoryObject-derived objects
@@ -85,9 +85,9 @@ static void              read_done_action_load_profile( const FMAIFactoryProvide
  * This is implementation of FMAIIOProvider::read_items method
  */
 GList *
-fma_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
+fma_desktop_reader_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
 {
-	static const gchar *thisfn = "io-desktop/fma_iio_provider_read_items";
+	static const gchar *thisfn = "io-desktop/fma_desktop_reader_iio_provider_read_items";
 	GList *items;
 	GList *desktop_paths, *ip;
 	FMAIFactoryObject *item;
@@ -103,7 +103,7 @@ fma_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
 	desktop_paths = get_list_of_desktop_paths( FMA_DESKTOP_PROVIDER( provider ), messages );
 	for( ip = desktop_paths ; ip ; ip = ip->next ){
 
-		item = item_from_desktop_path( FMA_DESKTOP_PROVIDER( provider ), ( DesktopPath * ) ip->data, messages );
+		item = item_from_desktop_path( FMA_DESKTOP_PROVIDER( provider ), ( sDesktopPath * ) ip->data, messages );
 
 		if( item ){
 			items = g_list_prepend( items, item );
@@ -118,13 +118,13 @@ fma_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
 }
 
 /*
- * returns a list of DesktopPath items
+ * returns a list of sDesktopPath items
  *
  * we get the ordered list of XDG_DATA_DIRS, and the ordered list of
  *  subdirs to add; then for each item of each list, we search for
  *  .desktop files in the resulted built path
  *
- * the returned list is so a list of DesktopPath struct, in
+ * the returned list is so a list of sDesktopPath struct, in
  * the ordered of preference (most preferred first)
  */
 static GList *
@@ -167,7 +167,7 @@ get_list_of_desktop_paths( FMADesktopProvider *provider, GSList **messages )
 static void
 get_list_of_desktop_files( const FMADesktopProvider *provider, GList **files, const gchar *dir, GSList **messages )
 {
-	static const gchar *thisfn = "fma_reader_get_list_of_desktop_files";
+	static const gchar *thisfn = "fma_desktop_reader_get_list_of_desktop_files";
 	GDir *dir_handle;
 	GError *error;
 	const gchar *name;
@@ -215,11 +215,11 @@ is_already_loaded( const FMADesktopProvider *provider, GList *files, const gchar
 {
 	gboolean found;
 	GList *ip;
-	DesktopPath *dps;
+	sDesktopPath *dps;
 
 	found = FALSE;
 	for( ip = files ; ip && !found ; ip = ip->next ){
-		dps = ( DesktopPath * ) ip->data;
+		dps = ( sDesktopPath * ) ip->data;
 		if( !g_ascii_strcasecmp( dps->id, desktop_id )){
 			found = TRUE;
 		}
@@ -231,11 +231,11 @@ is_already_loaded( const FMADesktopProvider *provider, GList *files, const gchar
 static GList *
 desktop_path_from_id( const FMADesktopProvider *provider, GList *files, const gchar *dir, const gchar *id )
 {
-	DesktopPath *dps;
+	sDesktopPath *dps;
 	gchar *bname;
 	GList *list;
 
-	dps = g_new0( DesktopPath, 1 );
+	dps = g_new0( sDesktopPath, 1 );
 
 	bname = g_strdup_printf( "%s%s", id, FMA_DESKTOP_FILE_SUFFIX );
 	dps->path = g_build_filename( dir, bname, NULL );
@@ -250,10 +250,10 @@ desktop_path_from_id( const FMADesktopProvider *provider, GList *files, const gc
 
 /*
  * Returns a newly allocated FMAIFactoryObject-derived object, initialized
- * from the .desktop file pointed to by DesktopPath struct
+ * from the .desktop file pointed to by sDesktopPath struct
  */
 static FMAIFactoryObject *
-item_from_desktop_path( const FMADesktopProvider *provider, DesktopPath *dps, GSList **messages )
+item_from_desktop_path( const FMADesktopProvider *provider, sDesktopPath *dps, GSList **messages )
 {
 	FMADesktopFile *ndf;
 
@@ -272,10 +272,10 @@ item_from_desktop_path( const FMADesktopProvider *provider, DesktopPath *dps, GS
 static FMAIFactoryObject *
 item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf, GSList **messages )
 {
-	/*static const gchar *thisfn = "fma_reader_item_from_desktop_file";*/
+	/*static const gchar *thisfn = "fma_desktop_reader_item_from_desktop_file";*/
 	FMAIFactoryObject *item;
 	gchar *type;
-	FMAReaderData *reader_data;
+	sReaderData *reader_data;
 	gchar *id;
 
 	item = NULL;
@@ -297,7 +297,7 @@ item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf,
 		fma_object_set_id( item, id );
 		g_free( id );
 
-		reader_data = g_new0( FMAReaderData, 1 );
+		reader_data = g_new0( sReaderData, 1 );
 		reader_data->ndf = ndf;
 
 		fma_ifactory_provider_read_item( FMA_IFACTORY_PROVIDER( provider ), reader_data, item, messages );
@@ -316,7 +316,7 @@ item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf,
 static void
 desktop_weak_notify( FMADesktopFile *ndf, GObject *item )
 {
-	static const gchar *thisfn = "fma_reader_desktop_weak_notify";
+	static const gchar *thisfn = "fma_desktop_reader_desktop_weak_notify";
 
 	g_debug( "%s: ndf=%p (%s), item=%p (%s)",
 			thisfn, ( void * ) ndf, G_OBJECT_TYPE_NAME( ndf ),
@@ -329,10 +329,10 @@ static void
 free_desktop_paths( GList *paths )
 {
 	GList *ip;
-	DesktopPath *dps;
+	sDesktopPath *dps;
 
 	for( ip = paths ; ip ; ip = ip->next ){
-		dps = ( DesktopPath * ) ip->data;
+		dps = ( sDesktopPath * ) ip->data;
 		g_free( dps->path );
 		g_free( dps->id );
 		g_free( dps );
@@ -342,7 +342,7 @@ free_desktop_paths( GList *paths )
 }
 
 /**
- * fma_reader_iimporter_import_from_uri:
+ * fma_desktop_reader_iimporter_import_from_uri:
  * @instance: the #FMAIImporter provider.
  * @parms: a #FMAIImporterUriParms structure.
  *
@@ -361,9 +361,9 @@ free_desktop_paths( GList *paths )
  * thus no more checking here against possible duplicate identifiers.
  */
 guint
-fma_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
+fma_desktop_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms_ptr )
 {
-	static const gchar *thisfn = "fma_reader_iimporter_import_from_uri";
+	static const gchar *thisfn = "fma_desktop_reader_iimporter_import_from_uri";
 	guint code;
 	FMAIImporterImportFromUriParmsv2 *parms;
 	FMADesktopFile *ndf;
@@ -419,9 +419,9 @@ fma_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms_
  * depending of the exact class of the FMAObjectItem
  */
 void
-fma_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
+fma_desktop_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
 {
-	static const gchar *thisfn = "fma_reader_ifactory_provider_read_start";
+	static const gchar *thisfn = "fma_desktop_reader_ifactory_provider_read_start";
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( reader ));
@@ -437,18 +437,18 @@ fma_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, void
 				( void * ) messages );
 
 		if( FMA_IS_OBJECT_ITEM( serializable )){
-			read_start_read_subitems_key( reader, FMA_OBJECT_ITEM( serializable ), ( FMAReaderData * ) reader_data, messages );
+			read_start_read_subitems_key( reader, FMA_OBJECT_ITEM( serializable ), ( sReaderData * ) reader_data, messages );
 			fma_object_set_iversion( serializable, 3 );
 		}
 
 		if( FMA_IS_OBJECT_PROFILE( serializable )){
-			read_start_profile_attach_profile( reader, FMA_OBJECT_PROFILE( serializable ), ( FMAReaderData * ) reader_data, messages );
+			read_start_profile_attach_profile( reader, FMA_OBJECT_PROFILE( serializable ), ( sReaderData * ) reader_data, messages );
 		}
 	}
 }
 
 static void
-read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, FMAReaderData *reader_data, GSList **messages )
+read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem *item, sReaderData *reader_data, GSList **messages )
 {
 	GSList *subitems;
 	gboolean key_found;
@@ -467,7 +467,7 @@ read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem
 }
 
 static void
-read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, FMAReaderData *reader_data, GSList **messages )
+read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjectProfile *profile, sReaderData *reader_data, GSList **messages )
 {
 	fma_object_attach_profile( reader_data->action, profile );
 }
@@ -483,12 +483,12 @@ read_start_profile_attach_profile( const FMAIFactoryProvider *provider, FMAObjec
  * letting the caller deal with default values
  */
 FMADataBoxed *
-fma_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
+fma_desktop_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages )
 {
-	static const gchar *thisfn = "fma_reader_ifactory_provider_read_data";
+	static const gchar *thisfn = "fma_desktop_reader_ifactory_provider_read_data";
 	FMADataBoxed *boxed;
 	gboolean found;
-	FMAReaderData *nrd;
+	sReaderData *nrd;
 	gchar *group, *id;
 	gchar *msg;
 	gchar *str_value;
@@ -504,7 +504,7 @@ fma_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void 
 
 	if( !FMA_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
-		nrd = ( FMAReaderData * ) reader_data;
+		nrd = ( sReaderData * ) reader_data;
 		g_return_val_if_fail( FMA_IS_DESKTOP_FILE( nrd->ndf ), NULL );
 
 		if( def->desktop_entry ){
@@ -581,9 +581,9 @@ fma_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void 
  * called when each FMAIFactoryObject object has been read
  */
 void
-fma_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
+fma_desktop_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages )
 {
-	static const gchar *thisfn = "fma_reader_ifactory_provider_read_done";
+	static const gchar *thisfn = "fma_desktop_reader_ifactory_provider_read_done";
 	gboolean writable;
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ));
@@ -600,12 +600,12 @@ fma_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void 
 				( void * ) messages );
 
 		if( FMA_IS_OBJECT_ITEM( serializable )){
-			writable = read_done_item_is_writable( reader, FMA_OBJECT_ITEM( serializable ), ( FMAReaderData * ) reader_data, messages );
+			writable = read_done_item_is_writable( reader, FMA_OBJECT_ITEM( serializable ), ( sReaderData * ) reader_data, messages );
 			fma_object_set_readonly( serializable, !writable );
 		}
 
 		if( FMA_IS_OBJECT_ACTION( serializable )){
-			read_done_action_read_profiles( reader, FMA_OBJECT_ACTION( serializable ), ( FMAReaderData * ) reader_data, messages );
+			read_done_action_read_profiles( reader, FMA_OBJECT_ACTION( serializable ), ( sReaderData * ) reader_data, messages );
 		}
 
 		g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( serializable ), ( void * ) serializable );
@@ -613,7 +613,7 @@ fma_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void 
 }
 
 static gboolean
-read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, FMAReaderData *reader_data, GSList **messages )
+read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *item, sReaderData *reader_data, GSList **messages )
 {
 	FMADesktopFile *ndf;
 	gchar *uri;
@@ -636,9 +636,9 @@ read_done_item_is_writable( const FMAIFactoryProvider *provider, FMAObjectItem *
  * - ensure that there is at least one profile attached to the action
  */
 static void
-read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, FMAReaderData *reader_data, GSList **messages )
+read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAction *action, sReaderData *reader_data, GSList **messages )
 {
-	static const gchar *thisfn = "fma_reader_read_done_action_read_profiles";
+	static const gchar *thisfn = "fma_desktop_reader_read_done_action_read_profiles";
 	GSList *order;
 	GSList *ip;
 	gchar *profile_id;
@@ -666,9 +666,9 @@ read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAc
 }
 
 static void
-read_done_action_load_profile( const FMAIFactoryProvider *provider, FMAReaderData *reader_data, const gchar *profile_id, GSList **messages )
+read_done_action_load_profile( const FMAIFactoryProvider *provider, sReaderData *reader_data, const gchar *profile_id, GSList **messages )
 {
-	static const gchar *thisfn = "fma_reader_read_done_action_load_profile";
+	static const gchar *thisfn = "fma_desktop_reader_read_done_action_load_profile";
 	FMAObjectProfile *profile;
 
 	g_debug( "%s: loading profile=%s", thisfn, profile_id );

@@ -52,8 +52,8 @@ libna_io_desktop_la_SOURCES = \
 	fma-module.c										\
 	fma-monitor.c										\
 	fma-monitor.h										\
-	fma-reader.c										\
-	fma-reader.h										\
+	fma-desktop-reader.c								\
+	fma-desktop-reader.h								\
 	nadp-utils.c										\
 	nadp-utils.h										\
 	nadp-writer.c										\

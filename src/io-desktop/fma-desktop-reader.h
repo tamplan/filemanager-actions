@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __IO_DESKTOP_FMA_READER_H__
-#define __IO_DESKTOP_FMA_READER_H__
+#ifndef __IO_DESKTOP_FMA_DESKTOP_READER_H__
+#define __IO_DESKTOP_FMA_DESKTOP_READER_H__
 
 #include <api/fma-iio-provider.h>
 #include <api/fma-iimporter.h>
@@ -36,14 +36,14 @@
 
 G_BEGIN_DECLS
 
-GList        *fma_iio_provider_read_items            ( const FMAIIOProvider *provider, GSList **messages );
+GList        *fma_desktop_reader_iio_provider_read_items     ( const FMAIIOProvider *provider, GSList **messages );
 
-guint         fma_reader_iimporter_import_from_uri   ( const FMAIImporter *instance, void *parms_ptr );
+guint         fma_desktop_reader_iimporter_import_from_uri   ( const FMAIImporter *instance, void *parms_ptr );
 
-void          fma_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages );
-FMADataBoxed *fma_reader_ifactory_provider_read_data ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, const FMADataDef *iddef, GSList **messages );
-void          fma_reader_ifactory_provider_read_done ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages );
+void          fma_desktop_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages );
+FMADataBoxed *fma_desktop_reader_ifactory_provider_read_data ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, const FMADataDef *iddef, GSList **messages );
+void          fma_desktop_reader_ifactory_provider_read_done ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *serializable, GSList **messages );
 
 G_END_DECLS
 
-#endif /* __IO_DESKTOP_FMA_READER_H__ */
+#endif /* __IO_DESKTOP_FMA_DESKTOP_READER_H__ */
