@@ -138,7 +138,7 @@ nagp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			( void * ) messages );
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
@@ -147,12 +147,12 @@ nagp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 	self = NAGP_GCONF_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
-		return( FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
+		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
 	ret = nagp_iio_provider_delete_item( provider, item, messages );
 
-	if( ret == FMA_IIO_PROVIDER_CODE_OK ){
+	if( ret == IIO_PROVIDER_CODE_OK ){
 		fma_ifactory_provider_write_item( FMA_IFACTORY_PROVIDER( provider ), NULL, FMA_IFACTORY_OBJECT( item ), messages );
 	}
 
@@ -180,7 +180,7 @@ nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			( void * ) messages );
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NAGP_IS_GCONF_PROVIDER( provider ), ret );
@@ -189,17 +189,17 @@ nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 	self = NAGP_GCONF_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
-		return( FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
+		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
-	ret = FMA_IIO_PROVIDER_CODE_OK;
+	ret = IIO_PROVIDER_CODE_OK;
 	uuid = fma_object_get_id( FMA_OBJECT( item ));
 
 	/* GCONF_UNSET_INCLUDING_SCHEMA_NAMES seems mean: including the name
 	 * of the schemas which is embedded in the GConfEntry - this doesn't
 	 * mean including the schemas themselves
 	 */
-	if( ret == FMA_IIO_PROVIDER_CODE_OK ){
+	if( ret == IIO_PROVIDER_CODE_OK ){
 		path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, uuid );
 		gconf_client_recursive_unset( self->private->gconf, path, GCONF_UNSET_INCLUDING_SCHEMA_NAMES, &error );
 		if( error ){
@@ -207,13 +207,13 @@ nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 			*messages = g_slist_append( *messages, g_strdup( error->message ));
 			g_error_free( error );
 			error = NULL;
-			ret = FMA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR;
+			ret = IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR;
 		}
 		gconf_client_suggest_sync( self->private->gconf, NULL );
 		g_free( path );
 	}
 
-	if( ret == FMA_IIO_PROVIDER_CODE_OK ){
+	if( ret == IIO_PROVIDER_CODE_OK ){
 		path = gconf_concat_dir_and_key( NAGP_SCHEMAS_PATH, uuid );
 		gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
 		if( error ){
@@ -221,7 +221,7 @@ nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 			*messages = g_slist_append( *messages, g_strdup( error->message ));
 			g_error_free( error );
 			error = NULL;
-			ret = FMA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR;
+			ret = IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR;
 		}
 		g_free( path );
 		gconf_client_suggest_sync( self->private->gconf, NULL );
@@ -241,7 +241,7 @@ nagp_writer_write_start( const FMAIFactoryProvider *writer, void *writer_data,
 		write_start_write_version( NAGP_GCONF_PROVIDER( writer ), FMA_OBJECT_ITEM( object ));
 	}
 
-	return( FMA_IIO_PROVIDER_CODE_OK );
+	return( IIO_PROVIDER_CODE_OK );
 }
 
 static void
@@ -298,7 +298,7 @@ nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 	/*g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
 
 	msg = NULL;
-	code = FMA_IIO_PROVIDER_CODE_OK;
+	code = IIO_PROVIDER_CODE_OK;
 	def = fma_data_boxed_get_data_def( boxed );
 
 	if( !fma_data_boxed_is_default( boxed ) || def->write_if_default ){
@@ -327,7 +327,7 @@ nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 				fma_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
-					code = FMA_IIO_PROVIDER_CODE_WRITE_ERROR;
+					code = IIO_PROVIDER_CODE_WRITE_ERROR;
 				}
 				g_free( str_value );
 				break;
@@ -337,7 +337,7 @@ nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 				fma_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
-					code = FMA_IIO_PROVIDER_CODE_WRITE_ERROR;
+					code = IIO_PROVIDER_CODE_WRITE_ERROR;
 				}
 				g_free( str_value );
 				break;
@@ -347,7 +347,7 @@ nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 				fma_gconf_utils_write_bool( gconf, path, bool_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
-					code = FMA_IIO_PROVIDER_CODE_WRITE_ERROR;
+					code = IIO_PROVIDER_CODE_WRITE_ERROR;
 				}
 				break;
 
@@ -356,7 +356,7 @@ nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 				fma_gconf_utils_write_string_list( gconf, path, slist_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
-					code = FMA_IIO_PROVIDER_CODE_WRITE_ERROR;
+					code = IIO_PROVIDER_CODE_WRITE_ERROR;
 				}
 				fma_core_utils_slist_free( slist_value );
 				break;
@@ -366,13 +366,13 @@ nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 				fma_gconf_utils_write_int( gconf, path, uint_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
-					code = FMA_IIO_PROVIDER_CODE_WRITE_ERROR;
+					code = IIO_PROVIDER_CODE_WRITE_ERROR;
 				}
 				break;
 
 			default:
 				g_warning( "%s: unknown type=%u for %s", thisfn, def->type, def->name );
-				code = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+				code = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 		}
 
 		/*g_debug( "%s: gconf=%p, code=%u, path=%s", thisfn, ( void * ) gconf, code, path );*/
@@ -391,6 +391,6 @@ nagp_writer_write_done( const FMAIFactoryProvider *writer, void *writer_data,
 									const FMAIFactoryObject *object,
 									GSList **messages  )
 {
-	return( FMA_IIO_PROVIDER_CODE_OK );
+	return( IIO_PROVIDER_CODE_OK );
 }
 #endif /* NA_ENABLE_DEPRECATED */

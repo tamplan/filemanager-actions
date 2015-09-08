@@ -92,7 +92,7 @@ typedef struct {
 }
 	FMAIContextInterface;
 
-GType    fma_icontext_get_type( void );
+GType    fma_icontext_get_type        ( void );
 
 gboolean fma_icontext_are_equal       ( const FMAIContext *a, const FMAIContext *b );
 gboolean fma_icontext_is_candidate    ( const FMAIContext *context, guint target, GList *selection );

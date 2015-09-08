@@ -885,7 +885,7 @@ fma_object_item_is_finally_writable( const FMAObjectItem *item, guint *reason )
 	gboolean writable;
 
 	if( reason ){
-		*reason = FMA_IIO_PROVIDER_STATUS_UNDETERMINED;
+		*reason = IIO_PROVIDER_STATUS_UNDETERMINED;
 	}
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), FALSE );
 

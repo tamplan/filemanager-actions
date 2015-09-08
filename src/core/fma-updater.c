@@ -259,12 +259,12 @@ fma_updater_check_item_writability_status( const FMAUpdater *updater, const FMAO
 	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
 
 	writable = FALSE;
-	reason = FMA_IIO_PROVIDER_STATUS_UNDETERMINED;
+	reason = IIO_PROVIDER_STATUS_UNDETERMINED;
 
 	if( !updater->private->dispose_has_run ){
 
 		writable = TRUE;
-		reason = FMA_IIO_PROVIDER_STATUS_WRITABLE;
+		reason = IIO_PROVIDER_STATUS_WRITABLE;
 
 		/* Writability status of the item has been determined at load time
 		 * (cf. e.g. io-desktop/nadp-reader.c:read_done_item_is_writable()).
@@ -276,7 +276,7 @@ fma_updater_check_item_writability_status( const FMAUpdater *updater, const FMAO
 		if( writable ){
 			if( fma_object_is_readonly( item )){
 				writable = FALSE;
-				reason = FMA_IIO_PROVIDER_STATUS_ITEM_READONLY;
+				reason = IIO_PROVIDER_STATUS_ITEM_READONLY;
 			}
 		}
 
@@ -291,7 +291,7 @@ fma_updater_check_item_writability_status( const FMAUpdater *updater, const FMAO
 				provider = fma_io_provider_find_writable_io_provider( FMA_PIVOT( updater ));
 				if( !provider ){
 					writable = FALSE;
-					reason = FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
+					reason = IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
 				}
 			}
 		}
@@ -302,7 +302,7 @@ fma_updater_check_item_writability_status( const FMAUpdater *updater, const FMAO
 			parent = ( FMAObjectItem * ) fma_object_get_parent( item );
 			if( !parent ){
 				if( updater->private->is_level_zero_writable ){
-					reason = FMA_IIO_PROVIDER_STATUS_LEVEL_ZERO;
+					reason = IIO_PROVIDER_STATUS_LEVEL_ZERO;
 				}
 			}
 		}
@@ -558,7 +558,7 @@ fma_updater_write_item( const FMAUpdater *updater, FMAObjectItem *item, GSList *
 {
 	guint ret;
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_UPDATER( updater ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
@@ -570,7 +570,7 @@ fma_updater_write_item( const FMAUpdater *updater, FMAObjectItem *item, GSList *
 
 		if( !provider ){
 			provider = fma_io_provider_find_writable_io_provider( FMA_PIVOT( updater ));
-			g_return_val_if_fail( provider, FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND );
+			g_return_val_if_fail( provider, IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND );
 		}
 
 		if( provider ){
@@ -601,11 +601,11 @@ fma_updater_delete_item( const FMAUpdater *updater, const FMAObjectItem *item, G
 	guint ret;
 	FMAIOProvider *provider;
 
-	g_return_val_if_fail( FMA_IS_UPDATER( updater ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( messages, FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_UPDATER( updater ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( messages, IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
-	ret = FMA_IIO_PROVIDER_CODE_OK;
+	ret = IIO_PROVIDER_CODE_OK;
 
 	if( !updater->private->dispose_has_run ){
 
@@ -615,7 +615,7 @@ fma_updater_delete_item( const FMAUpdater *updater, const FMAObjectItem *item, G
 		 * without having been ever saved
 		 */
 		if( provider ){
-			g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+			g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
 			ret = fma_io_provider_delete_item( provider, item, messages );
 		}
 	}

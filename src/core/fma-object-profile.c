@@ -368,7 +368,7 @@ ifactory_object_read_done( FMAIFactoryObject *instance, const FMAIFactoryProvide
 static guint
 ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	return( FMA_IIO_PROVIDER_CODE_OK );
+	return( IIO_PROVIDER_CODE_OK );
 }
 
 static void

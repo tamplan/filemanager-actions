@@ -85,10 +85,10 @@ fma_factory_provider_write_data( const FMAIFactoryProvider *writer, void *writer
 {
 	guint code;
 
-	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
-	code = FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
+	code = IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
 
 	if( FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data ){
 		code = FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data( writer, writer_data, object, boxed, messages );

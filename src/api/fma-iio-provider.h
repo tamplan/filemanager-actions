@@ -374,7 +374,7 @@ typedef struct {
 	 * The I/O provider should implement this method, or return
 	 * FALSE in is_willing_to_write() method above.
 	 *
-	 * Return value: FMA_IIO_PROVIDER_CODE_OK if the write operation
+	 * Return value: IIO_PROVIDER_CODE_OK if the write operation
 	 * was successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
@@ -393,7 +393,7 @@ typedef struct {
 	 * The I/O provider should implement this method, or return
 	 * FALSE in is_willing_to_write() method above.
 	 *
-	 * Return value: FMA_IIO_PROVIDER_CODE_OK if the delete operation was
+	 * Return value: IIO_PROVIDER_CODE_OK if the delete operation was
 	 * successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
@@ -418,7 +418,7 @@ typedef struct {
 	 * the provider-specific data which may have been attached to
 	 * the FMAObjectItem-derived object.
 	 *
-	 * Return value: FMA_IIO_PROVIDER_CODE_OK if the duplicate operation
+	 * Return value: IIO_PROVIDER_CODE_OK if the duplicate operation
 	 * was successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
@@ -432,17 +432,17 @@ typedef struct {
  */
 /**
  * FMAIIOProviderWritabilityStatus:
- * @FMA_IIO_PROVIDER_STATUS_WRITABLE:          item and i/o provider are writable.
- * @FMA_IIO_PROVIDER_STATUS_UNAVAILABLE:       unavailable i/o provider.
- * @FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API:    i/o provider has an incomplete write api.
- * @FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO:    i/o provider is not willing to write.
- * @FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO:       i/o provider is not able to write.
- * @FMA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:   i/o provider has been locked by the administrator.
- * @FMA_IIO_PROVIDER_STATUS_LOCKED_BY_USER:    i/o provider has been locked by the user.
- * @FMA_IIO_PROVIDER_STATUS_ITEM_READONLY:     item is read-only.
- * @FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND: no writable i/o provider found.
- * @FMA_IIO_PROVIDER_STATUS_LEVEL_ZERO:        level zero is not writable.
- * @FMA_IIO_PROVIDER_STATUS_UNDETERMINED:      unknwon reason (and probably a bug).
+ * @IIO_PROVIDER_STATUS_WRITABLE:          item and i/o provider are writable.
+ * @IIO_PROVIDER_STATUS_UNAVAILABLE:       unavailable i/o provider.
+ * @IIO_PROVIDER_STATUS_INCOMPLETE_API:    i/o provider has an incomplete write api.
+ * @IIO_PROVIDER_STATUS_NOT_WILLING_TO:    i/o provider is not willing to write.
+ * @IIO_PROVIDER_STATUS_NOT_ABLE_TO:       i/o provider is not able to write.
+ * @IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:   i/o provider has been locked by the administrator.
+ * @IIO_PROVIDER_STATUS_LOCKED_BY_USER:    i/o provider has been locked by the user.
+ * @IIO_PROVIDER_STATUS_ITEM_READONLY:     item is read-only.
+ * @IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND: no writable i/o provider found.
+ * @IIO_PROVIDER_STATUS_LEVEL_ZERO:        level zero is not writable.
+ * @IIO_PROVIDER_STATUS_UNDETERMINED:      unknwon reason (and probably a bug).
  *
  * The reasons for which an item may not be writable.
  *
@@ -450,19 +450,19 @@ typedef struct {
  * Some are to be used only internally from &prodname; programs.
  */
 typedef enum {
-	FMA_IIO_PROVIDER_STATUS_WRITABLE = 0,
-	FMA_IIO_PROVIDER_STATUS_UNAVAILABLE,
-	FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API,
-	FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO,
-	FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO,
-	FMA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN,
-	FMA_IIO_PROVIDER_STATUS_LOCKED_BY_USER,
-	FMA_IIO_PROVIDER_STATUS_ITEM_READONLY,
-	FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND,
-	FMA_IIO_PROVIDER_STATUS_LEVEL_ZERO,
-	FMA_IIO_PROVIDER_STATUS_UNDETERMINED,
+	IIO_PROVIDER_STATUS_WRITABLE = 0,
+	IIO_PROVIDER_STATUS_UNAVAILABLE,
+	IIO_PROVIDER_STATUS_INCOMPLETE_API,
+	IIO_PROVIDER_STATUS_NOT_WILLING_TO,
+	IIO_PROVIDER_STATUS_NOT_ABLE_TO,
+	IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN,
+	IIO_PROVIDER_STATUS_LOCKED_BY_USER,
+	IIO_PROVIDER_STATUS_ITEM_READONLY,
+	IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND,
+	IIO_PROVIDER_STATUS_LEVEL_ZERO,
+	IIO_PROVIDER_STATUS_UNDETERMINED,
 	/*< private >*/
-	FMA_IIO_PROVIDER_STATUS_LAST,
+	IIO_PROVIDER_STATUS_LAST,
 }
 	FMAIIOProviderWritabilityStatus;
 
@@ -471,25 +471,25 @@ typedef enum {
  */
 /**
  * FMAIIOProviderOperationStatus:
- * @FMA_IIO_PROVIDER_CODE_OK:            the requested operation has been successful.
- * @FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR: a program error has been detected;
+ * @IIO_PROVIDER_CODE_OK:            the requested operation has been successful.
+ * @IIO_PROVIDER_CODE_PROGRAM_ERROR: a program error has been detected;
  *                                      you should open a bug in
  *                                      <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions">Bugzilla</ulink>.
- * @FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:   the provider is not willing
+ * @IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:   the provider is not willing
  *                                             to do the requested action.
- * @FMA_IIO_PROVIDER_CODE_WRITE_ERROR:          a write error has been detected.
- * @FMA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR: the schemas could not be deleted.
- * @FMA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:  the configuration could not be deleted.
+ * @IIO_PROVIDER_CODE_WRITE_ERROR:          a write error has been detected.
+ * @IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR: the schemas could not be deleted.
+ * @IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:  the configuration could not be deleted.
  *
  * The return code of operations.
  */
 typedef enum {
-	FMA_IIO_PROVIDER_CODE_OK = 0,
-	FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR = 1 + FMA_IIO_PROVIDER_STATUS_LAST,
-	FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN,
-	FMA_IIO_PROVIDER_CODE_WRITE_ERROR,
-	FMA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR,
-	FMA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR,
+	IIO_PROVIDER_CODE_OK = 0,
+	IIO_PROVIDER_CODE_PROGRAM_ERROR = 1 + IIO_PROVIDER_STATUS_LAST,
+	IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN,
+	IIO_PROVIDER_CODE_WRITE_ERROR,
+	IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR,
+	IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR,
 }
 	FMAIIOProviderOperationStatus;
 

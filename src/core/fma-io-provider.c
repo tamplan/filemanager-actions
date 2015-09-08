@@ -187,7 +187,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->provider = NULL;
 	self->private->item_changed_handler = 0;
 	self->private->writable = FALSE;
-	self->private->reason = FMA_IIO_PROVIDER_STATUS_UNAVAILABLE;
+	self->private->reason = IIO_PROVIDER_STATUS_UNAVAILABLE;
 }
 
 static void
@@ -813,7 +813,7 @@ fma_io_provider_is_finally_writable( const FMAIOProvider *provider, guint *reaso
 	gboolean is_writable;
 
 	if( reason ){
-		*reason = FMA_IIO_PROVIDER_STATUS_UNDETERMINED;
+		*reason = IIO_PROVIDER_STATUS_UNDETERMINED;
 	}
 	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), FALSE );
 
@@ -968,12 +968,12 @@ is_finally_writable( const FMAIOProvider *provider, const FMAPivot *pivot, guint
 	g_return_val_if_fail( reason, FALSE );
 
 	writable = FALSE;
-	*reason = FMA_IIO_PROVIDER_STATUS_UNAVAILABLE;
+	*reason = IIO_PROVIDER_STATUS_UNAVAILABLE;
 
 	if( provider->private->provider && FMA_IS_IIO_PROVIDER( provider->private->provider )){
 
 		writable = TRUE;
-		*reason = FMA_IIO_PROVIDER_STATUS_WRITABLE;
+		*reason = IIO_PROVIDER_STATUS_WRITABLE;
 
 		if( !FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write ||
 			!FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write ||
@@ -981,22 +981,22 @@ is_finally_writable( const FMAIOProvider *provider, const FMAPivot *pivot, guint
 			!FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item ){
 
 				writable = FALSE;
-				*reason = FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API;
-				g_debug( "%s: provider_module=%p (%s), writable=False, reason=FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API",
+				*reason = IIO_PROVIDER_STATUS_INCOMPLETE_API;
+				g_debug( "%s: provider_module=%p (%s), writable=False, reason=IIO_PROVIDER_STATUS_INCOMPLETE_API",
 						thisfn, ( void * ) provider->private->provider, provider->private->id );
 
 		} else if( !FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write( provider->private->provider )){
 
 				writable = FALSE;
-				*reason = FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO;
-				g_debug( "%s: provider_module=%p (%s), writable=False, reason=FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO",
+				*reason = IIO_PROVIDER_STATUS_NOT_WILLING_TO;
+				g_debug( "%s: provider_module=%p (%s), writable=False, reason=IIO_PROVIDER_STATUS_NOT_WILLING_TO",
 						thisfn, ( void * ) provider->private->provider, provider->private->id );
 
 		} else if( !FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write( provider->private->provider )){
 
 				writable = FALSE;
-				*reason = FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO;
-				g_debug( "%s: provider_module=%p (%s), writable=False, reason=FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO",
+				*reason = IIO_PROVIDER_STATUS_NOT_ABLE_TO;
+				g_debug( "%s: provider_module=%p (%s), writable=False, reason=IIO_PROVIDER_STATUS_NOT_ABLE_TO",
 						thisfn, ( void * ) provider->private->provider, provider->private->id );
 
 		} else {
@@ -1004,11 +1004,11 @@ is_finally_writable( const FMAIOProvider *provider, const FMAPivot *pivot, guint
 			if( !is_writable ){
 				writable = FALSE;
 				if( mandatory ){
-					*reason = FMA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN;
+					*reason = IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN;
 				} else {
-					*reason = FMA_IIO_PROVIDER_STATUS_LOCKED_BY_USER;
+					*reason = IIO_PROVIDER_STATUS_LOCKED_BY_USER;
 				}
-				g_debug( "%s: provider_module=%p (%s), writable=False, reason=FMA_IIO_PROVIDER_STATUS_LOCKED_BY_someone, mandatory=%s",
+				g_debug( "%s: provider_module=%p (%s), writable=False, reason=IIO_PROVIDER_STATUS_LOCKED_BY_someone, mandatory=%s",
 						thisfn, ( void * ) provider->private->provider, provider->private->id,
 						mandatory ? "True":"False" );
 			}
@@ -1254,7 +1254,7 @@ fma_io_provider_write_item( const FMAIOProvider *provider, const FMAObjectItem *
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			( void * ) messages );
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
@@ -1263,7 +1263,7 @@ fma_io_provider_write_item( const FMAIOProvider *provider, const FMAObjectItem *
 
 	ret = FMA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item( provider->private->provider, item, messages );
 
-	if( ret == FMA_IIO_PROVIDER_CODE_OK ){
+	if( ret == IIO_PROVIDER_CODE_OK ){
 		fma_object_set_provider( item, provider );
 	}
 
@@ -1291,7 +1291,7 @@ fma_io_provider_delete_item( const FMAIOProvider *provider, const FMAObjectItem 
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			( void * ) messages );
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
@@ -1327,7 +1327,7 @@ fma_io_provider_duplicate_data( const FMAIOProvider *provider, FMAObjectItem *de
 			( void * ) source, G_OBJECT_TYPE_NAME( source ),
 			( void * ) messages );
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( dest ), ret );
@@ -1361,39 +1361,39 @@ fma_io_provider_get_readonly_tooltip( guint reason )
 
 	switch( reason ){
 		/* item is writable, so tooltip is empty */
-		case FMA_IIO_PROVIDER_STATUS_WRITABLE:
+		case IIO_PROVIDER_STATUS_WRITABLE:
 			tooltip = g_strdup( "" );
 			break;
 
-		case FMA_IIO_PROVIDER_STATUS_UNAVAILABLE:
+		case IIO_PROVIDER_STATUS_UNAVAILABLE:
 			tooltip = g_strdup( _( "Unavailable I/O provider." ));
 			break;
 
-		case FMA_IIO_PROVIDER_STATUS_INCOMPLETE_API:
+		case IIO_PROVIDER_STATUS_INCOMPLETE_API:
 			tooltip = g_strdup( _( "I/O provider implementation lacks of required API." ));
 			break;
 
-		case FMA_IIO_PROVIDER_STATUS_NOT_WILLING_TO:
+		case IIO_PROVIDER_STATUS_NOT_WILLING_TO:
 			tooltip = g_strdup( _( "I/O provider is not willing to write." ));
 			break;
 
-		case FMA_IIO_PROVIDER_STATUS_NOT_ABLE_TO:
+		case IIO_PROVIDER_STATUS_NOT_ABLE_TO:
 			tooltip = g_strdup( _( "I/O provider announces itself as unable to write." ));
 			break;
 
-		case FMA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:
+		case IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:
 			tooltip = g_strdup( _( "I/O provider has been locked down by an administrator." ));
 			break;
 
-		case FMA_IIO_PROVIDER_STATUS_LOCKED_BY_USER:
+		case IIO_PROVIDER_STATUS_LOCKED_BY_USER:
 			tooltip = g_strdup( _( "I/O provider has been locked down by the user." ));
 			break;
 
-		case FMA_IIO_PROVIDER_STATUS_ITEM_READONLY:
+		case IIO_PROVIDER_STATUS_ITEM_READONLY:
 			tooltip = g_strdup( _( "Item is read-only." ));
 			break;
 
-		case FMA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND:
+		case IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND:
 			tooltip = g_strdup( _( "No writable I/O provider found." ));
 			break;
 
@@ -1421,27 +1421,27 @@ fma_io_provider_get_return_code_label( guint code )
 	label = NULL;
 
 	switch( code ){
-		case FMA_IIO_PROVIDER_CODE_OK:
+		case IIO_PROVIDER_CODE_OK:
 			label = g_strdup( _( "OK." ));
 			break;
 
-		case FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR:
+		case IIO_PROVIDER_CODE_PROGRAM_ERROR:
 			label = g_strdup_printf( _( "Program flow error.\n%s" ), st_enter_bug );
 			break;
 
-		case FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:
+		case IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:
 			label = g_strdup( _( "The I/O provider is not willing to do that." ));
 			break;
 
-		case FMA_IIO_PROVIDER_CODE_WRITE_ERROR:
+		case IIO_PROVIDER_CODE_WRITE_ERROR:
 			label = g_strdup( _( "Write error in I/O provider." ));
 			break;
 
-		case FMA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR:
+		case IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR:
 			label = g_strdup( _( "Unable to delete GConf schemas." ));
 			break;
 
-		case FMA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:
+		case IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:
 			label = g_strdup( _( "Unable to delete configuration." ));
 			break;
 

@@ -312,13 +312,13 @@ ifactory_object_write_start( FMAIFactoryObject *instance, const FMAIFactoryProvi
 {
 	fma_object_item_rebuild_children_slist( FMA_OBJECT_ITEM( instance ));
 
-	return( FMA_IIO_PROVIDER_CODE_OK );
+	return( IIO_PROVIDER_CODE_OK );
 }
 
 static guint
 ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	return( FMA_IIO_PROVIDER_CODE_OK );
+	return( IIO_PROVIDER_CODE_OK );
 }
 
 static void

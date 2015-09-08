@@ -588,7 +588,7 @@ output_to_desktop( FMAObjectAction *action, GSList **msgs )
 	if( provider ){
 		fma_object_set_provider( action, provider );
 		ret = fma_updater_write_item( updater, FMA_OBJECT_ITEM( action ), msgs );
-		code = ( ret == FMA_IIO_PROVIDER_CODE_OK );
+		code = ( ret == IIO_PROVIDER_CODE_OK );
 
 	} else {
 		/* i18n: 'na-desktop' is a plugin identifier - do not translate */

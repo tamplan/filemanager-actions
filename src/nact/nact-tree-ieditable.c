@@ -584,7 +584,7 @@ nact_tree_ieditable_remove_deleted( NactTreeIEditable *instance, GSList **messag
 		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
 		fma_object_dump_norec( item );
 
-		if( fma_updater_delete_item( ied->updater, item, messages ) != FMA_IIO_PROVIDER_CODE_OK ){
+		if( fma_updater_delete_item( ied->updater, item, messages ) != IIO_PROVIDER_CODE_OK ){
 			not_deleted = g_list_prepend( not_deleted, fma_object_ref( item ));
 			delete_ok = FALSE;
 		}

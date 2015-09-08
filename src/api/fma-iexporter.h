@@ -203,12 +203,12 @@ typedef struct {
  * Deprecated: 3.2
  */
 typedef struct {
-	guint         version;
+	guint          version;
 	FMAObjectItem *exported;
-	gchar        *folder;
-	GQuark        format;
-	gchar        *basename;
-	GSList       *messages;
+	gchar         *folder;
+	GQuark         format;
+	gchar         *basename;
+	GSList        *messages;
 }
 	FMAIExporterFileParms;
 

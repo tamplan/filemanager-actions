@@ -137,7 +137,7 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 	gchar *fulldir;
 	gboolean dir_ok;
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
@@ -218,7 +218,7 @@ write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, NadpDeskt
 			( void * ) ndf,
 			( void * ) messages );
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
@@ -232,15 +232,15 @@ write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, NadpDeskt
 	self = NADP_DESKTOP_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
-		return( FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
+		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
-	ret = FMA_IIO_PROVIDER_CODE_OK;
+	ret = IIO_PROVIDER_CODE_OK;
 
 	fma_ifactory_provider_write_item( FMA_IFACTORY_PROVIDER( provider ), ndf, FMA_IFACTORY_OBJECT( item ), messages );
 
 	if( !nadp_desktop_file_write( ndf )){
-		ret = FMA_IIO_PROVIDER_CODE_WRITE_ERROR;
+		ret = IIO_PROVIDER_CODE_WRITE_ERROR;
 	}
 
 	return( ret );
@@ -261,7 +261,7 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			( void * ) messages );
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
@@ -270,7 +270,7 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 	self = NADP_DESKTOP_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
-		return( FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
+		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
 	ndf = ( NadpDesktopFile * ) fma_object_get_provider_data( item );
@@ -279,13 +279,13 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
 		uri = nadp_desktop_file_get_key_file_uri( ndf );
 		if( nadp_utils_uri_delete( uri )){
-			ret = FMA_IIO_PROVIDER_CODE_OK;
+			ret = IIO_PROVIDER_CODE_OK;
 		}
 		g_free( uri );
 
 	} else {
 		g_warning( "%s: NadpDesktopFile is null", thisfn );
-		ret = FMA_IIO_PROVIDER_CODE_OK;
+		ret = IIO_PROVIDER_CODE_OK;
 	}
 
 	return( ret );
@@ -323,7 +323,7 @@ nadp_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem 
 			( void * ) source, G_OBJECT_TYPE_NAME( source ),
 			( void * ) messages );
 
-	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
@@ -333,7 +333,7 @@ nadp_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem 
 	self = NADP_DESKTOP_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
-		return( FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
+		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
 	ndf = ( NadpDesktopFile * ) fma_object_get_provider_data( source );
@@ -341,7 +341,7 @@ nadp_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem 
 	fma_object_set_provider_data( dest, g_object_ref( ndf ));
 	g_object_weak_ref( G_OBJECT( dest ), ( GWeakNotify ) desktop_weak_notify, ndf );
 
-	return( FMA_IIO_PROVIDER_CODE_OK );
+	return( IIO_PROVIDER_CODE_OK );
 }
 
 /**
@@ -388,7 +388,7 @@ nadp_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMAIExport
 			ndf = nadp_desktop_file_new();
 			write_code = fma_ifactory_provider_write_item( FMA_IFACTORY_PROVIDER( instance ), ndf, FMA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
 
-			if( write_code != FMA_IIO_PROVIDER_CODE_OK ){
+			if( write_code != IIO_PROVIDER_CODE_OK ){
 				code = FMA_IEXPORTER_CODE_ERROR;
 
 			} else {
@@ -456,7 +456,7 @@ nadp_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIExporter
 			ndf = nadp_desktop_file_new_for_write( dest_path );
 			write_code = fma_ifactory_provider_write_item( FMA_IFACTORY_PROVIDER( instance ), ndf, FMA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
 
-			if( write_code != FMA_IIO_PROVIDER_CODE_OK ){
+			if( write_code != IIO_PROVIDER_CODE_OK ){
 				code = FMA_IEXPORTER_CODE_ERROR;
 
 			} else if( !nadp_desktop_file_write( ndf )){
@@ -480,7 +480,7 @@ nadp_writer_ifactory_provider_write_start( const FMAIFactoryProvider *provider, 
 		write_start_write_type( NADP_DESKTOP_FILE( writer_data ), FMA_OBJECT_ITEM( object ));
 	}
 
-	return( FMA_IIO_PROVIDER_CODE_OK );
+	return( IIO_PROVIDER_CODE_OK );
 }
 
 static void
@@ -514,10 +514,10 @@ nadp_writer_ifactory_provider_write_data(
 	guint uint_value;
 	gchar *parms, *tmp;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( writer_data ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( writer_data ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	/*g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
 
-	code = FMA_IIO_PROVIDER_CODE_OK;
+	code = IIO_PROVIDER_CODE_OK;
 	ndf = NADP_DESKTOP_FILE( writer_data );
 	def = fma_data_boxed_get_data_def( boxed );
 
@@ -575,7 +575,7 @@ nadp_writer_ifactory_provider_write_data(
 
 				default:
 					g_warning( "%s: unknown type=%u for %s", thisfn, def->type, def->name );
-					code = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+					code = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 			}
 
 		} else {
@@ -596,7 +596,7 @@ nadp_writer_ifactory_provider_write_done( const FMAIFactoryProvider *provider, v
 		write_done_write_subitems_list( NADP_DESKTOP_FILE( writer_data ), FMA_OBJECT_ITEM( object ));
 	}
 
-	return( FMA_IIO_PROVIDER_CODE_OK );
+	return( IIO_PROVIDER_CODE_OK );
 }
 
 static void

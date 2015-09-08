@@ -670,10 +670,10 @@ fma_factory_object_write_item( FMAIFactoryObject *object, const FMAIFactoryProvi
 	FMADataGroup *groups;
 	gchar *msg;
 
-	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
-	code = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	code = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	groups = v_get_groups( object );
 
@@ -687,7 +687,7 @@ fma_factory_object_write_item( FMAIFactoryObject *object, const FMAIFactoryProvi
 		*messages = g_slist_append( *messages, msg );
 	}
 
-	if( code == FMA_IIO_PROVIDER_CODE_OK ){
+	if( code == IIO_PROVIDER_CODE_OK ){
 
 		NafoWriteIter *iter = g_new0( NafoWriteIter, 1 );
 		iter->writer = ( FMAIFactoryProvider * ) writer;
@@ -701,7 +701,7 @@ fma_factory_object_write_item( FMAIFactoryObject *object, const FMAIFactoryProvi
 		g_free( iter );
 	}
 
-	if( code == FMA_IIO_PROVIDER_CODE_OK ){
+	if( code == IIO_PROVIDER_CODE_OK ){
 		code = v_write_done( object, writer, writer_data, messages );
 	}
 
@@ -718,7 +718,7 @@ write_data_iter( const FMAIFactoryObject *object, FMADataBoxed *boxed, NafoWrite
 	}
 
 	/* iter while code is ok */
-	return( iter->code != FMA_IIO_PROVIDER_CODE_OK );
+	return( iter->code != IIO_PROVIDER_CODE_OK );
 }
 
 /*
@@ -918,7 +918,7 @@ v_read_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *reader,
 static guint
 v_write_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	guint code = FMA_IIO_PROVIDER_CODE_OK;
+	guint code = IIO_PROVIDER_CODE_OK;
 
 	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start ){
 		code = FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_start( serializable, writer, writer_data, messages );
@@ -930,7 +930,7 @@ v_write_start( FMAIFactoryObject *serializable, const FMAIFactoryProvider *write
 static guint
 v_write_done( FMAIFactoryObject *serializable, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	guint code = FMA_IIO_PROVIDER_CODE_OK;
+	guint code = IIO_PROVIDER_CODE_OK;
 
 	if( FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done ){
 		code = FMA_IFACTORY_OBJECT_GET_INTERFACE( serializable )->write_done( serializable, writer, writer_data, messages );

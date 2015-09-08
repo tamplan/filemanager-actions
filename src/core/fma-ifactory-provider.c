@@ -216,19 +216,19 @@ fma_ifactory_provider_write_item( const FMAIFactoryProvider *writer, void *write
 	static const gchar *thisfn = "fma_ifactory_provider_write_item";
 	guint code;
 
-	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( writer ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
 	g_debug( "%s: writer=%p, writer_data=%p, object=%p (%s)",
 			thisfn, ( void * ) writer, ( void * ) writer_data, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	code = v_factory_provider_write_start( writer, writer_data, object, messages );
 
-	if( code == FMA_IIO_PROVIDER_CODE_OK ){
+	if( code == IIO_PROVIDER_CODE_OK ){
 		code = fma_factory_object_write_item( object, writer, writer_data, messages );
 	}
 
-	if( code == FMA_IIO_PROVIDER_CODE_OK ){
+	if( code == IIO_PROVIDER_CODE_OK ){
 		code = v_factory_provider_write_done( writer, writer_data, object, messages );
 	}
 
@@ -254,7 +254,7 @@ v_factory_provider_read_done( const FMAIFactoryProvider *reader, void *reader_da
 static guint
 v_factory_provider_write_start( const FMAIFactoryProvider *writer, void *writer_data, FMAIFactoryObject *serializable, GSList **messages )
 {
-	guint code = FMA_IIO_PROVIDER_CODE_OK;
+	guint code = IIO_PROVIDER_CODE_OK;
 
 	if( FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_start ){
 		code = FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_start( writer, writer_data, serializable, messages );
@@ -266,7 +266,7 @@ v_factory_provider_write_start( const FMAIFactoryProvider *writer, void *writer_
 static guint
 v_factory_provider_write_done( const FMAIFactoryProvider *writer, void *writer_data, FMAIFactoryObject *serializable, GSList **messages )
 {
-	guint code = FMA_IIO_PROVIDER_CODE_OK;
+	guint code = IIO_PROVIDER_CODE_OK;
 
 	if( FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_done ){
 		code = FMA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_done( writer, writer_data, serializable, messages );

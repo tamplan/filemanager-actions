@@ -350,7 +350,7 @@ save_item( NactMainWindow *window, FMAUpdater *updater, FMAObjectItem *item, GSL
 		g_free( label );
 
 		save_ret = fma_updater_write_item( updater, item, messages );
-		ret = ( save_ret == FMA_IIO_PROVIDER_CODE_OK );
+		ret = ( save_ret == IIO_PROVIDER_CODE_OK );
 
 		if( ret ){
 			if( FMA_IS_OBJECT_ACTION( item )){

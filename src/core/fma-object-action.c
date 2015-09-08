@@ -418,7 +418,7 @@ ifactory_object_write_start( FMAIFactoryObject *instance, const FMAIFactoryProvi
 {
 	fma_object_item_rebuild_children_slist( FMA_OBJECT_ITEM( instance ));
 
-	return( FMA_IIO_PROVIDER_CODE_OK );
+	return( IIO_PROVIDER_CODE_OK );
 }
 
 static guint
@@ -426,7 +426,7 @@ ifactory_object_write_done( FMAIFactoryObject *instance, const FMAIFactoryProvid
 {
 	guint code;
 
-	g_return_val_if_fail( FMA_IS_OBJECT_ACTION( instance ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_OBJECT_ACTION( instance ), IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
 	code = write_done_write_profiles( instance, writer, writer_data, messages );
 
@@ -538,10 +538,10 @@ write_done_write_profiles( FMAIFactoryObject *instance, const FMAIFactoryProvide
 	GSList *children_slist, *ic;
 	FMAObjectProfile *profile;
 
-	code = FMA_IIO_PROVIDER_CODE_OK;
+	code = IIO_PROVIDER_CODE_OK;
 	children_slist = fma_object_get_items_slist( instance );
 
-	for( ic = children_slist ; ic && code == FMA_IIO_PROVIDER_CODE_OK ; ic = ic->next ){
+	for( ic = children_slist ; ic && code == IIO_PROVIDER_CODE_OK ; ic = ic->next ){
 		profile = FMA_OBJECT_PROFILE( fma_object_get_item( instance, ic->data ));
 
 		if( profile ){
