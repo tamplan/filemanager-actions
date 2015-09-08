@@ -1,7 +1,7 @@
-file-manager-actions-new
-file-manager-actions-print
-file-manager-actions-run
-file-manager-actions-run-bindings.h
+filemanager-actions-new
+filemanager-actions-print
+filemanager-actions-run
+filemanager-actions-run-bindings.h
 na-delete-xmltree
 fma-gconf2key.sh
 na-print-schemas

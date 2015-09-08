@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_IIMPORTER_H__
-#define __FILE_MANAGER_ACTIONS_API_IIMPORTER_H__
+#ifndef __FILEMANAGER_ACTIONS_API_IIMPORTER_H__
+#define __FILEMANAGER_ACTIONS_API_IIMPORTER_H__
 
 /**
  * SECTION: iimporter
  * @title: FMAIImporter
  * @short_description: The Import Interface
- * @include: file-manager-actions/fma-iimporter.h
+ * @include: filemanager-actions/fma-iimporter.h
  *
  * The #FMAIImporter interface imports items from the outside world
  * into &prodname; repository (see #FMAIIOProvider interface for how
@@ -351,7 +351,7 @@ typedef struct {
  * @IMPORTER_CODE_OK:                import ok.
  * @IMPORTER_CODE_PROGRAM_ERROR:     a program error has been detected.
  *                                   You should open a bug in
- *                                   <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=file-manager-actions">Bugzilla</ulink>.
+ *                                   <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions">Bugzilla</ulink>.
  * @IMPORTER_CODE_NOT_WILLING_TO:    the plugin is not willing to import the uri.
  * @IMPORTER_CODE_NO_ITEM_ID:        item id not found.
  * @IMPORTER_CODE_NO_ITEM_TYPE:      item type not found.
@@ -411,4 +411,4 @@ guint fma_iimporter_import_from_uri( const FMAIImporter *importer, FMAIImporterI
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_IIMPORTER_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_IIMPORTER_H__ */

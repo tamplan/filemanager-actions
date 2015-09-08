@@ -537,8 +537,8 @@ write_type_schema_v1( NAXMLWriter *writer, const FMAObjectItem *object, const FM
 
 /*
  * <schema>
- *  <key>/schemas/apps/file-manager-actions/configurations/entry</key>
- *  <applyto>/apps/file-manager-actions/configurations/item_id/profile_id/entry</applyto>
+ *  <key>/schemas/apps/filemanager-actions/configurations/entry</key>
+ *  <applyto>/apps/filemanager-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
 write_data_schema_v2( NAXMLWriter *writer, const FMAObjectId *object, const FMADataBoxed *boxed, const FMADataDef *def )
@@ -585,8 +585,8 @@ write_data_schema_v2( NAXMLWriter *writer, const FMAObjectId *object, const FMAD
 
 /*
  * <schema>
- *  <key>/schemas/apps/file-manager-actions/configurations/entry</key>
- *  <applyto>/apps/file-manager-actions/configurations/item_id/profile_id/entry</applyto>
+ *  <key>/schemas/apps/filemanager-actions/configurations/entry</key>
+ *  <applyto>/apps/filemanager-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
 write_data_schema_v2_element( NAXMLWriter *writer, const FMADataDef *def, const gchar *object_id, const gchar *value_str )
@@ -624,8 +624,8 @@ write_data_schema_v2_element( NAXMLWriter *writer, const FMADataDef *def, const 
 
 /*
  * <schema>
- *  <key>/schemas/apps/file-manager-actions/configurations/entry</key>
- *  <applyto>/apps/file-manager-actions/configurations/item_id/profile_id/entry</applyto>
+ *  <key>/schemas/apps/filemanager-actions/configurations/entry</key>
+ *  <applyto>/apps/filemanager-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
 write_type_schema_v2( NAXMLWriter *writer, const FMAObjectItem *object, const FMADataDef *def, const gchar *value )

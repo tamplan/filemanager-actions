@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_IDUPLICABLE_H__
-#define __FILE_MANAGER_ACTIONS_API_IDUPLICABLE_H__
+#ifndef __FILEMANAGER_ACTIONS_API_IDUPLICABLE_H__
+#define __FILEMANAGER_ACTIONS_API_IDUPLICABLE_H__
 
 /**
  * SECTION: iduplicable
  * @title: FMAIDuplicable
  * @short_description: The Duplication Interface
- * @include: file-manager-actions/private/fma-iduplicable.h
+ * @include: filemanager-actions/private/fma-iduplicable.h
  *
  * This interface is implemented by #FMAObject in order to let
  * #FMAObject -derived instance duplication be easily tracked. This works
@@ -225,4 +225,4 @@ void            fma_iduplicable_set_modified( FMAIDuplicable *object, gboolean m
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_IDUPLICABLE_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_IDUPLICABLE_H__ */

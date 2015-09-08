@@ -59,7 +59,7 @@ static FMAImportModeStr st_import_modes[] = {
 			N_( "This used to be the historical behavior.\n" \
 				"The selected file will be marked as \"NOT OK\" in the Summary page.\n" \
 				"The existing item will not be modified." ),
-			"import-mode-no-import.png" },
+			"fma-import-mode-no-import.png" },
 
 	{ IMPORTER_MODE_RENUMBER,
 			"Renumber",
@@ -67,7 +67,7 @@ static FMAImportModeStr st_import_modes[] = {
 			N_( "The selected file will be imported with a slightly modified label " \
 				"indicating the renumbering.\n" \
 				"The existing item will not be modified." ),
-			"import-mode-renumber.png" },
+			"fma-import-mode-renumber.png" },
 
 	{ IMPORTER_MODE_OVERRIDE,
 			"Override",
@@ -75,7 +75,7 @@ static FMAImportModeStr st_import_modes[] = {
 			N_( "The item found in the selected file will silently override the " \
 				"current one which has the same identifier.\n" \
 				"Be warned: this mode may be dangerous. You will not be prompted another time." ),
-			"import-mode-override.png" },
+			"fma-import-mode-override.png" },
 
 	{ 0 }
 };
@@ -86,7 +86,7 @@ static FMAImportModeStr st_import_ask_mode = {
 			"Ask",
 			N_( "_Ask me" ),
 			N_( "You will be asked each time an imported ID already exists." ),
-			"import-mode-ask.png"
+			"fma-import-mode-ask.png"
 };
 
 static FMAImporterResult *import_from_uri( const FMAPivot *pivot, GList *modules, const gchar *uri );

@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_GCONF_MONITOR_H__
-#define __FILE_MANAGER_ACTIONS_API_GCONF_MONITOR_H__
+#ifndef __FILEMANAGER_ACTIONS_API_GCONF_MONITOR_H__
+#define __FILEMANAGER_ACTIONS_API_GCONF_MONITOR_H__
 
 #ifdef HAVE_GCONF
 #ifdef NA_ENABLE_DEPRECATED
@@ -36,7 +36,7 @@
  * SECTION: gconf-monitor
  * @title: FMAGConfMonitor
  * @short_description: The GConf Monitoring Class Definition
- * @include: file-manager-actions/fma-gconf-monitor.h
+ * @include: filemanager-actions/fma-gconf-monitor.h
  *
  * This class manages the GConf monitoring.
  * It is used to monitor both the GConf provider and the GConf runtime
@@ -85,4 +85,4 @@ G_END_DECLS
 
 #endif /* NA_ENABLE_DEPRECATED */
 #endif /* HAVE_GCONF */
-#endif /* __FILE_MANAGER_ACTIONS_API_GCONF_MONITOR_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_GCONF_MONITOR_H__ */

@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_IFACTORY_PROVIDER_H__
-#define __FILE_MANAGER_ACTIONS_API_IFACTORY_PROVIDER_H__
+#ifndef __FILEMANAGER_ACTIONS_API_IFACTORY_PROVIDER_H__
+#define __FILEMANAGER_ACTIONS_API_IFACTORY_PROVIDER_H__
 
 /**
  * SECTION: ifactory-provider
  * @title: FMAIFactoryProvider
  * @short_description: The Data Factory Provider Interface v 1
- * @include: file-manager-actions/na-ifactory_provider.h
+ * @include: filemanager-actions/na-ifactory_provider.h
  *
  * &prodname; has to deal with a relatively great number of elementary datas,
  * reading them from different supports, storing and displaying them,
@@ -289,4 +289,4 @@ guint fma_ifactory_provider_write_item( const FMAIFactoryProvider *writer, void 
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_IFACTORY_PROVIDER_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_IFACTORY_PROVIDER_H__ */

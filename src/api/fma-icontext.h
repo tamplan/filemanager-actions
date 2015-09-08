@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_ICONTEXT_H__
-#define __FILE_MANAGER_ACTIONS_API_ICONTEXT_H__
+#ifndef __FILEMANAGER_ACTIONS_API_ICONTEXT_H__
+#define __FILEMANAGER_ACTIONS_API_ICONTEXT_H__
 
 /**
  * SECTION: icontext
  * @title: FMAIContext
  * @short_description: The Contextual Interface
- * @include: file-manager-actions/fma-icontext.h
+ * @include: filemanager-actions/fma-icontext.h
  *
  * This interface is implemented by all #FMAObject -derived objects
  * whose the display in the Nautilus context menu is subject to some
@@ -109,4 +109,4 @@ void     fma_icontext_replace_folder  ( FMAIContext *context, const gchar *old, 
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_ICONTEXT_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_ICONTEXT_H__ */

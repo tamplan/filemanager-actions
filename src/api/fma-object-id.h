@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_OBJECT_ID_H__
-#define __FILE_MANAGER_ACTIONS_API_OBJECT_ID_H__
+#ifndef __FILEMANAGER_ACTIONS_API_OBJECT_ID_H__
+#define __FILEMANAGER_ACTIONS_API_OBJECT_ID_H__
 
 /**
  * SECTION: object-id
  * @title: FMAObjectId
  * @short_description: The Identified Object Base Class Definition
- * @include: file-manager-actions/fma-object-id.h
+ * @include: filemanager-actions/fma-object-id.h
  *
  * This is a pure virtual class, i.e. not an instantiatable one.
  * It serves as the base class for #FMAObject -derived object which have
@@ -108,4 +108,4 @@ void   fma_object_id_set_new_id       ( FMAObjectId *object, const FMAObjectId *
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_OBJECT_ID_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_OBJECT_ID_H__ */

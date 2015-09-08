@@ -27,21 +27,21 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_OBJECT_H__
-#define __FILE_MANAGER_ACTIONS_API_OBJECT_H__
+#ifndef __FILEMANAGER_ACTIONS_API_OBJECT_H__
+#define __FILEMANAGER_ACTIONS_API_OBJECT_H__
 
 /**
  * SECTION: object
  * @title: FMAObject
  * @short_description: The Deepest Base Class Definition
- * @include: file-manager-actions/fma-object.h
+ * @include: filemanager-actions/fma-object.h
  *
  * This is the base class of all our data object hierarchy. #FMAObject is
  * supposed to be used as a pure virtual base class, i.e. should only be
  * derived.
  *
  * All the API described here is rather private. External code should
- * use the API described in <filename>file-manager-actions/fma-object-api.h</filename>.
+ * use the API described in <filename>filemanager-actions/fma-object-api.h</filename>.
  */
 
 #include <glib-object.h>
@@ -173,4 +173,4 @@ void       fma_object_object_debug_invalid   ( const FMAObject *object, const gc
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_OBJECT_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_OBJECT_H__ */

@@ -224,7 +224,7 @@ na_mandatory="${na_package}/mandatory"
 na_providers="${na_package}/io-providers"
 
 # read an item from GConf, printing as .desktop on stdout
-na_print_program="@bindir@/file-manager-actions-print"
+na_print_program="@bindir@/filemanager-actions-print"
 
 # loop over command line arguments
 pos=0
@@ -450,7 +450,7 @@ if [ "${opt_admin}" = "no" ]; then
 		let nbitems+=1
 		[ "${opt_verbose}" = "yes" ] && msg "item=${id}"
 		if [ ! -e ${opt_dir}/${id}.desktop -o "${opt_force}" = "yes" ]; then
-			command "${na_print_program} --id ${id} | grep -v 'file-manager-actions-print' > ${opt_dir}/${id}.desktop"
+			command "${na_print_program} --id ${id} | grep -v 'filemanager-actions-print' > ${opt_dir}/${id}.desktop"
 			let new+=1
 		else
 			# the item has most probably already been migrated
@@ -458,7 +458,7 @@ if [ "${opt_admin}" = "no" ]; then
 			# else create a copy with a new id
 			msgwarn "${opt_dir}/${id}.desktop already exists"
 			tmpfile=$(mktemp)
-			command "${na_print_program} --id ${id} | grep -v 'file-manager-actions-print' > ${tmpfile}"
+			command "${na_print_program} --id ${id} | grep -v 'filemanager-actions-print' > ${tmpfile}"
 			diff -qB ${tmpfile} ${opt_dir}/${id}.desktop 1>/dev/null 2>&1
 			if [ $? -eq 0 ]; then
 				msg "${opt_dir}/${id}.desktop has no modification, just ignoring it"
@@ -478,8 +478,8 @@ if [ "${opt_admin}" = "no" ]; then
 fi
 
 # we are using this same script to migrate preferences to .conf files
-# mandatory preferences go to SYSCONFDIR/xdg/file-manager-actions/nautilus-actions.conf
-# while user preferences go to HOME/.config/file-manager-actions/nautilus-actions.conf
+# mandatory preferences go to SYSCONFDIR/xdg/filemanager-actions/nautilus-actions.conf
+# while user preferences go to HOME/.config/filemanager-actions/nautilus-actions.conf
 # Note also that the GConf I/O provider will be disabled for writings
 # after this migration
 destdir=${conf_dir}/@PACKAGE@
@@ -596,7 +596,7 @@ if [ "${opt_admin}" = "no" ]; then
 				;;
 			iprefs-level-zero)
 				# for now, keep the level zero order as a runtime preference
-				# in file-manager-actions.conf
+				# in filemanager-actions.conf
 				#create_first_level "${value}"
 				add_pref "runtime" "items-level-zero-order" list "${value}"
 				;;
@@ -638,8 +638,8 @@ if [ "${opt_admin}" = "no" ]; then
 fi
 
 # migrate mandatory keys
-# /apps/file-manager-actions/mandatory/all/locked -> [runtime]
-# /apps/file-manager-actions/mandatory/<provider_id>/locked -> [io-provider <provider_id>]
+# /apps/filemanager-actions/mandatory/all/locked -> [runtime]
+# /apps/filemanager-actions/mandatory/<provider_id>/locked -> [io-provider <provider_id>]
 if [ "${opt_admin}" = "yes" ]; then
 	for dir in $(gconftool-2 --all-dirs ${na_mandatory}); do
 		bdir=${dir##*/}

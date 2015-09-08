@@ -50,7 +50,7 @@
  * - doc/nact/C/nact-execution.xml "Multiple execution" paragraph
  * - src/core/fma-tokens.c::is_singular_exec() function
  * - src/core/fma-tokens.c::parse_singular() function
- * - src/nact/file-manager-actions-config-tool.ui:LegendDialog labels
+ * - src/nact/filemanager-actions-config-tool.ui:LegendDialog labels
  * - src/core/fma-object-profile-factory.c:FMAFO_DATA_PARAMETERS comment
  *
  * Valid parameters are :

@@ -41,7 +41,7 @@
  * are actually full GConf schema exports of the form :
  *  <schemalist>
  *   <schema>
- *    <key>/schemas/apps/file-manager-actions/..../uuid/label</key>
+ *    <key>/schemas/apps/filemanager-actions/..../uuid/label</key>
  *    <applyto>/apps/..../label</applyto>
  *
  * I don't know why Frederic had chosen to export as schema. But this

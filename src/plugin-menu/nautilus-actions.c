@@ -798,7 +798,7 @@ create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files,
 	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_profile, duplicate );
 
 	g_object_set_data_full( G_OBJECT( item ),
-			"file-manager-actions-tokens",
+			"filemanager-actions-tokens",
 			g_object_ref( tokens ),
 			( GDestroyNotify ) g_object_unref );
 
@@ -908,7 +908,7 @@ execute_action( NautilusMenuItem *item, FMAObjectProfile *profile )
 
 	g_debug( "%s: item=%p, profile=%p", thisfn, ( void * ) item, ( void * ) profile );
 
-	tokens = FMA_TOKENS( g_object_get_data( G_OBJECT( item ), "file-manager-actions-tokens" ));
+	tokens = FMA_TOKENS( g_object_get_data( G_OBJECT( item ), "filemanager-actions-tokens" ));
 	fma_tokens_execute_action( tokens, profile );
 }
 

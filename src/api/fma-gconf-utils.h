@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_GCONF_UTILS_H__
-#define __FILE_MANAGER_ACTIONS_API_GCONF_UTILS_H__
+#ifndef __FILEMANAGER_ACTIONS_API_GCONF_UTILS_H__
+#define __FILEMANAGER_ACTIONS_API_GCONF_UTILS_H__
 
 #ifdef HAVE_GCONF
 /**
@@ -76,4 +76,4 @@ gchar   *fma_gconf_utils_slist_to_string  ( GSList *slist );
 G_END_DECLS
 
 #endif /* HAVE_GCONF */
-#endif /* __FILE_MANAGER_ACTIONS_API_GCONF_UTILS_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_GCONF_UTILS_H__ */

@@ -343,7 +343,7 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 
 			case NACT_XCHANGE_FORMAT_XDS:
 				/* get the dest default filename as an uri
-				 * e.g. file:///home/pierre/data/eclipse/file-manager-actions/trash/xds.txt
+				 * e.g. file:///home/pierre/data/eclipse/filemanager-actions/trash/xds.txt
 				 */
 				folder = get_xds_atom_value( context );
 				dest_folder = g_path_get_dirname( folder );
@@ -1107,8 +1107,8 @@ on_drag_drop( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint 
  *
  * On a 32-bits system:
  * get_xds_atom_value: actual_length=63, actual_length=15
- * get_xds_atom_value: ret=file:///home/pierre/data/eclipse/file-manager-actions/trash/xds.txt0x8299
- * get_xds_atom_value: dup=file:///home/pierre/data/eclipse/file-manager-actions/trash/xds.txt
+ * get_xds_atom_value: ret=file:///home/pierre/data/eclipse/filemanager-actions/trash/xds.txt0x8299
+ * get_xds_atom_value: dup=file:///home/pierre/data/eclipse/filemanager-actions/trash/xds.txt
  * get_xds_atom_value: ret=file:///home/pi
  *
  * idem on a 64bits system.

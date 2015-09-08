@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_OBJECT_ITEM_H__
-#define __FILE_MANAGER_ACTIONS_API_OBJECT_ITEM_H__
+#ifndef __FILEMANAGER_ACTIONS_API_OBJECT_ITEM_H__
+#define __FILEMANAGER_ACTIONS_API_OBJECT_ITEM_H__
 
 /**
  * SECTION: object-item
  * @title: FMAObjectItem
  * @short_description: The Object Item Base Class Definition
- * @include: file-manager-actions/fma-object-item.h
+ * @include: filemanager-actions/fma-object-item.h
  *
  * This is a pure virtual class, i.e. not an instantiatable one, but
  * serves as the base class for #FMAObjectAction and #FMAObjectMenu.
@@ -112,4 +112,4 @@ void         fma_object_item_set_writability_status( FMAObjectItem *item, gboole
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_OBJECT_ITEM_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_OBJECT_ITEM_H__ */

@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_IFACTORY_OBJECT_H__
-#define __FILE_MANAGER_ACTIONS_API_IFACTORY_OBJECT_H__
+#ifndef __FILEMANAGER_ACTIONS_API_IFACTORY_OBJECT_H__
+#define __FILEMANAGER_ACTIONS_API_IFACTORY_OBJECT_H__
 
 /**
  * SECTION: ifactory-object
  * @title: FMAIFactoryObject
  * @short_description: The #FMAObjectItem Interface v 1
- * @include: file-manager-actions/na-ifactory_object.h
+ * @include: filemanager-actions/na-ifactory_object.h
  *
  * This interface is implemented by #FMAObjectItem derived objects so that they
  * can take advantage of our data factory management system.
@@ -245,4 +245,4 @@ void          fma_ifactory_object_set_from_void  ( FMAIFactoryObject *object, co
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_IFACTORY_OBJECT_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_IFACTORY_OBJECT_H__ */

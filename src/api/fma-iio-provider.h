@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_IIO_PROVIDER_H__
-#define __FILE_MANAGER_ACTIONS_API_IIO_PROVIDER_H__
+#ifndef __FILEMANAGER_ACTIONS_API_IIO_PROVIDER_H__
+#define __FILEMANAGER_ACTIONS_API_IIO_PROVIDER_H__
 
 /**
  * SECTION: iio-provider
  * @title: FMAIIOProvider
  * @short_description: The I/O Provider Interface
- * @include: file-manager-actions/fma-iio-provider.h
+ * @include: filemanager-actions/fma-iio-provider.h
  *
  * The #FMAIIOProvider interface is defined in order to let both &prodname;
  * internal and user-provided external plugins provide read and write accesses
@@ -47,7 +47,7 @@
  * &prodname; is bundled with several I/O providers.
  * Since version 3, the <literal>na-desktop</literal> I/O provider, which
  * implements the
- * <ulink role="online-location" url="http://www.file-manager-actions.org/?q=node/377/">DES-EMA</ulink>
+ * <ulink role="online-location" url="http://www.filemanager-actions.org/?q=node/377/">DES-EMA</ulink>
  * specification, is the preferred way of storing (and sharing) items.
  *
  * The #FMAIIOProvider interface provides three types of services:
@@ -114,7 +114,7 @@
  *   In order to avoid any collision, this I/O provider identifier is
  *   allocated by the &prodname; maintainers team. If you wish develop
  *   yourself a new I/O provider, and so need a new provider identifier,
- *   please contact the maintainers (see file-manager-actions.doap at the
+ *   please contact the maintainers (see filemanager-actions.doap at the
  *   root of the source tree).
  *  </para>
  *  <para>
@@ -474,7 +474,7 @@ typedef enum {
  * @FMA_IIO_PROVIDER_CODE_OK:            the requested operation has been successful.
  * @FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR: a program error has been detected;
  *                                      you should open a bug in
- *                                      <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=file-manager-actions">Bugzilla</ulink>.
+ *                                      <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions">Bugzilla</ulink>.
  * @FMA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:   the provider is not willing
  *                                             to do the requested action.
  * @FMA_IIO_PROVIDER_CODE_WRITE_ERROR:          a write error has been detected.
@@ -501,4 +501,4 @@ void  fma_iio_provider_item_changed( const FMAIIOProvider *instance );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_IIO_PROVIDER_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_IIO_PROVIDER_H__ */

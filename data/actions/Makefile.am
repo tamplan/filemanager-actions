@@ -26,10 +26,10 @@
 #   ... and many others (see AUTHORS)
 
 actions_files = \
-	my-first-action.desktop			\
-	my-first-menu.desktop			\
+	my-first-action.desktop				\
+	my-first-menu.desktop				\
 	open-terminal-here.desktop			\
-	show-parameters.desktop			\
+	show-parameters.desktop				\
 	$(NULL)
 
 actionsdir = $(pkgdatadir)/samples

@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_CORE_UTILS_H__
-#define __FILE_MANAGER_ACTIONS_API_CORE_UTILS_H__
+#ifndef __FILEMANAGER_ACTIONS_API_CORE_UTILS_H__
+#define __FILEMANAGER_ACTIONS_API_CORE_UTILS_H__
 
 /**
  * SECTION: core-utils
  * @title: Core Misc
  * @short_description: The Core Library Utilities
- * @include: file-manager-actions/fma-core-utils.h
+ * @include: filemanager-actions/fma-core-utils.h
  */
 
 #include <glib.h>
@@ -103,4 +103,4 @@ void     fma_core_utils_print_version( void );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_CORE_UTILS_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_CORE_UTILS_H__ */

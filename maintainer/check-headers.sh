@@ -300,9 +300,9 @@ if [ "${opt_version}" = "yes" ]; then
 	exit
 fi
 
-#if [ "${top_srcdir##*/}" != "file-manager-actions" ]; then
+#if [ "${top_srcdir##*/}" != "filemanager-actions" ]; then
 #	msgerr "current directory is $(pwd)"
-#	msg "you should change to file-manager-actions/"
+#	msg "you should change to filemanager-actions/"
 #	let errs+=1
 #fi
 

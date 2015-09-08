@@ -48,7 +48,7 @@
 #include "nact-preferences-editor.h"
 #include "nact-tree-view.h"
 
-static const gchar *st_uixml_actions    = PKGUIDIR "/file-manager-actions-config-tool.actions";
+static const gchar *st_uixml_actions    = PKGUIDIR "/filemanager-actions-config-tool.actions";
 static const gchar *st_ui_app_menu      = "app-menu";
 static const gchar *st_ui_menubar       = "menubar";
 
@@ -263,7 +263,7 @@ on_app_help( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 	g_return_if_fail( user_data && NACT_IS_APPLICATION( user_data ));
 
 	error = NULL;
-	gtk_show_uri( NULL, "ghelp:file-manager-actions-config-tool", GDK_CURRENT_TIME, &error );
+	gtk_show_uri( NULL, "ghelp:filemanager-actions-config-tool", GDK_CURRENT_TIME, &error );
 	if( error ){
 		g_warning( "%s: %s", thisfn, error->message );
 		g_error_free( error );

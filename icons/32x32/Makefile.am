@@ -27,6 +27,6 @@
 
 icondir = $(datadir)/icons/hicolor/32x32/apps
 
-icon_DATA = file-manager-actions.png
+icon_DATA = filemanager-actions.png
 
 EXTRA_DIST = $(icon_DATA)

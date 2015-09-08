@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_TIMEOUT_H__
-#define __FILE_MANAGER_ACTIONS_API_TIMEOUT_H__
+#ifndef __FILEMANAGER_ACTIONS_API_TIMEOUT_H__
+#define __FILEMANAGER_ACTIONS_API_TIMEOUT_H__
 
 /**
  * SECTION: timeout
  * @title: FMATimeout
  * @short_description: The FMATimeout Structure
- * @include: file-manager-actions/fma-timeout.h
+ * @include: filemanager-actions/fma-timeout.h
  *
  * The FMATimeout structure is a convenience structure to manage timeout
  * functions.
@@ -94,4 +94,4 @@ void na_timeout_event( FMATimeout *timeout );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_TIMEOUT_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_TIMEOUT_H__ */

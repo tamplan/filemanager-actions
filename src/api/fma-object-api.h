@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_OBJECT_API_H__
-#define __FILE_MANAGER_ACTIONS_API_OBJECT_API_H__
+#ifndef __FILEMANAGER_ACTIONS_API_OBJECT_API_H__
+#define __FILEMANAGER_ACTIONS_API_OBJECT_API_H__
 
 /**
  * SECTION: object-api
  * @title: API
  * @short_description: The Common Public #FMAObject API
- * @include: file-manager-actions/fma-object-api.h
+ * @include: filemanager-actions/fma-object-api.h
  *
  * We define here a common API which makes easier to write (and read)
  * the code; all object functions are named fma_object; all arguments
@@ -218,4 +218,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_OBJECT_API_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_OBJECT_API_H__ */

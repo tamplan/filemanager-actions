@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_EXTENSION_H__
-#define __FILE_MANAGER_ACTIONS_API_EXTENSION_H__
+#ifndef __FILEMANAGER_ACTIONS_API_EXTENSION_H__
+#define __FILEMANAGER_ACTIONS_API_EXTENSION_H__
 
 /**
  * SECTION: extension
  * @title: Plugins
  * @short_description: The FileManager-Actions Extension Interface Definition v 1
- * @include: file-manager-actions/fma-extension.h
+ * @include: filemanager-actions/fma-extension.h
  *
  * &prodname; accepts extensions as dynamically loadable libraries
  * (aka plugins).
@@ -113,8 +113,8 @@
  *       <para>
  * At startup time, &prodname; searches for its candidate libraries in
  * <filename>PKGLIBDIR</filename> directory, which most often happens to
- * be <filename>/usr/lib/file-manager-actions/</filename> or
- * <filename>/usr/lib64/file-manager-actions/</filename>,
+ * be <filename>/usr/lib/filemanager-actions/</filename> or
+ * <filename>/usr/lib64/filemanager-actions/</filename>,
  * depending of your system.
  *       </para>
  *   </refsect3>
@@ -291,4 +291,4 @@ void     fma_extension_shutdown   ( void );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_EXTENSION_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_EXTENSION_H__ */

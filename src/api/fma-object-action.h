@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_OBJECT_ACTION_H__
-#define __FILE_MANAGER_ACTIONS_API_OBJECT_ACTION_H__
+#ifndef __FILEMANAGER_ACTIONS_API_OBJECT_ACTION_H__
+#define __FILEMANAGER_ACTIONS_API_OBJECT_ACTION_H__
 
 /**
  * SECTION: object-action
  * @title: FMAObjectAction
  * @short_description: The Action Class Definition
- * @include: file-manager-actions/fma-object-action.h
+ * @include: filemanager-actions/fma-object-action.h
  *
  * This is the class which maintains data and properties of a &prodname;
  * action.
@@ -95,4 +95,4 @@ void             fma_object_action_set_last_version    ( FMAObjectAction *action
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_OBJECT_ACTION_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_OBJECT_ACTION_H__ */

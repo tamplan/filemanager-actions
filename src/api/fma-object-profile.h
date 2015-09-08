@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_OBJECT_PROFILE_H__
-#define __FILE_MANAGER_ACTIONS_API_OBJECT_PROFILE_H__
+#ifndef __FILEMANAGER_ACTIONS_API_OBJECT_PROFILE_H__
+#define __FILEMANAGER_ACTIONS_API_OBJECT_PROFILE_H__
 
 /**
  * SECTION: object-profile
  * @title: FMAObjectProfile
  * @short_description: The Action Profile Class Definition
- * @include: file-manager-actions/fma-object-item.h
+ * @include: filemanager-actions/fma-object-item.h
  */
 
 #include "fma-object-id.h"
@@ -82,4 +82,4 @@ void              fma_object_profile_convert_v2_to_last( FMAObjectProfile *profi
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_OBJECT_PROFILE_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_OBJECT_PROFILE_H__ */

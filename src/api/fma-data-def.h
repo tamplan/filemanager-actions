@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_DATA_DEF_H__
-#define __FILE_MANAGER_ACTIONS_API_DATA_DEF_H__
+#ifndef __FILEMANAGER_ACTIONS_API_DATA_DEF_H__
+#define __FILEMANAGER_ACTIONS_API_DATA_DEF_H__
 
 /**
  * SECTION: data-def
  * @title: FMADataDef, FMADataGroup
  * @short_description: The Data Factory Structure Definitions
- * @include: file-manager-actions/fma-data-def.h
+ * @include: filemanager-actions/fma-data-def.h
  *
  * #FMADataDef and #FMADataGroup are structures which handle the list of
  * elementary datas for each and every #FMAObjectItem which happens to
@@ -70,7 +70,7 @@ G_BEGIN_DECLS
  * @type:             the elementary FMA_DATA_TYPE_xxx data type.
  * @default_value:    the default to assign when creating a new object.
  *                    This default is also displayed in command-line help
- *                    of file-manager-actions-new utility.
+ *                    of filemanager-actions-new utility.
  * @write_if_default: write this value even if it is the default value ?
  *                    Should default to FALSE.
  * @copyable:         whether this data should be automatically copied when
@@ -84,13 +84,13 @@ G_BEGIN_DECLS
  * @localizable:      whether this is a localizable data when serializing or exporting.
  * @gconf_entry:      same entry is also used for GConf-based XML docs.
  * @desktop_entry:    entry in .desktop files.
- * @option_short:     the short version of a command-line parameter in file-manager-actions-new,
+ * @option_short:     the short version of a command-line parameter in filemanager-actions-new,
  *                    or 0.
- * @option_long:      the long version of the same command-line parameter in file-manager-actions-new,
+ * @option_long:      the long version of the same command-line parameter in filemanager-actions-new,
  *                    or NULL.
  * @option_flags:     #GOptionFlags for the command-line parameter, or 0.
  * @option_arg:       the type of the option, or 0.
- * @option_label:     the localizable description for the variable in file-manager-actions-new.
+ * @option_label:     the localizable description for the variable in filemanager-actions-new.
  *                    Defaults to @short_label if NULL.
  * @option_arg_label: the localizable description for the argument.
  *
@@ -142,4 +142,4 @@ const FMADataDef *fma_data_def_get_data_def( const FMADataGroup *group, const gc
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_DATA_DEF_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_DATA_DEF_H__ */

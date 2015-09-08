@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_DATA_TYPES_H__
-#define __FILE_MANAGER_ACTIONS_API_DATA_TYPES_H__
+#ifndef __FILEMANAGER_ACTIONS_API_DATA_TYPES_H__
+#define __FILEMANAGER_ACTIONS_API_DATA_TYPES_H__
 
 /**
  * SECTION: data-type
  * @title: FMADataType
  * @short_description: The Data Factory Type Definitions
- * @include: file-manager-actions/fma-data-types.h
+ * @include: filemanager-actions/fma-data-types.h
  */
 
 #include <glib.h>
@@ -94,4 +94,4 @@ const gchar *fma_data_types_get_gconf_dump_key( guint type );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_DATA_TYPES_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_DATA_TYPES_H__ */

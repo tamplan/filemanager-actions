@@ -31,7 +31,7 @@ exportformat_datadir = $(pkgdatadir)/export-format
 
 importmode_datadir = $(pkgdatadir)/import-mode
 
-icon_fname = $(datadir)/icons/hicolor/48x48/apps/file-manager-actions.png
+icon_fname = $(datadir)/icons/hicolor/48x48/apps/filemanager-actions.png
 
 ui_datadir = $(pkgdatadir)/ui
 
@@ -140,14 +140,14 @@ ui_data_DATA = \
 	$(NULL)
 
 exportformat_data_DATA = \
-	export-format-ask.png								\
+	fma-export-format-ask.png							\
 	$(NULL)
 
 importmode_data_DATA = \
-	import-mode-ask.png									\
-	import-mode-no-import.png							\
-	import-mode-override.png							\
-	import-mode-renumber.png							\
+	fma-import-mode-ask.png								\
+	fma-import-mode-no-import.png						\
+	fma-import-mode-override.png						\
+	fma-import-mode-renumber.png						\
 	$(NULL)
 
 CLEANFILES = \

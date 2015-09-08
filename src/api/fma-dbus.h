@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_DBUS_H__
-#define __FILE_MANAGER_ACTIONS_API_DBUS_H__
+#ifndef __FILEMANAGER_ACTIONS_API_DBUS_H__
+#define __FILEMANAGER_ACTIONS_API_DBUS_H__
 
 /**
  * SECTION: dbus
  * @title: D-Bus
  * @short_description: The D-Bus Services
- * @include: file-manager-actions/fma-dbus.h
+ * @include: filemanager-actions/fma-dbus.h
  *
  * &prodname;, through its <emphasis>tracker</emphasis> plugin, exposes
  * several D-Bus interfaces. These interfaces may be queried in order to get
@@ -59,15 +59,15 @@
 G_BEGIN_DECLS
 
 /**
- * FILE_MANAGER_ACTIONS_DBUS_SERVICE:
+ * FILEMANAGER_ACTIONS_DBUS_SERVICE:
  *
  * This is the &laquo;&nbsp;well-known&nbsp;&raquo; name that
  * &prodname; reserves on D-Bus session bus.
  */
-#define FILE_MANAGER_ACTIONS_DBUS_SERVICE            "org.file-manager-actions.DBus"
+#define FILEMANAGER_ACTIONS_DBUS_SERVICE            "org.filemanager-actions.DBus"
 
 /**
- * FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH:
+ * FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH:
  *
  * The D-Bus path of the <emphasis>tracker</emphasis> object.
  *
@@ -81,7 +81,7 @@ G_BEGIN_DECLS
  *       --session \
  *       --type=method_call \
  *       --print-reply \
- *       --dest=org.file-manager-actions.DBus \
+ *       --dest=org.filemanager-actions.DBus \
  *         /org/file_manager_actions/DBus/Tracker \
  *           org.freedesktop.DBus.Introspectable.Introspect
  *   </command>
@@ -122,16 +122,16 @@ G_BEGIN_DECLS
  *   </computeroutput>
  * </programlisting>
  */
-#define FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH       "/org/file_manager_actions/DBus/Tracker"
+#define FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH       "/org/file_manager_actions/DBus/Tracker"
 
 /**
- * FILE_MANAGER_ACTIONS_DBUS_TRACKER_IFACE:
+ * FILEMANAGER_ACTIONS_DBUS_TRACKER_IFACE:
  *
  * An interface defined on the <emphasis>tracker</emphasis> object,
- * identified by its %FILE_MANAGER_ACTIONS_DBUS_TRACKER_PATH D-Bus path.
+ * identified by its %FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH D-Bus path.
  */
-#define FILE_MANAGER_ACTIONS_DBUS_TRACKER_IFACE  	"org.file_manager_actions.DBus.Tracker.Properties1"
+#define FILEMANAGER_ACTIONS_DBUS_TRACKER_IFACE  	"org.file_manager_actions.DBus.Tracker.Properties1"
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_DBUS_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_DBUS_H__ */

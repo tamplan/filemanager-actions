@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_IEXPORTER_H__
-#define __FILE_MANAGER_ACTIONS_API_IEXPORTER_H__
+#ifndef __FILEMANAGER_ACTIONS_API_IEXPORTER_H__
+#define __FILEMANAGER_ACTIONS_API_IEXPORTER_H__
 
 /**
  * SECTION: iexporter
  * @title: FMAIExporter
  * @short_description: The Export Interface
- * @include: file-manager-actions/fma-iexporter.h
+ * @include: filemanager-actions/fma-iexporter.h
  *
  * The #FMAIExporter interface exports items to the outside world. Each
  * implementation may provide one or more formats.
@@ -49,7 +49,7 @@
  *   In order to avoid any collision, this export format identifier is
  *   allocated by the &prodname; maintainers team. If you wish provide
  *   yourself a new export format, and so need a new export format identifier,
- *   please contact the maintainers (see file-manager-actions.doap at the
+ *   please contact the maintainers (see filemanager-actions.doap at the
  *   root of the source tree).
  *  </para>
  *  <para>
@@ -447,7 +447,7 @@ typedef struct {
 	 * To avoid any collision, the format identifier is allocated by the
 	 * FileManager-Actions maintainers team. If you wish develop a new export
 	 * format, and so need a new format identifier, please contact the
-	 * maintainers (see file-manager-actions.doap).
+	 * maintainers (see filemanager-actions.doap).
 	 *
 	 * Return value:
 	 * - Interface v1:
@@ -539,4 +539,4 @@ GType fma_iexporter_get_type( void );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_IEXPORTER_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_IEXPORTER_H__ */

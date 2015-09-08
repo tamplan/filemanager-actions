@@ -1,5 +1,5 @@
 base-marshal.c
 base-marshal.h
 nact.desktop
-file-manager-actions-config
-file-manager-actions-config-tool
+filemanager-actions-config
+filemanager-actions-config-tool

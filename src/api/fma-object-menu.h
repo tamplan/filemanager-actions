@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_OBJECT_MENU_H__
-#define __FILE_MANAGER_ACTIONS_API_OBJECT_MENU_H__
+#ifndef __FILEMANAGER_ACTIONS_API_OBJECT_MENU_H__
+#define __FILEMANAGER_ACTIONS_API_OBJECT_MENU_H__
 
 /**
  * SECTION: object-menu
  * @title: FMAObjectMenu
  * @short_description: The Menu Class Definition
- * @include: file-manager-actions/fma-object-menu.h
+ * @include: filemanager-actions/fma-object-menu.h
  */
 
 #include "fma-object-item.h"
@@ -73,4 +73,4 @@ FMAObjectMenu *fma_object_menu_new_with_defaults( void );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_OBJECT_MENU_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_OBJECT_MENU_H__ */

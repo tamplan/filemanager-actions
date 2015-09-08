@@ -27,6 +27,6 @@
 
 svgicondir = $(datadir)/icons/hicolor/scalable/apps
 
-svgicon_DATA = file-manager-actions.svg
+svgicon_DATA = filemanager-actions.svg
 
 EXTRA_DIST = $(svgicon_DATA)

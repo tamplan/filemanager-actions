@@ -53,7 +53,7 @@ static NAExporterFormatStr st_format_ask = {
 		N_( "_Ask me" ),
 		N_( "You will be asked for the format to choose each time an item " \
 			"is about to be exported." ),
-		"export-format-ask.png"
+		"fma-export-format-ask.png"
 };
 
 /* i18n: FMAIExporter is an interface name, do not even try to translate */

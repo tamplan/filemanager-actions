@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_DATA_BOXED_H__
-#define __FILE_MANAGER_ACTIONS_API_DATA_BOXED_H__
+#ifndef __FILEMANAGER_ACTIONS_API_DATA_BOXED_H__
+#define __FILEMANAGER_ACTIONS_API_DATA_BOXED_H__
 
 /**
  * SECTION: data-boxed
  * @title: FMADataBoxed
  * @short_description: The Data Factory Element Class Definition
- * @include: file-manager-actions/fma-data-boxed.h
+ * @include: filemanager-actions/fma-data-boxed.h
  *
  * The object which encapsulates an elementary data of #FMAIFactoryObject.
  * A #FMADataBoxed object has a type and a value.
@@ -109,4 +109,4 @@ void              fma_data_boxed_set_from_void  ( FMADataBoxed *boxed, const voi
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_DATA_BOXED_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_DATA_BOXED_H__ */

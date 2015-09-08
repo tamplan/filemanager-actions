@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FILE_MANAGER_ACTIONS_API_BOXED_H__
-#define __FILE_MANAGER_ACTIONS_API_BOXED_H__
+#ifndef __FILEMANAGER_ACTIONS_API_BOXED_H__
+#define __FILEMANAGER_ACTIONS_API_BOXED_H__
 
 /**
  * SECTION: boxed
  * @title: FMABoxed
  * @short_description: The FMABoxed Structure
- * @include: file-manager-actions/fma-boxed.h
+ * @include: filemanager-actions/fma-boxed.h
  *
  * The FMABoxed structure is a way of handling various types of data in an
  * opaque structure.
@@ -95,4 +95,4 @@ void          fma_boxed_set_from_void  ( FMABoxed *boxed, const void *value );
 
 G_END_DECLS
 
-#endif /* __FILE_MANAGER_ACTIONS_API_BOXED_H__ */
+#endif /* __FILEMANAGER_ACTIONS_API_BOXED_H__ */

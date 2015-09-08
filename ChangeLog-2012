@@ -1226,7 +1226,7 @@
 	Move 'Ask' export format to NAExporter.
 
 	* src/core/Makefile.am:
-	* src/nact/Makefile.am: Move export-format-ask.png to src/core.
+	* src/nact/Makefile.am: Move fma-export-format-ask.png to src/core.
 
 	* nact-export-format.c:
 	* nact-export-format.h: Removed files.
@@ -1430,7 +1430,7 @@
 
 2012-01-01 Pierre Wieser <pwieser@trychlos.org>
 
-	* src/nact/export-format-ask.png: Add omitted image.
+	* src/nact/fma-export-format-ask.png: Add omitted image.
 
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c (na_core_utils_str_add_prefix): Deprecated function.
