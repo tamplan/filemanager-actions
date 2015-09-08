@@ -44,8 +44,8 @@
 #include "nact-statusbar.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
-#include "nact-menu.h"
-#include "nact-menu-file.h"
+#include "fma-menu.h"
+#include "fma-menu-file.h"
 #include "nact-tree-ieditable.h"
 
 static FMATimeout st_autosave_prefs_timeout = { 0 };
@@ -64,29 +64,29 @@ static gboolean autosave_callback( FMAMainWindow *main_window );
 static void     autosave_destroyed( FMAMainWindow *main_window );
 
 /*
- * nact_menu_file_init:
+ * fma_menu_file_init:
  * @main_window: the #FMAMainWindow main window.
  */
 void
-nact_menu_file_init( FMAMainWindow *main_window )
+fma_menu_file_init( FMAMainWindow *main_window )
 {
 	install_autosave( main_window );
 }
 
 /**
- * nact_menu_file_update_sensitivities:
+ * fma_menu_file_update_sensitivities:
  * @main_window: the #FMAMainWindow main window.
  *
  * Update sensitivity of items of the File menu.
  */
 void
-nact_menu_file_update_sensitivities( FMAMainWindow *main_window )
+fma_menu_file_update_sensitivities( FMAMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menu_file_update_sensitivities";
+	static const gchar *thisfn = "fma_menu_file_update_sensitivities";
 	sMenuData *sdata;
 	gboolean new_item_enabled;
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 
 	/* new menu / new action
 	 * new item will be inserted just before the beginning of selection
@@ -99,37 +99,37 @@ nact_menu_file_update_sensitivities( FMAMainWindow *main_window )
 			sdata->is_parent_writable ? "True":"False",
 			sdata->has_writable_providers ? "True":"False",
 			new_item_enabled ? "True":"False" );
-	nact_menu_enable_item( main_window, "new-menu", new_item_enabled );
-	nact_menu_enable_item( main_window, "new-action", new_item_enabled );
+	fma_menu_enable_item( main_window, "new-menu", new_item_enabled );
+	fma_menu_enable_item( main_window, "new-action", new_item_enabled );
 
 	/* new profile enabled if selection is relative to only one writable action
 	 * i.e. contains profile(s) of the same action, or only contains one action
 	 * action must be writable
 	 */
-	nact_menu_enable_item( main_window, "new-profile",
+	fma_menu_enable_item( main_window, "new-profile",
 			sdata->enable_new_profile && sdata->is_action_writable );
 
 	/* save enabled if at least one item has been modified
 	 * or level-zero has been resorted and is writable
 	 */
-	nact_menu_enable_item( main_window, "save", ( sdata->is_tree_modified ));
+	fma_menu_enable_item( main_window, "save", ( sdata->is_tree_modified ));
 }
 
 /**
- * nact_menu_file_new_menu:
+ * fma_menu_file_new_menu:
  * @main_window: the #FMAMainWindow main window.
  *
  * Triggers File / New menu item.
  */
 void
-nact_menu_file_new_menu( FMAMainWindow *main_window )
+fma_menu_file_new_menu( FMAMainWindow *main_window )
 {
 	sMenuData *sdata;
 	FMAObjectMenu *menu;
 	NactTreeView *items_view;
 	GList *items;
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 	menu = fma_object_menu_new_with_defaults();
 	fma_object_check_status( menu );
 	fma_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( menu ));
@@ -140,20 +140,20 @@ nact_menu_file_new_menu( FMAMainWindow *main_window )
 }
 
 /**
- * nact_menu_file_new_action:
+ * fma_menu_file_new_action:
  * @main_window: the #FMAMainWindow main window.
  *
  * Triggers File / New action item.
  */
 void
-nact_menu_file_new_action( FMAMainWindow *main_window )
+fma_menu_file_new_action( FMAMainWindow *main_window )
 {
 	sMenuData *sdata;
 	FMAObjectAction *action;
 	NactTreeView *items_view;
 	GList *items;
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 	action = fma_object_action_new_with_defaults();
 	fma_object_check_status( action );
 	fma_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( action ));
@@ -164,13 +164,13 @@ nact_menu_file_new_action( FMAMainWindow *main_window )
 }
 
 /**
- * nact_menu_file_new_profile:
+ * fma_menu_file_new_profile:
  * @main_window: the #FMAMainWindow main window.
  *
  * Triggers File / New profile item.
  */
 void
-nact_menu_file_new_profile( FMAMainWindow *main_window )
+fma_menu_file_new_profile( FMAMainWindow *main_window )
 {
 	FMAObjectAction *action;
 	FMAObjectProfile *profile;
@@ -197,11 +197,11 @@ nact_menu_file_new_profile( FMAMainWindow *main_window )
 }
 
 /**
- * nact_menu_file_save_items:
+ * fma_menu_file_save_items:
  * @window: the #FMAMainWindow main window.
  *
  * Save items.
- * This is the same function that nact_menu_file_save(), just
+ * This is the same function that fma_menu_file_save(), just
  * with different arguments.
  *
  * Synopsis:
@@ -226,9 +226,9 @@ nact_menu_file_new_profile( FMAMainWindow *main_window )
  * - idem if some items cannot be actually rewritten...
  */
 void
-nact_menu_file_save_items( FMAMainWindow *window )
+fma_menu_file_save_items( FMAMainWindow *window )
 {
-	static const gchar *thisfn = "nact_menu_file_save_items";
+	static const gchar *thisfn = "fma_menu_file_save_items";
 	sMenuData *sdata;
 	NactTreeView *items_view;
 	GList *items, *it;
@@ -239,7 +239,7 @@ nact_menu_file_save_items( FMAMainWindow *window )
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	sdata = nact_menu_get_data( window );
+	sdata = fma_menu_get_data( window );
 
 	/* always write the level zero list of items as the first save phase
 	 * and reset the corresponding modification flag
@@ -321,7 +321,7 @@ nact_menu_file_save_items( FMAMainWindow *window )
 static gboolean
 save_item( FMAMainWindow *window, FMAUpdater *updater, FMAObjectItem *item, GSList **messages )
 {
-	static const gchar *thisfn = "nact_menu_file_save_item";
+	static const gchar *thisfn = "fma_menu_file_save_item";
 	gboolean ret;
 	FMAIOProvider *provider_before;
 	FMAIOProvider *provider_after;
@@ -371,7 +371,7 @@ save_item( FMAMainWindow *window, FMAUpdater *updater, FMAObjectItem *item, GSLi
 }
 
 /*
- * nact_menu_file_install_autosave:
+ * fma_menu_file_install_autosave:
  * @main_window: this #FMAMainWindow main window.
  *
  * Setup the autosave feature and initialize its monitoring.
@@ -398,7 +398,7 @@ on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer n
 static void
 on_autosave_prefs_timeout( FMAMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menu_file_autosave_prefs_timeout";
+	static const gchar *thisfn = "fma_menu_file_autosave_prefs_timeout";
 	gboolean autosave_on;
 	guint autosave_period;
 
@@ -427,11 +427,11 @@ autosave_callback( FMAMainWindow *main_window )
 {
 	NactStatusbar *bar;
 	const gchar *context = "autosave-context";
-	g_debug( "nact_menu_file_autosave_callback" );
+	g_debug( "fma_menu_file_autosave_callback" );
 
 	bar = fma_main_window_get_statusbar( main_window );
 	nact_statusbar_display_status( bar, context, _( "Automatically saving pending modifications..." ));
-	nact_menu_file_save_items( main_window );
+	fma_menu_file_save_items( main_window );
 	nact_statusbar_hide_status( bar, context );
 
 	return( TRUE );
@@ -440,5 +440,5 @@ autosave_callback( FMAMainWindow *main_window )
 static void
 autosave_destroyed( FMAMainWindow *main_window )
 {
-	g_debug( "nact_menu_file_autosave_destroyed" );
+	g_debug( "fma_menu_file_autosave_destroyed" );
 }

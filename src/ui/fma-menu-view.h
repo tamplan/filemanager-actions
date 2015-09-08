@@ -27,25 +27,34 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_MENU_FILE_H__
-#define __UI_NACT_MENU_FILE_H__
+#ifndef __UI_FMA_MENU_VIEW_H__
+#define __UI_FMA_MENU_VIEW_H__
 
 #include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
-void nact_menu_file_init                ( FMAMainWindow *main_window );
+enum {
+	MAIN_TOOLBAR_FILE_ID = 1,
+	MAIN_TOOLBAR_EDIT_ID,
+	MAIN_TOOLBAR_TOOLS_ID,
+	MAIN_TOOLBAR_HELP_ID,
+};
 
-void nact_menu_file_update_sensitivities( FMAMainWindow *main_window );
+void fma_menu_view_init                ( FMAMainWindow *main_window );
 
-void nact_menu_file_new_menu            ( FMAMainWindow *main_window );
+void fma_menu_view_update_sensitivities( FMAMainWindow *main_window );
 
-void nact_menu_file_new_action          ( FMAMainWindow *main_window );
+void fma_menu_view_toolbar_display     ( FMAMainWindow *main_window,
+												const gchar *action_name,
+												gboolean visible );
 
-void nact_menu_file_new_profile         ( FMAMainWindow *main_window );
+void fma_menu_view_notebook_tab_display( FMAMainWindow *main_window,
+												const gchar *action_name,
+												const gchar *target );
 
-void nact_menu_file_save_items          ( FMAMainWindow *main_window );
+void fma_menu_view_set_notebook_label  ( FMAMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_MENU_FILE_H__ */
+#endif /* __UI_FMA_MENU_VIEW_H__ */

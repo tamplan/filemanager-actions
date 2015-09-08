@@ -54,7 +54,7 @@
 #include "fma-iproperties-tab.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
-#include "nact-menu.h"
+#include "fma-menu.h"
 #include "nact-statusbar.h"
 #include "nact-tree-view.h"
 #include "fma-confirm-logout.h"
@@ -663,7 +663,7 @@ fma_main_window_new( FMAApplication *application )
 
 	setup_main_ui( window );
 	setup_treeview( window );
-	nact_menu_win( window );
+	fma_menu_win( window );
 
 	window->private->clipboard = fma_clipboard_new( window );
 	window->private->sort_buttons = nact_sort_buttons_new( window );

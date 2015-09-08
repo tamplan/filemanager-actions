@@ -57,7 +57,7 @@
  *  |    on_startup()
  *  |      |
  *  |      +-> fma_updater_new()
- *  |          nact_menu_app()
+ *  |          fma_menu_app()
  *  |
  *  |    on_activate()
  *  |      |
@@ -81,7 +81,7 @@
  *  |
  *  |               setup_monitor_pivot()
  *  |               setup_delete_event()
- *  |               nact_menu_win()
+ *  |               fma_menu_win()
  *  |               load_items()
  *  v
  * [X] End of initialization process

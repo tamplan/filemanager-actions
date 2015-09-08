@@ -27,27 +27,25 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_MENU_EDIT_H__
-#define __UI_NACT_MENU_EDIT_H__
+#ifndef __UI_FMA_MENU_FILE_H__
+#define __UI_FMA_MENU_FILE_H__
 
 #include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
-void nact_menu_edit_update_sensitivities( FMAMainWindow *main_window );
+void fma_menu_file_init                ( FMAMainWindow *main_window );
 
-void nact_menu_edit_cut                 ( FMAMainWindow *main_window );
+void fma_menu_file_update_sensitivities( FMAMainWindow *main_window );
 
-void nact_menu_edit_copy                ( FMAMainWindow *main_window );
+void fma_menu_file_new_menu            ( FMAMainWindow *main_window );
 
-void nact_menu_edit_paste               ( FMAMainWindow *main_window );
+void fma_menu_file_new_action          ( FMAMainWindow *main_window );
 
-void nact_menu_edit_paste_into          ( FMAMainWindow *main_window );
+void fma_menu_file_new_profile         ( FMAMainWindow *main_window );
 
-void nact_menu_edit_duplicate           ( FMAMainWindow *main_window );
-
-void nact_menu_edit_delete              ( FMAMainWindow *main_window );
+void fma_menu_file_save_items          ( FMAMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_MENU_EDIT_H__ */
+#endif /* __UI_FMA_MENU_FILE_H__ */

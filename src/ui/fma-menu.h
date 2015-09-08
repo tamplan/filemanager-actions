@@ -27,14 +27,14 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_MENU_H__
-#define __UI_NACT_MENU_H__
+#ifndef __UI_FMA_MENU_H__
+#define __UI_FMA_MENU_H__
 
 /*
- * SECTION: nact-menu
- * @title: NactMenu
+ * SECTION: fma-menu
+ * @title: FMAMenu
  * @short_description: The menu helpers functions
- * @include: nact-menu.h
+ * @include: ui/fma-menu.h
  */
 
 #include "core/fma-updater.h"
@@ -51,48 +51,48 @@ typedef struct {
 
 	/* set at initialization time
 	 */
-	gulong		update_sensitivities_handler_id;
+	gulong		 update_sensitivities_handler_id;
 	FMAUpdater  *updater;
-	GMenuModel *maintainer;
-	GMenuModel *popup;
-	gboolean    is_level_zero_writable;
-	gboolean    has_writable_providers;
+	GMenuModel  *maintainer;
+	GMenuModel  *popup;
+	gboolean     is_level_zero_writable;
+	gboolean     has_writable_providers;
 
 	/* set when the selection changes
 	 */
-	guint       count_selected;
-	GList      *selected_items;
-	gboolean    is_parent_writable;		/* new menu/new action/paste menu or action */
-	gboolean    enable_new_profile;		/* new profile/paste a profile */
-	gboolean    is_action_writable;
-	gboolean    are_parents_writable;	/* duplicate */
-	gboolean    are_items_writable;		/* cut/delete */
+	guint        count_selected;
+	GList       *selected_items;
+	gboolean     is_parent_writable;		/* new menu/new action/paste menu or action */
+	gboolean     enable_new_profile;		/* new profile/paste a profile */
+	gboolean     is_action_writable;
+	gboolean     are_parents_writable;	/* duplicate */
+	gboolean     are_items_writable;		/* cut/delete */
 
 	/* set when the count of modified or deleted FMAObjectItem changes
 	 * or when the level zero is changed
 	 */
-	gboolean    is_tree_modified;
+	gboolean     is_tree_modified;
 
 	/* set on focus in/out
 	 */
-	gboolean    treeview_has_focus;
+	gboolean     treeview_has_focus;
 
 	/* opening a contextual popup menu
 	 */
-	gulong      popup_handler;
+	gulong       popup_handler;
 
 	/* set when total count of items changes
 	 */
-	gint        count_menus;
-	gint        count_actions;
-	gint        count_profiles;
-	gboolean    have_exportables;
-	gint        selected_menus;
-	gint        selected_actions;
-	gint        selected_profiles;
-	gint        clipboard_menus;
-	gint        clipboard_actions;
-	gint        clipboard_profiles;
+	gint         count_menus;
+	gint         count_actions;
+	gint         count_profiles;
+	gboolean     have_exportables;
+	gint         selected_menus;
+	gint         selected_actions;
+	gint         selected_profiles;
+	gint         clipboard_menus;
+	gint         clipboard_actions;
+	gint         clipboard_profiles;
 }
 	sMenuData;
 
@@ -106,16 +106,16 @@ enum {
 	TOOLBAR_HELP_ID,
 };
 
-void       nact_menu_app        ( FMAApplication *application );
+void       fma_menu_app        ( FMAApplication *application );
 
-void       nact_menu_win        ( FMAMainWindow *main_window );
+void       fma_menu_win        ( FMAMainWindow *main_window );
 
-void       nact_menu_enable_item( FMAMainWindow *main_window,
+void       fma_menu_enable_item( FMAMainWindow *main_window,
 										const gchar *action_name,
 										gboolean enable );
 
-sMenuData *nact_menu_get_data   ( FMAMainWindow *main_window );
+sMenuData *fma_menu_get_data   ( FMAMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_MENU_H__ */
+#endif /* __UI_FMA_MENU_H__ */

@@ -35,8 +35,8 @@
 #include "core/fma-iprefs.h"
 
 #include "fma-main-window.h"
-#include "nact-menu.h"
-#include "nact-menu-view.h"
+#include "fma-menu.h"
+#include "fma-menu-view.h"
 
 /* defines the toolbar properties
  */
@@ -87,36 +87,36 @@ static sNotebookTabsProps *get_notebook_tabs_properties_by_pos( guint pos );
 void                       set_notebook_tabs_position( FMAMainWindow *main_window, guint pos );
 
 /**
- * nact_menu_view_init:
+ * fma_menu_view_init:
  * @window: the #FMAMainWindow main window.
  *
  * Setup the toolbars menu at creation time.
  */
 void
-nact_menu_view_init( FMAMainWindow *window )
+fma_menu_view_init( FMAMainWindow *window )
 {
 	setup_toolbars_submenu( window );
 	setup_notebook_tab_position_submenu( window );
 }
 
 /**
- * nact_menu_view_update_sensitivities:
+ * fma_menu_view_update_sensitivities:
  * @window: the #FMAMainWindow main window.
  *
  * Update sensitivity of items of the View menu.
  */
 void
-nact_menu_view_update_sensitivities( FMAMainWindow *window )
+fma_menu_view_update_sensitivities( FMAMainWindow *window )
 {
 	sMenuData *sdata;
 	guint count_list;
 
-	sdata = nact_menu_get_data( window );
+	sdata = fma_menu_get_data( window );
 
 	/* expand all/collapse all requires at least one item in the list */
 	count_list = sdata->count_menus + sdata->count_actions + sdata->count_profiles;
-	nact_menu_enable_item( window, "expand", count_list > 0 );
-	nact_menu_enable_item( window, "collapse", count_list > 0 );
+	fma_menu_enable_item( window, "expand", count_list > 0 );
+	fma_menu_enable_item( window, "collapse", count_list > 0 );
 }
 
 /*
@@ -167,7 +167,7 @@ setup_toolbar( FMAMainWindow *window, GtkBuilder *builder, guint toolbar_id )
 static sToolbarProps *
 get_toolbar_properties_by_id( guint toolbar_id )
 {
-	static const gchar *thisfn = "nact_menu_view_get_toolbar_properties_by_id";
+	static const gchar *thisfn = "fma_menu_view_get_toolbar_properties_by_id";
 	guint i;
 
 	for( i=0 ; i < G_N_ELEMENTS( st_toolbar_props ) ; ++i ){
@@ -181,13 +181,13 @@ get_toolbar_properties_by_id( guint toolbar_id )
 }
 
 /**
- * nact_menu_view_toolbar_display:
+ * fma_menu_view_toolbar_display:
  * @main_window: the #FMAMainWindow main window.
  * @action_name: the action name.
  * @visible: whether the toolbar must be displayed or hidden.
  */
 void
-nact_menu_view_toolbar_display( FMAMainWindow *main_window, const gchar *action_name, gboolean visible )
+fma_menu_view_toolbar_display( FMAMainWindow *main_window, const gchar *action_name, gboolean visible )
 {
 	sToolbarProps *props;
 	GtkWidget *parent;
@@ -212,7 +212,7 @@ nact_menu_view_toolbar_display( FMAMainWindow *main_window, const gchar *action_
 static sToolbarProps *
 get_toolbar_properties_by_name( const gchar *action_name )
 {
-	static const gchar *thisfn = "nact_menu_view_get_toolbar_properties_by_name";
+	static const gchar *thisfn = "fma_menu_view_get_toolbar_properties_by_name";
 	guint i;
 
 	for( i=0 ; i < G_N_ELEMENTS( st_toolbar_props ) ; ++i ){
@@ -303,7 +303,7 @@ setup_notebook_tab_position_submenu( FMAMainWindow *window )
  * GtkRadioButtons items share the same "current_value".
  */
 void
-nact_menu_view_on_tabs_pos_changed( GtkRadioAction *action, GtkRadioAction *current, BaseWindow *window )
+fma_menu_view_on_tabs_pos_changed( GtkRadioAction *action, GtkRadioAction *current, BaseWindow *window )
 {
 	GtkNotebook *notebook;
 	guint new_pos;
@@ -315,13 +315,13 @@ nact_menu_view_on_tabs_pos_changed( GtkRadioAction *action, GtkRadioAction *curr
 #endif
 
 /**
- * nact_menu_view_notebook_tab_display:
+ * fma_menu_view_notebook_tab_display:
  * @main_window: the #FMAMainWindow main window.
  * @action_name: the action name.
  * @target: the targeted position.
  */
 void
-nact_menu_view_notebook_tab_display( FMAMainWindow *main_window, const gchar *action_name, const gchar *target )
+fma_menu_view_notebook_tab_display( FMAMainWindow *main_window, const gchar *action_name, const gchar *target )
 {
 	sNotebookTabsProps *props;
 
@@ -337,7 +337,7 @@ nact_menu_view_notebook_tab_display( FMAMainWindow *main_window, const gchar *ac
 static sNotebookTabsProps *
 get_notebook_tabs_properties_by_target( const gchar *target )
 {
-	static const gchar *thisfn = "nact_menu_view_get_notebook_tabs_properties_by_target";
+	static const gchar *thisfn = "fma_menu_view_get_notebook_tabs_properties_by_target";
 	guint i;
 
 	for( i=0 ; i<G_N_ELEMENTS( st_notebook_tabs_props ) ; ++i ){
@@ -356,7 +356,7 @@ get_notebook_tabs_properties_by_target( const gchar *target )
 static sNotebookTabsProps *
 get_notebook_tabs_properties_by_pos( guint pos )
 {
-	static const gchar *thisfn = "nact_menu_view_get_notebook_tabs_properties_by_pos";
+	static const gchar *thisfn = "fma_menu_view_get_notebook_tabs_properties_by_pos";
 	guint i;
 
 	for( i=0 ; i<G_N_ELEMENTS( st_notebook_tabs_props ) ; ++i ){

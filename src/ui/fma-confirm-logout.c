@@ -35,7 +35,7 @@
 
 #include "fma-confirm-logout.h"
 #include "fma-main-window-def.h"
-#include "nact-menu-file.h"
+#include "fma-menu-file.h"
 
 /* private instance data
  */
@@ -298,7 +298,7 @@ on_save_and_quit_clicked( GtkButton *button, FMAConfirmLogout *editor )
 	g_debug( "%s: button=%p, editor=%p", thisfn, ( void * ) button, ( void * ) editor );
 
 	main_window = FMA_MAIN_WINDOW( base_window_get_main_window( BASE_WINDOW( editor )));
-	nact_menu_file_save_items( main_window );
+	fma_menu_file_save_items( main_window );
 
 	close_dialog( editor, TRUE );
 }

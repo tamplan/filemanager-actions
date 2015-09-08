@@ -41,7 +41,7 @@
 #include "base-isession.h"
 #include "fma-application.h"
 #include "fma-main-window.h"
-#include "nact-menu.h"
+#include "fma-menu.h"
 
 /* private instance data
  */
@@ -424,7 +424,7 @@ application_startup( GApplication *application )
 	fma_pivot_set_loadable( FMA_PIVOT( priv->updater ), PIVOT_LOAD_ALL );
 
 	/* define the application menu */
-	nact_menu_app( FMA_APPLICATION( application ));
+	fma_menu_app( FMA_APPLICATION( application ));
 }
 
 /*

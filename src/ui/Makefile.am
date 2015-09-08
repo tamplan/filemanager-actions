@@ -69,18 +69,18 @@ fma_config_tool_SOURCES = \
 	egg-tree-multi-dnd.c								\
 	egg-tree-multi-dnd.h								\
 	main.c												\
-	fma-add-capability-dialog.c						\
-	fma-add-capability-dialog.h						\
-	fma-add-scheme-dialog.c							\
-	fma-add-scheme-dialog.h							\
+	fma-add-capability-dialog.c							\
+	fma-add-capability-dialog.h							\
+	fma-add-scheme-dialog.c								\
+	fma-add-scheme-dialog.h								\
 	fma-application.c									\
 	fma-application.h									\
 	fma-assistant-export.c								\
 	fma-assistant-export.h								\
 	fma-assistant-import.c								\
 	fma-assistant-import.h								\
-	fma-clipboard.c									\
-	fma-clipboard.h									\
+	fma-clipboard.c										\
+	fma-clipboard.h										\
 	fma-confirm-logout.c								\
 	fma-confirm-logout.h								\
 	fma-export-ask.c									\
@@ -89,8 +89,8 @@ fma_config_tool_SOURCES = \
 	fma-iaction-tab.h									\
 	fma-ibasenames-tab.c								\
 	fma-ibasenames-tab.h								\
-	fma-icapabilities-tab.c							\
-	fma-icapabilities-tab.h							\
+	fma-icapabilities-tab.c								\
+	fma-icapabilities-tab.h								\
 	fma-icommand-tab.c									\
 	fma-icommand-tab.h									\
 	fma-icon-chooser.c									\
@@ -114,14 +114,14 @@ fma_config_tool_SOURCES = \
 	fma-main-window-def.h								\
 	fma-match-list.c									\
 	fma-match-list.h									\
-	nact-menu.c											\
-	nact-menu.h											\
-	nact-menu-edit.c									\
-	nact-menu-edit.h									\
-	nact-menu-file.c									\
-	nact-menu-file.h									\
-	nact-menu-view.c									\
-	nact-menu-view.h									\
+	fma-menu.c											\
+	fma-menu.h											\
+	fma-menu-edit.c										\
+	fma-menu-edit.h										\
+	fma-menu-file.c										\
+	fma-menu-file.h										\
+	fma-menu-view.c										\
+	fma-menu-view.h										\
 	nact-preferences-editor.c							\
 	nact-preferences-editor.h							\
 	nact-providers-list.c								\
@@ -149,17 +149,17 @@ fma_config_tool_LDADD = \
 	$(NULL)
 
 actions_files = \
-	nautilus-actions-config-tool.actions				\
+	fma-ui.actions										\
 	$(NULL)
 
 ui_files = \
 	fma-add-capability.ui								\
 	fma-add-scheme.ui									\
-	fma-assistant-export.ui							\
-	fma-assistant-import.ui							\
+	fma-assistant-export.ui								\
+	fma-assistant-import.ui								\
 	fma-confirm-logout.ui								\
 	fma-export-ask.ui									\
-	fma-icon-chooser.ui								\
+	fma-icon-chooser.ui									\
 	nact-legend.ui										\
 	fma-main-window.ui									\
 	nact-preferences.ui									\

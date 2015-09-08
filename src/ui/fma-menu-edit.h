@@ -27,34 +27,27 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_MENU_VIEW_H__
-#define __UI_NACT_MENU_VIEW_H__
+#ifndef __UI_FMA_MENU_EDIT_H__
+#define __UI_FMA_MENU_EDIT_H__
 
 #include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
-enum {
-	MAIN_TOOLBAR_FILE_ID = 1,
-	MAIN_TOOLBAR_EDIT_ID,
-	MAIN_TOOLBAR_TOOLS_ID,
-	MAIN_TOOLBAR_HELP_ID,
-};
+void fma_menu_edit_update_sensitivities( FMAMainWindow *main_window );
 
-void nact_menu_view_init                ( FMAMainWindow *main_window );
+void fma_menu_edit_cut                 ( FMAMainWindow *main_window );
 
-void nact_menu_view_update_sensitivities( FMAMainWindow *main_window );
+void fma_menu_edit_copy                ( FMAMainWindow *main_window );
 
-void nact_menu_view_toolbar_display     ( FMAMainWindow *main_window,
-												const gchar *action_name,
-												gboolean visible );
+void fma_menu_edit_paste               ( FMAMainWindow *main_window );
 
-void nact_menu_view_notebook_tab_display( FMAMainWindow *main_window,
-												const gchar *action_name,
-												const gchar *target );
+void fma_menu_edit_paste_into          ( FMAMainWindow *main_window );
 
-void nact_menu_view_set_notebook_label  ( FMAMainWindow *main_window );
+void fma_menu_edit_duplicate           ( FMAMainWindow *main_window );
+
+void fma_menu_edit_delete              ( FMAMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_MENU_VIEW_H__ */
+#endif /* __UI_FMA_MENU_EDIT_H__ */

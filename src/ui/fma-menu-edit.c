@@ -41,8 +41,8 @@
 #include "fma-clipboard.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
-#include "nact-menu.h"
-#include "nact-menu-edit.h"
+#include "fma-menu.h"
+#include "fma-menu-edit.h"
 #include "nact-tree-ieditable.h"
 #include "nact-tree-view.h"
 
@@ -53,7 +53,7 @@ static gchar  *add_ndeletable_msg( const FMAObjectItem *item, gint reason );
 static void    update_clipboard_counters( FMAMainWindow *window, sMenuData *sdata );
 
 /**
- * nact_menu_edit_update_sensitivities:
+ * fma_menu_edit_update_sensitivities:
  * @main_window: the #FMAMainWindow main window.
  *
  * Update sensitivity of items of the Edit menu.
@@ -64,7 +64,7 @@ static void    update_clipboard_counters( FMAMainWindow *window, sMenuData *sdat
  * Menubar rule).
  */
 void
-nact_menu_edit_update_sensitivities( FMAMainWindow *main_window )
+fma_menu_edit_update_sensitivities( FMAMainWindow *main_window )
 {
 	sMenuData *sdata;
 	gboolean cut_enabled;
@@ -78,7 +78,7 @@ nact_menu_edit_update_sensitivities( FMAMainWindow *main_window )
 	FMAObject *selected_item;
 	gboolean is_clipboard_empty;
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 	is_clipboard_empty = ( sdata->clipboard_menus + sdata->clipboard_actions + sdata->clipboard_profiles == 0 );
 
 	/* cut requires a non-empty selection
@@ -90,12 +90,12 @@ nact_menu_edit_update_sensitivities( FMAMainWindow *main_window )
 	duplicate_enabled &= sdata->are_parents_writable;
 	cut_enabled = duplicate_enabled;
 	cut_enabled &= sdata->are_items_writable;
-	nact_menu_enable_item( main_window, "cut", cut_enabled );
+	fma_menu_enable_item( main_window, "cut", cut_enabled );
 
 	/* copy only requires a non-empty selection */
 	copy_enabled = sdata->treeview_has_focus || sdata->popup_handler;
 	copy_enabled &= sdata->count_selected > 0;
-	nact_menu_enable_item( main_window, "copy", copy_enabled );
+	fma_menu_enable_item( main_window, "copy", copy_enabled );
 
 	/* paste enabled if
 	 * - clipboard is not empty
@@ -121,7 +121,7 @@ nact_menu_edit_update_sensitivities( FMAMainWindow *main_window )
 			paste_enabled &= sdata->is_level_zero_writable;
 		}
 	}
-	nact_menu_enable_item( main_window, "paste", paste_enabled );
+	fma_menu_enable_item( main_window, "paste", paste_enabled );
 
 	/* paste into enabled if
 	 * - clipboard is not empty
@@ -160,26 +160,26 @@ nact_menu_edit_update_sensitivities( FMAMainWindow *main_window )
 			paste_into_enabled &= sdata->is_level_zero_writable;
 		}
 	}
-	nact_menu_enable_item( main_window, "paste-into", paste_into_enabled );
+	fma_menu_enable_item( main_window, "paste-into", paste_into_enabled );
 
 	/* duplicate items will be duplicated besides each one
 	 * selection must be non-empty
 	 * each parent must be writable
 	 */
-	nact_menu_enable_item( main_window, "duplicate", duplicate_enabled );
+	fma_menu_enable_item( main_window, "duplicate", duplicate_enabled );
 
 	/* delete is same that cut
 	 * but items themselves must be writable (because physically deleted)
 	 * this will be checked on delete activated
 	 */
 	delete_enabled = cut_enabled;
-	nact_menu_enable_item( main_window, "delete", delete_enabled );
+	fma_menu_enable_item( main_window, "delete", delete_enabled );
 
 	/* reload items always enabled */
 }
 
 /**
- * nact_menu_edit_cut:
+ * fma_menu_edit_cut:
  * @main_window: the #FMAMainWindow main window.
  *
  * Cut objects are installed both in the clipboard and in the deleted list.
@@ -199,9 +199,9 @@ nact_menu_edit_update_sensitivities( FMAMainWindow *main_window )
  * - (tree) remove selected items, unreffing objects
  */
 void
-nact_menu_edit_cut( FMAMainWindow *main_window )
+fma_menu_edit_cut( FMAMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menu_edit_cut";
+	static const gchar *thisfn = "fma_menu_edit_cut";
 	sMenuData *sdata;
 	GList *items;
 	FMAClipboard *clipboard;
@@ -212,7 +212,7 @@ nact_menu_edit_cut( FMAMainWindow *main_window )
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 	items = fma_object_copyref_items( sdata->selected_items );
 	ndeletables = NULL;
 	to_delete = get_deletables( sdata->updater, items, &ndeletables );
@@ -239,7 +239,7 @@ nact_menu_edit_cut( FMAMainWindow *main_window )
 }
 
 /**
- * nact_menu_edit_copy:
+ * fma_menu_edit_copy:
  * @main_window: the #FMAMainWindow main window.
  *
  * copies the visible selection
@@ -250,16 +250,16 @@ nact_menu_edit_cut( FMAMainWindow *main_window )
  * - (menu) refresh actions sensitivy (as selection doesn't change)
  */
 void
-nact_menu_edit_copy( FMAMainWindow *main_window )
+fma_menu_edit_copy( FMAMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menu_edit_copy";
+	static const gchar *thisfn = "fma_menu_edit_copy";
 	sMenuData *sdata;
 	FMAClipboard *clipboard;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 
 	clipboard = fma_main_window_get_clipboard( main_window );
 	fma_clipboard_primary_set( clipboard, sdata->selected_items, CLIPBOARD_MODE_COPY );
@@ -269,7 +269,7 @@ nact_menu_edit_copy( FMAMainWindow *main_window )
 }
 
 /**
- * nact_menu_edit_paste:
+ * fma_menu_edit_paste:
  * @main_window: the #FMAMainWindow main window.
  *
  * pastes the current content of the clipboard at the current position
@@ -284,9 +284,9 @@ nact_menu_edit_copy( FMAMainWindow *main_window )
  * - (menu) unreffing the copy got from clipboard
  */
 void
-nact_menu_edit_paste( FMAMainWindow *main_window )
+fma_menu_edit_paste( FMAMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menu_edit_paste";
+	static const gchar *thisfn = "fma_menu_edit_paste";
 	sMenuData *sdata;
 	GList *items;
 	NactTreeView *view;
@@ -294,7 +294,7 @@ nact_menu_edit_paste( FMAMainWindow *main_window )
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 	items = prepare_for_paste( main_window, sdata );
 
 	if( items ){
@@ -305,7 +305,7 @@ nact_menu_edit_paste( FMAMainWindow *main_window )
 }
 
 /**
- * nact_menu_edit_paste_into:
+ * fma_menu_edit_paste_into:
  * @main_window: the #FMAMainWindow main window.
  *
  * pastes the current content of the clipboard as the first child of
@@ -320,9 +320,9 @@ nact_menu_edit_paste( FMAMainWindow *main_window )
  * - (menu) unreffing the copy got from clipboard
  */
 void
-nact_menu_edit_paste_into( FMAMainWindow *main_window )
+fma_menu_edit_paste_into( FMAMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menu_edit_paste_into";
+	static const gchar *thisfn = "fma_menu_edit_paste_into";
 	sMenuData *sdata;
 	GList *items;
 	NactTreeView *view;
@@ -330,7 +330,7 @@ nact_menu_edit_paste_into( FMAMainWindow *main_window )
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 	items = prepare_for_paste( main_window, sdata );
 
 	if( items ){
@@ -343,7 +343,7 @@ nact_menu_edit_paste_into( FMAMainWindow *main_window )
 static GList *
 prepare_for_paste( FMAMainWindow *window, sMenuData *sdata )
 {
-	static const gchar *thisfn = "nact_menu_edit_prepare_for_paste";
+	static const gchar *thisfn = "fma_menu_edit_prepare_for_paste";
 	GList *items, *it;
 	FMAClipboard *clipboard;
 	FMAObjectAction *action;
@@ -377,7 +377,7 @@ prepare_for_paste( FMAMainWindow *window, sMenuData *sdata )
 }
 
 /**
- * nact_menu_edit_duplicate:
+ * fma_menu_edit_duplicate:
  * @main_window: the #FMAMainWindow main window.
  *
  * duplicate is just as paste, with the difference that content comes
@@ -388,9 +388,9 @@ prepare_for_paste( FMAMainWindow *window, sMenuData *sdata )
  * items just besides the original ones...
  */
 void
-nact_menu_edit_duplicate( FMAMainWindow *main_window )
+fma_menu_edit_duplicate( FMAMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menu_edit_duplicate";
+	static const gchar *thisfn = "fma_menu_edit_duplicate";
 	sMenuData *sdata;
 	FMAObjectAction *action;
 	GList *items, *it;
@@ -402,7 +402,7 @@ nact_menu_edit_duplicate( FMAMainWindow *main_window )
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 	items = fma_object_copyref_items( sdata->selected_items );
 
 	for( it = items ; it ; it = it->next ){
@@ -430,7 +430,7 @@ nact_menu_edit_duplicate( FMAMainWindow *main_window )
 }
 
 /**
- * nact_menu_edit_delete:
+ * fma_menu_edit_delete:
  * @main_window: the #FMAMainWindow main window.
  *
  * deletes the visible selection
@@ -446,9 +446,9 @@ nact_menu_edit_duplicate( FMAMainWindow *main_window )
  * this branch itself be deleted
  */
 void
-nact_menu_edit_delete( FMAMainWindow *main_window )
+fma_menu_edit_delete( FMAMainWindow *main_window )
 {
-	static const gchar *thisfn = "nact_menu_edit_delete";
+	static const gchar *thisfn = "fma_menu_edit_delete";
 	sMenuData *sdata;
 	GList *items;
 	GList *to_delete;
@@ -458,7 +458,7 @@ nact_menu_edit_delete( FMAMainWindow *main_window )
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 
-	sdata = nact_menu_get_data( main_window );
+	sdata = fma_menu_get_data( main_window );
 	items = fma_object_copyref_items( sdata->selected_items );
 	ndeletables = NULL;
 	to_delete = get_deletables( sdata->updater, items, &ndeletables );
@@ -577,7 +577,7 @@ update_clipboard_counters( FMAMainWindow *main_window, sMenuData *sdata )
 	sdata->clipboard_actions = sdata->selected_actions;
 	sdata->clipboard_profiles = sdata->selected_profiles;
 
-	g_debug( "nact_menu_update_clipboard_counters: menus=%d, actions=%d, profiles=%d",
+	g_debug( "fma_menu_update_clipboard_counters: menus=%d, actions=%d, profiles=%d",
 			sdata->clipboard_menus, sdata->clipboard_actions, sdata->clipboard_profiles );
 
 	g_signal_emit_by_name( main_window, MAIN_SIGNAL_UPDATE_SENSITIVITIES );
