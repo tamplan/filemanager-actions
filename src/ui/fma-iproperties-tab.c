@@ -41,13 +41,13 @@
 #include "core/fma-io-provider.h"
 
 #include "base-gtk-utils.h"
-#include "nact-iproperties-tab.h"
+#include "fma-iproperties-tab.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 
 /* private interface data
  */
-struct _NactIPropertiesTabInterfacePrivate {
+struct _FMAIPropertiesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -61,27 +61,27 @@ typedef struct {
 }
 	IPropertiesData;
 
-#define IPROPERTIES_TAB_PROP_DATA		"nact-iproperties-tab-data"
+#define IPROPERTIES_TAB_PROP_DATA		"fma-iproperties-tab-data"
 
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType            register_type( void );
-static void             interface_base_init( NactIPropertiesTabInterface *klass );
-static void             interface_base_finalize( NactIPropertiesTabInterface *klass );
-static void             initialize_window( NactIPropertiesTab *instance );
-static void             on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIPropertiesTab *instance );
-static void             on_main_item_updated( NactIPropertiesTab *instance, FMAIContext *context, guint data, void *empty );
-static GtkButton       *get_enabled_button( NactIPropertiesTab *instance );
-static void             on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
-static void             on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
-static void             on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance );
-static void             on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance );
-static void             display_provider_name( NactIPropertiesTab *instance, FMAObjectItem *item );
-static IPropertiesData *get_iproperties_data( NactIPropertiesTab *instance );
-static void             on_instance_finalized( gpointer user_data, NactIPropertiesTab *instance );
+static void             interface_base_init( FMAIPropertiesTabInterface *klass );
+static void             interface_base_finalize( FMAIPropertiesTabInterface *klass );
+static void             initialize_window( FMAIPropertiesTab *instance );
+static void             on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIPropertiesTab *instance );
+static void             on_main_item_updated( FMAIPropertiesTab *instance, FMAIContext *context, guint data, void *empty );
+static GtkButton       *get_enabled_button( FMAIPropertiesTab *instance );
+static void             on_enabled_toggled( GtkToggleButton *button, FMAIPropertiesTab *instance );
+static void             on_readonly_toggled( GtkToggleButton *button, FMAIPropertiesTab *instance );
+static void             on_description_changed( GtkTextBuffer *buffer, FMAIPropertiesTab *instance );
+static void             on_shortcut_clicked( GtkButton *button, FMAIPropertiesTab *instance );
+static void             display_provider_name( FMAIPropertiesTab *instance, FMAObjectItem *item );
+static IPropertiesData *get_iproperties_data( FMAIPropertiesTab *instance );
+static void             on_instance_finalized( gpointer user_data, FMAIPropertiesTab *instance );
 
 GType
-nact_iproperties_tab_get_type( void )
+fma_iproperties_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -95,11 +95,11 @@ nact_iproperties_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_register_type";
+	static const gchar *thisfn = "fma_iproperties_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactIPropertiesTabInterface ),
+		sizeof( FMAIPropertiesTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -112,7 +112,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactIPropertiesTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIPropertiesTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
@@ -120,24 +120,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIPropertiesTabInterface *klass )
+interface_base_init( FMAIPropertiesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_interface_base_init";
+	static const gchar *thisfn = "fma_iproperties_tab_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactIPropertiesTabInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIPropertiesTabInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NactIPropertiesTabInterface *klass )
+interface_base_finalize( FMAIPropertiesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_interface_base_finalize";
+	static const gchar *thisfn = "fma_iproperties_tab_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -150,19 +150,19 @@ interface_base_finalize( NactIPropertiesTabInterface *klass )
 }
 
 /**
- * nact_iproperties_tab_init:
- * @instance: this #NactIPropertiesTab instance.
+ * fma_iproperties_tab_init:
+ * @instance: this #FMAIPropertiesTab instance.
  *
  * Initialize the interface
  * Connect to #BaseWindow signals
  */
 void
-nact_iproperties_tab_init( NactIPropertiesTab *instance )
+fma_iproperties_tab_init( FMAIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_init";
+	static const gchar *thisfn = "fma_iproperties_tab_init";
 	IPropertiesData *data;
 
-	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
+	g_return_if_fail( FMA_IS_IPROPERTIES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn,
@@ -178,15 +178,15 @@ nact_iproperties_tab_init( NactIPropertiesTab *instance )
 }
 
 static void
-initialize_window( NactIPropertiesTab *instance )
+initialize_window( FMAIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_initialize_window";
+	static const gchar *thisfn = "fma_iproperties_tab_initialize_window";
 	GtkButton *enabled_button;
 	GtkWidget *label_widget;
 	GtkTextBuffer *buffer;
 	NactTreeView *tview;
 
-	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
+	g_return_if_fail( FMA_IS_IPROPERTIES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -220,9 +220,9 @@ initialize_window( NactIPropertiesTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIPropertiesTab *instance )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_tree_selection_changed";
+	static const gchar *thisfn = "fma_iproperties_tab_on_tree_selection_changed";
 	guint count_selected;
 	FMAObjectItem *item;
 	gboolean editable;
@@ -237,7 +237,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 	gchar *label, *shortcut;
 	IPropertiesData *data;
 
-	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
+	g_return_if_fail( FMA_IS_IPROPERTIES_TAB( instance ));
 
 	count_selected = g_list_length( selected_items );
 	g_debug( "%s: tview=%p, count_selected=%d, instance=%p (%s)",
@@ -313,9 +313,9 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIProp
 }
 
 static void
-on_main_item_updated( NactIPropertiesTab *instance, FMAIContext *context, guint data, void *empty )
+on_main_item_updated( FMAIPropertiesTab *instance, FMAIContext *context, guint data, void *empty )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_main_item_updated";
+	static const gchar *thisfn = "fma_iproperties_tab_on_main_item_updated";
 
 	if( data & MAIN_DATA_PROVIDER ){
 
@@ -328,15 +328,15 @@ on_main_item_updated( NactIPropertiesTab *instance, FMAIContext *context, guint 
 }
 
 static GtkButton *
-get_enabled_button( NactIPropertiesTab *instance )
+get_enabled_button( FMAIPropertiesTab *instance )
 {
 	return( GTK_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionEnabledButton" )));
 }
 
 static void
-on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
+on_enabled_toggled( GtkToggleButton *button, FMAIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_enabled_toggled";
+	static const gchar *thisfn = "fma_iproperties_tab_on_enabled_toggled";
 	FMAObjectItem *item;
 	gboolean enabled;
 	gboolean editable;
@@ -386,9 +386,9 @@ on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
  * the most elegant, seems at least working without too drawbacks
  */
 static void
-on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
+on_readonly_toggled( GtkToggleButton *button, FMAIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_readonly_toggled";
+	static const gchar *thisfn = "fma_iproperties_tab_on_readonly_toggled";
 	gboolean active;
 	IPropertiesData *data;
 
@@ -408,9 +408,9 @@ on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 
 #if 0
 static void
-on_readonly_toggle_cb( GtkToggleButton *button, NactIPropertiesTab *instance )
+on_readonly_toggle_cb( GtkToggleButton *button, FMAIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_readonly_toggle_cb";
+	static const gchar *thisfn = "fma_iproperties_tab_on_readonly_toggle_cb";
 	g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
 
 	if( rdbtn != GTK_WIDGET( button )){
@@ -425,9 +425,9 @@ on_readonly_toggle_cb( GtkToggleButton *button, NactIPropertiesTab *instance )
 
 static gboolean
 on_readonly_toggle_hook( GSignalInvocationHint *ihint,
-        guint n_param_values, const GValue *param_values, NactIPropertiesTab *instance )
+        guint n_param_values, const GValue *param_values, FMAIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_readonly_toggle_hook";
+	static const gchar *thisfn = "fma_iproperties_tab_on_readonly_toggle_hook";
 	GtkWidget *button;
 	GtkWidget *signaled_object;
 
@@ -450,9 +450,9 @@ on_readonly_toggle_hook( GSignalInvocationHint *ihint,
 #endif
 
 static void
-on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
+on_description_changed( GtkTextBuffer *buffer, FMAIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_description_changed";
+	static const gchar *thisfn = "fma_iproperties_tab_on_description_changed";
 	FMAObjectItem *item;
 	GtkTextIter start, end;
 	gchar *text;
@@ -474,7 +474,7 @@ on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
 }
 
 static void
-on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance )
+on_shortcut_clicked( GtkButton *button, FMAIPropertiesTab *instance )
 {
 	FMAObjectItem *item;
 
@@ -489,7 +489,7 @@ on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance )
 }
 
 static void
-display_provider_name( NactIPropertiesTab *instance, FMAObjectItem *item )
+display_provider_name( FMAIPropertiesTab *instance, FMAObjectItem *item )
 {
 	GtkWidget *label_widget;
 	gchar *label;
@@ -512,7 +512,7 @@ display_provider_name( NactIPropertiesTab *instance, FMAObjectItem *item )
 }
 
 static IPropertiesData *
-get_iproperties_data( NactIPropertiesTab *instance )
+get_iproperties_data( FMAIPropertiesTab *instance )
 {
 	IPropertiesData *data;
 
@@ -527,9 +527,9 @@ get_iproperties_data( NactIPropertiesTab *instance )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NactIPropertiesTab *instance )
+on_instance_finalized( gpointer user_data, FMAIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_instance_finalized";
+	static const gchar *thisfn = "fma_iproperties_tab_on_instance_finalized";
 	IPropertiesData *data;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );

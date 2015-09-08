@@ -27,41 +27,41 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_IFOLDERS_TAB_H__
-#define __UI_NACT_IFOLDERS_TAB_H__
+#ifndef __UI_FMA_IMIMETYPES_TAB_H__
+#define __UI_FMA_IMIMETYPES_TAB_H__
 
 /**
- * SECTION: nact_ifolders_tab
- * @short_description: #NactIFoldersTab interface declaration.
- * @include: ui/nact-ifolders-tab.h
+ * SECTION: fma_imimetypes_tab
+ * @short_description: #FMAIMimetypesTab interface declaration.
+ * @include: ui/fma-imimetypes-tab.h
  *
- * This interface implements all the widgets which are relevant for
- * items which are applied to backgrounds.
+ * This interface implements all the widgets which define the
+ * mimetypes-based conditions.
  */
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_IFOLDERS_TAB                      ( nact_ifolders_tab_get_type())
-#define NACT_IFOLDERS_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IFOLDERS_TAB, NactIFoldersTab ))
-#define NACT_IS_IFOLDERS_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IFOLDERS_TAB ))
-#define NACT_IFOLDERS_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IFOLDERS_TAB, NactIFoldersTabInterface ))
+#define FMA_TYPE_IMIMETYPES_TAB                      ( fma_imimetypes_tab_get_type())
+#define FMA_IMIMETYPES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IMIMETYPES_TAB, FMAIMimetypesTab ))
+#define FMA_IS_IMIMETYPES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IMIMETYPES_TAB ))
+#define FMA_IMIMETYPES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IMIMETYPES_TAB, FMAIMimetypesTabInterface ))
 
-typedef struct _NactIFoldersTab                     NactIFoldersTab;
-typedef struct _NactIFoldersTabInterfacePrivate     NactIFoldersTabInterfacePrivate;
+typedef struct _FMAIMimetypesTab                     FMAIMimetypesTab;
+typedef struct _FMAIMimetypesTabInterfacePrivate     FMAIMimetypesTabInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                   parent;
-	NactIFoldersTabInterfacePrivate *private;
+	GTypeInterface                    parent;
+	FMAIMimetypesTabInterfacePrivate *private;
 }
-	NactIFoldersTabInterface;
+	FMAIMimetypesTabInterface;
 
-GType nact_ifolders_tab_get_type( void );
+GType fma_imimetypes_tab_get_type( void );
 
-void  nact_ifolders_tab_init    ( NactIFoldersTab *instance );
+void  fma_imimetypes_tab_init    ( FMAIMimetypesTab *instance );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_IFOLDERS_TAB_H__ */
+#endif /* __UI_FMA_IMIMETYPES_TAB_H__ */

@@ -43,11 +43,11 @@
 #include "nact-main-window.h"
 #include "nact-match-list.h"
 #include "fma-add-scheme-dialog.h"
-#include "nact-ischemes-tab.h"
+#include "fma-ischemes-tab.h"
 
 /* private interface data
  */
-struct _NactISchemesTabInterfacePrivate {
+struct _FMAISchemesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -58,18 +58,18 @@ struct _NactISchemesTabInterfacePrivate {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType   register_type( void );
-static void    interface_base_init( NactISchemesTabInterface *klass );
-static void    interface_base_finalize( NactISchemesTabInterface *klass );
-static void    initialize_gtk( NactISchemesTab *instance );
-static void    initialize_window( NactISchemesTab *instance );
-static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactISchemesTab *instance );
-static void    on_add_from_defaults( GtkButton *button, NactISchemesTab *instance );
+static void    interface_base_init( FMAISchemesTabInterface *klass );
+static void    interface_base_finalize( FMAISchemesTabInterface *klass );
+static void    initialize_gtk( FMAISchemesTab *instance );
+static void    initialize_window( FMAISchemesTab *instance );
+static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAISchemesTab *instance );
+static void    on_add_from_defaults( GtkButton *button, FMAISchemesTab *instance );
 static GSList *get_schemes( void *context );
 static void    set_schemes( void *context, GSList *filters );
-static void    on_instance_finalized( gpointer user_data, NactISchemesTab *instance );
+static void    on_instance_finalized( gpointer user_data, FMAISchemesTab *instance );
 
 GType
-nact_ischemes_tab_get_type( void )
+fma_ischemes_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -83,11 +83,11 @@ nact_ischemes_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_register_type";
+	static const gchar *thisfn = "fma_ischemes_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactISchemesTabInterface ),
+		sizeof( FMAISchemesTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -100,7 +100,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactISchemesTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAISchemesTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
@@ -108,24 +108,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactISchemesTabInterface *klass )
+interface_base_init( FMAISchemesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_interface_base_init";
+	static const gchar *thisfn = "fma_ischemes_tab_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactISchemesTabInterfacePrivate, 1 );
+		klass->private = g_new0( FMAISchemesTabInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NactISchemesTabInterface *klass )
+interface_base_finalize( FMAISchemesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_interface_base_finalize";
+	static const gchar *thisfn = "fma_ischemes_tab_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -138,18 +138,18 @@ interface_base_finalize( NactISchemesTabInterface *klass )
 }
 
 /**
- * nact_ischemes_tab_init:
- * @instance: this #NactISchemesTab instance.
+ * fma_ischemes_tab_init:
+ * @instance: this #FMAISchemesTab instance.
  *
  * Initialize the interface
  * Connect to #BaseWindow signals
  */
 void
-nact_ischemes_tab_init( NactISchemesTab *instance )
+fma_ischemes_tab_init( FMAISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_init";
+	static const gchar *thisfn = "fma_ischemes_tab_init";
 
-	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
+	g_return_if_fail( FMA_IS_ISCHEMES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn,
@@ -163,11 +163,11 @@ nact_ischemes_tab_init( NactISchemesTab *instance )
 }
 
 static void
-initialize_gtk( NactISchemesTab *instance )
+initialize_gtk( FMAISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_initialize_gtk";
+	static const gchar *thisfn = "fma_ischemes_tab_initialize_gtk";
 
-	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
+	g_return_if_fail( FMA_IS_ISCHEMES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -189,12 +189,12 @@ initialize_gtk( NactISchemesTab *instance )
 }
 
 static void
-initialize_window( NactISchemesTab *instance )
+initialize_window( FMAISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_initialize_window";
+	static const gchar *thisfn = "fma_ischemes_tab_initialize_window";
 	NactTreeView *tview;
 
-	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
+	g_return_if_fail( FMA_IS_ISCHEMES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -211,7 +211,7 @@ initialize_window( NactISchemesTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactISchemesTab *instance )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAISchemesTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;
@@ -230,7 +230,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactISche
 }
 
 static void
-on_add_from_defaults( GtkButton *button, NactISchemesTab *instance )
+on_add_from_defaults( GtkButton *button, FMAISchemesTab *instance )
 {
 	GSList *schemes;
 	gchar *new_scheme;
@@ -262,9 +262,9 @@ set_schemes( void *context, GSList *filters )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NactISchemesTab *instance )
+on_instance_finalized( gpointer user_data, FMAISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_on_instance_finalized";
+	static const gchar *thisfn = "fma_ischemes_tab_on_instance_finalized";
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 }

@@ -45,19 +45,19 @@
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
-#include "nact-iaction-tab.h"
+#include "fma-iaction-tab.h"
 #include "nact-icon-chooser.h"
 #include "nact-tree-view.h"
 
 /* private interface data
  */
-struct _NactIActionTabInterfacePrivate {
+struct _FMAIActionTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* Context identifier, set against the menubar
  */
-#define IACTION_TAB_CONTEXT				"nact-iaction-tab-context"
+#define IACTION_TAB_CONTEXT				"fma-iaction-tab-context"
 
 /* data set against the instance
  */
@@ -66,37 +66,37 @@ typedef struct {
 }
 	IActionData;
 
-#define IACTION_TAB_PROP_DATA			"nact-iaction-tab-data"
+#define IACTION_TAB_PROP_DATA			"fma-iaction-tab-data"
 
 static guint st_initializations = 0;	/* interface initialisation count */
 
 static GType        register_type( void );
-static void         interface_base_init( NactIActionTabInterface *klass );
-static void         interface_base_finalize( NactIActionTabInterface *klass );
-static void         initialize_gtk( NactIActionTab *instance );
-static void         initialize_window( NactIActionTab *instance );
-static void         on_main_item_updated( NactIActionTab *instance, FMAIContext *context, guint data, void *empty );
-static void         on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIActionTab *instance );
-static void         on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance );
-static void         on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance );
-static void         check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label );
-static void         on_label_changed( GtkEntry *entry, NactIActionTab *instance );
-static void         set_label_label( NactIActionTab *instance, const gchar *color );
-static void         on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance );
-static void         on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance );
-static void         toolbar_same_label_set_sensitive( NactIActionTab *instance, FMAObjectItem *item );
-static void         setup_toolbar_label( NactIActionTab *instance, FMAObjectItem *item, const gchar *label );
-static void         on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance );
-static void         toolbar_label_set_sensitive( NactIActionTab *instance, FMAObjectItem *item );
-static void         on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance );
-static void         on_icon_browse( GtkButton *button, NactIActionTab *instance );
-static void         on_icon_changed( GtkEntry *entry, NactIActionTab *instance );
+static void         interface_base_init( FMAIActionTabInterface *klass );
+static void         interface_base_finalize( FMAIActionTabInterface *klass );
+static void         initialize_gtk( FMAIActionTab *instance );
+static void         initialize_window( FMAIActionTab *instance );
+static void         on_main_item_updated( FMAIActionTab *instance, FMAIContext *context, guint data, void *empty );
+static void         on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIActionTab *instance );
+static void         on_target_selection_toggled( GtkToggleButton *button, FMAIActionTab *instance );
+static void         on_target_location_toggled( GtkToggleButton *button, FMAIActionTab *instance );
+static void         check_for_label( FMAIActionTab *instance, GtkEntry *entry, const gchar *label );
+static void         on_label_changed( GtkEntry *entry, FMAIActionTab *instance );
+static void         set_label_label( FMAIActionTab *instance, const gchar *color );
+static void         on_target_toolbar_toggled( GtkToggleButton *button, FMAIActionTab *instance );
+static void         on_toolbar_same_label_toggled( GtkToggleButton *button, FMAIActionTab *instance );
+static void         toolbar_same_label_set_sensitive( FMAIActionTab *instance, FMAObjectItem *item );
+static void         setup_toolbar_label( FMAIActionTab *instance, FMAObjectItem *item, const gchar *label );
+static void         on_toolbar_label_changed( GtkEntry *entry, FMAIActionTab *instance );
+static void         toolbar_label_set_sensitive( FMAIActionTab *instance, FMAObjectItem *item );
+static void         on_tooltip_changed( GtkEntry *entry, FMAIActionTab *instance );
+static void         on_icon_browse( GtkButton *button, FMAIActionTab *instance );
+static void         on_icon_changed( GtkEntry *entry, FMAIActionTab *instance );
 
-static IActionData *get_iaction_data( NactIActionTab *instance );
-static void         on_instance_finalized( gpointer user_data, NactIActionTab *instance );
+static IActionData *get_iaction_data( FMAIActionTab *instance );
+static void         on_instance_finalized( gpointer user_data, FMAIActionTab *instance );
 
 GType
-nact_iaction_tab_get_type( void )
+fma_iaction_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -110,11 +110,11 @@ nact_iaction_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_iaction_tab_register_type";
+	static const gchar *thisfn = "fma_iaction_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactIActionTabInterface ),
+		sizeof( FMAIActionTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -127,7 +127,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactIActionTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIActionTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
@@ -135,24 +135,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIActionTabInterface *klass )
+interface_base_init( FMAIActionTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_iaction_tab_interface_base_init";
+	static const gchar *thisfn = "fma_iaction_tab_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactIActionTabInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIActionTabInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NactIActionTabInterface *klass )
+interface_base_finalize( FMAIActionTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_iaction_tab_interface_base_finalize";
+	static const gchar *thisfn = "fma_iaction_tab_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -165,18 +165,18 @@ interface_base_finalize( NactIActionTabInterface *klass )
 }
 
 /**
- * nact_iaction_tab_init:
- * @instance: this #NactIActionTab instance.
+ * fma_iaction_tab_init:
+ * @instance: this #FMAIActionTab instance.
  *
  * Initialize the interface
  */
 void
-nact_iaction_tab_init( NactIActionTab *instance )
+fma_iaction_tab_init( FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_init";
+	static const gchar *thisfn = "fma_iaction_tab_init";
 	IActionData *data;
 
-	g_return_if_fail( instance && NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( instance && FMA_IS_IACTION_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -206,15 +206,15 @@ nact_iaction_tab_init( NactIActionTab *instance )
  * Icon Chooser).
  */
 static void
-initialize_gtk( NactIActionTab *instance )
+initialize_gtk( FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_initialize_gtk";
+	static const gchar *thisfn = "fma_iaction_tab_initialize_gtk";
 	GtkWidget *frame;
 	GtkWidget *button;
 	gint size;
 	GtkRequisition minimal_size, natural_size;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -231,12 +231,12 @@ initialize_gtk( NactIActionTab *instance )
 }
 
 static void
-initialize_window( NactIActionTab *instance )
+initialize_window( FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_initialize_window";
+	static const gchar *thisfn = "fma_iaction_tab_initialize_window";
 	NactTreeView *tview;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -289,21 +289,21 @@ initialize_window( NactIActionTab *instance )
 }
 
 /**
- * nact_iaction_tab_has_label:
- * @window: this #NactIActionTab instance.
+ * fma_iaction_tab_has_label:
+ * @window: this #FMAIActionTab instance.
  *
  * An action or a menu can only be written if it has at least a label.
  *
  * Returns %TRUE if the label of the action or of the menu is not empty.
  */
 gboolean
-nact_iaction_tab_has_label( NactIActionTab *instance )
+fma_iaction_tab_has_label( FMAIActionTab *instance )
 {
 	GtkWidget *label_widget;
 	const gchar *label;
 	gboolean has_label = FALSE;
 
-	g_return_val_if_fail( NACT_IS_IACTION_TAB( instance ), FALSE );
+	g_return_val_if_fail( FMA_IS_IACTION_TAB( instance ), FALSE );
 
 	label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionMenuLabelEntry" );
 	label = gtk_entry_get_text( GTK_ENTRY( label_widget ));
@@ -313,12 +313,12 @@ nact_iaction_tab_has_label( NactIActionTab *instance )
 }
 
 static void
-on_main_item_updated( NactIActionTab *instance, FMAIContext *context, guint data, void *empty )
+on_main_item_updated( FMAIActionTab *instance, FMAIContext *context, guint data, void *empty )
 {
 	GtkWidget *label_widget;
 	gchar *label;
 
-	g_return_if_fail( instance && NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( instance && FMA_IS_IACTION_TAB( instance ));
 
 	if( context && FMA_IS_OBJECT_ITEM( context )){
 		label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionMenuLabelEntry" );
@@ -330,9 +330,9 @@ on_main_item_updated( NactIActionTab *instance, FMAIContext *context, guint data
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIActionTab *instance )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_tree_selection_changed";
+	static const gchar *thisfn = "fma_iaction_tab_on_tree_selection_changed";
 	guint count_selected;
 	gboolean enable_tab;
 	FMAObjectItem *item;
@@ -347,7 +347,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIActi
 	IActionData *data;
 
 	g_return_if_fail( instance && NACT_IS_MAIN_WINDOW( instance ));
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	count_selected = g_list_length( selected_items );
 	g_debug( "%s: tview=%p, selected_items=%p (count=%u), instance=%p (%s)",
@@ -449,15 +449,15 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIActi
 }
 
 static void
-on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
+on_target_selection_toggled( GtkToggleButton *button, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_target_selection_toggled";
+	static const gchar *thisfn = "fma_iaction_tab_on_target_selection_toggled";
 	FMAObjectItem *item;
 	gboolean is_target;
 	gboolean editable;
 	IActionData *data;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	data = get_iaction_data( instance );
 
@@ -494,15 +494,15 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 }
 
 static void
-on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance )
+on_target_location_toggled( GtkToggleButton *button, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_target_location_toggled";
+	static const gchar *thisfn = "fma_iaction_tab_on_target_location_toggled";
 	FMAObjectItem *item;
 	gboolean is_target;
 	gboolean editable;
 	IActionData *data;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	data = get_iaction_data( instance );
 
@@ -539,12 +539,12 @@ on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance )
 }
 
 static void
-check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label )
+check_for_label( FMAIActionTab *instance, GtkEntry *entry, const gchar *label )
 {
 	FMAObjectItem *item;
 	NactStatusbar *bar;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 	g_return_if_fail( GTK_IS_ENTRY( entry ));
 
 	bar = nact_main_window_get_statusbar( NACT_MAIN_WINDOW( instance ));
@@ -566,14 +566,14 @@ check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label )
 }
 
 static void
-on_label_changed( GtkEntry *entry, NactIActionTab *instance )
+on_label_changed( GtkEntry *entry, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_label_changed";
+	static const gchar *thisfn = "fma_iaction_tab_on_label_changed";
 	FMAObjectItem *item;
 	const gchar *label;
 	IActionData *data;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	data = get_iaction_data( instance );
 
@@ -603,7 +603,7 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 }
 
 static void
-set_label_label( NactIActionTab *instance, const gchar *color_str )
+set_label_label( FMAIActionTab *instance, const gchar *color_str )
 {
 	GtkWidget *label;
 	GdkRGBA color;
@@ -615,15 +615,15 @@ set_label_label( NactIActionTab *instance, const gchar *color_str )
 }
 
 static void
-on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
+on_target_toolbar_toggled( GtkToggleButton *button, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_target_toolbar_toggled";
+	static const gchar *thisfn = "fma_iaction_tab_on_target_toolbar_toggled";
 	FMAObjectAction *item;
 	gboolean is_target;
 	gboolean editable;
 	IActionData *data;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	data = get_iaction_data( instance );
 
@@ -662,9 +662,9 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 }
 
 static void
-on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance )
+on_toolbar_same_label_toggled( GtkToggleButton *button, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_toolbar_same_label_toggled";
+	static const gchar *thisfn = "fma_iaction_tab_on_toolbar_same_label_toggled";
 	FMAObjectItem *item;
 	gboolean same_label;
 	gboolean editable;
@@ -672,7 +672,7 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 	GtkWidget *label_widget;
 	IActionData *data;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	data = get_iaction_data( instance );
 
@@ -719,7 +719,7 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 }
 
 static void
-toolbar_same_label_set_sensitive( NactIActionTab *instance, FMAObjectItem *item )
+toolbar_same_label_set_sensitive( FMAIActionTab *instance, FMAObjectItem *item )
 {
 	GtkToggleButton *toggle;
 	gboolean target_toolbar;
@@ -735,7 +735,7 @@ toolbar_same_label_set_sensitive( NactIActionTab *instance, FMAObjectItem *item 
  * setup the label of the toolbar according to the toolbar_same_label flag
  */
 static void
-setup_toolbar_label( NactIActionTab *instance, FMAObjectItem *item, const gchar *label )
+setup_toolbar_label( FMAIActionTab *instance, FMAObjectItem *item, const gchar *label )
 {
 	GtkWidget *label_widget;
 
@@ -748,14 +748,14 @@ setup_toolbar_label( NactIActionTab *instance, FMAObjectItem *item, const gchar 
 }
 
 static void
-on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance )
+on_toolbar_label_changed( GtkEntry *entry, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_toolbar_label_changed";
+	static const gchar *thisfn = "fma_iaction_tab_on_toolbar_label_changed";
 	FMAObjectItem *item;
 	const gchar *label;
 	IActionData *data;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	data = get_iaction_data( instance );
 
@@ -779,7 +779,7 @@ on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance )
 }
 
 static void
-toolbar_label_set_sensitive( NactIActionTab *instance, FMAObjectItem *item )
+toolbar_label_set_sensitive( FMAIActionTab *instance, FMAObjectItem *item )
 {
 	gboolean is_action;
 	gboolean same_label;
@@ -792,13 +792,13 @@ toolbar_label_set_sensitive( NactIActionTab *instance, FMAObjectItem *item )
 }
 
 static void
-on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
+on_tooltip_changed( GtkEntry *entry, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_tooltip_changed";
+	static const gchar *thisfn = "fma_iaction_tab_on_tooltip_changed";
 	FMAObjectItem *item;
 	IActionData *data;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	data = get_iaction_data( instance );
 
@@ -821,15 +821,15 @@ on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
 }
 
 static void
-on_icon_browse( GtkButton *button, NactIActionTab *instance )
+on_icon_browse( GtkButton *button, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_icon_browse";
+	static const gchar *thisfn = "fma_iaction_tab_on_icon_browse";
 	FMAObjectItem *item;
 	GtkWidget *icon_entry;
 	gchar *icon_name;
 	gchar *new_icon_name;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	g_debug( "%s: button=%p, instance=%p (%s)",
 			thisfn,
@@ -856,15 +856,15 @@ on_icon_browse( GtkButton *button, NactIActionTab *instance )
 }
 
 static void
-on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
+on_icon_changed( GtkEntry *icon_entry, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_icon_changed";
+	static const gchar *thisfn = "fma_iaction_tab_on_icon_changed";
 	GtkImage *image;
 	FMAObjectItem *item;
 	gchar *icon_name;
 	IActionData *data;
 
-	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
 	g_debug( "%s: icon_entry=%p, instance=%p (%s)",
 			thisfn,
@@ -899,7 +899,7 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 }
 
 static IActionData *
-get_iaction_data( NactIActionTab *instance )
+get_iaction_data( FMAIActionTab *instance )
 {
 	IActionData *data;
 
@@ -914,9 +914,9 @@ get_iaction_data( NactIActionTab *instance )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NactIActionTab *instance )
+on_instance_finalized( gpointer user_data, FMAIActionTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_instance_finalized";
+	static const gchar *thisfn = "fma_iaction_tab_on_instance_finalized";
 	IActionData *data;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );

@@ -42,16 +42,16 @@
 #include "core/fma-iprefs.h"
 #include "core/fma-pivot.h"
 
-#include "nact-iaction-tab.h"
-#include "nact-icommand-tab.h"
-#include "nact-ibasenames-tab.h"
-#include "nact-imimetypes-tab.h"
-#include "nact-ifolders-tab.h"
-#include "nact-ischemes-tab.h"
-#include "nact-icapabilities-tab.h"
-#include "nact-ienvironment-tab.h"
-#include "nact-iexecution-tab.h"
-#include "nact-iproperties-tab.h"
+#include "fma-iaction-tab.h"
+#include "fma-icommand-tab.h"
+#include "fma-ibasenames-tab.h"
+#include "fma-imimetypes-tab.h"
+#include "fma-ifolders-tab.h"
+#include "fma-ischemes-tab.h"
+#include "fma-icapabilities-tab.h"
+#include "fma-ienvironment-tab.h"
+#include "fma-iexecution-tab.h"
+#include "fma-iproperties-tab.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-menu.h"
@@ -155,16 +155,16 @@ static guint            st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType      register_type( void );
 static void       class_init( NactMainWindowClass *klass );
-static void       iaction_tab_iface_init( NactIActionTabInterface *iface, void *user_data );
-static void       icommand_tab_iface_init( NactICommandTabInterface *iface, void *user_data );
-static void       ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface, void *user_data );
-static void       imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface, void *user_data );
-static void       ifolders_tab_iface_init( NactIFoldersTabInterface *iface, void *user_data );
-static void       ischemes_tab_iface_init( NactISchemesTabInterface *iface, void *user_data );
-static void       icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface, void *user_data );
-static void       ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface, void *user_data );
-static void       iexecution_tab_iface_init( NactIExecutionTabInterface *iface, void *user_data );
-static void       iproperties_tab_iface_init( NactIPropertiesTabInterface *iface, void *user_data );
+static void       iaction_tab_iface_init( FMAIActionTabInterface *iface, void *user_data );
+static void       icommand_tab_iface_init( FMAICommandTabInterface *iface, void *user_data );
+static void       ibasenames_tab_iface_init( FMAIBasenamesTabInterface *iface, void *user_data );
+static void       imimetypes_tab_iface_init( FMAIMimetypesTabInterface *iface, void *user_data );
+static void       ifolders_tab_iface_init( FMAIFoldersTabInterface *iface, void *user_data );
+static void       ischemes_tab_iface_init( FMAISchemesTabInterface *iface, void *user_data );
+static void       icapabilities_tab_iface_init( FMAICapabilitiesTabInterface *iface, void *user_data );
+static void       ienvironment_tab_iface_init( FMAIEnvironmentTabInterface *iface, void *user_data );
+static void       iexecution_tab_iface_init( FMAIExecutionTabInterface *iface, void *user_data );
+static void       iproperties_tab_iface_init( FMAIPropertiesTabInterface *iface, void *user_data );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -286,25 +286,25 @@ register_type( void )
 
 	type = g_type_register_static( GTK_TYPE_APPLICATION_WINDOW, "NactMainWindow", &info, 0 );
 
-	g_type_add_interface_static( type, NACT_TYPE_IACTION_TAB, &iaction_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IACTION_TAB, &iaction_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_TYPE_ICOMMAND_TAB, &icommand_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_ICOMMAND_TAB, &icommand_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_TYPE_IBASENAMES_TAB, &ibasenames_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IBASENAMES_TAB, &ibasenames_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_TYPE_IMIMETYPES_TAB, &imimetypes_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IMIMETYPES_TAB, &imimetypes_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_TYPE_IFOLDERS_TAB, &ifolders_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IFOLDERS_TAB, &ifolders_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_TYPE_ISCHEMES_TAB, &ischemes_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_ISCHEMES_TAB, &ischemes_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_TYPE_ICAPABILITIES_TAB, &icapabilities_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_ICAPABILITIES_TAB, &icapabilities_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_TYPE_IENVIRONMENT_TAB, &ienvironment_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IENVIRONMENT_TAB, &ienvironment_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_TYPE_IEXECUTION_TAB, &iexecution_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IEXECUTION_TAB, &iexecution_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_TYPE_IPROPERTIES_TAB, &iproperties_tab_iface_info );
+	g_type_add_interface_static( type, FMA_TYPE_IPROPERTIES_TAB, &iproperties_tab_iface_info );
 
 	return( type );
 }
@@ -414,7 +414,7 @@ class_init( NactMainWindowClass *klass )
 }
 
 static void
-iaction_tab_iface_init( NactIActionTabInterface *iface, void *user_data )
+iaction_tab_iface_init( FMAIActionTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_iaction_tab_iface_init";
 
@@ -422,7 +422,7 @@ iaction_tab_iface_init( NactIActionTabInterface *iface, void *user_data )
 }
 
 static void
-icommand_tab_iface_init( NactICommandTabInterface *iface, void *user_data )
+icommand_tab_iface_init( FMAICommandTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_icommand_tab_iface_init";
 
@@ -430,7 +430,7 @@ icommand_tab_iface_init( NactICommandTabInterface *iface, void *user_data )
 }
 
 static void
-ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface, void *user_data )
+ibasenames_tab_iface_init( FMAIBasenamesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_ibasenames_tab_iface_init";
 
@@ -438,7 +438,7 @@ ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface, void *user_data )
 }
 
 static void
-imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface, void *user_data )
+imimetypes_tab_iface_init( FMAIMimetypesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_imimetypes_tab_iface_init";
 
@@ -446,7 +446,7 @@ imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface, void *user_data )
 }
 
 static void
-ifolders_tab_iface_init( NactIFoldersTabInterface *iface, void *user_data )
+ifolders_tab_iface_init( FMAIFoldersTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_ifolders_tab_iface_init";
 
@@ -454,7 +454,7 @@ ifolders_tab_iface_init( NactIFoldersTabInterface *iface, void *user_data )
 }
 
 static void
-ischemes_tab_iface_init( NactISchemesTabInterface *iface, void *user_data )
+ischemes_tab_iface_init( FMAISchemesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_ischemes_tab_iface_init";
 
@@ -462,7 +462,7 @@ ischemes_tab_iface_init( NactISchemesTabInterface *iface, void *user_data )
 }
 
 static void
-icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface, void *user_data )
+icapabilities_tab_iface_init( FMAICapabilitiesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_icapabilities_tab_iface_init";
 
@@ -470,7 +470,7 @@ icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface, void *user_d
 }
 
 static void
-ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface, void *user_data )
+ienvironment_tab_iface_init( FMAIEnvironmentTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_ienvironment_tab_iface_init";
 
@@ -478,7 +478,7 @@ ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface, void *user_dat
 }
 
 static void
-iexecution_tab_iface_init( NactIExecutionTabInterface *iface, void *user_data )
+iexecution_tab_iface_init( FMAIExecutionTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_iexecution_tab_iface_init";
 
@@ -486,7 +486,7 @@ iexecution_tab_iface_init( NactIExecutionTabInterface *iface, void *user_data )
 }
 
 static void
-iproperties_tab_iface_init( NactIPropertiesTabInterface *iface, void *user_data )
+iproperties_tab_iface_init( FMAIPropertiesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_iproperties_tab_iface_init";
 
@@ -671,16 +671,16 @@ nact_main_window_new( FMAApplication *application )
 	/* initialize the notebook interfaces
 	 *  and monitor the updates which originates from each property tab
 	 */
-	nact_iaction_tab_init( NACT_IACTION_TAB( window ));
-	nact_icommand_tab_init( NACT_ICOMMAND_TAB( window ));
-	nact_ibasenames_tab_init( NACT_IBASENAMES_TAB( window ));
-	nact_imimetypes_tab_init( NACT_IMIMETYPES_TAB( window ));
-	nact_ifolders_tab_init( NACT_IFOLDERS_TAB( window ));
-	nact_ischemes_tab_init( NACT_ISCHEMES_TAB( window ));
-	nact_icapabilities_tab_init( NACT_ICAPABILITIES_TAB( window ));
-	nact_ienvironment_tab_init( NACT_IENVIRONMENT_TAB( window ));
-	nact_iexecution_tab_init( NACT_IEXECUTION_TAB( window ));
-	nact_iproperties_tab_init( NACT_IPROPERTIES_TAB( window ));
+	fma_iaction_tab_init( FMA_IACTION_TAB( window ));
+	fma_icommand_tab_init( FMA_ICOMMAND_TAB( window ));
+	fma_ibasenames_tab_init( FMA_IBASENAMES_TAB( window ));
+	fma_imimetypes_tab_init( FMA_IMIMETYPES_TAB( window ));
+	fma_ifolders_tab_init( FMA_IFOLDERS_TAB( window ));
+	fma_ischemes_tab_init( FMA_ISCHEMES_TAB( window ));
+	fma_icapabilities_tab_init( FMA_ICAPABILITIES_TAB( window ));
+	fma_ienvironment_tab_init( FMA_IENVIRONMENT_TAB( window ));
+	fma_iexecution_tab_init( FMA_IEXECUTION_TAB( window ));
+	fma_iproperties_tab_init( FMA_IPROPERTIES_TAB( window ));
 
 	g_signal_connect( window, MAIN_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_item_updated ), NULL );
 

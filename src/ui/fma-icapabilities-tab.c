@@ -42,11 +42,11 @@
 #include "nact-main-window.h"
 #include "nact-match-list.h"
 #include "fma-add-capability-dialog.h"
-#include "nact-icapabilities-tab.h"
+#include "fma-icapabilities-tab.h"
 
 /* private interface data
  */
-struct _NactICapabilitiesTabInterfacePrivate {
+struct _FMAICapabilitiesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -55,18 +55,18 @@ struct _NactICapabilitiesTabInterfacePrivate {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType   register_type( void );
-static void    interface_base_init( NactICapabilitiesTabInterface *klass );
-static void    interface_base_finalize( NactICapabilitiesTabInterface *klass );
-static void    initialize_gtk( NactICapabilitiesTab *instance );
-static void    initialize_window( NactICapabilitiesTab *instance );
-static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICapabilitiesTab *instance );
-static void    on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance );
+static void    interface_base_init( FMAICapabilitiesTabInterface *klass );
+static void    interface_base_finalize( FMAICapabilitiesTabInterface *klass );
+static void    initialize_gtk( FMAICapabilitiesTab *instance );
+static void    initialize_window( FMAICapabilitiesTab *instance );
+static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAICapabilitiesTab *instance );
+static void    on_add_clicked( GtkButton *button, FMAICapabilitiesTab *instance );
 static GSList *get_capabilities( FMAIContext *context );
 static void    set_capabilities( FMAIContext *context, GSList *list );
-static void    on_instance_finalized( gpointer user_data, NactICapabilitiesTab *instance );
+static void    on_instance_finalized( gpointer user_data, FMAICapabilitiesTab *instance );
 
 GType
-nact_icapabilities_tab_get_type( void )
+fma_icapabilities_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -80,11 +80,11 @@ nact_icapabilities_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_icapabilities_tab_register_type";
+	static const gchar *thisfn = "fma_icapabilities_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactICapabilitiesTabInterface ),
+		sizeof( FMAICapabilitiesTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -97,7 +97,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactICapabilitiesTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAICapabilitiesTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
@@ -105,24 +105,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactICapabilitiesTabInterface *klass )
+interface_base_init( FMAICapabilitiesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_icapabilities_tab_interface_base_init";
+	static const gchar *thisfn = "fma_icapabilities_tab_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactICapabilitiesTabInterfacePrivate, 1 );
+		klass->private = g_new0( FMAICapabilitiesTabInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NactICapabilitiesTabInterface *klass )
+interface_base_finalize( FMAICapabilitiesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_icapabilities_tab_interface_base_finalize";
+	static const gchar *thisfn = "fma_icapabilities_tab_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -135,18 +135,18 @@ interface_base_finalize( NactICapabilitiesTabInterface *klass )
 }
 
 /**
- * nact_icapabilities_tab_init:
- * @instance: this #NactICapabilitiesTab instance.
+ * fma_icapabilities_tab_init:
+ * @instance: this #FMAICapabilitiesTab instance.
  *
  * Initialize the interface
  * Connect to #BaseWindow signals
  */
 void
-nact_icapabilities_tab_init( NactICapabilitiesTab *instance )
+fma_icapabilities_tab_init( FMAICapabilitiesTab *instance )
 {
-	static const gchar *thisfn = "nact_icapabilities_tab_init";
+	static const gchar *thisfn = "fma_icapabilities_tab_init";
 
-	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+	g_return_if_fail( FMA_IS_ICAPABILITIES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn,
@@ -160,11 +160,11 @@ nact_icapabilities_tab_init( NactICapabilitiesTab *instance )
 }
 
 static void
-initialize_gtk( NactICapabilitiesTab *instance )
+initialize_gtk( FMAICapabilitiesTab *instance )
 {
-	static const gchar *thisfn = "nact_icapabilities_tab_initialize_gtk";
+	static const gchar *thisfn = "fma_icapabilities_tab_initialize_gtk";
 
-	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+	g_return_if_fail( FMA_IS_ICAPABILITIES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -186,12 +186,12 @@ initialize_gtk( NactICapabilitiesTab *instance )
 }
 
 static void
-initialize_window( NactICapabilitiesTab *instance )
+initialize_window( FMAICapabilitiesTab *instance )
 {
-	static const gchar *thisfn = "nact_icapabilities_tab_initialize_window";
+	static const gchar *thisfn = "fma_icapabilities_tab_initialize_window";
 	NactTreeView *tview;
 
-	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+	g_return_if_fail( FMA_IS_ICAPABILITIES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -204,7 +204,7 @@ initialize_window( NactICapabilitiesTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICapabilitiesTab *instance )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAICapabilitiesTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;
@@ -219,7 +219,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICapa
 }
 
 static void
-on_add_clicked( GtkButton *button, NactICapabilitiesTab *instance )
+on_add_clicked( GtkButton *button, FMAICapabilitiesTab *instance )
 {
 	FMAIContext *context;
 	GSList *capabilities;
@@ -253,9 +253,9 @@ set_capabilities( FMAIContext *context, GSList *list )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NactICapabilitiesTab *instance )
+on_instance_finalized( gpointer user_data, FMAICapabilitiesTab *instance )
 {
-	static const gchar *thisfn = "nact_icapabilities_tab_on_instance_finalized";
+	static const gchar *thisfn = "fma_icapabilities_tab_on_instance_finalized";
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 }

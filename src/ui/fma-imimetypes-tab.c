@@ -40,11 +40,11 @@
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"
-#include "nact-imimetypes-tab.h"
+#include "fma-imimetypes-tab.h"
 
 /* private interface data
  */
-struct _NactIMimetypesTabInterfacePrivate {
+struct _FMAIMimetypesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -55,17 +55,17 @@ struct _NactIMimetypesTabInterfacePrivate {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType   register_type( void );
-static void    interface_base_init( NactIMimetypesTabInterface *klass );
-static void    interface_base_finalize( NactIMimetypesTabInterface *klass );
-static void    initialize_gtk( NactIMimetypesTab *instance );
-static void    initialize_window( NactIMimetypesTab *instance );
-static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIMimetypesTab *instance );
+static void    interface_base_init( FMAIMimetypesTabInterface *klass );
+static void    interface_base_finalize( FMAIMimetypesTabInterface *klass );
+static void    initialize_gtk( FMAIMimetypesTab *instance );
+static void    initialize_window( FMAIMimetypesTab *instance );
+static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIMimetypesTab *instance );
 static GSList *get_mimetypes( void *context );
 static void    set_mimetypes( void *context, GSList *filters );
-static void    on_instance_finalized( gpointer user_data, NactIMimetypesTab *instance );
+static void    on_instance_finalized( gpointer user_data, FMAIMimetypesTab *instance );
 
 GType
-nact_imimetypes_tab_get_type( void )
+fma_imimetypes_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -79,11 +79,11 @@ nact_imimetypes_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_register_type";
+	static const gchar *thisfn = "fma_imimetypes_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactIMimetypesTabInterface ),
+		sizeof( FMAIMimetypesTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -96,7 +96,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactIMimetypesTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIMimetypesTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
@@ -104,24 +104,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIMimetypesTabInterface *klass )
+interface_base_init( FMAIMimetypesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_interface_base_init";
+	static const gchar *thisfn = "fma_imimetypes_tab_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactIMimetypesTabInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIMimetypesTabInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NactIMimetypesTabInterface *klass )
+interface_base_finalize( FMAIMimetypesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_interface_base_finalize";
+	static const gchar *thisfn = "fma_imimetypes_tab_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -134,18 +134,18 @@ interface_base_finalize( NactIMimetypesTabInterface *klass )
 }
 
 /*
- * nact_imimetypes_tab_init:
- * @instance: this #NactIMimetypesTab instance.
+ * fma_imimetypes_tab_init:
+ * @instance: this #FMAIMimetypesTab instance.
  *
  * Initialize the interface
  * Connect to #BaseWindow signals
  */
 void
-nact_imimetypes_tab_init( NactIMimetypesTab *instance )
+fma_imimetypes_tab_init( FMAIMimetypesTab *instance )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_init";
+	static const gchar *thisfn = "fma_imimetypes_tab_init";
 
-	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
+	g_return_if_fail( FMA_IS_IMIMETYPES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn,
@@ -160,16 +160,16 @@ nact_imimetypes_tab_init( NactIMimetypesTab *instance )
 
 /*
  * initialize_gtk:
- * @window: this #NactIMimetypesTab instance.
+ * @window: this #FMAIMimetypesTab instance.
  *
  * Initializes the tab widget at initial load.
  */
 static void
-initialize_gtk( NactIMimetypesTab *instance )
+initialize_gtk( FMAIMimetypesTab *instance )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_initialize_gtk";
+	static const gchar *thisfn = "fma_imimetypes_tab_initialize_gtk";
 
-	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
+	g_return_if_fail( FMA_IS_IMIMETYPES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -192,18 +192,18 @@ initialize_gtk( NactIMimetypesTab *instance )
 
 /*
  * initialize_window:
- * @window: this #NactIMimetypesTab instance.
+ * @window: this #FMAIMimetypesTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
  * Connect signals and setup runtime values.
  */
 static void
-initialize_window( NactIMimetypesTab *instance )
+initialize_window( FMAIMimetypesTab *instance )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_initialize_window";
+	static const gchar *thisfn = "fma_imimetypes_tab_initialize_window";
 	NactTreeView *tview;
 
-	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
+	g_return_if_fail( FMA_IS_IMIMETYPES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -216,7 +216,7 @@ initialize_window( NactIMimetypesTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIMimetypesTab *instance )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIMimetypesTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;
@@ -243,9 +243,9 @@ set_mimetypes( void *context, GSList *filters )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NactIMimetypesTab *instance )
+on_instance_finalized( gpointer user_data, FMAIMimetypesTab *instance )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_on_instance_finalized";
+	static const gchar *thisfn = "fma_imimetypes_tab_on_instance_finalized";
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 }

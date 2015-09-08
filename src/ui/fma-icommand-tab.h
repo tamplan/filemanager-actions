@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_ICOMMAND_TAB_H__
-#define __UI_NACT_ICOMMAND_TAB_H__
+#ifndef __UI_FMA_ICOMMAND_TAB_H__
+#define __UI_FMA_ICOMMAND_TAB_H__
 
 /**
- * SECTION: nact_icommand_tab
- * @short_description: #NactICommandTab interface declaration.
- * @include: ui/nact-icommand-tab.h
+ * SECTION: fma_icommand_tab
+ * @short_description: #FMAICommandTab interface declaration.
+ * @include: ui/fma-icommand-tab.h
  *
  * This interface implements all the widgets which define the
  * actual action to be executed (from FMAObjectProfile).
@@ -43,25 +43,25 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_ICOMMAND_TAB                      ( nact_icommand_tab_get_type())
-#define NACT_ICOMMAND_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_ICOMMAND_TAB, NactICommandTab ))
-#define NACT_IS_ICOMMAND_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_ICOMMAND_TAB ))
-#define NACT_ICOMMAND_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_ICOMMAND_TAB, NactICommandTabInterface ))
+#define FMA_TYPE_ICOMMAND_TAB                      ( fma_icommand_tab_get_type())
+#define FMA_ICOMMAND_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_ICOMMAND_TAB, FMAICommandTab ))
+#define FMA_IS_ICOMMAND_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_ICOMMAND_TAB ))
+#define FMA_ICOMMAND_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_ICOMMAND_TAB, FMAICommandTabInterface ))
 
-typedef struct _NactICommandTab                     NactICommandTab;
-typedef struct _NactICommandTabInterfacePrivate     NactICommandTabInterfacePrivate;
+typedef struct _FMAICommandTab                     FMAICommandTab;
+typedef struct _FMAICommandTabInterfacePrivate     FMAICommandTabInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                   parent;
-	NactICommandTabInterfacePrivate *private;
+	GTypeInterface                  parent;
+	FMAICommandTabInterfacePrivate *private;
 }
-	NactICommandTabInterface;
+	FMAICommandTabInterface;
 
-GType nact_icommand_tab_get_type( void );
+GType fma_icommand_tab_get_type( void );
 
-void  nact_icommand_tab_init    ( NactICommandTab *instance );
+void  fma_icommand_tab_init    ( FMAICommandTab *instance );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_ICOMMAND_TAB_H__ */
+#endif /* __UI_FMA_ICOMMAND_TAB_H__ */

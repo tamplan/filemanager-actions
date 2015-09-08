@@ -85,28 +85,28 @@ fma_config_tool_SOURCES = \
 	fma-confirm-logout.h								\
 	fma-export-ask.c									\
 	fma-export-ask.h									\
-	nact-iaction-tab.c									\
-	nact-iaction-tab.h									\
-	nact-ibasenames-tab.c								\
-	nact-ibasenames-tab.h								\
-	nact-icapabilities-tab.c							\
-	nact-icapabilities-tab.h							\
-	nact-icommand-tab.c									\
-	nact-icommand-tab.h									\
+	fma-iaction-tab.c									\
+	fma-iaction-tab.h									\
+	fma-ibasenames-tab.c								\
+	fma-ibasenames-tab.h								\
+	fma-icapabilities-tab.c							\
+	fma-icapabilities-tab.h							\
+	fma-icommand-tab.c									\
+	fma-icommand-tab.h									\
 	nact-icon-chooser.c									\
 	nact-icon-chooser.h									\
-	nact-ienvironment-tab.c								\
-	nact-ienvironment-tab.h								\
-	nact-iexecution-tab.c								\
-	nact-iexecution-tab.h								\
-	nact-ifolders-tab.c									\
-	nact-ifolders-tab.h									\
-	nact-imimetypes-tab.c								\
-	nact-imimetypes-tab.h								\
-	nact-iproperties-tab.c								\
-	nact-iproperties-tab.h								\
-	nact-ischemes-tab.c									\
-	nact-ischemes-tab.h									\
+	fma-ienvironment-tab.c								\
+	fma-ienvironment-tab.h								\
+	fma-iexecution-tab.c								\
+	fma-iexecution-tab.h								\
+	fma-ifolders-tab.c									\
+	fma-ifolders-tab.h									\
+	fma-imimetypes-tab.c								\
+	fma-imimetypes-tab.h								\
+	fma-iproperties-tab.c								\
+	fma-iproperties-tab.h								\
+	fma-ischemes-tab.c									\
+	fma-ischemes-tab.h									\
 	nact-main-tab.c										\
 	nact-main-tab.h										\
 	nact-main-window.c									\

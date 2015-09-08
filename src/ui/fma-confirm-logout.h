@@ -31,12 +31,12 @@
 #define __UI_FMA_CONFIRM_LOGOUT_H__
 
 /**
- * SECTION: nact_preferences_editor
+ * SECTION: fma_confirm_logout
  * @short_description: #FMAConfirmLogout class definition.
- * @include: ui/nact-preferences-editor.h
+ * @include: ui/fma-confirm-logout.h
  *
- * This class is derived from NactWindow.
- * It encapsulates the "PreferencesDialog" widget dialog.
+ * This class is derived from BaseDialog.
+ * It encapsulates the logout confirmation dialog.
  */
 
 #include "base-dialog.h"

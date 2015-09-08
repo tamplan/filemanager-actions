@@ -38,14 +38,14 @@
 #include "core/fma-gtk-utils.h"
 
 #include "base-gtk-utils.h"
-#include "nact-ibasenames-tab.h"
+#include "fma-ibasenames-tab.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"
 
 /* private interface data
  */
-struct _NactIBasenamesTabInterfacePrivate {
+struct _FMAIBasenamesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -60,24 +60,24 @@ typedef struct {
 }
 	IBasenamesData;
 
-#define IBASENAMES_TAB_PROP_DATA		"nact-ibasenames-tab-data"
+#define IBASENAMES_TAB_PROP_DATA		"fma-ibasenames-tab-data"
 
 static guint    st_initializations = 0;	/* interface initialization count */
 
 static GType           register_type( void );
-static void            interface_base_init( NactIBasenamesTabInterface *klass );
-static void            interface_base_finalize( NactIBasenamesTabInterface *klass );
-static void            initialize_gtk( NactIBasenamesTab *instance );
-static void            initialize_window( NactIBasenamesTab *instance );
-static void            on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBasenamesTab *instance );
-static void            on_matchcase_toggled( GtkToggleButton *button, NactIBasenamesTab *instance );
+static void            interface_base_init( FMAIBasenamesTabInterface *klass );
+static void            interface_base_finalize( FMAIBasenamesTabInterface *klass );
+static void            initialize_gtk( FMAIBasenamesTab *instance );
+static void            initialize_window( FMAIBasenamesTab *instance );
+static void            on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIBasenamesTab *instance );
+static void            on_matchcase_toggled( GtkToggleButton *button, FMAIBasenamesTab *instance );
 static GSList         *get_basenames( void *context );
 static void            set_basenames( void *context, GSList *filters );
-static IBasenamesData *get_ibasenames_data( NactIBasenamesTab *instance );
-static void            on_instance_finalized( gpointer user_data, NactIBasenamesTab *instance );
+static IBasenamesData *get_ibasenames_data( FMAIBasenamesTab *instance );
+static void            on_instance_finalized( gpointer user_data, FMAIBasenamesTab *instance );
 
 GType
-nact_ibasenames_tab_get_type( void )
+fma_ibasenames_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -91,11 +91,11 @@ nact_ibasenames_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_register_type";
+	static const gchar *thisfn = "fma_ibasenames_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactIBasenamesTabInterface ),
+		sizeof( FMAIBasenamesTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -108,7 +108,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactIBasenamesTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIBasenamesTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
@@ -116,24 +116,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIBasenamesTabInterface *klass )
+interface_base_init( FMAIBasenamesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_interface_base_init";
+	static const gchar *thisfn = "fma_ibasenames_tab_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactIBasenamesTabInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIBasenamesTabInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NactIBasenamesTabInterface *klass )
+interface_base_finalize( FMAIBasenamesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_interface_base_finalize";
+	static const gchar *thisfn = "fma_ibasenames_tab_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -146,19 +146,19 @@ interface_base_finalize( NactIBasenamesTabInterface *klass )
 }
 
 /*
- * nact_ibasenames_tab_init:
- * @instance: this #NactIBasenamesTab instance.
+ * fma_ibasenames_tab_init:
+ * @instance: this #FMAIBasenamesTab instance.
  *
  * Initialize the interface
  * Connect to #BaseWindow signals
  */
 void
-nact_ibasenames_tab_init( NactIBasenamesTab *instance )
+fma_ibasenames_tab_init( FMAIBasenamesTab *instance )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_init";
+	static const gchar *thisfn = "fma_ibasenames_tab_init";
 	IBasenamesData *data;
 
-	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
+	g_return_if_fail( FMA_IS_IBASENAMES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn,
@@ -176,16 +176,16 @@ nact_ibasenames_tab_init( NactIBasenamesTab *instance )
 
 /*
  * on_base_initialize_gtk:
- * @window: this #NactIBasenamesTab instance.
+ * @window: this #FMAIBasenamesTab instance.
  *
  * Initializes the tab widget at initial load.
  */
 static void
-initialize_gtk( NactIBasenamesTab *instance )
+initialize_gtk( FMAIBasenamesTab *instance )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_initialize_gtk";
+	static const gchar *thisfn = "fma_ibasenames_tab_initialize_gtk";
 
-	g_return_if_fail( instance && NACT_IS_IBASENAMES_TAB( instance ));
+	g_return_if_fail( instance && FMA_IS_IBASENAMES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -208,18 +208,18 @@ initialize_gtk( NactIBasenamesTab *instance )
 
 /*
  * on_base_initialize_window:
- * @window: this #NactIBasenamesTab instance.
+ * @window: this #FMAIBasenamesTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
  * Connect signals and setup runtime values.
  */
 static void
-initialize_window( NactIBasenamesTab *instance )
+initialize_window( FMAIBasenamesTab *instance )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_initialize_window";
+	static const gchar *thisfn = "fma_ibasenames_tab_initialize_window";
 	NactTreeView *tview;
 
-	g_return_if_fail( instance && NACT_IS_IBASENAMES_TAB( instance ));
+	g_return_if_fail( instance && FMA_IS_IBASENAMES_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -235,7 +235,7 @@ initialize_window( NactIBasenamesTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBasenamesTab *instance )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIBasenamesTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;
@@ -251,7 +251,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBase
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES, enable_tab );
 
-	data = get_ibasenames_data( NACT_IBASENAMES_TAB( instance ));
+	data = get_ibasenames_data( FMA_IBASENAMES_TAB( instance ));
 	data->on_selection_change = TRUE;
 
 	matchcase_button = GTK_TOGGLE_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "BasenamesMatchcaseButton" ));
@@ -263,14 +263,14 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIBase
 }
 
 static void
-on_matchcase_toggled( GtkToggleButton *button, NactIBasenamesTab *instance )
+on_matchcase_toggled( GtkToggleButton *button, FMAIBasenamesTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;
 	gboolean matchcase;
 	IBasenamesData *data;
 
-	data = get_ibasenames_data( NACT_IBASENAMES_TAB( instance ));
+	data = get_ibasenames_data( FMA_IBASENAMES_TAB( instance ));
 
 	if( !data->on_selection_change ){
 		g_object_get( G_OBJECT( instance ),
@@ -306,7 +306,7 @@ set_basenames( void *context, GSList *filters )
 }
 
 static IBasenamesData *
-get_ibasenames_data( NactIBasenamesTab *instance )
+get_ibasenames_data( FMAIBasenamesTab *instance )
 {
 	IBasenamesData *data;
 
@@ -321,9 +321,9 @@ get_ibasenames_data( NactIBasenamesTab *instance )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NactIBasenamesTab *instance )
+on_instance_finalized( gpointer user_data, FMAIBasenamesTab *instance )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_on_instance_finalized";
+	static const gchar *thisfn = "fma_ibasenames_tab_on_instance_finalized";
 	IBasenamesData *data;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );

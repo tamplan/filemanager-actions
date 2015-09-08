@@ -44,11 +44,11 @@
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"
-#include "nact-ifolders-tab.h"
+#include "fma-ifolders-tab.h"
 
 /* private interface data
  */
-struct _NactIFoldersTabInterfacePrivate {
+struct _FMAIFoldersTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -59,18 +59,18 @@ struct _NactIFoldersTabInterfacePrivate {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType   register_type( void );
-static void    interface_base_init( NactIFoldersTabInterface *klass );
-static void    interface_base_finalize( NactIFoldersTabInterface *klass );
-static void    initialize_gtk( NactIFoldersTab *instance );
-static void    initialize_window( NactIFoldersTab *instance );
-static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIFoldersTab *instance );
-static void    on_browse_folder_clicked( GtkButton *button, NactIFoldersTab *instance );
+static void    interface_base_init( FMAIFoldersTabInterface *klass );
+static void    interface_base_finalize( FMAIFoldersTabInterface *klass );
+static void    initialize_gtk( FMAIFoldersTab *instance );
+static void    initialize_window( FMAIFoldersTab *instance );
+static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIFoldersTab *instance );
+static void    on_browse_folder_clicked( GtkButton *button, FMAIFoldersTab *instance );
 static GSList *get_folders( void *context );
 static void    set_folders( void *context, GSList *filters );
-static void    on_instance_finalized( gpointer user_data, NactIFoldersTab *instance );
+static void    on_instance_finalized( gpointer user_data, FMAIFoldersTab *instance );
 
 GType
-nact_ifolders_tab_get_type( void )
+fma_ifolders_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -84,11 +84,11 @@ nact_ifolders_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_register_type";
+	static const gchar *thisfn = "fma_ifolders_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactIFoldersTabInterface ),
+		sizeof( FMAIFoldersTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -101,7 +101,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactIFoldersTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIFoldersTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
@@ -109,24 +109,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIFoldersTabInterface *klass )
+interface_base_init( FMAIFoldersTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_interface_base_init";
+	static const gchar *thisfn = "fma_ifolders_tab_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactIFoldersTabInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIFoldersTabInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NactIFoldersTabInterface *klass )
+interface_base_finalize( FMAIFoldersTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_interface_base_finalize";
+	static const gchar *thisfn = "fma_ifolders_tab_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -139,18 +139,18 @@ interface_base_finalize( NactIFoldersTabInterface *klass )
 }
 
 /**
- * nact_ifolders_tab_init:
- * @instance: this #NactIFoldersTab instance.
+ * fma_ifolders_tab_init:
+ * @instance: this #FMAIFoldersTab instance.
  *
  * Initialize the interface
  * Connect to #BaseWindow signals
  */
 void
-nact_ifolders_tab_init( NactIFoldersTab *instance )
+fma_ifolders_tab_init( FMAIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_init";
+	static const gchar *thisfn = "fma_ifolders_tab_init";
 
-	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
+	g_return_if_fail( FMA_IS_IFOLDERS_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn,
@@ -164,11 +164,11 @@ nact_ifolders_tab_init( NactIFoldersTab *instance )
 }
 
 static void
-initialize_gtk( NactIFoldersTab *instance )
+initialize_gtk( FMAIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_initialize_gtk";
+	static const gchar *thisfn = "fma_ifolders_tab_initialize_gtk";
 
-	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
+	g_return_if_fail( FMA_IS_IFOLDERS_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -190,12 +190,12 @@ initialize_gtk( NactIFoldersTab *instance )
 }
 
 static void
-initialize_window( NactIFoldersTab *instance )
+initialize_window( FMAIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_initialize_window";
+	static const gchar *thisfn = "fma_ifolders_tab_initialize_window";
 	NactTreeView *tview;
 
-	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
+	g_return_if_fail( FMA_IS_IFOLDERS_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -212,7 +212,7 @@ initialize_window( NactIFoldersTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIFoldersTab *instance )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIFoldersTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;
@@ -231,7 +231,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIFold
 }
 
 static void
-on_browse_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
+on_browse_folder_clicked( GtkButton *button, FMAIFoldersTab *instance )
 {
 	gchar *uri, *path;
 	GtkWidget *dialog;
@@ -283,9 +283,9 @@ set_folders( void *context, GSList *filters )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NactIFoldersTab *instance )
+on_instance_finalized( gpointer user_data, FMAIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_on_instance_finalized";
+	static const gchar *thisfn = "fma_ifolders_tab_on_instance_finalized";
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 }

@@ -117,7 +117,7 @@ static SchemesListData *get_schemes_list_data( GtkTreeView *treeview );
  * Associates the SchemesListData structure to the widget.
  *
  * The default list of schemes is displayed in two cases:
- * - when adding a scheme to a FMAObjectItem (cf. NactISchemesTab)
+ * - when adding a scheme to a FMAObjectItem (cf. FMAISchemesTab)
  *   so the schemes list is opened for selection
  *
  *   we have chosen to not allow default schemes list edition in this mode

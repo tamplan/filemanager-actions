@@ -46,18 +46,18 @@
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
-#include "nact-icommand-tab.h"
-#include "nact-ischemes-tab.h"
+#include "fma-icommand-tab.h"
+#include "fma-ischemes-tab.h"
 
 /* private interface data
  */
-struct _NactICommandTabInterfacePrivate {
+struct _FMAICommandTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* a data set in the LegendDialog GObject
  */
-#define ICOMMAND_TAB_LEGEND_VISIBLE			"nact-icommand-tab-legend-dialog-visible"
+#define ICOMMAND_TAB_LEGEND_VISIBLE			"fma-icommand-tab-legend-dialog-visible"
 
 /* data set against the instance
  */
@@ -68,42 +68,42 @@ typedef struct {
 }
 	ICommandData;
 
-#define ICOMMAND_TAB_PROP_DATA				"nact-icommand-tab-data"
+#define ICOMMAND_TAB_PROP_DATA				"fma-icommand-tab-data"
 
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType         register_type( void );
-static void          interface_base_init( NactICommandTabInterface *klass );
-static void          interface_base_finalize( NactICommandTabInterface *klass );
-static void          initialize_gtk( NactICommandTab *instance );
-static void          initialize_window( NactICommandTab *instance );
-static void          on_main_item_updated( NactICommandTab *instance, FMAIContext *context, guint data, void *empty );
-static void          on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICommandTab *instance );
-static GtkWidget    *get_label_entry( NactICommandTab *instance );
-static GtkButton    *get_legend_button( NactICommandTab *instance );
-static GtkWindow    *get_legend_dialog( NactICommandTab *instance );
-static GtkWidget    *get_parameters_entry( NactICommandTab *instance );
-static GtkButton    *get_path_button( NactICommandTab *instance );
-static GtkWidget    *get_path_entry( NactICommandTab *instance );
-static void          legend_dialog_show( NactICommandTab *instance );
-static void          legend_dialog_hide( NactICommandTab *instance );
-static void          on_label_changed( GtkEntry *entry, NactICommandTab *instance );
-static void          on_legend_clicked( GtkButton *button, NactICommandTab *instance );
+static void          interface_base_init( FMAICommandTabInterface *klass );
+static void          interface_base_finalize( FMAICommandTabInterface *klass );
+static void          initialize_gtk( FMAICommandTab *instance );
+static void          initialize_window( FMAICommandTab *instance );
+static void          on_main_item_updated( FMAICommandTab *instance, FMAIContext *context, guint data, void *empty );
+static void          on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAICommandTab *instance );
+static GtkWidget    *get_label_entry( FMAICommandTab *instance );
+static GtkButton    *get_legend_button( FMAICommandTab *instance );
+static GtkWindow    *get_legend_dialog( FMAICommandTab *instance );
+static GtkWidget    *get_parameters_entry( FMAICommandTab *instance );
+static GtkButton    *get_path_button( FMAICommandTab *instance );
+static GtkWidget    *get_path_entry( FMAICommandTab *instance );
+static void          legend_dialog_show( FMAICommandTab *instance );
+static void          legend_dialog_hide( FMAICommandTab *instance );
+static void          on_label_changed( GtkEntry *entry, FMAICommandTab *instance );
+static void          on_legend_clicked( GtkButton *button, FMAICommandTab *instance );
 #if 0
-static gboolean      on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, NactICommandTab *instance );
+static gboolean      on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, FMAICommandTab *instance );
 #endif
-static void          on_parameters_changed( GtkEntry *entry, NactICommandTab *instance );
-static void          on_path_browse( GtkButton *button, NactICommandTab *instance );
-static void          on_path_changed( GtkEntry *entry, NactICommandTab *instance );
-static void          on_wdir_browse( GtkButton *button, NactICommandTab *instance );
-static void          on_wdir_changed( GtkEntry *entry, NactICommandTab *instance );
-static gchar        *parse_parameters( NactICommandTab *instance );
-static void          update_example_label( NactICommandTab *instance, FMAObjectProfile *profile );
-static ICommandData *get_icommand_data( NactICommandTab *instance );
-static void          on_instance_finalized( gpointer user_data, NactICommandTab *instance );
+static void          on_parameters_changed( GtkEntry *entry, FMAICommandTab *instance );
+static void          on_path_browse( GtkButton *button, FMAICommandTab *instance );
+static void          on_path_changed( GtkEntry *entry, FMAICommandTab *instance );
+static void          on_wdir_browse( GtkButton *button, FMAICommandTab *instance );
+static void          on_wdir_changed( GtkEntry *entry, FMAICommandTab *instance );
+static gchar        *parse_parameters( FMAICommandTab *instance );
+static void          update_example_label( FMAICommandTab *instance, FMAObjectProfile *profile );
+static ICommandData *get_icommand_data( FMAICommandTab *instance );
+static void          on_instance_finalized( gpointer user_data, FMAICommandTab *instance );
 
 GType
-nact_icommand_tab_get_type( void )
+fma_icommand_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -117,11 +117,11 @@ nact_icommand_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_icommand_tab_register_type";
+	static const gchar *thisfn = "fma_icommand_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactICommandTabInterface ),
+		sizeof( FMAICommandTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -134,7 +134,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactICommandTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAICommandTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
@@ -142,24 +142,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactICommandTabInterface *klass )
+interface_base_init( FMAICommandTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_icommand_tab_interface_base_init";
+	static const gchar *thisfn = "fma_icommand_tab_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactICommandTabInterfacePrivate, 1 );
+		klass->private = g_new0( FMAICommandTabInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NactICommandTabInterface *klass )
+interface_base_finalize( FMAICommandTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_icommand_tab_interface_base_finalize";
+	static const gchar *thisfn = "fma_icommand_tab_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -172,19 +172,19 @@ interface_base_finalize( NactICommandTabInterface *klass )
 }
 
 /*
- * nact_icommand_tab_init:
- * @instance: this #NactICommandTab instance.
+ * fma_icommand_tab_init:
+ * @instance: this #FMAICommandTab instance.
  *
  * Initialize the interface
  * Connect to #BaseWindow signals
  */
 void
-nact_icommand_tab_init( NactICommandTab *instance )
+fma_icommand_tab_init( FMAICommandTab *instance )
 {
-	static const gchar *thisfn = "nact_icommand_tab_init";
+	static const gchar *thisfn = "fma_icommand_tab_init";
 	ICommandData *data;
 
-	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
+	g_return_if_fail( FMA_IS_ICOMMAND_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn,
@@ -200,21 +200,21 @@ nact_icommand_tab_init( NactICommandTab *instance )
 }
 
 static void
-initialize_gtk( NactICommandTab *instance )
+initialize_gtk( FMAICommandTab *instance )
 {
 }
 
 /*
  * on_base_initialize_window:
- * @window: this #NactICommandTab instance.
+ * @window: this #FMAICommandTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
  * Connect signals and setup runtime values.
  */
 static void
-initialize_window( NactICommandTab *instance )
+initialize_window( FMAICommandTab *instance )
 {
-	static const gchar *thisfn = "nact_icommand_tab_initialize_window";
+	static const gchar *thisfn = "fma_icommand_tab_initialize_window";
 #if 0
 	GtkWindow *legend_dialog;
 #endif
@@ -223,7 +223,7 @@ initialize_window( NactICommandTab *instance )
 	ICommandData *data;
 	NactTreeView *tview;
 
-	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
+	g_return_if_fail( FMA_IS_ICOMMAND_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -289,12 +289,12 @@ initialize_window( NactICommandTab *instance )
 }
 
 static void
-on_main_item_updated( NactICommandTab *instance, FMAIContext *context, guint data, void *empty )
+on_main_item_updated( FMAICommandTab *instance, FMAIContext *context, guint data, void *empty )
 {
 	GtkWidget *label_widget;
 	gchar *label;
 
-	g_return_if_fail( instance && NACT_IS_ICOMMAND_TAB( instance ));
+	g_return_if_fail( instance && FMA_IS_ICOMMAND_TAB( instance ));
 
 	if( FMA_IS_OBJECT_PROFILE( context )){
 		label_widget = get_label_entry( instance );
@@ -305,9 +305,9 @@ on_main_item_updated( NactICommandTab *instance, FMAIContext *context, guint dat
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactICommandTab *instance )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAICommandTab *instance )
 {
-	static const gchar *thisfn = "nact_icommand_tab_on_tree_selection_changed";
+	static const gchar *thisfn = "fma_icommand_tab_on_tree_selection_changed";
 	FMAObjectProfile *profile;
 	gboolean editable;
 	gboolean enable_tab;
@@ -317,7 +317,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 	GtkButton *legend_button;
 	ICommandData *data;
 
-	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
+	g_return_if_fail( FMA_IS_ICOMMAND_TAB( instance ));
 
 	g_debug( "%s: tview=%p, selected_items=%p (count=%d), instance=%p (%s)",
 			thisfn, tview,
@@ -387,19 +387,19 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIComm
 }
 
 static GtkWidget *
-get_label_entry( NactICommandTab *instance )
+get_label_entry( FMAICommandTab *instance )
 {
 	return( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ProfileLabelEntry" ));
 }
 
 static GtkButton *
-get_legend_button( NactICommandTab *instance )
+get_legend_button( FMAICommandTab *instance )
 {
 	return( GTK_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandLegendButton" )));
 }
 
 static GtkWindow *
-get_legend_dialog( NactICommandTab *instance )
+get_legend_dialog( FMAICommandTab *instance )
 {
 #if 0
 	return( base_window_get_gtk_toplevel_by_name( BASE_WINDOW( instance ), "LegendDialog" ));
@@ -408,25 +408,25 @@ get_legend_dialog( NactICommandTab *instance )
 }
 
 static GtkWidget *
-get_parameters_entry( NactICommandTab *instance )
+get_parameters_entry( FMAICommandTab *instance )
 {
 	return( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandParametersEntry" ));
 }
 
 static GtkButton *
-get_path_button( NactICommandTab *instance )
+get_path_button( FMAICommandTab *instance )
 {
 	return( GTK_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandPathButton" )));
 }
 
 static GtkWidget *
-get_path_entry( NactICommandTab *instance )
+get_path_entry( FMAICommandTab *instance )
 {
 	return( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "CommandPathEntry" ));
 }
 
 static void
-legend_dialog_hide( NactICommandTab *instance )
+legend_dialog_hide( FMAICommandTab *instance )
 {
 	GtkWindow *legend_dialog;
 	GtkButton *legend_button;
@@ -454,7 +454,7 @@ legend_dialog_hide( NactICommandTab *instance )
 }
 
 static void
-legend_dialog_show( NactICommandTab *instance )
+legend_dialog_show( FMAICommandTab *instance )
 {
 	GtkWindow *legend_dialog;
 
@@ -470,7 +470,7 @@ legend_dialog_show( NactICommandTab *instance )
 }
 
 static void
-on_label_changed( GtkEntry *entry, NactICommandTab *instance )
+on_label_changed( GtkEntry *entry, FMAICommandTab *instance )
 {
 	FMAObjectProfile *profile;
 	const gchar *label;
@@ -493,7 +493,7 @@ on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 }
 
 static void
-on_legend_clicked( GtkButton *button, NactICommandTab *instance )
+on_legend_clicked( GtkButton *button, FMAICommandTab *instance )
 {
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
 		legend_dialog_show( instance );
@@ -505,7 +505,7 @@ on_legend_clicked( GtkButton *button, NactICommandTab *instance )
 
 #if 0
 static gboolean
-on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, NactICommandTab *instance )
+on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, FMAICommandTab *instance )
 {
 	/*g_debug( "on_legend_dialog_deleted" );*/
 	legend_dialog_hide( instance );
@@ -514,7 +514,7 @@ on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, NactICommandTab *i
 #endif
 
 static void
-on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
+on_parameters_changed( GtkEntry *entry, FMAICommandTab *instance )
 {
 	FMAObjectProfile *profile;
 	ICommandData *data;
@@ -536,7 +536,7 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 }
 
 static void
-on_path_browse( GtkButton *button, NactICommandTab *instance )
+on_path_browse( GtkButton *button, FMAICommandTab *instance )
 {
 	base_gtk_utils_select_file(
 			GTK_APPLICATION_WINDOW( instance ),
@@ -545,7 +545,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 }
 
 static void
-on_path_changed( GtkEntry *entry, NactICommandTab *instance )
+on_path_changed( GtkEntry *entry, FMAICommandTab *instance )
 {
 	FMAObjectProfile *profile;
 	ICommandData *data;
@@ -567,7 +567,7 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 }
 
 static void
-on_wdir_browse( GtkButton *button, NactICommandTab *instance )
+on_wdir_browse( GtkButton *button, FMAICommandTab *instance )
 {
 	GtkWidget *wdir_entry;
 	FMAObjectProfile *profile;
@@ -590,7 +590,7 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 }
 
 static void
-on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
+on_wdir_changed( GtkEntry *entry, FMAICommandTab *instance )
 {
 	FMAObjectProfile *profile;
 	ICommandData *data;
@@ -614,9 +614,9 @@ on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
  * See core/fma-tokens.c for valid parameters
  */
 static gchar *
-parse_parameters( NactICommandTab *instance )
+parse_parameters( FMAICommandTab *instance )
 {
-	static const gchar *thisfn = "nact_icommand_tab_parse_parameters";
+	static const gchar *thisfn = "fma_icommand_tab_parse_parameters";
 
 	const gchar *command = gtk_entry_get_text( GTK_ENTRY( get_path_entry( instance )));
 	const gchar *param_template = gtk_entry_get_text( GTK_ENTRY( get_parameters_entry( instance )));
@@ -634,7 +634,7 @@ parse_parameters( NactICommandTab *instance )
 }
 
 static void
-update_example_label( NactICommandTab *instance, FMAObjectProfile *profile )
+update_example_label( FMAICommandTab *instance, FMAObjectProfile *profile )
 {
 	/*static const char *thisfn = "nact_iconditions_update_example_label";*/
 	gchar *newlabel;
@@ -665,9 +665,9 @@ update_example_label( NactICommandTab *instance, FMAObjectProfile *profile )
 }
 
 static ICommandData *
-get_icommand_data( NactICommandTab *instance )
+get_icommand_data( FMAICommandTab *instance )
 {
-	static const gchar *thisfn = "nact_icommand_tab_get_icommand_data";
+	static const gchar *thisfn = "fma_icommand_tab_get_icommand_data";
 	ICommandData *data;
 
 	data = ( ICommandData * ) g_object_get_data( G_OBJECT( instance ), ICOMMAND_TAB_PROP_DATA );
@@ -682,9 +682,9 @@ get_icommand_data( NactICommandTab *instance )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NactICommandTab *instance )
+on_instance_finalized( gpointer user_data, FMAICommandTab *instance )
 {
-	static const gchar *thisfn = "nact_icommand_tab_on_instance_finalized";
+	static const gchar *thisfn = "fma_icommand_tab_on_instance_finalized";
 	ICommandData *data;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );

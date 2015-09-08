@@ -27,41 +27,41 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_ISCHEMES_TAB_H__
-#define __UI_NACT_ISCHEMES_TAB_H__
+#ifndef __UI_FMA_IEXECUTION_TAB_H__
+#define __UI_FMA_IEXECUTION_TAB_H__
 
 /**
- * SECTION: nact_ischemes_tab
- * @short_description: #NactISchemesTab interface declaration.
- * @include: ui/nact-ischemes-tab.h
+ * SECTION: fma_iexecution_tab
+ * @short_description: #FMAIExecutionTab interface declaration.
+ * @include: ui/fma-iexecution-tab.h
  *
  * This interface implements all the widgets which define the
- * conditions for the action.
+ * actual action to be executed.
  */
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_ISCHEMES_TAB                      ( nact_ischemes_tab_get_type())
-#define NACT_ISCHEMES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_ISCHEMES_TAB, NactISchemesTab ))
-#define NACT_IS_ISCHEMES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_ISCHEMES_TAB ))
-#define NACT_ISCHEMES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_ISCHEMES_TAB, NactISchemesTabInterface ))
+#define FMA_TYPE_IEXECUTION_TAB                      ( fma_iexecution_tab_get_type())
+#define FMA_IEXECUTION_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IEXECUTION_TAB, FMAIExecutionTab ))
+#define FMA_IS_IEXECUTION_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IEXECUTION_TAB ))
+#define FMA_IEXECUTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IEXECUTION_TAB, FMAIExecutionTabInterface ))
 
-typedef struct _NactISchemesTab                     NactISchemesTab;
-typedef struct _NactISchemesTabInterfacePrivate     NactISchemesTabInterfacePrivate;
+typedef struct _FMAIExecutionTab                     FMAIExecutionTab;
+typedef struct _FMAIExecutionTabInterfacePrivate     FMAIExecutionTabInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                   parent;
-	NactISchemesTabInterfacePrivate *private;
+	GTypeInterface                    parent;
+	FMAIExecutionTabInterfacePrivate *private;
 }
-	NactISchemesTabInterface;
+	FMAIExecutionTabInterface;
 
-GType nact_ischemes_tab_get_type( void );
+GType fma_iexecution_tab_get_type( void );
 
-void  nact_ischemes_tab_init    ( NactISchemesTab *instance );
+void  fma_iexecution_tab_init    ( FMAIExecutionTab *instance );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_ISCHEMES_TAB_H__ */
+#endif /* __UI_FMA_IEXECUTION_TAB_H__ */

@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_IPROPERTIES_TAB_H__
-#define __UI_NACT_IPROPERTIES_TAB_H__
+#ifndef __UI_FMA_IPROPERTIES_TAB_H__
+#define __UI_FMA_IPROPERTIES_TAB_H__
 
 /**
- * SECTION: nact_iproperties_tab
- * @short_description: #NactIPropertiesTab interface definition.
- * @include: ui/nact-iproperties-tab.h
+ * SECTION: fma_iproperties_tab
+ * @short_description: #FMAIPropertiesTab interface definition.
+ * @include: ui/fma-iproperties-tab.h
  *
  * This interface implements the "Properties" tab of the notebook.
  *
@@ -45,25 +45,25 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_IPROPERTIES_TAB                      ( nact_iproperties_tab_get_type())
-#define NACT_IPROPERTIES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IPROPERTIES_TAB, NactIPropertiesTab ))
-#define NACT_IS_IPROPERTIES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IPROPERTIES_TAB ))
-#define NACT_IPROPERTIES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IPROPERTIES_TAB, NactIPropertiesTabInterface ))
+#define FMA_TYPE_IPROPERTIES_TAB                      ( fma_iproperties_tab_get_type())
+#define FMA_IPROPERTIES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IPROPERTIES_TAB, FMAIPropertiesTab ))
+#define FMA_IS_IPROPERTIES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IPROPERTIES_TAB ))
+#define FMA_IPROPERTIES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IPROPERTIES_TAB, FMAIPropertiesTabInterface ))
 
-typedef struct _NactIPropertiesTab                     NactIPropertiesTab;
-typedef struct _NactIPropertiesTabInterfacePrivate     NactIPropertiesTabInterfacePrivate;
+typedef struct _FMAIPropertiesTab                     FMAIPropertiesTab;
+typedef struct _FMAIPropertiesTabInterfacePrivate     FMAIPropertiesTabInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                      parent;
-	NactIPropertiesTabInterfacePrivate *private;
+	GTypeInterface                     parent;
+	FMAIPropertiesTabInterfacePrivate *private;
 }
-	NactIPropertiesTabInterface;
+	FMAIPropertiesTabInterface;
 
-GType nact_iproperties_tab_get_type( void );
+GType fma_iproperties_tab_get_type( void );
 
-void  nact_iproperties_tab_init    ( NactIPropertiesTab *instance );
+void  fma_iproperties_tab_init    ( FMAIPropertiesTab *instance );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_IPROPERTIES_TAB_H__ */
+#endif /* __UI_FMA_IPROPERTIES_TAB_H__ */

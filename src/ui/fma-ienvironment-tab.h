@@ -27,41 +27,45 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_IEXECUTION_TAB_H__
-#define __UI_NACT_IEXECUTION_TAB_H__
+#ifndef __UI_FMA_IENVIRONMENT_TAB_H__
+#define __UI_FMA_IENVIRONMENT_TAB_H__
 
 /**
- * SECTION: nact_iexecution_tab
- * @short_description: #NactIExecutionTab interface declaration.
- * @include: ui/nact-iexecution-tab.h
+ * SECTION: fma_ienvironment_tab
+ * @short_description: #FMAIEnvironmentTab interface declaration.
+ * @include: ui/fma-ienvironment-tab.h
  *
  * This interface implements all the widgets which define the
  * actual action to be executed.
+ *
+ * Notes:
+ * - OnlyShowIn/NotShowIn are configured as one list of strings.
+ *   They are edited here as a radio button and a list of checkbuttons
  */
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_IEXECUTION_TAB                      ( nact_iexecution_tab_get_type())
-#define NACT_IEXECUTION_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IEXECUTION_TAB, NactIExecutionTab ))
-#define NACT_IS_IEXECUTION_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IEXECUTION_TAB ))
-#define NACT_IEXECUTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IEXECUTION_TAB, NactIExecutionTabInterface ))
+#define FMA_TYPE_IENVIRONMENT_TAB                      ( fma_ienvironment_tab_get_type())
+#define FMA_IENVIRONMENT_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IENVIRONMENT_TAB, FMAIEnvironmentTab ))
+#define FMA_IS_IENVIRONMENT_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IENVIRONMENT_TAB ))
+#define FMA_IENVIRONMENT_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IENVIRONMENT_TAB, FMAIEnvironmentTabInterface ))
 
-typedef struct _NactIExecutionTab                     NactIExecutionTab;
-typedef struct _NactIExecutionTabInterfacePrivate     NactIExecutionTabInterfacePrivate;
+typedef struct _FMAIEnvironmentTab                     FMAIEnvironmentTab;
+typedef struct _FMAIEnvironmentTabInterfacePrivate     FMAIEnvironmentTabInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                     parent;
-	NactIExecutionTabInterfacePrivate *private;
+	GTypeInterface                      parent;
+	FMAIEnvironmentTabInterfacePrivate *private;
 }
-	NactIExecutionTabInterface;
+	FMAIEnvironmentTabInterface;
 
-GType nact_iexecution_tab_get_type( void );
+GType fma_ienvironment_tab_get_type( void );
 
-void  nact_iexecution_tab_init    ( NactIExecutionTab *instance );
+void  fma_ienvironment_tab_init    ( FMAIEnvironmentTab *instance );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_IEXECUTION_TAB_H__ */
+#endif /* __UI_FMA_IENVIRONMENT_TAB_H__ */

@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_IACTION_TAB_H__
-#define __UI_NACT_IACTION_TAB_H__
+#ifndef __UI_FMA_IACTION_TAB_H__
+#define __UI_FMA_IACTION_TAB_H__
 
 /**
- * SECTION: nact_iaction_tab
- * @short_description: #NactIActionTab interface definition.
- * @include: ui/nact-iaction-tab.h
+ * SECTION: fma_iaction_tab
+ * @short_description: #FMAIActionTab interface definition.
+ * @include: ui/fma-iaction-tab.h
  *
  * This interface implements the "Nautilus Menu Item" tab of the notebook.
  *
@@ -46,27 +46,27 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_IACTION_TAB                      ( nact_iaction_tab_get_type())
-#define NACT_IACTION_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IACTION_TAB, NactIActionTab ))
-#define NACT_IS_IACTION_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IACTION_TAB ))
-#define NACT_IACTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IACTION_TAB, NactIActionTabInterface ))
+#define FMA_TYPE_IACTION_TAB                      ( fma_iaction_tab_get_type())
+#define FMA_IACTION_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IACTION_TAB, FMAIActionTab ))
+#define FMA_IS_IACTION_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IACTION_TAB ))
+#define FMA_IACTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IACTION_TAB, FMAIActionTabInterface ))
 
-typedef struct _NactIActionTab                     NactIActionTab;
-typedef struct _NactIActionTabInterfacePrivate     NactIActionTabInterfacePrivate;
+typedef struct _FMAIActionTab                     FMAIActionTab;
+typedef struct _FMAIActionTabInterfacePrivate     FMAIActionTabInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                  parent;
-	NactIActionTabInterfacePrivate *private;
+	GTypeInterface                 parent;
+	FMAIActionTabInterfacePrivate *private;
 }
-	NactIActionTabInterface;
+	FMAIActionTabInterface;
 
-GType    nact_iaction_tab_get_type ( void );
+GType    fma_iaction_tab_get_type ( void );
 
-void     nact_iaction_tab_init     ( NactIActionTab *instance );
+void     fma_iaction_tab_init     ( FMAIActionTab *instance );
 
-gboolean nact_iaction_tab_has_label( NactIActionTab *instance );
+gboolean fma_iaction_tab_has_label( FMAIActionTab *instance );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_IACTION_TAB_H__ */
+#endif /* __UI_FMA_IACTION_TAB_H__ */

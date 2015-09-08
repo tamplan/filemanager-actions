@@ -40,11 +40,11 @@
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
-#include "nact-iexecution-tab.h"
+#include "fma-iexecution-tab.h"
 
 /* private interface data
  */
-struct _NactIExecutionTabInterfacePrivate {
+struct _FMAIExecutionTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -55,28 +55,28 @@ typedef struct {
 }
 	IExecutionData;
 
-#define IEXECUTION_TAB_PROP_DATA		"nact-iexecution-tab-data"
+#define IEXECUTION_TAB_PROP_DATA		"fma-iexecution-tab-data"
 
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType           register_type( void );
-static void            interface_base_init( NactIExecutionTabInterface *klass );
-static void            interface_base_finalize( NactIExecutionTabInterface *klass );
-static void            initialize_window( NactIExecutionTab *instance );
-static void            on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIExecutionTab *instance );
-static void            on_normal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void            on_terminal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void            on_embedded_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void            on_display_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void            execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *togglebutton, GCallback cb, const gchar *mode );
-static void            on_startup_notify_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void            on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance );
-static void            on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance );
-static IExecutionData *get_iexecution_data( NactIExecutionTab *instance );
-static void            on_instance_finalized( gpointer user_data, NactIExecutionTab *instance );
+static void            interface_base_init( FMAIExecutionTabInterface *klass );
+static void            interface_base_finalize( FMAIExecutionTabInterface *klass );
+static void            initialize_window( FMAIExecutionTab *instance );
+static void            on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIExecutionTab *instance );
+static void            on_normal_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance );
+static void            on_terminal_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance );
+static void            on_embedded_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance );
+static void            on_display_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance );
+static void            execution_mode_toggle( FMAIExecutionTab *instance, GtkToggleButton *togglebutton, GCallback cb, const gchar *mode );
+static void            on_startup_notify_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance );
+static void            on_startup_class_changed( GtkEntry *entry, FMAIExecutionTab *instance );
+static void            on_execute_as_changed( GtkEntry *entry, FMAIExecutionTab *instance );
+static IExecutionData *get_iexecution_data( FMAIExecutionTab *instance );
+static void            on_instance_finalized( gpointer user_data, FMAIExecutionTab *instance );
 
 GType
-nact_iexecution_tab_get_type( void )
+fma_iexecution_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -90,11 +90,11 @@ nact_iexecution_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_register_type";
+	static const gchar *thisfn = "fma_iexecution_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactIExecutionTabInterface ),
+		sizeof( FMAIExecutionTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -107,7 +107,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactIExecutionTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "FMAIExecutionTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, GTK_TYPE_APPLICATION_WINDOW );
 
@@ -115,24 +115,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIExecutionTabInterface *klass )
+interface_base_init( FMAIExecutionTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_interface_base_init";
+	static const gchar *thisfn = "fma_iexecution_tab_interface_base_init";
 
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactIExecutionTabInterfacePrivate, 1 );
+		klass->private = g_new0( FMAIExecutionTabInterfacePrivate, 1 );
 	}
 
 	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NactIExecutionTabInterface *klass )
+interface_base_finalize( FMAIExecutionTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_interface_base_finalize";
+	static const gchar *thisfn = "fma_iexecution_tab_interface_base_finalize";
 
 	st_initializations -= 1;
 
@@ -145,19 +145,19 @@ interface_base_finalize( NactIExecutionTabInterface *klass )
 }
 
 /**
- * nact_iexecution_tab_init:
- * @instance: this #NactIExecutionTab instance.
+ * fma_iexecution_tab_init:
+ * @instance: this #FMAIExecutionTab instance.
  *
  * Initialize the interface
  * Connect to #BaseWindow signals
  */
 void
-nact_iexecution_tab_init( NactIExecutionTab *instance )
+fma_iexecution_tab_init( FMAIExecutionTab *instance )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_init";
+	static const gchar *thisfn = "fma_iexecution_tab_init";
 	IExecutionData *data;
 
-	g_return_if_fail( instance && NACT_IS_IEXECUTION_TAB( instance ));
+	g_return_if_fail( instance && FMA_IS_IEXECUTION_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn,
@@ -174,18 +174,18 @@ nact_iexecution_tab_init( NactIExecutionTab *instance )
 
 /*
  * on_base_initialize_window:
- * @window: this #NactIExecutionTab instance.
+ * @window: this #FMAIExecutionTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
  * Connect signals and setup runtime values.
  */
 static void
-initialize_window( NactIExecutionTab *instance )
+initialize_window( FMAIExecutionTab *instance )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_initialize_window";
+	static const gchar *thisfn = "fma_iexecution_tab_initialize_window";
 	NactTreeView *tview;
 
-	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IEXECUTION_TAB( instance ));
 
 	g_debug( "%s: instance=%p (%s)",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
@@ -226,9 +226,9 @@ initialize_window( NactIExecutionTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIExecutionTab *instance )
+on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIExecutionTab *instance )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_on_tree_selection_changed";
+	static const gchar *thisfn = "fma_iexecution_tab_on_tree_selection_changed";
 	FMAObjectProfile *profile;
 	gboolean editable;
 	gboolean enable_tab;
@@ -240,7 +240,7 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIExec
 	GtkWidget *entry;
 	IExecutionData *data;
 
-	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
+	g_return_if_fail( FMA_IS_IEXECUTION_TAB( instance ));
 
 	g_debug( "%s: tview=%p, selected_items=%p (count=%d), instance=%p (%s)",
 			thisfn, tview,
@@ -320,31 +320,31 @@ on_tree_selection_changed( NactTreeView *tview, GList *selected_items, NactIExec
 }
 
 static void
-on_normal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance )
+on_normal_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance )
 {
 	execution_mode_toggle( instance, togglebutton, G_CALLBACK( on_normal_mode_toggled ), "Normal" );
 }
 
 static void
-on_terminal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance )
+on_terminal_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance )
 {
 	execution_mode_toggle( instance, togglebutton, G_CALLBACK( on_terminal_mode_toggled ), "Terminal" );
 }
 
 static void
-on_embedded_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance )
+on_embedded_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance )
 {
 	execution_mode_toggle( instance, togglebutton, G_CALLBACK( on_embedded_mode_toggled ), "Embedded" );
 }
 
 static void
-on_display_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance )
+on_display_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance )
 {
 	execution_mode_toggle( instance, togglebutton, G_CALLBACK( on_display_mode_toggled ), "DisplayOutput" );
 }
 
 static void
-execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_button, GCallback cb, const gchar *mode )
+execution_mode_toggle( FMAIExecutionTab *instance, GtkToggleButton *toggle_button, GCallback cb, const gchar *mode )
 {
 	FMAObjectProfile *profile;
 	gboolean editable;
@@ -381,7 +381,7 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 }
 
 static void
-on_startup_notify_toggled( GtkToggleButton *toggle_button, NactIExecutionTab *instance )
+on_startup_notify_toggled( GtkToggleButton *toggle_button, FMAIExecutionTab *instance )
 {
 	FMAObjectProfile *profile;
 	gboolean editable;
@@ -409,7 +409,7 @@ on_startup_notify_toggled( GtkToggleButton *toggle_button, NactIExecutionTab *in
 }
 
 static void
-on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance )
+on_startup_class_changed( GtkEntry *entry, FMAIExecutionTab *instance )
 {
 	FMAObjectProfile *profile;
 	const gchar *text;
@@ -427,7 +427,7 @@ on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance )
 }
 
 static void
-on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance )
+on_execute_as_changed( GtkEntry *entry, FMAIExecutionTab *instance )
 {
 	FMAObjectProfile *profile;
 	const gchar *text;
@@ -445,7 +445,7 @@ on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance )
 }
 
 static IExecutionData *
-get_iexecution_data( NactIExecutionTab *instance )
+get_iexecution_data( FMAIExecutionTab *instance )
 {
 	IExecutionData *data;
 
@@ -460,9 +460,9 @@ get_iexecution_data( NactIExecutionTab *instance )
 }
 
 static void
-on_instance_finalized( gpointer user_data, NactIExecutionTab *instance )
+on_instance_finalized( gpointer user_data, FMAIExecutionTab *instance )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_on_instance_finalized";
+	static const gchar *thisfn = "fma_iexecution_tab_on_instance_finalized";
 	IExecutionData *data;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );

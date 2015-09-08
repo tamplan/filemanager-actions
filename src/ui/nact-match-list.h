@@ -35,10 +35,10 @@
  * @short_description: Implementation of a list match/does not match.
  * @include: ui/nact-match-list.h
  *
- * In an ideal world, this would be a base interface for NactISchemesTab,
+ * In an ideal world, this would be a base interface for FMAISchemesTab,
  * etc. interfaces.
  * In GObject world however, one cannot derived an interface, nor an interface
- * can implement another interface. The GObject solution would be for NactISchemesTab
+ * can implement another interface. The GObject solution would be for FMAISchemesTab
  * to requires NactIMatchList, and for NactMainWindow to implement this same
  * NactIMatchList interface. This is not very practical as NactMainWindow is
  * already some big bunch of code...

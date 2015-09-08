@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_IBASENAMES_TAB_H__
-#define __UI_NACT_IBASENAMES_TAB_H__
+#ifndef __UI_FMA_IBASENAMES_TAB_H__
+#define __UI_FMA_IBASENAMES_TAB_H__
 
 /**
- * SECTION: nact_ibasenames_tab
- * @short_description: #NactIBasenamesTab interface declaration.
- * @include: ui/nact-ibasenames-tab.h
+ * SECTION: fma_ibasenames_tab
+ * @short_description: #FMAIBasenamesTab interface declaration.
+ * @include: ui/fma-ibasenames-tab.h
  *
  * This interface implements all the widgets which define the
  * basenames-based conditions.
@@ -43,25 +43,25 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_IBASENAMES_TAB                      ( nact_ibasenames_tab_get_type())
-#define NACT_IBASENAMES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IBASENAMES_TAB, NactIBasenamesTab ))
-#define NACT_IS_IBASENAMES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IBASENAMES_TAB ))
-#define NACT_IBASENAMES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IBASENAMES_TAB, NactIBasenamesTabInterface ))
+#define FMA_TYPE_IBASENAMES_TAB                      ( fma_ibasenames_tab_get_type())
+#define FMA_IBASENAMES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_IBASENAMES_TAB, FMAIBasenamesTab ))
+#define FMA_IS_IBASENAMES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_IBASENAMES_TAB ))
+#define FMA_IBASENAMES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_IBASENAMES_TAB, FMAIBasenamesTabInterface ))
 
-typedef struct _NactIBasenamesTab                     NactIBasenamesTab;
-typedef struct _NactIBasenamesTabInterfacePrivate     NactIBasenamesTabInterfacePrivate;
+typedef struct _FMAIBasenamesTab                     FMAIBasenamesTab;
+typedef struct _FMAIBasenamesTabInterfacePrivate     FMAIBasenamesTabInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                     parent;
-	NactIBasenamesTabInterfacePrivate *private;
+	GTypeInterface                    parent;
+	FMAIBasenamesTabInterfacePrivate *private;
 }
-	NactIBasenamesTabInterface;
+	FMAIBasenamesTabInterface;
 
-GType nact_ibasenames_tab_get_type( void );
+GType fma_ibasenames_tab_get_type( void );
 
-void  nact_ibasenames_tab_init    ( NactIBasenamesTab *instance );
+void  fma_ibasenames_tab_init    ( FMAIBasenamesTab *instance );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_IBASENAMES_TAB_H__ */
+#endif /* __UI_FMA_IBASENAMES_TAB_H__ */

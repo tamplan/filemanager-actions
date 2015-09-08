@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_ICAPABILITIES_TAB_H__
-#define __UI_NACT_ICAPABILITIES_TAB_H__
+#ifndef __UI_FMA_ICAPABILITIES_TAB_H__
+#define __UI_FMA_ICAPABILITIES_TAB_H__
 
 /**
- * SECTION: nact_icapabilities_tab
- * @short_description: #NactICapabilitiesTab interface declaration.
- * @include: ui/nact-icapabilities-tab.h
+ * SECTION: fma_icapabilities_tab
+ * @short_description: #FMAICapabilitiesTab interface declaration.
+ * @include: ui/fma-icapabilities-tab.h
  *
  * This interface implements all the widgets which define the
  * conditions for the action.
@@ -43,25 +43,25 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_ICAPABILITIES_TAB                      ( nact_icapabilities_tab_get_type())
-#define NACT_ICAPABILITIES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_ICAPABILITIES_TAB, NactICapabilitiesTab ))
-#define NACT_IS_ICAPABILITIES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_ICAPABILITIES_TAB ))
-#define NACT_ICAPABILITIES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_ICAPABILITIES_TAB, NactICapabilitiesTabInterface ))
+#define FMA_TYPE_ICAPABILITIES_TAB                      ( fma_icapabilities_tab_get_type())
+#define FMA_ICAPABILITIES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, FMA_TYPE_ICAPABILITIES_TAB, FMAICapabilitiesTab ))
+#define FMA_IS_ICAPABILITIES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, FMA_TYPE_ICAPABILITIES_TAB ))
+#define FMA_ICAPABILITIES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), FMA_TYPE_ICAPABILITIES_TAB, FMAICapabilitiesTabInterface ))
 
-typedef struct _NactICapabilitiesTab                     NactICapabilitiesTab;
-typedef struct _NactICapabilitiesTabInterfacePrivate     NactICapabilitiesTabInterfacePrivate;
+typedef struct _FMAICapabilitiesTab                     FMAICapabilitiesTab;
+typedef struct _FMAICapabilitiesTabInterfacePrivate     FMAICapabilitiesTabInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
-	GTypeInterface                        parent;
-	NactICapabilitiesTabInterfacePrivate *private;
+	GTypeInterface                       parent;
+	FMAICapabilitiesTabInterfacePrivate *private;
 }
-	NactICapabilitiesTabInterface;
+	FMAICapabilitiesTabInterface;
 
-GType nact_icapabilities_tab_get_type( void );
+GType fma_icapabilities_tab_get_type( void );
 
-void  nact_icapabilities_tab_init    ( NactICapabilitiesTab *instance );
+void  fma_icapabilities_tab_init    ( FMAICapabilitiesTab *instance );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_ICAPABILITIES_TAB_H__ */
+#endif /* __UI_FMA_ICAPABILITIES_TAB_H__ */
