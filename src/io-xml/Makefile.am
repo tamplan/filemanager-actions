@@ -46,8 +46,8 @@ libna_io_xml_la_SOURCES = \
 	naxml-provider.h									\
 	naxml-keys.c										\
 	naxml-keys.h										\
-	naxml-formats.c										\
-	naxml-formats.h										\
+	fma-xml-formats.c									\
+	fma-xml-formats.h									\
 	naxml-reader.c										\
 	naxml-reader.h										\
 	naxml-writer.c										\

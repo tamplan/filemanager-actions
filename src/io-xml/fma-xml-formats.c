@@ -35,7 +35,7 @@
 #include <gtk/gtk.h>
 #include <libintl.h>
 
-#include "naxml-formats.h"
+#include "fma-xml-formats.h"
 
 typedef struct {
 	gchar *format;
@@ -45,13 +45,13 @@ typedef struct {
 }
 	NaxmlExportFormat;
 
-static NaxmlExportFormat naxml_formats[] = {
+static NaxmlExportFormat fma_xml_formats[] = {
 
 	/* GCONF_SCHEMA_V1: a schema with owner, short and long descriptions;
 	 * each action has its own schema addressed by the id
 	 * (historical format up to v1.10.x serie)
 	 */
-	{ NAXML_FORMAT_GCONF_SCHEMA_V1,
+	{ FMA_XML_FORMAT_GCONF_SCHEMA_V1,
 			N_( "Export as a _full GConf schema file" ),
 			N_( "This used to be the historical export format.\n" \
 				"The exported schema file may later be imported via :\n" \
@@ -63,7 +63,7 @@ static NaxmlExportFormat naxml_formats[] = {
 	/* GCONF_SCHEMA_V2: the lightest schema still compatible with gconftool-2 --install-schema-file
 	 * (no owner, no short nor long descriptions) - introduced in v 1.11
 	 */
-	{ NAXML_FORMAT_GCONF_SCHEMA_V2,
+	{ FMA_XML_FORMAT_GCONF_SCHEMA_V2,
 			N_( "Export as a _light GConf schema (v2) file" ),
 			N_( "This format has been introduced in v 1.11 serie.\n" \
 				"This is the lightest schema still compatible with GConf command-line tools, " \
@@ -78,7 +78,7 @@ static NaxmlExportFormat naxml_formats[] = {
 	/* GCONF_ENTRY: not a schema, but a dump of the GConf entry
 	 * introduced in v 1.11
 	 */
-	{ NAXML_FORMAT_GCONF_ENTRY,
+	{ FMA_XML_FORMAT_GCONF_ENTRY,
 			N_( "Export as a GConf _dump file" ),
 			N_( "This format has been introduced in v 1.11 serie.\n" \
 				"Tough not backward compatible with FileManager-Actions " \
@@ -98,20 +98,20 @@ static void on_pixbuf_finalized( const FMAIExporter* exporter, GObject *pixbuf )
 #endif
 
 /**
- * naxml_formats_get_formats:
+ * fma_xml_formats_get_formats:
  * @exporter: this #FMAIExporter provider.
  *
  * Returns: a #GList of the #FMAIExporterFormatv2 supported export formats.
  *
- * This list should be naxml_formats_free_formats() by the caller.
+ * This list should be fma_xml_formats_free_formats() by the caller.
  *
  * Since: 3.2
  */
 GList *
-naxml_formats_get_formats( const FMAIExporter* exporter )
+fma_xml_formats_get_formats( const FMAIExporter* exporter )
 {
 #if 0
-	static const gchar *thisfn = "naxml_formats_get_formats";
+	static const gchar *thisfn = "fma_xml_formats_get_formats";
 #endif
 	GList *str_list;
 	FMAIExporterFormatv2 *str;
@@ -125,15 +125,15 @@ naxml_formats_get_formats( const FMAIExporter* exporter )
 		width = height = 48;
 	}
 
-	for( i = 0 ; naxml_formats[i].format ; ++i ){
+	for( i = 0 ; fma_xml_formats[i].format ; ++i ){
 		str = g_new0( FMAIExporterFormatv2, 1 );
 		str->version = 2;
 		str->provider = FMA_IEXPORTER( exporter );
-		str->format = g_strdup( naxml_formats[i].format );
-		str->label = g_strdup( gettext( naxml_formats[i].label ));
-		str->description = g_strdup( gettext( naxml_formats[i].description ));
-		if( naxml_formats[i].image ){
-			fname = g_strdup_printf( "%s/%s", PROVIDER_DATADIR, naxml_formats[i].image );
+		str->format = g_strdup( fma_xml_formats[i].format );
+		str->label = g_strdup( gettext( fma_xml_formats[i].label ));
+		str->description = g_strdup( gettext( fma_xml_formats[i].description ));
+		if( fma_xml_formats[i].image ){
+			fname = g_strdup_printf( "%s/%s", PROVIDER_DATADIR, fma_xml_formats[i].image );
 			str->pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
 			g_free( fname );
 #if 0
@@ -158,12 +158,12 @@ naxml_formats_get_formats( const FMAIExporter* exporter )
 static void
 on_pixbuf_finalized( const FMAIExporter* exporter, GObject *pixbuf )
 {
-	g_debug( "naxml_formats_on_pixbuf_finalized: exporter=%p, pixbuf=%p", ( void * ) exporter, ( void * ) pixbuf );
+	g_debug( "fma_xml_formats_on_pixbuf_finalized: exporter=%p, pixbuf=%p", ( void * ) exporter, ( void * ) pixbuf );
 }
 #endif
 
 /**
- * naxml_formats_free_formats:
+ * fma_xml_formats_free_formats:
  * @formats: a #GList to be freed.
  *
  * Releases the list of managed formats.
@@ -171,7 +171,7 @@ on_pixbuf_finalized( const FMAIExporter* exporter, GObject *pixbuf )
  * Since: 3.2
  */
 void
-naxml_formats_free_formats( GList *formats )
+fma_xml_formats_free_formats( GList *formats )
 {
 	GList *is;
 	FMAIExporterFormatv2 *str;

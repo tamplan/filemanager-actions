@@ -44,7 +44,7 @@
 
 #include <io-gconf/fma-gconf-keys.h>
 
-#include "naxml-formats.h"
+#include "fma-xml-formats.h"
 #include "naxml-keys.h"
 #include "naxml-writer.h"
 
@@ -127,7 +127,7 @@ static guint           writer_to_buffer( NAXMLWriter *writer );
 
 static ExportFormatFn st_export_format_fn[] = {
 
-	{ NAXML_FORMAT_GCONF_SCHEMA_V1,
+	{ FMA_XML_FORMAT_GCONF_SCHEMA_V1,
 					NAXML_KEY_SCHEMA_ROOT,
 					NAXML_KEY_SCHEMA_LIST,
 					NULL,
@@ -135,7 +135,7 @@ static ExportFormatFn st_export_format_fn[] = {
 					write_data_schema_v1,
 					write_type_schema_v1 },
 
-	{ NAXML_FORMAT_GCONF_SCHEMA_V2,
+	{ FMA_XML_FORMAT_GCONF_SCHEMA_V2,
 					NAXML_KEY_SCHEMA_ROOT,
 					NAXML_KEY_SCHEMA_LIST,
 					NULL,
@@ -143,7 +143,7 @@ static ExportFormatFn st_export_format_fn[] = {
 					write_data_schema_v2,
 					write_type_schema_v2 },
 
-	{ NAXML_FORMAT_GCONF_ENTRY,
+	{ FMA_XML_FORMAT_GCONF_ENTRY,
 					NAXML_KEY_DUMP_ROOT,
 					NAXML_KEY_DUMP_LIST,
 					write_list_attribs_dump,
@@ -835,15 +835,15 @@ get_output_fname( const FMAObjectItem *item, const gchar *folder, const gchar *f
 
 	item_id = fma_object_get_id( item );
 
-	if( !strcmp( format, NAXML_FORMAT_GCONF_SCHEMA_V1 )){
+	if( !strcmp( format, FMA_XML_FORMAT_GCONF_SCHEMA_V1 )){
 		canonical_fname = g_strdup_printf( "config_%s", item_id );
 		canonical_ext = g_strdup( "schemas" );
 
-	} else if( !strcmp( format, NAXML_FORMAT_GCONF_SCHEMA_V2 )){
+	} else if( !strcmp( format, FMA_XML_FORMAT_GCONF_SCHEMA_V2 )){
 		canonical_fname = g_strdup_printf( "config-%s", item_id );
 		canonical_ext = g_strdup( "schema" );
 
-	} else if( !strcmp( format, NAXML_FORMAT_GCONF_ENTRY )){
+	} else if( !strcmp( format, FMA_XML_FORMAT_GCONF_ENTRY )){
 		canonical_fname = g_strdup_printf( "%s-%s", FMA_IS_OBJECT_ACTION( item ) ? "action" : "menu", item_id );
 		canonical_ext = g_strdup( "xml" );
 

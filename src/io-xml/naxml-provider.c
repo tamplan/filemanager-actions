@@ -36,7 +36,7 @@
 #include <api/fma-iimporter.h>
 
 #include "naxml-provider.h"
-#include "naxml-formats.h"
+#include "fma-xml-formats.h"
 #include "naxml-reader.h"
 #include "naxml-writer.h"
 
@@ -249,13 +249,13 @@ iexporter_get_name( const FMAIExporter *exporter )
 static void *
 iexporter_get_formats( const FMAIExporter *exporter )
 {
-	return(( void * ) naxml_formats_get_formats( exporter ));
+	return(( void * ) fma_xml_formats_get_formats( exporter ));
 }
 
 static void
 iexporter_free_formats( const FMAIExporter *exporter, GList *format_list )
 {
-	naxml_formats_free_formats( format_list );
+	fma_xml_formats_free_formats( format_list );
 }
 
 static void
