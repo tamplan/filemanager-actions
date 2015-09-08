@@ -186,18 +186,18 @@ on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *trac
 			( void * ) tracker );
 
 	/* create a new org.freedesktop.DBus.ObjectManager rooted at
-	 *  /org/file_manager_actions/DBus/Tracker
+	 *  /org/filemanager_actions/DBus/Tracker
 	 */
 	tracker->private->manager = g_dbus_object_manager_server_new( FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH );
 
 	/* create a new D-Bus object at the path
-	 *  /org/file_manager_actions/DBus/Tracker
+	 *  /org/filemanager_actions/DBus/Tracker
 	 *  (which must be same or below than that of object manager server)
 	 */
 	tracker_object = na_tracker_object_skeleton_new( FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH "/0" );
 
 	/* make a newly created object export the interface
-	 *  org.file_manager_actions.DBus.Tracker.Properties1
+	 *  org.filemanager_actions.DBus.Tracker.Properties1
 	 *  and attach it to the D-Bus object, which takes its own reference on it
 	 */
 	tracker_properties1 = na_tracker_properties1_skeleton_new();

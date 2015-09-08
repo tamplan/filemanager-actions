@@ -82,7 +82,7 @@ G_BEGIN_DECLS
  *       --type=method_call \
  *       --print-reply \
  *       --dest=org.filemanager-actions.DBus \
- *         /org/file_manager_actions/DBus/Tracker \
+ *         /org/filemanager_actions/DBus/Tracker \
  *           org.freedesktop.DBus.Introspectable.Introspect
  *   </command>
  *   <computeroutput>
@@ -112,7 +112,7 @@ G_BEGIN_DECLS
  *           <arg name="props" direction="out" type="a{sv}"/>
  *         </method>
  *       </interface>
- *       <interface name="org.file_manager_actions.DBus.Tracker.Status">
+ *       <interface name="org.filemanager_actions.DBus.Tracker.Status">
  *         <method name="GetSelectedPaths">
  *           <arg name="paths" type="as" direction="out"/>
  *         </method>
@@ -122,7 +122,7 @@ G_BEGIN_DECLS
  *   </computeroutput>
  * </programlisting>
  */
-#define FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH       "/org/file_manager_actions/DBus/Tracker"
+#define FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH       "/org/filemanager_actions/DBus/Tracker"
 
 /**
  * FILEMANAGER_ACTIONS_DBUS_TRACKER_IFACE:
@@ -130,7 +130,7 @@ G_BEGIN_DECLS
  * An interface defined on the <emphasis>tracker</emphasis> object,
  * identified by its %FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH D-Bus path.
  */
-#define FILEMANAGER_ACTIONS_DBUS_TRACKER_IFACE  	"org.file_manager_actions.DBus.Tracker.Properties1"
+#define FILEMANAGER_ACTIONS_DBUS_TRACKER_IFACE  	"org.filemanager_actions.DBus.Tracker.Properties1"
 
 G_END_DECLS
 

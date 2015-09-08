@@ -81,7 +81,7 @@ typedef struct {
 }
 	FMADataBoxedClass;
 
-GType             fma_data_boxed_get_type( void );
+GType             fma_data_boxed_get_type       ( void );
 
 FMADataBoxed     *fma_data_boxed_new            ( const FMADataDef *def );
 

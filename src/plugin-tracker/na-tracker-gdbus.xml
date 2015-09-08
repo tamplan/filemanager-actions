@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <node>
   <!--
-    org.file_manager_actions.DBus.Tracker.Properties1:
+    org.filemanager_actions.DBus.Tracker.Properties1:
     @short_description: Tracker properties
     @since: 3.2
     
@@ -9,7 +9,7 @@
     file manager user interface. and is able to retrieve them through
     DBus.
   -->
-  <interface name="org.file_manager_actions.DBus.Tracker.Properties1">
+  <interface name="org.filemanager_actions.DBus.Tracker.Properties1">
   
     <!--
       GetSelectedPaths:
