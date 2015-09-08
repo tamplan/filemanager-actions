@@ -41,9 +41,9 @@ libna_io_gconf_la_SOURCES = \
 	fma-gconf-provider.h								\
 	fma-gconf-keys.c									\
 	fma-gconf-keys.h									\
-	nagp-module.c										\
-	nagp-reader.c										\
-	nagp-reader.h										\
+	fma-gconf-module.c									\
+	fma-gconf-reader.c									\
+	fma-gconf-reader.h									\
 	nagp-writer.c										\
 	nagp-writer.h										\
 	$(NULL)

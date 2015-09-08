@@ -27,20 +27,20 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_READER_H__
-#define __NAGP_READER_H__
+#ifndef __FMA_GCONF_READER_H__
+#define __FMA_GCONF_READER_H__
 
 #include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-provider.h>
 
 G_BEGIN_DECLS
 
-GList       *nagp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages );
+GList        *fma_gconf_reader_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages );
 
-void         nagp_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
-FMADataBoxed *nagp_reader_read_data ( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages );
-void         nagp_reader_read_done ( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
+void          fma_gconf_reader_read_start( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
+FMADataBoxed *fma_gconf_reader_read_data ( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages );
+void          fma_gconf_reader_read_done ( const FMAIFactoryProvider *provider, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
 
 G_END_DECLS
 
-#endif /* __NAGP_READER_H__ */
+#endif /* __FMA_GCONF_READER_H__ */
