@@ -69,8 +69,8 @@ fma_config_tool_SOURCES = \
 	egg-tree-multi-dnd.c								\
 	egg-tree-multi-dnd.h								\
 	main.c												\
-	nact-add-capability-dialog.c						\
-	nact-add-capability-dialog.h						\
+	fma-add-capability-dialog.c						\
+	fma-add-capability-dialog.h						\
 	nact-add-scheme-dialog.c							\
 	nact-add-scheme-dialog.h							\
 	fma-application.c									\

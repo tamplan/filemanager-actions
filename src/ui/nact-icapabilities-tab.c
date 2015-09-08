@@ -41,7 +41,7 @@
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-match-list.h"
-#include "nact-add-capability-dialog.h"
+#include "fma-add-capability-dialog.h"
 #include "nact-icapabilities-tab.h"
 
 /* private interface data

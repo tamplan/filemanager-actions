@@ -39,7 +39,7 @@
 
 #include <core/fma-settings.h>
 
-#include "nact-add-capability-dialog.h"
+#include "fma-add-capability-dialog.h"
 
 /* private class data
  */
