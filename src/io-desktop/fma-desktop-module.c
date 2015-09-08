@@ -50,7 +50,7 @@
 gboolean
 fma_extension_startup( GTypeModule *module )
 {
-	static const gchar *thisfn = "io-desktop/fma_module_fma_extension_startup";
+	static const gchar *thisfn = "fma_desktop_module_fma_extension_startup";
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
@@ -67,7 +67,7 @@ fma_extension_startup( GTypeModule *module )
 guint
 fma_extension_get_version( void )
 {
-	static const gchar *thisfn = "io-desktop/fma_module_fma_extension_get_version";
+	static const gchar *thisfn = "fma_desktop_module_fma_extension_get_version";
 	guint version;
 
 	version = 1;
@@ -85,7 +85,7 @@ fma_extension_get_version( void )
 guint
 fma_extension_list_types( const GType **types )
 {
-	static const gchar *thisfn = "io-desktop/fma_module_fma_extension_list_types";
+	static const gchar *thisfn = "fma_desktop_module_fma_extension_list_types";
 	static GType types_list [1+FMA_TYPES_COUNT];
 
 	g_debug( "%s: types=%p", thisfn, ( void * ) types );
@@ -106,7 +106,7 @@ fma_extension_list_types( const GType **types )
 void
 fma_extension_shutdown( void )
 {
-	static const gchar *thisfn = "io-desktop/fma_module_fma_extension_shutdown";
+	static const gchar *thisfn = "fma_desktop_module_fma_extension_shutdown";
 
 	g_debug( "%s", thisfn );
 }
