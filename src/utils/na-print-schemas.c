@@ -45,7 +45,7 @@
 
 #include <io-gconf/fma-gconf-keys.h>
 
-#include <io-xml/naxml-keys.h>
+#include <io-xml/fma-xml-keys.h>
 
 #include "console-utils.h"
 
@@ -235,9 +235,9 @@ output_to_stdout( FMADataGroup *groups, GSList **msgs )
 
 	doc = xmlNewDoc( BAD_CAST( "1.0" ));
 
-	root_node = xmlNewNode( NULL, BAD_CAST( NAXML_KEY_SCHEMA_ROOT ));
+	root_node = xmlNewNode( NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_ROOT ));
 	xmlDocSetRootElement( doc, root_node );
-	list_node = xmlNewChild( root_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_LIST ), NULL );
+	list_node = xmlNewChild( root_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_LIST ), NULL );
 
 	for( ig = 0 ; groups[ig].group ; ++ig ){
 		for( id = 0 ; groups[ig].def[id].name ; ++id ){
@@ -268,30 +268,30 @@ attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const FMADataDef *def )
 	xmlNodePtr parent_value_node;
 	xmlNodePtr locale_node;
 
-	schema_node = xmlNewChild( list_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE ), NULL );
+	schema_node = xmlNewChild( list_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE ), NULL );
 
 	content = BAD_CAST( g_build_path( "/", FMA_GCONF_SCHEMAS_PATH, def->gconf_entry, NULL ));
-	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_KEY ), content );
+	xmlNewChild( schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_KEY ), content );
 	xmlFree( content );
 
-	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
+	xmlNewChild( schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
 
-	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_TYPE ), BAD_CAST( fma_data_types_get_gconf_dump_key( def->type )));
+	xmlNewChild( schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_TYPE ), BAD_CAST( fma_data_types_get_gconf_dump_key( def->type )));
 	if( def->type == FMA_DATA_TYPE_STRING_LIST ){
-		xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LISTTYPE ), BAD_CAST( "string" ));
+		xmlNewChild( schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LISTTYPE ), BAD_CAST( "string" ));
 	}
 
-	locale_node = xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE ), NULL );
+	locale_node = xmlNewChild( schema_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LOCALE ), NULL );
 	xmlNewProp( locale_node, BAD_CAST( "name" ), BAD_CAST( "C" ));
 
-	xmlNewChild( locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( gettext( def->short_label )));
+	xmlNewChild( locale_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( gettext( def->short_label )));
 
-	xmlNewChild( locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( gettext( def->long_label )));
+	xmlNewChild( locale_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( gettext( def->long_label )));
 
 	parent_value_node = def->localizable ? locale_node : schema_node;
 
 	content = xmlEncodeSpecialChars( doc, BAD_CAST( def->default_value ));
-	xmlNewChild( parent_value_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_DEFAULT ), content );
+	xmlNewChild( parent_value_node, NULL, BAD_CAST( FMA_XML_KEY_SCHEMA_NODE_DEFAULT ), content );
 	xmlFree( content );
 }
 

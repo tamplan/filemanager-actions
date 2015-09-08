@@ -27,13 +27,19 @@
 
 if HAVE_GCONF
 
+provider_id = io-gconf
+
 pkglib_LTLIBRARIES = libfma-io-gconf.la
+
+provider_datadir = $(pkgdatadir)/$(provider_id)
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_GCONF}\"			\
+	-DPROVIDER_ID=\"$(provider_id)\"					\
+	-DPROVIDER_DATADIR=\"$(provider_datadir)\"			\
 	$(NULL)
 
 libfma_io_gconf_la_SOURCES = \

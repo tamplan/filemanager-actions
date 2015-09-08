@@ -25,9 +25,9 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-provider_id = na-xml
+provider_id = io-xml
 
-pkglib_LTLIBRARIES = libna-io-xml.la
+pkglib_LTLIBRARIES = libfma-io-xml.la
 
 provider_datadir = $(pkgdatadir)/$(provider_id)
 
@@ -40,7 +40,7 @@ AM_CPPFLAGS += \
 	-DPROVIDER_DATADIR=\"$(provider_datadir)\"			\
 	$(NULL)
 
-libna_io_xml_la_SOURCES = \
+libfma_io_xml_la_SOURCES = \
 	fma-xml-formats.c									\
 	fma-xml-formats.h									\
 	fma-xml-keys.c										\
@@ -54,12 +54,12 @@ libna_io_xml_la_SOURCES = \
 	fma-xml-writer.h									\
 	$(NULL)
 
-libna_io_xml_la_LIBADD = \
+libfma_io_xml_la_LIBADD = \
 	$(top_builddir)/src/core/libfma-core.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-libna_io_xml_la_LDFLAGS = \
+libfma_io_xml_la_LDFLAGS = \
 	-module 											\
 	-no-undefined										\
 	-avoid-version										\
