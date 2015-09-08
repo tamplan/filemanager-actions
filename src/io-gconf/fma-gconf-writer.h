@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAGP_WRITE_H__
-#define __NAGP_WRITE_H__
+#ifndef __IO_GCONF_FMA_GCONF_WRITER_H__
+#define __IO_GCONF_FMA_GCONF_WRITER_H__
 
 #include <api/fma-data-boxed.h>
 #include <api/fma-iio-provider.h>
@@ -38,34 +38,40 @@ G_BEGIN_DECLS
 
 /* FMAIIOProvider interface
  */
-gboolean nagp_iio_provider_is_willing_to_write( const FMAIIOProvider *provider );
+gboolean fma_gconf_writer_iio_provider_is_willing_to_write( const FMAIIOProvider *provider );
 
-gboolean nagp_iio_provider_is_able_to_write   ( const FMAIIOProvider *provider );
+gboolean fma_gconf_writer_iio_provider_is_able_to_write   ( const FMAIIOProvider *provider );
 
 /* Writing into GConf is deprecated since 3.1.0
  */
 #ifdef NA_ENABLE_DEPRECATED
-guint    nagp_iio_provider_write_item         ( const FMAIIOProvider *provider,
-													const FMAObjectItem *item, GSList **message );
+guint    fma_gconf_writer_iio_provider_write_item         ( const FMAIIOProvider *provider,
+																const FMAObjectItem *item,
+																GSList **message );
 
-guint    nagp_iio_provider_delete_item        ( const FMAIIOProvider *provider,
-													const FMAObjectItem *item, GSList **message );
+guint    fma_gconf_writer_iio_provider_delete_item        ( const FMAIIOProvider *provider,
+																const FMAObjectItem *item,
+																GSList **message );
 
 /* FMAIFactoryProvider interface
  */
-guint    nagp_writer_write_start( const FMAIFactoryProvider *writer, void *writer_data,
-									const FMAIFactoryObject *object,
-									GSList **messages  );
+guint    fma_gconf_writer_write_start                     ( const FMAIFactoryProvider *writer,
+																void *writer_data,
+																const FMAIFactoryObject *object,
+																GSList **messages  );
 
-guint    nagp_writer_write_data ( const FMAIFactoryProvider *provider, void *writer_data,
-									const FMAIFactoryObject *object, const FMADataBoxed *boxed,
-									GSList **messages );
+guint    fma_gconf_writer_write_data                      ( const FMAIFactoryProvider *provider,
+																void *writer_data,
+																const FMAIFactoryObject *object,
+																const FMADataBoxed *boxed,
+																GSList **messages );
 
-guint    nagp_writer_write_done ( const FMAIFactoryProvider *writer, void *writer_data,
-									const FMAIFactoryObject *object,
-									GSList **messages  );
+guint    fma_gconf_writer_write_done                      ( const FMAIFactoryProvider *writer,
+																void *writer_data,
+																const FMAIFactoryObject *object,
+																GSList **messages  );
 #endif /* NA_ENABLE_DEPRECATED */
 
 G_END_DECLS
 
-#endif /* __NAGP_WRITE_H__ */
+#endif /* __IO_GCONF_FMA_GCONF_WRITER_H__ */

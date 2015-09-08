@@ -42,7 +42,7 @@
 #include <api/fma-gconf-utils.h>
 
 #include "fma-gconf-provider.h"
-#include "nagp-writer.h"
+#include "fma-gconf-writer.h"
 #include "fma-gconf-keys.h"
 
 #ifdef NA_ENABLE_DEPRECATED
@@ -54,7 +54,7 @@ static void write_start_write_version( FMAGConfProvider *provider, FMAObjectItem
  * API function: should only be called through FMAIIOProvider interface
  */
 gboolean
-nagp_iio_provider_is_willing_to_write( const FMAIIOProvider *provider )
+fma_gconf_writer_iio_provider_is_willing_to_write( const FMAIIOProvider *provider )
 {
 #ifdef NA_ENABLE_DEPRECATED
 	return( TRUE );
@@ -75,11 +75,11 @@ nagp_iio_provider_is_willing_to_write( const FMAIIOProvider *provider )
  * API function: should only be called through FMAIIOProvider interface
  */
 gboolean
-nagp_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
+fma_gconf_writer_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
 {
 #ifdef NA_ENABLE_DEPRECATED
-	static const gchar *thisfn = "nagp_iio_provider_is_able_to_write";
-	static const gchar *path = "/apps/filemanager-actions/foo";
+	static const gchar *thisfn = "fma_gconf_writer_iio_provider_is_able_to_write";
+	static const gchar *path = "/apps/nautilus-actions/foo";
 	FMAGConfProvider *self;
 	gboolean able_to = FALSE;
 
@@ -126,7 +126,7 @@ nagp_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
  * before trying to write the new ones
  */
 guint
-nagp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
+fma_gconf_writer_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
 	static const gchar *thisfn = "fma_gconf_provider_iio_provider_write_item";
 	FMAGConfProvider *self;
@@ -150,7 +150,7 @@ nagp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
 	}
 
-	ret = nagp_iio_provider_delete_item( provider, item, messages );
+	ret = fma_gconf_writer_iio_provider_delete_item( provider, item, messages );
 
 	if( ret == IIO_PROVIDER_CODE_OK ){
 		fma_ifactory_provider_write_item( FMA_IFACTORY_PROVIDER( provider ), NULL, FMA_IFACTORY_OBJECT( item ), messages );
@@ -166,7 +166,7 @@ nagp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
  * cf. http://bugzilla.gnome.org/show_bug.cgi?id=325585
  */
 guint
-nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
+fma_gconf_writer_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectItem *item, GSList **messages )
 {
 	static const gchar *thisfn = "fma_gconf_provider_iio_provider_delete_item";
 	FMAGConfProvider *self;
@@ -233,7 +233,7 @@ nagp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 }
 
 guint
-nagp_writer_write_start( const FMAIFactoryProvider *writer, void *writer_data,
+fma_gconf_writer_write_start( const FMAIFactoryProvider *writer, void *writer_data,
 							const FMAIFactoryObject *object, GSList **messages  )
 {
 	if( FMA_IS_OBJECT_ITEM( object )){
@@ -279,11 +279,11 @@ write_start_write_version( FMAGConfProvider *provider, FMAObjectItem *item )
 }
 
 guint
-nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
+fma_gconf_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 									const FMAIFactoryObject *object, const FMADataBoxed *boxed,
 									GSList **messages )
 {
-	static const gchar *thisfn = "nagp_writer_write_data";
+	static const gchar *thisfn = "fma_gconf_writer_write_data";
 	guint code;
 	const FMADataDef *def;
 	gchar *this_id;
@@ -387,7 +387,7 @@ nagp_writer_write_data( const FMAIFactoryProvider *provider, void *writer_data,
 }
 
 guint
-nagp_writer_write_done( const FMAIFactoryProvider *writer, void *writer_data,
+fma_gconf_writer_write_done( const FMAIFactoryProvider *writer, void *writer_data,
 									const FMAIFactoryObject *object,
 									GSList **messages  )
 {

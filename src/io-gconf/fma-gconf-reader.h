@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FMA_GCONF_READER_H__
-#define __FMA_GCONF_READER_H__
+#ifndef __IO_GCONF_FMA_GCONF_READER_H__
+#define __IO_GCONF_FMA_GCONF_READER_H__
 
 #include <api/fma-iio-provider.h>
 #include <api/fma-ifactory-provider.h>
@@ -43,4 +43,4 @@ void          fma_gconf_reader_read_done ( const FMAIFactoryProvider *provider, 
 
 G_END_DECLS
 
-#endif /* __FMA_GCONF_READER_H__ */
+#endif /* __IO_GCONF_FMA_GCONF_READER_H__ */

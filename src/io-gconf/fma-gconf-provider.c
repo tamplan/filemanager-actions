@@ -40,7 +40,7 @@
 
 #include "fma-gconf-provider.h"
 #include "fma-gconf-reader.h"
-#include "nagp-writer.h"
+#include "fma-gconf-writer.h"
 #include "fma-gconf-keys.h"
 
 /* private class data
@@ -223,11 +223,11 @@ iio_provider_iface_init( FMAIIOProviderInterface *iface )
 	iface->get_name = iio_provider_get_name;
 	iface->get_version = iio_provider_get_version;
 	iface->read_items = fma_gconf_reader_iio_provider_read_items;
-	iface->is_willing_to_write = nagp_iio_provider_is_willing_to_write;
-	iface->is_able_to_write = nagp_iio_provider_is_able_to_write;
+	iface->is_willing_to_write = fma_gconf_writer_iio_provider_is_willing_to_write;
+	iface->is_able_to_write = fma_gconf_writer_iio_provider_is_able_to_write;
 #ifdef NA_ENABLE_DEPRECATED
-	iface->write_item = nagp_iio_provider_write_item;
-	iface->delete_item = nagp_iio_provider_delete_item;
+	iface->write_item = fma_gconf_writer_iio_provider_write_item;
+	iface->delete_item = fma_gconf_writer_iio_provider_delete_item;
 #else
 	iface->write_item = NULL;
 	iface->delete_item = NULL;
@@ -265,9 +265,9 @@ ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 	iface->read_data = fma_gconf_reader_read_data;
 	iface->read_done = fma_gconf_reader_read_done;
 #ifdef NA_ENABLE_DEPRECATED
-	iface->write_start = nagp_writer_write_start;
-	iface->write_data = nagp_writer_write_data;
-	iface->write_done = nagp_writer_write_done;
+	iface->write_start = fma_gconf_writer_write_start;
+	iface->write_data = fma_gconf_writer_write_data;
+	iface->write_done = fma_gconf_writer_write_done;
 #else
 	iface->write_start = NULL;
 	iface->write_data = NULL;

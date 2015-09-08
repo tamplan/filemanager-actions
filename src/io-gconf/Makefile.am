@@ -44,8 +44,8 @@ libna_io_gconf_la_SOURCES = \
 	fma-gconf-module.c									\
 	fma-gconf-reader.c									\
 	fma-gconf-reader.h									\
-	nagp-writer.c										\
-	nagp-writer.h										\
+	fma-gconf-writer.c									\
+	fma-gconf-writer.h									\
 	$(NULL)
 
 libna_io_gconf_la_LIBADD = \
