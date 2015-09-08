@@ -37,7 +37,7 @@
 
 #include <api/fma-core-utils.h>
 
-#include "nadp-desktop-file.h"
+#include "fma-desktop-file.h"
 #include "nadp-keys.h"
 
 /* private class data

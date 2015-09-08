@@ -39,8 +39,8 @@
 #include <api/fma-object-api.h>
 #include <api/fma-ifactory-provider.h>
 
-#include "nadp-desktop-file.h"
-#include "nadp-desktop-provider.h"
+#include "fma-desktop-file.h"
+#include "fma-desktop-provider.h"
 #include "nadp-formats.h"
 #include "nadp-keys.h"
 #include "nadp-utils.h"
@@ -86,7 +86,7 @@ nadp_iio_provider_is_willing_to_write( const FMAIIOProvider *provider )
 }
 
 /*
- * NadpDesktopProvider is able to write if user data dir exists (or
+ * FMADesktopProvider is able to write if user data dir exists (or
  * can be created) and is writable
  *
  * This is implementation of FMAIIOProvider::is_able_to_write method
@@ -98,7 +98,7 @@ nadp_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
 	gboolean able_to;
 	gchar *userdir;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), FALSE );
+	g_return_val_if_fail( FMA_IS_DESKTOP_PROVIDER( provider ), FALSE );
 
 	able_to = FALSE;
 
@@ -139,7 +139,7 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 
 	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
+	g_return_val_if_fail( FMA_IS_DESKTOP_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 
 	if( fma_object_is_readonly( item )){
@@ -155,7 +155,7 @@ nadp_iio_provider_write_item( const FMAIIOProvider *provider, const FMAObjectIte
 
 	} else {
 		userdir = nadp_xdg_dirs_get_user_data_dir();
-		subdirs = fma_core_utils_slist_from_split( NADP_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
+		subdirs = fma_core_utils_slist_from_split( FMA_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
 		fulldir = g_build_filename( userdir, ( gchar * ) subdirs->data, NULL );
 		dir_ok = TRUE;
 
@@ -209,7 +209,7 @@ write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, FMADeskto
 {
 	static const gchar *thisfn = "nadp_iio_provider_write_item";
 	guint ret;
-	NadpDesktopProvider *self;
+	FMADesktopProvider *self;
 
 	g_debug( "%s: provider=%p (%s), item=%p (%s), ndf=%p, messages=%p",
 			thisfn,
@@ -221,7 +221,7 @@ write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, FMADeskto
 	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
+	g_return_val_if_fail( FMA_IS_DESKTOP_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( provider ), ret );
 
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
@@ -229,7 +229,7 @@ write_item( const FMAIIOProvider *provider, const FMAObjectItem *item, FMADeskto
 
 	g_return_val_if_fail( FMA_IS_DESKTOP_FILE( ndf ), ret );
 
-	self = NADP_DESKTOP_PROVIDER( provider );
+	self = FMA_DESKTOP_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
 		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
@@ -251,7 +251,7 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 {
 	static const gchar *thisfn = "nadp_iio_provider_delete_item";
 	guint ret;
-	NadpDesktopProvider *self;
+	FMADesktopProvider *self;
 	FMADesktopFile *ndf;
 	gchar *uri;
 
@@ -264,10 +264,10 @@ nadp_iio_provider_delete_item( const FMAIIOProvider *provider, const FMAObjectIt
 	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
+	g_return_val_if_fail( FMA_IS_DESKTOP_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 
-	self = NADP_DESKTOP_PROVIDER( provider );
+	self = FMA_DESKTOP_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
 		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
@@ -313,7 +313,7 @@ nadp_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem 
 {
 	static const gchar *thisfn = "nadp_iio_provider_duplicate_data";
 	guint ret;
-	NadpDesktopProvider *self;
+	FMADesktopProvider *self;
 	FMADesktopFile *ndf;
 
 	g_debug( "%s: provider=%p (%s), dest=%p (%s), source=%p (%s), messages=%p",
@@ -326,11 +326,11 @@ nadp_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem 
 	ret = IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), ret );
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
+	g_return_val_if_fail( FMA_IS_DESKTOP_PROVIDER( provider ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( dest ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( source ), ret );
 
-	self = NADP_DESKTOP_PROVIDER( provider );
+	self = FMA_DESKTOP_PROVIDER( provider );
 
 	if( self->private->dispose_has_run ){
 		return( IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );

@@ -33,7 +33,7 @@
 /**
  * SECTION: fma_desktop_file
  * @short_description: #FMADesktopFile class definition.
- * @include: nadp-desktop-file.h
+ * @include: fma-desktop-file.h
  *
  * This class encapŝulates the EggDesktopFile structure, adding some
  * private properties. An instance of this class is associated with

@@ -41,10 +41,10 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libna_io_desktop_la_SOURCES = \
-	nadp-desktop-file.c									\
-	nadp-desktop-file.h									\
-	nadp-desktop-provider.c								\
-	nadp-desktop-provider.h								\
+	fma-desktop-file.c									\
+	fma-desktop-file.h									\
+	fma-desktop-provider.c								\
+	fma-desktop-provider.h								\
 	nadp-formats.c										\
 	nadp-formats.h										\
 	nadp-keys.c											\

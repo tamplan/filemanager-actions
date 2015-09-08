@@ -37,7 +37,7 @@
 #include <api/fma-core-utils.h>
 #include <api/fma-ifactory-provider.h>
 
-#include "nadp-desktop-provider.h"
+#include "fma-desktop-provider.h"
 #include "nadp-formats.h"
 #include "nadp-keys.h"
 #include "nadp-monitor.h"
@@ -46,7 +46,7 @@
 
 /* private class data
  */
-struct _NadpDesktopProviderClassPrivate {
+struct _FMADesktopProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -54,7 +54,7 @@ static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 static guint         st_burst_timeout = 100;		/* burst timeout in msec */
 
-static void   class_init( NadpDesktopProviderClass *klass );
+static void   class_init( FMADesktopProviderClass *klass );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
@@ -76,27 +76,27 @@ static gchar *iexporter_get_name( const FMAIExporter *exporter );
 static void  *iexporter_get_formats( const FMAIExporter *exporter );
 static void   iexporter_free_formats( const FMAIExporter *exporter, GList *format_list );
 
-static void   on_monitor_timeout( NadpDesktopProvider *provider );
+static void   on_monitor_timeout( FMADesktopProvider *provider );
 
 GType
-nadp_desktop_provider_get_type( void )
+fma_desktop_provider_get_type( void )
 {
 	return( st_module_type );
 }
 
 void
-nadp_desktop_provider_register_type( GTypeModule *module )
+fma_desktop_provider_register_type( GTypeModule *module )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_register_type";
+	static const gchar *thisfn = "fma_desktop_provider_register_type";
 
 	static GTypeInfo info = {
-		sizeof( NadpDesktopProviderClass ),
+		sizeof( FMADesktopProviderClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NadpDesktopProvider ),
+		sizeof( FMADesktopProvider ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -127,7 +127,7 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 
 	g_debug( "%s", thisfn );
 
-	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NadpDesktopProvider", &info, 0 );
+	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "FMADesktopProvider", &info, 0 );
 
 	g_type_module_add_interface( module, st_module_type, FMA_TYPE_IIO_PROVIDER, &iio_provider_iface_info );
 
@@ -139,9 +139,9 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 }
 
 static void
-class_init( NadpDesktopProviderClass *klass )
+class_init( FMADesktopProviderClass *klass )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_class_init";
+	static const gchar *thisfn = "fma_desktop_provider_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -152,23 +152,23 @@ class_init( NadpDesktopProviderClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NadpDesktopProviderClassPrivate, 1 );
+	klass->private = g_new0( FMADesktopProviderClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_instance_init";
-	NadpDesktopProvider *self;
+	static const gchar *thisfn = "fma_desktop_provider_instance_init";
+	FMADesktopProvider *self;
 
-	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( instance ));
+	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NADP_DESKTOP_PROVIDER( instance );
+	self = FMA_DESKTOP_PROVIDER( instance );
 
-	self->private = g_new0( NadpDesktopProviderPrivate, 1 );
+	self->private = g_new0( FMADesktopProviderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->monitors = NULL;
@@ -181,12 +181,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_instance_dispose";
-	NadpDesktopProvider *self;
+	static const gchar *thisfn = "fma_desktop_provider_instance_dispose";
+	FMADesktopProvider *self;
 
-	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( object ));
+	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( object ));
 
-	self = NADP_DESKTOP_PROVIDER( object );
+	self = FMA_DESKTOP_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -194,7 +194,7 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		nadp_desktop_provider_release_monitors( self );
+		fma_desktop_provider_release_monitors( self );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -206,14 +206,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_instance_finalize";
-	NadpDesktopProvider *self;
+	static const gchar *thisfn = "fma_desktop_provider_instance_finalize";
+	FMADesktopProvider *self;
 
-	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( object ));
+	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NADP_DESKTOP_PROVIDER( object );
+	self = FMA_DESKTOP_PROVIDER( object );
 
 	g_free( self->private );
 
@@ -226,7 +226,7 @@ instance_finalize( GObject *object )
 static void
 iio_provider_iface_init( FMAIIOProviderInterface *iface )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_iio_provider_iface_init";
+	static const gchar *thisfn = "fma_desktop_provider_iio_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -262,7 +262,7 @@ iio_provider_get_name( const FMAIIOProvider *provider )
 static void
 ifactory_provider_iface_init( FMAIFactoryProviderInterface *iface )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_ifactory_provider_iface_init";
+	static const gchar *thisfn = "fma_desktop_provider_ifactory_provider_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -284,7 +284,7 @@ ifactory_provider_get_version( const FMAIFactoryProvider *reader )
 static void
 iimporter_iface_init( FMAIImporterInterface *iface )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_iimporter_iface_init";
+	static const gchar *thisfn = "fma_desktop_provider_iimporter_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -338,18 +338,18 @@ iexporter_free_formats( const FMAIExporter *exporter, GList *format_list )
 }
 
 /**
- * nadp_desktop_provider_add_monitor:
- * @provider: this #NadpDesktopProvider object.
+ * fma_desktop_provider_add_monitor:
+ * @provider: this #FMADesktopProvider object.
  * @dir: the path to the directory to be monitored. May not exist.
  *
  * Installs a GIO monitor on the given directory.
  */
 void
-nadp_desktop_provider_add_monitor( NadpDesktopProvider *provider, const gchar *dir )
+fma_desktop_provider_add_monitor( FMADesktopProvider *provider, const gchar *dir )
 {
 	NadpMonitor *monitor;
 
-	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( provider ));
 
 	if( !provider->private->dispose_has_run ){
 
@@ -359,15 +359,15 @@ nadp_desktop_provider_add_monitor( NadpDesktopProvider *provider, const gchar *d
 }
 
 /**
- * nadp_desktop_provider_on_monitor_event:
- * @provider: this #NadpDesktopProvider object.
+ * fma_desktop_provider_on_monitor_event:
+ * @provider: this #FMADesktopProvider object.
  *
  * Factorize events received from GIO when monitoring desktop directories.
  */
 void
-nadp_desktop_provider_on_monitor_event( NadpDesktopProvider *provider )
+fma_desktop_provider_on_monitor_event( FMADesktopProvider *provider )
 {
-	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( provider ));
 
 	if( !provider->private->dispose_has_run ){
 
@@ -376,15 +376,15 @@ nadp_desktop_provider_on_monitor_event( NadpDesktopProvider *provider )
 }
 
 /**
- * nadp_desktop_provider_release_monitors:
- * @provider: this #NadpDesktopProvider object.
+ * fma_desktop_provider_release_monitors:
+ * @provider: this #FMADesktopProvider object.
  *
  * Release previously set desktop monitors.
  */
 void
-nadp_desktop_provider_release_monitors( NadpDesktopProvider *provider )
+fma_desktop_provider_release_monitors( FMADesktopProvider *provider )
 {
-	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ));
+	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( provider ));
 
 	if( provider->private->monitors ){
 
@@ -395,9 +395,9 @@ nadp_desktop_provider_release_monitors( NadpDesktopProvider *provider )
 }
 
 static void
-on_monitor_timeout( NadpDesktopProvider *provider )
+on_monitor_timeout( FMADesktopProvider *provider )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_on_monitor_timeout";
+	static const gchar *thisfn = "fma_desktop_provider_on_monitor_timeout";
 
 	/* last individual notification is older that the st_burst_timeout
 	 * so triggers the FMAIIOProvider interface and destroys this timeout

@@ -171,13 +171,13 @@ G_BEGIN_DECLS
  *     fma_extension_startup( GTypeModule *plugin )
  *     {
  *         static GTypeInfo info = {
- *             sizeof( NadpDesktopProviderClass ),
+ *             sizeof( FMADesktopProviderClass ),
  *             NULL,
  *             NULL,
  *             ( GClassInitFunc ) class_init,
  *             NULL,
  *             NULL,
- *             sizeof( NadpDesktopProvider ),
+ *             sizeof( FMADesktopProvider ),
  *             0,
  *             ( GInstanceInitFunc ) instance_init
  *         };
@@ -188,7 +188,7 @@ G_BEGIN_DECLS
  *             NULL
  *         };
  *
- *         st_module_type = g_type_module_register_type( plugin, G_TYPE_OBJECT, "NadpDesktopProvider", &amp;info, 0 );
+ *         st_module_type = g_type_module_register_type( plugin, G_TYPE_OBJECT, "FMADesktopProvider", &amp;info, 0 );
  *
  *         g_type_module_add_interface( plugin, st_module_type, FMA_TYPE_IIO_PROVIDER, &amp;iio_provider_iface_info );
  *
@@ -252,10 +252,10 @@ guint    fma_extension_get_version( void );
  *     {
  *          static GType types_list [1+NADP_TYPES_COUNT];
  *
- *          &lcomment; NADP_TYPE_DESKTOP_PROVIDER has been previously
+ *          &lcomment; FMA_TYPE_DESKTOP_PROVIDER has been previously
  *           * registered in fma_extension_startup function
  *           &rcomment;
- *          types_list[0] = NADP_TYPE_DESKTOP_PROVIDER;
+ *          types_list[0] = FMA_TYPE_DESKTOP_PROVIDER;
  *
  *          types_list[NADP_TYPES_COUNT] = 0;
  *          *types = types_list;

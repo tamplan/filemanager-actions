@@ -38,7 +38,7 @@
 
 #include <api/fma-core-utils.h>
 
-#include "nadp-desktop-provider.h"
+#include "fma-desktop-provider.h"
 #include "nadp-utils.h"
 
 /**

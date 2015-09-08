@@ -45,7 +45,7 @@ struct _NadpMonitorClassPrivate {
  */
 struct _NadpMonitorPrivate {
 	gboolean             dispose_has_run;
-	NadpDesktopProvider *provider;
+	FMADesktopProvider *provider;
 	gchar               *name;
 	GFile               *file;
 	GFileMonitor        *monitor;
@@ -193,7 +193,7 @@ instance_finalize( GObject *object )
 
 /**
  * nadp_monitor_new:
- * @provider: the #NadpDesktopProvider instance.
+ * @provider: the #FMADesktopProvider instance.
  * @path: the path of a directory to be monitored.
  *
  * Installs a new monitor on the given directory.
@@ -201,7 +201,7 @@ instance_finalize( GObject *object )
  * Returns: a new #NadpMonitor instance.
  */
 NadpMonitor *
-nadp_monitor_new( const NadpDesktopProvider *provider, const gchar *path )
+nadp_monitor_new( const FMADesktopProvider *provider, const gchar *path )
 {
 	static const gchar *thisfn = "nadp_monitor_new";
 	NadpMonitor *monitor;
@@ -210,7 +210,7 @@ nadp_monitor_new( const NadpDesktopProvider *provider, const gchar *path )
 
 	monitor = g_object_new( NADP_TYPE_MONITOR, NULL );
 
-	monitor->private->provider = NADP_DESKTOP_PROVIDER( provider );
+	monitor->private->provider = FMA_DESKTOP_PROVIDER( provider );
 	monitor->private->name = g_strdup( path );
 	monitor->private->file = g_file_new_for_path( path );
 
@@ -246,5 +246,5 @@ nadp_monitor_new( const NadpDesktopProvider *provider, const gchar *path )
 static void
 on_monitor_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, NadpMonitor *my_monitor )
 {
-	nadp_desktop_provider_on_monitor_event( my_monitor->private->provider );
+	fma_desktop_provider_on_monitor_event( my_monitor->private->provider );
 }

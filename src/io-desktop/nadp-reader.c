@@ -41,7 +41,7 @@
 #include <api/fma-ifactory-provider.h>
 #include <api/fma-object-api.h>
 
-#include "nadp-desktop-provider.h"
+#include "fma-desktop-provider.h"
 #include "nadp-keys.h"
 #include "nadp-reader.h"
 #include "nadp-utils.h"
@@ -63,12 +63,12 @@ typedef struct {
 
 #define ERR_NOT_DESKTOP		_( "The Desktop I/O Provider is not able to handle the URI" )
 
-static GList            *get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **mesages );
-static void              get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
-static gboolean          is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id );
-static GList            *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
-static FMAIFactoryObject *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
-static FMAIFactoryObject *item_from_desktop_file( const NadpDesktopProvider *provider, FMADesktopFile *ndf, GSList **messages );
+static GList            *get_list_of_desktop_paths( FMADesktopProvider *provider, GSList **mesages );
+static void              get_list_of_desktop_files( const FMADesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
+static gboolean          is_already_loaded( const FMADesktopProvider *provider, GList *files, const gchar *desktop_id );
+static GList            *desktop_path_from_id( const FMADesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
+static FMAIFactoryObject *item_from_desktop_path( const FMADesktopProvider *provider, DesktopPath *dps, GSList **messages );
+static FMAIFactoryObject *item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf, GSList **messages );
 static void              desktop_weak_notify( FMADesktopFile *ndf, GObject *item );
 static void              free_desktop_paths( GList *paths );
 
@@ -98,12 +98,12 @@ nadp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages 
 	g_return_val_if_fail( FMA_IS_IIO_PROVIDER( provider ), NULL );
 
 	items = NULL;
-	nadp_desktop_provider_release_monitors( NADP_DESKTOP_PROVIDER( provider ));
+	fma_desktop_provider_release_monitors( FMA_DESKTOP_PROVIDER( provider ));
 
-	desktop_paths = get_list_of_desktop_paths( NADP_DESKTOP_PROVIDER( provider ), messages );
+	desktop_paths = get_list_of_desktop_paths( FMA_DESKTOP_PROVIDER( provider ), messages );
 	for( ip = desktop_paths ; ip ; ip = ip->next ){
 
-		item = item_from_desktop_path( NADP_DESKTOP_PROVIDER( provider ), ( DesktopPath * ) ip->data, messages );
+		item = item_from_desktop_path( FMA_DESKTOP_PROVIDER( provider ), ( DesktopPath * ) ip->data, messages );
 
 		if( item ){
 			items = g_list_prepend( items, item );
@@ -128,7 +128,7 @@ nadp_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages 
  * the ordered of preference (most preferred first)
  */
 static GList *
-get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **messages )
+get_list_of_desktop_paths( FMADesktopProvider *provider, GSList **messages )
 {
 	GList *files;
 	GSList *xdg_dirs, *idir;
@@ -137,7 +137,7 @@ get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **messages )
 
 	files = NULL;
 	xdg_dirs = nadp_xdg_dirs_get_data_dirs();
-	subdirs = fma_core_utils_slist_from_split( NADP_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
+	subdirs = fma_core_utils_slist_from_split( FMA_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
 
 	/* explore each directory from XDG_DATA_DIRS
 	 */
@@ -148,7 +148,7 @@ get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **messages )
 		for( isub = subdirs ; isub ; isub = isub->next ){
 
 			dir = g_build_filename(( gchar * ) idir->data, ( gchar * ) isub->data, NULL );
-			nadp_desktop_provider_add_monitor( provider, dir );
+			fma_desktop_provider_add_monitor( provider, dir );
 			get_list_of_desktop_files( provider, &files, dir, messages );
 			g_free( dir );
 		}
@@ -165,7 +165,7 @@ get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **messages )
  * only adds to the list those which have not been yet loaded
  */
 static void
-get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages )
+get_list_of_desktop_files( const FMADesktopProvider *provider, GList **files, const gchar *dir, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_get_list_of_desktop_files";
 	GDir *dir_handle;
@@ -211,7 +211,7 @@ close_dir_handle:
 }
 
 static gboolean
-is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id )
+is_already_loaded( const FMADesktopProvider *provider, GList *files, const gchar *desktop_id )
 {
 	gboolean found;
 	GList *ip;
@@ -229,7 +229,7 @@ is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gcha
 }
 
 static GList *
-desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id )
+desktop_path_from_id( const FMADesktopProvider *provider, GList *files, const gchar *dir, const gchar *id )
 {
 	DesktopPath *dps;
 	gchar *bname;
@@ -253,7 +253,7 @@ desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const g
  * from the .desktop file pointed to by DesktopPath struct
  */
 static FMAIFactoryObject *
-item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages )
+item_from_desktop_path( const FMADesktopProvider *provider, DesktopPath *dps, GSList **messages )
 {
 	FMADesktopFile *ndf;
 
@@ -270,7 +270,7 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
  * from the .desktop file
  */
 static FMAIFactoryObject *
-item_from_desktop_file( const NadpDesktopProvider *provider, FMADesktopFile *ndf, GSList **messages )
+item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf, GSList **messages )
 {
 	/*static const gchar *thisfn = "nadp_reader_item_from_desktop_file";*/
 	FMAIFactoryObject *item;
@@ -371,7 +371,7 @@ nadp_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, parms_ptr );
 
 	g_return_val_if_fail( FMA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_DESKTOP_PROVIDER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 
 	parms = ( FMAIImporterImportFromUriParmsv2 * ) parms_ptr;
 
@@ -385,7 +385,7 @@ nadp_reader_iimporter_import_from_uri( const FMAIImporter *instance, void *parms
 	ndf = fma_desktop_file_new_from_uri( parms->uri );
 	if( ndf ){
 		parms->imported = ( FMAObjectItem * ) item_from_desktop_file(
-				( const NadpDesktopProvider * ) NADP_DESKTOP_PROVIDER( instance ),
+				( const FMADesktopProvider * ) FMA_DESKTOP_PROVIDER( instance ),
 				ndf, &parms->messages );
 
 		if( parms->imported ){
@@ -424,10 +424,10 @@ nadp_reader_ifactory_provider_read_start( const FMAIFactoryProvider *reader, voi
 	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_start";
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ));
-	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
+	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( reader ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( serializable ));
 
-	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
+	if( !FMA_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
 		g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
 				thisfn,
@@ -497,12 +497,12 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 	guint uint_value;
 
 	g_return_val_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ), NULL );
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ), NULL );
+	g_return_val_if_fail( FMA_IS_DESKTOP_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( FMA_IS_IFACTORY_OBJECT( object ), NULL );
 
 	boxed = NULL;
 
-	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
+	if( !FMA_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
 		nrd = ( NadpReaderData * ) reader_data;
 		g_return_val_if_fail( FMA_IS_DESKTOP_FILE( nrd->ndf ), NULL );
@@ -587,10 +587,10 @@ nadp_reader_ifactory_provider_read_done( const FMAIFactoryProvider *reader, void
 	gboolean writable;
 
 	g_return_if_fail( FMA_IS_IFACTORY_PROVIDER( reader ));
-	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
+	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( reader ));
 	g_return_if_fail( FMA_IS_IFACTORY_OBJECT( serializable ));
 
-	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
+	if( !FMA_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
 		g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
 				thisfn,

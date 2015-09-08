@@ -33,7 +33,7 @@
 
 #include <api/fma-extension.h>
 
-#include "nadp-desktop-provider.h"
+#include "fma-desktop-provider.h"
 
 /* the count of GType types provided by this extension
  * each new GType type must
@@ -54,7 +54,7 @@ fma_extension_startup( GTypeModule *module )
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
-	nadp_desktop_provider_register_type( module );
+	fma_desktop_provider_register_type( module );
 
 	return( TRUE );
 }
@@ -90,7 +90,7 @@ fma_extension_list_types( const GType **types )
 
 	g_debug( "%s: types=%p", thisfn, ( void * ) types );
 
-	types_list[0] = NADP_TYPE_DESKTOP_PROVIDER;
+	types_list[0] = FMA_TYPE_DESKTOP_PROVIDER;
 
 	types_list[NADP_TYPES_COUNT] = 0;
 	*types = types_list;

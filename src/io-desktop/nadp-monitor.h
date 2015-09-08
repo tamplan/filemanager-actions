@@ -46,7 +46,7 @@
  * we try to factorize all monitor events before advertizing FMAPivot.
  */
 
-#include "nadp-desktop-provider.h"
+#include "fma-desktop-provider.h"
 
 G_BEGIN_DECLS
 
@@ -77,7 +77,7 @@ typedef struct {
 
 GType        nadp_monitor_get_type( void );
 
-NadpMonitor *nadp_monitor_new( const NadpDesktopProvider *provider, const gchar *path );
+NadpMonitor *nadp_monitor_new( const FMADesktopProvider *provider, const gchar *path );
 
 G_END_DECLS
 
