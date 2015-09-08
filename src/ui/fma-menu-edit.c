@@ -44,7 +44,7 @@
 #include "fma-menu.h"
 #include "fma-menu-edit.h"
 #include "fma-tree-ieditable.h"
-#include "nact-tree-view.h"
+#include "fma-tree-view.h"
 
 static GList  *prepare_for_paste( FMAMainWindow *window, sMenuData *sdata );
 static GList  *get_deletables( FMAUpdater *updater, GList *tree, GSList **not_deletable );
@@ -207,7 +207,7 @@ fma_menu_edit_cut( FMAMainWindow *main_window )
 	FMAClipboard *clipboard;
 	GList *to_delete;
 	GSList *ndeletables;
-	NactTreeView *view;
+	FMATreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
@@ -289,7 +289,7 @@ fma_menu_edit_paste( FMAMainWindow *main_window )
 	static const gchar *thisfn = "fma_menu_edit_paste";
 	sMenuData *sdata;
 	GList *items;
-	NactTreeView *view;
+	FMATreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
@@ -325,7 +325,7 @@ fma_menu_edit_paste_into( FMAMainWindow *main_window )
 	static const gchar *thisfn = "fma_menu_edit_paste_into";
 	sMenuData *sdata;
 	GList *items;
-	NactTreeView *view;
+	FMATreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
@@ -397,7 +397,7 @@ fma_menu_edit_duplicate( FMAMainWindow *main_window )
 	GList *dup;
 	FMAObject *obj;
 	gboolean relabel;
-	NactTreeView *view;
+	FMATreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
@@ -453,7 +453,7 @@ fma_menu_edit_delete( FMAMainWindow *main_window )
 	GList *items;
 	GList *to_delete;
 	GSList *ndeletables;
-	NactTreeView *view;
+	FMATreeView *view;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));

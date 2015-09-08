@@ -577,7 +577,7 @@ drop_inside( FMATreeModel *model, GtkTreePath *dest, GtkSelectionData  *selectio
 	GtkTreeIter iter;
 	GList *deletable;
 	gboolean relabel;
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 
 	application = FMA_APPLICATION( gtk_window_get_application( GTK_WINDOW( model->private->window )));
 	updater = fma_application_get_updater( application );
@@ -873,7 +873,7 @@ drop_uri_list( FMATreeModel *model, GtkTreePath *dest, GtkSelectionData  *select
 	GSList *im;
 	GList *imported, *overriden;
 	const gchar *selection_data_data;
-	NactTreeView *view;
+	FMATreeView *view;
 	GSList *messages;
 	gchar *dlg_message;
 	GtkWidget *dialog;
@@ -993,11 +993,11 @@ drop_uri_list( FMATreeModel *model, GtkTreePath *dest, GtkSelectionData  *select
 static FMAObjectItem *
 is_dropped_already_exists( const FMAObjectItem *importing, const FMAMainWindow *window )
 {
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 
 	gchar *id = fma_object_get_id( importing );
 	items_view = fma_main_window_get_items_view( window );
-	FMAObjectItem *exists = nact_tree_view_get_item_by_id( items_view, id );
+	FMAObjectItem *exists = fma_tree_view_get_item_by_id( items_view, id );
 	g_free( id );
 
 	return( exists );

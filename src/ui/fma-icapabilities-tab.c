@@ -59,7 +59,7 @@ static void    interface_base_init( FMAICapabilitiesTabInterface *klass );
 static void    interface_base_finalize( FMAICapabilitiesTabInterface *klass );
 static void    initialize_gtk( FMAICapabilitiesTab *instance );
 static void    initialize_window( FMAICapabilitiesTab *instance );
-static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAICapabilitiesTab *instance );
+static void    on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAICapabilitiesTab *instance );
 static void    on_add_clicked( GtkButton *button, FMAICapabilitiesTab *instance );
 static GSList *get_capabilities( FMAIContext *context );
 static void    set_capabilities( FMAIContext *context, GSList *list );
@@ -189,7 +189,7 @@ static void
 initialize_window( FMAICapabilitiesTab *instance )
 {
 	static const gchar *thisfn = "fma_icapabilities_tab_initialize_window";
-	NactTreeView *tview;
+	FMATreeView *tview;
 
 	g_return_if_fail( FMA_IS_ICAPABILITIES_TAB( instance ));
 
@@ -204,7 +204,7 @@ initialize_window( FMAICapabilitiesTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAICapabilitiesTab *instance )
+on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAICapabilitiesTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;

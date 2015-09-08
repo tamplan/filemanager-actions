@@ -63,7 +63,7 @@ static void    interface_base_init( FMAIFoldersTabInterface *klass );
 static void    interface_base_finalize( FMAIFoldersTabInterface *klass );
 static void    initialize_gtk( FMAIFoldersTab *instance );
 static void    initialize_window( FMAIFoldersTab *instance );
-static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIFoldersTab *instance );
+static void    on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIFoldersTab *instance );
 static void    on_browse_folder_clicked( GtkButton *button, FMAIFoldersTab *instance );
 static GSList *get_folders( void *context );
 static void    set_folders( void *context, GSList *filters );
@@ -193,7 +193,7 @@ static void
 initialize_window( FMAIFoldersTab *instance )
 {
 	static const gchar *thisfn = "fma_ifolders_tab_initialize_window";
-	NactTreeView *tview;
+	FMATreeView *tview;
 
 	g_return_if_fail( FMA_IS_IFOLDERS_TAB( instance ));
 
@@ -212,7 +212,7 @@ initialize_window( FMAIFoldersTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIFoldersTab *instance )
+on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIFoldersTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;

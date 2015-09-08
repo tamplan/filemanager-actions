@@ -69,7 +69,7 @@ static GType            register_type( void );
 static void             interface_base_init( FMAIPropertiesTabInterface *klass );
 static void             interface_base_finalize( FMAIPropertiesTabInterface *klass );
 static void             initialize_window( FMAIPropertiesTab *instance );
-static void             on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIPropertiesTab *instance );
+static void             on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIPropertiesTab *instance );
 static void             on_main_item_updated( FMAIPropertiesTab *instance, FMAIContext *context, guint data, void *empty );
 static GtkButton       *get_enabled_button( FMAIPropertiesTab *instance );
 static void             on_enabled_toggled( GtkToggleButton *button, FMAIPropertiesTab *instance );
@@ -184,7 +184,7 @@ initialize_window( FMAIPropertiesTab *instance )
 	GtkButton *enabled_button;
 	GtkWidget *label_widget;
 	GtkTextBuffer *buffer;
-	NactTreeView *tview;
+	FMATreeView *tview;
 
 	g_return_if_fail( FMA_IS_IPROPERTIES_TAB( instance ));
 
@@ -220,7 +220,7 @@ initialize_window( FMAIPropertiesTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIPropertiesTab *instance )
+on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIPropertiesTab *instance )
 {
 	static const gchar *thisfn = "fma_iproperties_tab_on_tree_selection_changed";
 	guint count_selected;

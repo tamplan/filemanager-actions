@@ -47,7 +47,7 @@
 #include "fma-main-window.h"
 #include "fma-iaction-tab.h"
 #include "fma-icon-chooser.h"
-#include "nact-tree-view.h"
+#include "fma-tree-view.h"
 
 /* private interface data
  */
@@ -76,7 +76,7 @@ static void         interface_base_finalize( FMAIActionTabInterface *klass );
 static void         initialize_gtk( FMAIActionTab *instance );
 static void         initialize_window( FMAIActionTab *instance );
 static void         on_main_item_updated( FMAIActionTab *instance, FMAIContext *context, guint data, void *empty );
-static void         on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIActionTab *instance );
+static void         on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIActionTab *instance );
 static void         on_target_selection_toggled( GtkToggleButton *button, FMAIActionTab *instance );
 static void         on_target_location_toggled( GtkToggleButton *button, FMAIActionTab *instance );
 static void         check_for_label( FMAIActionTab *instance, GtkEntry *entry, const gchar *label );
@@ -234,7 +234,7 @@ static void
 initialize_window( FMAIActionTab *instance )
 {
 	static const gchar *thisfn = "fma_iaction_tab_initialize_window";
-	NactTreeView *tview;
+	FMATreeView *tview;
 
 	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 
@@ -330,7 +330,7 @@ on_main_item_updated( FMAIActionTab *instance, FMAIContext *context, guint data,
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIActionTab *instance )
+on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIActionTab *instance )
 {
 	static const gchar *thisfn = "fma_iaction_tab_on_tree_selection_changed";
 	guint count_selected;

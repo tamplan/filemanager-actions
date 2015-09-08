@@ -46,7 +46,7 @@
 #include "fma-menu-tools.h"
 */
 #include "fma-preferences-editor.h"
-#include "nact-tree-view.h"
+#include "fma-tree-view.h"
 
 static const gchar *st_uixml_actions    = PKGUIDIR "/fma-ui.actions";
 static const gchar *st_ui_app_menu      = "app-menu";
@@ -180,13 +180,13 @@ static sActionEntry st_menubar_entries[] = {
 };
 
 static void       free_menu_data( sMenuData *sdata );
-static void       on_open_context_menu( NactTreeView *treeview, GdkEventButton *event, FMAMainWindow *window );
+static void       on_open_context_menu( FMATreeView *treeview, GdkEventButton *event, FMAMainWindow *window );
 static void       on_popup_selection_done( GtkMenuShell *menushell, FMAMainWindow *window );
-static void       on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, gint actions, gint profiles, FMAMainWindow *window );
-static void       on_tree_view_focus_in( NactTreeView *treeview, FMAMainWindow *window );
-static void       on_tree_view_focus_out( NactTreeView *treeview, FMAMainWindow *window );
-static void       on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, FMAMainWindow *window );
-static void       on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, FMAMainWindow *window );
+static void       on_tree_view_count_changed( FMATreeView *treeview, gboolean reset, gint menus, gint actions, gint profiles, FMAMainWindow *window );
+static void       on_tree_view_focus_in( FMATreeView *treeview, FMAMainWindow *window );
+static void       on_tree_view_focus_out( FMATreeView *treeview, FMAMainWindow *window );
+static void       on_tree_view_modified_status_changed( FMATreeView *treeview, gboolean is_modified, FMAMainWindow *window );
+static void       on_tree_view_selection_changed( FMATreeView *treeview, GList *selected, FMAMainWindow *window );
 static void       on_update_sensitivities( FMAMainWindow *window, void *empty );
 
 /**
@@ -308,7 +308,7 @@ fma_menu_win( FMAMainWindow *main_window )
 	static const gchar *thisfn = "fma_menu_win";
 	gint i;
 	GtkApplication *application;
-	NactTreeView *treeview;
+	FMATreeView *treeview;
 	sMenuData *sdata;
 
 	sdata = fma_menu_get_data( main_window );
@@ -402,7 +402,7 @@ free_menu_data( sMenuData *sdata )
  * Opens a popup menu.
  */
 static void
-on_open_context_menu( NactTreeView *treeview, GdkEventButton *event, FMAMainWindow *window )
+on_open_context_menu( FMATreeView *treeview, GdkEventButton *event, FMAMainWindow *window )
 {
 	sMenuData *sdata;
 
@@ -438,7 +438,7 @@ on_popup_selection_done( GtkMenuShell *menushell, FMAMainWindow *window )
  * that we are knowing if we have some exportables
  */
 static void
-on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, gint actions, gint profiles, FMAMainWindow *window )
+on_tree_view_count_changed( FMATreeView *treeview, gboolean reset, gint menus, gint actions, gint profiles, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "fma_menu_on_tree_view_count_changed";
 	sMenuData *sdata;
@@ -477,7 +477,7 @@ on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, 
 }
 
 static void
-on_tree_view_focus_in( NactTreeView *treeview, FMAMainWindow *window )
+on_tree_view_focus_in( FMATreeView *treeview, FMAMainWindow *window )
 {
 	sMenuData *sdata;
 
@@ -488,7 +488,7 @@ on_tree_view_focus_in( NactTreeView *treeview, FMAMainWindow *window )
 }
 
 static void
-on_tree_view_focus_out( NactTreeView *treeview, FMAMainWindow *window )
+on_tree_view_focus_out( FMATreeView *treeview, FMAMainWindow *window )
 {
 	sMenuData *sdata;
 
@@ -502,7 +502,7 @@ on_tree_view_focus_out( NactTreeView *treeview, FMAMainWindow *window )
  * the count of modified FMAObjectItem has changed
  */
 static void
-on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, FMAMainWindow *window )
+on_tree_view_modified_status_changed( FMATreeView *treeview, gboolean is_modified, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "fma_menu_on_tree_view_modified_status_changed";
 	sMenuData *sdata;
@@ -529,7 +529,7 @@ on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modifi
  * of applying to valid candidates, and rejecting the others.
  */
 static void
-on_tree_view_selection_changed( NactTreeView *treeview, GList *selected, FMAMainWindow *window )
+on_tree_view_selection_changed( FMATreeView *treeview, GList *selected, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "fma_menu_on_tree_view_selection_changed";
 	sMenuData *sdata;
@@ -677,12 +677,12 @@ on_win_brief_tree_store_dump( GSimpleAction *action, GVariant *parameter, gpoint
 static void
 on_win_collapse_all( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 
 	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 
 	items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( user_data ));
-	nact_tree_view_collapse_all( items_view );
+	fma_tree_view_collapse_all( items_view );
 }
 
 static void
@@ -728,12 +728,12 @@ on_win_duplicate( GSimpleAction *action, GVariant *parameter, gpointer user_data
 static void
 on_win_expand_all( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 
 	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
 
 	items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( user_data ));
-	nact_tree_view_expand_all( items_view );
+	fma_tree_view_expand_all( items_view );
 }
 
 static void

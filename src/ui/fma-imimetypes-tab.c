@@ -59,7 +59,7 @@ static void    interface_base_init( FMAIMimetypesTabInterface *klass );
 static void    interface_base_finalize( FMAIMimetypesTabInterface *klass );
 static void    initialize_gtk( FMAIMimetypesTab *instance );
 static void    initialize_window( FMAIMimetypesTab *instance );
-static void    on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIMimetypesTab *instance );
+static void    on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIMimetypesTab *instance );
 static GSList *get_mimetypes( void *context );
 static void    set_mimetypes( void *context, GSList *filters );
 static void    on_instance_finalized( gpointer user_data, FMAIMimetypesTab *instance );
@@ -201,7 +201,7 @@ static void
 initialize_window( FMAIMimetypesTab *instance )
 {
 	static const gchar *thisfn = "fma_imimetypes_tab_initialize_window";
-	NactTreeView *tview;
+	FMATreeView *tview;
 
 	g_return_if_fail( FMA_IS_IMIMETYPES_TAB( instance ));
 
@@ -216,7 +216,7 @@ initialize_window( FMAIMimetypesTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIMimetypesTab *instance )
+on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIMimetypesTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;

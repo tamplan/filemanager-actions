@@ -93,7 +93,7 @@ static ColumnHeaderStruct st_match_headers[] = {
 
 static void         create_tree_model( MatchListData *data );
 static void         initialize_window( MatchListData *data );
-static void         on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchListData *data );
+static void         on_tree_selection_changed( FMATreeView *treeview, GList *selected_items, MatchListData *data );
 
 static void         on_add_filter_clicked( GtkButton *button, MatchListData *data );
 static void         on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data );
@@ -258,7 +258,7 @@ initialize_window( MatchListData *data )
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	GtkTreeModel *model;
-	NactTreeView *treeview;
+	FMATreeView *treeview;
 
 	g_return_if_fail( data != NULL );
 
@@ -324,7 +324,7 @@ initialize_window( MatchListData *data )
  * - update the object with a summary of the listbox contents
  */
 static void
-on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchListData *data )
+on_tree_selection_changed( FMATreeView *treeview, GList *selected_items, MatchListData *data )
 {
 	static const gchar *thisfn = "fma_match_list_on_tree_selection_changed";
 	FMAIContext *context;
@@ -335,7 +335,7 @@ on_tree_selection_changed( NactTreeView *treeview, GList *selected_items, MatchL
 	GtkTreeViewColumn *column;
 	GtkTreePath *path;
 
-	g_return_if_fail( treeview && NACT_IS_TREE_VIEW( treeview ));
+	g_return_if_fail( treeview && FMA_IS_TREE_VIEW( treeview ));
 	g_return_if_fail( data != NULL );
 
 	g_object_get( G_OBJECT( data->window ),

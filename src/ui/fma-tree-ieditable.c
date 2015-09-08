@@ -42,7 +42,7 @@
 #include "fma-main-window.h"
 #include "fma-tree-ieditable.h"
 #include "fma-tree-model.h"
-#include "nact-tree-view.h"
+#include "fma-tree-view.h"
 
 /* private interface data
  */
@@ -50,7 +50,7 @@ struct _FMATreeIEditableInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-/* data attached to the NactTreeView
+/* data attached to the FMATreeView
  */
 typedef struct {
 	FMAUpdater     *updater;
@@ -74,7 +74,7 @@ static GType          register_type( void );
 static void           interface_base_init( FMATreeIEditableInterface *klass );
 static void           interface_base_finalize( FMATreeIEditableInterface *klass );
 static gboolean       on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, FMATreeIEditable *instance );
-static void           on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, NactTreeView *items_view );
+static void           on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, FMATreeView *items_view );
 static void           on_tree_view_selection_changed( FMATreeIEditable *view, GList *selected_items, void *empty );
 static void           on_object_modified_status_changed( FMATreeIEditable *view, FMAObject *object, gboolean new_status, void *empty );
 static void           on_object_valid_status_changed( FMATreeIEditable *view, FMAObject *object, gboolean new_status, void *empty );
@@ -126,7 +126,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "FMATreeIEditable", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, NACT_TYPE_TREE_VIEW );
+	g_type_interface_add_prerequisite( type, FMA_TYPE_TREE_VIEW );
 
 	return( type );
 }
@@ -163,7 +163,7 @@ interface_base_finalize( FMATreeIEditableInterface *klass )
 
 /**
  * fma_tree_ieditable_initialize:
- * @instance: the #NactTreeView which implements this interface.
+ * @instance: the #FMATreeView which implements this interface.
  * @treeview: the embedded #GtkTreeView tree view.
  * @window: the #BaseWindow which embeds the @instance.
  *
@@ -231,7 +231,7 @@ fma_tree_ieditable_initialize( FMATreeIEditable *instance, GtkTreeView *treeview
 
 /**
  * fma_tree_ieditable_terminate:
- * @instance: the #NactTreeView which implements this interface.
+ * @instance: the #FMATreeView which implements this interface.
  *
  * Free the data when application quits.
  */
@@ -277,13 +277,13 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, FMATreeIEditable *i
  *   data = object_at_row + new_label
  */
 static void
-on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, NactTreeView *items_view )
+on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, FMATreeView *items_view )
 {
 	IEditableData *ied;
 	FMAObject *object;
 	GtkTreePath *path;
 
-	if( nact_tree_view_are_notify_allowed( items_view )){
+	if( fma_tree_view_are_notify_allowed( items_view )){
 		ied = ( IEditableData * ) g_object_get_data( G_OBJECT( items_view ), VIEW_DATA_IEDITABLE );
 		path = gtk_tree_path_new_from_string( path_str );
 		object = fma_tree_model_object_at_path( ied->model, path );
@@ -339,7 +339,7 @@ on_object_modified_status_changed( FMATreeIEditable *instance, FMAObject *object
 		}
 	}
 
-	if( nact_tree_view_are_notify_allowed( NACT_TREE_VIEW( instance ))){
+	if( fma_tree_view_are_notify_allowed( FMA_TREE_VIEW( instance ))){
 		status = get_modification_status( ied );
 		if( status != prev_status ){
 			g_signal_emit_by_name( instance, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
@@ -377,7 +377,7 @@ on_tree_view_level_zero_changed( FMATreeIEditable *view, gboolean is_modified, v
 	prev_status = get_modification_status( ied );
 	ied->level_zero_changed = is_modified;
 
-	if( nact_tree_view_are_notify_allowed( NACT_TREE_VIEW( view ))){
+	if( fma_tree_view_are_notify_allowed( FMA_TREE_VIEW( view ))){
 		status = get_modification_status( ied );
 		if( prev_status != status ){
 			g_signal_emit_by_name( view, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
@@ -437,7 +437,7 @@ fma_tree_ieditable_delete( FMATreeIEditable *instance, GList *items, TreeIEditab
 	g_debug( "%s: instance=%p, items=%p (count=%d), ope=%u",
 			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ), ope );
 
-	nact_tree_view_set_notify_allowed( NACT_TREE_VIEW( instance ), FALSE );
+	fma_tree_view_set_notify_allowed( FMA_TREE_VIEW( instance ), FALSE );
 	ied = get_instance_data( instance );
 	prev_status = get_modification_status( ied );
 
@@ -473,11 +473,11 @@ fma_tree_ieditable_delete( FMATreeIEditable *instance, GList *items, TreeIEditab
 
 	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( ied->model ));
 
-	nact_tree_view_set_notify_allowed( NACT_TREE_VIEW( instance ), TRUE );
+	fma_tree_view_set_notify_allowed( FMA_TREE_VIEW( instance ), TRUE );
 
 	if( path ){
 		if( ope == TREE_OPE_DELETE ){
-			nact_tree_view_select_row_at_path( NACT_TREE_VIEW( instance ), path );
+			fma_tree_view_select_row_at_path( FMA_TREE_VIEW( instance ), path );
 		}
 		gtk_tree_path_free( path );
 	}
@@ -720,7 +720,7 @@ fma_tree_ieditable_insert_at_path( FMATreeIEditable *instance, GList *items, Gtk
 	g_debug( "%s: instance=%p, items=%p (count=%d)",
 		thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
 
-	nact_tree_view_set_notify_allowed( NACT_TREE_VIEW( instance ), FALSE );
+	fma_tree_view_set_notify_allowed( FMA_TREE_VIEW( instance ), FALSE );
 	ied = get_instance_data( instance );
 	prev_status = get_modification_status( ied );
 
@@ -742,11 +742,11 @@ fma_tree_ieditable_insert_at_path( FMATreeIEditable *instance, GList *items, Gtk
 	if( prev_status != status ){
 		g_signal_emit_by_name( instance, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
 	}
-	nact_tree_view_set_notify_allowed( NACT_TREE_VIEW( instance ), TRUE );
+	fma_tree_view_set_notify_allowed( FMA_TREE_VIEW( instance ), TRUE );
 
 	increment_counters( instance, ied, items );
 	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( ied->model ));
-	nact_tree_view_select_row_at_path( NACT_TREE_VIEW( instance ), actual_path );
+	fma_tree_view_select_row_at_path( FMA_TREE_VIEW( instance ), actual_path );
 	gtk_tree_path_free( actual_path );
 }
 
@@ -795,7 +795,7 @@ fma_tree_ieditable_insert_into( FMATreeIEditable *instance, GList *items )
 	 */
 	increment_counters( instance, ied, items );
 	gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( ied->model ));
-	nact_tree_view_select_row_at_path( NACT_TREE_VIEW( instance ), new_path );
+	fma_tree_view_select_row_at_path( FMA_TREE_VIEW( instance ), new_path );
 	gtk_tree_path_free( new_path );
 	gtk_tree_path_free( insert_path );
 }
@@ -948,7 +948,7 @@ fma_tree_ieditable_set_items( FMATreeIEditable *instance, GList *items )
 		new_item = FMA_OBJECT_ITEM( it->data );
 
 		id = fma_object_get_id( new_item );
-		old_item = nact_tree_view_get_item_by_id( NACT_TREE_VIEW( instance ), id );
+		old_item = fma_tree_view_get_item_by_id( FMA_TREE_VIEW( instance ), id );
 
 		if( !old_item ){
 			g_warning( "%s: id=%s: item not found - ignored", thisfn, id );
@@ -1040,7 +1040,7 @@ check_level_zero_status( FMATreeIEditable *instance )
 	items = fma_pivot_get_items( FMA_PIVOT( ied->updater ));
 	pivot_str = get_items_id_list_str( items );
 
-	items = nact_tree_view_get_items( NACT_TREE_VIEW( instance ));
+	items = fma_tree_view_get_items( FMA_TREE_VIEW( instance ));
 	view_str = get_items_id_list_str( items );
 	fma_object_free_items( items );
 

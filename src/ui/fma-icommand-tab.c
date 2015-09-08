@@ -78,7 +78,7 @@ static void          interface_base_finalize( FMAICommandTabInterface *klass );
 static void          initialize_gtk( FMAICommandTab *instance );
 static void          initialize_window( FMAICommandTab *instance );
 static void          on_main_item_updated( FMAICommandTab *instance, FMAIContext *context, guint data, void *empty );
-static void          on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAICommandTab *instance );
+static void          on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAICommandTab *instance );
 static GtkWidget    *get_label_entry( FMAICommandTab *instance );
 static GtkButton    *get_legend_button( FMAICommandTab *instance );
 static GtkWindow    *get_legend_dialog( FMAICommandTab *instance );
@@ -221,7 +221,7 @@ initialize_window( FMAICommandTab *instance )
 	GtkWidget *label_entry, *path_entry, *parameters_entry;
 	GtkButton *legend_button, *path_button;
 	ICommandData *data;
-	NactTreeView *tview;
+	FMATreeView *tview;
 
 	g_return_if_fail( FMA_IS_ICOMMAND_TAB( instance ));
 
@@ -305,7 +305,7 @@ on_main_item_updated( FMAICommandTab *instance, FMAIContext *context, guint data
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAICommandTab *instance )
+on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAICommandTab *instance )
 {
 	static const gchar *thisfn = "fma_icommand_tab_on_tree_selection_changed";
 	FMAObjectProfile *profile;

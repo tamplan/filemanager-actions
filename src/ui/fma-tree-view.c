@@ -40,18 +40,18 @@
 #include "base-keysyms.h"
 #include "fma-application.h"
 #include "fma-main-window.h"
-#include "nact-tree-view.h"
+#include "fma-tree-view.h"
 #include "fma-tree-model.h"
 #include "fma-tree-ieditable.h"
 
 /* private instance data
  */
-struct _NactTreeViewPrivate {
+struct _FMATreeViewPrivate {
 	gboolean        dispose_has_run;
 
 	/* properties set at instanciation time
 	 */
-	FMAMainWindow *window;
+	FMAMainWindow  *window;
 
 	/* initialization
 	 */
@@ -89,41 +89,41 @@ enum {
 
 /* iter on selection prototype
  */
-typedef gboolean ( *FnIterOnSelection )( NactTreeView *, GtkTreeModel *, GtkTreeIter *, FMAObject *, gpointer );
+typedef gboolean ( *FnIterOnSelection )( FMATreeView *, GtkTreeModel *, GtkTreeIter *, FMAObject *, gpointer );
 
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 static GObjectClass *st_parent_class           = NULL;
 
 static GType      register_type( void );
-static void       class_init( NactTreeViewClass *klass );
+static void       class_init( FMATreeViewClass *klass );
 static void       tree_ieditable_iface_init( FMATreeIEditableInterface *iface, void *user_data );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_dispose( GObject *application );
 static void       instance_finalize( GObject *application );
-static void       initialize_gtk( NactTreeView *view );
-static gboolean   on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactTreeView *view );
-static gboolean   on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactTreeView *view );
-static gboolean   on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactTreeView *view );
-static gboolean   on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactTreeView *view );
-static gboolean   on_popup_menu( GtkWidget *widget, NactTreeView *view );
-static void       on_selection_changed( GtkTreeSelection *selection, NactTreeView *view );
-static void       on_tree_view_realized( NactTreeView *treeview, void *empty );
-static void       clear_selection( NactTreeView *view );
-static void       on_selection_changed_cleanup_handler( NactTreeView *tview, GList *selected_items );
-static void       display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactTreeView *view );
-static void       extend_selection_to_children( NactTreeView *view, GtkTreeModel *model, GtkTreeIter *parent );
-static GList     *get_selected_items( NactTreeView *view );
-static void       iter_on_selection( NactTreeView *view, FnIterOnSelection fn_iter, gpointer user_data );
-static void       navigate_to_child( NactTreeView *view );
-static void       navigate_to_parent( NactTreeView *view );
-static void       do_open_popup( NactTreeView *view, GdkEventButton *event );
-static void       select_row_at_path_by_string( NactTreeView *view, const gchar *path );
-static void       toggle_collapse( NactTreeView *view );
-static gboolean   toggle_collapse_iter( NactTreeView *view, GtkTreeModel *model, GtkTreeIter *iter, FMAObject *object, gpointer user_data );
+static void       initialize_gtk( FMATreeView *view );
+static gboolean   on_button_press_event( GtkWidget *widget, GdkEventButton *event, FMATreeView *view );
+static gboolean   on_focus_in( GtkWidget *widget, GdkEventFocus *event, FMATreeView *view );
+static gboolean   on_focus_out( GtkWidget *widget, GdkEventFocus *event, FMATreeView *view );
+static gboolean   on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, FMATreeView *view );
+static gboolean   on_popup_menu( GtkWidget *widget, FMATreeView *view );
+static void       on_selection_changed( GtkTreeSelection *selection, FMATreeView *view );
+static void       on_tree_view_realized( FMATreeView *treeview, void *empty );
+static void       clear_selection( FMATreeView *view );
+static void       on_selection_changed_cleanup_handler( FMATreeView *tview, GList *selected_items );
+static void       display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, FMATreeView *view );
+static void       extend_selection_to_children( FMATreeView *view, GtkTreeModel *model, GtkTreeIter *parent );
+static GList     *get_selected_items( FMATreeView *view );
+static void       iter_on_selection( FMATreeView *view, FnIterOnSelection fn_iter, gpointer user_data );
+static void       navigate_to_child( FMATreeView *view );
+static void       navigate_to_parent( FMATreeView *view );
+static void       do_open_popup( FMATreeView *view, GdkEventButton *event );
+static void       select_row_at_path_by_string( FMATreeView *view, const gchar *path );
+static void       toggle_collapse( FMATreeView *view );
+static gboolean   toggle_collapse_iter( FMATreeView *view, GtkTreeModel *model, GtkTreeIter *iter, FMAObject *object, gpointer user_data );
 static void       toggle_collapse_row( GtkTreeView *treeview, GtkTreePath *path, guint *toggle );
 
 GType
-nact_tree_view_get_type( void )
+fma_tree_view_get_type( void )
 {
 	static GType type = 0;
 
@@ -144,32 +144,32 @@ nact_tree_view_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_tree_view_register_type";
+	static const gchar *thisfn = "fma_tree_view_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactTreeViewClass ),
+		sizeof( FMATreeViewClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactTreeView ),
+		sizeof( FMATreeView ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( GTK_TYPE_BIN, "NactTreeView", &info, 0 );
+	type = g_type_register_static( GTK_TYPE_BIN, "FMATreeView", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactTreeViewClass *klass )
+class_init( FMATreeViewClass *klass )
 {
-	static const gchar *thisfn = "nact_tree_view_class_init";
+	static const gchar *thisfn = "fma_tree_view_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -181,7 +181,7 @@ class_init( NactTreeViewClass *klass )
 	object_class->finalize = instance_finalize;
 
 	/**
-	 * NactTreeView::tree-signal-count-changed:
+	 * FMATreeView::tree-signal-count-changed:
 	 *
 	 * This signal is emitted on BaseWindow parent when the count of items
 	 * has changed in the underlying tree store.
@@ -208,7 +208,7 @@ class_init( NactTreeViewClass *klass )
 	 */
 	st_signals[ COUNT_CHANGED ] = g_signal_new(
 			TREE_SIGNAL_COUNT_CHANGED,
-			NACT_TYPE_TREE_VIEW,
+			FMA_TYPE_TREE_VIEW,
 			G_SIGNAL_RUN_LAST,
 			0,						/* no default handler */
 			NULL,
@@ -219,7 +219,7 @@ class_init( NactTreeViewClass *klass )
 			G_TYPE_BOOLEAN, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT );
 
 	/**
-	 * NactTreeView::tree-signal-focus-in:
+	 * FMATreeView::tree-signal-focus-in:
 	 *
 	 * This signal is emitted on the window when the view gains the focus.
 	 * In particular, edition menu is disabled outside of the treeview.
@@ -231,7 +231,7 @@ class_init( NactTreeViewClass *klass )
 	 */
 	st_signals[ FOCUS_IN ] = g_signal_new(
 			TREE_SIGNAL_FOCUS_IN,
-			NACT_TYPE_TREE_VIEW,
+			FMA_TYPE_TREE_VIEW,
 			G_SIGNAL_RUN_LAST,
 			0,
 			NULL,
@@ -241,7 +241,7 @@ class_init( NactTreeViewClass *klass )
 			0 );
 
 	/**
-	 * NactTreeView::tree-signal-focus-out:
+	 * FMATreeView::tree-signal-focus-out:
 	 *
 	 * This signal is emitted on the window when the view loses the focus.
 	 * In particular, edition menu is disabled outside of the treeview.
@@ -253,7 +253,7 @@ class_init( NactTreeViewClass *klass )
 	 */
 	st_signals[ FOCUS_OUT ] = g_signal_new(
 			TREE_SIGNAL_FOCUS_OUT,
-			NACT_TYPE_TREE_VIEW,
+			FMA_TYPE_TREE_VIEW,
 			G_SIGNAL_RUN_LAST,
 			0,
 			NULL,
@@ -263,7 +263,7 @@ class_init( NactTreeViewClass *klass )
 			0 );
 
 	/**
-	 * NactTreeView::tree-signal-level-zero-changed:
+	 * FMATreeView::tree-signal-level-zero-changed:
 	 *
 	 * This signal is emitted on the BaseWindow each time the level zero
 	 * has changed because an item has been removed or inserted, or when
@@ -278,7 +278,7 @@ class_init( NactTreeViewClass *klass )
 	 */
 	st_signals[ LEVEL_ZERO_CHANGED ] = g_signal_new(
 			TREE_SIGNAL_LEVEL_ZERO_CHANGED,
-			NACT_TYPE_TREE_VIEW,
+			FMA_TYPE_TREE_VIEW,
 			G_SIGNAL_RUN_LAST,
 			0,					/* no default handler */
 			NULL,
@@ -289,7 +289,7 @@ class_init( NactTreeViewClass *klass )
 			G_TYPE_BOOLEAN );
 
 	/**
-	 * NactTreeView::tree-signal-modified-status-changed:
+	 * FMATreeView::tree-signal-modified-status-changed:
 	 *
 	 * This signal is emitted on the BaseWindow when the view detects that
 	 * the count of modified FMAObjectItems has changed, when an item is
@@ -306,7 +306,7 @@ class_init( NactTreeViewClass *klass )
 	 */
 	st_signals[ MODIFIED_STATUS ] = g_signal_new(
 			TREE_SIGNAL_MODIFIED_STATUS_CHANGED,
-			NACT_TYPE_TREE_VIEW,
+			FMA_TYPE_TREE_VIEW,
 			G_SIGNAL_RUN_LAST,
 			0,
 			NULL,
@@ -317,7 +317,7 @@ class_init( NactTreeViewClass *klass )
 			G_TYPE_BOOLEAN );
 
 	/**
-	 * NactTreeView::tree-selection-changed:
+	 * FMATreeView::tree-selection-changed:
 	 *
 	 * This signal is emitted on the treeview each time the selection
 	 * has changed after having set the current item/profile/context
@@ -331,13 +331,13 @@ class_init( NactTreeViewClass *klass )
 	 * - a #GList of currently selected #FMAObjectItems.
 	 *
 	 * Handler prototype:
-	 *   void handler( NactTreeView *tview,
+	 *   void handler( FMATreeView *tview,
 	 *   				GList       *selected,
 	 *   				void        *user_data );
 	 */
 	st_signals[ SELECTION_CHANGED ] = g_signal_new_class_handler(
 			TREE_SIGNAL_SELECTION_CHANGED,
-			NACT_TYPE_TREE_VIEW,
+			FMA_TYPE_TREE_VIEW,
 			G_SIGNAL_RUN_CLEANUP,
 			G_CALLBACK( on_selection_changed_cleanup_handler ),
 			NULL,
@@ -348,7 +348,7 @@ class_init( NactTreeViewClass *klass )
 			G_TYPE_POINTER );
 
 	/**
-	 * NactTreeView::tree-signal-open-popup
+	 * FMATreeView::tree-signal-open-popup
 	 *
 	 * This signal is emitted on the treeview when the user right
 	 * clicks somewhere (on an active zone).
@@ -357,13 +357,13 @@ class_init( NactTreeViewClass *klass )
 	 * - the GdkEvent
 	 *
 	 * Handler prototype:
-	 *   void handler( NactTreeView *tview,
+	 *   void handler( FMATreeView *tview,
 	 *   				GdkEvent    *event,
 	 *   				void        *user_data );
 	 */
 	st_signals[ OPEN_POPUP ] = g_signal_new(
 			TREE_SIGNAL_CONTEXT_MENU,
-			NACT_TYPE_TREE_VIEW,
+			FMA_TYPE_TREE_VIEW,
 			G_SIGNAL_RUN_LAST,
 			0,
 			NULL,
@@ -385,17 +385,17 @@ tree_ieditable_iface_init( FMATreeIEditableInterface *iface, void *user_data )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_tree_view_instance_init";
-	NactTreeView *self;
+	static const gchar *thisfn = "fma_tree_view_instance_init";
+	FMATreeView *self;
 
-	g_return_if_fail( NACT_IS_TREE_VIEW( instance ));
+	g_return_if_fail( FMA_IS_TREE_VIEW( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NACT_TREE_VIEW( instance );
+	self = FMA_TREE_VIEW( instance );
 
-	self->private = g_new0( NactTreeViewPrivate, 1 );
+	self->private = g_new0( FMATreeViewPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -403,12 +403,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nact_tree_view_instance_dispose";
-	NactTreeView *self;
+	static const gchar *thisfn = "fma_tree_view_instance_dispose";
+	FMATreeView *self;
 
-	g_return_if_fail( NACT_IS_TREE_VIEW( object ));
+	g_return_if_fail( FMA_IS_TREE_VIEW( object ));
 
-	self = NACT_TREE_VIEW( object );
+	self = FMA_TREE_VIEW( object );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
@@ -429,14 +429,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *instance )
 {
-	static const gchar *thisfn = "nact_tree_view_instance_finalize";
-	NactTreeView *self;
+	static const gchar *thisfn = "fma_tree_view_instance_finalize";
+	FMATreeView *self;
 
-	g_return_if_fail( NACT_IS_TREE_VIEW( instance ));
+	g_return_if_fail( FMA_IS_TREE_VIEW( instance ));
 
 	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	self = NACT_TREE_VIEW( instance );
+	self = FMA_TREE_VIEW( instance );
 
 	g_free( self->private );
 
@@ -447,18 +447,18 @@ instance_finalize( GObject *instance )
 }
 
 /**
- * nact_tree_view_new:
+ * fma_tree_view_new:
  *
- * Returns: a newly allocated NactTreeView object, which will be owned
+ * Returns: a newly allocated FMATreeView object, which will be owned
  * by the caller. It is useless to unref it as it will be automatically
  * destroyed at @window finalization.
  */
-NactTreeView *
-nact_tree_view_new( FMAMainWindow *main_window )
+FMATreeView *
+fma_tree_view_new( FMAMainWindow *main_window )
 {
-	NactTreeView *view;
+	FMATreeView *view;
 
-	view = g_object_new( NACT_TYPE_TREE_VIEW, NULL );
+	view = g_object_new( FMA_TYPE_TREE_VIEW, NULL );
 	view->private->window = main_window;
 
 	initialize_gtk( view );
@@ -470,10 +470,10 @@ nact_tree_view_new( FMAMainWindow *main_window )
 }
 
 static void
-initialize_gtk( NactTreeView *view )
+initialize_gtk( FMATreeView *view )
 {
-	static const gchar *thisfn = "nact_tree_view_initialize_gtk";
-	NactTreeViewPrivate *priv;
+	static const gchar *thisfn = "fma_tree_view_initialize_gtk";
+	FMATreeViewPrivate *priv;
 	GtkWidget *scrolled, *tview;
 	FMATreeModel *model;
 	GtkTreeViewColumn *column;
@@ -530,20 +530,20 @@ initialize_gtk( NactTreeView *view )
 }
 
 /**
- * nact_tree_view_set_mnemonic:
- * @view: this #NactTreeView
+ * fma_tree_view_set_mnemonic:
+ * @view: this #FMATreeView
  * @parent: a parent container of the mnemonic label
  * @widget_name: the name of the mnemonic label
  *
  * Setup the mnemonic label
  */
 void
-nact_tree_view_set_mnemonic( NactTreeView *view, GtkContainer *parent, const gchar *widget_name )
+fma_tree_view_set_mnemonic( FMATreeView *view, GtkContainer *parent, const gchar *widget_name )
 {
-	NactTreeViewPrivate *priv;
+	FMATreeViewPrivate *priv;
 	GtkWidget *label;
 
-	g_return_if_fail( view && NACT_IS_TREE_VIEW( view ));
+	g_return_if_fail( view && FMA_IS_TREE_VIEW( view ));
 	g_return_if_fail( widget_name && g_utf8_strlen( widget_name, -1 ));
 
 	priv = view->private;
@@ -557,22 +557,22 @@ nact_tree_view_set_mnemonic( NactTreeView *view, GtkContainer *parent, const gch
 }
 
 /**
- * nact_tree_view_set_edition_mode:
- * @view: this #NactTreeView
+ * fma_tree_view_set_edition_mode:
+ * @view: this #FMATreeView
  * @mode: the edition mode
  *
  * Setup the edition mode
  */
 void
-nact_tree_view_set_edition_mode( NactTreeView *view, guint mode )
+fma_tree_view_set_edition_mode( FMATreeView *view, guint mode )
 {
-	NactTreeViewPrivate *priv;
+	FMATreeViewPrivate *priv;
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	GtkCellRenderer *renderer;
 	GtkTreeModel *tmodel;
 
-	g_return_if_fail( view && NACT_IS_TREE_VIEW( view ));
+	g_return_if_fail( view && FMA_IS_TREE_VIEW( view ));
 
 	priv = view->private;
 
@@ -599,7 +599,7 @@ nact_tree_view_set_edition_mode( NactTreeView *view, guint mode )
 }
 
 static gboolean
-on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactTreeView *view )
+on_button_press_event( GtkWidget *widget, GdkEventButton *event, FMATreeView *view )
 {
 	gboolean stop = FALSE;
 
@@ -619,7 +619,7 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactTreeView *v
  * delete current row in the list!
  */
 static gboolean
-on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactTreeView *view )
+on_focus_in( GtkWidget *widget, GdkEventFocus *event, FMATreeView *view )
 {
 	gboolean stop = FALSE;
 
@@ -629,7 +629,7 @@ on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactTreeView *view )
 }
 
 static gboolean
-on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactTreeView *view )
+on_focus_out( GtkWidget *widget, GdkEventFocus *event, FMATreeView *view )
 {
 	gboolean stop = FALSE;
 
@@ -639,7 +639,7 @@ on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactTreeView *view )
 }
 
 static gboolean
-on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactTreeView *view )
+on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, FMATreeView *view )
 {
 	gboolean stop = FALSE;
 
@@ -663,7 +663,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactTreeView *view 
  * triggered by the "popup-menu" signal, itself triggered by the keybindings
  */
 static gboolean
-on_popup_menu( GtkWidget *widget, NactTreeView *view )
+on_popup_menu( GtkWidget *widget, FMATreeView *view )
 {
 	do_open_popup( view, NULL );
 	return( TRUE );
@@ -672,9 +672,9 @@ on_popup_menu( GtkWidget *widget, NactTreeView *view )
  * handles the "changed" signal emitted on the GtkTreeSelection
  */
 static void
-on_selection_changed( GtkTreeSelection *selection, NactTreeView *view )
+on_selection_changed( GtkTreeSelection *selection, FMATreeView *view )
 {
-	static const gchar *thisfn = "nact_tree_view_on_selection_changed";
+	static const gchar *thisfn = "fma_tree_view_on_selection_changed";
 	GList *selected_items;
 
 	if( view->private->notify_allowed ){
@@ -685,14 +685,14 @@ on_selection_changed( GtkTreeSelection *selection, NactTreeView *view )
 }
 
 /*
- * the NactTreeView is realized
+ * the FMATreeView is realized
  */
 static void
-on_tree_view_realized( NactTreeView *treeview, void *empty )
+on_tree_view_realized( FMATreeView *treeview, void *empty )
 {
-	NactTreeViewPrivate *priv;
+	FMATreeViewPrivate *priv;
 
-	g_debug( "nact_tree_view_on_tree_view_realized" );
+	g_debug( "fma_tree_view_on_tree_view_realized" );
 
 	priv = treeview->private;
 
@@ -721,8 +721,8 @@ on_tree_view_realized( NactTreeView *treeview, void *empty )
 }
 
 /**
- * nact_tree_view_fill:
- * @view: this #NactTreeView instance.
+ * fma_tree_view_fill:
+ * @view: this #FMATreeView instance.
  *
  * Fill the tree view with the provided list of items.
  *
@@ -731,13 +731,13 @@ on_tree_view_realized( NactTreeView *treeview, void *empty )
  * selection-changed messages.
  */
 void
-nact_tree_view_fill( NactTreeView *view, GList *items )
+fma_tree_view_fill( FMATreeView *view, GList *items )
 {
-	static const gchar *thisfn = "nact_tree_view_fill";
+	static const gchar *thisfn = "fma_tree_view_fill";
 	FMATreeModel *model;
 	gint nb_menus, nb_actions, nb_profiles;
 
-	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
+	g_return_if_fail( FMA_IS_TREE_VIEW( view ));
 
 	if( !view->private->dispose_has_run ){
 		g_debug( "%s: view=%p, items=%p (count=%u)",
@@ -759,17 +759,17 @@ nact_tree_view_fill( NactTreeView *view, GList *items )
 }
 
 /**
- * nact_tree_view_are_notify_allowed:
- * @view: this #NactTreeView instance.
+ * fma_tree_view_are_notify_allowed:
+ * @view: this #FMATreeView instance.
  *
  * Returns: %TRUE if notifications are allowed, %FALSE else.
  */
 gboolean
-nact_tree_view_are_notify_allowed( const NactTreeView *view )
+fma_tree_view_are_notify_allowed( const FMATreeView *view )
 {
 	gboolean are_allowed;
 
-	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), FALSE );
+	g_return_val_if_fail( FMA_IS_TREE_VIEW( view ), FALSE );
 
 	are_allowed = FALSE;
 
@@ -782,14 +782,14 @@ nact_tree_view_are_notify_allowed( const NactTreeView *view )
 }
 
 /**
- * nact_tree_view_set_notify_allowed:
- * @view: this #NactTreeView instance.
+ * fma_tree_view_set_notify_allowed:
+ * @view: this #FMATreeView instance.
  * @allow: whether the notifications are to be allowed.
  */
 void
-nact_tree_view_set_notify_allowed( NactTreeView *view, gboolean allow )
+fma_tree_view_set_notify_allowed( FMATreeView *view, gboolean allow )
 {
-	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
+	g_return_if_fail( FMA_IS_TREE_VIEW( view ));
 
 	if( !view->private->dispose_has_run ){
 
@@ -798,15 +798,15 @@ nact_tree_view_set_notify_allowed( NactTreeView *view, gboolean allow )
 }
 
 /**
- * nact_tree_view_collapse_all:
- * @view: this #NactTreeView instance.
+ * fma_tree_view_collapse_all:
+ * @view: this #FMATreeView instance.
  *
  * Collapse all the tree hierarchy.
  */
 void
-nact_tree_view_collapse_all( const NactTreeView *view )
+fma_tree_view_collapse_all( const FMATreeView *view )
 {
-	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
+	g_return_if_fail( FMA_IS_TREE_VIEW( view ));
 
 	if( !view->private->dispose_has_run ){
 
@@ -815,15 +815,15 @@ nact_tree_view_collapse_all( const NactTreeView *view )
 }
 
 /**
- * nact_tree_view_expand_all:
- * @view: this #NactTreeView instance.
+ * fma_tree_view_expand_all:
+ * @view: this #FMATreeView instance.
  *
  * Collapse all the tree hierarchy.
  */
 void
-nact_tree_view_expand_all( const NactTreeView *view )
+fma_tree_view_expand_all( const FMATreeView *view )
 {
-	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
+	g_return_if_fail( FMA_IS_TREE_VIEW( view ));
 
 	if( !view->private->dispose_has_run ){
 
@@ -832,8 +832,8 @@ nact_tree_view_expand_all( const NactTreeView *view )
 }
 
 /**
- * nact_tree_view_get_item_by_id:
- * @view: this #NactTreeView instance.
+ * fma_tree_view_get_item_by_id:
+ * @view: this #FMATreeView instance.
  * @id: the searched #FMAObjectItem.
  *
  * Returns: a pointer on the searched #FMAObjectItem if it exists, or %NULL.
@@ -842,12 +842,12 @@ nact_tree_view_expand_all( const NactTreeView *view )
  * not be released by the caller.
  */
 FMAObjectItem *
-nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id )
+fma_tree_view_get_item_by_id( const FMATreeView *view, const gchar *id )
 {
 	FMAObjectItem *item;
 	FMATreeModel *model;
 
-	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), NULL );
+	g_return_val_if_fail( FMA_IS_TREE_VIEW( view ), NULL );
 
 	item = NULL;
 
@@ -861,34 +861,34 @@ nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id )
 }
 
 /**
- * nact_tree_view_get_items:
- * @view: this #NactTreeView instance.
+ * fma_tree_view_get_items:
+ * @view: this #FMATreeView instance.
  *
  * Returns: the content of the current tree as a newly allocated list
  * which should be fma_object_free_items() by the caller.
  */
 GList *
-nact_tree_view_get_items( const NactTreeView *view )
+fma_tree_view_get_items( const FMATreeView *view )
 {
-	return( nact_tree_view_get_items_ex( view, TREE_LIST_ALL ));
+	return( fma_tree_view_get_items_ex( view, TREE_LIST_ALL ));
 }
 
 /**
- * nact_tree_view_get_items_ex:
- * @view: this #NactTreeView instance.
+ * fma_tree_view_get_items_ex:
+ * @view: this #FMATreeView instance.
  * @mode: the list content
  *
  * Returns: the content of the current tree as a newly allocated list
  * which should be fma_object_free_items() by the caller.
  */
 GList *
-nact_tree_view_get_items_ex( const NactTreeView *view, guint mode )
+fma_tree_view_get_items_ex( const FMATreeView *view, guint mode )
 {
 	GList *items;
 	FMATreeModel *model;
 	GList *deleted;
 
-	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), NULL );
+	g_return_val_if_fail( FMA_IS_TREE_VIEW( view ), NULL );
 
 	items = NULL;
 
@@ -912,8 +912,8 @@ nact_tree_view_get_items_ex( const NactTreeView *view, guint mode )
 }
 
 /**
- * nact_tree_view_select_row_at_path:
- * @view: this #NactTreeView object.
+ * fma_tree_view_select_row_at_path:
+ * @view: this #FMATreeView object.
  * @path: the #GtkTreePath to be selected.
  *
  * Select the row at the required path, or the immediate previous, or
@@ -923,15 +923,15 @@ nact_tree_view_get_items_ex( const NactTreeView *view, guint mode )
  * message with an empty selection.
  */
 void
-nact_tree_view_select_row_at_path( NactTreeView *view, GtkTreePath *path )
+fma_tree_view_select_row_at_path( FMATreeView *view, GtkTreePath *path )
 {
-	static const gchar *thisfn = "nact_tree_view_select_row_at_path";
+	static const gchar *thisfn = "fma_tree_view_select_row_at_path";
 	gchar *path_str;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	gboolean something = FALSE;
 
-	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
+	g_return_if_fail( FMA_IS_TREE_VIEW( view ));
 
 	if( !view->private->dispose_has_run ){
 
@@ -976,7 +976,7 @@ nact_tree_view_select_row_at_path( NactTreeView *view, GtkTreePath *path )
 }
 
 static void
-clear_selection( NactTreeView *view )
+clear_selection( FMATreeView *view )
 {
 	GtkTreeSelection *selection;
 
@@ -988,9 +988,9 @@ clear_selection( NactTreeView *view )
  * signal cleanup handler
  */
 static void
-on_selection_changed_cleanup_handler( NactTreeView *tview, GList *selected_items )
+on_selection_changed_cleanup_handler( FMATreeView *tview, GList *selected_items )
 {
-	static const gchar *thisfn = "nact_tree_view_on_selection_changed_cleanup_handler";
+	static const gchar *thisfn = "fma_tree_view_on_selection_changed_cleanup_handler";
 
 	g_debug( "%s: tview=%p, selected_items=%p (count=%u)",
 			thisfn, ( void * ) tview,
@@ -1004,7 +1004,7 @@ on_selection_changed_cleanup_handler( NactTreeView *tview, GList *selected_items
  * item not saveable (invalid): red
  */
 static void
-display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactTreeView *view )
+display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, FMATreeView *view )
 {
 	FMAObject *object;
 	gchar *label;
@@ -1038,7 +1038,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
  * when expanding a selected row which has children
  */
 static void
-extend_selection_to_children( NactTreeView *view, GtkTreeModel *model, GtkTreeIter *parent )
+extend_selection_to_children( FMATreeView *view, GtkTreeModel *model, GtkTreeIter *parent )
 {
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
@@ -1057,7 +1057,7 @@ extend_selection_to_children( NactTreeView *view, GtkTreeModel *model, GtkTreeIt
 
 /*
  * get_selected_items:
- * @view: this #NactTreeView instance.
+ * @view: this #FMATreeView instance.
  *
  * We acquire here a new reference on objects corresponding to actually
  * selected rows, and their children.
@@ -1066,9 +1066,9 @@ extend_selection_to_children( NactTreeView *view, GtkTreeModel *model, GtkTreeIt
  * which should be fma_object_free_items() by the caller.
  */
 static GList *
-get_selected_items( NactTreeView *view )
+get_selected_items( FMATreeView *view )
 {
-	static const gchar *thisfn = "nact_tree_view_get_selected_items";
+	static const gchar *thisfn = "fma_tree_view_get_selected_items";
 	GList *items;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
@@ -1099,7 +1099,7 @@ get_selected_items( NactTreeView *view )
 }
 
 static void
-iter_on_selection( NactTreeView *view, FnIterOnSelection fn_iter, gpointer user_data )
+iter_on_selection( FMATreeView *view, FnIterOnSelection fn_iter, gpointer user_data )
 {
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
@@ -1130,7 +1130,7 @@ iter_on_selection( NactTreeView *view, FnIterOnSelection fn_iter, gpointer user_
 
 /*
  * navigate_to_child:
- * @view: this #NactTreeView object.
+ * @view: this #FMATreeView object.
  *
  * On right arrow, if collapsed, then expand
  * if already expanded, then goto first child
@@ -1140,7 +1140,7 @@ iter_on_selection( NactTreeView *view, FnIterOnSelection fn_iter, gpointer user_
  * trying to expand it has no visible effect.
  */
 static void
-navigate_to_child( NactTreeView *view )
+navigate_to_child( FMATreeView *view )
 {
 	GtkTreeSelection *selection;
 	GList *listrows;
@@ -1164,7 +1164,7 @@ navigate_to_child( NactTreeView *view )
 			if( gtk_tree_model_iter_has_child( model, &iter )){
 				child_path = gtk_tree_path_copy( path );
 				gtk_tree_path_append_index( child_path, 0 );
-				nact_tree_view_select_row_at_path( view, child_path );
+				fma_tree_view_select_row_at_path( view, child_path );
 				gtk_tree_path_free( child_path );
 			}
 		}
@@ -1176,7 +1176,7 @@ navigate_to_child( NactTreeView *view )
 
 /*
  * navigate_to_parent:
- * @view: this #NactTreeView object.
+ * @view: this #FMATreeView object.
  *
  * On left arrow, go to the parent.
  * if already on a parent, collapse it
@@ -1186,7 +1186,7 @@ navigate_to_child( NactTreeView *view )
  * this means that depth is always >= 1, with depth=1 being the root.
  */
 static void
-navigate_to_parent( NactTreeView *view )
+navigate_to_parent( FMATreeView *view )
 {
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
@@ -1206,7 +1206,7 @@ navigate_to_parent( NactTreeView *view )
 		} else if( gtk_tree_path_get_depth( path ) > 1 ){
 			parent_path = gtk_tree_path_copy( path );
 			gtk_tree_path_up( parent_path );
-			nact_tree_view_select_row_at_path( view, parent_path );
+			fma_tree_view_select_row_at_path( view, parent_path );
 			gtk_tree_path_free( parent_path );
 		}
 	}
@@ -1216,16 +1216,16 @@ navigate_to_parent( NactTreeView *view )
 }
 
 static void
-do_open_popup( NactTreeView *view, GdkEventButton *event )
+do_open_popup( FMATreeView *view, GdkEventButton *event )
 {
-	NactTreeViewPrivate *priv;
+	FMATreeViewPrivate *priv;
 	GtkTreePath *path;
 
 	priv = view->private;
 
 	if( event ){
 		if( gtk_tree_view_get_path_at_pos( priv->tree_view, event->x, event->y, &path, NULL, NULL, NULL )){
-			nact_tree_view_select_row_at_path( view, path );
+			fma_tree_view_select_row_at_path( view, path );
 			gtk_tree_path_free( path );
 		}
 	}
@@ -1234,19 +1234,19 @@ do_open_popup( NactTreeView *view, GdkEventButton *event )
 }
 
 /*
- * nact_tree_view_select_row_at_path_by_string:
- * @view: this #NactTreeView object.
+ * fma_tree_view_select_row_at_path_by_string:
+ * @view: this #FMATreeView object.
  * @path: the #GtkTreePath to be selected.
  *
- * cf. nact_tree_view_select_row_at_path().
+ * cf. fma_tree_view_select_row_at_path().
  */
 static void
-select_row_at_path_by_string( NactTreeView *view, const gchar *path_str )
+select_row_at_path_by_string( FMATreeView *view, const gchar *path_str )
 {
 	GtkTreePath *path;
 
 	path = gtk_tree_path_new_from_string( path_str );
-	nact_tree_view_select_row_at_path( view, path );
+	fma_tree_view_select_row_at_path( view, path );
 	gtk_tree_path_free( path );
 }
 
@@ -1254,7 +1254,7 @@ select_row_at_path_by_string( NactTreeView *view, const gchar *path_str )
  * Toggle or collapse the current subtree.
  */
 static void
-toggle_collapse( NactTreeView *view )
+toggle_collapse( FMATreeView *view )
 {
 	guint toggle = TOGGLE_UNDEFINED;
 
@@ -1262,7 +1262,7 @@ toggle_collapse( NactTreeView *view )
 }
 
 static gboolean
-toggle_collapse_iter( NactTreeView *view, GtkTreeModel *model,
+toggle_collapse_iter( FMATreeView *view, GtkTreeModel *model,
 						GtkTreeIter *iter, FMAObject *object, gpointer user_data )
 {
 	guint count;

@@ -346,7 +346,7 @@ fma_clipboard_dnd_get_data( FMAClipboard *clipboard, gboolean *copy_data )
 		if( selection ){
 			data = ( FMAClipboardDndData * ) gtk_selection_data_get_data( selection );
 
-			if( data->target == FMA_XCHANGE_FORMAT_NACT ){
+			if( data->target == FMA_XCHANGE_FORMAT_FMA ){
 				for( it = data->rows ; it ; it = it->next ){
 					rows = g_list_append( rows,
 							gtk_tree_row_reference_copy(( GtkTreeRowReference * ) it->data ));

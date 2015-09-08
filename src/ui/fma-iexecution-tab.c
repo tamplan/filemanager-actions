@@ -63,7 +63,7 @@ static GType           register_type( void );
 static void            interface_base_init( FMAIExecutionTabInterface *klass );
 static void            interface_base_finalize( FMAIExecutionTabInterface *klass );
 static void            initialize_window( FMAIExecutionTab *instance );
-static void            on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIExecutionTab *instance );
+static void            on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIExecutionTab *instance );
 static void            on_normal_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance );
 static void            on_terminal_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance );
 static void            on_embedded_mode_toggled( GtkToggleButton *togglebutton, FMAIExecutionTab *instance );
@@ -183,7 +183,7 @@ static void
 initialize_window( FMAIExecutionTab *instance )
 {
 	static const gchar *thisfn = "fma_iexecution_tab_initialize_window";
-	NactTreeView *tview;
+	FMATreeView *tview;
 
 	g_return_if_fail( FMA_IS_IEXECUTION_TAB( instance ));
 
@@ -226,7 +226,7 @@ initialize_window( FMAIExecutionTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIExecutionTab *instance )
+on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIExecutionTab *instance )
 {
 	static const gchar *thisfn = "fma_iexecution_tab_on_tree_selection_changed";
 	FMAObjectProfile *profile;

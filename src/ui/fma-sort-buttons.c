@@ -38,7 +38,7 @@
 #include "fma-application.h"
 #include "fma-main-window.h"
 #include "fma-sort-buttons.h"
-#include "nact-tree-view.h"
+#include "fma-tree-view.h"
 
 struct _FMASortButtonsPrivate {
 	gboolean        dispose_has_run;
@@ -72,7 +72,7 @@ static void  instance_finalize( GObject *application );
 static void  initialize_buttons( FMASortButtons *buttons, FMAMainWindow *window );
 static void  on_toggle_button_toggled( GtkToggleButton *button, FMASortButtons *buttons );
 static void  on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, FMASortButtons *sort_buttons );
-static void  on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, FMASortButtons *sort_buttons );
+static void  on_tree_view_count_changed( FMATreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, FMASortButtons *sort_buttons );
 static void  enable_buttons( const FMASortButtons *sort_buttons, gboolean enabled );
 static gint  toggle_group_get_from_mode( guint mode );
 static gint  toggle_group_get_from_button( GtkToggleButton *toggled_button );
@@ -230,7 +230,7 @@ fma_sort_buttons_new( FMAMainWindow *window )
 static void
 initialize_buttons( FMASortButtons *buttons, FMAMainWindow *window )
 {
-	NactTreeView *treeview;
+	FMATreeView *treeview;
 	gint i;
 
 	treeview = fma_main_window_get_items_view( window );
@@ -337,7 +337,7 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 }
 
 static void
-on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, FMASortButtons *buttons )
+on_tree_view_count_changed( FMATreeView *treeview, gboolean reset, gint menus_count, gint actions_count, gint profiles_count, FMASortButtons *buttons )
 {
 	static const gchar *thisfn = "fma_sort_buttons_on_tree_view_count_changed";
 	FMASortButtonsPrivate *priv;

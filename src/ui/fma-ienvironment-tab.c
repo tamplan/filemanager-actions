@@ -101,7 +101,7 @@ static void          interface_base_init( FMAIEnvironmentTabInterface *klass );
 static void          interface_base_finalize( FMAIEnvironmentTabInterface *klass );
 static void          initialize_gtk( FMAIEnvironmentTab *instance );
 static void          initialize_window( FMAIEnvironmentTab *instance );
-static void          on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIEnvironmentTab *instance );
+static void          on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIEnvironmentTab *instance );
 static void          on_selcount_ope_changed( GtkComboBox *combo, FMAIEnvironmentTab *instance );
 static void          on_selcount_int_changed( GtkEntry *entry, FMAIEnvironmentTab *instance );
 static void          on_selection_count_changed( FMAIEnvironmentTab *instance );
@@ -262,7 +262,7 @@ initialize_window( FMAIEnvironmentTab *instance )
 	GList *renderers;
 	guint i;
 	const FMADesktopEnv *desktops;
-	NactTreeView *tview;
+	FMATreeView *tview;
 
 	g_return_if_fail( FMA_IS_IENVIRONMENT_TAB( instance ));
 
@@ -346,7 +346,7 @@ initialize_window( FMAIEnvironmentTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIEnvironmentTab *instance )
+on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "fma_ienvironment_tab_on_tree_selection_changed";
 	FMAIContext *context;

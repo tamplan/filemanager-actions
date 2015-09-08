@@ -46,7 +46,7 @@
 #include "fma-main-window.h"
 #include "fma-assistant-export.h"
 #include "fma-export-ask.h"
-#include "nact-tree-view.h"
+#include "fma-tree-view.h"
 
 /* Export Assistant
  *
@@ -73,7 +73,7 @@ enum {
  */
 struct _FMAAssistantExportPrivate {
 	gboolean      dispose_has_run;
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 	gboolean      preferences_locked;
 	gchar        *uri;
 	GList        *selected_items;
@@ -404,15 +404,15 @@ items_tree_view_initialize_gtk( FMAAssistantExport *window, GtkAssistant *assist
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) window, ( void * ) assistant );
 
 	priv = window->private;
-	priv->items_view = nact_tree_view_new(
+	priv->items_view = fma_tree_view_new(
 			FMA_MAIN_WINDOW( base_window_get_main_window( BASE_WINDOW( window ))));
 
 	parent = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( assistant ), "ActionsList" );
 	g_return_if_fail( parent && GTK_IS_CONTAINER( parent ));
 	gtk_container_add( GTK_CONTAINER( parent ), GTK_WIDGET( priv->items_view ));
 
-	nact_tree_view_set_mnemonic( priv->items_view, GTK_CONTAINER( assistant ), "ActionsListLabel" );
-	nact_tree_view_set_edition_mode( priv->items_view, TREE_MODE_SELECTION );
+	fma_tree_view_set_mnemonic( priv->items_view, GTK_CONTAINER( assistant ), "ActionsListLabel" );
+	fma_tree_view_set_edition_mode( priv->items_view, TREE_MODE_SELECTION );
 }
 
 static void
@@ -518,7 +518,7 @@ on_base_all_widgets_showed( FMAAssistantExport *window, void *empty )
 	GtkAssistant *assistant;
 	GtkWidget *page;
 	GtkApplicationWindow *main_window;
-	NactTreeView *main_items_view;
+	FMATreeView *main_items_view;
 	GList *items;
 	GtkTreePath *path;
 
@@ -534,10 +534,10 @@ on_base_all_widgets_showed( FMAAssistantExport *window, void *empty )
 		main_window = base_window_get_main_window( BASE_WINDOW( window ));
 		g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
 		main_items_view = fma_main_window_get_items_view( FMA_MAIN_WINDOW( main_window ));
-		items = nact_tree_view_get_items( main_items_view );
-		nact_tree_view_fill( window->private->items_view, items );
+		items = fma_tree_view_get_items( main_items_view );
+		fma_tree_view_fill( window->private->items_view, items );
 
-		/* connect to the 'selection-changed' signal emitted by NactTreeView
+		/* connect to the 'selection-changed' signal emitted by FMATreeView
 		 */
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
@@ -548,7 +548,7 @@ on_base_all_widgets_showed( FMAAssistantExport *window, void *empty )
 		/* select the first row
 		 */
 		path = gtk_tree_path_new_from_string( "0" );
-		nact_tree_view_select_row_at_path( window->private->items_view, path );
+		fma_tree_view_select_row_at_path( window->private->items_view, path );
 		gtk_tree_path_free( path );
 
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );

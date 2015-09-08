@@ -56,7 +56,7 @@
 #include "fma-main-window.h"
 #include "fma-menu.h"
 #include "fma-status-bar.h"
-#include "nact-tree-view.h"
+#include "fma-tree-view.h"
 #include "fma-confirm-logout.h"
 #include "fma-sort-buttons.h"
 
@@ -112,7 +112,7 @@ struct _FMAMainWindowPrivate {
 	/**
 	 * Some convenience objects and data.
 	 */
-	NactTreeView      *items_view;
+	FMATreeView      *items_view;
 	gboolean          is_tree_modified;
 	FMAClipboard     *clipboard;
 	FMAStatusBar     *statusbar;
@@ -174,8 +174,8 @@ static void       setup_main_ui( FMAMainWindow *main_window );
 static void       setup_treeview( FMAMainWindow *main_window );
 static void       setup_monitor_pivot( FMAMainWindow *main_window );
 static void       on_block_items_changed_timeout( FMAMainWindow *window );
-static void       on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, FMAMainWindow *window );
-static void       on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, FMAMainWindow *window );
+static void       on_tree_view_modified_status_changed( FMATreeView *treeview, gboolean is_modified, FMAMainWindow *window );
+static void       on_tree_view_selection_changed( FMATreeView *treeview, GList *selected_items, FMAMainWindow *window );
 static void       on_tab_item_updated( FMAMainWindow *window, FMAIContext *context, guint data, void *empty );
 static void       raz_selection_properties( FMAMainWindow *window );
 static void       setup_current_selection( FMAMainWindow *window, FMAObjectId *selected_row );
@@ -767,14 +767,14 @@ setup_treeview( FMAMainWindow *main_window )
 	GtkWidget *top_widget;
 
 	priv = main_window->private;
-	priv->items_view = nact_tree_view_new( main_window );
+	priv->items_view = fma_tree_view_new( main_window );
 
 	top_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( main_window ), "ActionsList" );
 	g_return_if_fail( top_widget && GTK_IS_CONTAINER( top_widget ));
 	gtk_container_add( GTK_CONTAINER( top_widget ), GTK_WIDGET( priv->items_view ));
 
-	nact_tree_view_set_mnemonic( priv->items_view, GTK_CONTAINER( main_window ), "ActionsListLabel" );
-	nact_tree_view_set_edition_mode( priv->items_view, TREE_MODE_EDITION );
+	fma_tree_view_set_mnemonic( priv->items_view, GTK_CONTAINER( main_window ), "ActionsListLabel" );
+	fma_tree_view_set_edition_mode( priv->items_view, TREE_MODE_EDITION );
 
 	g_signal_connect(
 			priv->items_view,
@@ -881,12 +881,12 @@ fma_main_window_get_statusbar( const FMAMainWindow *window )
  * fma_main_window_get_items_view:
  * @window: this #FMAMainWindow instance.
  *
- * Returns: The #NactTreeView convenience object.
+ * Returns: The #FMATreeView convenience object.
  */
-NactTreeView *
+FMATreeView *
 fma_main_window_get_items_view( const FMAMainWindow *window )
 {
-	NactTreeView *view;
+	FMATreeView *view;
 
 	g_return_val_if_fail( FMA_IS_MAIN_WINDOW( window ), NULL );
 
@@ -961,7 +961,7 @@ on_block_items_changed_timeout( FMAMainWindow *window )
  * the modification status of the items view has changed
  */
 static void
-on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modified, FMAMainWindow *window )
+on_tree_view_modified_status_changed( FMATreeView *treeview, gboolean is_modified, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "fma_main_window_on_tree_view_modified_status_changed";
 
@@ -979,7 +979,7 @@ on_tree_view_modified_status_changed( NactTreeView *treeview, gboolean is_modifi
  * tree view selection has changed
  */
 static void
-on_tree_view_selection_changed( NactTreeView *treeview, GList *selected_items, FMAMainWindow *window )
+on_tree_view_selection_changed( FMATreeView *treeview, GList *selected_items, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "fma_main_window_on_tree_view_selection_changed";
 	guint count;
@@ -1209,7 +1209,7 @@ load_or_reload_items( FMAMainWindow *window )
 
 	raz_selection_properties( window );
 	tree = fma_updater_load_items( window->private->updater );
-	nact_tree_view_fill( window->private->items_view, tree );
+	fma_tree_view_fill( window->private->items_view, tree );
 
 	g_debug( "%s: end of tree view filling", thisfn );
 }

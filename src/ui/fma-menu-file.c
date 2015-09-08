@@ -126,7 +126,7 @@ fma_menu_file_new_menu( FMAMainWindow *main_window )
 {
 	sMenuData *sdata;
 	FMAObjectMenu *menu;
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 	GList *items;
 
 	sdata = fma_menu_get_data( main_window );
@@ -150,7 +150,7 @@ fma_menu_file_new_action( FMAMainWindow *main_window )
 {
 	sMenuData *sdata;
 	FMAObjectAction *action;
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 	GList *items;
 
 	sdata = fma_menu_get_data( main_window );
@@ -174,7 +174,7 @@ fma_menu_file_new_profile( FMAMainWindow *main_window )
 {
 	FMAObjectAction *action;
 	FMAObjectProfile *profile;
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 	GList *items;
 
 	g_object_get(
@@ -230,7 +230,7 @@ fma_menu_file_save_items( FMAMainWindow *window )
 {
 	static const gchar *thisfn = "fma_menu_file_save_items";
 	sMenuData *sdata;
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 	GList *items, *it;
 	GList *new_pivot;
 	FMAObjectItem *duplicate;
@@ -245,7 +245,7 @@ fma_menu_file_save_items( FMAMainWindow *window )
 	 * and reset the corresponding modification flag
 	 */
 	items_view = fma_main_window_get_items_view( window );
-	items = nact_tree_view_get_items( items_view );
+	items = fma_tree_view_get_items( items_view );
 	fma_object_dump_tree( items );
 	messages = NULL;
 
@@ -283,7 +283,7 @@ fma_menu_file_save_items( FMAMainWindow *window )
 
 	} else {
 		fma_object_free_items( items );
-		items = nact_tree_view_get_items( items_view );
+		items = fma_tree_view_get_items( items_view );
 	}
 
 	/* recursively save the modified items

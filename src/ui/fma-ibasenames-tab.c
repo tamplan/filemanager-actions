@@ -69,7 +69,7 @@ static void            interface_base_init( FMAIBasenamesTabInterface *klass );
 static void            interface_base_finalize( FMAIBasenamesTabInterface *klass );
 static void            initialize_gtk( FMAIBasenamesTab *instance );
 static void            initialize_window( FMAIBasenamesTab *instance );
-static void            on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIBasenamesTab *instance );
+static void            on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIBasenamesTab *instance );
 static void            on_matchcase_toggled( GtkToggleButton *button, FMAIBasenamesTab *instance );
 static GSList         *get_basenames( void *context );
 static void            set_basenames( void *context, GSList *filters );
@@ -217,7 +217,7 @@ static void
 initialize_window( FMAIBasenamesTab *instance )
 {
 	static const gchar *thisfn = "fma_ibasenames_tab_initialize_window";
-	NactTreeView *tview;
+	FMATreeView *tview;
 
 	g_return_if_fail( instance && FMA_IS_IBASENAMES_TAB( instance ));
 
@@ -235,7 +235,7 @@ initialize_window( FMAIBasenamesTab *instance )
 }
 
 static void
-on_tree_selection_changed( NactTreeView *tview, GList *selected_items, FMAIBasenamesTab *instance )
+on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIBasenamesTab *instance )
 {
 	FMAIContext *context;
 	gboolean editable;

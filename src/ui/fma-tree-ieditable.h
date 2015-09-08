@@ -36,7 +36,7 @@
  * @short_description: The FMATreeIEditable interface definition
  * @include: ui/fma-tree-ieditable.h
  *
- * This interface is to be implemented by a NactTreeView which would
+ * This interface is to be implemented by a FMATreeView which would
  * want get edition features, such as inline edition, insert, delete,
  * and so on.
  *

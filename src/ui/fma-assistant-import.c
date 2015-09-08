@@ -650,7 +650,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	FMAImporterResult *result;
 	FMAApplication *application;
 	FMAUpdater *updater;
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 
 	g_return_if_fail( FMA_IS_ASSISTANT_IMPORT( wnd ));
 
@@ -716,7 +716,7 @@ static FMAObjectItem *
 check_for_existence( const FMAObjectItem *item, FMAMainWindow *window )
 {
 	static const gchar *thisfn = "fma_assistant_import_check_for_existence";
-	NactTreeView *items_view;
+	FMATreeView *items_view;
 	FMAObjectItem *exists;
 	gchar *importing_id;
 
@@ -725,7 +725,7 @@ check_for_existence( const FMAObjectItem *item, FMAMainWindow *window )
 			thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ), importing_id );
 
 	items_view = fma_main_window_get_items_view( window );
-	exists = nact_tree_view_get_item_by_id( items_view, importing_id );
+	exists = fma_tree_view_get_item_by_id( items_view, importing_id );
 
 	g_free( importing_id );
 

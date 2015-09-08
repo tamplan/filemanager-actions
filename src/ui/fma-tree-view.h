@@ -27,23 +27,23 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_TREE_VIEW_H__
-#define __UI_NACT_TREE_VIEW_H__
+#ifndef __UI_FMA_TREE_VIEW_H__
+#define __UI_FMA_TREE_VIEW_H__
 
 /*
- * SECTION: nact-tree-view
- * @title: NactTreeView
+ * SECTION: fma-tree-view
+ * @title: FMATreeView
  * @short_description: The Tree View Base Class Definition
- * @include: nact-tree-view.h
+ * @include: ui/fma-tree-view.h
  *
  * This is a convenience class to manage a read-only items tree view.
  *
- * The NactTreeView encapsulates the GtkTreeView which displays the items
+ * The FMATreeView encapsulates the GtkTreeView which displays the items
  * list on the left of the main pane.
  *
  * It is instanciated from FMAMainWindow::on_initialize_gtk().
  *
- * A pointer to this NactTreeView is attached to the FMAMainWindow at
+ * A pointer to this FMATreeView is attached to the FMAMainWindow at
  * construction time.
  */
 
@@ -54,30 +54,30 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_TREE_VIEW                ( nact_tree_view_get_type())
-#define NACT_TREE_VIEW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_TREE_VIEW, NactTreeView ))
-#define NACT_TREE_VIEW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_TREE_VIEW, NactTreeViewClass ))
-#define NACT_IS_TREE_VIEW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_TREE_VIEW ))
-#define NACT_IS_TREE_VIEW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_TREE_VIEW ))
-#define NACT_TREE_VIEW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_TREE_VIEW, NactTreeViewClass ))
+#define FMA_TYPE_TREE_VIEW                ( fma_tree_view_get_type())
+#define FMA_TREE_VIEW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_TREE_VIEW, FMATreeView ))
+#define FMA_TREE_VIEW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_TREE_VIEW, FMATreeViewClass ))
+#define FMA_IS_TREE_VIEW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_TREE_VIEW ))
+#define FMA_IS_TREE_VIEW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_TREE_VIEW ))
+#define FMA_TREE_VIEW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_TREE_VIEW, FMATreeViewClass ))
 
-typedef struct _NactTreeViewPrivate        NactTreeViewPrivate;
-
-typedef struct {
-	/*< private >*/
-	GtkBin               parent;
-	NactTreeViewPrivate *private;
-}
-	NactTreeView;
+typedef struct _FMATreeViewPrivate        FMATreeViewPrivate;
 
 typedef struct {
 	/*< private >*/
-	GtkBinClass          parent;
+	GtkBin              parent;
+	FMATreeViewPrivate *private;
 }
-	NactTreeViewClass;
+	FMATreeView;
+
+typedef struct {
+	/*< private >*/
+	GtkBinClass         parent;
+}
+	FMATreeViewClass;
 
 /**
- * Signals emitted by the NactTreeView instance.
+ * Signals emitted by the FMATreeView instance.
  */
 #define TREE_SIGNAL_COUNT_CHANGED				"tree-signal-count-changed"
 #define TREE_SIGNAL_FOCUS_IN					"tree-signal-focus-in"
@@ -105,30 +105,30 @@ enum {
 	TREE_LIST_DELETED  = 1<<8,
 };
 
-GType         nact_tree_view_get_type( void );
+GType          fma_tree_view_get_type          ( void );
 
-NactTreeView *nact_tree_view_new               ( FMAMainWindow *main_window );
+FMATreeView   *fma_tree_view_new               ( FMAMainWindow *main_window );
 
-void          nact_tree_view_set_mnemonic      ( NactTreeView *view,
+void           fma_tree_view_set_mnemonic      ( FMATreeView *view,
 														GtkContainer *parent,
 														const gchar *widget_name );
 
-void          nact_tree_view_set_edition_mode  ( NactTreeView *view,
+void           fma_tree_view_set_edition_mode  ( FMATreeView *view,
 														NactTreeMode mode );
 
-void          nact_tree_view_fill              ( NactTreeView *view, GList *items );
+void           fma_tree_view_fill              ( FMATreeView *view, GList *items );
 
-gboolean      nact_tree_view_are_notify_allowed( const NactTreeView *view );
-void          nact_tree_view_set_notify_allowed( NactTreeView *view, gboolean allow );
+gboolean       fma_tree_view_are_notify_allowed( const FMATreeView *view );
+void           fma_tree_view_set_notify_allowed( FMATreeView *view, gboolean allow );
 
-void          nact_tree_view_collapse_all      ( const NactTreeView *view );
-void          nact_tree_view_expand_all        ( const NactTreeView *view );
-FMAObjectItem *nact_tree_view_get_item_by_id    ( const NactTreeView *view, const gchar *id );
-GList        *nact_tree_view_get_items         ( const NactTreeView *view );
-GList        *nact_tree_view_get_items_ex      ( const NactTreeView *view, guint mode );
+void           fma_tree_view_collapse_all      ( const FMATreeView *view );
+void           fma_tree_view_expand_all        ( const FMATreeView *view );
+FMAObjectItem *fma_tree_view_get_item_by_id    ( const FMATreeView *view, const gchar *id );
+GList         *fma_tree_view_get_items         ( const FMATreeView *view );
+GList         *fma_tree_view_get_items_ex      ( const FMATreeView *view, guint mode );
 
-void          nact_tree_view_select_row_at_path( NactTreeView *view, GtkTreePath *path );
+void           fma_tree_view_select_row_at_path( FMATreeView *view, GtkTreePath *path );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_TREE_VIEW_H__ */
+#endif /* __UI_FMA_TREE_VIEW_H__ */

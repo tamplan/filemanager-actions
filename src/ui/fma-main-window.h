@@ -42,7 +42,7 @@
 #include "fma-main-window-def.h"
 #include "fma-sort-buttons.h"
 #include "fma-status-bar.h"
-#include "nact-tree-view.h"
+#include "fma-tree-view.h"
 
 G_BEGIN_DECLS
 
@@ -79,7 +79,7 @@ FMASortButtons *fma_main_window_get_sort_buttons( const FMAMainWindow *window );
 
 FMAStatusBar   *fma_main_window_get_statusbar   ( const FMAMainWindow *window );
 
-NactTreeView    *fma_main_window_get_items_view  ( const FMAMainWindow *window );
+FMATreeView    *fma_main_window_get_items_view  ( const FMAMainWindow *window );
 
 void            fma_main_window_reload          ( FMAMainWindow *window );
 
