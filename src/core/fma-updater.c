@@ -37,17 +37,17 @@
 
 #include "fma-io-provider.h"
 #include "fma-settings.h"
-#include "na-updater.h"
+#include "fma-updater.h"
 
 /* private class data
  */
-struct _NAUpdaterClassPrivate {
+struct _FMAUpdaterClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NAUpdaterPrivate {
+struct _FMAUpdaterPrivate {
 	gboolean dispose_has_run;
 	gboolean are_preferences_locked;
 	gboolean is_level_zero_writable;
@@ -56,17 +56,17 @@ struct _NAUpdaterPrivate {
 static FMAPivotClass *st_parent_class = NULL;
 
 static GType    register_type( void );
-static void     class_init( NAUpdaterClass *klass );
+static void     class_init( FMAUpdaterClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
-static gboolean are_preferences_locked( const NAUpdater *updater );
-static gboolean is_level_zero_writable( const NAUpdater *updater );
-static void     set_writability_status( FMAObjectItem *item, const NAUpdater *updater );
+static gboolean are_preferences_locked( const FMAUpdater *updater );
+static gboolean is_level_zero_writable( const FMAUpdater *updater );
+static void     set_writability_status( FMAObjectItem *item, const FMAUpdater *updater );
 
 GType
-na_updater_get_type( void )
+fma_updater_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -80,32 +80,32 @@ na_updater_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_updater_register_type";
+	static const gchar *thisfn = "fma_updater_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NAUpdaterClass ),
+		sizeof( FMAUpdaterClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NAUpdater ),
+		sizeof( FMAUpdater ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( FMA_TYPE_PIVOT, "NAUpdater", &info, 0 );
+	type = g_type_register_static( FMA_TYPE_PIVOT, "FMAUpdater", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NAUpdaterClass *klass )
+class_init( FMAUpdaterClass *klass )
 {
-	static const gchar *thisfn = "na_updater_class_init";
+	static const gchar *thisfn = "fma_updater_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -116,23 +116,23 @@ class_init( NAUpdaterClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NAUpdaterClassPrivate, 1 );
+	klass->private = g_new0( FMAUpdaterClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_updater_instance_init";
-	NAUpdater *self;
+	static const gchar *thisfn = "fma_updater_instance_init";
+	FMAUpdater *self;
 
-	g_return_if_fail( NA_IS_UPDATER( instance ));
+	g_return_if_fail( FMA_IS_UPDATER( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NA_UPDATER( instance );
+	self = FMA_UPDATER( instance );
 
-	self->private = g_new0( NAUpdaterPrivate, 1 );
+	self->private = g_new0( FMAUpdaterPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -140,12 +140,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_updater_instance_dispose";
-	NAUpdater *self;
+	static const gchar *thisfn = "fma_updater_instance_dispose";
+	FMAUpdater *self;
 
-	g_return_if_fail( NA_IS_UPDATER( object ));
+	g_return_if_fail( FMA_IS_UPDATER( object ));
 
-	self = NA_UPDATER( object );
+	self = FMA_UPDATER( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -163,14 +163,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_updater_instance_finalize";
-	NAUpdater *self;
+	static const gchar *thisfn = "fma_updater_instance_finalize";
+	FMAUpdater *self;
 
-	g_return_if_fail( NA_IS_UPDATER( object ));
+	g_return_if_fail( FMA_IS_UPDATER( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = NA_UPDATER( object );
+	self = FMA_UPDATER( object );
 
 	g_free( self->private );
 
@@ -181,19 +181,19 @@ instance_finalize( GObject *object )
 }
 
 /*
- * na_updater_new:
+ * fma_updater_new:
  *
- * Returns: a newly allocated #NAUpdater object.
+ * Returns: a newly allocated #FMAUpdater object.
  */
-NAUpdater *
-na_updater_new( void )
+FMAUpdater *
+fma_updater_new( void )
 {
-	static const gchar *thisfn = "na_updater_new";
-	NAUpdater *updater;
+	static const gchar *thisfn = "fma_updater_new";
+	FMAUpdater *updater;
 
 	g_debug( "%s", thisfn );
 
-	updater = g_object_new( NA_TYPE_UPDATER, NULL );
+	updater = g_object_new( FMA_TYPE_UPDATER, NULL );
 
 	updater->private->are_preferences_locked = are_preferences_locked( updater );
 	updater->private->is_level_zero_writable = is_level_zero_writable( updater );
@@ -206,7 +206,7 @@ na_updater_new( void )
 }
 
 static gboolean
-are_preferences_locked( const NAUpdater *updater )
+are_preferences_locked( const FMAUpdater *updater )
 {
 	gboolean are_locked;
 	gboolean mandatory;
@@ -217,7 +217,7 @@ are_preferences_locked( const NAUpdater *updater )
 }
 
 static gboolean
-is_level_zero_writable( const NAUpdater *updater )
+is_level_zero_writable( const FMAUpdater *updater )
 {
 	GSList *level_zero;
 	gboolean mandatory;
@@ -226,15 +226,15 @@ is_level_zero_writable( const NAUpdater *updater )
 
 	fma_core_utils_slist_free( level_zero );
 
-	g_debug( "na_updater_is_level_zero_writable: IPREFS_ITEMS_LEVEL_ZERO_ORDER: mandatory=%s",
+	g_debug( "fma_updater_is_level_zero_writable: IPREFS_ITEMS_LEVEL_ZERO_ORDER: mandatory=%s",
 			mandatory ? "True":"False" );
 
 	return( !mandatory );
 }
 
 /*
- * na_updater_check_item_writability_status:
- * @updater: this #NAUpdater object.
+ * fma_updater_check_item_writability_status:
+ * @updater: this #FMAUpdater object.
  * @item: the #FMAObjectItem to be written.
  *
  * Compute and set the writability status of the @item.
@@ -248,14 +248,14 @@ is_level_zero_writable( const NAUpdater *updater )
  * If the item does not have a parent, then the level zero must be writable.
  */
 void
-na_updater_check_item_writability_status( const NAUpdater *updater, const FMAObjectItem *item )
+fma_updater_check_item_writability_status( const FMAUpdater *updater, const FMAObjectItem *item )
 {
 	gboolean writable;
 	FMAIOProvider *provider;
 	FMAObjectItem *parent;
 	guint reason;
 
-	g_return_if_fail( NA_IS_UPDATER( updater ));
+	g_return_if_fail( FMA_IS_UPDATER( updater ));
 	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
 
 	writable = FALSE;
@@ -312,18 +312,18 @@ na_updater_check_item_writability_status( const NAUpdater *updater, const FMAObj
 }
 
 /*
- * na_updater_are_preferences_locked:
- * @updater: the #NAUpdater application object.
+ * fma_updater_are_preferences_locked:
+ * @updater: the #FMAUpdater application object.
  *
  * Returns: %TRUE if preferences have been globally locked down by an
  * admin, %FALSE else.
  */
 gboolean
-na_updater_are_preferences_locked( const NAUpdater *updater )
+fma_updater_are_preferences_locked( const FMAUpdater *updater )
 {
 	gboolean are_locked;
 
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), TRUE );
+	g_return_val_if_fail( FMA_IS_UPDATER( updater ), TRUE );
 
 	are_locked = TRUE;
 
@@ -336,8 +336,8 @@ na_updater_are_preferences_locked( const NAUpdater *updater )
 }
 
 /*
- * na_updater_is_level_zero_writable:
- * @updater: the #NAUpdater application object.
+ * fma_updater_is_level_zero_writable:
+ * @updater: the #FMAUpdater application object.
  *
  * As of 3.1.0, level-zero is written as a user preference.
  *
@@ -355,11 +355,11 @@ na_updater_are_preferences_locked( const NAUpdater *updater )
  * %FALSE else.
  */
 gboolean
-na_updater_is_level_zero_writable( const NAUpdater *updater )
+fma_updater_is_level_zero_writable( const FMAUpdater *updater )
 {
 	gboolean is_writable;
 
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
+	g_return_val_if_fail( FMA_IS_UPDATER( updater ), FALSE );
 
 	is_writable = FALSE;
 
@@ -372,18 +372,18 @@ na_updater_is_level_zero_writable( const NAUpdater *updater )
 }
 
 /*
- * na_updater_append_item:
- * @updater: this #NAUpdater object.
+ * fma_updater_append_item:
+ * @updater: this #FMAUpdater object.
  * @item: a #FMAObjectItem-derived object to be appended to the tree.
  *
  * Append a new item at the end of the global tree.
  */
 void
-na_updater_append_item( NAUpdater *updater, FMAObjectItem *item )
+fma_updater_append_item( FMAUpdater *updater, FMAObjectItem *item )
 {
 	GList *tree;
 
-	g_return_if_fail( NA_IS_UPDATER( updater ));
+	g_return_if_fail( FMA_IS_UPDATER( updater ));
 	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
 
 	if( !updater->private->dispose_has_run ){
@@ -395,8 +395,8 @@ na_updater_append_item( NAUpdater *updater, FMAObjectItem *item )
 }
 
 /*
- * na_updater_insert_item:
- * @updater: this #NAUpdater object.
+ * fma_updater_insert_item:
+ * @updater: this #FMAUpdater object.
  * @item: a #FMAObjectItem-derived object to be inserted in the tree.
  * @parent_id: the id of the parent, or %NULL.
  * @pos: the position in the children of the parent, starting at zero, or -1.
@@ -404,12 +404,12 @@ na_updater_append_item( NAUpdater *updater, FMAObjectItem *item )
  * Insert a new item in the global tree.
  */
 void
-na_updater_insert_item( NAUpdater *updater, FMAObjectItem *item, const gchar *parent_id, gint pos )
+fma_updater_insert_item( FMAUpdater *updater, FMAObjectItem *item, const gchar *parent_id, gint pos )
 {
 	GList *tree;
 	FMAObjectItem *parent;
 
-	g_return_if_fail( NA_IS_UPDATER( updater ));
+	g_return_if_fail( FMA_IS_UPDATER( updater ));
 	g_return_if_fail( FMA_IS_OBJECT_ITEM( item ));
 
 	if( !updater->private->dispose_has_run ){
@@ -432,14 +432,14 @@ na_updater_insert_item( NAUpdater *updater, FMAObjectItem *item, const gchar *pa
 }
 
 /*
- * na_updater_remove_item:
+ * fma_updater_remove_item:
  * @updater: this #FMAPivot instance.
  * @item: the #FMAObjectItem to be removed from the list.
  *
  * Removes a #FMAObjectItem from the hierarchical tree. Does not delete it.
  */
 void
-na_updater_remove_item( NAUpdater *updater, FMAObject *item )
+fma_updater_remove_item( FMAUpdater *updater, FMAObject *item )
 {
 	GList *tree;
 	FMAObjectItem *parent;
@@ -448,7 +448,7 @@ na_updater_remove_item( NAUpdater *updater, FMAObject *item )
 
 	if( !updater->private->dispose_has_run ){
 
-		g_debug( "na_updater_remove_item: updater=%p, item=%p (%s)",
+		g_debug( "fma_updater_remove_item: updater=%p, item=%p (%s)",
 				( void * ) updater,
 				( void * ) item, G_IS_OBJECT( item ) ? G_OBJECT_TYPE_NAME( item ) : "(null)" );
 
@@ -467,8 +467,8 @@ na_updater_remove_item( NAUpdater *updater, FMAObject *item )
 }
 
 /**
- * na_updater_should_pasted_be_relabeled:
- * @updater: this #NAUpdater instance.
+ * fma_updater_should_pasted_be_relabeled:
+ * @updater: this #FMAUpdater instance.
  * @object: the considered #FMAObject-derived object.
  *
  * Whether the specified object should be relabeled when pasted ?
@@ -476,9 +476,9 @@ na_updater_remove_item( NAUpdater *updater, FMAObject *item )
  * Returns: %TRUE if the object should be relabeled, %FALSE else.
  */
 gboolean
-na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const FMAObject *item )
+fma_updater_should_pasted_be_relabeled( const FMAUpdater *updater, const FMAObject *item )
 {
-	static const gchar *thisfn = "na_updater_should_pasted_be_relabeled";
+	static const gchar *thisfn = "fma_updater_should_pasted_be_relabeled";
 	gboolean relabel;
 
 	if( FMA_IS_OBJECT_MENU( item )){
@@ -499,8 +499,8 @@ na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const FMAObject
 }
 
 /*
- * na_updater_load_items:
- * @updater: this #NAUpdater instance.
+ * fma_updater_load_items:
+ * @updater: this #FMAUpdater instance.
  *
  * Loads the items, updating simultaneously their writability status.
  *
@@ -509,12 +509,12 @@ na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const FMAObject
  * Since: 3.1
  */
 GList *
-na_updater_load_items( NAUpdater *updater )
+fma_updater_load_items( FMAUpdater *updater )
 {
-	static const gchar *thisfn = "na_updater_load_items";
+	static const gchar *thisfn = "fma_updater_load_items";
 	GList *tree;
 
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), NULL );
+	g_return_val_if_fail( FMA_IS_UPDATER( updater ), NULL );
 
 	tree = NULL;
 
@@ -530,11 +530,11 @@ na_updater_load_items( NAUpdater *updater )
 }
 
 static void
-set_writability_status( FMAObjectItem *item, const NAUpdater *updater )
+set_writability_status( FMAObjectItem *item, const FMAUpdater *updater )
 {
 	GList *children;
 
-	na_updater_check_item_writability_status( updater, item );
+	fma_updater_check_item_writability_status( updater, item );
 
 	if( FMA_IS_OBJECT_MENU( item )){
 		children = fma_object_get_items( item );
@@ -543,8 +543,8 @@ set_writability_status( FMAObjectItem *item, const NAUpdater *updater )
 }
 
 /*
- * na_updater_write_item:
- * @updater: this #NAUpdater instance.
+ * fma_updater_write_item:
+ * @updater: this #FMAUpdater instance.
  * @item: a #FMAObjectItem to be written down to the storage subsystem.
  * @messages: the I/O provider can allocate and store here its error
  * messages.
@@ -554,13 +554,13 @@ set_writability_status( FMAObjectItem *item, const NAUpdater *updater )
  * Returns: the #FMAIIOProvider return code.
  */
 guint
-na_updater_write_item( const NAUpdater *updater, FMAObjectItem *item, GSList **messages )
+fma_updater_write_item( const FMAUpdater *updater, FMAObjectItem *item, GSList **messages )
 {
 	guint ret;
 
 	ret = FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), ret );
+	g_return_val_if_fail( FMA_IS_UPDATER( updater ), ret );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( messages, ret );
 
@@ -582,8 +582,8 @@ na_updater_write_item( const NAUpdater *updater, FMAObjectItem *item, GSList **m
 }
 
 /*
- * na_updater_delete_item:
- * @updater: this #NAUpdater instance.
+ * fma_updater_delete_item:
+ * @updater: this #FMAUpdater instance.
  * @item: the #FMAObjectItem to be deleted from the storage subsystem.
  * @messages: the I/O provider can allocate and store here its error
  * messages.
@@ -596,12 +596,12 @@ na_updater_write_item( const NAUpdater *updater, FMAObjectItem *item, GSList **m
  * doesn't have any attached provider. We so do nothing and return OK...
  */
 guint
-na_updater_delete_item( const NAUpdater *updater, const FMAObjectItem *item, GSList **messages )
+fma_updater_delete_item( const FMAUpdater *updater, const FMAObjectItem *item, GSList **messages )
 {
 	guint ret;
 	FMAIOProvider *provider;
 
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( FMA_IS_UPDATER( updater ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( messages, FMA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 

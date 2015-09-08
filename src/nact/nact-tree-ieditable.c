@@ -35,7 +35,7 @@
 #include <api/fma-object-api.h>
 
 #include <core/fma-factory-object.h>
-#include <core/na-updater.h>
+#include <core/fma-updater.h>
 
 #include "base-keysyms.h"
 #include "nact-application.h"
@@ -53,7 +53,7 @@ struct _NactTreeIEditableInterfacePrivate {
 /* data attached to the NactTreeView
  */
 typedef struct {
-	NAUpdater      *updater;
+	FMAUpdater      *updater;
 	NactMainWindow *main_window;
 	GtkTreeView    *treeview;
 	NactTreeModel  *model;
@@ -584,7 +584,7 @@ nact_tree_ieditable_remove_deleted( NactTreeIEditable *instance, GSList **messag
 		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
 		fma_object_dump_norec( item );
 
-		if( na_updater_delete_item( ied->updater, item, messages ) != FMA_IIO_PROVIDER_CODE_OK ){
+		if( fma_updater_delete_item( ied->updater, item, messages ) != FMA_IIO_PROVIDER_CODE_OK ){
 			not_deleted = g_list_prepend( not_deleted, fma_object_ref( item ));
 			delete_ok = FALSE;
 		}

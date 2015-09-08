@@ -200,7 +200,7 @@ do_is_able_to_write( const FMAIIOProvider *instance )
  * to ask the user if he is willing to reload such a current list (and
  * this is the way &nact; has chosen to deal with this message).
  *
- * Note that application FMAPivot/NAUpdater pivot is typically the only
+ * Note that application FMAPivot/FMAUpdater pivot is typically the only
  * object connected to this signal. It acts so as a filtering proxy,
  * re-emitting its own 'items-changed' signal for a whole set of detected
  * underlying modifications.

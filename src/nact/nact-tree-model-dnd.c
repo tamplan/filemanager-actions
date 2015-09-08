@@ -564,7 +564,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 {
 	static const gchar *thisfn = "nact_tree_model_dnd_inside_drag_and_drop";
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	NactMainWindow *main_window;
 	FMAObjectItem *parent;
 	gboolean copy_data;
@@ -616,7 +616,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 					inserted = ( FMAObject * ) fma_object_duplicate( current, DUPLICATE_REC );
 					fma_object_set_origin( inserted, NULL );
 					fma_object_check_status( inserted );
-					relabel = na_updater_should_pasted_be_relabeled( updater, inserted );
+					relabel = fma_updater_should_pasted_be_relabeled( updater, inserted );
 
 				} else {
 					inserted = fma_object_ref( current );
@@ -865,7 +865,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	NactTreeModelPrivate *priv;
 	gboolean drop_done;
 	GtkApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	NactMainWindow *main_window;
 	FMAImporterParms parms;
 	GList *import_results, *it;
@@ -927,7 +927,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		if( result->imported ){
 			if( !result->exist || result->mode == IMPORTER_MODE_RENUMBER ){
 				imported = g_list_prepend( imported, result->imported );
-				na_updater_check_item_writability_status( updater, result->imported );
+				fma_updater_check_item_writability_status( updater, result->imported );
 
 			} else if( result->mode == IMPORTER_MODE_OVERRIDE ){
 				overriden = g_list_prepend( overriden, result->imported );
@@ -1153,7 +1153,7 @@ static gboolean
 is_parent_accept_new_children( NactApplication *application, NactMainWindow *window, FMAObjectItem *parent )
 {
 	gboolean accept_ok;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	NactStatusbar *bar;
 
 	accept_ok = FALSE;
@@ -1164,7 +1164,7 @@ is_parent_accept_new_children( NactApplication *application, NactMainWindow *win
 	 * ensure that level zero is writable
 	 */
 	if( parent == NULL ){
-		if( na_updater_is_level_zero_writable( updater )){
+		if( fma_updater_is_level_zero_writable( updater )){
 			accept_ok = TRUE;
 
 		} else {

@@ -49,7 +49,7 @@
 
 #include <gtk/gtk.h>
 
-#include "core/na-updater.h"
+#include "core/fma-updater.h"
 
 G_BEGIN_DECLS
 
@@ -103,7 +103,7 @@ int              nact_application_run_with_args       ( NactApplication *applica
 
 gchar           *nact_application_get_application_name( const NactApplication *application );
 
-NAUpdater       *nact_application_get_updater         ( const NactApplication *application );
+FMAUpdater       *nact_application_get_updater         ( const NactApplication *application );
 
 gboolean         nact_application_is_willing_to_quit  ( const NactApplication *application );
 

@@ -56,7 +56,7 @@ static gchar *st_save_warning     = N_( "Some items may not have been saved" );
 static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items list" );
 static gchar *st_delete_error     = N_( "Some items have not been deleted" );
 
-static gboolean save_item( NactMainWindow *window, NAUpdater *updater, FMAObjectItem *item, GSList **messages );
+static gboolean save_item( NactMainWindow *window, FMAUpdater *updater, FMAObjectItem *item, GSList **messages );
 static void     install_autosave( NactMainWindow *main_window );
 static void     on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer new_value, gpointer user_data );
 static void     on_autosave_prefs_timeout( NactMainWindow *main_window );
@@ -132,7 +132,7 @@ nact_menu_file_new_menu( NactMainWindow *main_window )
 	sdata = nact_menu_get_data( main_window );
 	menu = fma_object_menu_new_with_defaults();
 	fma_object_check_status( menu );
-	na_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( menu ));
+	fma_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( menu ));
 	items = g_list_prepend( NULL, menu );
 	items_view = nact_main_window_get_items_view( main_window );
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
@@ -156,7 +156,7 @@ nact_menu_file_new_action( NactMainWindow *main_window )
 	sdata = nact_menu_get_data( main_window );
 	action = fma_object_action_new_with_defaults();
 	fma_object_check_status( action );
-	na_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( action ));
+	fma_updater_check_item_writability_status( sdata->updater, FMA_OBJECT_ITEM( action ));
 	items = g_list_prepend( NULL, action );
 	items_view = nact_main_window_get_items_view( main_window );
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
@@ -319,7 +319,7 @@ nact_menu_file_save_items( NactMainWindow *window )
  * iterates here on each and every FMAObjectItem row stored in the tree
  */
 static gboolean
-save_item( NactMainWindow *window, NAUpdater *updater, FMAObjectItem *item, GSList **messages )
+save_item( NactMainWindow *window, FMAUpdater *updater, FMAObjectItem *item, GSList **messages )
 {
 	static const gchar *thisfn = "nact_menu_file_save_item";
 	gboolean ret;
@@ -330,7 +330,7 @@ save_item( NactMainWindow *window, NAUpdater *updater, FMAObjectItem *item, GSLi
 	guint save_ret;
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
+	g_return_val_if_fail( FMA_IS_UPDATER( updater ), FALSE );
 	g_return_val_if_fail( FMA_IS_OBJECT_ITEM( item ), FALSE );
 
 	ret = TRUE;
@@ -349,7 +349,7 @@ save_item( NactMainWindow *window, NAUpdater *updater, FMAObjectItem *item, GSLi
 		g_debug( "%s: saving %p (%s) '%s'", thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ), label );
 		g_free( label );
 
-		save_ret = na_updater_write_item( updater, item, messages );
+		save_ret = fma_updater_write_item( updater, item, messages );
 		ret = ( save_ret == FMA_IIO_PROVIDER_CODE_OK );
 
 		if( ret ){

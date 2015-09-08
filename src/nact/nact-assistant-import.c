@@ -649,7 +649,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	GList *insertable_items, *overriden_items;
 	FMAImporterResult *result;
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	NactTreeView *items_view;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( wnd ));

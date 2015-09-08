@@ -324,11 +324,11 @@ nact_menu_win( NactMainWindow *main_window )
 	application = gtk_window_get_application( GTK_WINDOW( main_window ));
 	g_return_if_fail( application && NACT_IS_APPLICATION( application ));
 	sdata->updater = nact_application_get_updater( NACT_APPLICATION( application ));
-	sdata->is_level_zero_writable = na_updater_is_level_zero_writable( sdata->updater );
+	sdata->is_level_zero_writable = fma_updater_is_level_zero_writable( sdata->updater );
 	sdata->has_writable_providers =
 			( fma_io_provider_find_writable_io_provider( FMA_PIVOT( sdata->updater )) != NULL );
 
-	g_debug( "%s: na_updater_is_level_zero_writable=%s, fma_io_provider_find_writable_io_provider=%s",
+	g_debug( "%s: fma_updater_is_level_zero_writable=%s, fma_io_provider_find_writable_io_provider=%s",
 			thisfn,
 			sdata->is_level_zero_writable ? "True":"False",
 			sdata->has_writable_providers ? "True":"False" );

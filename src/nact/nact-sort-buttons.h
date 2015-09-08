@@ -43,8 +43,8 @@
  * Preferences editor).
  *
  * Modifying the sort order mode requires that:
- * - level zero is writable (see NAUpdater)
- * - preferences are not locked (see NAUpdater)
+ * - level zero is writable (see FMAUpdater)
+ * - preferences are not locked (see FMAUpdater)
  * - sort order mode is not a mandatory preference.
  */
 

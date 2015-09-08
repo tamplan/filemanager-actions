@@ -33,7 +33,7 @@
 
 #include "core/fma-gtk-utils.h"
 #include "core/fma-iprefs.h"
-#include "core/na-updater.h"
+#include "core/fma-updater.h"
 
 #include "nact-application.h"
 #include "nact-main-window.h"
@@ -42,7 +42,7 @@
 
 struct _NactSortButtonsPrivate {
 	gboolean        dispose_has_run;
-	NAUpdater      *updater;
+	FMAUpdater      *updater;
 	gboolean        toggling;
 	gint            active;
 	guint           count_items;
@@ -371,8 +371,8 @@ enable_buttons( const NactSortButtons *sort_buttons, gboolean enabled )
 	guint order_mode;
 
 	priv = sort_buttons->private;
-	level_zero_writable = na_updater_is_level_zero_writable( priv->updater );
-	preferences_locked = na_updater_are_preferences_locked( priv->updater );
+	level_zero_writable = fma_updater_is_level_zero_writable( priv->updater );
+	preferences_locked = fma_updater_are_preferences_locked( priv->updater );
 	finally_enabled = level_zero_writable && !preferences_locked && enabled;
 
 	for( i=0 ; st_toggle_group[i].btn_name ; ++i ){

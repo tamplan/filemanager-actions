@@ -47,8 +47,8 @@
 #include "nact-tree-view.h"
 
 static GList  *prepare_for_paste( NactMainWindow *window, sMenuData *sdata );
-static GList  *get_deletables( NAUpdater *updater, GList *tree, GSList **not_deletable );
-static GSList *get_deletables_rec( NAUpdater *updater, GList *tree );
+static GList  *get_deletables( FMAUpdater *updater, GList *tree, GSList **not_deletable );
+static GSList *get_deletables_rec( FMAUpdater *updater, GList *tree );
 static gchar  *add_ndeletable_msg( const FMAObjectItem *item, gint reason );
 static void    update_clipboard_counters( NactMainWindow *window, sMenuData *sdata );
 
@@ -365,7 +365,7 @@ prepare_for_paste( NactMainWindow *window, sMenuData *sdata )
 			}
 		}
 
-		relabel = na_updater_should_pasted_be_relabeled( sdata->updater, FMA_OBJECT( it->data ));
+		relabel = fma_updater_should_pasted_be_relabeled( sdata->updater, FMA_OBJECT( it->data ));
 		fma_object_prepare_for_paste( it->data, relabel, renumber, action );
 		fma_object_check_status( it->data );
 	}
@@ -416,7 +416,7 @@ nact_menu_edit_duplicate( NactMainWindow *main_window )
 			action = FMA_OBJECT_ACTION( fma_object_get_parent( it->data ));
 		}
 
-		relabel = na_updater_should_pasted_be_relabeled( sdata->updater, obj );
+		relabel = fma_updater_should_pasted_be_relabeled( sdata->updater, obj );
 		fma_object_prepare_for_paste( obj, relabel, TRUE, action );
 		fma_object_set_origin( obj, NULL );
 		fma_object_check_status( obj );
@@ -482,7 +482,7 @@ nact_menu_edit_delete( NactMainWindow *main_window )
 }
 
 static GList *
-get_deletables( NAUpdater *updater, GList *selected, GSList **ndeletables )
+get_deletables( FMAUpdater *updater, GList *selected, GSList **ndeletables )
 {
 	GList *to_delete;
 	GList *it;
@@ -523,7 +523,7 @@ get_deletables( NAUpdater *updater, GList *selected, GSList **ndeletables )
 }
 
 static GSList *
-get_deletables_rec( NAUpdater *updater, GList *tree )
+get_deletables_rec( FMAUpdater *updater, GList *tree )
 {
 	GSList *msgs;
 	GList *it;

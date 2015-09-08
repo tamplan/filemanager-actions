@@ -201,7 +201,7 @@ ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container
 {
 	NactAssistantExport *window;
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	GList *formats;
 
 	g_return_val_if_fail( NACT_IS_ASSISTANT_EXPORT( instance ), NULL );
@@ -755,7 +755,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	GList *ia;
 	ExportStruct *str;
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	gboolean first;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( wnd ));

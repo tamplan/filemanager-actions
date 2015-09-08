@@ -65,7 +65,7 @@
 struct _NactMainWindowPrivate {
 	gboolean         dispose_has_run;
 
-	NAUpdater       *updater;
+	FMAUpdater       *updater;
 
 	/**
 	 * Current action or menu.
@@ -183,7 +183,7 @@ static void       setup_dialog_title( NactMainWindow *window );
 static void       setup_writability_status( NactMainWindow *window );
 
 /* items have changed */
-static void       on_pivot_items_changed( NAUpdater *updater, NactMainWindow *window );
+static void       on_pivot_items_changed( FMAUpdater *updater, NactMainWindow *window );
 static gboolean   confirm_for_giveup_from_pivot( const NactMainWindow *window );
 static gboolean   confirm_for_giveup_from_menu( const NactMainWindow *window );
 static void       load_or_reload_items( NactMainWindow *window );
@@ -1116,12 +1116,12 @@ setup_writability_status( NactMainWindow *window )
  * in the underlying storage subsystems
  */
 static void
-on_pivot_items_changed( NAUpdater *updater, NactMainWindow *window )
+on_pivot_items_changed( FMAUpdater *updater, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_on_pivot_items_changed";
 	gboolean reload_ok;
 
-	g_return_if_fail( NA_IS_UPDATER( updater ));
+	g_return_if_fail( FMA_IS_UPDATER( updater ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
@@ -1208,7 +1208,7 @@ load_or_reload_items( NactMainWindow *window )
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	raz_selection_properties( window );
-	tree = na_updater_load_items( window->private->updater );
+	tree = fma_updater_load_items( window->private->updater );
 	nact_tree_view_fill( window->private->items_view, tree );
 
 	g_debug( "%s: end of tree view filling", thisfn );

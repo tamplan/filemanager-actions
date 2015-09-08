@@ -120,8 +120,8 @@ libna_core_la_SOURCES = \
 	fma-timeout.c										\
 	fma-tokens.c											\
 	fma-tokens.h											\
-	na-updater.c										\
-	na-updater.h										\
+	fma-updater.c										\
+	fma-updater.h										\
 	$(BUILT_SOURCES)									\
 	$(NULL)
 

@@ -259,7 +259,7 @@ ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container
 	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_get_options";
 	GList *options;
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 
 	g_return_val_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ), NULL );
 

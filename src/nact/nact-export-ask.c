@@ -157,7 +157,7 @@ ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container
 {
 	NactExportAsk *window;
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	GList *formats;
 
 	g_return_val_if_fail( NACT_IS_EXPORT_ASK( instance ), NULL );

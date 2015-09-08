@@ -56,7 +56,7 @@
  *  +-> [NactApplication]
  *  |    on_startup()
  *  |      |
- *  |      +-> na_updater_new()
+ *  |      +-> fma_updater_new()
  *  |          nact_menu_app()
  *  |
  *  |    on_activate()

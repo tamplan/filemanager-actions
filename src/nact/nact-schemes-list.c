@@ -201,7 +201,7 @@ nact_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window, pf_new_s
 	static const gchar *thisfn = "nact_schemes_list_init_view";
 	SchemesListData *data;
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 
 	g_debug( "%s: treeview=%p, window=%p",
 			thisfn,
@@ -217,7 +217,7 @@ nact_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window, pf_new_s
 	data->window = window;
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	data->preferences_locked = na_updater_are_preferences_locked( updater );
+	data->preferences_locked = fma_updater_are_preferences_locked( updater );
 	data->editable = ( data->mode == SCHEMES_LIST_FOR_PREFERENCES && !data->preferences_locked );
 	data->pf_on_sel_changed = pf;
 	data->user_data = user_data;

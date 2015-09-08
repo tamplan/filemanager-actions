@@ -45,7 +45,7 @@
 #include <core/fma-gconf-migration.h>
 #include <core/fma-io-provider.h>
 #include <core/fma-exporter.h>
-#include <core/na-updater.h>
+#include <core/fma-updater.h>
 
 #include "console-utils.h"
 
@@ -577,17 +577,17 @@ get_action_from_cmdline( void )
 static gboolean
 output_to_desktop( FMAObjectAction *action, GSList **msgs )
 {
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	FMAIOProvider *provider;
 	guint ret;
 	gboolean code;
 
-	updater = na_updater_new();
+	updater = fma_updater_new();
 	provider = fma_io_provider_find_io_provider_by_id( FMA_PIVOT( updater ), "na-desktop" );
 
 	if( provider ){
 		fma_object_set_provider( action, provider );
-		ret = na_updater_write_item( updater, FMA_OBJECT_ITEM( action ), msgs );
+		ret = fma_updater_write_item( updater, FMA_OBJECT_ITEM( action ), msgs );
 		code = ( ret == FMA_IIO_PROVIDER_CODE_OK );
 
 	} else {
@@ -605,10 +605,10 @@ static gboolean
 output_to_stdout( const FMAObjectAction *action, GSList **msgs )
 {
 	gboolean ret;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	gchar *buffer;
 
-	updater = na_updater_new();
+	updater = fma_updater_new();
 	buffer = fma_exporter_to_buffer( FMA_PIVOT( updater ), FMA_OBJECT_ITEM( action ), "Desktop1", msgs );
 	ret = ( buffer != NULL );
 

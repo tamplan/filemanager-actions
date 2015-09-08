@@ -37,7 +37,7 @@
  * @include: nact-menu.h
  */
 
-#include "core/na-updater.h"
+#include "core/fma-updater.h"
 
 #include "nact-application.h"
 #include "nact-main-window-def.h"
@@ -52,7 +52,7 @@ typedef struct {
 	/* set at initialization time
 	 */
 	gulong		update_sensitivities_handler_id;
-	NAUpdater  *updater;
+	FMAUpdater  *updater;
 	GMenuModel *maintainer;
 	GMenuModel *popup;
 	gboolean    is_level_zero_writable;

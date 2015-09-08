@@ -568,7 +568,7 @@ export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *des
 	static const gchar *thisfn = "nact_clipboard_export_row_object";
 	GList *subitems, *isub;
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	FMAObjectItem *item;
 	gchar *item_label;
 	gint index;

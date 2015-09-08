@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include "core/fma-gtk-utils.h"
-#include "core/na-updater.h"
+#include "core/fma-updater.h"
 
 #include "base-gtk-utils.h"
 

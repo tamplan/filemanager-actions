@@ -55,7 +55,7 @@ struct _NactApplicationPrivate {
 	GStrv           argv;
 	int             code;
 
-	NAUpdater      *updater;
+	FMAUpdater      *updater;
 };
 
 static const gchar *st_application_name	= N_( "FileManager-Actions Configuration Tool" );
@@ -420,7 +420,7 @@ application_startup( GApplication *application )
 	/* create the FMAPivot object (loading the plugins and so on)
 	 * after having dealt with command-line arguments
 	 */
-	priv->updater = na_updater_new();
+	priv->updater = fma_updater_new();
 	fma_pivot_set_loadable( FMA_PIVOT( priv->updater ), PIVOT_LOAD_ALL );
 
 	/* define the application menu */
@@ -538,16 +538,16 @@ nact_application_get_application_name( const NactApplication *application )
  * nact_application_get_updater:
  * @application: this NactApplication object.
  *
- * Returns a pointer on the #NAUpdater object.
+ * Returns a pointer on the #FMAUpdater object.
  *
  * The returned pointer is owned by the #NactApplication object.
  * It should not be g_free() not g_object_unref() by the caller.
  */
-NAUpdater *
+FMAUpdater *
 nact_application_get_updater( const NactApplication *application )
 {
 	NactApplicationPrivate *priv;
-	NAUpdater *updater = NULL;
+	FMAUpdater *updater = NULL;
 
 	g_return_val_if_fail( application && NACT_IS_APPLICATION( application ), NULL );
 

@@ -199,7 +199,7 @@ nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 	static const gchar *thisfn = "nact_providers_list_init_view";
 	ProvidersListData *data;
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
@@ -212,7 +212,7 @@ nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 	data->window = window;
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	data->preferences_locked = na_updater_are_preferences_locked( updater );
+	data->preferences_locked = fma_updater_are_preferences_locked( updater );
 
 	init_view_setup_providers( treeview, window );
 	init_view_connect_signals( treeview, window );
@@ -225,7 +225,7 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_providers_list_init_view_setup_providers";
 	NactApplication *application;
-	NAUpdater *updater;
+	FMAUpdater *updater;
 	GtkListStore *model;
 	const GList *providers;
 	const GList *iter;
