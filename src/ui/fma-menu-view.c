@@ -56,7 +56,7 @@ static sToolbarProps st_toolbar_props[] = {
 	{ TOOLBAR_HELP_ID,  IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,  "toolbar-help",  "help-toolbar",  NULL }
 };
 
-static const gchar *st_toolbar_ui       = PKGUIDIR "/nact-toolbar.ui";
+static const gchar *st_toolbar_ui       = PKGUIDIR "/fma-toolbar.ui";
 
 /* associates the target string (from the XML ui definition)
  *  to the desired GTK_POS

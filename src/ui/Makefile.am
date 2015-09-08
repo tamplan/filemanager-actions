@@ -160,10 +160,10 @@ ui_files = \
 	fma-confirm-logout.ui								\
 	fma-export-ask.ui									\
 	fma-icon-chooser.ui									\
-	nact-legend.ui										\
+	fma-legend.ui										\
 	fma-main-window.ui									\
 	fma-preferences.ui									\
-	nact-toolbar.ui										\
+	fma-toolbar.ui										\
 	$(NULL)
 
 images_files = \
