@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NADP_MONITOR_H__
-#define __NADP_MONITOR_H__
+#ifndef __IO_DESKTOP_FMA_MONITOR_H__
+#define __IO_DESKTOP_FMA_MONITOR_H__
 
 /**
- * SECTION: nadp_monitor
- * @short_description: #NadpMonitor class definition.
- * @include: nadp-monitor.h
+ * SECTION: fma_monitor
+ * @short_description: #FMAMonitor class definition.
+ * @include: fma-monitor.h
  *
  * This class manages monitoring on .desktop files and directories.
  * We also put a monitor on directories which do not exist, to be
@@ -50,35 +50,35 @@
 
 G_BEGIN_DECLS
 
-#define NADP_TYPE_MONITOR                ( nadp_monitor_get_type())
-#define NADP_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NADP_TYPE_MONITOR, NadpMonitor ))
-#define NADP_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NADP_TYPE_MONITOR, NadpMonitorClass ))
-#define NADP_IS_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NADP_TYPE_MONITOR ))
-#define NADP_IS_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NADP_TYPE_MONITOR ))
-#define NADP_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NADP_TYPE_MONITOR, NadpMonitorClass ))
+#define FMA_TYPE_MONITOR                ( fma_monitor_get_type())
+#define FMA_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_MONITOR, FMAMonitor ))
+#define FMA_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_MONITOR, FMAMonitorClass ))
+#define FMA_IS_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_MONITOR ))
+#define FMA_IS_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_MONITOR ))
+#define FMA_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_MONITOR, FMAMonitorClass ))
 
-typedef struct _NadpMonitorPrivate       NadpMonitorPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject             parent;
-	NadpMonitorPrivate *private;
-}
-	NadpMonitor;
-
-typedef struct _NadpMonitorClassPrivate  NadpMonitorClassPrivate;
+typedef struct _FMAMonitorPrivate       FMAMonitorPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass             parent;
-	NadpMonitorClassPrivate *private;
+	GObject            parent;
+	FMAMonitorPrivate *private;
 }
-	NadpMonitorClass;
+	FMAMonitor;
 
-GType        nadp_monitor_get_type( void );
+typedef struct _FMAMonitorClassPrivate  FMAMonitorClassPrivate;
 
-NadpMonitor *nadp_monitor_new( const FMADesktopProvider *provider, const gchar *path );
+typedef struct {
+	/*< private >*/
+	GObjectClass            parent;
+	FMAMonitorClassPrivate *private;
+}
+	FMAMonitorClass;
+
+GType       fma_monitor_get_type( void );
+
+FMAMonitor *fma_monitor_new( const FMADesktopProvider *provider, const gchar *path );
 
 G_END_DECLS
 
-#endif /* __NADP_MONITOR_H__ */
+#endif /* __IO_DESKTOP_FMA_MONITOR_H__ */

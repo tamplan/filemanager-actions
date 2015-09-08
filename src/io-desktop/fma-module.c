@@ -40,7 +40,7 @@
  * - be registered in fma_extension_startup()
  * - be addressed in fma_extension_list_types().
  */
-#define NADP_TYPES_COUNT	1
+#define FMA_TYPES_COUNT	1
 
 /*
  * fma_extension_startup:
@@ -50,7 +50,7 @@
 gboolean
 fma_extension_startup( GTypeModule *module )
 {
-	static const gchar *thisfn = "nadp_module_fma_extension_startup";
+	static const gchar *thisfn = "io-desktop/fma_module_fma_extension_startup";
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
@@ -67,7 +67,7 @@ fma_extension_startup( GTypeModule *module )
 guint
 fma_extension_get_version( void )
 {
-	static const gchar *thisfn = "nadp_module_fma_extension_get_version";
+	static const gchar *thisfn = "io-desktop/fma_module_fma_extension_get_version";
 	guint version;
 
 	version = 1;
@@ -85,17 +85,17 @@ fma_extension_get_version( void )
 guint
 fma_extension_list_types( const GType **types )
 {
-	static const gchar *thisfn = "nadp_module_fma_extension_list_types";
-	static GType types_list [1+NADP_TYPES_COUNT];
+	static const gchar *thisfn = "io-desktop/fma_module_fma_extension_list_types";
+	static GType types_list [1+FMA_TYPES_COUNT];
 
 	g_debug( "%s: types=%p", thisfn, ( void * ) types );
 
 	types_list[0] = FMA_TYPE_DESKTOP_PROVIDER;
 
-	types_list[NADP_TYPES_COUNT] = 0;
+	types_list[FMA_TYPES_COUNT] = 0;
 	*types = types_list;
 
-	return( NADP_TYPES_COUNT );
+	return( FMA_TYPES_COUNT );
 }
 
 /*
@@ -106,7 +106,7 @@ fma_extension_list_types( const GType **types )
 void
 fma_extension_shutdown( void )
 {
-	static const gchar *thisfn = "nadp_module_fma_extension_shutdown";
+	static const gchar *thisfn = "io-desktop/fma_module_fma_extension_shutdown";
 
 	g_debug( "%s", thisfn );
 }

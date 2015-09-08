@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __FMA_FORMATS_H__
-#define __FMA_FORMATS_H__
+#ifndef __IO_DESKTOP_FMA_FORMATS_H__
+#define __IO_DESKTOP_FMA_FORMATS_H__
 
 #include <glib.h>
 
@@ -43,4 +43,4 @@ void   fma_formats_free_formats( GList *formats );
 
 G_END_DECLS
 
-#endif /* __FMA_FORMATS_H__ */
+#endif /* __IO_DESKTOP_FMA_FORMATS_H__ */

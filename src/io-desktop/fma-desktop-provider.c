@@ -39,8 +39,8 @@
 
 #include "fma-desktop-provider.h"
 #include "fma-formats.h"
-#include "nadp-keys.h"
-#include "nadp-monitor.h"
+#include "fma-keys.h"
+#include "fma-monitor.h"
 #include "nadp-reader.h"
 #include "nadp-writer.h"
 
@@ -347,13 +347,13 @@ iexporter_free_formats( const FMAIExporter *exporter, GList *format_list )
 void
 fma_desktop_provider_add_monitor( FMADesktopProvider *provider, const gchar *dir )
 {
-	NadpMonitor *monitor;
+	FMAMonitor *monitor;
 
 	g_return_if_fail( FMA_IS_DESKTOP_PROVIDER( provider ));
 
 	if( !provider->private->dispose_has_run ){
 
-		monitor = nadp_monitor_new( provider, dir );
+		monitor = fma_monitor_new( provider, dir );
 		provider->private->monitors = g_list_prepend( provider->private->monitors, monitor );
 	}
 }

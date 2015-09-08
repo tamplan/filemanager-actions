@@ -27,43 +27,43 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NADP_KEYS_H__
-#define __NADP_KEYS_H__
+#ifndef __IO_DESKTOP_FMA_KEYS_H__
+#define __IO_DESKTOP_FMA_KEYS_H__
 
 #include <api/fma-data-def.h>
 
 G_BEGIN_DECLS
 
-#define NADP_GROUP_DESKTOP							G_KEY_FILE_DESKTOP_GROUP
-#define NADP_GROUP_PROFILE							"X-Action-Profile"
+#define FMA_GROUP_DESKTOP							G_KEY_FILE_DESKTOP_GROUP
+#define FMA_GROUP_PROFILE							"X-Action-Profile"
 
-#define NADP_KEY_TYPE								G_KEY_FILE_DESKTOP_KEY_TYPE
-#define NADP_VALUE_TYPE_ACTION						"Action"
-#define NADP_VALUE_TYPE_MENU						"Menu"
+#define FMA_KEY_TYPE								G_KEY_FILE_DESKTOP_KEY_TYPE
+#define FMA_VALUE_TYPE_ACTION						"Action"
+#define FMA_VALUE_TYPE_MENU							"Menu"
 
-#define NADP_KEY_PROFILES							"Profiles"
+#define FMA_KEY_PROFILES							"Profiles"
 
-#define NADP_KEY_EXECUTION_MODE						"ExecutionMode"
-#define NADP_VALUE_EXECUTION_MODE_NORMAL			"Normal"
-#define NADP_VALUE_EXECUTION_MODE_MINIMIZED			"Minimized"
-#define NADP_VALUE_EXECUTION_MODE_MAXIMIZED			"Maximized"
-#define NADP_VALUE_EXECUTION_MODE_TERMINAL			"Terminal"
-#define NADP_VALUE_EXECUTION_MODE_EMBEDDED			"Embedded"
-#define NADP_VALUE_EXECUTION_MODE_DISPLAY_OUTPUT	"DisplayOutput"
+#define FMA_KEY_EXECUTION_MODE						"ExecutionMode"
+#define FMA_VALUE_EXECUTION_MODE_NORMAL				"Normal"
+#define FMA_VALUE_EXECUTION_MODE_MINIMIZED			"Minimized"
+#define FMA_VALUE_EXECUTION_MODE_MAXIMIZED			"Maximized"
+#define FMA_VALUE_EXECUTION_MODE_TERMINAL			"Terminal"
+#define FMA_VALUE_EXECUTION_MODE_EMBEDDED			"Embedded"
+#define FMA_VALUE_EXECUTION_MODE_DISPLAY_OUTPUT		"DisplayOutput"
 
-#define NADP_KEY_ITEMS_LIST							"ItemsList"
+#define FMA_KEY_ITEMS_LIST							"ItemsList"
 
-#define NADP_KEY_ONLY_SHOW_IN						G_KEY_FILE_DESKTOP_KEY_ONLY_SHOW_IN
-#define NADP_KEY_NOT_SHOW_IN						G_KEY_FILE_DESKTOP_KEY_NOT_SHOW_IN
-#define NADP_KEY_NO_DISPLAY							"NoDisplay"
-#define NADP_KEY_HIDDEN								G_KEY_FILE_DESKTOP_KEY_HIDDEN
-#define NADP_KEY_CAPABILITIES						"Capabilities"
-#define NADP_VALUE_CAPABILITY_OWNER					"Owner"
-#define NADP_VALUE_CAPABILITY_READABLE				"Readable"
-#define NADP_VALUE_CAPABILITY_WRITABLE				"Writable"
-#define NADP_VALUE_CAPABILITY_EXECUTABLE			"Executable"
-#define NADP_VALUE_CAPABILITY_LOCAL					"Local"
+#define FMA_KEY_ONLY_SHOW_IN						G_KEY_FILE_DESKTOP_KEY_ONLY_SHOW_IN
+#define FMA_KEY_NOT_SHOW_IN							G_KEY_FILE_DESKTOP_KEY_NOT_SHOW_IN
+#define FMA_KEY_NO_DISPLAY							"NoDisplay"
+#define FMA_KEY_HIDDEN								G_KEY_FILE_DESKTOP_KEY_HIDDEN
+#define FMA_KEY_CAPABILITIES						"Capabilities"
+#define FMA_VALUE_CAPABILITY_OWNER					"Owner"
+#define FMA_VALUE_CAPABILITY_READABLE				"Readable"
+#define FMA_VALUE_CAPABILITY_WRITABLE				"Writable"
+#define FMA_VALUE_CAPABILITY_EXECUTABLE				"Executable"
+#define FMA_VALUE_CAPABILITY_LOCAL					"Local"
 
 G_END_DECLS
 
-#endif /* __NADP_KEYS_H__ */
+#endif /* __IO_DESKTOP_FMA_KEYS_H__ */

@@ -42,7 +42,7 @@
 #include <api/fma-object-api.h>
 
 #include "fma-desktop-provider.h"
-#include "nadp-keys.h"
+#include "fma-keys.h"
 #include "nadp-reader.h"
 #include "nadp-utils.h"
 #include "nadp-xdg-dirs.h"
@@ -281,10 +281,10 @@ item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf,
 	item = NULL;
 	type = fma_desktop_file_get_file_type( ndf );
 
-	if( !strcmp( type, NADP_VALUE_TYPE_ACTION )){
+	if( !strcmp( type, FMA_VALUE_TYPE_ACTION )){
 		item = FMA_IFACTORY_OBJECT( fma_object_action_new());
 
-	} else if( !strcmp( type, NADP_VALUE_TYPE_MENU )){
+	} else if( !strcmp( type, FMA_VALUE_TYPE_MENU )){
 		item = FMA_IFACTORY_OBJECT( fma_object_menu_new());
 
 	} else {
@@ -454,8 +454,8 @@ read_start_read_subitems_key( const FMAIFactoryProvider *provider, FMAObjectItem
 	gboolean key_found;
 
 	subitems = fma_desktop_file_get_string_list( reader_data->ndf,
-			NADP_GROUP_DESKTOP,
-			FMA_IS_OBJECT_ACTION( item ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
+			FMA_GROUP_DESKTOP,
+			FMA_IS_OBJECT_ACTION( item ) ? FMA_KEY_PROFILES : FMA_KEY_ITEMS_LIST,
 			&key_found,
 			NULL );
 
@@ -510,12 +510,12 @@ nadp_reader_ifactory_provider_read_data( const FMAIFactoryProvider *reader, void
 		if( def->desktop_entry ){
 
 			if( FMA_IS_OBJECT_ITEM( object )){
-				group = g_strdup( NADP_GROUP_DESKTOP );
+				group = g_strdup( FMA_GROUP_DESKTOP );
 
 			} else {
 				g_return_val_if_fail( FMA_IS_OBJECT_PROFILE( object ), NULL );
 				id = fma_object_get_id( object );
-				group = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, id );
+				group = g_strdup_printf( "%s %s", FMA_GROUP_PROFILE, id );
 				g_free( id );
 			}
 
