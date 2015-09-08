@@ -31,4 +31,4 @@
 #include <config.h>
 #endif
 
-#include "fma-keys.h"
+#include "fma-desktop-keys.h"

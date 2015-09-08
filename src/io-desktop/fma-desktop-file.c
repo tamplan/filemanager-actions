@@ -38,7 +38,7 @@
 #include <api/fma-core-utils.h>
 
 #include "fma-desktop-file.h"
-#include "fma-keys.h"
+#include "fma-desktop-keys.h"
 
 /* private class data
  */
@@ -458,21 +458,21 @@ check_key_file( FMADesktopFile *ndf )
 
 	/* start group must be [Desktop Entry] */
 	start_group = g_key_file_get_start_group( ndf->private->key_file );
-	if( strcmp( start_group, FMA_GROUP_DESKTOP )){
+	if( strcmp( start_group, FMA_DESKTOP_GROUP_DESKTOP )){
 		g_debug( "%s: %s: invalid start group, found %s, waited for %s",
-				thisfn, ndf->private->uri, start_group, FMA_GROUP_DESKTOP );
+				thisfn, ndf->private->uri, start_group, FMA_DESKTOP_GROUP_DESKTOP );
 		ret = FALSE;
 	}
 
 	/* must not have Hidden=true value */
 	if( ret ){
-		has_key = g_key_file_has_key( ndf->private->key_file, start_group, FMA_KEY_HIDDEN, &error );
+		has_key = g_key_file_has_key( ndf->private->key_file, start_group, FMA_DESTOP_KEY_HIDDEN, &error );
 		if( error ){
 			g_debug( "%s: %s: %s", thisfn, ndf->private->uri, error->message );
 			ret = FALSE;
 
 		} else if( has_key ){
-			hidden = g_key_file_get_boolean( ndf->private->key_file, start_group, FMA_KEY_HIDDEN, &error );
+			hidden = g_key_file_get_boolean( ndf->private->key_file, start_group, FMA_DESTOP_KEY_HIDDEN, &error );
 			if( error ){
 				g_debug( "%s: %s: %s", thisfn, ndf->private->uri, error->message );
 				ret = FALSE;
@@ -489,14 +489,14 @@ check_key_file( FMADesktopFile *ndf )
 	 */
 	if( ret ){
 		type = NULL;
-		has_key = g_key_file_has_key( ndf->private->key_file, start_group, FMA_KEY_TYPE, &error );
+		has_key = g_key_file_has_key( ndf->private->key_file, start_group, FMA_DESTOP_KEY_TYPE, &error );
 		if( error ){
 			g_debug( "%s: %s", thisfn, error->message );
 			g_error_free( error );
 			ret = FALSE;
 
 		} else if( has_key ){
-			type = g_key_file_get_string( ndf->private->key_file, start_group, FMA_KEY_TYPE, &error );
+			type = g_key_file_get_string( ndf->private->key_file, start_group, FMA_DESTOP_KEY_TYPE, &error );
 			if( error ){
 				g_debug( "%s: %s", thisfn, error->message );
 				g_free( type );
@@ -506,9 +506,9 @@ check_key_file( FMADesktopFile *ndf )
 		}
 		if( ret ){
 			if( !type || !strlen( type )){
-				type = g_strdup( FMA_VALUE_TYPE_ACTION );
+				type = g_strdup( FMA_DESKTOP_VALUE_TYPE_ACTION );
 
-			} else if( strcmp( type, FMA_VALUE_TYPE_MENU ) && strcmp( type, FMA_VALUE_TYPE_ACTION )){
+			} else if( strcmp( type, FMA_DESKTOP_VALUE_TYPE_MENU ) && strcmp( type, FMA_DESKTOP_VALUE_TYPE_ACTION )){
 				g_debug( "%s: unmanaged type: %s", thisfn, type );
 				g_free( type );
 				ret = FALSE;
@@ -600,7 +600,7 @@ fma_desktop_file_get_profiles( const FMADesktopFile *ndf )
 		groups = g_key_file_get_groups( ndf->private->key_file, NULL );
 		if( groups ){
 			ig = groups;
-			profile_pfx = g_strdup_printf( "%s ", FMA_GROUP_PROFILE );
+			profile_pfx = g_strdup_printf( "%s ", FMA_DESKTOP_GROUP_PROFILE );
 			pfx_len = strlen( profile_pfx );
 
 			while( *ig ){
@@ -643,7 +643,7 @@ fma_desktop_file_has_profile( const FMADesktopFile *ndf, const gchar *profile_id
 
 	if( !ndf->private->dispose_has_run ){
 
-		group_name = g_strdup_printf( "%s %s", FMA_GROUP_PROFILE, profile_id );
+		group_name = g_strdup_printf( "%s %s", FMA_DESKTOP_GROUP_PROFILE, profile_id );
 		has_profile = g_key_file_has_group( ndf->private->key_file, group_name );
 		g_free( group_name );
 	}
@@ -708,7 +708,7 @@ fma_desktop_file_remove_profile( const FMADesktopFile *ndf, const gchar *profile
 
 	if( !ndf->private->dispose_has_run ){
 
-		group_name = g_strdup_printf( "%s %s", FMA_GROUP_PROFILE, profile_id );
+		group_name = g_strdup_printf( "%s %s", FMA_DESKTOP_GROUP_PROFILE, profile_id );
 		g_key_file_remove_group( ndf->private->key_file, group_name, NULL );
 		g_free( group_name );
 	}

@@ -42,7 +42,7 @@
 #include "fma-desktop-file.h"
 #include "fma-desktop-provider.h"
 #include "fma-desktop-formats.h"
-#include "fma-keys.h"
+#include "fma-desktop-keys.h"
 #include "nadp-utils.h"
 #include "nadp-writer.h"
 #include "nadp-xdg-dirs.h"
@@ -488,9 +488,9 @@ write_start_write_type( FMADesktopFile *ndp, FMAObjectItem *item )
 {
 	fma_desktop_file_set_string(
 			ndp,
-			FMA_GROUP_DESKTOP,
-			FMA_KEY_TYPE,
-			FMA_IS_OBJECT_ACTION( item ) ? FMA_VALUE_TYPE_ACTION : FMA_VALUE_TYPE_MENU );
+			FMA_DESKTOP_GROUP_DESKTOP,
+			FMA_DESTOP_KEY_TYPE,
+			FMA_IS_OBJECT_ACTION( item ) ? FMA_DESKTOP_VALUE_TYPE_ACTION : FMA_DESKTOP_VALUE_TYPE_MENU );
 }
 
 /*
@@ -525,11 +525,11 @@ nadp_writer_ifactory_provider_write_data(
 
 		if( FMA_IS_OBJECT_PROFILE( object )){
 			profile_id = fma_object_get_id( object );
-			group_name = g_strdup_printf( "%s %s", FMA_GROUP_PROFILE, profile_id );
+			group_name = g_strdup_printf( "%s %s", FMA_DESKTOP_GROUP_PROFILE, profile_id );
 			g_free( profile_id );
 
 		} else {
-			group_name = g_strdup( FMA_GROUP_DESKTOP );
+			group_name = g_strdup( FMA_DESKTOP_GROUP_DESKTOP );
 		}
 
 		if( !fma_data_boxed_is_default( boxed ) || def->write_if_default ){
@@ -614,8 +614,8 @@ write_done_write_subitems_list( FMADesktopFile *ndp, FMAObjectItem *item )
 
 	fma_desktop_file_set_string_list(
 			ndp,
-			FMA_GROUP_DESKTOP,
-			FMA_IS_OBJECT_ACTION( item ) ? FMA_KEY_PROFILES : FMA_KEY_ITEMS_LIST,
+			FMA_DESKTOP_GROUP_DESKTOP,
+			FMA_IS_OBJECT_ACTION( item ) ? FMA_DESTOP_KEY_PROFILES : FMA_DESTOP_KEY_ITEMS_LIST,
 			subitems );
 
 	profile_groups = fma_desktop_file_get_profiles( ndp );

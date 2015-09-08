@@ -39,7 +39,7 @@
 
 #include "fma-desktop-provider.h"
 #include "fma-desktop-formats.h"
-#include "fma-keys.h"
+#include "fma-desktop-keys.h"
 #include "fma-monitor.h"
 #include "fma-desktop-reader.h"
 #include "nadp-writer.h"

@@ -47,8 +47,8 @@ libna_io_desktop_la_SOURCES = \
 	fma-desktop-provider.h								\
 	fma-desktop-formats.c								\
 	fma-desktop-formats.h								\
-	fma-keys.c											\
-	fma-keys.h											\
+	fma-desktop-keys.c									\
+	fma-desktop-keys.h									\
 	fma-module.c										\
 	fma-monitor.c										\
 	fma-monitor.h										\
