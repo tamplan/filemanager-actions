@@ -25,7 +25,7 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-pkglib_LTLIBRARIES = libna-core.la
+pkglib_LTLIBRARIES = libfma-core.la
 
 exportformat_datadir = $(pkgdatadir)/export-format
 
@@ -50,22 +50,22 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
-libna_core_la_SOURCES = \
+libfma_core_la_SOURCES = \
 	fma-about.c											\
 	fma-about.h											\
 	fma-boxed.c											\
-	fma-core-utils.c										\
-	fma-data-boxed.c										\
+	fma-core-utils.c									\
+	fma-data-boxed.c									\
 	fma-data-def.c										\
-	fma-data-types.c										\
+	fma-data-types.c									\
 	fma-desktop-environment.c							\
 	fma-desktop-environment.h							\
 	fma-exporter.c										\
 	fma-exporter.h										\
 	fma-export-format.c									\
 	fma-export-format.h									\
-	fma-factory-object.c									\
-	fma-factory-object.h									\
+	fma-factory-object.c								\
+	fma-factory-object.h								\
 	fma-factory-provider.c								\
 	fma-factory-provider.h								\
 	fma-gconf-migration.c								\
@@ -96,19 +96,19 @@ libna_core_la_SOURCES = \
 	fma-ioption.h										\
 	fma-ioptions-list.c									\
 	fma-ioptions-list.h									\
-	fma-iprefs.c											\
-	fma-iprefs.h											\
-	fma-module.c											\
-	fma-module.h											\
-	fma-object.c											\
+	fma-iprefs.c										\
+	fma-iprefs.h										\
+	fma-module.c										\
+	fma-module.h										\
+	fma-object.c										\
 	fma-object-id.c										\
 	fma-object-id-factory.c								\
 	fma-object-item.c									\
 	fma-object-item-factory.c							\
 	fma-object-action.c									\
 	fma-object-action-factory.c							\
-	fma-object-profile.c									\
-	fma-object-profile-factory.c							\
+	fma-object-profile.c								\
+	fma-object-profile-factory.c						\
 	fma-object-menu.c									\
 	fma-object-menu-factory.c							\
 	fma-pivot.c											\
@@ -118,18 +118,18 @@ libna_core_la_SOURCES = \
 	fma-settings.c										\
 	fma-settings.h										\
 	fma-timeout.c										\
-	fma-tokens.c											\
-	fma-tokens.h											\
+	fma-tokens.c										\
+	fma-tokens.h										\
 	fma-updater.c										\
 	fma-updater.h										\
 	$(BUILT_SOURCES)									\
 	$(NULL)
 
-libna_core_la_LIBADD = \
+libfma_core_la_LIBADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-libna_core_la_LDFLAGS = \
+libfma_core_la_LDFLAGS = \
 	-no-undefined										\
 	-avoid-version										\
 	-fPIC												\

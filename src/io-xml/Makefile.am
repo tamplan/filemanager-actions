@@ -55,7 +55,7 @@ libna_io_xml_la_SOURCES = \
 	$(NULL)
 
 libna_io_xml_la_LIBADD = \
-	$(top_builddir)/src/core/libna-core.la				\
+	$(top_builddir)/src/core/libfma-core.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 

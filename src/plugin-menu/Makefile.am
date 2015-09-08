@@ -43,7 +43,7 @@ libnautilus_actions_menu_la_SOURCES = \
 	$(NULL)
 
 libnautilus_actions_menu_la_LIBADD = \
-	$(top_builddir)/src/core/libna-core.la						\
+	$(top_builddir)/src/core/libfma-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 

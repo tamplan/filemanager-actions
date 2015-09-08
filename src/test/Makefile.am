@@ -53,7 +53,7 @@ test_reader_SOURCES = \
 	$(NULL)
 
 test_reader_LDADD = \
-	$(top_builddir)/src/core/libna-core.la				\
+	$(top_builddir)/src/core/libfma-core.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
@@ -111,7 +111,7 @@ test_parse_uris_SOURCES = \
 	$(NULL)
 
 test_parse_uris_LDADD = \
-	$(top_builddir)/src/core/libna-core.la				\
+	$(top_builddir)/src/core/libfma-core.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 

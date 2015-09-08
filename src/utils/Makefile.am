@@ -26,7 +26,7 @@
 #   ... and many others (see AUTHORS)
 
 NA_UTILS_LDADD = \
-	$(top_builddir)/src/core/libna-core.la						\
+	$(top_builddir)/src/core/libfma-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
