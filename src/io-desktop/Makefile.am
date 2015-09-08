@@ -50,8 +50,8 @@ libna_io_desktop_la_SOURCES = \
 	fma-desktop-keys.c									\
 	fma-desktop-keys.h									\
 	fma-desktop-module.c								\
-	fma-monitor.c										\
-	fma-monitor.h										\
+	fma-desktop-monitor.c								\
+	fma-desktop-monitor.h								\
 	fma-desktop-reader.c								\
 	fma-desktop-reader.h								\
 	nadp-utils.c										\

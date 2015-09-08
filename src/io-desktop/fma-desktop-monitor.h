@@ -27,13 +27,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __IO_DESKTOP_FMA_MONITOR_H__
-#define __IO_DESKTOP_FMA_MONITOR_H__
+#ifndef __IO_DESKTOP_FMA_DESKTOP_MONITOR_H__
+#define __IO_DESKTOP_FMA_DESKTOP_MONITOR_H__
 
 /**
- * SECTION: fma_monitor
- * @short_description: #FMAMonitor class definition.
- * @include: fma-monitor.h
+ * SECTION: fma_desktop_monitor
+ * @short_description: #FMADesktopMonitor class definition.
+ * @include: fma-desktop-monitor.h
  *
  * This class manages monitoring on .desktop files and directories.
  * We also put a monitor on directories which do not exist, to be
@@ -50,35 +50,35 @@
 
 G_BEGIN_DECLS
 
-#define FMA_TYPE_MONITOR                ( fma_monitor_get_type())
-#define FMA_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_MONITOR, FMAMonitor ))
-#define FMA_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_MONITOR, FMAMonitorClass ))
-#define FMA_IS_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_MONITOR ))
-#define FMA_IS_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_MONITOR ))
-#define FMA_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_MONITOR, FMAMonitorClass ))
+#define FMA_TYPE_DESKTOP_MONITOR                ( fma_desktop_monitor_get_type())
+#define FMA_DESKTOP_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_DESKTOP_MONITOR, FMADesktopMonitor ))
+#define FMA_DESKTOP_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_DESKTOP_MONITOR, FMADesktopMonitorClass ))
+#define FMA_IS_DESKTOP_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_DESKTOP_MONITOR ))
+#define FMA_IS_DESKTOP_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_DESKTOP_MONITOR ))
+#define FMA_DESKTOP_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_DESKTOP_MONITOR, FMADesktopMonitorClass ))
 
-typedef struct _FMAMonitorPrivate       FMAMonitorPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject            parent;
-	FMAMonitorPrivate *private;
-}
-	FMAMonitor;
-
-typedef struct _FMAMonitorClassPrivate  FMAMonitorClassPrivate;
+typedef struct _FMADesktopMonitorPrivate        FMADesktopMonitorPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass            parent;
-	FMAMonitorClassPrivate *private;
+	GObject                   parent;
+	FMADesktopMonitorPrivate *private;
 }
-	FMAMonitorClass;
+	FMADesktopMonitor;
 
-GType       fma_monitor_get_type( void );
+typedef struct _FMADesktopMonitorClassPrivate   FMADesktopMonitorClassPrivate;
 
-FMAMonitor *fma_monitor_new( const FMADesktopProvider *provider, const gchar *path );
+typedef struct {
+	/*< private >*/
+	GObjectClass                   parent;
+	FMADesktopMonitorClassPrivate *private;
+}
+	FMADesktopMonitorClass;
+
+GType              fma_desktop_monitor_get_type( void );
+
+FMADesktopMonitor *fma_desktop_monitor_new     ( const FMADesktopProvider *provider, const gchar *path );
 
 G_END_DECLS
 
-#endif /* __IO_DESKTOP_FMA_MONITOR_H__ */
+#endif /* __IO_DESKTOP_FMA_DESKTOP_MONITOR_H__ */

@@ -33,17 +33,17 @@
 
 #include <gio/gio.h>
 
-#include "fma-monitor.h"
+#include "fma-desktop-monitor.h"
 
 /* private class data
  */
-struct _FMAMonitorClassPrivate {
+struct _FMADesktopMonitorClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _FMAMonitorPrivate {
+struct _FMADesktopMonitorPrivate {
 	gboolean            dispose_has_run;
 	FMADesktopProvider *provider;
 	gchar              *name;
@@ -55,15 +55,15 @@ struct _FMAMonitorPrivate {
 static GObjectClass *st_parent_class = NULL;
 
 static GType  register_type( void );
-static void   class_init( FMAMonitorClass *klass );
+static void   class_init( FMADesktopMonitorClass *klass );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
-static void   on_monitor_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, FMAMonitor *my_monitor );
+static void   on_monitor_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, FMADesktopMonitor *my_monitor );
 
 GType
-fma_monitor_get_type( void )
+fma_desktop_monitor_get_type( void )
 {
 	static GType class_type = 0;
 
@@ -77,32 +77,32 @@ fma_monitor_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "fma_monitor_register_type";
+	static const gchar *thisfn = "fma_desktop_monitor_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( FMAMonitorClass ),
+		sizeof( FMADesktopMonitorClass ),
 		NULL,
 		NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( FMAMonitor ),
+		sizeof( FMADesktopMonitor ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "FMAMonitor", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMADesktopMonitor", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( FMAMonitorClass *klass )
+class_init( FMADesktopMonitorClass *klass )
 {
-	static const gchar *thisfn = "fma_monitor_class_init";
+	static const gchar *thisfn = "fma_desktop_monitor_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -113,23 +113,23 @@ class_init( FMAMonitorClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( FMAMonitorClassPrivate, 1 );
+	klass->private = g_new0( FMADesktopMonitorClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "fma_monitor_instance_init";
-	FMAMonitor *self;
+	static const gchar *thisfn = "fma_desktop_monitor_instance_init";
+	FMADesktopMonitor *self;
 
-	g_return_if_fail( FMA_IS_MONITOR( instance ));
+	g_return_if_fail( FMA_IS_DESKTOP_MONITOR( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = FMA_MONITOR( instance );
+	self = FMA_DESKTOP_MONITOR( instance );
 
-	self->private = g_new0( FMAMonitorPrivate, 1 );
+	self->private = g_new0( FMADesktopMonitorPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -137,12 +137,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "fma_monitor_instance_dispose";
-	FMAMonitor *self;
+	static const gchar *thisfn = "fma_desktop_monitor_instance_dispose";
+	FMADesktopMonitor *self;
 
-	g_return_if_fail( FMA_IS_MONITOR( object ));
+	g_return_if_fail( FMA_IS_DESKTOP_MONITOR( object ));
 
-	self = FMA_MONITOR( object );
+	self = FMA_DESKTOP_MONITOR( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -172,14 +172,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "fma_monitor_instance_finalize";
-	FMAMonitor *self;
+	static const gchar *thisfn = "fma_desktop_monitor_instance_finalize";
+	FMADesktopMonitor *self;
 
-	g_return_if_fail( FMA_IS_MONITOR( object ));
+	g_return_if_fail( FMA_IS_DESKTOP_MONITOR( object ));
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	self = FMA_MONITOR( object );
+	self = FMA_DESKTOP_MONITOR( object );
 
 	g_free( self->private->name );
 
@@ -192,23 +192,23 @@ instance_finalize( GObject *object )
 }
 
 /**
- * fma_monitor_new:
+ * fma_desktop_monitor_new:
  * @provider: the #FMADesktopProvider instance.
  * @path: the path of a directory to be monitored.
  *
  * Installs a new monitor on the given directory.
  *
- * Returns: a new #FMAMonitor instance.
+ * Returns: a new #FMADesktopMonitor instance.
  */
-FMAMonitor *
-fma_monitor_new( const FMADesktopProvider *provider, const gchar *path )
+FMADesktopMonitor *
+fma_desktop_monitor_new( const FMADesktopProvider *provider, const gchar *path )
 {
-	static const gchar *thisfn = "fma_monitor_new";
-	FMAMonitor *monitor;
+	static const gchar *thisfn = "fma_desktop_monitor_new";
+	FMADesktopMonitor *monitor;
 	GFileMonitorFlags flags;
 	GError *error;
 
-	monitor = g_object_new( FMA_TYPE_MONITOR, NULL );
+	monitor = g_object_new( FMA_TYPE_DESKTOP_MONITOR, NULL );
 
 	monitor->private->provider = FMA_DESKTOP_PROVIDER( provider );
 	monitor->private->name = g_strdup( path );
@@ -244,7 +244,7 @@ fma_monitor_new( const FMADesktopProvider *provider, const gchar *path )
  * - the renamed file is modified: n events on dir
  */
 static void
-on_monitor_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, FMAMonitor *my_monitor )
+on_monitor_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, FMADesktopMonitor *my_monitor )
 {
 	fma_desktop_provider_on_monitor_event( my_monitor->private->provider );
 }
