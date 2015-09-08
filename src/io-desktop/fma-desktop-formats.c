@@ -64,7 +64,7 @@ static sExportFormat st_desktop_formats[] = {
 				"- Import assistant of the FileManager-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
 				"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory." ),
-			"export-desktop.png" },
+			"fma-desktop-export.png" },
 
 	{ NULL }
 };

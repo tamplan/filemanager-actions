@@ -25,9 +25,9 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-provider_id = na-desktop
+provider_id = io-desktop
 
-pkglib_LTLIBRARIES = libna-io-desktop.la
+pkglib_LTLIBRARIES = libfma-io-desktop.la
 
 provider_datadir = $(pkgdatadir)/$(provider_id)
 
@@ -40,7 +40,7 @@ AM_CPPFLAGS += \
 	-DPROVIDER_DATADIR=\"$(provider_datadir)\"			\
 	$(NULL)
 
-libna_io_desktop_la_SOURCES = \
+libfma_io_desktop_la_SOURCES = \
 	fma-desktop-file.c									\
 	fma-desktop-file.h									\
 	fma-desktop-provider.c								\
@@ -62,19 +62,19 @@ libna_io_desktop_la_SOURCES = \
 	fma-desktop-xdg-dirs.h								\
 	$(NULL)
 
-libna_io_desktop_la_LIBADD = \
+libfma_io_desktop_la_LIBADD = \
 	$(top_builddir)/src/core/libfma-core.la				\
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-libna_io_desktop_la_LDFLAGS = \
+libfma_io_desktop_la_LDFLAGS = \
 	-module 											\
 	-no-undefined										\
 	-avoid-version										\
 	$(NULL)
 
 images_files = \
-	export-desktop.png									\
+	fma-desktop-export.png								\
 	$(NULL)
 
 provider_data_DATA = \
