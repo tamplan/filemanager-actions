@@ -31,9 +31,9 @@ SUBDIRS = \
 	io-desktop							\
 	io-gconf							\
 	io-xml								\
-	nact								\
 	plugin-menu							\
 	plugin-tracker						\
 	test								\
+	ui									\
 	utils								\
 	$(NULL)
