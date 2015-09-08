@@ -113,8 +113,8 @@ libna_core_la_SOURCES = \
 	fma-object-menu-factory.c							\
 	fma-pivot.c											\
 	fma-pivot.h											\
-	na-selected-info.c									\
-	na-selected-info.h									\
+	fma-selected-info.c									\
+	fma-selected-info.h									\
 	na-settings.c										\
 	na-settings.h										\
 	fma-timeout.c										\

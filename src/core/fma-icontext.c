@@ -52,7 +52,7 @@
 
 #include "fma-desktop-environment.h"
 #include "fma-gnome-vfs-uri.h"
-#include "na-selected-info.h"
+#include "fma-selected-info.h"
 #include "na-settings.h"
 
 /* private interface data
@@ -201,7 +201,7 @@ fma_icontext_are_equal( const FMAIContext *a, const FMAIContext *b )
  * fma_icontext_is_candidate:
  * @context: a #FMAIContext to be checked.
  * @target: the current target.
- * @selection: the currently selected items, as a #GList of NASelectedInfo items.
+ * @selection: the currently selected items, as a #GList of FMASelectedInfo items.
  *
  * Determines if the given object may be candidate to be displayed in
  * the Nautilus context menu, depending of the list of currently selected
@@ -739,8 +739,8 @@ is_candidate_for_mimetypes( const FMAIContext *object, guint target, GList *file
 			gboolean regular, match, positive;
 
 			match = FALSE;
-			ftype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
-			regular = na_selected_info_is_regular( NA_SELECTED_INFO( it->data ));
+			ftype = fma_selected_info_get_mime_type( FMA_SELECTED_INFO( it->data ));
+			regular = fma_selected_info_is_regular( FMA_SELECTED_INFO( it->data ));
 
 			if( ftype ){
 				for( im = mimetypes ; im && ok ; im = im->next ){
@@ -768,7 +768,7 @@ is_candidate_for_mimetypes( const FMAIContext *object, guint target, GList *file
 				}
 
 			} else {
-				gchar *uri = na_selected_info_get_uri( NA_SELECTED_INFO( it->data ));
+				gchar *uri = fma_selected_info_get_uri( FMA_SELECTED_INFO( it->data ));
 				g_warning( "%s: null mimetype found for %s", thisfn, uri );
 				g_free( uri );
 				ok = FALSE;
@@ -863,7 +863,7 @@ is_candidate_for_basenames( const FMAIContext *object, guint target, GList *file
 				gboolean match, positive;
 				gchar *pattern_utf8;
 
-				bname = na_selected_info_get_basename( NA_SELECTED_INFO( it->data ));
+				bname = fma_selected_info_get_basename( FMA_SELECTED_INFO( it->data ));
 				bname_utf8 = g_filename_to_utf8( bname, -1, NULL, NULL, NULL );
 				if( !matchcase ){
 					tmp = g_utf8_strdown( bname_utf8, -1 );
@@ -974,7 +974,7 @@ is_candidate_for_schemes( const FMAIContext *object, guint target, GList *files 
 			GList *it;
 
 			for( it = files ; it && ok ; it = it->next ){
-				gchar *scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( it->data ));
+				gchar *scheme = fma_selected_info_get_uri_scheme( FMA_SELECTED_INFO( it->data ));
 
 				if( fma_core_utils_slist_count( distincts, scheme ) == 0 ){
 					GSList *is;
@@ -1057,7 +1057,7 @@ is_candidate_for_folders( const FMAIContext *object, guint target, GList *files 
 			GList *it;
 
 			for( it = files ; it && ok ; it = it->next ){
-				gchar *dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( it->data ));
+				gchar *dirname = fma_selected_info_get_dirname( FMA_SELECTED_INFO( it->data ));
 
 				if( fma_core_utils_slist_count( distincts, dirname ) == 0 ){
 					g_debug( "%s: examining new distinct selected dirname=%s", thisfn, dirname );
@@ -1127,19 +1127,19 @@ is_candidate_for_capabilities( const FMAIContext *object, guint target, GList *f
 				match = FALSE;
 
 				if( !strcmp( positive ? cap : cap+1, "Owner" )){
-					match = na_selected_info_is_owner( NA_SELECTED_INFO( it->data ), getlogin());
+					match = fma_selected_info_is_owner( FMA_SELECTED_INFO( it->data ), getlogin());
 
 				} else if( !strcmp( positive ? cap : cap+1, "Readable" )){
-					match = na_selected_info_is_readable( NA_SELECTED_INFO( it->data ));
+					match = fma_selected_info_is_readable( FMA_SELECTED_INFO( it->data ));
 
 				} else if( !strcmp( positive ? cap : cap+1, "Writable" )){
-					match = na_selected_info_is_writable( NA_SELECTED_INFO( it->data ));
+					match = fma_selected_info_is_writable( FMA_SELECTED_INFO( it->data ));
 
 				} else if( !strcmp( positive ? cap : cap+1, "Executable" )){
-					match = na_selected_info_is_executable( NA_SELECTED_INFO( it->data ));
+					match = fma_selected_info_is_executable( FMA_SELECTED_INFO( it->data ));
 
 				} else if( !strcmp( positive ? cap : cap+1, "Local" )){
-					match = na_selected_info_is_local( NA_SELECTED_INFO( it->data ));
+					match = fma_selected_info_is_local( FMA_SELECTED_INFO( it->data ));
 
 				} else {
 					g_warning( "%s: unknown capability %s", thisfn, cap );

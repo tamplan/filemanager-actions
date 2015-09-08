@@ -35,17 +35,17 @@
 #include <string.h>
 
 #include "fma-gnome-vfs-uri.h"
-#include "na-selected-info.h"
+#include "fma-selected-info.h"
 
 /* private class data
  */
-struct _NASelectedInfoClassPrivate {
+struct _FMASelectedInfoClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NASelectedInfoPrivate {
+struct _FMASelectedInfoPrivate {
 	gboolean       dispose_has_run;
 	gchar         *uri;
 	gchar         *filename;
@@ -68,19 +68,19 @@ struct _NASelectedInfoPrivate {
 static GObjectClass *st_parent_class = NULL;
 
 static GType           register_type( void );
-static void            class_init( NASelectedInfoClass *klass );
+static void            class_init( FMASelectedInfoClass *klass );
 static void            instance_init( GTypeInstance *instance, gpointer klass );
 static void            instance_dispose( GObject *object );
 static void            instance_finalize( GObject *object );
 
-static void            dump( const NASelectedInfo *nsi );
+static void            dump( const FMASelectedInfo *nsi );
 static const char     *dump_file_type( GFileType type );
-static NASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
-static NASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg );
-static void            query_file_attributes( NASelectedInfo *info, GFile *location, gchar **errmsg );
+static FMASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
+static FMASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg );
+static void            query_file_attributes( FMASelectedInfo *info, GFile *location, gchar **errmsg );
 
 GType
-na_selected_info_get_type( void )
+fma_selected_info_get_type( void )
 {
 	static GType object_type = 0;
 
@@ -94,32 +94,32 @@ na_selected_info_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_selected_info_register_type";
+	static const gchar *thisfn = "fma_selected_info_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NASelectedInfoClass ),
+		sizeof( FMASelectedInfoClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NASelectedInfo ),
+		sizeof( FMASelectedInfo ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NASelectedInfo", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMASelectedInfo", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NASelectedInfoClass *klass )
+class_init( FMASelectedInfoClass *klass )
 {
-	static const gchar *thisfn = "na_selected_info_class_init";
+	static const gchar *thisfn = "fma_selected_info_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -130,23 +130,23 @@ class_init( NASelectedInfoClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NASelectedInfoClassPrivate, 1 );
+	klass->private = g_new0( FMASelectedInfoClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_selected_info_instance_init";
-	NASelectedInfo *self;
+	static const gchar *thisfn = "fma_selected_info_instance_init";
+	FMASelectedInfo *self;
 
-	g_return_if_fail( NA_IS_SELECTED_INFO( instance ));
+	g_return_if_fail( FMA_IS_SELECTED_INFO( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NA_SELECTED_INFO( instance );
+	self = FMA_SELECTED_INFO( instance );
 
-	self->private = g_new0( NASelectedInfoPrivate, 1 );
+	self->private = g_new0( FMASelectedInfoPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->uri = NULL;
@@ -155,11 +155,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_selected_info_instance_dispose";
-	NASelectedInfo *self;
+	static const gchar *thisfn = "fma_selected_info_instance_dispose";
+	FMASelectedInfo *self;
 
-	g_return_if_fail( NA_IS_SELECTED_INFO( object ));
-	self = NA_SELECTED_INFO( object );
+	g_return_if_fail( FMA_IS_SELECTED_INFO( object ));
+	self = FMA_SELECTED_INFO( object );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
@@ -176,12 +176,12 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_selected_info_instance_finalize";
-	NASelectedInfo *self;
+	static const gchar *thisfn = "fma_selected_info_instance_finalize";
+	FMASelectedInfo *self;
 
-	g_return_if_fail( NA_IS_SELECTED_INFO( object ));
+	g_return_if_fail( FMA_IS_SELECTED_INFO( object ));
 
-	self = NA_SELECTED_INFO( object );
+	self = FMA_SELECTED_INFO( object );
 
 	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -204,19 +204,19 @@ instance_finalize( GObject *object )
 }
 
 /*
- * na_selected_info_get_list_from_item:
+ * fma_selected_info_get_list_from_item:
  * @item: a #NautilusFileInfo item
  *
- * Returns: a #GList list which contains a #NASelectedInfo item with the
+ * Returns: a #GList list which contains a #FMASelectedInfo item with the
  * same URI that the @item.
  */
 GList *
-na_selected_info_get_list_from_item( NautilusFileInfo *item )
+fma_selected_info_get_list_from_item( NautilusFileInfo *item )
 {
 	GList *selected;
 
 	selected = NULL;
-	NASelectedInfo *info = new_from_nautilus_file_info( item );
+	FMASelectedInfo *info = new_from_nautilus_file_info( item );
 
 	if( info ){
 		selected = g_list_prepend( NULL, info );
@@ -226,14 +226,14 @@ na_selected_info_get_list_from_item( NautilusFileInfo *item )
 }
 
 /*
- * na_selected_info_get_list_from_list:
+ * fma_selected_info_get_list_from_list:
  * @nautilus_selection: a #GList list of #NautilusFileInfo items.
  *
- * Returns: a #GList list of #NASelectedInfo items whose URI correspond
+ * Returns: a #GList list of #FMASelectedInfo items whose URI correspond
  * to those of @nautilus_selection.
  */
 GList *
-na_selected_info_get_list_from_list( GList *nautilus_selection )
+fma_selected_info_get_list_from_list( GList *nautilus_selection )
 {
 	GList *selected;
 	GList *it;
@@ -241,7 +241,7 @@ na_selected_info_get_list_from_list( GList *nautilus_selection )
 	selected = NULL;
 
 	for( it = nautilus_selection ; it ; it = it->next ){
-		NASelectedInfo *info = new_from_nautilus_file_info( NAUTILUS_FILE_INFO( it->data ));
+		FMASelectedInfo *info = new_from_nautilus_file_info( NAUTILUS_FILE_INFO( it->data ));
 
 		if( info ){
 			selected = g_list_prepend( selected, info );
@@ -252,13 +252,13 @@ na_selected_info_get_list_from_list( GList *nautilus_selection )
 }
 
 /*
- * na_selected_info_copy_list:
- * @files: a #GList list of #NASelectedInfo items.
+ * fma_selected_info_copy_list:
+ * @files: a #GList list of #FMASelectedInfo items.
  *
  * Returns: a copy of the provided @files list.
  */
 GList *
-na_selected_info_copy_list( GList *files )
+fma_selected_info_copy_list( GList *files )
 {
 	GList *copy;
 	GList *l;
@@ -273,32 +273,32 @@ na_selected_info_copy_list( GList *files )
 }
 
 /*
- * na_selected_info_free_list:
- * @files: a #GList of #NASelectedInfo items.
+ * fma_selected_info_free_list:
+ * @files: a #GList of #FMASelectedInfo items.
  *
  * Frees up the #GList @files.
  */
 void
-na_selected_info_free_list( GList *files )
+fma_selected_info_free_list( GList *files )
 {
 	g_list_foreach( files, ( GFunc ) g_object_unref, NULL );
 	g_list_free( files );
 }
 
 /*
- * na_selected_info_get_basename:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_get_basename:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: the basename of the file associated with this
- * #NASelectedInfo object, as a newly allocated string which
+ * #FMASelectedInfo object, as a newly allocated string which
  * must be g_free() by the caller.
  */
 gchar *
-na_selected_info_get_basename( const NASelectedInfo *nsi )
+fma_selected_info_get_basename( const FMASelectedInfo *nsi )
 {
 	gchar *basename;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), NULL );
 
 	basename = NULL;
 
@@ -311,19 +311,19 @@ na_selected_info_get_basename( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_get_dirname:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_get_dirname:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: the dirname of the file associated with this
- * #NASelectedInfo object, as a newly allocated string which
+ * #FMASelectedInfo object, as a newly allocated string which
  * must be g_free() by the caller.
  */
 gchar *
-na_selected_info_get_dirname( const NASelectedInfo *nsi )
+fma_selected_info_get_dirname( const FMASelectedInfo *nsi )
 {
 	gchar *dirname;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), NULL );
 
 	dirname = NULL;
 
@@ -336,18 +336,18 @@ na_selected_info_get_dirname( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_get_mime_type:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_get_mime_type:
+ * @nsi: this #FMASelectedInfo object.
  *
- * Returns: the mime type associated with this #NASelectedInfo object,
+ * Returns: the mime type associated with this #FMASelectedInfo object,
  * as a newly allocated string which should be g_free() by the caller.
  */
 gchar *
-na_selected_info_get_mime_type( const NASelectedInfo *nsi )
+fma_selected_info_get_mime_type( const FMASelectedInfo *nsi )
 {
 	gchar *mimetype;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), NULL );
 
 	mimetype = NULL;
 
@@ -362,18 +362,18 @@ na_selected_info_get_mime_type( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_get_path:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_get_path:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: the filename of the item as a newly allocated string which
  * should be g_free() by the caller.
  */
 gchar *
-na_selected_info_get_path( const NASelectedInfo *nsi )
+fma_selected_info_get_path( const FMASelectedInfo *nsi )
 {
 	gchar *path;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), NULL );
 
 	path = NULL;
 
@@ -386,18 +386,18 @@ na_selected_info_get_path( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_get_uri:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_get_uri:
+ * @nsi: this #FMASelectedInfo object.
  *
- * Returns: the URI associated with this #NASelectedInfo object, as a
+ * Returns: the URI associated with this #FMASelectedInfo object, as a
  * newly allocated string which should be g_free() by the caller.
  */
 gchar *
-na_selected_info_get_uri( const NASelectedInfo *nsi )
+fma_selected_info_get_uri( const FMASelectedInfo *nsi )
 {
 	gchar *uri;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), NULL );
 
 	uri = NULL;
 
@@ -410,18 +410,18 @@ na_selected_info_get_uri( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_get_uri_host:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_get_uri_host:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: the host associated to this @nsi object, as a
  * newly allocated string which should be g_free() by the caller.
  */
 gchar *
-na_selected_info_get_uri_host( const NASelectedInfo *nsi )
+fma_selected_info_get_uri_host( const FMASelectedInfo *nsi )
 {
 	gchar *host;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), NULL );
 
 	host = NULL;
 
@@ -434,18 +434,18 @@ na_selected_info_get_uri_host( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_get_uri_user:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_get_uri_user:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: the user associated to this @nsi object, as a
  * newly allocated string which should be g_free() by the caller.
  */
 gchar *
-na_selected_info_get_uri_user( const NASelectedInfo *nsi )
+fma_selected_info_get_uri_user( const FMASelectedInfo *nsi )
 {
 	gchar *user;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), NULL );
 
 	user = NULL;
 
@@ -458,17 +458,17 @@ na_selected_info_get_uri_user( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_get_uri_port:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_get_uri_port:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: the port associated to this @nsi object.
  */
 guint
-na_selected_info_get_uri_port( const NASelectedInfo *nsi )
+fma_selected_info_get_uri_port( const FMASelectedInfo *nsi )
 {
 	guint port;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), 0 );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), 0 );
 
 	port = 0;
 
@@ -481,18 +481,18 @@ na_selected_info_get_uri_port( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_get_uri_scheme:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_get_uri_scheme:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: the scheme associated to this @nsi object, as a
  * newly allocated string which should be g_free() by the caller.
  */
 gchar *
-na_selected_info_get_uri_scheme( const NASelectedInfo *nsi )
+fma_selected_info_get_uri_scheme( const FMASelectedInfo *nsi )
 {
 	gchar *scheme;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), NULL );
 
 	scheme = NULL;
 
@@ -505,17 +505,17 @@ na_selected_info_get_uri_scheme( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_is_directory:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_is_directory:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: %TRUE if the item is a directory, %FALSE else.
  */
 gboolean
-na_selected_info_is_directory( const NASelectedInfo *nsi )
+fma_selected_info_is_directory( const FMASelectedInfo *nsi )
 {
 	gboolean is_dir;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), FALSE );
 
 	is_dir = FALSE;
 
@@ -528,17 +528,17 @@ na_selected_info_is_directory( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_is_regular:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_is_regular:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: %TRUE if the item is a regular file, %FALSE else.
  */
 gboolean
-na_selected_info_is_regular( const NASelectedInfo *nsi )
+fma_selected_info_is_regular( const FMASelectedInfo *nsi )
 {
 	gboolean is_regular;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), FALSE );
 
 	is_regular = FALSE;
 
@@ -551,17 +551,17 @@ na_selected_info_is_regular( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_is_executable:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_is_executable:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: %TRUE if the item is executable by the user, %FALSE else.
  */
 gboolean
-na_selected_info_is_executable( const NASelectedInfo *nsi )
+fma_selected_info_is_executable( const FMASelectedInfo *nsi )
 {
 	gboolean is_exe;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), FALSE );
 
 	is_exe = FALSE;
 
@@ -574,24 +574,24 @@ na_selected_info_is_executable( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_is_local:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_is_local:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: %TRUE if the item is on a local filesystem, %FALSE else.
  */
 gboolean
-na_selected_info_is_local( const NASelectedInfo *nsi )
+fma_selected_info_is_local( const FMASelectedInfo *nsi )
 {
 	gboolean is_local;
 	gchar *scheme;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), FALSE );
 
 	is_local = FALSE;
 
 	if( !nsi->private->dispose_has_run ){
 
-		scheme = na_selected_info_get_uri_scheme( nsi );
+		scheme = fma_selected_info_get_uri_scheme( nsi );
 		is_local = ( strcmp( scheme, "file" ) == 0 );
 		g_free( scheme );
 	}
@@ -600,18 +600,18 @@ na_selected_info_is_local( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_is_owner:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_is_owner:
+ * @nsi: this #FMASelectedInfo object.
  * @user: the user to be tested against the owner of the @nsi object.
  *
  * Returns: %TRUE if the item is a owner, %FALSE else.
  */
 gboolean
-na_selected_info_is_owner( const NASelectedInfo *nsi, const gchar *user )
+fma_selected_info_is_owner( const FMASelectedInfo *nsi, const gchar *user )
 {
 	gboolean is_owner;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), FALSE );
 
 	is_owner = FALSE;
 
@@ -624,17 +624,17 @@ na_selected_info_is_owner( const NASelectedInfo *nsi, const gchar *user )
 }
 
 /*
- * na_selected_info_is_readable:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_is_readable:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: %TRUE if the item is a readable, %FALSE else.
  */
 gboolean
-na_selected_info_is_readable( const NASelectedInfo *nsi )
+fma_selected_info_is_readable( const FMASelectedInfo *nsi )
 {
 	gboolean is_readable;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), FALSE );
 
 	is_readable = FALSE;
 
@@ -647,17 +647,17 @@ na_selected_info_is_readable( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_is_writable:
- * @nsi: this #NASelectedInfo object.
+ * fma_selected_info_is_writable:
+ * @nsi: this #FMASelectedInfo object.
  *
  * Returns: %TRUE if the item is a writable, %FALSE else.
  */
 gboolean
-na_selected_info_is_writable( const NASelectedInfo *nsi )
+fma_selected_info_is_writable( const FMASelectedInfo *nsi )
 {
 	gboolean is_writable;
 
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+	g_return_val_if_fail( FMA_IS_SELECTED_INFO( nsi ), FALSE );
 
 	is_writable = FALSE;
 
@@ -670,30 +670,30 @@ na_selected_info_is_writable( const NASelectedInfo *nsi )
 }
 
 /*
- * na_selected_info_create_for_uri:
+ * fma_selected_info_create_for_uri:
  * @uri: an URI.
  * @mimetype: the corresponding Nautilus mime type, or %NULL.
  * @errmsg: a pointer to a string which will contain an error message on
  *  return.
  *
- * Returns: a newly allocated #NASelectedInfo object for the given @uri.
+ * Returns: a newly allocated #FMASelectedInfo object for the given @uri.
  */
-NASelectedInfo *
-na_selected_info_create_for_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
+FMASelectedInfo *
+fma_selected_info_create_for_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 {
-	static const gchar *thisfn = "na_selected_info_create_for_uri";
+	static const gchar *thisfn = "fma_selected_info_create_for_uri";
 
 	g_debug( "%s: uri=%s, mimetype=%s", thisfn, uri, mimetype );
 
-	NASelectedInfo *obj = new_from_uri( uri, mimetype, errmsg );
+	FMASelectedInfo *obj = new_from_uri( uri, mimetype, errmsg );
 
 	return( obj );
 }
 
 static void
-dump( const NASelectedInfo *nsi )
+dump( const FMASelectedInfo *nsi )
 {
-	static const gchar *thisfn = "na_selected_info_dump";
+	static const gchar *thisfn = "fma_selected_info_dump";
 
 	g_debug( "%s:                uri=%s", thisfn, nsi->private->uri );
 	g_debug( "%s:           mimetype=%s", thisfn, nsi->private->mimetype );
@@ -734,12 +734,12 @@ dump_file_type( GFileType type )
 	return( "unknown" );
 }
 
-static NASelectedInfo *
+static FMASelectedInfo *
 new_from_nautilus_file_info( NautilusFileInfo *item )
 {
 	gchar *uri = nautilus_file_info_get_uri( item );
 	gchar *mimetype = nautilus_file_info_get_mime_type( item );
-	NASelectedInfo *info = new_from_uri( uri, mimetype, NULL );
+	FMASelectedInfo *info = new_from_uri( uri, mimetype, NULL );
 	g_free( mimetype );
 	g_free( uri );
 
@@ -803,13 +803,13 @@ new_from_nautilus_file_info( NautilusFileInfo *item )
  *
  * As a result, we may have valid, non-escaped, simple quotes in an URI.
  */
-static NASelectedInfo *
+static FMASelectedInfo *
 new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 {
 	GFile *location;
 	FMAGnomeVFSURI *vfs;
 
-	NASelectedInfo *info = g_object_new( NA_TYPE_SELECTED_INFO, NULL );
+	FMASelectedInfo *info = g_object_new( FMA_TYPE_SELECTED_INFO, NULL );
 
 	info->private->uri = g_strdup( uri );
 	if( mimetype ){
@@ -828,7 +828,7 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 	vfs = g_new0( FMAGnomeVFSURI, 1 );
 	fma_gnome_vfs_uri_parse( vfs, uri );
 	if( !info->private->filename ){
-		g_debug( "na_selected_info_new_from_uri: uri='%s', filename=NULL, setting it to '%s'", uri, vfs->path );
+		g_debug( "fma_selected_info_new_from_uri: uri='%s', filename=NULL, setting it to '%s'", uri, vfs->path );
 		info->private->filename = g_strdup( vfs->path );
 	}
 
@@ -849,9 +849,9 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 }
 
 static void
-query_file_attributes( NASelectedInfo *nsi, GFile *location, gchar **errmsg )
+query_file_attributes( FMASelectedInfo *nsi, GFile *location, gchar **errmsg )
 {
-	static const gchar *thisfn = "na_selected_info_query_file_attributes";
+	static const gchar *thisfn = "fma_selected_info_query_file_attributes";
 	GError *error;
 
 	error = NULL;

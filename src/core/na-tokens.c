@@ -40,7 +40,7 @@
 #include <api/fma-object-api.h>
 
 #include "fma-gnome-vfs-uri.h"
-#include "na-selected-info.h"
+#include "fma-selected-info.h"
 #include "na-settings.h"
 #include "na-tokens.h"
 
@@ -302,7 +302,7 @@ na_tokens_new_for_example( void )
 
 /*
  * na_tokens_new_from_selection:
- * @selection: a #GList list of #NASelectedInfo objects.
+ * @selection: a #GList list of #FMASelectedInfo objects.
  *
  * Returns: a new #NATokens object which holds all possible tokens.
  */
@@ -323,19 +323,19 @@ na_tokens_new_from_selection( GList *selection )
 	tokens->private->count = g_list_length( selection );
 
 	for( it = selection ; it ; it = it->next ){
-		mimetype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
+		mimetype = fma_selected_info_get_mime_type( FMA_SELECTED_INFO( it->data ));
 
-		uri = na_selected_info_get_uri( NA_SELECTED_INFO( it->data ));
-		filename = na_selected_info_get_path( NA_SELECTED_INFO( it->data ));
-		basedir = na_selected_info_get_dirname( NA_SELECTED_INFO( it->data ));
-		basename = na_selected_info_get_basename( NA_SELECTED_INFO( it->data ));
+		uri = fma_selected_info_get_uri( FMA_SELECTED_INFO( it->data ));
+		filename = fma_selected_info_get_path( FMA_SELECTED_INFO( it->data ));
+		basedir = fma_selected_info_get_dirname( FMA_SELECTED_INFO( it->data ));
+		basename = fma_selected_info_get_basename( FMA_SELECTED_INFO( it->data ));
 		fma_core_utils_dir_split_ext( basename, &bname_woext, &ext );
 
 		if( first ){
-			tokens->private->hostname = na_selected_info_get_uri_host( NA_SELECTED_INFO( it->data ));
-			tokens->private->username = na_selected_info_get_uri_user( NA_SELECTED_INFO( it->data ));
-			tokens->private->port = na_selected_info_get_uri_port( NA_SELECTED_INFO( it->data ));
-			tokens->private->scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( it->data ));
+			tokens->private->hostname = fma_selected_info_get_uri_host( FMA_SELECTED_INFO( it->data ));
+			tokens->private->username = fma_selected_info_get_uri_user( FMA_SELECTED_INFO( it->data ));
+			tokens->private->port = fma_selected_info_get_uri_port( FMA_SELECTED_INFO( it->data ));
+			tokens->private->scheme = fma_selected_info_get_uri_scheme( FMA_SELECTED_INFO( it->data ));
 			first = FALSE;
 		}
 

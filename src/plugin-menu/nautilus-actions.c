@@ -45,7 +45,7 @@
 
 #include <core/fma-pivot.h>
 #include <core/fma-about.h>
-#include <core/na-selected-info.h>
+#include <core/fma-selected-info.h>
 #include <core/na-tokens.h>
 
 #include "nautilus-actions.h"
@@ -335,7 +335,7 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
  * - or when there is only one selected directory
  *
  * Note that 'x-nautilus-desktop:///' cannot be interpreted by
- * #NASelectedInfo::query_file_attributes() function. It so never participate
+ * #FMASelectedInfo::query_file_attributes() function. It so never participate
  * to the display of actions.
  */
 static GList *
@@ -350,7 +350,7 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
 
-		selected = na_selected_info_get_list_from_item( current_folder );
+		selected = fma_selected_info_get_list_from_item( current_folder );
 
 		if( selected ){
 			uri = nautilus_file_info_get_uri( current_folder );
@@ -366,7 +366,7 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 					ITEM_TARGET_LOCATION,
 					selected );
 
-			na_selected_info_free_list( selected );
+			fma_selected_info_free_list( selected );
 		}
 	}
 
@@ -395,7 +395,7 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 			return(( GList * ) NULL );
 		}
 
-		selected = na_selected_info_get_list_from_list(( GList * ) files );
+		selected = fma_selected_info_get_list_from_list(( GList * ) files );
 
 		if( selected ){
 			g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
@@ -420,7 +420,7 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 					ITEM_TARGET_SELECTION,
 					selected );
 
-			na_selected_info_free_list( selected );
+			fma_selected_info_free_list( selected );
 		}
 	}
 
@@ -447,7 +447,7 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
 
-		selected = na_selected_info_get_list_from_item( current_folder );
+		selected = fma_selected_info_get_list_from_item( current_folder );
 
 		if( selected ){
 			uri = nautilus_file_info_get_uri( current_folder );
@@ -463,7 +463,7 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 					ITEM_TARGET_TOOLBAR,
 					selected );
 
-			na_selected_info_free_list( selected );
+			fma_selected_info_free_list( selected );
 		}
 	}
 
@@ -475,10 +475,10 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
  * build_nautilus_menu:
  * @target: whether the menu targets a location (a folder) or a selection
  *  (the list of currently selected items in the file manager)
- * @selection: a list of NASelectedInfo, with:
+ * @selection: a list of FMASelectedInfo, with:
  *  - only one item if a location
  *  - one item by selected file manager item, if a selection.
- *  Note: a NASelectedInfo is just a sort of NautilusFileInfo, with
+ *  Note: a FMASelectedInfo is just a sort of NautilusFileInfo, with
  *  some added APIs.
  *
  * Build the Nautilus menu as a list of NautilusMenuItem items

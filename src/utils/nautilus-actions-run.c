@@ -43,7 +43,7 @@
 
 #include <core/fma-gconf-migration.h>
 #include <core/fma-pivot.h>
-#include <core/na-selected-info.h>
+#include <core/fma-selected-info.h>
 #include <core/na-tokens.h>
 
 #include "console-utils.h"
@@ -174,7 +174,7 @@ main( int argc, char** argv )
 
 	execute_action( action, profile, targets );
 
-	na_selected_info_free_list( targets );
+	fma_selected_info_free_list( targets );
 	exit( status );
 }
 
@@ -256,7 +256,7 @@ get_action( const gchar *id )
  * where each selected item brings up both its URI and its Nautilus
  * mime type.
  *
- * We return to the caller a GList of NASelectedInfo objects
+ * We return to the caller a GList of FMASelectedInfo objects
  */
 static GList *
 targets_from_selection( void )
@@ -328,7 +328,7 @@ targets_from_selection( void )
 /*
  * get targets from command-line
  *
- * We return to the caller a GList of NASelectedInfo objects.
+ * We return to the caller a GList of FMASelectedInfo objects.
  */
 static GList *
 targets_from_commandline( void )
@@ -362,7 +362,7 @@ get_selection_from_strv( const gchar **strv, gboolean has_mimetype )
 		}
 
 		errmsg = NULL;
-		NASelectedInfo *nsi = na_selected_info_create_for_uri( uri, mimetype, &errmsg );
+		FMASelectedInfo *nsi = fma_selected_info_create_for_uri( uri, mimetype, &errmsg );
 
 		if( errmsg ){
 			g_printerr( "%s\n", errmsg );
@@ -420,9 +420,9 @@ dump_targets( GList *targets )
 	gchar *uri, *mimetype;
 
 	for( it = targets ; it ; it = it->next ){
-		NASelectedInfo *nsi = NA_SELECTED_INFO( it->data );
-		uri = na_selected_info_get_uri( nsi );
-		mimetype = na_selected_info_get_mime_type( nsi );
+		FMASelectedInfo *nsi = FMA_SELECTED_INFO( it->data );
+		uri = fma_selected_info_get_uri( nsi );
+		mimetype = fma_selected_info_get_mime_type( nsi );
 		g_print( "%s\t[%s]\n", uri, mimetype );
 		g_free( mimetype );
 		g_free( uri );
