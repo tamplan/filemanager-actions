@@ -152,6 +152,7 @@ AC_CONFIG_FILES([
 	src/test/Makefile
 	src/ui/Makefile
 	src/utils/Makefile
+	src/utils/fma-gconf2key.sh
 	test/Makefile
 	test/plugman/Makefile
 ])

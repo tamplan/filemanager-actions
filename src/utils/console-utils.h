@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CONSOLE_UTILS_H__
-#define __CONSOLE_UTILS_H__
+#ifndef __UTILS_CONSOLE_UTILS_H__
+#define __UTILS_CONSOLE_UTILS_H__
 
 /**
  * SECTION: console-utils
@@ -47,4 +47,4 @@ void   console_init_log_handler( void );
 
 G_END_DECLS
 
-#endif /* __CONSOLE_UTILS_H__ */
+#endif /* __UTILS_CONSOLE_UTILS_H__ */

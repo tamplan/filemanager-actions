@@ -353,8 +353,10 @@ init_options( void )
 
 	g_option_context_set_summary( context, _(
 			"The created action defaults to be written to stdout.\n"
-			"It can also be written to an output folder, in a file later suitable for an import in NACT.\n"
-			"Or you may choose to directly write the action into your FileManager-Actions configuration." ));
+			"It can also be written to an output folder, "
+			"in a file later suitable for an import in user configuration tool.\n"
+			"Or you may choose to directly write the action as a .desktop file "
+			"into your FileManager-Actions configuration." ));
 
 	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 

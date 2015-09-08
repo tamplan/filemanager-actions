@@ -30,15 +30,12 @@ NA_UTILS_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
-bin_PROGRAMS = \
-	nautilus-actions-new										\
-	nautilus-actions-print										\
-	nautilus-actions-run										\
-	$(NULL)
-
 pkglibexec_PROGRAMS = \
-	na-print-schemas											\
-	na-set-conf													\
+	fma-new														\
+	fma-print													\
+	fma-print-schemas											\
+	fma-run														\
+	fma-set-conf												\
 	$(NULL)
 
 AM_CPPFLAGS += \
@@ -49,23 +46,23 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
-nautilus_actions_new_SOURCES = \
-	nautilus-actions-new.c										\
+fma_new_SOURCES = \
+	fma-new.c													\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)
 
-nautilus_actions_new_LDADD = \
+fma_new_LDADD = \
 	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
-nautilus_actions_print_SOURCES = \
-	nautilus-actions-print.c									\
+fma_print_SOURCES = \
+	fma-print.c													\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)
 
-nautilus_actions_print_LDADD = \
+fma_print_LDADD = \
 	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
@@ -84,37 +81,37 @@ fma-run-bindings.c fma-run-bindings.h: $(top_srcdir)/src/plugin-tracker/fma-trac
 		--c-generate-object-manager								\
 		$<
 
-nodist_nautilus_actions_run_SOURCES = \
+nodist_fma_run_SOURCES = \
 	$(BUILT_SOURCES)											\
 	$(NULL)
 
-nautilus_actions_run_SOURCES = \
-	nautilus-actions-run.c										\
+fma_run_SOURCES = \
+	fma-run.c										\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)
 
-nautilus_actions_run_LDADD = \
+fma_run_LDADD = \
 	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
-na_print_schemas_SOURCES = \
-	na-print-schemas.c											\
+fma_print_schemas_SOURCES = \
+	fma-print-schemas.c											\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)
 
-na_print_schemas_LDADD = \
+fma_print_schemas_LDADD = \
 	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
-na_set_conf_SOURCES = \
-	na-set-conf.c												\
+fma_set_conf_SOURCES = \
+	fma-set-conf.c												\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)
 
-na_set_conf_LDADD = \
+fma_set_conf_LDADD = \
 	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
@@ -130,21 +127,21 @@ CLEANFILES = \
 
 if HAVE_GCONF
 pkglibexec_PROGRAMS += \
-	na-delete-xmltree											\
+	fma-delete-xmltree											\
 	$(NULL)
 
-na_delete_xmltree_SOURCES = \
-	na-delete-xmltree.c											\
+fma_delete_xmltree_SOURCES = \
+	fma-delete-xmltree.c										\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)
 
-na_delete_xmltree_LDADD = \
+fma_delete_xmltree_LDADD = \
 	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
 pkglibexec_SCRIPTS = \
-	fma-gconf2key.sh												\
+	fma-gconf2key.sh											\
 	$(NULL)
 
 do_subst = sed \
