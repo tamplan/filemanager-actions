@@ -71,7 +71,7 @@ enum {
 
 /* private instance data
  */
-struct _NactAssistantExportPrivate {
+struct _FMAAssistantExportPrivate {
 	gboolean      dispose_has_run;
 	NactTreeView *items_view;
 	gboolean      preferences_locked;
@@ -95,7 +95,7 @@ static const gchar        *st_wsp_name       = IPREFS_EXPORT_ASSISTANT_WSP;
 static BaseAssistantClass *st_parent_class   = NULL;
 
 static GType      register_type( void );
-static void       class_init( NactAssistantExportClass *klass );
+static void       class_init( FMAAssistantExportClass *klass );
 static void       ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
 static GList     *ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container );
 static void       ioptions_list_free_formats( const FMAIOptionsList *instance, GtkWidget *container, GList *formats );
@@ -104,22 +104,22 @@ static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_constructed( GObject *instance );
 static void       instance_dispose( GObject *instance );
 static void       instance_finalize( GObject *instance );
-static void       on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *toplevel, void *empty );
-static void       items_tree_view_initialize_gtk( NactAssistantExport *window, GtkAssistant *toplevel );
-static void       folder_chooser_initialize_gtk( NactAssistantExport *window );
-static void       format_tree_view_initialize_gtk( NactAssistantExport *window );
-static void       on_base_initialize_base_window( NactAssistantExport *window, void *empty );
-static void       on_base_all_widgets_showed( NactAssistantExport *window, void *empty );
-static void       on_items_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data );
-static void       on_folder_chooser_selection_changed( GtkFileChooser *chooser, NactAssistantExport *window );
+static void       on_base_initialize_gtk_toplevel( FMAAssistantExport *window, GtkAssistant *toplevel, void *empty );
+static void       items_tree_view_initialize_gtk( FMAAssistantExport *window, GtkAssistant *toplevel );
+static void       folder_chooser_initialize_gtk( FMAAssistantExport *window );
+static void       format_tree_view_initialize_gtk( FMAAssistantExport *window );
+static void       on_base_initialize_base_window( FMAAssistantExport *window, void *empty );
+static void       on_base_all_widgets_showed( FMAAssistantExport *window, void *empty );
+static void       on_items_tree_view_selection_changed( FMAAssistantExport *window, GList *selected_items, gpointer user_data );
+static void       on_folder_chooser_selection_changed( GtkFileChooser *chooser, FMAAssistantExport *window );
 static void       assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
-static void       assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
+static void       assist_prepare_confirm( FMAAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
 static void       assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
-static void       assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
+static void       assist_prepare_exportdone( FMAAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
 static void       free_results( GList *list );
 
 GType
-nact_assistant_export_get_type( void )
+fma_assistant_export_get_type( void )
 {
 	static GType window_type = 0;
 
@@ -133,17 +133,17 @@ nact_assistant_export_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_assistant_export_register_type";
+	static const gchar *thisfn = "fma_assistant_export_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactAssistantExportClass ),
+		sizeof( FMAAssistantExportClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactAssistantExport ),
+		sizeof( FMAAssistantExport ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
@@ -156,7 +156,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_ASSISTANT, "NactAssistantExport", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_ASSISTANT, "FMAAssistantExport", &info, 0 );
 
 	g_type_add_interface_static( type, FMA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
@@ -164,9 +164,9 @@ register_type( void )
 }
 
 static void
-class_init( NactAssistantExportClass *klass )
+class_init( FMAAssistantExportClass *klass )
 {
-	static const gchar *thisfn = "nact_assistant_export_class_init";
+	static const gchar *thisfn = "fma_assistant_export_class_init";
 	GObjectClass *object_class;
 	BaseAssistantClass *assist_class;
 
@@ -187,7 +187,7 @@ class_init( NactAssistantExportClass *klass )
 static void
 ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
+	static const gchar *thisfn = "fma_assistant_export_ioptions_list_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
@@ -199,13 +199,13 @@ ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 static GList *
 ioptions_list_get_formats( const FMAIOptionsList *instance, GtkWidget *container )
 {
-	NactAssistantExport *window;
+	FMAAssistantExport *window;
 	FMAApplication *application;
 	FMAUpdater *updater;
 	GList *formats;
 
-	g_return_val_if_fail( NACT_IS_ASSISTANT_EXPORT( instance ), NULL );
-	window = NACT_ASSISTANT_EXPORT( instance );
+	g_return_val_if_fail( FMA_IS_ASSISTANT_EXPORT( instance ), NULL );
+	window = FMA_ASSISTANT_EXPORT( instance );
 
 	application = FMA_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = fma_application_get_updater( application );
@@ -229,17 +229,17 @@ ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *contai
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_assistant_export_instance_init";
-	NactAssistantExport *self;
+	static const gchar *thisfn = "fma_assistant_export_instance_init";
+	FMAAssistantExport *self;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( instance ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NACT_ASSISTANT_EXPORT( instance );
+	self = FMA_ASSISTANT_EXPORT( instance );
 
-	self->private = g_new0( NactAssistantExportPrivate, 1 );
+	self->private = g_new0( FMAAssistantExportPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -247,12 +247,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *window )
 {
-	static const gchar *thisfn = "nact_assistant_export_instance_constructed";
-	NactAssistantExportPrivate *priv;
+	static const gchar *thisfn = "fma_assistant_export_instance_constructed";
+	FMAAssistantExportPrivate *priv;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( window ));
 
-	priv = NACT_ASSISTANT_EXPORT( window )->private;
+	priv = FMA_ASSISTANT_EXPORT( window )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -286,16 +286,16 @@ instance_constructed( GObject *window )
 static void
 instance_dispose( GObject *window )
 {
-	static const gchar *thisfn = "nact_assistant_export_instance_dispose";
-	NactAssistantExport *self;
+	static const gchar *thisfn = "fma_assistant_export_instance_dispose";
+	FMAAssistantExport *self;
 	GtkAssistant *assistant;
 	GtkWidget *page;
 	guint pos;
 	GtkWidget *pane;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( window ));
 
-	self = NACT_ASSISTANT_EXPORT( window );
+	self = FMA_ASSISTANT_EXPORT( window );
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
@@ -324,14 +324,14 @@ instance_dispose( GObject *window )
 static void
 instance_finalize( GObject *window )
 {
-	static const gchar *thisfn = "nact_assistant_export_instance_finalize";
-	NactAssistantExport *self;
+	static const gchar *thisfn = "fma_assistant_export_instance_finalize";
+	FMAAssistantExport *self;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( window ));
 
 	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-	self = NACT_ASSISTANT_EXPORT( window );
+	self = FMA_ASSISTANT_EXPORT( window );
 
 	free_results( self->private->results );
 
@@ -344,15 +344,15 @@ instance_finalize( GObject *window )
 }
 
 /**
- * nact_assistant_export_run:
+ * fma_assistant_export_run:
  * @main: the main window of the application.
  *
  * Run the assistant.
  */
 void
-nact_assistant_export_run( NactMainWindow *main_window )
+fma_assistant_export_run( NactMainWindow *main_window )
 {
-	NactAssistantExport *assistant;
+	FMAAssistantExport *assistant;
 	gboolean esc_quit, esc_confirm;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( main_window ));
@@ -360,7 +360,7 @@ nact_assistant_export_run( NactMainWindow *main_window )
 	esc_quit = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
 	esc_confirm = fma_settings_get_boolean( IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 
-	assistant = g_object_new( NACT_TYPE_ASSISTANT_EXPORT,
+	assistant = g_object_new( FMA_TYPE_ASSISTANT_EXPORT,
 			BASE_PROP_MAIN_WINDOW,     main_window,
 			BASE_PROP_HAS_OWN_BUILDER, TRUE,
 			BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
@@ -374,12 +374,12 @@ nact_assistant_export_run( NactMainWindow *main_window )
 }
 
 static void
-on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *assistant, void *empty )
+on_base_initialize_gtk_toplevel( FMAAssistantExport *window, GtkAssistant *assistant, void *empty )
 {
-	static const gchar *thisfn = "nact_assistant_export_on_base_initialize_gtk_toplevel";
+	static const gchar *thisfn = "fma_assistant_export_on_base_initialize_gtk_toplevel";
 	gboolean are_locked, mandatory;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( window ));
 
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: window=%p, assistant=%p, empty=%p",
@@ -395,10 +395,10 @@ on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *assi
 }
 
 static void
-items_tree_view_initialize_gtk( NactAssistantExport *window, GtkAssistant *assistant )
+items_tree_view_initialize_gtk( FMAAssistantExport *window, GtkAssistant *assistant )
 {
-	static const gchar *thisfn = "nact_assistant_export_items_tree_view_initialize_gtk";
-	NactAssistantExportPrivate *priv;
+	static const gchar *thisfn = "fma_assistant_export_items_tree_view_initialize_gtk";
+	FMAAssistantExportPrivate *priv;
 	GtkWidget *parent;
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) window, ( void * ) assistant );
@@ -416,9 +416,9 @@ items_tree_view_initialize_gtk( NactAssistantExport *window, GtkAssistant *assis
 }
 
 static void
-folder_chooser_initialize_gtk( NactAssistantExport *window )
+folder_chooser_initialize_gtk( FMAAssistantExport *window )
 {
-	static const gchar *thisfn = "nact_assistant_export_folder_chooser_initialize_gtk";
+	static const gchar *thisfn = "fma_assistant_export_folder_chooser_initialize_gtk";
 	GtkAssistant *assistant;
 	GtkWidget *page, *chooser;
 	gchar *uri;
@@ -447,9 +447,9 @@ folder_chooser_initialize_gtk( NactAssistantExport *window )
 }
 
 static void
-format_tree_view_initialize_gtk( NactAssistantExport *window )
+format_tree_view_initialize_gtk( FMAAssistantExport *window )
 {
-	static const gchar *thisfn = "nact_assistant_export_on_format_tree_view_realized";
+	static const gchar *thisfn = "fma_assistant_export_on_format_tree_view_realized";
 	GtkAssistant *assistant;
 	GtkWidget *page, *tree_view;
 
@@ -465,9 +465,9 @@ format_tree_view_initialize_gtk( NactAssistantExport *window )
 }
 
 static void
-on_base_initialize_base_window( NactAssistantExport *window, void *empty )
+on_base_initialize_base_window( FMAAssistantExport *window, void *empty )
 {
-	static const gchar *thisfn = "nact_assistant_export_on_base_initialize_base_window";
+	static const gchar *thisfn = "fma_assistant_export_on_base_initialize_base_window";
 	GtkAssistant *assistant;
 	GtkWidget *page;
 	guint pos;
@@ -476,7 +476,7 @@ on_base_initialize_base_window( NactAssistantExport *window, void *empty )
 	gboolean mandatory;
 	GtkWidget *tree_view;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( window ));
 
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: window=%p, empty=%p", thisfn, ( void * ) window, empty );
@@ -512,9 +512,9 @@ on_base_initialize_base_window( NactAssistantExport *window, void *empty )
 }
 
 static void
-on_base_all_widgets_showed( NactAssistantExport *window, void *empty )
+on_base_all_widgets_showed( FMAAssistantExport *window, void *empty )
 {
-	static const gchar *thisfn = "nact_assistant_export_on_base_all_widgets_showed";
+	static const gchar *thisfn = "fma_assistant_export_on_base_all_widgets_showed";
 	GtkAssistant *assistant;
 	GtkWidget *page;
 	GtkApplicationWindow *main_window;
@@ -522,7 +522,7 @@ on_base_all_widgets_showed( NactAssistantExport *window, void *empty )
 	GList *items;
 	GtkTreePath *path;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( window ));
 
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: window=%p, empty=%p", thisfn, ( void * ) window, empty );
@@ -563,14 +563,14 @@ on_base_all_widgets_showed( NactAssistantExport *window, void *empty )
 }
 
 static void
-on_items_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data )
+on_items_tree_view_selection_changed( FMAAssistantExport *window, GList *selected_items, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_assistant_export_on_items_tree_view_selection_changed";
+	static const gchar *thisfn = "fma_assistant_export_on_items_tree_view_selection_changed";
 	GtkAssistant *assistant;
 	GtkWidget *page;
 	gboolean enabled;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( window ));
 
 	if( !window->private->dispose_has_run ){
 
@@ -602,15 +602,15 @@ on_items_tree_view_selection_changed( NactAssistantExport *window, GList *select
  * (maybe removed)
  */
 static void
-on_folder_chooser_selection_changed( GtkFileChooser *chooser, NactAssistantExport *window )
+on_folder_chooser_selection_changed( GtkFileChooser *chooser, FMAAssistantExport *window )
 {
-	static const gchar *thisfn = "nact_assistant_export_on_folder_chooser_selection_changed";
+	static const gchar *thisfn = "fma_assistant_export_on_folder_chooser_selection_changed";
 	GtkAssistant *assistant;
 	GtkWidget *page;
 	gchar *uri;
 	gboolean enabled;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( window ));
 
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: chooser=%p, window=%p", thisfn, ( void * ) chooser, ( void * ) window );
@@ -636,7 +636,7 @@ on_folder_chooser_selection_changed( GtkFileChooser *chooser, NactAssistantExpor
 static void
 assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page )
 {
-	static const gchar *thisfn = "nact_assistant_export_on_prepare";
+	static const gchar *thisfn = "fma_assistant_export_on_prepare";
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p", thisfn, window, assistant, page );
 
@@ -644,11 +644,11 @@ assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *pa
 
 	switch( type ){
 		case GTK_ASSISTANT_PAGE_CONFIRM:
-			assist_prepare_confirm( NACT_ASSISTANT_EXPORT( window ), assistant, page );
+			assist_prepare_confirm( FMA_ASSISTANT_EXPORT( window ), assistant, page );
 			break;
 
 		case GTK_ASSISTANT_PAGE_SUMMARY:
-			assist_prepare_exportdone( NACT_ASSISTANT_EXPORT( window ), assistant, page );
+			assist_prepare_exportdone( FMA_ASSISTANT_EXPORT( window ), assistant, page );
 			break;
 
 		default:
@@ -657,9 +657,9 @@ assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *pa
 }
 
 static void
-assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
+assist_prepare_confirm( FMAAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
 {
-	static const gchar *thisfn = "nact_assistant_export_prepare_confirm";
+	static const gchar *thisfn = "fma_assistant_export_prepare_confirm";
 	gchar *text, *tmp;
 	gchar *label_item;
 	gchar *format_label, *format_label2;
@@ -750,19 +750,19 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 static void
 assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 {
-	static const gchar *thisfn = "nact_assistant_export_on_apply";
-	NactAssistantExport *window;
+	static const gchar *thisfn = "fma_assistant_export_on_apply";
+	FMAAssistantExport *window;
 	GList *ia;
 	ExportStruct *str;
 	FMAApplication *application;
 	FMAUpdater *updater;
 	gboolean first;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( wnd ));
+	g_return_if_fail( FMA_IS_ASSISTANT_EXPORT( wnd ));
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 
-	window = NACT_ASSISTANT_EXPORT( wnd );
+	window = FMA_ASSISTANT_EXPORT( wnd );
 
 	application = FMA_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = fma_application_get_updater( application );
@@ -798,9 +798,9 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 }
 
 static void
-assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
+assist_prepare_exportdone( FMAAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
 {
-	static const gchar *thisfn = "nact_assistant_export_prepare_exportdone";
+	static const gchar *thisfn = "fma_assistant_export_prepare_exportdone";
 	gint errors;
 	guint width;
 	GtkWidget *vbox;

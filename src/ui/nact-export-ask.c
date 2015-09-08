@@ -144,7 +144,7 @@ class_init( NactExportAskClass *klass )
 static void
 ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data )
 {
-	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
+	static const gchar *thisfn = "fma_assistant_export_ioptions_list_iface_init";
 
 	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 

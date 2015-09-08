@@ -27,12 +27,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_ASSISTANT_EXPORT_H__
-#define __UI_NACT_ASSISTANT_EXPORT_H__
+#ifndef __UI_FMA_ASSISTANT_EXPORT_H__
+#define __UI_FMA_ASSISTANT_EXPORT_H__
 
 /**
- * SECTION: nact_assistant_export
- * @short_description: #NactAssistantExport class definition.
+ * SECTION: fma_assistant_export
+ * @short_description: #FMAAssistantExport class definition.
  * @include: nact/nact-assistant-export.h
  *
  * Rationale:
@@ -66,32 +66,32 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_ASSISTANT_EXPORT                ( nact_assistant_export_get_type())
-#define NACT_ASSISTANT_EXPORT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_ASSISTANT_EXPORT, NactAssistantExport ))
-#define NACT_ASSISTANT_EXPORT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_ASSISTANT_EXPORT, NactAssistantExportClass ))
-#define NACT_IS_ASSISTANT_EXPORT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_ASSISTANT_EXPORT ))
-#define NACT_IS_ASSISTANT_EXPORT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_ASSISTANT_EXPORT ))
-#define NACT_ASSISTANT_EXPORT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_ASSISTANT_EXPORT, NactAssistantExportClass ))
+#define FMA_TYPE_ASSISTANT_EXPORT                ( fma_assistant_export_get_type())
+#define FMA_ASSISTANT_EXPORT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_ASSISTANT_EXPORT, FMAAssistantExport ))
+#define FMA_ASSISTANT_EXPORT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_ASSISTANT_EXPORT, FMAAssistantExportClass ))
+#define FMA_IS_ASSISTANT_EXPORT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_ASSISTANT_EXPORT ))
+#define FMA_IS_ASSISTANT_EXPORT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_ASSISTANT_EXPORT ))
+#define FMA_ASSISTANT_EXPORT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_ASSISTANT_EXPORT, FMAAssistantExportClass ))
 
-typedef struct _NactAssistantExportPrivate        NactAssistantExportPrivate;
-
-typedef struct {
-	/*< private >*/
-	BaseAssistant               parent;
-	NactAssistantExportPrivate *private;
-}
-	NactAssistantExport;
+typedef struct _FMAAssistantExportPrivate        FMAAssistantExportPrivate;
 
 typedef struct {
 	/*< private >*/
-	BaseAssistantClass          parent;
+	BaseAssistant              parent;
+	FMAAssistantExportPrivate *private;
 }
-	NactAssistantExportClass;
+	FMAAssistantExport;
 
-GType nact_assistant_export_get_type( void );
+typedef struct {
+	/*< private >*/
+	BaseAssistantClass         parent;
+}
+	FMAAssistantExportClass;
 
-void  nact_assistant_export_run     ( NactMainWindow *main_window );
+GType fma_assistant_export_get_type( void );
+
+void  fma_assistant_export_run     ( NactMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_ASSISTANT_EXPORT_H__ */
+#endif /* __UI_FMA_ASSISTANT_EXPORT_H__ */
