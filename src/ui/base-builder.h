@@ -33,7 +33,7 @@
 /**
  * SECTION: base_builder
  * @short_description: #BaseBuilder class definition.
- * @include: nact/base-builder.h
+ * @include: ui/base-builder.h
  *
  * This class is derived from GtkBuilder class. It adds to it two
  * features:

@@ -84,7 +84,7 @@ struct _FMAAssistantImportPrivate {
 	gboolean     dispose_has_run;
 	GtkWidget   *file_chooser;
 	GtkTreeView *duplicates_listview;
-	FMAIOption   *mode;
+	FMAIOption  *mode;
 	GList       *results;
 	GList       *overriden;
 };
@@ -95,35 +95,35 @@ static const gchar        *st_wsp_name       = IPREFS_IMPORT_ASSISTANT_WSP;
 
 static BaseAssistantClass *st_parent_class   = NULL;
 
-static GType         register_type( void );
-static void          class_init( FMAAssistantImportClass *klass );
-static void          ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
-static GList        *ioptions_list_get_modes( const FMAIOptionsList *instance, GtkWidget *container );
-static void          ioptions_list_free_modes( const FMAIOptionsList *instance, GtkWidget *container, GList *modes );
+static GType          register_type( void );
+static void           class_init( FMAAssistantImportClass *klass );
+static void           ioptions_list_iface_init( FMAIOptionsListInterface *iface, void *user_data );
+static GList         *ioptions_list_get_modes( const FMAIOptionsList *instance, GtkWidget *container );
+static void           ioptions_list_free_modes( const FMAIOptionsList *instance, GtkWidget *container, GList *modes );
 static FMAIOption    *ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *container );
-static void          instance_init( GTypeInstance *instance, gpointer klass );
-static void          instance_dispose( GObject *application );
-static void          instance_finalize( GObject *application );
+static void           instance_init( GTypeInstance *instance, gpointer klass );
+static void           instance_dispose( GObject *application );
+static void           instance_finalize( GObject *application );
 
-static void          on_base_initialize_gtk( FMAAssistantImport *dialog );
-static void          create_duplicates_treeview_model( FMAAssistantImport *dialog );
-static void          on_base_initialize_base_window( FMAAssistantImport *dialog );
-static void          runtime_init_intro( FMAAssistantImport *window, GtkAssistant *assistant );
-static void          runtime_init_file_selector( FMAAssistantImport *window, GtkAssistant *assistant );
-static void          on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
-static gboolean      has_loadable_files( GSList *uris );
-static void          runtime_init_duplicates( FMAAssistantImport *window, GtkAssistant *assistant );
+static void           on_base_initialize_gtk( FMAAssistantImport *dialog );
+static void           create_duplicates_treeview_model( FMAAssistantImport *dialog );
+static void           on_base_initialize_base_window( FMAAssistantImport *dialog );
+static void           runtime_init_intro( FMAAssistantImport *window, GtkAssistant *assistant );
+static void           runtime_init_file_selector( FMAAssistantImport *window, GtkAssistant *assistant );
+static void           on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
+static gboolean       has_loadable_files( GSList *uris );
+static void           runtime_init_duplicates( FMAAssistantImport *window, GtkAssistant *assistant );
 
-static void          assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
-static void          prepare_confirm( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
-static void          assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
+static void           assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
+static void           prepare_confirm( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
+static void           assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
 static FMAObjectItem *check_for_existence( const FMAObjectItem *, NactMainWindow *window );
-static void          prepare_importdone( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
-static void          free_results( GList *list );
+static void           prepare_importdone( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
+static void           free_results( GList *list );
 
-static GtkWidget    *find_widget_from_page( GtkWidget *page, const gchar *name );
-static GtkTreeView  *get_duplicates_treeview_from_assistant_import( FMAAssistantImport *window );
-static GtkTreeView  *get_duplicates_treeview_from_page( GtkWidget *page );
+static GtkWidget     *find_widget_from_page( GtkWidget *page, const gchar *name );
+static GtkTreeView   *get_duplicates_treeview_from_assistant_import( FMAAssistantImport *window );
+static GtkTreeView   *get_duplicates_treeview_from_page( GtkWidget *page );
 
 GType
 fma_assistant_import_get_type( void )

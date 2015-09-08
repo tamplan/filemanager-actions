@@ -34,7 +34,7 @@
  * SECTION: base-gtk-utils
  * @title: BaseGtkUtils
  * @short_description: Gtk helper functions
- * @include: base-gtk-utils.h
+ * @include: ui/base-gtk-utils.h
  */
 
 #include "base-window.h"

@@ -33,7 +33,7 @@
 /**
  * SECTION: fma_assistant_import
  * @short_description: #FMAAssistantImport class definition.
- * @include: nact/fma-assistant-import.h
+ * @include: ui/fma-assistant-import.h
  */
 
 #include "base-assistant.h"

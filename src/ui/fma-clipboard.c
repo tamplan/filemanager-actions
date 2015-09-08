@@ -43,11 +43,11 @@
 #include "nact-export-ask.h"
 #include "nact-main-window.h"
 #include "nact-tree-model.h"
-#include "nact-clipboard.h"
+#include "fma-clipboard.h"
 
 /* private class data
  */
-struct _NactClipboardClassPrivate {
+struct _FMAClipboardClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -59,7 +59,7 @@ typedef struct {
 	GList   *rows;
 	gboolean copy;
 }
-	NactClipboardDndData;
+	FMAClipboardDndData;
 
 typedef struct {
 	GList *items;
@@ -70,22 +70,22 @@ typedef struct {
 }
 	PrimaryData;
 
-struct _NactClipboardPrivate {
+struct _FMAClipboardPrivate {
 	gboolean        dispose_has_run;
-	NactMainWindow *window;
+	NactMainWindow  *window;
 	GtkClipboard   *dnd;
 	GtkClipboard   *primary;
 	PrimaryData    *primary_data;
 	gboolean        primary_got;
 };
 
-#define NACT_CLIPBOARD_ATOM				gdk_atom_intern( "_NACT_CLIPBOARD", FALSE )
-#define NACT_CLIPBOARD_NACT_ATOM		gdk_atom_intern( "ClipboardNautilusActions", FALSE )
+#define FMA_CLIPBOARD_ATOM			gdk_atom_intern( "_FMA_CLIPBOARD", FALSE )
+#define FMA_CLIPBOARD_NACT_ATOM		gdk_atom_intern( "ClipboardFileManagerActions", FALSE )
 
 enum {
-	NACT_CLIPBOARD_FORMAT_NACT = 0,
-	NACT_CLIPBOARD_FORMAT_APPLICATION_XML,
-	NACT_CLIPBOARD_FORMAT_TEXT_PLAIN
+	FMA_CLIPBOARD_FORMAT_FMA = 0,
+	FMA_CLIPBOARD_FORMAT_APPLICATION_XML,
+	FMA_CLIPBOARD_FORMAT_TEXT_PLAIN
 };
 
 /* clipboard formats
@@ -97,34 +97,34 @@ enum {
  * - a text (xml) format, to go to clipboard or a text editor
  */
 static GtkTargetEntry clipboard_formats[] = {
-	{ "ClipboardNautilusActions", 0, NACT_CLIPBOARD_FORMAT_NACT },
-	{ "application/xml",          0, NACT_CLIPBOARD_FORMAT_APPLICATION_XML },
-	{ "text/plain",               0, NACT_CLIPBOARD_FORMAT_TEXT_PLAIN },
+	{ "ClipboardFileManagerActions", 0, FMA_CLIPBOARD_FORMAT_FMA },
+	{ "application/xml",             0, FMA_CLIPBOARD_FORMAT_APPLICATION_XML },
+	{ "text/plain",                  0, FMA_CLIPBOARD_FORMAT_TEXT_PLAIN },
 };
 
 static GObjectClass *st_parent_class = NULL;
 
 static GType  register_type( void );
-static void   class_init( NactClipboardClass *klass );
+static void   class_init( FMAClipboardClass *klass );
 static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *application );
 static void   instance_finalize( GObject *application );
 
 static void   get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
-static void   clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *data );
-static gchar *export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder );
-static gchar *export_objects( NactClipboard *clipboard, GList *objects );
-static gchar *export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *dest_folder, GList **exported, gboolean first );
+static void   clear_dnd_clipboard_callback( GtkClipboard *clipboard, FMAClipboardDndData *data );
+static gchar *export_rows( FMAClipboard *clipboard, GList *rows, const gchar *dest_folder );
+static gchar *export_objects( FMAClipboard *clipboard, GList *objects );
+static gchar *export_row_object( FMAClipboard *clipboard, FMAObject *object, const gchar *dest_folder, GList **exported, gboolean first );
 
-static void   get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard );
-static void   clear_primary_clipboard( NactClipboard *clipboard );
-static void   clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, NactClipboard *clipboard );
-static void   dump_primary_clipboard( NactClipboard *clipboard );
+static void   get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, FMAClipboard *clipboard );
+static void   clear_primary_clipboard( FMAClipboard *clipboard );
+static void   clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, FMAClipboard *clipboard );
+static void   dump_primary_clipboard( FMAClipboard *clipboard );
 
 static gchar *clipboard_mode_to_string( gint mode );
 
 GType
-nact_clipboard_get_type( void )
+fma_clipboard_get_type( void )
 {
 	static GType type = 0;
 
@@ -138,32 +138,32 @@ nact_clipboard_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_clipboard_register_type";
+	static const gchar *thisfn = "fma_clipboard_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactClipboardClass ),
+		sizeof( FMAClipboardClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactClipboard ),
+		sizeof( FMAClipboard ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_OBJECT, "NactClipboard", &info, 0 );
+	type = g_type_register_static( G_TYPE_OBJECT, "FMAClipboard", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactClipboardClass *klass )
+class_init( FMAClipboardClass *klass )
 {
-	static const gchar *thisfn = "nact_clipboard_class_init";
+	static const gchar *thisfn = "fma_clipboard_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -174,29 +174,29 @@ class_init( NactClipboardClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NactClipboardClassPrivate, 1 );
+	klass->private = g_new0( FMAClipboardClassPrivate, 1 );
 }
 
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_clipboard_instance_init";
-	NactClipboard *self;
+	static const gchar *thisfn = "fma_clipboard_instance_init";
+	FMAClipboard *self;
 	GdkDisplay *display;
 
-	g_return_if_fail( NACT_IS_CLIPBOARD( instance ));
+	g_return_if_fail( FMA_IS_CLIPBOARD( instance ));
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	self = NACT_CLIPBOARD( instance );
+	self = FMA_CLIPBOARD( instance );
 
-	self->private = g_new0( NactClipboardPrivate, 1 );
+	self->private = g_new0( FMAClipboardPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 
 	display = gdk_display_get_default();
-	self->private->dnd = gtk_clipboard_get_for_display( display, NACT_CLIPBOARD_ATOM );
+	self->private->dnd = gtk_clipboard_get_for_display( display, FMA_CLIPBOARD_ATOM );
 	self->private->primary = gtk_clipboard_get_for_display( display, GDK_SELECTION_CLIPBOARD );
 	self->private->primary_data = NULL;
 }
@@ -204,12 +204,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "nact_clipboard_instance_dispose";
-	NactClipboard *self;
+	static const gchar *thisfn = "fma_clipboard_instance_dispose";
+	FMAClipboard *self;
 
-	g_return_if_fail( NACT_IS_CLIPBOARD( object ));
+	g_return_if_fail( FMA_IS_CLIPBOARD( object ));
 
-	self = NACT_CLIPBOARD( object );
+	self = FMA_CLIPBOARD( object );
 
 	if( !self->private->dispose_has_run ){
 
@@ -230,14 +230,14 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *instance )
 {
-	static const gchar *thisfn = "nact_clipboard_instance_finalize";
-	NactClipboard *self;
+	static const gchar *thisfn = "fma_clipboard_instance_finalize";
+	FMAClipboard *self;
 
-	g_return_if_fail( NACT_IS_CLIPBOARD( instance ));
+	g_return_if_fail( FMA_IS_CLIPBOARD( instance ));
 
 	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-	self = NACT_CLIPBOARD( instance );
+	self = FMA_CLIPBOARD( instance );
 
 	if( self->private->primary_data ){
 		clear_primary_clipboard( self );
@@ -253,16 +253,16 @@ instance_finalize( GObject *instance )
 }
 
 /**
- * nact_clipboard_new:
+ * fma_clipboard_new:
  *
- * Returns: a new #NactClipboard object.
+ * Returns: a new #FMAClipboard object.
  */
-NactClipboard *
-nact_clipboard_new( NactMainWindow *window )
+FMAClipboard *
+fma_clipboard_new( NactMainWindow *window )
 {
-	NactClipboard *clipboard;
+	FMAClipboard *clipboard;
 
-	clipboard = g_object_new( NACT_TYPE_CLIPBOARD, NULL );
+	clipboard = g_object_new( FMA_TYPE_CLIPBOARD, NULL );
 
 	clipboard->private->window = window;
 
@@ -270,8 +270,8 @@ nact_clipboard_new( NactMainWindow *window )
 }
 
 /**
- * nact_clipboard_dnd_set:
- * @clipboard: this #NactClipboard instance.
+ * fma_clipboard_dnd_set:
+ * @clipboard: this #FMAClipboard instance.
  * @rows: the list of row references of dragged items.
  * @folder: the URI of the target folder if any (XDS protocol to outside).
  * @copy_data: %TRUE if data is to be copied, %FALSE else
@@ -280,18 +280,18 @@ nact_clipboard_new( NactMainWindow *window )
  * Set the selected items into our dnd clipboard.
  */
 void
-nact_clipboard_dnd_set( NactClipboard *clipboard, guint target, GList *rows, const gchar *folder, gboolean copy_data )
+fma_clipboard_dnd_set( FMAClipboard *clipboard, guint target, GList *rows, const gchar *folder, gboolean copy_data )
 {
-	static const gchar *thisfn = "nact_clipboard_dnd_set";
-	NactClipboardDndData *data;
+	static const gchar *thisfn = "fma_clipboard_dnd_set";
+	FMAClipboardDndData *data;
 	GList *it;
 
-	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+	g_return_if_fail( FMA_IS_CLIPBOARD( clipboard ));
 	g_return_if_fail( rows && g_list_length( rows ));
 
 	if( !clipboard->private->dispose_has_run ){
 
-		data = g_new0( NactClipboardDndData, 1 );
+		data = g_new0( FMAClipboardDndData, 1 );
 
 		data->target = target;
 		data->folder = g_strdup( folder );
@@ -315,8 +315,8 @@ nact_clipboard_dnd_set( NactClipboard *clipboard, guint target, GList *rows, con
 }
 
 /**
- * nact_clipboard_dnd_get_data:
- * @clipboard: this #NactClipboard instance.
+ * fma_clipboard_dnd_get_data:
+ * @clipboard: this #FMAClipboard instance.
  * @copy_data: will be set to the original value of the drag and drop.
  *
  * Returns the list of rows references privously stored.
@@ -325,16 +325,16 @@ nact_clipboard_dnd_set( NactClipboard *clipboard, guint target, GList *rows, con
  * caller.
  */
 GList *
-nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
+fma_clipboard_dnd_get_data( FMAClipboard *clipboard, gboolean *copy_data )
 {
-	static const gchar *thisfn = "nact_clipboard_dnd_get_data";
+	static const gchar *thisfn = "fma_clipboard_dnd_get_data";
 	GList *rows = NULL;
 	GtkSelectionData *selection;
-	NactClipboardDndData *data;
+	FMAClipboardDndData *data;
 	GList *it;
 
 	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
-	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
+	g_return_val_if_fail( FMA_IS_CLIPBOARD( clipboard ), NULL );
 
 	if( copy_data ){
 		*copy_data = FALSE;
@@ -342,11 +342,11 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
 
 	if( !clipboard->private->dispose_has_run ){
 
-		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, NACT_CLIPBOARD_NACT_ATOM );
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, FMA_CLIPBOARD_NACT_ATOM );
 		if( selection ){
-			data = ( NactClipboardDndData * ) gtk_selection_data_get_data( selection );
+			data = ( FMAClipboardDndData * ) gtk_selection_data_get_data( selection );
 
-			if( data->target == NACT_XCHANGE_FORMAT_NACT ){
+			if( data->target == FMA_XCHANGE_FORMAT_NACT ){
 				for( it = data->rows ; it ; it = it->next ){
 					rows = g_list_append( rows,
 							gtk_tree_row_reference_copy(( GtkTreeRowReference * ) it->data ));
@@ -376,12 +376,12 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
  * the presence of several <?xml ?> headers inside.
  */
 gchar *
-nact_clipboard_dnd_get_text( NactClipboard *clipboard, GList *rows )
+fma_clipboard_dnd_get_text( FMAClipboard *clipboard, GList *rows )
 {
-	static const gchar *thisfn = "nact_clipboard_dnd_get_text";
+	static const gchar *thisfn = "fma_clipboard_dnd_get_text";
 	gchar *buffer;
 
-	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
+	g_return_val_if_fail( FMA_IS_CLIPBOARD( clipboard ), NULL );
 
 	g_debug( "%s: clipboard=%p, rows=%p (count=%u)",
 			thisfn, ( void * ) clipboard, ( void * ) rows, g_list_length( rows ));
@@ -398,32 +398,32 @@ nact_clipboard_dnd_get_text( NactClipboard *clipboard, GList *rows )
 }
 
 /**
- * nact_clipboard_dnd_drag_end:
- * @clipboard: this #NactClipboard instance.
+ * fma_clipboard_dnd_drag_end:
+ * @clipboard: this #FMAClipboard instance.
  *
  * On drag-end, exports the objects if needed.
  */
 void
-nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
+fma_clipboard_dnd_drag_end( FMAClipboard *clipboard )
 {
-	static const gchar *thisfn = "nact_clipboard_dnd_drag_end";
+	static const gchar *thisfn = "fma_clipboard_dnd_drag_end";
 	GtkSelectionData *selection;
-	NactClipboardDndData *data;
+	FMAClipboardDndData *data;
 	gchar *buffer;
 
 	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
-	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+	g_return_if_fail( FMA_IS_CLIPBOARD( clipboard ));
 
 	if( !clipboard->private->dispose_has_run ){
 
-		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, NACT_CLIPBOARD_NACT_ATOM );
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, FMA_CLIPBOARD_NACT_ATOM );
 		g_debug( "%s: selection=%p", thisfn, ( void * ) selection );
 
 		if( selection ){
-			data = ( NactClipboardDndData * ) gtk_selection_data_get_data( selection );
-			g_debug( "%s: data=%p (NactClipboardDndData)", thisfn, ( void * ) data );
+			data = ( FMAClipboardDndData * ) gtk_selection_data_get_data( selection );
+			g_debug( "%s: data=%p (FMAClipboardDndData)", thisfn, ( void * ) data );
 
-			if( data->target == NACT_XCHANGE_FORMAT_XDS ){
+			if( data->target == FMA_XCHANGE_FORMAT_XDS ){
 				g_debug( "%s: folder=%s", thisfn, data->folder );
 				buffer = export_rows( clipboard, data->rows, data->folder );
 				g_free( buffer );
@@ -435,17 +435,17 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 }
 
 /**
- * nact_clipboard_dnd_clear:
- * @clipboard: this #NactClipboard instance.
+ * fma_clipboard_dnd_clear:
+ * @clipboard: this #FMAClipboard instance.
  *
  * Clears the drag-and-drop clipboard.
  *
  * At least called on drag-begin.
  */
 void
-nact_clipboard_dnd_clear( NactClipboard *clipboard )
+fma_clipboard_dnd_clear( FMAClipboard *clipboard )
 {
-	g_debug( "nact_clipboard_dnd_clear: clipboard=%p", ( void * ) clipboard );
+	g_debug( "fma_clipboard_dnd_clear: clipboard=%p", ( void * ) clipboard );
 
 	gtk_clipboard_clear( clipboard->private->dnd );
 }
@@ -453,7 +453,7 @@ nact_clipboard_dnd_clear( NactClipboard *clipboard )
 static void
 get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data )
 {
-	static const gchar *thisfn = "nact_clipboard_get_from_dnd_clipboard_callback";
+	static const gchar *thisfn = "fma_clipboard_get_from_dnd_clipboard_callback";
 	GdkAtom selection_data_target;
 
 	selection_data_target = gtk_selection_data_get_target( selection_data );
@@ -463,13 +463,13 @@ get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *sele
 			( void * ) selection_data, gdk_atom_name( selection_data_target ), info, ( void * ) data );
 
 	gtk_selection_data_set( selection_data,
-			selection_data_target, 8, data, sizeof( NactClipboardDndData ));
+			selection_data_target, 8, data, sizeof( FMAClipboardDndData ));
 }
 
 static void
-clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *data )
+clear_dnd_clipboard_callback( GtkClipboard *clipboard, FMAClipboardDndData *data )
 {
-	static const gchar *thisfn = "nact_clipboard_clear_dnd_clipboard_callback";
+	static const gchar *thisfn = "fma_clipboard_clear_dnd_clipboard_callback";
 
 	g_debug( "%s: clipboard=%p, data=%p", thisfn, ( void * ) clipboard, ( void * ) data );
 
@@ -484,9 +484,9 @@ clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *dat
  * else export items as files to target directory, returning an empty string
  */
 static gchar *
-export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
+export_rows( FMAClipboard *clipboard, GList *rows, const gchar *dest_folder )
 {
-	static const gchar *thisfn = "nact_clipboard_export_rows";
+	static const gchar *thisfn = "fma_clipboard_export_rows";
 	GString *data;
 	GtkTreeModel *model;
 	GList *exported, *irow;
@@ -526,7 +526,7 @@ export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 }
 
 static gchar *
-export_objects( NactClipboard *clipboard, GList *objects )
+export_objects( FMAClipboard *clipboard, GList *objects )
 {
 	gchar *buffer;
 	GString *data;
@@ -563,9 +563,9 @@ export_objects( NactClipboard *clipboard, GList *objects )
  * exported twice
  */
 static gchar *
-export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *dest_folder, GList **exported, gboolean first )
+export_row_object( FMAClipboard *clipboard, FMAObject *object, const gchar *dest_folder, GList **exported, gboolean first )
 {
-	static const gchar *thisfn = "nact_clipboard_export_row_object";
+	static const gchar *thisfn = "fma_clipboard_export_row_object";
 	GList *subitems, *isub;
 	FMAApplication *application;
 	FMAUpdater *updater;
@@ -646,8 +646,8 @@ export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *des
 }
 
 /**
- * nact_clipboard_primary_set:
- * @clipboard: this #NactClipboard object.
+ * fma_clipboard_primary_set:
+ * @clipboard: this #FMAClipboard object.
  * @items: a list of #FMAObject items
  * @mode: where do these items come from ?
  *  Or what is the operation which has led the items to the clipboard?
@@ -667,15 +667,15 @@ export_row_object( NactClipboard *clipboard, FMAObject *object, const gchar *des
  * data out of the clipboard.
  */
 void
-nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
+fma_clipboard_primary_set( FMAClipboard *clipboard, GList *items, gint mode )
 {
-	static const gchar *thisfn = "nact_clipboard_primary_set";
+	static const gchar *thisfn = "fma_clipboard_primary_set";
 	PrimaryData *user_data;
 	GList *it;
 
 	g_debug( "%s: clipboard=%p, items=%p (count=%d), mode=%d",
 			thisfn, ( void * ) clipboard, ( void * ) items, g_list_length( items ), mode );
-	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+	g_return_if_fail( FMA_IS_CLIPBOARD( clipboard ));
 
 	if( !clipboard->private->dispose_has_run ){
 
@@ -715,8 +715,8 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 }
 
 /**
- * nact_clipboard_primary_get:
- * @clipboard: this #NactClipboard object.
+ * fma_clipboard_primary_get:
+ * @clipboard: this #FMAClipboard object.
  *
  * Returns: a copy of the list of items previously referenced in the
  * internal clipboard.
@@ -725,9 +725,9 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
  * time.
  */
 GList *
-nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
+fma_clipboard_primary_get( FMAClipboard *clipboard, gboolean *relabel )
 {
-	static const gchar *thisfn = "nact_clipboard_primary_get";
+	static const gchar *thisfn = "fma_clipboard_primary_get";
 	GList *items = NULL;
 	GtkSelectionData *selection;
 	PrimaryData *user_data;
@@ -735,12 +735,12 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 	FMAObject *obj;
 
 	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
-	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
+	g_return_val_if_fail( FMA_IS_CLIPBOARD( clipboard ), NULL );
 	g_return_val_if_fail( relabel, NULL );
 
 	if( !clipboard->private->dispose_has_run ){
 
-		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, FMA_CLIPBOARD_NACT_ATOM );
 
 		if( selection ){
 			user_data = ( PrimaryData * ) gtk_selection_data_get_data( selection );
@@ -768,17 +768,17 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 }
 
 /**
- * nact_clipboard_primary_counts:
- * @clipboard: this #NactClipboard object.
+ * fma_clipboard_primary_counts:
+ * @clipboard: this #FMAClipboard object.
  *
  * Returns some counters on content of primary clipboard.
  */
 void
-nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *profiles, guint *menus )
+fma_clipboard_primary_counts( FMAClipboard *clipboard, guint *actions, guint *profiles, guint *menus )
 {
 	PrimaryData *user_data;
 
-	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+	g_return_if_fail( FMA_IS_CLIPBOARD( clipboard ));
 	g_return_if_fail( actions && profiles && menus );
 
 	if( !clipboard->private->dispose_has_run ){
@@ -798,9 +798,9 @@ nact_clipboard_primary_counts( NactClipboard *clipboard, guint *actions, guint *
 }
 
 static void
-get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard )
+get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, FMAClipboard *clipboard )
 {
-	static const gchar *thisfn = "nact_clipboard_get_from_primary_clipboard_callback";
+	static const gchar *thisfn = "fma_clipboard_get_from_primary_clipboard_callback";
 	PrimaryData *user_data;
 	gchar *buffer;
 	GdkAtom selection_data_target;
@@ -813,7 +813,7 @@ get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionDa
 
 	user_data = clipboard->private->primary_data;
 
-	if( info == NACT_CLIPBOARD_FORMAT_TEXT_PLAIN ){
+	if( info == FMA_CLIPBOARD_FORMAT_TEXT_PLAIN ){
 		buffer = export_objects( clipboard, user_data->items );
 		gtk_selection_data_set( selection_data,
 				selection_data_target, 8, ( const guchar * ) buffer, strlen( buffer ));
@@ -826,9 +826,9 @@ get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionDa
 }
 
 static void
-clear_primary_clipboard( NactClipboard *clipboard )
+clear_primary_clipboard( FMAClipboard *clipboard )
 {
-	static const gchar *thisfn = "nact_clipboard_clear_primary_clipboard";
+	static const gchar *thisfn = "fma_clipboard_clear_primary_clipboard";
 	PrimaryData *user_data;
 
 	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
@@ -847,22 +847,22 @@ clear_primary_clipboard( NactClipboard *clipboard )
 }
 
 static void
-clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, NactClipboard *clipboard )
+clear_primary_clipboard_callback( GtkClipboard *gtk_clipboard, FMAClipboard *clipboard )
 {
 }
 
 /**
- * nact_clipboard_dump:
- * @clipboard: this #NactClipboard instance.
+ * fma_clipboard_dump:
+ * @clipboard: this #FMAClipboard instance.
  *
  * Dumps the content of the primary clipboard.
  */
 void
-nact_clipboard_dump( NactClipboard *clipboard )
+fma_clipboard_dump( FMAClipboard *clipboard )
 {
-	static const gchar *thisfn = "nact_clipboard_dump";
+	static const gchar *thisfn = "fma_clipboard_dump";
 
-	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+	g_return_if_fail( FMA_IS_CLIPBOARD( clipboard ));
 
 	if( !clipboard->private->dispose_has_run ){
 
@@ -878,14 +878,14 @@ nact_clipboard_dump( NactClipboard *clipboard )
 }
 
 static void
-dump_primary_clipboard( NactClipboard *clipboard )
+dump_primary_clipboard( FMAClipboard *clipboard )
 {
-	static const gchar *thisfn = "nact_clipboard_dump_primary";
+	static const gchar *thisfn = "fma_clipboard_dump_primary";
 	PrimaryData *user_data;
 	gchar *mode;
 	GList *it;
 
-	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
+	g_return_if_fail( FMA_IS_CLIPBOARD( clipboard ));
 
 	if( !clipboard->private->dispose_has_run ){
 

@@ -37,7 +37,7 @@
 /**
  * SECTION: nact_main_tab
  * @short_description: Signals and properties.
- * @include: nact/nact-main-tab.h
+ * @include: ui/nact-main-tab.h
  *
  * Here as defined signals and properties common to all tabs.
  */

@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_iaction_tab
  * @short_description: #NactIActionTab interface definition.
- * @include: nact/nact-iaction-tab.h
+ * @include: ui/nact-iaction-tab.h
  *
  * This interface implements the "Nautilus Menu Item" tab of the notebook.
  *

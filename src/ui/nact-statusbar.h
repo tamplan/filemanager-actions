@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_statusbar
  * @short_description: Statusbar class definition.
- * @include: nact/nact-statusbar.h
+ * @include: ui/nact-statusbar.h
  *
  * The #NactStatusbar embeds both:
  * - a message bar

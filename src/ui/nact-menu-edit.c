@@ -38,7 +38,7 @@
 #include "core/fma-io-provider.h"
 
 #include "fma-application.h"
-#include "nact-clipboard.h"
+#include "fma-clipboard.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
 #include "nact-menu.h"
@@ -204,7 +204,7 @@ nact_menu_edit_cut( NactMainWindow *main_window )
 	static const gchar *thisfn = "nact_menu_edit_cut";
 	sMenuData *sdata;
 	GList *items;
-	NactClipboard *clipboard;
+	FMAClipboard *clipboard;
 	GList *to_delete;
 	GSList *ndeletables;
 	NactTreeView *view;
@@ -229,7 +229,7 @@ nact_menu_edit_cut( NactMainWindow *main_window )
 
 	if( to_delete ){
 		clipboard = nact_main_window_get_clipboard( NACT_MAIN_WINDOW( main_window ));
-		nact_clipboard_primary_set( clipboard, to_delete, CLIPBOARD_MODE_CUT );
+		fma_clipboard_primary_set( clipboard, to_delete, CLIPBOARD_MODE_CUT );
 		update_clipboard_counters( main_window, sdata );
 		view = nact_main_window_get_items_view( main_window );
 		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
@@ -254,7 +254,7 @@ nact_menu_edit_copy( NactMainWindow *main_window )
 {
 	static const gchar *thisfn = "nact_menu_edit_copy";
 	sMenuData *sdata;
-	NactClipboard *clipboard;
+	FMAClipboard *clipboard;
 
 	g_debug( "%s: main_window=%p", thisfn, ( void * ) main_window );
 	g_return_if_fail( main_window && NACT_IS_MAIN_WINDOW( main_window ));
@@ -262,7 +262,7 @@ nact_menu_edit_copy( NactMainWindow *main_window )
 	sdata = nact_menu_get_data( main_window );
 
 	clipboard = nact_main_window_get_clipboard( main_window );
-	nact_clipboard_primary_set( clipboard, sdata->selected_items, CLIPBOARD_MODE_COPY );
+	fma_clipboard_primary_set( clipboard, sdata->selected_items, CLIPBOARD_MODE_COPY );
 	update_clipboard_counters( main_window, sdata );
 
 	g_signal_emit_by_name( main_window, MAIN_SIGNAL_UPDATE_SENSITIVITIES );
@@ -345,13 +345,13 @@ prepare_for_paste( NactMainWindow *window, sMenuData *sdata )
 {
 	static const gchar *thisfn = "nact_menu_edit_prepare_for_paste";
 	GList *items, *it;
-	NactClipboard *clipboard;
+	FMAClipboard *clipboard;
 	FMAObjectAction *action;
 	gboolean relabel;
 	gboolean renumber;
 
 	clipboard = nact_main_window_get_clipboard( window );
-	items = nact_clipboard_primary_get( clipboard, &renumber );
+	items = fma_clipboard_primary_get( clipboard, &renumber );
 	action = NULL;
 
 	/* if pasted items are profiles, then setup the target action

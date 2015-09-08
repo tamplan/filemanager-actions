@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_ifolders_tab
  * @short_description: #NactIFoldersTab interface declaration.
- * @include: nact/nact-ifolders-tab.h
+ * @include: ui/nact-ifolders-tab.h
  *
  * This interface implements all the widgets which are relevant for
  * items which are applied to backgrounds.

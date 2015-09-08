@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_iproperties_tab
  * @short_description: #NactIPropertiesTab interface definition.
- * @include: nact/nact-iproperties-tab.h
+ * @include: ui/nact-iproperties-tab.h
  *
  * This interface implements the "Properties" tab of the notebook.
  *

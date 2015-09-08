@@ -33,7 +33,7 @@
 /**
  * SECTION: fma_add_capability_dialog
  * @short_description: #FMAAddCapabilityDialog class definition.
- * @include: nact/fma-add-capability-dialog.h
+ * @include: ui/fma-add-capability-dialog.h
  *
  * The dialog let the user pick a capability from the default list
  * when adding a new capability to a profile (resp. an action, a menu).

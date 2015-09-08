@@ -34,7 +34,7 @@
  * SECTION: base-dialog
  * @title: BaseDialog
  * @short_description: The BaseDialog dialog base class definition
- * @include: base-dialog.h
+ * @include: ui/base-dialog.h
  *
  * This class is derived from BaseWindow class, and serves as a base
  * class for all FileManager-Actions dialogs.

@@ -30,14 +30,14 @@
 /**
  * SECTION: nact_tree_model
  * @short_description: #NactTreeModel private data definition.
- * @include: nact/nact-tree-model-priv.h
+ * @include: ui/nact-tree-model-priv.h
  */
 
 #ifndef __UI_NACT_TREE_MODEL_PRIV_H__
 #define __UI_NACT_TREE_MODEL_PRIV_H__
 
 #include "egg-tree-multi-dnd.h"
-#include "nact-clipboard.h"
+#include "fma-clipboard.h"
 
 G_BEGIN_DECLS
 
@@ -55,7 +55,7 @@ struct _NactTreeModelPrivate {
 	/* must be initialized right after the instanciation
 	 */
 	NactMainWindow *window;
-	NactClipboard  *clipboard;
+	FMAClipboard  *clipboard;
 	guint           mode;
 
 	/* runtime data

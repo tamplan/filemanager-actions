@@ -30,7 +30,7 @@
 /**
  * SECTION: nact_tree_model
  * @short_description: #NactTreeModel class definition.
- * @include: nact/nact-tree-model.h
+ * @include: ui/nact-tree-model.h
  *
  * NactTreeModel is derived from GtkTreeModelFilter in order to be able
  * to selectively display profiles, whether an action has one or more

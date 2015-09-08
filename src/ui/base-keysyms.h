@@ -31,13 +31,9 @@
 #define __UI_BASE_KEYSYMS_H__
 
 /**
- * SECTION: base_window
- * @short_description: #BaseWindow public function declaration.
- * @include: nact/base-window.h
- *
- * This is a base class which encapsulates a Gtk+ windows.
- * It works together with the BaseApplication class to run a Gtk+
- * application.
+ * SECTION: base_keysyms
+ * @short_description: Keys declarations.
+ * @include: ui/base-keysyms.h
  */
 
 #include <gtk/gtk.h>

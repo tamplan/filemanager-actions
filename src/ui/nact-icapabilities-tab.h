@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_icapabilities_tab
  * @short_description: #NactICapabilitiesTab interface declaration.
- * @include: nact/nact-icapabilities-tab.h
+ * @include: ui/nact-icapabilities-tab.h
  *
  * This interface implements all the widgets which define the
  * conditions for the action.

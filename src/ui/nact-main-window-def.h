@@ -65,7 +65,7 @@
  *  |           |
  *  |           +-> setup_main_ui()
  *  |               setup_treeview()
- *  |               nact_clipboard_new()
+ *  |               fma_clipboard_new()
  *  |               nact_sort_buttons_new()
  *  |
  *  |               nact_iaction_tab_init()

@@ -39,7 +39,7 @@
 #include "core/fma-iprefs.h"
 
 #include "fma-application.h"
-#include "nact-clipboard.h"
+#include "fma-clipboard.h"
 #include "base-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-main-window.h"
@@ -267,7 +267,7 @@ instance_constructed( GObject *model )
 		g_debug( "%s: model=%p (%s)", thisfn, ( void * ) model, G_OBJECT_TYPE_NAME( model ));
 
 		/* nact_tree_model_set_main_window */
-		priv->clipboard = nact_clipboard_new( priv->window );
+		priv->clipboard = fma_clipboard_new( priv->window );
 
 		if( priv->mode == TREE_MODE_EDITION ){
 
@@ -427,7 +427,7 @@ nact_tree_model_set_main_window( NactTreeModel *tmodel, NactMainWindow *window )
 	if( !priv->dispose_has_run ){
 
 		priv->window = window;
-		priv->clipboard = nact_clipboard_new( window );
+		priv->clipboard = fma_clipboard_new( window );
 
 		/* depends of window and edition mode */
 		connect_item_updated_signal( tmodel );

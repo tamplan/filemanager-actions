@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_ienvironment_tab
  * @short_description: #NactIEnvironmentTab interface declaration.
- * @include: nact/nact-ienvironment-tab.h
+ * @include: ui/nact-ienvironment-tab.h
  *
  * This interface implements all the widgets which define the
  * actual action to be executed.

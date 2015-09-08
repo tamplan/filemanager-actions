@@ -114,7 +114,7 @@ struct _NactMainWindowPrivate {
 	 */
 	NactTreeView    *items_view;
 	gboolean         is_tree_modified;
-	NactClipboard   *clipboard;
+	FMAClipboard   *clipboard;
 	NactStatusbar   *statusbar;
 	NactSortButtons *sort_buttons;
 
@@ -665,7 +665,7 @@ nact_main_window_new( FMAApplication *application )
 	setup_treeview( window );
 	nact_menu_win( window );
 
-	window->private->clipboard = nact_clipboard_new( window );
+	window->private->clipboard = fma_clipboard_new( window );
 	window->private->sort_buttons = nact_sort_buttons_new( window );
 
 	/* initialize the notebook interfaces
@@ -812,12 +812,12 @@ setup_monitor_pivot( NactMainWindow *main_window )
  * nact_main_window_get_clipboard:
  * @window: this #NactMainWindow instance.
  *
- * Returns: the #NactClipboard convenience object.
+ * Returns: the #FMAClipboard convenience object.
  */
-NactClipboard *
+FMAClipboard *
 nact_main_window_get_clipboard( const NactMainWindow *window )
 {
-	NactClipboard *clipboard;
+	FMAClipboard *clipboard;
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), NULL );
 

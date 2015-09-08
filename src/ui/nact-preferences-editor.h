@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_preferences_editor
  * @short_description: #NactPreferencesEditor class definition.
- * @include: nact/nact-preferences-editor.h
+ * @include: ui/nact-preferences-editor.h
  *
  * This class is derived from NactWindow.
  * It encapsulates the "PreferencesDialog" widget dialog.

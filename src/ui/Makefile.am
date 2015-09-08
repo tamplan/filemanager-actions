@@ -79,8 +79,8 @@ fma_config_tool_SOURCES = \
 	fma-assistant-export.h								\
 	fma-assistant-import.c								\
 	fma-assistant-import.h								\
-	nact-clipboard.c									\
-	nact-clipboard.h									\
+	fma-clipboard.c									\
+	fma-clipboard.h									\
 	nact-confirm-logout.c								\
 	nact-confirm-logout.h								\
 	nact-export-ask.c									\

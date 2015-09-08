@@ -33,7 +33,7 @@
 /**
  * SECTION: base_isession
  * @short_description: #BaseISession interface definition.
- * @include: nact/base-isession.h
+ * @include: ui/base-isession.h
  *
  * This interface implements the features needed to monitor the end of the
  * session, thus letting the application react if some modifications need

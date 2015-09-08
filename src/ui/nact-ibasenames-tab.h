@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_ibasenames_tab
  * @short_description: #NactIBasenamesTab interface declaration.
- * @include: nact/nact-ibasenames-tab.h
+ * @include: ui/nact-ibasenames-tab.h
  *
  * This interface implements all the widgets which define the
  * basenames-based conditions.

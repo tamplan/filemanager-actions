@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_export_ask
  * @short_description: #NactExportAsk class definition.
- * @include: nact/nact-export-ask.h
+ * @include: ui/nact-export-ask.h
  *
  * This class is derived from BaseDialog.
  * It is ran each time an action is to be exported, and the user want

@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_imimetypes_tab
  * @short_description: #NactIMimetypesTab interface declaration.
- * @include: nact/nact-imimetypes-tab.h
+ * @include: ui/nact-imimetypes-tab.h
  *
  * This interface implements all the widgets which define the
  * mimetypes-based conditions.

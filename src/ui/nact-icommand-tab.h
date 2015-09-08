@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_icommand_tab
  * @short_description: #NactICommandTab interface declaration.
- * @include: nact/nact-icommand-tab.h
+ * @include: ui/nact-icommand-tab.h
  *
  * This interface implements all the widgets which define the
  * actual action to be executed (from FMAObjectProfile).

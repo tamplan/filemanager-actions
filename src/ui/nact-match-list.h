@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_match_list
  * @short_description: Implementation of a list match/does not match.
- * @include: nact/nact-match-list.h
+ * @include: ui/nact-match-list.h
  *
  * In an ideal world, this would be a base interface for NactISchemesTab,
  * etc. interfaces.

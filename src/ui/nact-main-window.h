@@ -38,7 +38,7 @@
  */
 
 #include "fma-application.h"
-#include "nact-clipboard.h"
+#include "fma-clipboard.h"
 #include "nact-main-window-def.h"
 #include "nact-sort-buttons.h"
 #include "nact-statusbar.h"
@@ -73,7 +73,7 @@ enum {
 
 NactMainWindow  *nact_main_window_new             ( FMAApplication *application );
 
-NactClipboard   *nact_main_window_get_clipboard   ( const NactMainWindow *window );
+FMAClipboard   *nact_main_window_get_clipboard   ( const NactMainWindow *window );
 
 NactSortButtons *nact_main_window_get_sort_buttons( const NactMainWindow *window );
 

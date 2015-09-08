@@ -33,7 +33,7 @@
 /**
  * SECTION: base_assistant
  * @short_description: #BaseAssistant class definition.
- * @include: nact/base-assistant.h
+ * @include: ui/base-assistant.h
  *
  * This class is derived from BaseWindow class, and serves as a base
  * class for all FileManager-Actions assistants.

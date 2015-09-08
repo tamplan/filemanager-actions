@@ -33,7 +33,7 @@
 /**
  * SECTION: fma_application
  * @short_description: #FMAApplication class definition.
- * @include: nact/fma-application.h
+ * @include: ui/fma-application.h
  *
  * This is the main class for filemanager-actions-config-tool program.
  *

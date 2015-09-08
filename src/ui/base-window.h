@@ -34,7 +34,7 @@
  * SECTION: base-window
  * @title: BaseWindow
  * @short_description: the BaseWindow base window class definition
- * @include: base-window.h
+ * @include: ui/base-window.h
  *
  * This is a base class which manages a Gtk+ toplevel.
  *

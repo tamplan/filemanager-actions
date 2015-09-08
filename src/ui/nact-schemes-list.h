@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_schemes_list
  * @short_description: Schemes list view management.
- * @include: nact/nact-schemes-list.h
+ * @include: ui/nact-schemes-list.h
  *
  * This set of functions manages the schemes list view.
  *

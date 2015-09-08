@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_icon_chooser
  * @short_description: NactIconChooser dialog box
- * @include: nact/nact-icon-chooser.h
+ * @include: ui/nact-icon-chooser.h
  *
  * This class is derived from BaseDialog.
  */

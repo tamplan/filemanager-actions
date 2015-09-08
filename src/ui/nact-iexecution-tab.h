@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_iexecution_tab
  * @short_description: #NactIExecutionTab interface declaration.
- * @include: nact/nact-iexecution-tab.h
+ * @include: ui/nact-iexecution-tab.h
  *
  * This interface implements all the widgets which define the
  * actual action to be executed.

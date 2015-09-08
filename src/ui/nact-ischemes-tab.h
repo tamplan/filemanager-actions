@@ -33,7 +33,7 @@
 /**
  * SECTION: nact_ischemes_tab
  * @short_description: #NactISchemesTab interface declaration.
- * @include: nact/nact-ischemes-tab.h
+ * @include: ui/nact-ischemes-tab.h
  *
  * This interface implements all the widgets which define the
  * conditions for the action.

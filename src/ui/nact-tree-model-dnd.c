@@ -42,7 +42,7 @@
 #include <core/fma-importer.h>
 
 #include "fma-application.h"
-#include "nact-clipboard.h"
+#include "fma-clipboard.h"
 #include "nact-statusbar.h"
 #include "nact-main-window.h"
 #include "nact-tree-model.h"
@@ -61,24 +61,24 @@
  *   call once egg_tree_multi_dnd_stop_drag_check( treeview )
  *   call once nact_tree_model_dnd_imulti_drag_source_row_draggable: drag_source=0x92a0d70, path_list=0x9373c90
  *   call once nact_tree_model_dnd_on_drag_begin
- *     nact_clipboard_dnd_clear()
- *   call once nact_clipboard_on_drag_begin( treeview, context, main_window )
+ *     fma_clipboard_dnd_clear()
+ *   call once fma_clipboard_on_drag_begin( treeview, context, main_window )
  *
  * when we drop (e.g. in Nautilus)
  *   call once egg_tree_multi_dnd_on_drag_data_get( treeview, context, selection_data, info=0, time )
  *   call once nact_tree_model_dnd_imulti_drag_source_drag_data_get( drag_source, context, selection_data, path_list, atom=XdndDirectSave0 )
- *     nact_clipboard_dnd_set()
+ *     fma_clipboard_dnd_set()
  *   call once nact_tree_model_dnd_on_drag_end
- *     nact_clipboard_dnd_drag_end
- *       nact_clipboard_get_from_dnd_clipboard_callback
- *     nact_clipboard_dnd_clear
+ *     fma_clipboard_dnd_drag_end
+ *       fma_clipboard_get_from_dnd_clipboard_callback
+ *     fma_clipboard_dnd_clear
  *
  * when we drop in FileManager-Actions
  *   call once egg_tree_multi_dnd_on_drag_data_get( treeview, context, selection_data, info=0, time )
  *   call once nact_tree_model_imulti_drag_source_drag_data_get( drag_source, context, selection_data, path_list, atom=XdndNautilusActions )
- *   call once nact_clipboard_get_data_for_intern_use
+ *   call once fma_clipboard_get_data_for_intern_use
  *   call once nact_tree_model_idrag_dest_drag_data_received
- *   call once nact_clipboard_on_drag_end( treeview, context, main_window )
+ *   call once fma_clipboard_on_drag_end( treeview, context, main_window )
  */
 
 #define MAX_XDS_ATOM_VAL_LEN			4096
@@ -96,10 +96,10 @@
  * - a text (xml) format, to go to clipboard or a text editor
  */
 static GtkTargetEntry dnd_source_formats[] = {
-	{ "XdndNautilusActions", GTK_TARGET_SAME_WIDGET, NACT_XCHANGE_FORMAT_NACT },
-	{ "XdndDirectSave0",     GTK_TARGET_OTHER_APP,   NACT_XCHANGE_FORMAT_XDS },
-	{ "application/xml",     GTK_TARGET_OTHER_APP,   NACT_XCHANGE_FORMAT_APPLICATION_XML },
-	{ "text/plain",          GTK_TARGET_OTHER_APP,   NACT_XCHANGE_FORMAT_TEXT_PLAIN },
+	{ "XdndNautilusActions", GTK_TARGET_SAME_WIDGET, FMA_XCHANGE_FORMAT_NACT },
+	{ "XdndDirectSave0",     GTK_TARGET_OTHER_APP,   FMA_XCHANGE_FORMAT_XDS },
+	{ "application/xml",     GTK_TARGET_OTHER_APP,   FMA_XCHANGE_FORMAT_APPLICATION_XML },
+	{ "text/plain",          GTK_TARGET_OTHER_APP,   FMA_XCHANGE_FORMAT_TEXT_PLAIN },
 };
 
 /* as a dnd dest, we accept
@@ -109,10 +109,10 @@ static GtkTargetEntry dnd_source_formats[] = {
  * - a plain text, which we are going to try to import as a XML description
  */
 GtkTargetEntry tree_model_dnd_dest_formats[] = {
-	{ "XdndNautilusActions", 0, NACT_XCHANGE_FORMAT_NACT },
-	{ "text/uri-list",       0, NACT_XCHANGE_FORMAT_URI_LIST },
-	{ "application/xml",     0, NACT_XCHANGE_FORMAT_APPLICATION_XML },
-	{ "text/plain",          0, NACT_XCHANGE_FORMAT_TEXT_PLAIN },
+	{ "XdndNautilusActions", 0, FMA_XCHANGE_FORMAT_NACT },
+	{ "text/uri-list",       0, FMA_XCHANGE_FORMAT_URI_LIST },
+	{ "application/xml",     0, FMA_XCHANGE_FORMAT_APPLICATION_XML },
+	{ "text/plain",          0, FMA_XCHANGE_FORMAT_TEXT_PLAIN },
 };
 
 guint tree_model_dnd_dest_formats_count = G_N_ELEMENTS( tree_model_dnd_dest_formats );
@@ -210,14 +210,14 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 		g_free( path_str );
 
 		switch( info ){
-			case NACT_XCHANGE_FORMAT_NACT:
+			case FMA_XCHANGE_FORMAT_NACT:
 				result = drop_inside( model, dest, selection_data );
 				break;
 
 			/* drop some actions from outside
 			 * most probably from the file manager as a list of uris
 			 */
-			case NACT_XCHANGE_FORMAT_URI_LIST:
+			case FMA_XCHANGE_FORMAT_URI_LIST:
 				result = drop_uri_list( model, dest, selection_data );
 				break;
 
@@ -263,19 +263,19 @@ nact_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, Gt
  * This function is called when we release the selected items onto the
  * destination
  *
- * NACT_XCHANGE_FORMAT_NACT:
+ * FMA_XCHANGE_FORMAT_NACT:
  * internal format for drag and drop inside the treeview:
  * - copy in the clipboard the list of row references
  * - selection data is empty
  *
- * NACT_XCHANGE_FORMAT_XDS:
+ * FMA_XCHANGE_FORMAT_XDS:
  * exchange format to drop to outside:
  * - copy in the clipboard the list of row references
  * - set the destination folder
  * - selection data is 'success' or 'failure'
  *
- * NACT_XCHANGE_FORMAT_APPLICATION_XML:
- * NACT_XCHANGE_FORMAT_TEXT_PLAIN:
+ * FMA_XCHANGE_FORMAT_APPLICATION_XML:
+ * FMA_XCHANGE_FORMAT_TEXT_PLAIN:
  * exchange format to export to outside:
  * - do not use dnd clipboard
  * - selection data receives the export in text format
@@ -333,15 +333,15 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 		}
 
 		switch( info ){
-			case NACT_XCHANGE_FORMAT_NACT:
+			case FMA_XCHANGE_FORMAT_NACT:
 				copy_data = ( context_selected_action == GDK_ACTION_COPY );
 				gtk_selection_data_set( selection_data,
 						selection_data_target, 8, ( guchar * ) "", 0 );
-				nact_clipboard_dnd_set( model->private->clipboard, info, rows, NULL, copy_data );
+				fma_clipboard_dnd_set( model->private->clipboard, info, rows, NULL, copy_data );
 				ret = TRUE;
 				break;
 
-			case NACT_XCHANGE_FORMAT_XDS:
+			case FMA_XCHANGE_FORMAT_XDS:
 				/* get the dest default filename as an uri
 				 * e.g. file:///home/pierre/data/eclipse/filemanager-actions/trash/xds.txt
 				 */
@@ -356,7 +356,7 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 						selection_data_target, 8, ( guchar * )( is_writable ? "S" : "F" ), 1 );
 
 				if( is_writable ){
-					nact_clipboard_dnd_set( model->private->clipboard, info, rows, dest_folder, TRUE );
+					fma_clipboard_dnd_set( model->private->clipboard, info, rows, dest_folder, TRUE );
 				}
 
 				g_free( dest_folder );
@@ -364,9 +364,9 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 				ret = is_writable;
 				break;
 
-			case NACT_XCHANGE_FORMAT_APPLICATION_XML:
-			case NACT_XCHANGE_FORMAT_TEXT_PLAIN:
-				data = nact_clipboard_dnd_get_text( model->private->clipboard, rows );
+			case FMA_XCHANGE_FORMAT_APPLICATION_XML:
+			case FMA_XCHANGE_FORMAT_TEXT_PLAIN:
+				data = fma_clipboard_dnd_get_text( model->private->clipboard, rows );
 				gtk_selection_data_set( selection_data,
 						selection_data_target, 8, ( guchar * ) data, strlen( data ));
 				g_free( data );
@@ -499,7 +499,7 @@ nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, B
 		model->private->drag_highlight = FALSE;
 		model->private->drag_drop = FALSE;
 
-		nact_clipboard_dnd_clear( model->private->clipboard );
+		fma_clipboard_dnd_clear( model->private->clipboard );
 
 #if GTK_CHECK_VERSION( 2, 22, 0 )
 		context_source_window = gdk_drag_context_get_source_window( context );
@@ -539,8 +539,8 @@ nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, Bas
 				( void * ) window,
 				( void * ) model, G_OBJECT( model )->ref_count );
 
-		nact_clipboard_dnd_drag_end( model->private->clipboard );
-		nact_clipboard_dnd_clear( model->private->clipboard );
+		fma_clipboard_dnd_drag_end( model->private->clipboard );
+		fma_clipboard_dnd_clear( model->private->clipboard );
 
 #if GTK_CHECK_VERSION( 2, 22, 0 )
 		context_source_window = gdk_drag_context_get_source_window( context );
@@ -592,7 +592,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	 *  without profile: only valid dest is outside (besides of) an action
 	 */
 	parent = NULL;
-	rows = nact_clipboard_dnd_get_data( model->private->clipboard, &copy_data );
+	rows = fma_clipboard_dnd_get_data( model->private->clipboard, &copy_data );
 
 	if( !is_drop_possible( model, dest, &parent )){
 		return( FALSE );
