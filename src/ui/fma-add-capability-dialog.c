@@ -43,13 +43,13 @@
 
 /* private class data
  */
-struct _NactAddCapabilityDialogClassPrivate {
+struct _FMAAddCapabilityDialogClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct _NactAddCapabilityDialogPrivate {
+struct _FMAAddCapabilityDialogPrivate {
 	gboolean dispose_has_run;
 	GSList  *already_used;
 	gchar   *capability;
@@ -86,25 +86,25 @@ static const gchar  *st_wsp_name       = IPREFS_CAPABILITY_ADD_CAPABILITY_WSP;
 static GObjectClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
-static void     class_init( NactAddCapabilityDialogClass *klass );
+static void     class_init( FMAAddCapabilityDialogClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_constructed( GObject *dialog );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static void     on_base_initialize_gtk( NactAddCapabilityDialog *editor, GtkDialog *toplevel, gpointer user_data );
-static void     on_base_initialize_window( NactAddCapabilityDialog *editor, gpointer user_data );
-static void     on_base_show_widgets( NactAddCapabilityDialog *editor, gpointer user_data );
-static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddCapabilityDialog *editor );
-static void     on_cancel_clicked( GtkButton *button, NactAddCapabilityDialog *editor );
-static void     on_ok_clicked( GtkButton *button, NactAddCapabilityDialog *editor );
+static void     on_base_initialize_gtk( FMAAddCapabilityDialog *editor, GtkDialog *toplevel, gpointer user_data );
+static void     on_base_initialize_window( FMAAddCapabilityDialog *editor, gpointer user_data );
+static void     on_base_show_widgets( FMAAddCapabilityDialog *editor, gpointer user_data );
+static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, FMAAddCapabilityDialog *editor );
+static void     on_cancel_clicked( GtkButton *button, FMAAddCapabilityDialog *editor );
+static void     on_ok_clicked( GtkButton *button, FMAAddCapabilityDialog *editor );
 static void     on_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
 static void     display_keyword( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window );
 static void     display_description( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window );
 static void     display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window, guint column_id );
 static gboolean setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList *capabilities );
-static void     try_for_send_ok( NactAddCapabilityDialog *dialog );
-static void     send_ok( NactAddCapabilityDialog *dialog );
+static void     try_for_send_ok( FMAAddCapabilityDialog *dialog );
+static void     send_ok( FMAAddCapabilityDialog *dialog );
 static void     on_dialog_ok( BaseDialog *dialog );
 
 GType
@@ -126,26 +126,26 @@ register_type( void )
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactAddCapabilityDialogClass ),
+		sizeof( FMAAddCapabilityDialogClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactAddCapabilityDialog ),
+		sizeof( FMAAddCapabilityDialog ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_DIALOG, "NactAddCapabilityDialog", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_DIALOG, "FMAAddCapabilityDialog", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactAddCapabilityDialogClass *klass )
+class_init( FMAAddCapabilityDialogClass *klass )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_class_init";
 	GObjectClass *object_class;
@@ -160,7 +160,7 @@ class_init( NactAddCapabilityDialogClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	klass->private = g_new0( NactAddCapabilityDialogClassPrivate, 1 );
+	klass->private = g_new0( FMAAddCapabilityDialogClassPrivate, 1 );
 
 	dialog_class = BASE_DIALOG_CLASS( klass );
 	dialog_class->ok = on_dialog_ok;
@@ -170,7 +170,7 @@ static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_instance_init";
-	NactAddCapabilityDialog *self;
+	FMAAddCapabilityDialog *self;
 
 	g_return_if_fail( FMA_IS_ADD_CAPABILITY_DIALOG( instance ));
 
@@ -178,7 +178,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self = FMA_ADD_CAPABILITY_DIALOG( instance );
 
-	self->private = g_new0( NactAddCapabilityDialogPrivate, 1 );
+	self->private = g_new0( FMAAddCapabilityDialogPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 	self->private->capability = NULL;
@@ -188,7 +188,7 @@ static void
 instance_constructed( GObject *dialog )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_instance_constructed";
-	NactAddCapabilityDialogPrivate *priv;
+	FMAAddCapabilityDialogPrivate *priv;
 
 	g_return_if_fail( FMA_IS_ADD_CAPABILITY_DIALOG( dialog ));
 
@@ -227,7 +227,7 @@ static void
 instance_dispose( GObject *dialog )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_instance_dispose";
-	NactAddCapabilityDialog *self;
+	FMAAddCapabilityDialog *self;
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
@@ -258,7 +258,7 @@ static void
 instance_finalize( GObject *dialog )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_instance_finalize";
-	NactAddCapabilityDialog *self;
+	FMAAddCapabilityDialog *self;
 
 	g_return_if_fail( FMA_IS_ADD_CAPABILITY_DIALOG( dialog ));
 
@@ -292,7 +292,7 @@ gchar *
 fma_add_capability_dialog_run( NactMainWindow *parent, GSList *capabilities )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_run";
-	NactAddCapabilityDialog *dialog;
+	FMAAddCapabilityDialog *dialog;
 	gchar *capability;
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
@@ -319,7 +319,7 @@ fma_add_capability_dialog_run( NactMainWindow *parent, GSList *capabilities )
 }
 
 static void
-on_base_initialize_gtk( NactAddCapabilityDialog *dialog, GtkDialog *toplevel, gpointer user_data )
+on_base_initialize_gtk( FMAAddCapabilityDialog *dialog, GtkDialog *toplevel, gpointer user_data )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_on_base_initialize_gtk";
 	GtkTreeView *listview;
@@ -370,7 +370,7 @@ on_base_initialize_gtk( NactAddCapabilityDialog *dialog, GtkDialog *toplevel, gp
 }
 
 static void
-on_base_initialize_window( NactAddCapabilityDialog *dialog, gpointer user_data )
+on_base_initialize_window( FMAAddCapabilityDialog *dialog, gpointer user_data )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_on_base_initialize_window";
 	GtkTreeView *listview;
@@ -414,7 +414,7 @@ on_base_initialize_window( NactAddCapabilityDialog *dialog, gpointer user_data )
 }
 
 static void
-on_base_show_widgets( NactAddCapabilityDialog *dialog, gpointer user_data )
+on_base_show_widgets( FMAAddCapabilityDialog *dialog, gpointer user_data )
 {
 	static const gchar *thisfn = "fma_add_capability_dialog_on_base_show_widgets";
 	GtkTreeView *listview;
@@ -436,7 +436,7 @@ on_base_show_widgets( NactAddCapabilityDialog *dialog, gpointer user_data )
 }
 
 static gboolean
-on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddCapabilityDialog *dialog )
+on_button_press_event( GtkWidget *widget, GdkEventButton *event, FMAAddCapabilityDialog *dialog )
 {
 	gboolean stop = FALSE;
 
@@ -450,7 +450,7 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddCapabili
 }
 
 static void
-on_cancel_clicked( GtkButton *button, NactAddCapabilityDialog *dialog )
+on_cancel_clicked( GtkButton *button, FMAAddCapabilityDialog *dialog )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( dialog ));
 
@@ -458,7 +458,7 @@ on_cancel_clicked( GtkButton *button, NactAddCapabilityDialog *dialog )
 }
 
 static void
-on_ok_clicked( GtkButton *button, NactAddCapabilityDialog *dialog )
+on_ok_clicked( GtkButton *button, FMAAddCapabilityDialog *dialog )
 {
 	send_ok( dialog );
 }
@@ -533,7 +533,7 @@ setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GS
 }
 
 static void
-try_for_send_ok( NactAddCapabilityDialog *dialog )
+try_for_send_ok( FMAAddCapabilityDialog *dialog )
 {
 	GtkWidget *button;
 	gboolean is_sensitive;
@@ -548,7 +548,7 @@ try_for_send_ok( NactAddCapabilityDialog *dialog )
 }
 
 static void
-send_ok( NactAddCapabilityDialog *dialog )
+send_ok( FMAAddCapabilityDialog *dialog )
 {
 	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( dialog ));
 
@@ -558,7 +558,7 @@ send_ok( NactAddCapabilityDialog *dialog )
 static void
 on_dialog_ok( BaseDialog *dialog )
 {
-	NactAddCapabilityDialog *editor;
+	FMAAddCapabilityDialog *editor;
 	GtkTreeView *listview;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;

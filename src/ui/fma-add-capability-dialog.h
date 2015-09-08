@@ -32,7 +32,7 @@
 
 /**
  * SECTION: fma_add_capability_dialog
- * @short_description: #NactAddCapabilityDialog class definition.
+ * @short_description: #FMAAddCapabilityDialog class definition.
  * @include: nact/nact-add-capability-dialog.h
  *
  * The dialog let the user pick a capability from the default list
@@ -45,29 +45,29 @@
 G_BEGIN_DECLS
 
 #define FMA_TYPE_ADD_CAPABILITY_DIALOG                ( fma_add_capability_dialog_get_type())
-#define FMA_ADD_CAPABILITY_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_ADD_CAPABILITY_DIALOG, NactAddCapabilityDialog ))
-#define FMA_ADD_CAPABILITY_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_ADD_CAPABILITY_DIALOG, NactAddCapabilityDialogClass ))
+#define FMA_ADD_CAPABILITY_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_ADD_CAPABILITY_DIALOG, FMAAddCapabilityDialog ))
+#define FMA_ADD_CAPABILITY_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_ADD_CAPABILITY_DIALOG, FMAAddCapabilityDialogClass ))
 #define FMA_IS_ADD_CAPABILITY_DIALOG( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_ADD_CAPABILITY_DIALOG ))
 #define FMA_IS_ADD_CAPABILITY_DIALOG_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_ADD_CAPABILITY_DIALOG ))
-#define FMA_ADD_CAPABILITY_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_ADD_CAPABILITY_DIALOG, NactAddCapabilityDialogClass ))
+#define FMA_ADD_CAPABILITY_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_ADD_CAPABILITY_DIALOG, FMAAddCapabilityDialogClass ))
 
-typedef struct _NactAddCapabilityDialogPrivate         NactAddCapabilityDialogPrivate;
+typedef struct _FMAAddCapabilityDialogPrivate        FMAAddCapabilityDialogPrivate;
 
 typedef struct {
 	/*< private >*/
 	BaseDialog                      parent;
-	NactAddCapabilityDialogPrivate *private;
+	FMAAddCapabilityDialogPrivate *private;
 }
-	NactAddCapabilityDialog;
+	FMAAddCapabilityDialog;
 
-typedef struct _NactAddCapabilityDialogClassPrivate    NactAddCapabilityDialogClassPrivate;
+typedef struct _FMAAddCapabilityDialogClassPrivate   FMAAddCapabilityDialogClassPrivate;
 
 typedef struct {
 	/*< private >*/
 	BaseDialogClass                      parent;
-	NactAddCapabilityDialogClassPrivate *private;
+	FMAAddCapabilityDialogClassPrivate *private;
 }
-	NactAddCapabilityDialogClass;
+	FMAAddCapabilityDialogClass;
 
 GType  fma_add_capability_dialog_get_type( void );
 
