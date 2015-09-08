@@ -41,7 +41,7 @@
 #include "fma-clipboard.h"
 #include "fma-main-window-def.h"
 #include "fma-sort-buttons.h"
-#include "nact-statusbar.h"
+#include "fma-statusbar.h"
 #include "nact-tree-view.h"
 
 G_BEGIN_DECLS
@@ -77,7 +77,7 @@ FMAClipboard   *fma_main_window_get_clipboard   ( const FMAMainWindow *window );
 
 FMASortButtons *fma_main_window_get_sort_buttons( const FMAMainWindow *window );
 
-NactStatusbar   *fma_main_window_get_statusbar   ( const FMAMainWindow *window );
+FMAStatusbar   *fma_main_window_get_statusbar   ( const FMAMainWindow *window );
 
 NactTreeView    *fma_main_window_get_items_view  ( const FMAMainWindow *window );
 

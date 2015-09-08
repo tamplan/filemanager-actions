@@ -42,7 +42,7 @@
 #include "core/fma-tokens.h"
 
 #include "fma-application.h"
-#include "nact-statusbar.h"
+#include "fma-statusbar.h"
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"

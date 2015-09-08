@@ -442,7 +442,7 @@ on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, 
 {
 	static const gchar *thisfn = "fma_menu_on_tree_view_count_changed";
 	sMenuData *sdata;
-	NactStatusbar *bar;
+	FMAStatusbar *bar;
 	gchar *status;
 
 	g_debug( "%s: treeview=%p, reset=%s, menus=%d, actions=%d, profiles=%d, window=%p",
@@ -470,7 +470,7 @@ on_tree_view_count_changed( NactTreeView *treeview, gboolean reset, gint menus, 
 			sdata->count_menus, sdata->count_actions, sdata->count_profiles );
 
 	bar = fma_main_window_get_statusbar( window );
-	nact_statusbar_display_status( bar, "menu-status-context", status );
+	fma_statusbar_display_status( bar, "menu-status-context", status );
 	g_free( status );
 
 	g_signal_emit_by_name( window, MAIN_SIGNAL_UPDATE_SENSITIVITIES );

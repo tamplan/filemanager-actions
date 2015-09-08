@@ -41,7 +41,7 @@
 #include "core/fma-io-provider.h"
 
 #include "fma-application.h"
-#include "nact-statusbar.h"
+#include "fma-statusbar.h"
 #include "base-gtk-utils.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
@@ -542,13 +542,13 @@ static void
 check_for_label( FMAIActionTab *instance, GtkEntry *entry, const gchar *label )
 {
 	FMAObjectItem *item;
-	NactStatusbar *bar;
+	FMAStatusbar *bar;
 
 	g_return_if_fail( FMA_IS_IACTION_TAB( instance ));
 	g_return_if_fail( GTK_IS_ENTRY( entry ));
 
 	bar = fma_main_window_get_statusbar( FMA_MAIN_WINDOW( instance ));
-	nact_statusbar_hide_status( bar, IACTION_TAB_CONTEXT );
+	fma_statusbar_hide_status( bar, IACTION_TAB_CONTEXT );
 	set_label_label( instance, "black" );
 
 	g_object_get( G_OBJECT( instance ), MAIN_PROP_ITEM, &item, NULL );
@@ -556,7 +556,7 @@ check_for_label( FMAIActionTab *instance, GtkEntry *entry, const gchar *label )
 	if( item && g_utf8_strlen( label, -1 ) == 0 ){
 
 		/* i18n: status bar message when the action label is empty */
-		nact_statusbar_display_status(
+		fma_statusbar_display_status(
 				bar,
 				IACTION_TAB_CONTEXT,
 				_( "Caution: a label is mandatory for the action or the menu." ));

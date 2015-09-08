@@ -41,7 +41,7 @@
 #include <core/fma-iprefs.h>
 
 #include "fma-application.h"
-#include "nact-statusbar.h"
+#include "fma-statusbar.h"
 #include "fma-main-tab.h"
 #include "fma-main-window.h"
 #include "fma-menu.h"
@@ -425,14 +425,14 @@ on_autosave_prefs_timeout( FMAMainWindow *main_window )
 static gboolean
 autosave_callback( FMAMainWindow *main_window )
 {
-	NactStatusbar *bar;
+	FMAStatusbar *bar;
 	const gchar *context = "autosave-context";
 	g_debug( "fma_menu_file_autosave_callback" );
 
 	bar = fma_main_window_get_statusbar( main_window );
-	nact_statusbar_display_status( bar, context, _( "Automatically saving pending modifications..." ));
+	fma_statusbar_display_status( bar, context, _( "Automatically saving pending modifications..." ));
 	fma_menu_file_save_items( main_window );
-	nact_statusbar_hide_status( bar, context );
+	fma_statusbar_hide_status( bar, context );
 
 	return( TRUE );
 }
