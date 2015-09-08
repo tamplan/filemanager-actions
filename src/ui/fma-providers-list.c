@@ -41,7 +41,7 @@
 
 #include "fma-application.h"
 #include "base-gtk-utils.h"
-#include "nact-providers-list.h"
+#include "fma-providers-list.h"
 
 /* column ordering
  */
@@ -80,8 +80,8 @@ typedef struct {
 }
 	ProvidersListSaveData;
 
-#define PROVIDERS_LIST_DATA				"nact-providers-list-data"
-#define PROVIDERS_LIST_TREEVIEW			"nact-providers-list-treeview"
+#define PROVIDERS_LIST_DATA				"fma-providers-list-data"
+#define PROVIDERS_LIST_TREEVIEW			"fma-providers-list-treeview"
 
 static gboolean st_on_selection_change = FALSE;
 
@@ -103,16 +103,16 @@ static GtkButton         *get_down_button( BaseWindow *window );
 static ProvidersListData *get_providers_list_data( GtkTreeView *treeview );
 
 /**
- * nact_providers_list_create_model:
+ * fma_providers_list_create_model:
  * @treeview: the #GtkTreeView.
  *
  * Create the treeview model when initially loading the widget from
  * the UI manager.
  */
 void
-nact_providers_list_create_model( GtkTreeView *treeview )
+fma_providers_list_create_model( GtkTreeView *treeview )
 {
-	static const char *thisfn = "nact_providers_list_create_model";
+	static const char *thisfn = "fma_providers_list_create_model";
 	GtkListStore *model;
 	GtkCellRenderer *toggled_cell;
 	GtkTreeViewColumn *column;
@@ -186,7 +186,7 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 }
 
 /**
- * nact_providers_list_init_view:
+ * fma_providers_list_init_view:
  * @window: the parent #BaseWindow which embeds the view.
  * @treeview: the #GtkTreeView.
  *
@@ -194,9 +194,9 @@ nact_providers_list_create_model( GtkTreeView *treeview )
  * current default values.
  */
 void
-nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
+fma_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 {
-	static const gchar *thisfn = "nact_providers_list_init_view";
+	static const gchar *thisfn = "fma_providers_list_init_view";
 	ProvidersListData *data;
 	FMAApplication *application;
 	FMAUpdater *updater;
@@ -223,7 +223,7 @@ nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 static void
 init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_providers_list_init_view_setup_providers";
+	static const gchar *thisfn = "fma_providers_list_init_view_setup_providers";
 	FMAApplication *application;
 	FMAUpdater *updater;
 	GtkListStore *model;
@@ -341,15 +341,15 @@ init_view_select_first_row( GtkTreeView *treeview )
 }
 
 /**
- * nact_providers_list_save:
+ * fma_providers_list_save:
  * @window: the #BaseWindow which embeds this treeview.
  *
  * Save the I/O provider status as a user preference.
  */
 void
-nact_providers_list_save( BaseWindow *window )
+fma_providers_list_save( BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_providers_list_save";
+	static const gchar *thisfn = "fma_providers_list_save";
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	ProvidersListSaveData *plsd;
@@ -399,15 +399,15 @@ providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* i
 }
 
 /**
- * nact_providers_list_dispose:
+ * fma_providers_list_dispose:
  * @treeview: the #GtkTreeView.
  *
  * Release the content of the page when we are closing the Preferences dialog.
  */
 void
-nact_providers_list_dispose( BaseWindow *window )
+fma_providers_list_dispose( BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_providers_list_dispose";
+	static const gchar *thisfn = "fma_providers_list_dispose";
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
@@ -439,7 +439,7 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 	ProvidersListData *data;
 	GtkTreeView *treeview;
 
-	g_debug( "nact_providers_list_on_selection_changed: selection=%p, window=%p (%s)",
+	g_debug( "fma_providers_list_on_selection_changed: selection=%p, window=%p (%s)",
 			( void * ) selection, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 	may_up = FALSE;
@@ -475,7 +475,7 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 static void
 on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_providers_list_on_readable_toggled";
+	static const gchar *thisfn = "fma_providers_list_on_readable_toggled";
 	ProvidersListData *data;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
@@ -518,7 +518,7 @@ on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWi
 static void
 on_writable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_providers_list_on_writable_toggled";
+	static const gchar *thisfn = "fma_providers_list_on_writable_toggled";
 	GtkTreeView *treeview;
 	ProvidersListData *data;
 	GtkTreeModel *model;

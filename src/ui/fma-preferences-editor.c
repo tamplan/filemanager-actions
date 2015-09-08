@@ -50,7 +50,7 @@
 #include "base-gtk-utils.h"
 #include "fma-main-window.h"
 #include "nact-schemes-list.h"
-#include "nact-providers-list.h"
+#include "fma-providers-list.h"
 #include "fma-preferences-editor.h"
 
 /* private class data
@@ -399,7 +399,7 @@ instance_dispose( GObject *dialog )
 		self->private->dispose_has_run = TRUE;
 
 		nact_schemes_list_dispose( BASE_WINDOW( self ));
-		nact_providers_list_dispose( BASE_WINDOW( self ));
+		fma_providers_list_dispose( BASE_WINDOW( self ));
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -498,7 +498,7 @@ on_base_initialize_gtk( FMAPreferencesEditor *editor, GtkDialog *toplevel, gpoin
 		nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
-		nact_providers_list_create_model( listview );
+		fma_providers_list_create_model( listview );
 
 #if !GTK_CHECK_VERSION( 2,22,0 )
 		gtk_dialog_set_has_separator( toplevel, FALSE );
@@ -574,7 +574,7 @@ on_base_initialize_window( FMAPreferencesEditor *editor, gpointer user_data )
 		/* seventh tab: I/O providers priorities
 		 */
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
-		nact_providers_list_init_view( BASE_WINDOW( editor ), listview );
+		fma_providers_list_init_view( BASE_WINDOW( editor ), listview );
 
 		/* dialog buttons
 		 */
@@ -1269,6 +1269,6 @@ on_dialog_ok( BaseDialog *dialog )
 
 		/* seventh tab: priorities of I/O providers
 		 */
-		nact_providers_list_save( BASE_WINDOW( editor ));
+		fma_providers_list_save( BASE_WINDOW( editor ));
 	}
 }

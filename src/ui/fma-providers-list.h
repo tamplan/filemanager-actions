@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_PROVIDERS_LIST_H__
-#define __UI_NACT_PROVIDERS_LIST_H__
+#ifndef __UI_FMA_PROVIDERS_LIST_H__
+#define __UI_FMA_PROVIDERS_LIST_H__
 
 #include <gtk/gtk.h>
 
@@ -36,11 +36,11 @@
 
 G_BEGIN_DECLS
 
-void    nact_providers_list_create_model( GtkTreeView *treeview );
-void    nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview );
-void    nact_providers_list_save( BaseWindow *window );
-void    nact_providers_list_dispose( BaseWindow *window );
+void    fma_providers_list_create_model( GtkTreeView *treeview );
+void    fma_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview );
+void    fma_providers_list_save( BaseWindow *window );
+void    fma_providers_list_dispose( BaseWindow *window );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_PROVIDERS_LIST_H__ */
+#endif /* __UI_FMA_PROVIDERS_LIST_H__ */
