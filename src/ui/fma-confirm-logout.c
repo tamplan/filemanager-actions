@@ -33,13 +33,13 @@
 
 #include "core/fma-settings.h"
 
-#include "nact-confirm-logout.h"
+#include "fma-confirm-logout.h"
 #include "nact-main-window-def.h"
 #include "nact-menu-file.h"
 
 /* private instance data
  */
-struct _NactConfirmLogoutPrivate {
+struct _FMAConfirmLogoutPrivate {
 	gboolean dispose_has_run;
 	gboolean willing_to_quit;
 };
@@ -50,27 +50,27 @@ enum {
 	BTN_SAVE_AND_QUIT
 };
 
-static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-confirm-logout.ui";
+static const gchar     *st_xmlui_filename = PKGUIDIR "/fma-confirm-logout.ui";
 static const gchar     *st_toplevel_name  = "ConfirmLogoutDialog";
 static const gchar     *st_wsp_name       = IPREFS_CONFIRM_LOGOUT_WSP;
 
 static BaseDialogClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
-static void     class_init( NactConfirmLogoutClass *klass );
+static void     class_init( FMAConfirmLogoutClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_constructed( GObject *dialog );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static void     on_base_initialize_window( NactConfirmLogout *editor, gpointer user_data );
-static void     on_quit_without_saving_clicked( GtkButton *button, NactConfirmLogout *editor );
-static void     on_cancel_clicked( GtkButton *button, NactConfirmLogout *editor );
-static void     on_save_and_quit_clicked( GtkButton *button, NactConfirmLogout *editor );
-static void     close_dialog( NactConfirmLogout *editor, gboolean willing_to );
+static void     on_base_initialize_window( FMAConfirmLogout *editor, gpointer user_data );
+static void     on_quit_without_saving_clicked( GtkButton *button, FMAConfirmLogout *editor );
+static void     on_cancel_clicked( GtkButton *button, FMAConfirmLogout *editor );
+static void     on_save_and_quit_clicked( GtkButton *button, FMAConfirmLogout *editor );
+static void     close_dialog( FMAConfirmLogout *editor, gboolean willing_to );
 
 GType
-nact_confirm_logout_get_type( void )
+fma_confirm_logout_get_type( void )
 {
 	static GType dialog_type = 0;
 
@@ -84,32 +84,32 @@ nact_confirm_logout_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_confirm_logout_register_type";
+	static const gchar *thisfn = "fma_confirm_logout_register_type";
 	GType type;
 
 	static GTypeInfo info = {
-		sizeof( NactConfirmLogoutClass ),
+		sizeof( FMAConfirmLogoutClass ),
 		( GBaseInitFunc ) NULL,
 		( GBaseFinalizeFunc ) NULL,
 		( GClassInitFunc ) class_init,
 		NULL,
 		NULL,
-		sizeof( NactConfirmLogout ),
+		sizeof( FMAConfirmLogout ),
 		0,
 		( GInstanceInitFunc ) instance_init
 	};
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_TYPE_DIALOG, "NactConfirmLogout", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_DIALOG, "FMAConfirmLogout", &info, 0 );
 
 	return( type );
 }
 
 static void
-class_init( NactConfirmLogoutClass *klass )
+class_init( FMAConfirmLogoutClass *klass )
 {
-	static const gchar *thisfn = "nact_confirm_logout_class_init";
+	static const gchar *thisfn = "fma_confirm_logout_class_init";
 	GObjectClass *object_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -125,15 +125,15 @@ class_init( NactConfirmLogoutClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "nact_confirm_logout_instance_init";
-	NactConfirmLogout *self;
+	static const gchar *thisfn = "fma_confirm_logout_instance_init";
+	FMAConfirmLogout *self;
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( instance ));
-	self = NACT_CONFIRM_LOGOUT( instance );
+	g_return_if_fail( FMA_IS_CONFIRM_LOGOUT( instance ));
+	self = FMA_CONFIRM_LOGOUT( instance );
 
-	self->private = g_new0( NactConfirmLogoutPrivate, 1 );
+	self->private = g_new0( FMAConfirmLogoutPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -141,12 +141,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_constructed( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_confirm_logout_instance_constructed";
-	NactConfirmLogoutPrivate *priv;
+	static const gchar *thisfn = "fma_confirm_logout_instance_constructed";
+	FMAConfirmLogoutPrivate *priv;
 
-	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( dialog ));
+	g_return_if_fail( FMA_IS_CONFIRM_LOGOUT( dialog ));
 
-	priv = NACT_CONFIRM_LOGOUT( dialog )->private;
+	priv = FMA_CONFIRM_LOGOUT( dialog )->private;
 
 	if( !priv->dispose_has_run ){
 
@@ -168,12 +168,12 @@ instance_constructed( GObject *dialog )
 static void
 instance_dispose( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_confirm_logout_instance_dispose";
-	NactConfirmLogout *self;
+	static const gchar *thisfn = "fma_confirm_logout_instance_dispose";
+	FMAConfirmLogout *self;
 
 	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
-	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( dialog ));
-	self = NACT_CONFIRM_LOGOUT( dialog );
+	g_return_if_fail( FMA_IS_CONFIRM_LOGOUT( dialog ));
+	self = FMA_CONFIRM_LOGOUT( dialog );
 
 	if( !self->private->dispose_has_run ){
 
@@ -189,12 +189,12 @@ instance_dispose( GObject *dialog )
 static void
 instance_finalize( GObject *dialog )
 {
-	static const gchar *thisfn = "nact_confirm_logout_instance_finalize";
-	NactConfirmLogout *self;
+	static const gchar *thisfn = "fma_confirm_logout_instance_finalize";
+	FMAConfirmLogout *self;
 
 	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
-	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( dialog ));
-	self = NACT_CONFIRM_LOGOUT( dialog );
+	g_return_if_fail( FMA_IS_CONFIRM_LOGOUT( dialog ));
+	self = FMA_CONFIRM_LOGOUT( dialog );
 
 	g_free( self->private );
 
@@ -205,24 +205,24 @@ instance_finalize( GObject *dialog )
 }
 
 /**
- * nact_confirm_logout_run:
+ * fma_confirm_logout_run:
  * @parent: the NactMainWindow parent of this dialog
  * (usually the NactMainWindow).
  *
  * Initializes and runs the dialog.
  */
 gboolean
-nact_confirm_logout_run( NactMainWindow *parent )
+fma_confirm_logout_run( NactMainWindow *parent )
 {
-	static const gchar *thisfn = "nact_confirm_logout_run";
-	NactConfirmLogout *dialog;
+	static const gchar *thisfn = "fma_confirm_logout_run";
+	FMAConfirmLogout *dialog;
 	gboolean willing_to;
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( parent ), TRUE );
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 
-	dialog = g_object_new( NACT_TYPE_CONFIRM_LOGOUT,
+	dialog = g_object_new( FMA_TYPE_CONFIRM_LOGOUT,
 			BASE_PROP_MAIN_WINDOW,        parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME, st_toplevel_name,
@@ -239,11 +239,11 @@ nact_confirm_logout_run( NactMainWindow *parent )
 }
 
 static void
-on_base_initialize_window( NactConfirmLogout *dialog, gpointer user_data )
+on_base_initialize_window( FMAConfirmLogout *dialog, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_confirm_logout_on_base_initialize_window";
+	static const gchar *thisfn = "fma_confirm_logout_on_base_initialize_window";
 
-	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( dialog ));
+	g_return_if_fail( FMA_IS_CONFIRM_LOGOUT( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
 
@@ -270,9 +270,9 @@ on_base_initialize_window( NactConfirmLogout *dialog, gpointer user_data )
 }
 
 static void
-on_quit_without_saving_clicked( GtkButton *button, NactConfirmLogout *editor )
+on_quit_without_saving_clicked( GtkButton *button, FMAConfirmLogout *editor )
 {
-	static const gchar *thisfn = "nact_confirm_logout_on_quit_without_saving_clicked";
+	static const gchar *thisfn = "fma_confirm_logout_on_quit_without_saving_clicked";
 
 	g_debug( "%s: button=%p, editor=%p", thisfn, ( void * ) button, ( void * ) editor );
 
@@ -280,9 +280,9 @@ on_quit_without_saving_clicked( GtkButton *button, NactConfirmLogout *editor )
 }
 
 static void
-on_cancel_clicked( GtkButton *button, NactConfirmLogout *editor )
+on_cancel_clicked( GtkButton *button, FMAConfirmLogout *editor )
 {
-	static const gchar *thisfn = "nact_confirm_logout_on_cancel_clicked";
+	static const gchar *thisfn = "fma_confirm_logout_on_cancel_clicked";
 
 	g_debug( "%s: button=%p, editor=%p", thisfn, ( void * ) button, ( void * ) editor );
 
@@ -290,9 +290,9 @@ on_cancel_clicked( GtkButton *button, NactConfirmLogout *editor )
 }
 
 static void
-on_save_and_quit_clicked( GtkButton *button, NactConfirmLogout *editor )
+on_save_and_quit_clicked( GtkButton *button, FMAConfirmLogout *editor )
 {
-	static const gchar *thisfn = "nact_confirm_logout_on_cancel_clicked";
+	static const gchar *thisfn = "fma_confirm_logout_on_cancel_clicked";
 	NactMainWindow *main_window;
 
 	g_debug( "%s: button=%p, editor=%p", thisfn, ( void * ) button, ( void * ) editor );
@@ -304,9 +304,9 @@ on_save_and_quit_clicked( GtkButton *button, NactConfirmLogout *editor )
 }
 
 static void
-close_dialog( NactConfirmLogout *editor, gboolean willing_to )
+close_dialog( FMAConfirmLogout *editor, gboolean willing_to )
 {
-	static const gchar *thisfn = "nact_confirm_logout_close_dialog";
+	static const gchar *thisfn = "fma_confirm_logout_close_dialog";
 	GtkWindow *toplevel;
 
 	g_debug( "%s: editor=%p, willing_to=%s", thisfn, ( void * ) editor, willing_to ? "True":"False" );

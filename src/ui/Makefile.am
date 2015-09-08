@@ -81,8 +81,8 @@ fma_config_tool_SOURCES = \
 	fma-assistant-import.h								\
 	fma-clipboard.c									\
 	fma-clipboard.h									\
-	nact-confirm-logout.c								\
-	nact-confirm-logout.h								\
+	fma-confirm-logout.c								\
+	fma-confirm-logout.h								\
 	nact-export-ask.c									\
 	nact-export-ask.h									\
 	nact-iaction-tab.c									\
@@ -157,7 +157,7 @@ ui_files = \
 	nact-add-scheme.ui									\
 	fma-assistant-export.ui							\
 	fma-assistant-import.ui							\
-	nact-confirm-logout.ui								\
+	fma-confirm-logout.ui								\
 	nact-export-ask.ui									\
 	nact-icon-chooser.ui								\
 	nact-legend.ui										\

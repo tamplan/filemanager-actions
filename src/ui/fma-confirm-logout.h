@@ -27,12 +27,12 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_CONFIRM_LOGOUT_H__
-#define __UI_NACT_CONFIRM_LOGOUT_H__
+#ifndef __UI_FMA_CONFIRM_LOGOUT_H__
+#define __UI_FMA_CONFIRM_LOGOUT_H__
 
 /**
  * SECTION: nact_preferences_editor
- * @short_description: #NactConfirmLogout class definition.
+ * @short_description: #FMAConfirmLogout class definition.
  * @include: ui/nact-preferences-editor.h
  *
  * This class is derived from NactWindow.
@@ -44,32 +44,32 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TYPE_CONFIRM_LOGOUT                ( nact_confirm_logout_get_type())
-#define NACT_CONFIRM_LOGOUT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_CONFIRM_LOGOUT, NactConfirmLogout ))
-#define NACT_CONFIRM_LOGOUT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_CONFIRM_LOGOUT, NactConfirmLogoutClass ))
-#define NACT_IS_CONFIRM_LOGOUT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_CONFIRM_LOGOUT ))
-#define NACT_IS_CONFIRM_LOGOUT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_CONFIRM_LOGOUT ))
-#define NACT_CONFIRM_LOGOUT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_CONFIRM_LOGOUT, NactConfirmLogoutClass ))
+#define FMA_TYPE_CONFIRM_LOGOUT                ( fma_confirm_logout_get_type())
+#define FMA_CONFIRM_LOGOUT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_CONFIRM_LOGOUT, FMAConfirmLogout ))
+#define FMA_CONFIRM_LOGOUT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_CONFIRM_LOGOUT, FMAConfirmLogoutClass ))
+#define FMA_IS_CONFIRM_LOGOUT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_CONFIRM_LOGOUT ))
+#define FMA_IS_CONFIRM_LOGOUT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_CONFIRM_LOGOUT ))
+#define FMA_CONFIRM_LOGOUT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_CONFIRM_LOGOUT, FMAConfirmLogoutClass ))
 
-typedef struct _NactConfirmLogoutPrivate        NactConfirmLogoutPrivate;
-
-typedef struct {
-	/*< private >*/
-	BaseDialog                parent;
-	NactConfirmLogoutPrivate *private;
-}
-	NactConfirmLogout;
+typedef struct _FMAConfirmLogoutPrivate        FMAConfirmLogoutPrivate;
 
 typedef struct {
 	/*< private >*/
-	BaseDialogClass           parent;
+	BaseDialog               parent;
+	FMAConfirmLogoutPrivate *private;
 }
-	NactConfirmLogoutClass;
+	FMAConfirmLogout;
 
-GType    nact_confirm_logout_get_type( void );
+typedef struct {
+	/*< private >*/
+	BaseDialogClass          parent;
+}
+	FMAConfirmLogoutClass;
 
-gboolean nact_confirm_logout_run     ( NactMainWindow *parent );
+GType    fma_confirm_logout_get_type( void );
+
+gboolean fma_confirm_logout_run     ( NactMainWindow *parent );
 
 G_END_DECLS
 
-#endif /* __UI_NACT_CONFIRM_LOGOUT_H__ */
+#endif /* __UI_FMA_CONFIRM_LOGOUT_H__ */

@@ -57,7 +57,7 @@
 #include "nact-menu.h"
 #include "nact-statusbar.h"
 #include "nact-tree-view.h"
-#include "nact-confirm-logout.h"
+#include "fma-confirm-logout.h"
 #include "nact-sort-buttons.h"
 
 /* private instance data
@@ -1280,7 +1280,7 @@ on_base_quit_requested( FMAApplication *application, NactMainWindow *window )
 		g_debug( "%s: application=%p, window=%p", thisfn, ( void * ) application, ( void * ) window );
 
 		if( window->private->is_tree_modified ){
-			willing_to = nact_confirm_logout_run( window );
+			willing_to = fma_confirm_logout_run( window );
 		}
 	}
 
