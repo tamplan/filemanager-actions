@@ -35,7 +35,6 @@ SUBDIRS = \
 	icons								\
 	po									\
 	src									\
-	test								\
 	$(NULL)
 
 # - nautilus-extdir is a foo directory so that make distcheck has a vpath

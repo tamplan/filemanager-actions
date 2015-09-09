@@ -98,8 +98,6 @@ fma_about_display( GtkWindow *toplevel )
 	gtk_show_about_dialog( toplevel,
 			"artists", artists,
 			"authors", authors,
-			/* i10n: "Nautilus actions" here is not a typo; this does not refer to the
-			 * FileManager-Actions product, but to the actions which are to be added to Nautilus */
 			"comments", _( "A graphical interface to create and edit your file-manager actions." ),
 			"copyright", copyright,
 			"documenters", documenters,
