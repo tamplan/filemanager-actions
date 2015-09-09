@@ -34,16 +34,16 @@
  * @short_description: The #FMASelectedInfo Class Definition
  * @include: core/fma-selected-info.h
  *
- * An object is instantiated for each Nautilus selected item, in order
- * to gather some common properties for the selected item, mainly its
- * mime type for example.
+ * An object is instantiated for each Nautilus/Nemo selected item, in
+ * order to gather some common properties for the selected item, mainly
+ * its mime type for example.
  *
- * This class should be replaced by NautilusFileInfo class, as soon as
- * the required Nautilus version will have the
- * nautilus_file_info_create_for_uri() API (after 2.28)
+ * This class should be replaced by Nautilus/NemoFileInfo class, as soon
+ * as the required Nautilus/Nemo version will have the
+ * nautilus/nemo_file_info_create_for_uri() API (2.28 for Nautilus)
  */
 
-#include <libnautilus-extension/nautilus-file-info.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -74,8 +74,6 @@ typedef struct {
 
 GType            fma_selected_info_get_type          ( void );
 
-GList           *fma_selected_info_get_list_from_item( NautilusFileInfo *item );
-GList           *fma_selected_info_get_list_from_list( GList *nautilus_selection );
 GList           *fma_selected_info_copy_list         ( GList *files );
 void             fma_selected_info_free_list         ( GList *files );
 

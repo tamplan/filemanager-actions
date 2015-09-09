@@ -42,6 +42,7 @@ api_include_HEADERS = \
 	fma-data-boxed.h									\
 	fma-data-def.h										\
 	fma-data-types.h									\
+	fma-fm-defines.h									\
 	fma-gconf-monitor.h									\
 	fma-gconf-utils.h									\
 	fma-icontext.h										\

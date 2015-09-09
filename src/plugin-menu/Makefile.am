@@ -32,23 +32,43 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
-nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
-
-nautilus_extension_LTLIBRARIES = libfma-menu.la
-
-libfma_menu_la_SOURCES = \
+lib_sources = \
 	fma-menu-module.c											\
 	fma-menu-plugin.c											\
 	fma-menu-plugin.h											\
 	$(NULL)
 
-libfma_menu_la_LIBADD = \
+lib_libadd = \
 	$(top_builddir)/src/core/libfma-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
-libfma_menu_la_LDFLAGS = \
+lib_ldflags = \
 	-module 													\
 	-no-undefined												\
 	-avoid-version												\
 	$(NULL)
+
+if HAVE_NAUTILUS
+nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
+nautilus_extension_LTLIBRARIES = libfma-nautilus-menu.la
+libfma_nautilus_menu_la_SOURCES = $(lib_sources)
+libfma_nautilus_menu_la_LIBADD = $(lib_libadd)
+libfma_nautilus_menu_la_LDFLAGS = $(lib_ldflags)
+libfma_nautilus_menu_la_CPPFLAGS = $(AM_CPPFLAGS)				\
+	-DFMA_TARGET_ID=$(NAUTILUS_ID)								\
+	-DFMA_TARGET_LABEL=\"$(NAUTILUS_LABEL)\"					\
+	$(NULL)
+endif
+
+if HAVE_NEMO
+nemo_extensiondir = $(NEMO_EXTENSIONS_DIR)
+nemo_extension_LTLIBRARIES = libfma-nemo-menu.la
+libfma_nemo_menu_la_SOURCES = $(lib_sources)
+libfma_nemo_menu_la_LIBADD = $(lib_libadd)
+libfma_nemo_menu_la_LDFLAGS = $(lib_ldflags)
+libfma_nemo_menu_la_CPPFLAGS = $(AM_CPPFLAGS) 					\
+	-DFMA_TARGET_ID=$(NEMO_ID)									\
+	-DFMA_TARGET_LABEL=\"$(NEMO_LABEL)\"						\
+	$(NULL)
+endif

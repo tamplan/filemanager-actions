@@ -188,13 +188,14 @@ $as_echo "
 	Build system type               ${ac_cv_build}
 	Gtk+ version                    ${GTK3_msg_version}
 	GLib version                    ${GLIB_msg_version}
-	Default I/O provider            ${with_default_io_provider}
-	Targeted file-manager           ${enable_file_manager}"
-if test "${enable_file_manager}" = "nautilus"; then
-	$as_echo "	Nautilus extensions directory   ${with_nautilus_extdir}"
+	Default I/O provider            ${with_default_io_provider}"
+if test "${with_nautilus_ok}" = "yes"; then
+	$as_echo "	Targeting Nautilus
+	  installing extensions in      ${with_nautilus_extdir}"
 fi
-if test "${enable_file_manager}" = "nemmo"; then
-	$as_echo "	Nemo extensions directory       ${with_nemo_extdir}"
+if test "${with_nemo_ok}" = "yes"; then
+	$as_echo "	Targeting Nemo
+	  installing extensions in      ${with_nemo_extdir}"
 fi
 $as_echo "	GConf enabled                   ${enable_gconf}"
 if test "${enable_gconf}" = "yes"; then

@@ -32,14 +32,10 @@
 #endif
 
 #include <string.h>
-
 #include <glib/gi18n.h>
 
-#include <libnautilus-extension/nautilus-extension-types.h>
-#include <libnautilus-extension/nautilus-file-info.h>
-#include <libnautilus-extension/nautilus-menu-provider.h>
-
 #include <api/fma-core-utils.h>
+#include <api/fma-fm-defines.h>
 #include <api/fma-object-api.h>
 #include <api/fma-timeout.h>
 
@@ -59,10 +55,10 @@ struct _FMAMenuPluginClassPrivate {
 /* private instance data
  */
 struct _FMAMenuPluginPrivate {
-	gboolean  dispose_has_run;
+	gboolean   dispose_has_run;
 	FMAPivot  *pivot;
-	gulong    items_changed_handler;
-	gulong    settings_changed_handler;
+	gulong     items_changed_handler;
+	gulong     settings_changed_handler;
 	FMATimeout change_timeout;
 };
 
@@ -70,41 +66,39 @@ static GObjectClass *st_parent_class  = NULL;
 static GType         st_actions_type  = 0;
 static gint          st_burst_timeout = 100;		/* burst timeout in msec */
 
-static void              class_init( FMAMenuPluginClass *klass );
-static void              instance_init( GTypeInstance *instance, gpointer klass );
-static void              instance_constructed( GObject *object );
-static void              instance_dispose( GObject *object );
-static void              instance_finalize( GObject *object );
-
-static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static GList            *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
-static GList            *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
-
-#ifdef HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS
-static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
+static void                 class_init( FMAMenuPluginClass *klass );
+static void                 instance_init( GTypeInstance *instance, gpointer klass );
+static void                 instance_constructed( GObject *object );
+static void                 instance_dispose( GObject *object );
+static void                 instance_finalize( GObject *object );
+static void                 menu_provider_iface_init( FileManagerMenuProviderIface *iface );
+static GList               *menu_provider_get_background_items( FileManagerMenuProvider *provider, GtkWidget *window, FileManagerFileInfo *current_folder );
+static GList               *menu_provider_get_file_items( FileManagerMenuProvider *provider, GtkWidget *window, GList *files );
+#if defined( HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS ) || \
+	defined( HAVE_NEMO_MENU_PROVIDER_GET_TOOLBAR_ITEMS )
+static GList               *menu_provider_get_toolbar_items( FileManagerMenuProvider *provider, GtkWidget *window, FileManagerFileInfo *current_folder );
 #endif
-
-static GList            *build_nautilus_menu( FMAMenuPlugin *plugin, guint target, GList *selection );
-static GList            *build_nautilus_menu_rec( GList *tree, guint target, GList *selection, FMATokens *tokens );
-static FMAObjectItem    *expand_tokens_item( const FMAObjectItem *item, FMATokens *tokens );
-static void              expand_tokens_context( FMAIContext *context, FMATokens *tokens );
-static FMAObjectProfile *get_candidate_profile( FMAObjectAction *action, guint target, GList *files );
-static NautilusMenuItem *create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files, FMATokens *tokens );
-static NautilusMenuItem *create_item_from_menu( FMAObjectMenu *menu, GList *subitems, guint target );
-static NautilusMenuItem *create_menu_item( const FMAObjectItem *item, guint target );
-static void              weak_notify_menu_item( void *user_data /* =NULL */, NautilusMenuItem *item );
-static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
-static void              weak_notify_profile( FMAObjectProfile *profile, NautilusMenuItem *item );
-
-static void              execute_action( NautilusMenuItem *item, FMAObjectProfile *profile );
-
-static GList            *create_root_menu( FMAMenuPlugin *plugin, GList *nautilus_menu );
-static GList            *add_about_item( FMAMenuPlugin *plugin, GList *nautilus_menu );
-static void              execute_about( NautilusMenuItem *item, FMAMenuPlugin *plugin );
-
-static void              on_pivot_items_changed_handler( FMAPivot *pivot, FMAMenuPlugin *plugin );
-static void              on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, FMAMenuPlugin *plugin );
-static void              on_change_event_timeout( FMAMenuPlugin *plugin );
+static GList               *selected_info_get_list_from_item( FileManagerFileInfo *item );
+static GList               *selected_info_get_list_from_list( GList *selection );
+static FMASelectedInfo     *new_from_file_manager_file_info( FileManagerFileInfo *item );
+static GList               *build_filemanager_menu( FMAMenuPlugin *plugin, guint target, GList *selection );
+static GList               *build_filemanager_menu_rec( GList *tree, guint target, GList *selection, FMATokens *tokens );
+static void                 attach_submenu_to_item( FileManagerMenuItem *item, GList *subitems );
+static void                 weak_notify_profile( FMAObjectProfile *profile, FileManagerMenuItem *item );
+static void                 execute_action( FileManagerMenuItem *item, FMAObjectProfile *profile );
+static void                 execute_about( FileManagerMenuItem *item, FMAMenuPlugin *plugin );
+static FileManagerMenuItem *create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files, FMATokens *tokens );
+static FileManagerMenuItem *create_item_from_menu( FMAObjectMenu *menu, GList *subitems, guint target );
+static FileManagerMenuItem *create_menu_item( const FMAObjectItem *item, guint target );
+static FMAObjectItem       *expand_tokens_item( const FMAObjectItem *item, FMATokens *tokens );
+static void                 expand_tokens_context( FMAIContext *context, FMATokens *tokens );
+static FMAObjectProfile    *get_candidate_profile( FMAObjectAction *action, guint target, GList *files );
+static GList               *create_root_menu( FMAMenuPlugin *plugin, GList *filemanager_menu );
+static void                 weak_notify_menu_item( void *user_data /* =NULL */, FileManagerMenuItem *item );
+static GList               *add_about_item( FMAMenuPlugin *plugin, GList *filemanager_menu );
+static void                 on_pivot_items_changed_handler( FMAPivot *pivot, FMAMenuPlugin *plugin );
+static void                 on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, FMAMenuPlugin *plugin );
+static void                 on_change_event_timeout( FMAMenuPlugin *plugin );
 
 GType
 fma_menu_plugin_get_type( void )
@@ -140,9 +134,11 @@ fma_menu_plugin_register_type( GTypeModule *module )
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
-	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "FMAMenuPlugin", &info, 0 );
+	st_actions_type = g_type_module_register_type(
+			module, G_TYPE_OBJECT, "FMAMenuPlugin", &info, 0 );
 
-	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
+	g_type_module_add_interface(
+			module, st_actions_type, FILE_MANAGER_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
 }
 
 static void
@@ -307,7 +303,7 @@ instance_finalize( GObject *object )
 }
 
 static void
-menu_provider_iface_init( NautilusMenuProviderIface *iface )
+menu_provider_iface_init( FileManagerMenuProviderIface *iface )
 {
 	static const gchar *thisfn = "fma_menu_plugin_menu_provider_iface_init";
 
@@ -316,7 +312,8 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 	iface->get_file_items = menu_provider_get_file_items;
 	iface->get_background_items = menu_provider_get_background_items;
 
-#ifdef HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS
+#if defined( HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS ) || \
+	defined( HAVE_NEMO_MENU_PROVIDER_GET_TOOLBAR_ITEMS )
 	iface->get_toolbar_items = menu_provider_get_toolbar_items;
 #endif
 }
@@ -339,10 +336,11 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
  * to the display of actions.
  */
 static GList *
-menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
+menu_provider_get_background_items(
+		FileManagerMenuProvider *provider, GtkWidget *window, FileManagerFileInfo *current_folder )
 {
 	static const gchar *thisfn = "fma_menu_plugin_menu_provider_get_background_items";
-	GList *nautilus_menus_list = NULL;
+	GList *filemanager_menus_list = NULL;
 	gchar *uri;
 	GList *selected;
 
@@ -350,10 +348,10 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 
 	if( !FMA_MENU_PLUGIN( provider )->private->dispose_has_run ){
 
-		selected = fma_selected_info_get_list_from_item( current_folder );
+		selected = selected_info_get_list_from_item( current_folder );
 
 		if( selected ){
-			uri = nautilus_file_info_get_uri( current_folder );
+			uri = file_manager_file_info_get_uri( current_folder );
 			g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
 					thisfn,
 					( void * ) provider,
@@ -361,7 +359,7 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 					( void * ) current_folder, uri );
 			g_free( uri );
 
-			nautilus_menus_list = build_nautilus_menu(
+			filemanager_menus_list = build_filemanager_menu(
 					FMA_MENU_PLUGIN( provider ),
 					ITEM_TARGET_LOCATION,
 					selected );
@@ -370,7 +368,7 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 		}
 	}
 
-	return( nautilus_menus_list );
+	return( filemanager_menus_list );
 }
 
 /*
@@ -380,10 +378,10 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
  * b) in contextual menu while the selection stays unchanged
  */
 static GList *
-menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
+menu_provider_get_file_items( FileManagerMenuProvider *provider, GtkWidget *window, GList *files )
 {
 	static const gchar *thisfn = "fma_menu_plugin_menu_provider_get_file_items";
-	GList *nautilus_menus_list = NULL;
+	GList *filemanager_menus_list = NULL;
 	GList *selected;
 
 	g_return_val_if_fail( FMA_IS_MENU_PLUGIN( provider ), NULL );
@@ -395,7 +393,7 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 			return(( GList * ) NULL );
 		}
 
-		selected = fma_selected_info_get_list_from_list(( GList * ) files );
+		selected = selected_info_get_list_from_list(( GList * ) files );
 
 		if( selected ){
 			g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
@@ -407,15 +405,15 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 #ifdef NA_MAINTAINER_MODE
 			GList *im;
 			for( im = files ; im ; im = im->next ){
-				gchar *uri = nautilus_file_info_get_uri( NAUTILUS_FILE_INFO( im->data ));
-				gchar *mimetype = nautilus_file_info_get_mime_type( NAUTILUS_FILE_INFO( im->data ));
+				gchar *uri = file_manager_file_info_get_uri( FILE_MANAGER_FILE_INFO( im->data ));
+				gchar *mimetype = file_manager_file_info_get_mime_type( FILE_MANAGER_FILE_INFO( im->data ));
 				g_debug( "%s: uri='%s', mimetype='%s'", thisfn, uri, mimetype );
 				g_free( mimetype );
 				g_free( uri );
 			}
 #endif
 
-			nautilus_menus_list = build_nautilus_menu(
+			filemanager_menus_list = build_filemanager_menu(
 					FMA_MENU_PLUGIN( provider ),
 					ITEM_TARGET_SELECTION,
 					selected );
@@ -424,22 +422,24 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 		}
 	}
 
-	return( nautilus_menus_list );
+	return( filemanager_menus_list );
 }
 
-#ifdef HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS
+#if defined( HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS ) || \
+	defined( HAVE_NEMO_MENU_PROVIDER_GET_TOOLBAR_ITEMS )
 /*
  * as of 2.26, this function is only called for folders, but for the
  * desktop (x-nautilus-desktop:///) which seems to be only called by
  * get_background_items ; also, only actions (not menus) are displayed
  *
  * the API is removed starting with Nautilus 2.91.90
+ * the API is not present as of Nemo 2.6.7
  */
 static GList *
-menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
+menu_provider_get_toolbar_items( FileManagerMenuProvider *provider, GtkWidget *window, FileManagerFileInfo *current_folder )
 {
 	static const gchar *thisfn = "fma_menu_plugin_menu_provider_get_toolbar_items";
-	GList *nautilus_menus_list = NULL;
+	GList *filemanager_menus_list = NULL;
 	gchar *uri;
 	GList *selected;
 
@@ -447,10 +447,10 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 
 	if( !FMA_MENU_PLUGIN( provider )->private->dispose_has_run ){
 
-		selected = fma_selected_info_get_list_from_item( current_folder );
+		selected = selected_info_get_list_from_item( current_folder );
 
 		if( selected ){
-			uri = nautilus_file_info_get_uri( current_folder );
+			uri = file_manager_file_info_get_uri( current_folder );
 			g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
 					thisfn,
 					( void * ) provider,
@@ -458,7 +458,7 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 					( void * ) current_folder, uri );
 			g_free( uri );
 
-			nautilus_menus_list = build_nautilus_menu(
+			filemanager_menus_list = build_filemanager_menu(
 					FMA_MENU_PLUGIN( provider ),
 					ITEM_TARGET_TOOLBAR,
 					selected );
@@ -467,12 +467,72 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 		}
 	}
 
-	return( nautilus_menus_list );
+	return( filemanager_menus_list );
 }
 #endif
 
 /*
- * build_nautilus_menu:
+ * selected_info_get_list_from_item:
+ * @item: a #NautilusFileInfo item
+ *
+ * Returns: a #GList list which contains a #FMASelectedInfo item with the
+ * same URI that the @item.
+ */
+static GList *
+selected_info_get_list_from_item( FileManagerFileInfo *item )
+{
+	GList *selected;
+
+	selected = NULL;
+	FMASelectedInfo *info = new_from_file_manager_file_info( item );
+
+	if( info ){
+		selected = g_list_prepend( NULL, info );
+	}
+
+	return( selected );
+}
+
+/*
+ * selected_info_get_list_from_list:
+ * @nautilus_selection: a #GList list of #NautilusFileInfo items.
+ *
+ * Returns: a #GList list of #FMASelectedInfo items whose URI correspond
+ * to those of @nautilus_selection.
+ */
+static GList *
+selected_info_get_list_from_list( GList *selection )
+{
+	GList *selected;
+	GList *it;
+
+	selected = NULL;
+
+	for( it = selection ; it ; it = it->next ){
+		FMASelectedInfo *info = new_from_file_manager_file_info( FILE_MANAGER_FILE_INFO( it->data ));
+
+		if( info ){
+			selected = g_list_prepend( selected, info );
+		}
+	}
+
+	return( selected ? g_list_reverse( selected ) : NULL );
+}
+
+static FMASelectedInfo *
+new_from_file_manager_file_info( FileManagerFileInfo *item )
+{
+	gchar *uri = file_manager_file_info_get_uri( item );
+	gchar *mimetype = file_manager_file_info_get_mime_type( item );
+	FMASelectedInfo *info = fma_selected_info_create_for_uri( uri, mimetype, NULL );
+	g_free( mimetype );
+	g_free( uri );
+
+	return( info );
+}
+
+/*
+ * build_filemanager_menu:
  * @target: whether the menu targets a location (a folder) or a selection
  *  (the list of currently selected items in the file manager)
  * @selection: a list of FMASelectedInfo, with:
@@ -481,15 +541,15 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
  *  Note: a FMASelectedInfo is just a sort of NautilusFileInfo, with
  *  some added APIs.
  *
- * Build the Nautilus menu as a list of NautilusMenuItem items
+ * Build the Nautilus/Nemo menu as a list of Nautilus/NemoMenuItem items
  *
- * Returns: the Nautilus menu
+ * Returns: the Nautilus/Nemo menu list
  */
 static GList *
-build_nautilus_menu( FMAMenuPlugin *plugin, guint target, GList *selection )
+build_filemanager_menu( FMAMenuPlugin *plugin, guint target, GList *selection )
 {
-	static const gchar *thisfn = "fma_menu_plugin_build_nautilus_menu";
-	GList *nautilus_menu;
+	static const gchar *thisfn = "fma_menu_plugin_build_filemanager_menu";
+	GList *filemanager_menu;
 	FMATokens *tokens;
 	GList *tree;
 	gboolean items_add_about_item;
@@ -502,7 +562,7 @@ build_nautilus_menu( FMAMenuPlugin *plugin, guint target, GList *selection )
 	tree = fma_pivot_get_items( plugin->private->pivot );
 	g_debug( "%s: tree=%p, count=%d", thisfn, ( void * ) tree, g_list_length( tree ));
 
-	nautilus_menu = build_nautilus_menu_rec( tree, target, selection, tokens );
+	filemanager_menu = build_filemanager_menu_rec( tree, target, selection, tokens );
 
 	/* the FMATokens object has been attached (and reffed) by each found
 	 * candidate profile, so it will be actually finalized only on actual
@@ -510,36 +570,36 @@ build_nautilus_menu( FMAMenuPlugin *plugin, guint target, GList *selection )
 	 */
 	g_object_unref( tokens );
 
-	if( target != ITEM_TARGET_TOOLBAR && nautilus_menu && g_list_length( nautilus_menu )){
+	if( target != ITEM_TARGET_TOOLBAR && filemanager_menu && g_list_length( filemanager_menu )){
 
 		items_create_root_menu = fma_settings_get_boolean( IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
 		if( items_create_root_menu ){
-			nautilus_menu = create_root_menu( plugin, nautilus_menu );
+			filemanager_menu = create_root_menu( plugin, filemanager_menu );
 
 			items_add_about_item = fma_settings_get_boolean( IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
 			if( items_add_about_item ){
-				nautilus_menu = add_about_item( plugin, nautilus_menu );
+				filemanager_menu = add_about_item( plugin, filemanager_menu );
 			}
 		}
 	}
 
-	return( nautilus_menu );
+	return( filemanager_menu );
 }
 
 static GList *
-build_nautilus_menu_rec( GList *tree, guint target, GList *selection, FMATokens *tokens )
+build_filemanager_menu_rec( GList *tree, guint target, GList *selection, FMATokens *tokens )
 {
-	static const gchar *thisfn = "fma_menu_plugin_build_nautilus_menu_rec";
-	GList *nautilus_menu;
+	static const gchar *thisfn = "fma_menu_plugin_build_filemanager_menu_rec";
+	GList *filemanager_menu;
 	GList *it;
 	GList *subitems;
 	FMAObjectItem *item;
 	GList *submenu;
 	FMAObjectProfile *profile;
-	NautilusMenuItem *menu_item;
+	FileManagerMenuItem *menu_item;
 	gchar *label;
 
-	nautilus_menu = NULL;
+	filemanager_menu = NULL;
 
 	for( it=tree ; it ; it=it->next ){
 
@@ -574,16 +634,16 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, FMATokens 
 			subitems = fma_object_get_items( FMA_OBJECT( it->data ));
 			g_debug( "%s: menu has %d items", thisfn, g_list_length( subitems ));
 
-			submenu = build_nautilus_menu_rec( subitems, target, selection, tokens );
+			submenu = build_filemanager_menu_rec( subitems, target, selection, tokens );
 			g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));
 
 			if( submenu ){
 				if( target == ITEM_TARGET_TOOLBAR ){
-					nautilus_menu = g_list_concat( nautilus_menu, submenu );
+					filemanager_menu = g_list_concat( filemanager_menu, submenu );
 
 				} else {
 					menu_item = create_item_from_menu( FMA_OBJECT_MENU( item ), submenu, target );
-					nautilus_menu = g_list_append( nautilus_menu, menu_item );
+					filemanager_menu = g_list_append( filemanager_menu, menu_item );
 				}
 			}
 			g_object_unref( item );
@@ -598,7 +658,7 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, FMATokens 
 		profile = get_candidate_profile( FMA_OBJECT_ACTION( item ), target, selection );
 		if( profile ){
 			menu_item = create_item_from_profile( profile, target, selection, tokens );
-			nautilus_menu = g_list_append( nautilus_menu, menu_item );
+			filemanager_menu = g_list_append( filemanager_menu, menu_item );
 
 		} else {
 			g_debug( "%s: %s does not have any valid candidate profile", thisfn, label );
@@ -608,7 +668,7 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, FMATokens 
 		g_free( label );
 	}
 
-	return( nautilus_menu );
+	return( filemanager_menu );
 }
 
 /*
@@ -775,10 +835,10 @@ get_candidate_profile( FMAObjectAction *action, guint target, GList *files )
 	return( candidate );
 }
 
-static NautilusMenuItem *
+static FileManagerMenuItem *
 create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files, FMATokens *tokens )
 {
-	NautilusMenuItem *item;
+	FileManagerMenuItem *item;
 	FMAObjectAction *action;
 	FMAObjectProfile *duplicate;
 
@@ -806,10 +866,10 @@ create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files,
 }
 
 /*
- * called _after_ the NautilusMenuItem has been finalized
+ * called _after_ the Nautilus/NemoMenuItem has been finalized
  */
 static void
-weak_notify_profile( FMAObjectProfile *profile, NautilusMenuItem *item )
+weak_notify_profile( FMAObjectProfile *profile, FileManagerMenuItem *item )
 {
 	g_debug( "fma_menu_plugin_weak_notify_profile: profile=%p (ref_count=%d)",
 			( void * ) profile, G_OBJECT( profile )->ref_count );
@@ -822,32 +882,32 @@ weak_notify_profile( FMAObjectProfile *profile, NautilusMenuItem *item )
  * we can so safely release our own ref on subitems after having attached
  * the submenu
  */
-static NautilusMenuItem *
+static FileManagerMenuItem *
 create_item_from_menu( FMAObjectMenu *menu, GList *subitems, guint target )
 {
 	/*static const gchar *thisfn = "fma_menu_plugin_create_item_from_menu";*/
-	NautilusMenuItem *item;
+	FileManagerMenuItem *item;
 
 	item = create_menu_item( FMA_OBJECT_ITEM( menu ), target );
 
 	attach_submenu_to_item( item, subitems );
 
-	nautilus_menu_item_list_free( subitems );
+	file_manager_menu_item_list_free( subitems );
 
 	/*g_debug( "%s: returning item=%p", thisfn, ( void * ) item );*/
 	return( item );
 }
 
 /*
- * Creates a NautilusMenuItem
+ * Creates a Nautilus/NemoMenuItem
  *
  * We attach a weak notify function to the created item in order to be able
  * to check for instanciation/finalization cycles
  */
-static NautilusMenuItem *
+static FileManagerMenuItem *
 create_menu_item( const FMAObjectItem *item, guint target )
 {
-	NautilusMenuItem *menu_item;
+	FileManagerMenuItem *menu_item;
 	gchar *id, *name, *label, *tooltip, *icon;
 
 	id = fma_object_get_id( item );
@@ -856,7 +916,7 @@ create_menu_item( const FMAObjectItem *item, guint target )
 	tooltip = fma_object_get_tooltip( item );
 	icon = fma_object_get_icon( item );
 
-	menu_item = nautilus_menu_item_new( name, label, tooltip, icon );
+	menu_item = file_manager_menu_item_new( name, label, tooltip, icon );
 
 	g_object_weak_ref( G_OBJECT( menu_item ), ( GWeakNotify ) weak_notify_menu_item, NULL );
 
@@ -870,25 +930,25 @@ create_menu_item( const FMAObjectItem *item, guint target )
 }
 
 /*
- * called _after_ the NautilusMenuItem has been finalized
+ * called _after_ the Nautilus/NemoMenuItem has been finalized
  */
 static void
-weak_notify_menu_item( void *user_data /* =NULL */, NautilusMenuItem *item )
+weak_notify_menu_item( void *user_data /* =NULL */, FileManagerMenuItem *item )
 {
 	g_debug( "fma_menu_plugin_weak_notify_menu_item: item=%p", ( void * ) item );
 }
 
 static void
-attach_submenu_to_item( NautilusMenuItem *item, GList *subitems )
+attach_submenu_to_item( FileManagerMenuItem *item, GList *subitems )
 {
-	NautilusMenu *submenu;
+	FileManagerMenu *submenu;
 	GList *it;
 
-	submenu = nautilus_menu_new();
-	nautilus_menu_item_set_submenu( item, submenu );
+	submenu = file_manager_menu_new();
+	file_manager_menu_item_set_submenu( item, submenu );
 
 	for( it = subitems ; it ; it = it->next ){
-		nautilus_menu_append_item( submenu, NAUTILUS_MENU_ITEM( it->data ));
+		file_manager_menu_append_item( submenu, FILE_MANAGER_MENU_ITEM( it->data ));
 	}
 }
 
@@ -901,7 +961,7 @@ attach_submenu_to_item( NautilusMenuItem *item, GList *subitems )
  * the current item of the selection
  */
 static void
-execute_action( NautilusMenuItem *item, FMAObjectProfile *profile )
+execute_action( FileManagerMenuItem *item, FMAObjectProfile *profile )
 {
 	static const gchar *thisfn = "fma_menu_plugin_execute_action";
 	FMATokens *tokens;
@@ -919,8 +979,8 @@ static GList *
 create_root_menu( FMAMenuPlugin *plugin, GList *menu )
 {
 	static const gchar *thisfn = "fma_menu_plugin_create_root_menu";
-	GList *nautilus_menu;
-	NautilusMenuItem *root_item;
+	GList *filemanager_menu;
+	FileManagerMenuItem *root_item;
 
 	g_debug( "%s: plugin=%p, menu=%p (%d items)",
 			thisfn, ( void * ) plugin, ( void * ) menu, g_list_length( menu ));
@@ -929,7 +989,7 @@ create_root_menu( FMAMenuPlugin *plugin, GList *menu )
 		return( NULL );
 	}
 
-	root_item = nautilus_menu_item_new(
+	root_item = file_manager_menu_item_new(
 			"FMAMenuPluginExtensions",
 			/* i18n: label of an automagic root submenu */
 			_( "FileManager-Actions actions" ),
@@ -937,9 +997,9 @@ create_root_menu( FMAMenuPlugin *plugin, GList *menu )
 			_( "A submenu which embeds the currently available FileManager-Actions actions and menus" ),
 			fma_about_get_icon_name());
 	attach_submenu_to_item( root_item, menu );
-	nautilus_menu = g_list_append( NULL, root_item );
+	filemanager_menu = g_list_append( NULL, root_item );
 
-	return( nautilus_menu );
+	return( filemanager_menu );
 }
 
 /*
@@ -950,11 +1010,11 @@ static GList *
 add_about_item( FMAMenuPlugin *plugin, GList *menu )
 {
 	static const gchar *thisfn = "fma_menu_plugin_add_about_item";
-	GList *nautilus_menu;
+	GList *filemanager_menu;
 	gboolean have_root_menu;
-	NautilusMenuItem *root_item;
-	NautilusMenuItem *about_item;
-	NautilusMenu *first;
+	FileManagerMenuItem *root_item;
+	FileManagerMenuItem *about_item;
+	FileManagerMenu *first;
 
 	g_debug( "%s: plugin=%p, menu=%p (%d items)",
 			thisfn, ( void * ) plugin, ( void * ) menu, g_list_length( menu ));
@@ -964,19 +1024,19 @@ add_about_item( FMAMenuPlugin *plugin, GList *menu )
 	}
 
 	have_root_menu = FALSE;
-	nautilus_menu = menu;
+	filemanager_menu = menu;
 
 	if( g_list_length( menu ) == 1 ){
-		root_item = NAUTILUS_MENU_ITEM( menu->data );
+		root_item = FILE_MANAGER_MENU_ITEM( menu->data );
 		g_object_get( G_OBJECT( root_item ), "menu", &first, NULL );
 		if( first ){
-			g_return_val_if_fail( NAUTILUS_IS_MENU( first ), NULL );
+			g_return_val_if_fail( FILE_MANAGER_IS_MENU( first ), NULL );
 			have_root_menu = TRUE;
 		}
 	}
 
 	if( have_root_menu ){
-		about_item = nautilus_menu_item_new(
+		about_item = file_manager_menu_item_new(
 				"AboutFMAMenuPlugin",
 				_( "About FileManager-Actions" ),
 				_( "Display some information about FileManager-Actions" ),
@@ -990,14 +1050,14 @@ add_about_item( FMAMenuPlugin *plugin, GList *menu )
 				NULL,
 				0 );
 
-		nautilus_menu_append_item( first, about_item );
+		file_manager_menu_append_item( first, about_item );
 	}
 
-	return( nautilus_menu );
+	return( filemanager_menu );
 }
 
 static void
-execute_about( NautilusMenuItem *item, FMAMenuPlugin *plugin )
+execute_about( FileManagerMenuItem *item, FMAMenuPlugin *plugin )
 {
 	g_return_if_fail( FMA_IS_MENU_PLUGIN( plugin ));
 
@@ -1055,5 +1115,9 @@ on_change_event_timeout( FMAMenuPlugin *plugin )
 	g_debug( "%s: timeout expired", thisfn );
 
 	fma_pivot_load_items( plugin->private->pivot );
-	nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
+
+#if defined( HAVE_NAUTILUS_MENU_PROVIDER_EMIT_ITEMS_UPDATED_SIGNAL ) || \
+	defined( HAVE_NEMO_MENU_PROVIDER_EMIT_ITEMS_UPDATED_SIGNAL )
+	file_manager_menu_provider_emit_items_updated_signal( FILE_MANAGER_MENU_PROVIDER( plugin ));
+#endif
 }

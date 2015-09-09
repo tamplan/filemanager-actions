@@ -31,6 +31,7 @@
 #include <config.h>
 #endif
 
+#include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <string.h>
 
@@ -75,7 +76,6 @@ static void             instance_finalize( GObject *object );
 
 static void             dump( const FMASelectedInfo *nsi );
 static const char      *dump_file_type( GFileType type );
-static FMASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
 static FMASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg );
 static void             query_file_attributes( FMASelectedInfo *info, GFile *location, gchar **errmsg );
 
@@ -201,54 +201,6 @@ instance_finalize( GObject *object )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
-}
-
-/*
- * fma_selected_info_get_list_from_item:
- * @item: a #NautilusFileInfo item
- *
- * Returns: a #GList list which contains a #FMASelectedInfo item with the
- * same URI that the @item.
- */
-GList *
-fma_selected_info_get_list_from_item( NautilusFileInfo *item )
-{
-	GList *selected;
-
-	selected = NULL;
-	FMASelectedInfo *info = new_from_nautilus_file_info( item );
-
-	if( info ){
-		selected = g_list_prepend( NULL, info );
-	}
-
-	return( selected );
-}
-
-/*
- * fma_selected_info_get_list_from_list:
- * @nautilus_selection: a #GList list of #NautilusFileInfo items.
- *
- * Returns: a #GList list of #FMASelectedInfo items whose URI correspond
- * to those of @nautilus_selection.
- */
-GList *
-fma_selected_info_get_list_from_list( GList *nautilus_selection )
-{
-	GList *selected;
-	GList *it;
-
-	selected = NULL;
-
-	for( it = nautilus_selection ; it ; it = it->next ){
-		FMASelectedInfo *info = new_from_nautilus_file_info( NAUTILUS_FILE_INFO( it->data ));
-
-		if( info ){
-			selected = g_list_prepend( selected, info );
-		}
-	}
-
-	return( selected ? g_list_reverse( selected ) : NULL );
 }
 
 /*
@@ -672,7 +624,7 @@ fma_selected_info_is_writable( const FMASelectedInfo *nsi )
 /*
  * fma_selected_info_create_for_uri:
  * @uri: an URI.
- * @mimetype: the corresponding Nautilus mime type, or %NULL.
+ * @mimetype: the corresponding mime type, or %NULL.
  * @errmsg: a pointer to a string which will contain an error message on
  *  return.
  *
@@ -732,18 +684,6 @@ dump_file_type( GFileType type )
 			break;
 	}
 	return( "unknown" );
-}
-
-static FMASelectedInfo *
-new_from_nautilus_file_info( NautilusFileInfo *item )
-{
-	gchar *uri = nautilus_file_info_get_uri( item );
-	gchar *mimetype = nautilus_file_info_get_mime_type( item );
-	FMASelectedInfo *info = new_from_uri( uri, mimetype, NULL );
-	g_free( mimetype );
-	g_free( uri );
-
-	return( info );
 }
 
 /*

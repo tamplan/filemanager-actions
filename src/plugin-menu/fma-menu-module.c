@@ -35,7 +35,7 @@
 #include <syslog.h>
 #include <unistd.h>
 
-#include <libnautilus-extension/nautilus-extension-types.h>
+#include <api/fma-fm-defines.h>
 
 #include <core/fma-gconf-migration.h>
 #include <core/fma-settings.h>
@@ -48,21 +48,24 @@ static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, cons
 static GLogFunc st_default_log_func = NULL;
 
 /*
- * A nautilus extension must implement three functions :
+ * A nautilus/nemo extension must implement three functions :
  *
- * - fma_menu_module_initialize
- * - fma_menu_module_list_types
- * - fma_menu_module_shutdown
+ * - xxx_module_initialize
+ * - xxx_module_list_types
+ * - xxx_module_shutdown
  *
  * The first two functions are called at nautilus startup.
  *
  * The prototypes for these functions are defined in nautilus-extension-types.h
  */
-
 void
+#if FMA_TARGET_ID == NAUTILUS_ID
 nautilus_module_initialize( GTypeModule *module )
+#elif FMA_TARGET_ID == NEMO_ID
+nemo_module_initialize( GTypeModule *module )
+#endif
 {
-	static const gchar *thisfn = "fma_menu_module_nautilus_module_initialize";
+	static const gchar *thisfn = "fma_menu_module_" FMA_TARGET_LABEL "_module_initialize";
 
 	syslog( LOG_USER | LOG_INFO, "[FMA] %s Menu Extender %s initializing...", PACKAGE_NAME, PACKAGE_VERSION );
 
@@ -82,9 +85,13 @@ nautilus_module_initialize( GTypeModule *module )
 }
 
 void
+#if FMA_TARGET_ID == NAUTILUS_ID
 nautilus_module_list_types( const GType **types, int *num_types )
+#elif FMA_TARGET_ID == NEMO_ID
+nemo_module_list_types( const GType **types, int *num_types )
+#endif
 {
-	static const gchar *thisfn = "fma_menu_module_nautilus_module_list_types";
+	static const gchar *thisfn = "fma_menu_module_" FMA_TARGET_LABEL "_module_list_types";
 	static GType type_list[1];
 
 	g_debug( "%s: types=%p, num_types=%p", thisfn, ( void * ) types, ( void * ) num_types );
@@ -98,9 +105,13 @@ nautilus_module_list_types( const GType **types, int *num_types )
 }
 
 void
+#if FMA_TARGET_ID == NAUTILUS_ID
 nautilus_module_shutdown( void )
+#elif FMA_TARGET_ID == NEMO_ID
+nemo_module_shutdown( void )
+#endif
 {
-	static const gchar *thisfn = "fma_menu_module_nautilus_module_shutdown";
+	static const gchar *thisfn = "fma_menu_module_" FMA_TARGET_LABEL "_module_shutdown";
 
 	g_debug( "%s", thisfn );
 
