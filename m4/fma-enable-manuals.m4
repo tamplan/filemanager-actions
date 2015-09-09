@@ -25,7 +25,7 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 4 define ENABLE_MANUALS conditional
+# serial 5 rename as FMA_ENABLE_MANUALS
 
 dnl --enable-html-manuals[=gdt|db2html]
 dnl   generates HTML manuals for all locales
@@ -42,18 +42,20 @@ dnl   output PDF manuals for all locales
 dnl   only use dblatex for now
 dnl   only '=dblatex' option is recognized for now.
 dnl
-dnl usage:  NA_ENABLE_MANUALS
+dnl usage:  FMA_ENABLE_MANUALS
 
-AC_DEFUN([NA_ENABLE_MANUALS],[
-	AC_REQUIRE([_AC_ARG_NA_ENABLE_HTML_MANUALS])dnl
-	AC_REQUIRE([_AC_ARG_NA_ENABLE_PDF_MANUALS])dnl
+AC_DEFUN([FMA_ENABLE_MANUALS],[
+	AC_REQUIRE([_AC_ARG_FMA_ENABLE_HTML_MANUALS])dnl
+	AC_REQUIRE([_AC_ARG_FMA_ENABLE_PDF_MANUALS])dnl
 	
 	_CHECK_FOR_HTML_MANUALS
 	_CHECK_FOR_PDF_MANUALS
-	AM_CONDITIONAL([ENABLE_MANUALS], [test "x${enable_html_manuals}" != "xno" || test "x${enable_pdf_manuals}" != "xno"])
+
+	AM_CONDITIONAL([ENABLE_MANUALS],
+		[test "x${enable_html_manuals}" != "xno" || test "x${enable_pdf_manuals}" != "xno"])
 ])
 
-AC_DEFUN([_AC_ARG_NA_ENABLE_HTML_MANUALS],[
+AC_DEFUN([_AC_ARG_FMA_ENABLE_HTML_MANUALS],[
 	AC_ARG_ENABLE(
 		[html-manuals],
 		AC_HELP_STRING(
@@ -97,10 +99,11 @@ AC_DEFUN([_CHECK_FOR_HTML_MANUALS],[
 
 	AC_SUBST([WITH_DB2HTML],[${with_db2html}])
 	AC_SUBST([WITH_GDT],[${with_gdt}])
+
 	AM_CONDITIONAL([ENABLE_HTML_MANUALS], [test "x${enable_html_manuals}" != "xno"])
 ])
 
-AC_DEFUN([_AC_ARG_NA_ENABLE_PDF_MANUALS],[
+AC_DEFUN([_AC_ARG_FMA_ENABLE_PDF_MANUALS],[
 	AC_ARG_ENABLE(
 		[pdf-manuals],
 		AC_HELP_STRING(

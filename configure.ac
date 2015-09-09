@@ -169,11 +169,11 @@ fi
 GNOME_DOC_INIT(,,[gdu_cv_have_gdu=no])
 
 # add --enable-html-manuals and --enable-pdf-manuals configure options
-NA_ENABLE_MANUALS
+FMA_ENABLE_MANUALS
 
 # display and keep configuration informations
 config_options="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g'`" 
-AC_DEFINE_UNQUOTED([NA_CONFIG_OPTIONS],["$0 ${config_options}"],["Configure options"])
+AC_DEFINE_UNQUOTED([FMA_CONFIG_OPTIONS],["$0 ${config_options}"],["Configure options"])
 
 AC_OUTPUT
 
