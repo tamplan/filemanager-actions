@@ -27,98 +27,70 @@
 
 # serial 3 renamed as FMA_TARGET_FILE_MANAGER
 
-# target file manager: nautilus
-# when working in a test environment, nautilus extensions are typically
-# installed in a non-standard location; lets specify this location here
-# --with-nautilus-extdir=<dir>
-
-AC_DEFUN([_AC_FMA_FILE_MANAGER_NAUTILUS],[
-
-	AC_MSG_NOTICE([targeting Nautilus file-manager])
-
-	if test "${with_nautilus_extdir}" = ""; then
-		if test "{PKG_CONFIG}" != ""; then
-			with_nautilus_extdir=`${PKG_CONFIG} --variable=extensiondir libnautilus-extension`
-		fi
-	fi
-	if test "${with_nautilus_extdir}" = ""; then
-		AC_MSG_ERROR([Unable to determine nautilus extension folder, please use --with-nautilus-extdir option])
-	else
-		AC_MSG_NOTICE([installing plugins in ${with_nautilus_extdir}])
-		AC_SUBST([NAUTILUS_EXTENSIONS_DIR],[${with_nautilus_extdir}])
-		AC_DEFINE_UNQUOTED([NA_NAUTILUS_EXTENSIONS_DIR],[${with_nautilus_extdir}],[Nautilus extensions directory])
-	fi
-
-	FMA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension],[${nautilus_required}])
-
-	# Check for menu update function
-	AC_CHECK_LIB([nautilus-extension],[nautilus_menu_item_new])
-	AC_CHECK_FUNCS([nautilus_menu_provider_emit_items_updated_signal])
-
-	# starting with 2.91.90, Nautilus no more allows extensions to
-	#  add toolbar items
-	AC_CHECK_FUNCS([nautilus_menu_provider_get_toolbar_items])
-])
-
-# target file manager: nemo
-# when working in a test environment, nemo extensions are typically
-# installed in a non-standard location; lets specify this location here
-# --with-nemo-extdir=<dir>
-
-AC_DEFUN([_AC_FMA_FILE_MANAGER_NEMO],[
-
-	AC_MSG_NOTICE([targeting Nemo file-manager])
-
-	if test "${with_nemo_extdir}" = ""; then
-		if test "{PKG_CONFIG}" != ""; then
-			with_nemo_extdir=`${PKG_CONFIG} --variable=extensiondir libnemo-extension`
-		fi
-	fi
-	if test "${with_nemo_extdir}" = ""; then
-		AC_MSG_ERROR([Unable to determine nemo extension folder, please use --with-nemo-extdir option])
-	else
-		AC_MSG_NOTICE([installing plugins in ${with_nemo_extdir}])
-		AC_SUBST([NEMO_EXTENSIONS_DIR],[${with_nemo_extdir}])
-		AC_DEFINE_UNQUOTED([NA_NEMO_EXTENSIONS_DIR],[${with_nemo_extdir}],[Nemo extensions directory])
-	fi
-
-	FMA_CHECK_MODULE([NEMO_EXTENSION],[libnemo-extension],[${nemo_required}])
-
-	# Check for menu update function
-	AC_CHECK_LIB([nemo-extension],[nemo_menu_item_new])
-	AC_CHECK_FUNCS([nemo_menu_provider_emit_items_updated_signal])
-])
-
-dnl defaults to nautilus
-dnl manages nemo
+dnl Usage: FMA_TARGET_FILE_MANAGER
+dnl Object: choose the target file-manager
+dnl Principe: FileManager-Actions plugins must be compiled for targeting
+dnl   a specific file manager because each file manager has its own set
+dnl   of extensions.
+dnl   The macro examines the available installed packages, and compiles
+dnl   our plugins for every suitable found API.
+dnl   Each file manager may also have specific extensions with may be
+dnl   configured via relative macros.
 dnl
 AC_DEFUN([FMA_TARGET_FILE_MANAGER],[
 
-	AC_ARG_ENABLE([file-manager],
-		AC_HELP_STRING(
-			[--enable-file-manager=@<:@nautilus|nemo@:>@],
-			[the targeted file manager @<:@nautilus@:>@]),
-		[enable_file_manager=$enableval],
-		[enable_file_manager="nautilus"])
+	let fma_fm_count=0
 
-	AC_ARG_WITH(
-		[nautilus-extdir],
-		AC_HELP_STRING(
-			[--with-nautilus-extdir=DIR],
-			[nautilus plugins extension directory @<:@auto@:>@]),
-		[with_nautilus_extdir=$withval],
-		[with_nautilus_extdir=""])
+	AC_REQUIRE([_AC_FMA_WITH_NAUTILUS])
+	AC_REQUIRE([_AC_FMA_WITH_NEMO])
 
-	AC_ARG_WITH(
-		[nemo-extdir],
-		AC_HELP_STRING(
-			[--with-nemo-extdir=DIR],
-			[nemo plugins extension directory @<:@auto@:>@]),
-		[with_nemo_extdir=$withval],
-		[with_nemo_extdir=""])
+	if test ${fma_fm_count} -eq 0; then
+		_FMA_CHECK_MODULE_MSG([yes],[No suitable target file manager found])
+	fi
+])
 
-	AS_IF(
-		[test "${enable_file_manager}" = "nautilus"],[_AC_FMA_FILE_MANAGER_NAUTILUS()],
-		[test "${enable_file_manager}" = "nemo"],[_AC_FMA_FILE_MANAGER_NEMO()],
-		[AC_MSG_NOTICE([no target file-manager specified])])
+# targeting file manager: nautilus
+# user may specify --with[out]-nautilus; default is to rely on the 
+#  availability of the extensions libraries/apis
+# requires: nautilus-devel be installed
+# supplementary options: --with-nautilus-extdir
+AC_DEFUN([_AC_FMA_WITH_NAUTILUS],[
+
+	AC_ARG_WITH([nautilus],
+    	[AS_HELP_STRING([--with-nautilus],
+			[compile plugins for Nautilus @<:@default=auto@:>@])],
+			[],
+		[with_nautilus=auto])
+
+	AS_IF([test "$with_nautilus" != "no"],[FMA_CHECK_FOR_NAUTILUS])
+
+	dnl AS_ECHO([with_nautilus_ok=${with_nautilus_ok}])
+	if test "${with_nautilus_ok}" = "yes"; then
+		let fma_fm_count+=1
+		dnl AS_ECHO([fma_fm_count=${fma_fm_count}])
+	fi
+
+	AM_CONDITIONAL([HAVE_NAUTILUS], [test "${with_nautilus_ok}" = "yes"])
+])
+
+# targeting file manager: nemo
+# user may specify --with[out]-nemo; default is to rely on the 
+#  availability of the extensions libraries/apis
+# requires: nemo-devel be installed
+# supplementary options: --with-nemo-extdir
+AC_DEFUN([_AC_FMA_WITH_NEMO],[
+
+	AC_ARG_WITH([nemo],
+    	[AS_HELP_STRING([--with-nemo],
+			[compile plugins for Nemo @<:@default=auto@:>@])],
+			[],
+		[with_nemo=auto])
+
+	AS_IF([test "$with_nemo" != "no"],[FMA_CHECK_FOR_NEMO])
+
+	if test "${with_nemo_ok}" = "yes"; then
+		let fma_fm_count+=1
+	fi
+
+	AM_CONDITIONAL([HAVE_NEMO], [test "${with_nemo_ok}" = "yes"])
 ])
