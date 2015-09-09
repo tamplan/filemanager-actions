@@ -48,6 +48,7 @@
  * So we stay with just a piece of helper functions...
  */
 
+#include "base-window.h"
 #include "fma-main-window-def.h"
 
 G_BEGIN_DECLS

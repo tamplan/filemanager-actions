@@ -31,7 +31,6 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n.h>
 #include <string.h>
 
 #include "api/fma-object-api.h"

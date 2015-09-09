@@ -36,6 +36,7 @@
 #ifndef __UI_FMA_TREE_MODEL_PRIV_H__
 #define __UI_FMA_TREE_MODEL_PRIV_H__
 
+#include "base-window.h"
 #include "egg-tree-multi-dnd.h"
 #include "fma-clipboard.h"
 

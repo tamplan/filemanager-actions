@@ -44,7 +44,7 @@
 #ifndef __UI_FMA_TREE_MODEL_H__
 #define __UI_FMA_TREE_MODEL_H__
 
-#include "api/fma-object.h"
+#include "api/fma-object-item.h"
 
 #include "fma-main-window-def.h"
 

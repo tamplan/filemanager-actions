@@ -29,7 +29,7 @@ AC_PREREQ([2.53])
 
 AC_INIT([FileManager-Actions],[3.4],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
 
-#m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
 

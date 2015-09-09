@@ -47,11 +47,11 @@ done
 
 rm -fr ${builddir}
 rm -fr ${installdir}
-find ${top_srcdir}/docs/nact -type f -name '*.html' -o -name '*.pdf' | xargs rm -f
-find ${top_srcdir}/docs/nact \( -type d -o -type l \) -name 'stylesheet-images' -o -name 'admon' | xargs rm -fr
+find ${top_srcdir}/docs/user-manual -type f -name '*.html' -o -name '*.pdf' | xargs rm -f
+find ${top_srcdir}/docs/user-manual \( -type d -o -type l \) -name 'stylesheet-images' -o -name 'admon' | xargs rm -fr
 
 ${maintainer_dir}/run-autogen.sh --enable-deprecated --enable-gtk-doc --enable-html-manuals &&
 	${maintainer_dir}/check-po.sh -nodummy &&
 	${maintainer_dir}/check-headers.sh -nodummy -builddir="${builddir}" &&
-	desktop-file-validate ${installdir}/share/applications/nact.desktop &&
+	desktop-file-validate ${installdir}/share/applications/fma-ui.desktop &&
 	make -C ${builddir} distcheck
