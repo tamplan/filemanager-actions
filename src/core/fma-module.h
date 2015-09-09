@@ -51,10 +51,10 @@
  * So the dynamic is as follows:
  * - FMAPivot scans for the PKGLIBDIR directory, trying to dynamically
  *   load all found libraries
- * - to be considered as a N-A plugin, a library must implement some
- *   functions (see api/na-api.h)
- * - for each found plugin, FMAPivot calls na_api_list_types() which
- *   returns the type of GObjects implemented in the plugin
+ * - to be considered as a FMA plugin, a library must implement some
+ *   functions (see api/fma-extension.h)
+ * - for each found plugin, FMAPivot calls fma_extension_list_types()
+ *   which returns the type of GObjects implemented in the plugin
  * - FMAPivot dynamically instantiates a GObject for each returned GType.
  *
  * After that, when FMAPivot wants to access, say to FMAIIOProvider

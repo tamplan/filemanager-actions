@@ -56,7 +56,7 @@ struct _FMAObjectMenuPrivate {
 /* i18n: default label for a new menu */
 #define NEW_NAUTILUS_MENU				N_( "New Nautilus menu" )
 
-extern FMADataGroup menu_data_groups [];			/* defined in na-item-menu-factory.c */
+extern FMADataGroup menu_data_groups [];	/* defined in fma-object-menu-factory.c */
 
 static FMAObjectItemClass *st_parent_class = NULL;
 
