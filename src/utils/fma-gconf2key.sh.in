@@ -690,7 +690,7 @@ let nbprefs=0
 
 if [ -e ${destconf} ]; then
 	msg "${destconf} already exists: do not replace it, update the N-A configuration file instead"
-	command "@pkglibexecdir@/na-set-conf --group 'io-provider fma-gconf' --key writable --type bool --value false"
+	command "@pkglibexecdir@/fma-set-conf --group 'io-provider fma-gconf' --key writable --type bool --value false"
 else
 	nbprefs=$(cat ${my_tmproot}.nact ${my_tmproot}.runtime ${my_tmproot}.io-provider_* 2>/dev/null | wc -l)
 
@@ -740,10 +740,10 @@ let count=${nbitems}+${nbprefs}
 if [ "${opt_delete}" = "yes" -a ${count} -gt 0 ]; then
 	if [ "${opt_admin}" = "yes" ]; then
 		# rather a bad hack to find where mandatory keys are stored by GConf
-		# na-delete-xmltree directly removes our branch from the XML tree!
+		# fma-delete-xmltree directly removes our branch from the XML tree!
 		xml=$(find /etc -name gconf.xml.mandatory)/%gconf-tree.xml
 		path='/gconf/dir[@name="apps"]/dir[@name="@PACKAGE@"]'
-		command "@pkglibexecdir@/na-delete-xmltree --path '${path}' --xml ${xml} > ${xml}2"
+		command "@pkglibexecdir@/fma-delete-xmltree --path '${path}' --xml ${xml} > ${xml}2"
 		command "mv ${xml}2 ${xml}"
 	else
 		# this does not work for mandatory items
