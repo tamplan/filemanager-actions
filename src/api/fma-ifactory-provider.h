@@ -34,7 +34,7 @@
  * SECTION: ifactory-provider
  * @title: FMAIFactoryProvider
  * @short_description: The Data Factory Provider Interface v 1
- * @include: filemanager-actions/na-ifactory_provider.h
+ * @include: filemanager-actions/fma-ifactory-provider.h
  *
  * &prodname; has to deal with a relatively great number of elementary datas,
  * reading them from different supports, storing and displaying them,
