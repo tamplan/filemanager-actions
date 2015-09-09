@@ -21,7 +21,7 @@
 
   <download-page rdf:resource="http://www.nautilus-actions.org/downloads" />
 
-  <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=nautilus-actions" />
+  <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=filemanager-actions" />
 
   <mailing-list rdf:resource="http://mailman.nautilus-actions.org/listinfo" />
 
