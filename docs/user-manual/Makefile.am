@@ -51,8 +51,8 @@
 # to correctly generate POT files (cf. mail of Claude Paroz 2010-08-29
 # http://mail.gnome.org/archives/gnome-i18n/2010-August/msg00229.html).
 
-include $(srcdir)/gnome-doc-utils-na.make
-#include $(top_srcdir)/gnome-doc-utils.make
+#include $(srcdir)/gnome-doc-utils-na.make
+include $(top_srcdir)/gnome-doc-utils.make
 
 DOC_MODULE = fma-config-tool
 
@@ -61,70 +61,70 @@ DOC_ENTITIES = \
 	appendix-gnu-fdl-1.3.xml						\
 	articleinfo.xml									\
 	legalnotice.xml									\
-	nact-bugs.xml									\
-	nact-conditions.xml								\
-	nact-edit.xml									\
-	nact-execution.xml								\
-	nact-export.xml									\
-	nact-import.xml									\
-	nact-menus.xml									\
-	nact-misc.xml									\
-	nact-prefs.xml									\
-	nact-profiles.xml								\
-	nact-properties.xml								\
-	nact-save.xml									\
-	nact-sorting.xml								\
-	nact-starting.xml								\
-	nact-where.xml									\
-	nautilus-actions-config-tool.xml
+	fma-bugs.xml									\
+	fma-conditions.xml								\
+	fma-edit.xml									\
+	fma-execution.xml								\
+	fma-export.xml									\
+	fma-import.xml									\
+	fma-menus.xml									\
+	fma-misc.xml									\
+	fma-prefs.xml									\
+	fma-profiles.xml								\
+	fma-properties.xml								\
+	fma-save.xml									\
+	fma-sorting.xml									\
+	fma-starting.xml								\
+	fma-where.xml									\
+	fma-config-tool.xml
 
 #DOC_INCLUDES =
 
 #DOC_FIGURES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/figures/*.png))
 DOC_FIGURES = \
 	figures/add.png									\
-	figures/nact-action-tab.png						\
-	figures/nact-basenames-tab.png					\
-	figures/nact-capabilities-tab.png				\
-	figures/nact-command-tab.png					\
-	figures/nact-desktop-environment-frame.png		\
-	figures/nact-environment-tab.png				\
-	figures/nact-exec-mode-frame.png				\
-	figures/nact-execute-as-frame.png				\
-	figures/nact-execution-environment-frame.png	\
-	figures/nact-execution-tab.png					\
-	figures/nact-export-done.png					\
-	figures/nact-export-format.png					\
-	figures/nact-export-home.png					\
-	figures/nact-export-items.png					\
-	figures/nact-export-summary.png					\
-	figures/nact-export-target.png					\
-	figures/nact-folders-tab.png					\
-	figures/nact-import-done.png					\
-	figures/nact-import-files.png					\
-	figures/nact-import-home.png					\
-	figures/nact-import-mode.png					\
-	figures/nact-import-resultat.png				\
-	figures/nact-import-summary.png					\
-	figures/nact-legend.png							\
-	figures/nact-main-empty.png						\
-	figures/nact-mimetypes-tab.png					\
-	figures/nact-new-capability.png					\
-	figures/nact-new-scheme.png						\
-	figures/nact-preferences-desktop.png			\
-	figures/nact-preferences-execution.png			\
-	figures/nact-preferences-export.png				\
-	figures/nact-preferences-import.png				\
-	figures/nact-preferences-io-providers.png		\
-	figures/nact-preferences-runtime.png			\
-	figures/nact-preferences-schemes.png			\
-	figures/nact-preferences-ui.png					\
-	figures/nact-properties-tab.png					\
-	figures/nact-schemes-tab.png					\
-	figures/nact-selection-count-frame.png			\
-	figures/nact-startup-mode-frame.png				\
-	figures/nact-target-location.png				\
-	figures/nact-working-directory-frame.png		\
+	figures/fma-action-tab.png						\
+	figures/fma-basenames-tab.png					\
+	figures/fma-capabilities-tab.png				\
+	figures/fma-command-tab.png						\
+	figures/fma-desktop-environment-frame.png		\
+	figures/fma-environment-tab.png					\
+	figures/fma-exec-mode-frame.png					\
+	figures/fma-execute-as-frame.png				\
+	figures/fma-execution-environment-frame.png		\
+	figures/fma-execution-tab.png					\
+	figures/fma-export-done.png						\
+	figures/fma-export-format.png					\
+	figures/fma-export-home.png						\
+	figures/fma-export-items.png					\
+	figures/fma-export-summary.png					\
+	figures/fma-export-target.png					\
+	figures/fma-folders-tab.png						\
+	figures/fma-import-done.png						\
+	figures/fma-import-files.png					\
+	figures/fma-import-home.png						\
+	figures/fma-import-mode.png						\
+	figures/fma-import-resultat.png					\
+	figures/fma-import-summary.png					\
+	figures/fma-legend.png							\
+	figures/fma-main-empty.png						\
+	figures/fma-mimetypes-tab.png					\
+	figures/fma-new-capability.png					\
+	figures/fma-new-scheme.png						\
+	figures/fma-preferences-desktop.png				\
+	figures/fma-preferences-execution.png			\
+	figures/fma-preferences-export.png				\
+	figures/fma-preferences-import.png				\
+	figures/fma-preferences-io-providers.png		\
+	figures/fma-preferences-runtime.png				\
+	figures/fma-preferences-schemes.png				\
+	figures/fma-preferences-ui.png					\
+	figures/fma-properties-tab.png					\
+	figures/fma-schemes-tab.png						\
+	figures/fma-selection-count-frame.png			\
+	figures/fma-startup-mode-frame.png				\
+	figures/fma-target-location.png					\
+	figures/fma-working-directory-frame.png			\
 	figures/read-only.png							\
 	figures/remove.png								\
 	figures/sort-asc.png							\
