@@ -34,7 +34,7 @@
 #include <string.h>
 #include <syslog.h>
 
-#include <libnautilus-extension/nautilus-extension-types.h>
+#include <api/fma-fm-defines.h>
 
 #include "fma-tracker-plugin.h"
 
@@ -56,9 +56,13 @@ static GLogFunc st_default_log_func = NULL;
  */
 
 void
+#if FMA_TARGET_ID == NAUTILUS_ID
 nautilus_module_initialize( GTypeModule *module )
+#elif FMA_TARGET_ID == NEMO_ID
+nemo_module_initialize( GTypeModule *module )
+#endif
 {
-	static const gchar *thisfn = "fma_tracker_module_nautilus_module_initialize";
+	static const gchar *thisfn = "fma_tracker_module_" FMA_TARGET_LABEL "_module_initialize";
 
 	syslog( LOG_USER | LOG_INFO, "[FMA] %s Tracker %s initializing...", PACKAGE_NAME, PACKAGE_VERSION );
 
@@ -72,9 +76,13 @@ nautilus_module_initialize( GTypeModule *module )
 }
 
 void
+#if FMA_TARGET_ID == NAUTILUS_ID
 nautilus_module_list_types( const GType **types, int *num_types )
+#elif FMA_TARGET_ID == NEMO_ID
+nemo_module_list_types( const GType **types, int *num_types )
+#endif
 {
-	static const gchar *thisfn = "fma_tracker_module_nautilus_module_list_types";
+	static const gchar *thisfn = "fma_tracker_module_" FMA_TARGET_LABEL "_module_list_types";
 	static GType type_list[1];
 
 	g_debug( "%s: types=%p, num_types=%p", thisfn, ( void * ) types, ( void * ) num_types );
@@ -85,9 +93,13 @@ nautilus_module_list_types( const GType **types, int *num_types )
 }
 
 void
+#if FMA_TARGET_ID == NAUTILUS_ID
 nautilus_module_shutdown( void )
+#elif FMA_TARGET_ID == NEMO_ID
+nemo_module_shutdown( void )
+#endif
 {
-	static const gchar *thisfn = "fma_tracker_module_nautilus_module_shutdown";
+	static const gchar *thisfn = "fma_tracker_module_" FMA_TARGET_LABEL "_module_shutdown";
 
 	g_debug( "%s", thisfn );
 

@@ -65,6 +65,8 @@ G_BEGIN_DECLS
 #define file_manager_menu_item_list_free                      nautilus_menu_item_list_free
 #define file_manager_file_info_get_uri                        nautilus_file_info_get_uri
 #define file_manager_file_info_get_mime_type                  nautilus_file_info_get_mime_type
+#define file_manager_file_info_list_copy                      nautilus_file_info_list_copy
+#define file_manager_file_info_list_free                      nautilus_file_info_list_free
 #define file_manager_menu_provider_emit_items_updated_signal  nautilus_menu_provider_emit_items_updated_signal
 #elif FMA_TARGET_ID == NEMO_ID
 #define FILE_MANAGER_TYPE_MENU_PROVIDER                       NEMO_TYPE_MENU_PROVIDER
@@ -84,6 +86,8 @@ G_BEGIN_DECLS
 #define file_manager_menu_item_list_free                      nemo_menu_item_list_free
 #define file_manager_file_info_get_uri                        nemo_file_info_get_uri
 #define file_manager_file_info_get_mime_type                  nemo_file_info_get_mime_type
+#define file_manager_file_info_list_copy                      nemo_file_info_list_copy
+#define file_manager_file_info_list_free                      nemo_file_info_list_free
 #define file_manager_menu_provider_emit_items_updated_signal  nemo_menu_provider_emit_items_updated_signal
 #endif
 

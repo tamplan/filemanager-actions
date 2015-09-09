@@ -33,11 +33,8 @@
 
 #include <gio/gio.h>
 
-#include <libnautilus-extension/nautilus-extension-types.h>
-#include <libnautilus-extension/nautilus-file-info.h>
-#include <libnautilus-extension/nautilus-menu-provider.h>
-
 #include <api/fma-dbus.h>
+#include <api/fma-fm-defines.h>
 
 #include "fma-tracker-plugin.h"
 #include "fma-tracker-gdbus.h"
@@ -70,9 +67,9 @@ static gboolean on_properties1_get_selected_paths( FMATrackerGDBusProperties1 *p
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
-static void     menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static GList   *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder );
-static GList   *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
+static void     menu_provider_iface_init( FileManagerMenuProviderIface *iface );
+static GList   *menu_provider_get_background_items( FileManagerMenuProvider *provider, GtkWidget *window, FileManagerFileInfo *folder );
+static GList   *menu_provider_get_file_items( FileManagerMenuProvider *provider, GtkWidget *window, GList *files );
 
 static void     set_uris( FMATrackerPlugin *tracker, GList *files );
 static gchar  **get_selected_paths( FMATrackerPlugin *tracker );
@@ -113,7 +110,7 @@ fma_tracker_plugin_register_type( GTypeModule *module )
 
 	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "FMATrackerPlugin", &info, 0 );
 
-	g_type_module_add_interface( module, st_module_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
+	g_type_module_add_interface( module, st_module_type, FILE_MANAGER_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
 }
 
 static void
@@ -298,7 +295,7 @@ instance_finalize( GObject *object )
 }
 
 static void
-menu_provider_iface_init( NautilusMenuProviderIface *iface )
+menu_provider_iface_init( FileManagerMenuProviderIface *iface )
 {
 	static const gchar *thisfn = "fma_tracker_plugin_menu_provider_iface_init";
 
@@ -309,7 +306,7 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 }
 
 static GList *
-menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder )
+menu_provider_get_background_items( FileManagerMenuProvider *provider, GtkWidget *window, FileManagerFileInfo *folder )
 {
 	static const gchar *thisfn = "fma_tracker_plugin_menu_provider_get_background_items";
 	FMATrackerPlugin *tracker;
@@ -322,7 +319,7 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 
 	if( !tracker->private->dispose_has_run ){
 
-		uri = nautilus_file_info_get_uri( folder );
+		uri = file_manager_file_info_get_uri( folder );
 		g_debug( "%s: provider=%p, window=%p, folder=%s",
 				thisfn,
 				( void * ) provider,
@@ -345,7 +342,7 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
  * b) in contextual menu while the selection stays unchanged
  */
 static GList *
-menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
+menu_provider_get_file_items( FileManagerMenuProvider *provider, GtkWidget *window, GList *files )
 {
 	static const gchar *thisfn = "fma_tracker_plugin_menu_provider_get_file_items";
 	FMATrackerPlugin *tracker;
@@ -383,7 +380,7 @@ set_uris( FMATrackerPlugin *tracker, GList *files )
 	priv = tracker->private;
 
 	priv->selected = free_selected( tracker->private->selected );
-	priv->selected = nautilus_file_info_list_copy( files );
+	priv->selected = file_manager_file_info_list_copy( files );
 }
 
 /*
@@ -441,9 +438,9 @@ get_selected_paths( FMATrackerPlugin *tracker )
 	iter = paths;
 
 	for( it = priv->selected ; it ; it = it->next ){
-		*iter = nautilus_file_info_get_uri(( NautilusFileInfo * ) it->data );
+		*iter = file_manager_file_info_get_uri(( FileManagerFileInfo * ) it->data );
 		iter++;
-		*iter = nautilus_file_info_get_mime_type(( NautilusFileInfo * ) it->data );
+		*iter = file_manager_file_info_get_mime_type(( FileManagerFileInfo * ) it->data );
 		iter++;
 	}
 
@@ -453,7 +450,7 @@ get_selected_paths( FMATrackerPlugin *tracker )
 static GList *
 free_selected( GList *selected )
 {
-	nautilus_file_info_list_free( selected );
+	file_manager_file_info_list_free( selected );
 
 	return( NULL );
 }
