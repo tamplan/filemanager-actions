@@ -2,15 +2,15 @@
 [Desktop Entry]
 Type=Action
 Profiles=profile-pre-v2;
-Name[en_US]=Display FileManager-Actions Parameters
-Name[en]=Display FileManager-Actions Parameters
-Name[C]=Display FileManager-Actions Parameters
+Name[en_US]=Display FileManager-Actions parameters
+Name[en]=Display FileManager-Actions parameters
+Name[C]=Display FileManager-Actions parameters
 Icon[en_US]=/usr/share/icons/hicolor/16x16/apps/filemanager-actions.png
 Icon[en]=/usr/share/icons/hicolor/16x16/apps/filemanager-actions.png
 Icon[C]=/usr/share/icons/hicolor/16x16/apps/filemanager-actions.png
 ToolbarLabel[en_US]=Display FileManager-Actions Parameters
-ToolbarLabel[en]=Display FileManager-Actions Parameters
-ToolbarLabel[C]=Display FileManager-Actions Parameters
+ToolbarLabel[en]=Display FileManager-Actions parameters
+ToolbarLabel[C]=Display FileManager-Actions parameters
 Tooltip[en_US]=Display the FileManager-Actions parameters
 Tooltip[en]=Display the FileManager-Actions parameters
 Tooltip[C]=Display the FileManager-Actions parameters
