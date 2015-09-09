@@ -25,16 +25,16 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 4 rename macro to NA_COMPILER_WARNINGS
+# serial 5 renamed as FMA_COMPILER_WARNINGS
 
-dnl NA_COMPILER_WARNINGS
+dnl FMA_COMPILER_WARNINGS
 dnl Turn on many useful compiler warnings
 dnl For now, only works on GCC
 dnl
 dnl pwi 2009-05-15 shamelessly copied from gnome-compiler-flags.m4
 dnl two patch have been submitted (see gnome-common #582860)
 
-AC_DEFUN([NA_COMPILER_WARNINGS],[
+AC_DEFUN([FMA_COMPILER_WARNINGS],[
 
 	_ac_warning_def=m4_default([$1],[yes])
 	_ac_compliant_def=m4_default(["$2"],[no])
@@ -185,7 +185,7 @@ dnl Bug #637797
 dnl see also http://www.gentoo.org/proj/en/qa/asneeded.xml
 dnl the '-Wl,--as-needed' link option is forced in make distcheck
 
-AC_DEFUN([NA_COMPILER_LINK_AS_NEEDED],[
+AC_DEFUN([FMA_COMPILER_LINK_AS_NEEDED],[
 	AC_ARG_ENABLE(
 		[as-needed],
 		AC_HELP_STRING(
