@@ -37,8 +37,8 @@
  * @include: filemanager-actions/fma-icontext.h
  *
  * This interface is implemented by all #FMAObject -derived objects
- * whose the display in the Nautilus context menu is subject to some
- * conditions.
+ * whose the display in the file manager context menu is subject to
+ * some conditions.
  *
  * Implementors, typically #FMAObjectAction, #FMAObjectProfile and
  * #FMAObjectMenu, host the required data as #FMADataBoxed in a dedicated
@@ -60,10 +60,10 @@ typedef struct _FMAIContextInterfacePrivate    FMAIContextInterfacePrivate;
 /**
  * FMAIContextInterface:
  * @is_candidate: determines if the given FMAObject-derived object is
- *                candidate to display in Nautilus.
+ *                candidate to display in the file manager.
  *
  * This interface manages all conditions relevant to a displayable status
- * in Nautilus.
+ * in the file manager.
  */
 typedef struct {
 	/*< private >*/
@@ -76,7 +76,8 @@ typedef struct {
 	 * @object: this FMAIContext object.
 	 * @target: the initial target which triggered this function's stack.
 	 *  This target is defined in fma-object-item.h.
-	 * @selection: the current selection as a GList of NautilusFileInfo.
+	 * @selection: the current selection as a GList of FileManagerFileInfo
+	 *  (see fma-fm-defines.h for these definitions).
 	 *
 	 * The FMAIContext implementor may take advantage of this
 	 * virtual function to check for its own specific data. Only if the

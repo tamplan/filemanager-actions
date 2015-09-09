@@ -329,11 +329,11 @@ on_module_load( GTypeModule *gmodule )
 
 /*
  * the module has been successfully loaded
- * is it a Nautilus-Action plugin ?
+ * is it a FileManager-Actions plugin ?
  * if ok, we ask the plugin to initialize itself
  *
  * As of API v 1:
- * - fma_extension_startup, na_extension_list_types and na_extension_shutdown
+ * - fma_extension_startup, fma_extension_list_types and fma_extension_shutdown
  *   are mandatory, and MUST be implemented by the plugin
  * - fma_extension_get_version is optional, and defaults to 1.
  */

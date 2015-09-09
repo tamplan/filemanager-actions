@@ -78,8 +78,8 @@ typedef struct {
  *                         to activate an action from a keyboard shortcut,
  *                         while keeping this same action hidden from the UI.
  *
- * The #FMAItemTarget mode is Nautilus-driven. It determines in which part
- * of the Nautilus UI our actions will be displayed.
+ * The #FMAItemTarget mode is driven by the file manager. It determines
+ * in which part of the file manager UI our actions will be displayed.
  */
 typedef enum {
 	ITEM_TARGET_SELECTION = 1,

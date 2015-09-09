@@ -558,8 +558,8 @@ convert_pre_v3_multiple( FMAObjectProfile *profile )
  * we try to replace this with the corresponding mimetype, but only if
  * current mimetype is '*' (or * / * or all/all).
  *
- * note that inode/directory is actually the mimetype provided by Nautilus;
- * contrarily all/allfiles mimetype has to be checked separately.
+ * note that 'inode/directory' is actually the mimetype provided by the
+ * file manager; 'all/allfiles' mimetype has to be checked separately.
  */
 static gboolean
 convert_pre_v3_isfiledir( FMAObjectProfile *profile )

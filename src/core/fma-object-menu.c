@@ -54,7 +54,7 @@ struct _FMAObjectMenuPrivate {
 };
 
 /* i18n: default label for a new menu */
-#define NEW_NAUTILUS_MENU				N_( "New Nautilus menu" )
+#define NEW_FILEMANAGER_MENU				N_( "New file-manager menu" )
 
 extern FMADataGroup menu_data_groups [];	/* defined in fma-object-menu-factory.c */
 
@@ -370,7 +370,7 @@ fma_object_menu_new_with_defaults( void )
 {
 	FMAObjectMenu *menu = fma_object_menu_new();
 	fma_object_set_new_id( menu, NULL );
-	fma_object_set_label( menu, gettext( NEW_NAUTILUS_MENU ));
+	fma_object_set_label( menu, gettext( NEW_FILEMANAGER_MENU ));
 	fma_factory_object_set_defaults( FMA_IFACTORY_OBJECT( menu ));
 
 	return( menu );

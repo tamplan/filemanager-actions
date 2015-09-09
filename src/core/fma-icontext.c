@@ -204,16 +204,16 @@ fma_icontext_are_equal( const FMAIContext *a, const FMAIContext *b )
  * @selection: the currently selected items, as a #GList of FMASelectedInfo items.
  *
  * Determines if the given object may be candidate to be displayed in
- * the Nautilus context menu, depending of the list of currently selected
- * items.
+ * the file manager context menu, depending of the list of currently
+ * selected items.
  *
  * This function is called by <methodname>build_nautilus_menus</methodname>
  * plugin function for each item found in FMAPivot items list, and, when this
  * an action, for each profile of this action.
  *
  * Returns: %TRUE if this @context succeeds to all tests and is so a
- * valid candidate to be displayed in Nautilus context menu, %FALSE
- * else.
+ * valid candidate to be displayed in the file manager context menu,
+ * %FALSE else.
  *
  * Since: 2.30
  */

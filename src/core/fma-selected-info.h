@@ -34,13 +34,13 @@
  * @short_description: The #FMASelectedInfo Class Definition
  * @include: core/fma-selected-info.h
  *
- * An object is instantiated for each Nautilus/Nemo selected item, in
+ * An object is instantiated for each file manager selected item, in
  * order to gather some common properties for the selected item, mainly
  * its mime type for example.
  *
- * This class should be replaced by Nautilus/NemoFileInfo class, as soon
- * as the required Nautilus/Nemo version will have the
- * nautilus/nemo_file_info_create_for_uri() API (2.28 for Nautilus)
+ * This class should be replaced by FileManagerFileInfo class, as soon
+ * as the required file manager version will have the
+ * file_manager_file_info_create_for_uri() API (2.28 for Nautilus)
  */
 
 #include <glib-object.h>

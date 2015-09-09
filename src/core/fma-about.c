@@ -127,7 +127,7 @@ fma_about_display( GtkWindow *toplevel )
 gchar *
 fma_about_get_application_name( void )
 {
-	/* i18n: title of the About dialog box, when seen from Nautilus file manager */
+	/* i18n: title of the About dialog box, when seen from the file manager */
 	return( g_strdup( _( "FileManager-Actions" )));
 }
 

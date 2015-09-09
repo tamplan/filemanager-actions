@@ -56,7 +56,7 @@ struct _FMAObjectActionPrivate {
 };
 
 /* i18n: default label for a new action */
-#define NEW_NAUTILUS_ACTION				N_( "New Nautilus action" )
+#define NEW_FILEMANAGER_ACTION				N_( "New file-manager action" )
 
 extern FMADataGroup action_data_groups [];		/* defined in fma-object-action-factory.c */
 extern FMADataDef   data_def_action_v1 [];		/* defined in fma-object-action-factory.c */
@@ -651,8 +651,8 @@ fma_object_action_new_with_defaults( void )
 
 	action = fma_object_action_new();
 	fma_object_set_new_id( action, NULL );
-	fma_object_set_label( action, gettext( NEW_NAUTILUS_ACTION ));
-	fma_object_set_toolbar_label( action, gettext( NEW_NAUTILUS_ACTION ));
+	fma_object_set_label( action, gettext( NEW_FILEMANAGER_ACTION ));
+	fma_object_set_toolbar_label( action, gettext( NEW_FILEMANAGER_ACTION ));
 	fma_factory_object_set_defaults( FMA_IFACTORY_OBJECT( action ));
 
 	profile = fma_object_profile_new_with_defaults();
