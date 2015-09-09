@@ -546,7 +546,7 @@ void
 fma_factory_object_dump( const FMAIFactoryObject *object )
 {
 	static const gchar *thisfn = "fma_factory_object_dump";
-	static const gchar *prefix = "na-factory-data-";
+	static const gchar *prefix = "factory-data-";
 	GList *list, *it;
 	guint length;
 	guint l_prefix;
