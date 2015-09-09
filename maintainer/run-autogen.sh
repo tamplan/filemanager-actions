@@ -74,7 +74,7 @@ for d in $(find ${top_srcdir} -maxdepth 2 -type d -name 'filemanager-actions-*')
 done
 
 # tools required version
-source ${top_srcdir}/na_required_versions
+source ${top_srcdir}/fma_required_versions
 
 # requires gtk-doc package
 # used for Developer Reference Manual generation (devhelp)

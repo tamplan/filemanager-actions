@@ -67,7 +67,7 @@ if test "${PKG_CONFIG}" = "no"; then
 fi
 
 # required versions of tools and libraries
-source ${0%/*}/na_required_versions
+source ${0%/*}/fma_required_versions
 
 # localization
 IT_PROG_INTLTOOL([${intltool_required}])
