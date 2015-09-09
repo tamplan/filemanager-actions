@@ -139,7 +139,7 @@ set_log_handler( void )
 {
 	gboolean is_log_enabled;
 
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 	is_log_enabled = TRUE;
 #else
 	is_log_enabled =

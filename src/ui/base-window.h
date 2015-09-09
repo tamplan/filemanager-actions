@@ -215,7 +215,7 @@ GType                 base_window_get_type                ( void );
 gboolean              base_window_init                    ( BaseWindow *window );
 int                   base_window_run                     ( BaseWindow *window );
 
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 void                  base_window_dump_children           ( const BaseWindow *window );
 #endif
 

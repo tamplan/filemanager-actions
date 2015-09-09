@@ -1176,7 +1176,7 @@ on_keyfile_changed_timeout( void )
 	const KeyValue *changed;
 	const Consumer *consumer;
 	gchar *group_prefix, *key;
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 	gchar *value;
 #endif
 
@@ -1187,7 +1187,7 @@ on_keyfile_changed_timeout( void )
 	new_content = content_load_keys( new_content, st_settings->private->user );
 	modifs = content_diff( st_settings->private->content, new_content );
 
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 	g_debug( "%s: %d found update(s)", thisfn, g_list_length( modifs ));
 	for( im = modifs ; im ; im = im->next ){
 		changed = ( const KeyValue * ) im->data;

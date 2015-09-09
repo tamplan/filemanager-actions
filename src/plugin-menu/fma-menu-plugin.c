@@ -402,7 +402,7 @@ menu_provider_get_file_items( FileManagerMenuProvider *provider, GtkWidget *wind
 					( void * ) window,
 					( void * ) files, g_list_length( files ));
 
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 			GList *im;
 			for( im = files ; im ; im = im->next ){
 				gchar *uri = file_manager_file_info_get_uri( FILE_MANAGER_FILE_INFO( im->data ));

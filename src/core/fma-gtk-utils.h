@@ -49,7 +49,7 @@ void       fma_gtk_utils_connect_widget_by_name( GtkContainer *container,
 													GCallback cb,
 													void *user_data );
 
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 void       fma_gtk_utils_dump_children          ( GtkContainer *container );
 #endif
 

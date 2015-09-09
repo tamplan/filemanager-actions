@@ -784,7 +784,7 @@ on_initialize_gtk_toplevel_class_handler( BaseWindow *window, GtkWindow *topleve
 			BASE_WINDOW_GET_CLASS( window )->initialize_gtk_toplevel( window, toplevel );
 		}
 	}
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 	base_window_dump_children( window );
 #endif
 }
@@ -948,7 +948,7 @@ base_window_run( BaseWindow *window )
 	return( code );
 }
 
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 /*
  * base_window_dump_children:
  * @window: this #BaseWindow instance.

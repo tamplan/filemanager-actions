@@ -28,7 +28,7 @@
 # Test programs are only relevant for the maintainer and his own tests
 # Do not build them in a release
 
-if NA_MAINTAINER_MODE
+if FMA_MAINTAINER_MODE
 
 noinst_PROGRAMS = \
 	test-reader											\
@@ -79,7 +79,7 @@ test_iface2_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-if NA_MAINTAINER_MODE
+if FMA_MAINTAINER_MODE
 noinst_PROGRAMS += test-module
 pkglib_LTLIBRARIES = libtest_module_plugin.la
 
@@ -132,4 +132,4 @@ test_virtuals_without_test_LDADD = \
 	$(NULL)
 
 endif
-#if NA_MAINTAINER_MODE
+#if FMA_MAINTAINER_MODE

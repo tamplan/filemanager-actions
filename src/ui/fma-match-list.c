@@ -772,7 +772,7 @@ delete_row_at_path( GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *pat
 static void
 dump_current_rows( MatchListData *data )
 {
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 	GtkTreeModel *model;
 	GSList *filters;
 

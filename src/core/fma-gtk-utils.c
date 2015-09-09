@@ -76,7 +76,7 @@ fma_gtk_utils_find_widget_by_name( GtkContainer *container, const gchar *name )
 	return( found );
 }
 
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 static void
 dump_children( const gchar *thisfn, GtkContainer *container, int level )
 {

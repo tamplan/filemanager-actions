@@ -55,7 +55,7 @@ AC_PROG_MAKE_SET
 
 # Gnome stuff
 GNOME_COMMON_INIT
-NA_MAINTAINER_CHECK_MODE
+FMA_MAINTAINER_CHECK_MODE
 
 # libtool
 AM_PROG_LIBTOOL
@@ -155,7 +155,7 @@ AC_CONFIG_FILES([
 ])
 
 # Enable deprecated functions ?
-NA_MAINTAINER_CHECK_FOR_DEPRECATED
+FMA_MAINTAINER_CHECK_FOR_DEPRECATED
 
 # check for gtk-doc
 # - starting with gtk-doc 1.16, is able to handle srcdir != builddir

@@ -69,7 +69,7 @@ console_init_log_handler( void )
 static void
 log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data )
 {
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 	( *st_default_log_func )( log_domain, log_level, message, user_data );
 #else
 	if( g_getenv( NAUTILUS_ACTIONS_DEBUG )){

@@ -36,7 +36,7 @@
 #include "fma-application.h"
 
 /*
- * The 'configure' script may define a NA_MAINTAINER_MODE variable when
+ * The 'configure' script may define a FMA_MAINTAINER_MODE variable when
  * the application is compiled for/in a development environment. When
  * this variable is defined, debug messages are printed on stdout.
  *
@@ -82,7 +82,7 @@ set_log_handler( void )
 static void
 log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data )
 {
-#ifdef NA_MAINTAINER_MODE
+#ifdef FMA_MAINTAINER_MODE
 	( *st_default_log_func )( log_domain, log_level, message, user_data );
 #else
 	if( g_getenv( NAUTILUS_ACTIONS_DEBUG )){
