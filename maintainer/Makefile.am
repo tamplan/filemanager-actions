@@ -40,7 +40,7 @@ check_header_SOURCES = \
 	$(NULL)
 
 check_header_LDADD = \
-	$(top_builddir)/src/core/libna-core.la						\
+	$(top_builddir)/src/core/libfma-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
