@@ -35,7 +35,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_XML}\"			\
+	-DG_LOG_DOMAIN=\"FMA\"								\
 	-DPROVIDER_ID=\"$(provider_id)\"					\
 	-DPROVIDER_DATADIR=\"$(provider_datadir)\"			\
 	$(NULL)

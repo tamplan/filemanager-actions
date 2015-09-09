@@ -111,9 +111,6 @@ FMA_TARGET_FILE_MANAGER
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
-# defines a log domain for each component
-NA_LOG_DOMAINS
-
 # print the debug output be printed to the console
 AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
 

@@ -44,7 +44,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"				\
+	-DG_LOG_DOMAIN=\"FMA\"								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 

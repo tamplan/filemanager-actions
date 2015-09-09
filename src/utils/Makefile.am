@@ -26,122 +26,122 @@
 #   ... and many others (see AUTHORS)
 
 NA_UTILS_LDADD = \
-	$(top_builddir)/src/core/libfma-core.la						\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(top_builddir)/src/core/libfma-core.la				\
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 pkglibexec_PROGRAMS = \
-	fma-new														\
-	fma-print													\
-	fma-print-schemas											\
-	fma-run														\
-	fma-set-conf												\
+	fma-new												\
+	fma-print											\
+	fma-print-schemas									\
+	fma-run												\
+	fma-set-conf										\
 	$(NULL)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)											\
-	-I $(top_srcdir)/src										\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"					\
-	$(NAUTILUS_ACTIONS_CFLAGS)									\
+	-I $(top_srcdir)									\
+	-I $(top_srcdir)/src								\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
+	-DG_LOG_DOMAIN=\"FMA\"								\
+	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
 fma_new_SOURCES = \
-	fma-new.c													\
-	console-utils.c												\
-	console-utils.h												\
+	fma-new.c											\
+	console-utils.c										\
+	console-utils.h										\
 	$(NULL)
 
 fma_new_LDADD = \
-	$(NA_UTILS_LDADD)											\
+	$(NA_UTILS_LDADD)									\
 	$(NULL)
 
 fma_print_SOURCES = \
-	fma-print.c													\
-	console-utils.c												\
-	console-utils.h												\
+	fma-print.c											\
+	console-utils.c										\
+	console-utils.h										\
 	$(NULL)
 
 fma_print_LDADD = \
-	$(NA_UTILS_LDADD)											\
+	$(NA_UTILS_LDADD)									\
 	$(NULL)
 
 BUILT_SOURCES =
 
 BUILT_SOURCES += \
-	fma-run-bindings.c											\
-	fma-run-bindings.h											\
+	fma-run-bindings.c									\
+	fma-run-bindings.h									\
 	$(NULL)
 
 fma-run-bindings.c fma-run-bindings.h: $(top_srcdir)/src/plugin-tracker/fma-tracker-gdbus.xml
 	gdbus-codegen \
 		--interface-prefix org.filemanager_actions.DBus.Tracker.	\
-		--generate-c-code fma-run-bindings						\
-		--c-namespace FMA_Tracker_GDBus							\
-		--c-generate-object-manager								\
+		--generate-c-code fma-run-bindings				\
+		--c-namespace FMA_Tracker_GDBus					\
+		--c-generate-object-manager						\
 		$<
 
 nodist_fma_run_SOURCES = \
-	$(BUILT_SOURCES)											\
+	$(BUILT_SOURCES)									\
 	$(NULL)
 
 fma_run_SOURCES = \
-	fma-run.c										\
-	console-utils.c												\
-	console-utils.h												\
+	fma-run.c											\
+	console-utils.c										\
+	console-utils.h										\
 	$(NULL)
 
 fma_run_LDADD = \
-	$(NA_UTILS_LDADD)											\
+	$(NA_UTILS_LDADD)									\
 	$(NULL)
 
 fma_print_schemas_SOURCES = \
-	fma-print-schemas.c											\
-	console-utils.c												\
-	console-utils.h												\
+	fma-print-schemas.c									\
+	console-utils.c										\
+	console-utils.h										\
 	$(NULL)
 
 fma_print_schemas_LDADD = \
-	$(NA_UTILS_LDADD)											\
+	$(NA_UTILS_LDADD)									\
 	$(NULL)
 
 fma_set_conf_SOURCES = \
-	fma-set-conf.c												\
-	console-utils.c												\
-	console-utils.h												\
+	fma-set-conf.c										\
+	console-utils.c										\
+	console-utils.h										\
 	$(NULL)
 
 fma_set_conf_LDADD = \
-	$(NA_UTILS_LDADD)											\
+	$(NA_UTILS_LDADD)									\
 	$(NULL)
 
 EXTRA_DIST = \
-	fma-gconf2key.sh.in											\
+	fma-gconf2key.sh.in									\
 	$(NULL)
 
 CLEANFILES = \
-	$(BUILT_SOURCES)											\
+	$(BUILT_SOURCES)									\
 	$(NULL)
 
 # If GConf support is enabled, then also build the migration tools
 
 if HAVE_GCONF
 pkglibexec_PROGRAMS += \
-	fma-delete-xmltree											\
+	fma-delete-xmltree									\
 	$(NULL)
 
 fma_delete_xmltree_SOURCES = \
-	fma-delete-xmltree.c										\
-	console-utils.c												\
-	console-utils.h												\
+	fma-delete-xmltree.c								\
+	console-utils.c										\
+	console-utils.h										\
 	$(NULL)
 
 fma_delete_xmltree_LDADD = \
-	$(NA_UTILS_LDADD)											\
+	$(NA_UTILS_LDADD)									\
 	$(NULL)
 
 pkglibexec_SCRIPTS = \
-	fma-gconf2key.sh											\
+	fma-gconf2key.sh									\
 	$(NULL)
 
 do_subst = sed \
@@ -159,6 +159,6 @@ do_subst = sed \
 	chmod a+x $@
 
 CLEANFILES += \
-	$(pkglibexec_SCRIPTS)										\
+	$(pkglibexec_SCRIPTS)								\
 	$(NULL)
 endif

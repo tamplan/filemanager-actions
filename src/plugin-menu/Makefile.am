@@ -26,27 +26,27 @@
 #   ... and many others (see AUTHORS)
 
 AM_CPPFLAGS += \
-	-I $(top_srcdir)											\
-	-I $(top_srcdir)/src										\
-	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_PLUGIN_MENU}\"				\
-	$(NAUTILUS_ACTIONS_CFLAGS)									\
+	-I $(top_srcdir)									\
+	-I $(top_srcdir)/src								\
+	-DG_LOG_DOMAIN=\"FMA\"								\
+	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
 lib_sources = \
-	fma-menu-module.c											\
-	fma-menu-plugin.c											\
-	fma-menu-plugin.h											\
+	fma-menu-module.c									\
+	fma-menu-plugin.c									\
+	fma-menu-plugin.h									\
 	$(NULL)
 
 lib_libadd = \
-	$(top_builddir)/src/core/libfma-core.la						\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(top_builddir)/src/core/libfma-core.la				\
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 lib_ldflags = \
-	-module 													\
-	-no-undefined												\
-	-avoid-version												\
+	-module 											\
+	-no-undefined										\
+	-avoid-version										\
 	$(NULL)
 
 if HAVE_NAUTILUS
@@ -55,9 +55,9 @@ nautilus_extension_LTLIBRARIES = libfma-nautilus-menu.la
 libfma_nautilus_menu_la_SOURCES = $(lib_sources)
 libfma_nautilus_menu_la_LIBADD = $(lib_libadd)
 libfma_nautilus_menu_la_LDFLAGS = $(lib_ldflags)
-libfma_nautilus_menu_la_CPPFLAGS = $(AM_CPPFLAGS)				\
-	-DFMA_TARGET_ID=$(NAUTILUS_ID)								\
-	-DFMA_TARGET_LABEL=\"$(NAUTILUS_LABEL)\"					\
+libfma_nautilus_menu_la_CPPFLAGS = $(AM_CPPFLAGS)		\
+	-DFMA_TARGET_ID=$(NAUTILUS_ID)						\
+	-DFMA_TARGET_LABEL=\"$(NAUTILUS_LABEL)\"			\
 	$(NULL)
 endif
 
@@ -67,8 +67,8 @@ nemo_extension_LTLIBRARIES = libfma-nemo-menu.la
 libfma_nemo_menu_la_SOURCES = $(lib_sources)
 libfma_nemo_menu_la_LIBADD = $(lib_libadd)
 libfma_nemo_menu_la_LDFLAGS = $(lib_ldflags)
-libfma_nemo_menu_la_CPPFLAGS = $(AM_CPPFLAGS) 					\
-	-DFMA_TARGET_ID=$(NEMO_ID)									\
-	-DFMA_TARGET_LABEL=\"$(NEMO_LABEL)\"						\
+libfma_nemo_menu_la_CPPFLAGS = $(AM_CPPFLAGS) 			\
+	-DFMA_TARGET_ID=$(NEMO_ID)							\
+	-DFMA_TARGET_LABEL=\"$(NEMO_LABEL)\"				\
 	$(NULL)
 endif
