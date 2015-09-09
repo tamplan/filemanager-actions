@@ -35,7 +35,7 @@ schemas_in_files = \
 schemas_files = $(schemas_in_files:.schemas.in=.schemas)
 
 nautilus-actions-confs.schemas.in:
-	$(top_srcdir)/src/utils/na-print-schemas -s > $@
+	$(top_srcdir)/src/utils/fma-print-schemas -s > $@
 
 schemasdir = $(pkgdatadir)/gconf-schemas
 
