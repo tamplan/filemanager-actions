@@ -25,7 +25,7 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 3 GConf is deprecated, and thus disabled by default
+# serial 4 renamed as FMA_CHECK_FOR_GCONF
 
 dnl let the user choose whether to compile with GConf enabled
 dnl --enable-gconf
@@ -37,14 +37,20 @@ dnl Please note that, from the packager point of view, we should have
 dnl both GConf2 and GConf2-devel package, in order to be able to build
 dnl and distribute the 'na-gconf' I/O provider
 dnl
-dnl Define the HAVE_GCONF conditional
+dnl Defined AM_CONDITIONAL conditionals:
+dnl - HAVE_GCONF
+dnl - GCONF_SCHEMAS_INSTALL
+dnl
+dnl Defined AC_SUBST variables:
+dnl - GCONF_SCHEMA_FILE_DIR
+dnl - GCONF_SCHEMA_CONFIG_SOURCE
 
-AC_DEFUN([NA_CHECK_FOR_GCONF],[
-	AC_REQUIRE([_AC_NA_GCONF_ARG])dnl
-	AC_REQUIRE([_AC_NA_GCONF_CHECK])dnl
+AC_DEFUN([FMA_CHECK_FOR_GCONF],[
+	AC_REQUIRE([_AC_FMA_GCONF_ARG])dnl
+	AC_REQUIRE([_AC_FMA_GCONF_CHECK])dnl
 ])
 
-AC_DEFUN([_AC_NA_GCONF_ARG],[
+AC_DEFUN([_AC_FMA_GCONF_ARG],[
 	AC_ARG_ENABLE(
 		[gconf],
 		AC_HELP_STRING(
@@ -54,7 +60,7 @@ AC_DEFUN([_AC_NA_GCONF_ARG],[
 		[enable_gconf="no"])
 ])
 
-AC_DEFUN([_AC_NA_GCONF_CHECK],[
+AC_DEFUN([_AC_FMA_GCONF_CHECK],[
 	AC_MSG_CHECKING([whether GConf is required])
 	AC_MSG_RESULT([${enable_gconf}])
 	compile_with_gconf="no"
@@ -90,7 +96,7 @@ AC_DEFUN([_AC_NA_GCONF_CHECK],[
 		AC_DEFINE_UNQUOTED([HAVE_GCONF],[1],[Whether we compile against the GConf library (and build the GConf I/O Provider)])
 	fi
 
-	_NA_GCONF_SOURCE_2(["${compile_with_gconf}"])
+	_FMA_GCONF_SOURCE_2(["${compile_with_gconf}"])
 
 	AM_CONDITIONAL([HAVE_GCONF], [test "${compile_with_gconf}" = "yes"])
 ])
@@ -98,7 +104,7 @@ AC_DEFUN([_AC_NA_GCONF_CHECK],[
 dnl pwi 2011-02-14
 dnl this is a copy of the original AM_GCONF_SOURCE_2 which is just a bit hacked
 dnl in order to define the conditionals event when we want disabled GConf
-dnl syntax: NA_GCONF_SOURCE_2([have_gconf])
+dnl syntax: FMA_GCONF_SOURCE_2([have_gconf])
 dnl
 dnl AM_GCONF_SOURCE_2
 dnl Defines GCONF_SCHEMA_CONFIG_SOURCE which is where you should install schemas
@@ -106,7 +112,7 @@ dnl  (i.e. pass to gconftool-2)
 dnl Defines GCONF_SCHEMA_FILE_DIR which is a filesystem directory where
 dnl  you should install foo.schemas files
 
-AC_DEFUN([_NA_GCONF_SOURCE_2],
+AC_DEFUN([_FMA_GCONF_SOURCE_2],
 [
 	if test "$1" = "yes"; then
 		if test "x$GCONF_SCHEMA_INSTALL_SOURCE" = "x"; then

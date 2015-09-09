@@ -91,7 +91,7 @@ fi
 # We only search for the libraries when explicitely required from 
 # configure. This is a first step deprecation; in a second step, we
 # will emit a warning.
-NA_CHECK_FOR_GCONF
+FMA_CHECK_FOR_GCONF
 
 # As of 3.4 release, remove Gtk+2 support, only allowing for Gtk+3
 dnl aclocal complains if the comma is not just after the square bracket
