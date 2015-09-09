@@ -25,15 +25,14 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 1 let the user choose a target file-manager
-# serial 2 manage Nemo
+# serial 3 renamed as FMA_TARGET_FILE_MANAGER
 
 # target file manager: nautilus
 # when working in a test environment, nautilus extensions are typically
 # installed in a non-standard location; lets specify this location here
 # --with-nautilus-extdir=<dir>
 
-AC_DEFUN([_AC_NA_FILE_MANAGER_NAUTILUS],[
+AC_DEFUN([_AC_FMA_FILE_MANAGER_NAUTILUS],[
 
 	AC_MSG_NOTICE([targeting Nautilus file-manager])
 
@@ -50,7 +49,7 @@ AC_DEFUN([_AC_NA_FILE_MANAGER_NAUTILUS],[
 		AC_DEFINE_UNQUOTED([NA_NAUTILUS_EXTENSIONS_DIR],[${with_nautilus_extdir}],[Nautilus extensions directory])
 	fi
 
-	NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension],[${nautilus_required}])
+	FMA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension],[${nautilus_required}])
 
 	# Check for menu update function
 	AC_CHECK_LIB([nautilus-extension],[nautilus_menu_item_new])
@@ -66,7 +65,7 @@ AC_DEFUN([_AC_NA_FILE_MANAGER_NAUTILUS],[
 # installed in a non-standard location; lets specify this location here
 # --with-nemo-extdir=<dir>
 
-AC_DEFUN([_AC_NA_FILE_MANAGER_NEMO],[
+AC_DEFUN([_AC_FMA_FILE_MANAGER_NEMO],[
 
 	AC_MSG_NOTICE([targeting Nemo file-manager])
 
@@ -83,7 +82,7 @@ AC_DEFUN([_AC_NA_FILE_MANAGER_NEMO],[
 		AC_DEFINE_UNQUOTED([NA_NEMO_EXTENSIONS_DIR],[${with_nemo_extdir}],[Nemo extensions directory])
 	fi
 
-	NA_CHECK_MODULE([NEMO_EXTENSION],[libnemo-extension],[${nemo_required}])
+	FMA_CHECK_MODULE([NEMO_EXTENSION],[libnemo-extension],[${nemo_required}])
 
 	# Check for menu update function
 	AC_CHECK_LIB([nemo-extension],[nemo_menu_item_new])
@@ -93,7 +92,7 @@ AC_DEFUN([_AC_NA_FILE_MANAGER_NEMO],[
 dnl defaults to nautilus
 dnl manages nemo
 dnl
-AC_DEFUN([NA_TARGET_FILE_MANAGER],[
+AC_DEFUN([FMA_TARGET_FILE_MANAGER],[
 
 	AC_ARG_ENABLE([file-manager],
 		AC_HELP_STRING(
@@ -119,7 +118,7 @@ AC_DEFUN([NA_TARGET_FILE_MANAGER],[
 		[with_nemo_extdir=""])
 
 	AS_IF(
-		[test "${enable_file_manager}" = "nautilus"],[_AC_NA_FILE_MANAGER_NAUTILUS()],
-		[test "${enable_file_manager}" = "nemo"],[_AC_NA_FILE_MANAGER_NEMO()],
+		[test "${enable_file_manager}" = "nautilus"],[_AC_FMA_FILE_MANAGER_NAUTILUS()],
+		[test "${enable_file_manager}" = "nemo"],[_AC_FMA_FILE_MANAGER_NEMO()],
 		[AC_MSG_NOTICE([no target file-manager specified])])
 ])
