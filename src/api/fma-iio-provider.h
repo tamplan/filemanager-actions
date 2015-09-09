@@ -45,7 +45,7 @@
  * of this interface.
  *
  * &prodname; is bundled with several I/O providers.
- * Since version 3, the <literal>na-desktop</literal> I/O provider, which
+ * Since version 3, the <literal>io-desktop</literal> I/O provider, which
  * implements the
  * <ulink role="online-location" url="http://www.filemanager-actions.org/?q=node/377/">DES-EMA</ulink>
  * specification, is the preferred way of storing (and sharing) items.
@@ -144,7 +144,7 @@
  *          <entry>2010-01-28</entry>
  *        </row>
  *        <row>
- *          <entry><literal>na-desktop</literal></entry>
+ *          <entry><literal>io-desktop</literal></entry>
  *          <entry>NA Desktop I/O Provider</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2009-12-16</entry>
@@ -156,7 +156,7 @@
  *          <entry>2009-12-16</entry>
  *        </row>
  *        <row>
- *          <entry><literal>na-xml</literal></entry>
+ *          <entry><literal>io-xml</literal></entry>
  *          <entry>NA XML module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-02-14</entry>

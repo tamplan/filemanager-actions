@@ -165,7 +165,7 @@
           <arg>--with-nautilus-extdir=DIR</arg>
         </group>
         <group>
-          <arg>--with-default-io-provider=na-gconf|na-desktop</arg>
+          <arg>--with-default-io-provider=na-gconf|io-desktop</arg>
         </group>
         <group>
           <arg>--enable-html-manuals[=gdt|db2html]</arg>
@@ -210,7 +210,7 @@
     </formalpara>
 
     <formalpara>
-      <title><systemitem>--with-default-io-provider=na-gconf|na-desktop</systemitem></title>
+      <title><systemitem>--with-default-io-provider=na-gconf|io-desktop</systemitem></title>
       <para>
         As of version 3.0, &prodname; may store menus and actions
         both in GConf, which is the historical behavior, or as
@@ -222,7 +222,7 @@
         created.
       </para>
       <para>
-        This defaults to &quot;na-desktop&quot; which is the internal
+        This defaults to &quot;io-desktop&quot; which is the internal
         identifier of the I/O provider which manages
         <filename>.desktop</filename> files.
       </para>

@@ -585,7 +585,7 @@ output_to_desktop( FMAObjectAction *action, GSList **msgs )
 	gboolean code;
 
 	updater = fma_updater_new();
-	provider = fma_io_provider_find_io_provider_by_id( FMA_PIVOT( updater ), "na-desktop" );
+	provider = fma_io_provider_find_io_provider_by_id( FMA_PIVOT( updater ), "io-desktop" );
 
 	if( provider ){
 		fma_object_set_provider( action, provider );
@@ -593,8 +593,8 @@ output_to_desktop( FMAObjectAction *action, GSList **msgs )
 		code = ( ret == IIO_PROVIDER_CODE_OK );
 
 	} else {
-		/* i18n: 'na-desktop' is a plugin identifier - do not translate */
-		*msgs = g_slist_append( *msgs, _( "Error: unable to find 'na-desktop' i/o provider." ));
+		/* i18n: 'io-desktop' is a plugin identifier - do not translate */
+		*msgs = g_slist_append( *msgs, _( "Error: unable to find 'io-desktop' i/o provider." ));
 		code = FALSE;
 	}
 

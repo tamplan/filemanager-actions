@@ -29,14 +29,14 @@
 
 dnl --with-default-io-provider=gconf|desktop
 dnl   Defines the default I/O Provider when creating a new action
-dnl   Default to 'na-desktop'
+dnl   Default to 'io-desktop'
 dnl
 dnl configure.ac usage:  NA_SET_DEFAULT_IO_PROVIDER
 dnl
 dnl ac_define NA_DEFAULT_IO_PROVIDER variable
 
 AC_DEFUN([NA_SET_DEFAULT_IO_PROVIDER],[
-	_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER([na-desktop])
+	_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER([io-desktop])
 	_CHECK_FOR_DEFAULT_IO_PROVIDER
 ])
 
@@ -54,8 +54,8 @@ AC_DEFUN([_CHECK_FOR_DEFAULT_IO_PROVIDER],[
 	AC_MSG_CHECKING([for default I/O provider on new items])
 	AC_MSG_RESULT([${with_default_io_provider}])
 	if test "${with_default_io_provider}" != "na-gconf"; then
-		if test "${with_default_io_provider}" != "na-desktop"; then
-			AC_MSG_ERROR([a default I/O provider must be specified, must be 'na-gconf' or 'na-desktop'])
+		if test "${with_default_io_provider}" != "io-desktop"; then
+			AC_MSG_ERROR([a default I/O provider must be specified, must be 'na-gconf' or 'io-desktop'])
 		fi
 	fi
 
