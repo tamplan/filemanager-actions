@@ -25,22 +25,22 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 2 remove the input parameter
+# serial 3 renamed as FMA_SET_DEFAULT_IO_PROVIDER
 
 dnl --with-default-io-provider=gconf|desktop
 dnl   Defines the default I/O Provider when creating a new action
 dnl   Default to 'io-desktop'
 dnl
-dnl configure.ac usage:  NA_SET_DEFAULT_IO_PROVIDER
+dnl configure.ac usage:  FMA_SET_DEFAULT_IO_PROVIDER
 dnl
-dnl ac_define NA_DEFAULT_IO_PROVIDER variable
+dnl ac_define FMA_DEFAULT_IO_PROVIDER variable
 
-AC_DEFUN([NA_SET_DEFAULT_IO_PROVIDER],[
-	_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER([io-desktop])
+AC_DEFUN([FMA_SET_DEFAULT_IO_PROVIDER],[
+	_AC_ARG_FMA_WITH_DEFAULT_IO_PROVIDER([io-desktop])
 	_CHECK_FOR_DEFAULT_IO_PROVIDER
 ])
 
-AC_DEFUN([_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER],[
+AC_DEFUN([_AC_ARG_FMA_WITH_DEFAULT_IO_PROVIDER],[
 	AC_ARG_WITH(
 		[default-io-provider],
 		AS_HELP_STRING(
@@ -59,5 +59,5 @@ AC_DEFUN([_CHECK_FOR_DEFAULT_IO_PROVIDER],[
 		fi
 	fi
 
-	AC_DEFINE_UNQUOTED([NA_DEFAULT_IO_PROVIDER],["${with_default_io_provider}"],[Default I/O Provider])
+	AC_DEFINE_UNQUOTED([FMA_DEFAULT_IO_PROVIDER],["${with_default_io_provider}"],[Default I/O Provider])
 ])

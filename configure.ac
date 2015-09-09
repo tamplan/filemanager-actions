@@ -118,7 +118,7 @@ NA_LOG_DOMAINS
 AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
 
 # add --with-default-io-provider option
-NA_SET_DEFAULT_IO_PROVIDER([io-desktop])
+FMA_SET_DEFAULT_IO_PROVIDER([io-desktop])
 
 ###
 
