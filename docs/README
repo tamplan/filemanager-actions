@@ -1,9 +1,19 @@
 docs
 ----
-As of Nautilus-Actions 3.0, the documentation is composed of two main
-parts:
+As of FileManager-Actions 3.4, the documentation is composed of two
+main parts:
 - the Reference Manual describes all features of the product, rather
   targeting developers and packagers;
-- the Nautilus-Actions Configuration Tool User's Manual.
+- the FileManager-Actions Configuration Tool User's Manual.
 
-P. Wieser, Dec. 2010
+All the documentation, whether it targets users or developers, is made
+of architecture-independent files. More it needs some rather special
+tools to be built (db2html, dblatex, Docbook stylesheets, and so on).
+So we want distribute it.
+
+There are so in the Makefiles some hacks so that:
+a) the built objects are distributed
+b) the distributed objects are installed without requiring to be
+   rebuilt.
+
+P. Wieser, last updated on sept. 2015
