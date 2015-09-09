@@ -25,16 +25,16 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 2 remove Gtk2 vs. Gtk3 check
+# serial 3 renamed as FMA_CHECK_MDOULE
 
-dnl usage:  NA_CHECK_MODULE(var,module[,[version],[error]])
+dnl usage:  FMA_CHECK_MODULE(var,module[,[version],[error]])
 dnl
 dnl if 'error' = 'no', then only displays on information message, making
 dnl the lack of library non fatal.
 dnl
 # translit($1, 'a-z', 'A-Z'),
 
-AC_DEFUN([NA_CHECK_MODULE],[
+AC_DEFUN([FMA_CHECK_MODULE],[
 	_cond="$2"
 	if test "$3" != ""; then
 		_cond="$2 >= $3"
@@ -52,14 +52,14 @@ AC_DEFUN([NA_CHECK_MODULE],[
 		NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${$1_CFLAGS}"
 		NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${$1_LIBS}"
 	else
-		_NA_CHECK_MODULE_MSG([$4],[$1: condition ${_cond} not satisfied])
+		_FMA_CHECK_MODULE_MSG([$4],[$1: condition ${_cond} not satisfied])
 	fi
 ])
 
 dnl what to do when the searched for library is missing: it is a fatal
 dnl error, or no ?
 
-AC_DEFUN([_NA_CHECK_MODULE_MSG],[
+AC_DEFUN([_FMA_CHECK_MODULE_MSG],[
 	if test "$1" = "no"; then
 		AC_MSG_RESULT([warning: $2])
 	else
