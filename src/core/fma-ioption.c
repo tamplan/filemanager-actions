@@ -48,7 +48,7 @@ typedef struct {
 }
 	IOptionData;
 
-#define IOPTION_PROP_DATA				"na-prop-ioption-data"
+#define IOPTION_PROP_DATA				"prop-ioption-data"
 
 static guint st_initializations = 0;	/* interface initialization count */
 
