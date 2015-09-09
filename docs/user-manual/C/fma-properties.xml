@@ -4,12 +4,12 @@
     An item has both editable and read-only properties.
   </para>
     
-  <figure id="nact-FIG-prefs-runtime">
+  <figure id="fma-FIG-prefs-runtime">
     <title>Item properties</title>
     <screenshot>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="figures/nact-properties-tab.png" format="PNG" />
+          <imagedata fileref="figures/fma-properties-tab.png" format="PNG" />
         </imageobject>
         <textobject>
           <phrase>Shows the tab which lets you access both editable and read-only item properties.</phrase>

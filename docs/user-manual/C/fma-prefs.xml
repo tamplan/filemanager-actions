@@ -13,12 +13,12 @@
 
   <sect3 id="usage-prefs-runtime">
     <title>Runtime preferences</title>
-    <figure id="nact-FIG-prefs-runtime">
+    <figure id="fma-FIG-prefs-runtime">
       <title>Runtime preferences</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-preferences-runtime.png" format="PNG" />
+            <imagedata fileref="figures/fma-preferences-runtime.png" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Shows the tab which lets you define runtime preferences.</phrase>
@@ -33,12 +33,12 @@
 
   <sect3 id="usage-prefs-execution">
     <title>Runtime execution preferences</title>
-    <figure id="nact-FIG-prefs-execution">
+    <figure id="fma-FIG-prefs-execution">
       <title>Runtime execution preferences</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-preferences-execution.png" format="PNG" />
+            <imagedata fileref="figures/fma-preferences-execution.png" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Shows the tab which lets you define runtime execution preferences.</phrase>
@@ -50,12 +50,12 @@
       </screenshot>
     </figure>
 
-    <figure id="nact-FIG-prefs-desktop">
+    <figure id="fma-FIG-prefs-desktop">
       <title>Desktop selection</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-preferences-desktop.png" format="PNG" />
+            <imagedata fileref="figures/fma-preferences-desktop.png" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Let the user explicitely configure the current desktop.</phrase>
@@ -70,12 +70,12 @@
 
   <sect3 id="usage-prefs-ui">
     <title>User interface preferences</title>
-    <figure id="nact-FIG-prefs-ui">
+    <figure id="fma-FIG-prefs-ui">
       <title>UI preferences</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-preferences-ui.png" format="PNG" />
+            <imagedata fileref="figures/fma-preferences-ui.png" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Shows the tab which lets you define UI preferences.</phrase>
@@ -90,12 +90,12 @@
 
   <sect3 id="usage-prefs-import">
     <title>Import preferences</title>
-    <figure id="nact-FIG-prefs-import">
+    <figure id="fma-FIG-prefs-import">
       <title>Import preferences</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-preferences-import.png" format="PNG" />
+            <imagedata fileref="figures/fma-preferences-import.png" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Shows the tab which lets you define import preferences.</phrase>
@@ -112,12 +112,12 @@
 
   <sect3 id="usage-prefs-export">
     <title>Export preferences</title>
-    <figure id="nact-FIG-prefs-export">
+    <figure id="fma-FIG-prefs-export">
       <title>Export preferences</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-preferences-export.png" format="PNG" />
+            <imagedata fileref="figures/fma-preferences-export.png" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Shows the tab which lets you define export preferences.</phrase>
@@ -134,12 +134,12 @@
 
   <sect3 id="usage-prefs-schemes">
     <title>Schemes preferences</title>
-    <figure id="nact-FIG-prefs-schemes">
+    <figure id="fma-FIG-prefs-schemes">
       <title>Schemes preferences</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-preferences-schemes.png" format="PNG" />
+            <imagedata fileref="figures/fma-preferences-schemes.png" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Shows the tab which lets you define schemes preferences.</phrase>
@@ -156,12 +156,12 @@
 
   <sect3 id="usage-prefs-providers">
     <title>I/O providers preferences</title>
-    <figure id="nact-FIG-prefs-io-providers">
+    <figure id="fma-FIG-prefs-io-providers">
       <title>I/O providers preferences</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-preferences-io-providers.png" format="PNG" />
+            <imagedata fileref="figures/fma-preferences-io-providers.png" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Shows the tab which lets you define I/O providers preferences.</phrase>

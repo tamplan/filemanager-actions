@@ -27,14 +27,15 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
+# src/ must be built before maintainer/
 SUBDIRS = \
 	data								\
 	docs								\
 	m4									\
+	src									\
 	maintainer							\
 	icons								\
 	po									\
-	src									\
 	$(NULL)
 
 # - nautilus-extdir is a foo directory so that make distcheck has a vpath
@@ -46,7 +47,8 @@ SUBDIRS = \
 # - GNOME_DOC_DEFINES tries to disable scrollkeeper, but the set is
 #   overriden but this one
 DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck' \
+	--with-nautilus-extdir='$${libdir}/nautilus/extensions-3.0-distcheck' \
+	--with-nemo-extdir='$${libdir}/nemo/extensions-3.0-distcheck' \
 	--enable-silent-rules				\
 	--enable-as-needed					\
 	--disable-scrollkeeper				\

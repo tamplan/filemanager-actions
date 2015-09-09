@@ -7,12 +7,13 @@
     <year>2012</year>
     <year>2013</year>
     <year>2014</year>
+    <year>2015</year>
     <holder>Pierre Wieser</holder>
   </copyright>
 
   <abstract role="description">
     <para>
-      &prodname; is a &nautilus; extension whose principal function
+      &prodname; is a file manager extension whose principal function
       is to allow the user to add arbitrary actions to the file manager
       context menus. These actions may be organized in menus and submenus,
       exported and shared with other desktop environments.
@@ -21,6 +22,10 @@
       This manual describes the &appname; user interface, and explains how
       you may configure your menus and actions, making them be displayed
       and applied depending on specific conditions.
+    </para>
+    <para>
+      Starting with its 3.4 version, &prodname; is compatible with both
+      &nautilus; and &nemo; Gnome file-managers.
     </para>
   </abstract>
 
@@ -93,8 +98,18 @@
         </para>
       </revdescription>
     </revision>
+    <revision>
+      <revnumber>&appnamex; User's Manual v 3.4</revnumber>
+      <date>September 2015</date>
+      <revdescription>
+        <para role="author">
+          Pierre Wieser
+          <email>pwieser@trychlos.org</email>
+        </para>
+      </revdescription>
+    </revision>
   </revhistory>
 
-  &legalnotice;
+  &elegalnotice;
 
 </articleinfo>

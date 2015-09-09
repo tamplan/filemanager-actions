@@ -26,12 +26,12 @@
       click on <guilabel>Legend</guilabel>
       button to see the list of available parameters.
     </para>
-    <figure id="nact-FIG-legend">
+    <figure id="fma-FIG-legend">
       <title>List of available parameters</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-legend.png" format="PNG"/>
+            <imagedata fileref="figures/fma-legend.png" format="PNG"/>
           </imageobject>
           <textobject>
             <phrase>Shows the list of available parameters.</phrase>
@@ -83,12 +83,12 @@
       on <guibutton>Browse</guibutton> to select a folder on the 
       filesystem.
     </para>
-    <figure id="nact-FIG-work-dir-frame">
+    <figure id="fma-FIG-work-dir-frame">
       <title>Working directory frame</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-working-directory-frame.png" format="PNG"/>
+            <imagedata fileref="figures/fma-working-directory-frame.png" format="PNG"/>
           </imageobject>
           <textobject>
             <phrase>Focus on the working directory selection frame.</phrase>
@@ -126,12 +126,12 @@
       Click on the <guilabel>Execution</guilabel> tab to show the page
       which configures the execution of your command.
     </para>
-    <figure id="nact-FIG-execution">
+    <figure id="fma-FIG-execution">
       <title>Configuration of the execution modes</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-execution-tab.png" format="PNG"/>
+            <imagedata fileref="figures/fma-execution-tab.png" format="PNG"/>
           </imageobject>
           <textobject>
             <phrase>Shows how to configure the execution modes of a command.</phrase>
@@ -145,12 +145,12 @@
 
     <sect4 id="usage-execution-how-mode">
       <title>Execution mode</title>
-      <figure id="nact-FIG-execution-mode">
+      <figure id="fma-FIG-execution-mode">
         <title>Configuration of the execution mode</title>
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="figures/nact-exec-mode-frame.png" format="PNG"/>
+              <imagedata fileref="figures/fma-exec-mode-frame.png" format="PNG"/>
             </imageobject>
             <textobject>
               <phrase>Focus on the execution mode frame.</phrase>
@@ -196,10 +196,12 @@
               Makes use of a special feature of the file manager which may allow
               a terminal to be ran in it.
             </para>
-            <para>
-              As &nautilus; does not have this feature, this option is strictly
-              equivalent to <literal>Terminal</literal> option.
-            </para>
+            <note>
+              <para>
+                As for now, none of the managed file managers implement this
+                feature.
+              </para>
+            </note>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -224,12 +226,12 @@
 
     <sect4 id="usage-execution-how-notify">
       <title>Startup notification</title>
-      <figure id="nact-FIG-startup-mode">
+      <figure id="fma-FIG-startup-mode">
         <title>Configuration of the startup modes</title>
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="figures/nact-startup-mode-frame.png" format="PNG"/>
+              <imagedata fileref="figures/fma-startup-mode-frame.png" format="PNG"/>
             </imageobject>
             <textobject>
               <phrase>Focus on the Startup mode frame.</phrase>
@@ -276,12 +278,12 @@
 
     <sect4 id="usage-execution-how-user">
       <title>Owner of the execution</title>
-      <figure id="nact-FIG-execute-as">
+      <figure id="fma-FIG-execute-as">
         <title>Configuration of the owner of the run</title>
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="figures/nact-execute-as-frame.png" format="PNG"/>
+              <imagedata fileref="figures/fma-execute-as-frame.png" format="PNG"/>
             </imageobject>
             <textobject>
               <phrase>Focus on the <guilabel>Execute as</guilabel> frame.</phrase>
@@ -371,7 +373,7 @@
           </para>
         </listitem>
       </itemizedlist>
-      <table id="nact-TAB-multiple-execution" frame="all" tocentry="1">
+      <table id="fma-TAB-multiple-execution" frame="all" tocentry="1">
         <title>Characterization of the parameters <abbrev>vs.</abbrev> multiple execution</title>
         <tgroup cols="5">
           <colspec align="center" colwidth="*" />

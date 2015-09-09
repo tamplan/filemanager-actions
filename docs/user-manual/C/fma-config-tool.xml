@@ -3,16 +3,17 @@
 
   <!-- name and version of the application -->
   <!ENTITY prodname "<productname>FileManager-Actions</productname>">
-  <!ENTITY appnamex "FileManager-Actions Configuration Tool">
+  <!ENTITY appnamex "FileManager-Actions configuration tool">
   <!ENTITY appname "<application>&appnamex;</application>">
-  <!ENTITY appversion "3.2">
+  <!ENTITY appversion "3.4">
 
   <!-- revision number and release date of this manual -->
-  <!ENTITY manrevision "3.2">
-  <!ENTITY mandate "January 2012">
+  <!ENTITY manrevision "3.4">
+  <!ENTITY mandate "September 2015">
 
   <!-- product name used -->
   <!ENTITY nautilus "<productname>Nautilus</productname>">
+  <!ENTITY nemo     "<productname>Nemo</productname>">
   <!ENTITY windows  "<productname>Windows</productname>">
   <!ENTITY zenity   "<productname>Zenity</productname>">
 
@@ -30,24 +31,24 @@
   <!ENTITY must_not_match "&laquosp;must not match any of&spraquo;">
 
   <!-- the synopsys of the document -->
-  <!ENTITY articleinfo SYSTEM "articleinfo.xml">
-  <!ENTITY legalnotice SYSTEM "legalnotice.xml">
-  <!ENTITY starting    SYSTEM "nact-starting.xml">
-  <!ENTITY conditions  SYSTEM "nact-conditions.xml">
-  <!ENTITY where       SYSTEM "nact-where.xml">
-  <!ENTITY execution   SYSTEM "nact-execution.xml">
-  <!ENTITY profiles    SYSTEM "nact-profiles.xml">
-  <!ENTITY menus       SYSTEM "nact-menus.xml">
-  <!ENTITY sorting     SYSTEM "nact-sorting.xml">
-  <!ENTITY edit        SYSTEM "nact-edit.xml">
-  <!ENTITY save        SYSTEM "nact-save.xml">
-  <!ENTITY export      SYSTEM "nact-export.xml">
-  <!ENTITY import      SYSTEM "nact-import.xml">
-  <!ENTITY preferences SYSTEM "nact-prefs.xml">
-  <!ENTITY properties  SYSTEM "nact-properties.xml">
-  <!ENTITY misc-infos  SYSTEM "nact-misc.xml">
-  <!ENTITY bugs        SYSTEM "nact-bugs.xml">
-  <!ENTITY gnu-fdl     SYSTEM "appendix-gnu-fdl-1.3.xml">
+  <!ENTITY earticleinfo SYSTEM "articleinfo.xml">
+  <!ENTITY elegalnotice SYSTEM "legalnotice.xml">
+  <!ENTITY estarting    SYSTEM "fma-starting.xml">
+  <!ENTITY econditions  SYSTEM "fma-conditions.xml">
+  <!ENTITY ewhere       SYSTEM "fma-where.xml">
+  <!ENTITY eexecution   SYSTEM "fma-execution.xml">
+  <!ENTITY eprofiles    SYSTEM "fma-profiles.xml">
+  <!ENTITY emenus       SYSTEM "fma-menus.xml">
+  <!ENTITY esorting     SYSTEM "fma-sorting.xml">
+  <!ENTITY eedit        SYSTEM "fma-edit.xml">
+  <!ENTITY esave        SYSTEM "fma-save.xml">
+  <!ENTITY eexport      SYSTEM "fma-export.xml">
+  <!ENTITY eimport      SYSTEM "fma-import.xml">
+  <!ENTITY epreferences SYSTEM "fma-prefs.xml">
+  <!ENTITY eproperties  SYSTEM "fma-properties.xml">
+  <!ENTITY emisc-infos  SYSTEM "fma-misc.xml">
+  <!ENTITY ebugs        SYSTEM "fma-bugs.xml">
+  <!ENTITY egnu-fdl     SYSTEM "appendix-gnu-fdl-1.3.xml">
 ]>
 
 <!-- ========================= Document Header ======================== -->
@@ -56,10 +57,13 @@
 
 <article id="index" lang="en">
 
-  &articleinfo;
+  &earticleinfo;
 
   <indexterm zone="index">
     <primary>&nautilus;</primary>
+  </indexterm>
+  <indexterm zone="index">
+    <primary>&nemo;</primary>
   </indexterm>
   <indexterm zone="index">
     <primary>&prodname;</primary>
@@ -73,14 +77,15 @@
   <sect1 id="introduction">
     <title>Introduction</title>
     <para>
-      &prodname; is a &nautilus; extension whose principal function
+      &prodname; is a file manager extension whose principal function
       is to allow the user to add arbitrary actions to the file manager
       context menus. These actions may be organized in menus and submenus,
       exported and shared with other desktop environments.
     </para>
     <para>
       The &appname; application is the user interface which lets you precisely
-      configure how, where and when your actions should appear in &nautilus;
+      configure how, where and when your actions should appear in the file
+      manager
       context menus, and how they will be executed.
     </para>
     <para>
@@ -104,7 +109,7 @@
       <itemizedlist>
         <listitem>
           <para>
-            A &nautilus; plugin which exports in real time to D-Bus the currently
+            A tracker plugin which exports in real time to D-Bus the currently
             selected files.
           </para>
         </listitem>
@@ -129,6 +134,10 @@
         &prodname; documentation.
       </para>
     </note>
+    <para>
+      Starting with the version 3.4, &prodname; is compatible with both
+      &nautilus; and &nemo; file-managers.
+    </para>
   </sect1>
 
 <!-- ========================= Getting Started ======================== -->
@@ -142,7 +151,7 @@
 
   <sect1 id="getting-started">
     <title>Getting Started</title>
-    &starting;
+    &estarting;
   </sect1>
 
 <!-- ============================== Usage ============================= -->
@@ -151,17 +160,17 @@
 
   <sect1 id="usage">
     <title>Using &appname;</title>
-    &conditions;
-    &where;
-    &execution;
-    &profiles;
-    &menus;
-    &sorting;
-    &edit;
-    &save;
-    &export;
-    &import;
-    &preferences;
+    &econditions;
+    &ewhere;
+    &eexecution;
+    &eprofiles;
+    &emenus;
+    &esorting;
+    &eedit;
+    &esave;
+    &eexport;
+    &eimport;
+    &epreferences;
   </sect1>
 
 <!-- ============================ Misc ================================ -->
@@ -169,7 +178,7 @@
 
   <sect1 id="misc">
     <title>Miscellaneous informations</title>
-    &misc-infos;
+    &emisc-infos;
   </sect1>
 
 <!-- ============================ Bugs ================================ -->
@@ -180,7 +189,7 @@
 
   <sect1 id="bugs">
     <title>Known Bugs and Limitations</title>
-    &bugs;
+    &ebugs;
   </sect1>
 
 <!-- =========================== About ================================ -->
@@ -219,11 +228,11 @@
       or you may prefer, at your convenience, directly open a bug
       or a request for enhancement in
       <ulink
-       url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions"
+       url="https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions"
        type="http">Bugzilla website</ulink>.
     </para>
   </sect1>
 
-  &gnu-fdl;
+  &egnu-fdl;
 
 </article>

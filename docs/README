@@ -8,7 +8,8 @@ main parts:
 
 All the documentation, whether it targets users or developers, is made
 of architecture-independent files. More it needs some rather special
-tools to be built (db2html, dblatex, Docbook stylesheets, and so on).
+tools to be built (msgfmt, xml2po, db2html, dblatex, Docbook
+stylesheets, and so on).
 So we want distribute it.
 
 There are so in the Makefiles some hacks so that:

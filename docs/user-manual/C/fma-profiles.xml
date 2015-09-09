@@ -73,7 +73,7 @@
     <para>
       Profiles of an action are ordered, and they are examined in that
       order at runtime. The first profile whose conditions are met will
-      be validated, and made selectable in the &nautilus; context menu.
+      be validated, and made selectable in the file manager context menu.
     </para>
     <para>
       So, ordering of the profiles may be important for your action:

@@ -31,7 +31,7 @@
       In these modes, actions and menus are sorted depending of their
       label, inside of their parent. 
     </para>
-    <figure id="nact-FIG-sort-buttons">
+    <figure id="fma-FIG-sort-buttons">
       <title>Sort buttons in the main window</title>
       <screenshot>
         <mediaobject>

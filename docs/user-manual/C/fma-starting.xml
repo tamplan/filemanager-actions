@@ -24,7 +24,7 @@
               To start &appname; from a command line, type the following command:
             </para>
             <para>
-              <command><filename>nautilus-actions-config-tool</filename></command>
+              <command><filename>fma-config-tool</filename></command>
             </para>
             <para>
               <!-- i18n: "Return" is a key name -->
@@ -36,7 +36,7 @@
               </para>
               <para>
                 <command>
-                  <filename>nautilus-actions-config-tool</filename>
+                  <filename>fma-config-tool</filename>
                   <option>--help-all</option>
                 </command>
               </para>
@@ -55,12 +55,12 @@
       <para>
         When you start &appname;, the following window is displayed.
       </para>
-      <figure id="nact-FIG-main-empty">
+      <figure id="fma-FIG-main-empty">
         <title>&appname; Start Up Window</title>
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="figures/nact-main-empty.png" format="PNG"/>
+              <imagedata fileref="figures/fma-main-empty.png" format="PNG"/>
             </imageobject>
             <textobject>
               <phrase>
@@ -284,7 +284,7 @@
                 </term>
                 <listitem>
                   <para>
-                    Define in which &nautilus; menus the item should
+                    Define in which file manager menus the item should
                     appear, and how it will be displayed.
                   </para>
                 </listitem>
@@ -316,7 +316,7 @@
                 </term>
                 <listitem>
                   <para>
-                    Define the basename filters the &nautilus; selection
+                    Define the basename filters the file manager selection
                     must satisfy in order the action or menu be candidate
                     for display.
                   </para>
@@ -328,7 +328,7 @@
                 </term>
                 <listitem>
                   <para>
-                    Define the mimetype filters the &nautilus; selection
+                    Define the mimetype filters the file manager selection
                     must satisfy in order the action or menu be candidate
                     for display.
                   </para>
@@ -340,7 +340,7 @@
                 </term>
                 <listitem>
                   <para>
-                    Define the folder filters the &nautilus; selection
+                    Define the folder filters the file manager selection
                     must satisfy in order the action or menu be candidate
                     for display.
                   </para>
@@ -352,7 +352,7 @@
                 </term>
                 <listitem>
                   <para>
-                    Define the scheme filters the &nautilus; selection
+                    Define the scheme filters the file manager selection
                     must satisfy in order the action or menu be candidate
                     for display.
                   </para>
@@ -364,7 +364,7 @@
                 </term>
                 <listitem>
                   <para>
-                    Define the capability filters the &nautilus; selection
+                    Define the capability filters the file manager selection
                     must satisfy in order the action or menu be candidate
                     for display.
                   </para>
@@ -376,7 +376,7 @@
                 </term>
                 <listitem>
                   <para>
-                    Define some environment conditions the &nautilus;
+                    Define some environment conditions the file manager
                     selection must satisfy in order the action or menu
                     be candidate for display.
                   </para>
@@ -472,12 +472,12 @@
         The label of the currently edited action (this one) is added
         to the application name in the title bar.
       </para>
-      <figure id="nact-FIG-tab-action">
+      <figure id="fma-FIG-tab-action">
         <title>Default properties of a new action</title>
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="figures/nact-action-tab.png" format="PNG"/>
+              <imagedata fileref="figures/fma-action-tab.png" format="PNG"/>
             </imageobject>
             <textobject>
               <phrase>
@@ -592,12 +592,12 @@
         Click on the <guilabel>Command</guilabel> tab to show the page
         which will permit you to enter the command.
       </para>
-      <figure id="nact-FIG-tab-command">
+      <figure id="fma-FIG-tab-command">
         <title>Command page</title>
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="figures/nact-command-tab.png" format="PNG"/>
+              <imagedata fileref="figures/fma-command-tab.png" format="PNG"/>
             </imageobject>
             <textobject>
               <phrase>
@@ -692,31 +692,31 @@
         </para>
       </formalpara>
       <para>
-        &nautilus; automatically takes into account your new action,
+        The file manager automatically takes into account your new action,
         and displays it in its context menu.
       </para>
-      <figure id="nact-FIG-start-nautilus-context">
-        <title>Your first action in the &nautilus; context menu</title>
+      <figure id="fma-FIG-start-nautilus-context">
+        <title>Your first action in the file manager context menu</title>
         <screenshot>
           <mediaobject>
             <imageobject>
               <imagedata fileref="figures/start-context-menu-nautilus.png" format="PNG"/>
             </imageobject>
             <textobject>
-              <phrase>Shows the first action in the &nautilus; context menu.
+              <phrase>Shows the first action in the file manager context menu.
               </phrase>
             </textobject>
             <caption>
-              <para>Your first action in the &nautilus; context menu</para>
+              <para>Your first action in the file manager context menu</para>
             </caption>
           </mediaobject>
         </screenshot>
       </figure>
       <para>
-        Cliking of the item in the &nautilus; context menu activates it,
+        Cliking of the item in the file manager context menu activates it,
         and executes the corresponding command.
       </para>
-      <figure id="nact-FIG-start-zenity">
+      <figure id="fma-FIG-start-zenity">
         <title>The result of the execution of your first action</title>
         <screenshot>
           <mediaobject>

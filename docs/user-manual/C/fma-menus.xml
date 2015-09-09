@@ -59,7 +59,7 @@
   <para>
     As an action, too, a menu requires a label, and may have an icon and
     a tooltip. Also, you may define some conditions in order your menu
-    be candidate to be displayed in &nautilus; context menu. If the
+    be candidate to be displayed in the file manager context menu. If the
     defined conditions are not met at runtime, then your whole menu,
     including its submenus, its actions and so on, will not be displayed.
   </para>

@@ -2,12 +2,12 @@
   <title>Known bugs</title>
   <para>
     Known bugs are available on
-    <ulink url="https://bugzilla.gnome.org/buglist.cgi?product=nautilus-actions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED" type="http">Bugzilla summary page</ulink>.
+    <ulink url="https://bugzilla.gnome.org/buglist.cgi?product=filemanager-actions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED" type="http">Bugzilla summary page</ulink>.
   </para>
   <para>
     If you find some new bug in &prodname;, you are welcome to open it by pointing
     your favorite browser to
-    <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions" type="http">Bugzilla web site</ulink>.
+    <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions" type="http">Bugzilla web site</ulink>.
   </para>
   
   <formalpara>
@@ -28,7 +28,7 @@
     <title>Execution mode</title>
     <para>
       As of version 3.0, execution mode may be configured in &appname; but is
-      not yet honored by &nautilus; plugin.
+      not yet honored by known file-managers.
     </para>
   </formalpara>
   <para>
@@ -40,7 +40,12 @@
     <title>Suggested shortcut</title>
     <para>
       As of version 3.0, suggested shortcut, as described in &desema; cannot be
-      configured in &appname;, and is not honored by &nautilus; plugin.
+      configured in &appname;, and is not honored by the menu plugin.
+    </para>
+    <para>
+      But, thanks to the tracker plugin, you are always able to define a shortcut
+      at the desktop level, assigning this shortcut to the fma-run program, making
+      it execute the action of your choice.
     </para>
   </formalpara>
 
@@ -48,11 +53,7 @@
     <title>Menu separator</title>
     <para>
       As of version 3.0, menu separators cannot be
-      configured in &appname;, and are not honored by &nautilus; plugin.
+      configured in &appname;, and are not honored by any known file-managers.
     </para>
   </formalpara>
-  <para>
-    One has to note that, for now, &nautilus; file manager does not
-    allow its plugins to define separators in the context menu.
-  </para>
 </sect2>

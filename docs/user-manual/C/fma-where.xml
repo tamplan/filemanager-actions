@@ -1,11 +1,11 @@
 <sect2 id="usage-where">
   <title>Locating the action</title>
-    <figure id="nact-FIG-target-location-where">
+    <figure id="fma-FIG-target-location-where">
       <title>Target configuration</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-target-location.png" format="PNG" />
+            <imagedata fileref="figures/fma-target-location.png" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Shows the three fields which let you configure the target of your action.</phrase>
@@ -17,7 +17,7 @@
       </screenshot>
     </figure>
   <para>
-    &nautilus; file manager may display your action in different places,
+    The file manager may display your action in different places,
     depending on what you will request here, and if some item is currently
     selected (or not).
   </para>
@@ -33,18 +33,18 @@
     <para>
       When <guilabel>Display item in selection context menu</guilabel>
       is checked, then your action will be a candidate to be displayed in 
-      &nautilus;' context menu as soon as at least one item is selected in 
+      the file manager context menu as soon as at least one item is selected in 
       the file manager. Your action will so deal with currently selected
       item(s).In order to be
       actually displayed, all the conditions defined in
       your candidate action must be met by each item currently selected
-      in the &nautilus; file manager. 
+      in the file manager. 
     </para>
     <tip>
       <para>
         When an action targets the selection context menu, and is actually 
-        displayed in &nautilus;' context menu, then it is also displayed
-        in &nautilus;' <guimenu>Edit</guimenu> menu.
+        displayed in the file manager context menu, then it is also displayed
+        in file manager' <guimenu>Edit</guimenu> menu.
       </para>
     </tip>
     <para>
@@ -57,18 +57,18 @@
     <para>
       When <guilabel>Display item in location context menu</guilabel> checkbox
       is activated, then your action will be a candidate to be displayed in 
-      &nautilus;' context menu when the file manager selection is empty.
+      file manager' context menu when the file manager selection is empty.
       Your action will so deal with currently displayed location.
       In order to be
       actually displayed, all the conditions defined in
       your candidate action must be met by the location currently displayed
-      in the &nautilus; file manager. 
+      in the file manager. 
     </para>
     <tip>
       <para>
         When an action targets the location context menu, and is actually 
-        displayed in &nautilus;' context menu, then it is also displayed
-        in &nautilus;' <guimenu>File</guimenu> menu.
+        displayed in file manager' context menu, then it is also displayed
+        in file manager' <guimenu>File</guimenu> menu.
       </para>
     </tip>
   </sect3>
@@ -78,7 +78,7 @@
     <para>
       When <guilabel>Display item in the toolbar</guilabel> checkbox
       is activated, then your action will be a candidate to be displayed in 
-      &nautilus;' toolbar.
+      file manager;' toolbar.
     </para>
     <para>
       Actions displayed in the toolbar only deal with the location which
@@ -96,7 +96,7 @@
       <title>If your action is to be displayed in a context menu</title>
       <para>
         Whether it is the selection context menu or the location
-        context menu, and both in &nautilus;' context menus and in 
+        context menu, and both in file manager' context menus and in 
         <guimenu>File</guimenu> or <guimenu>Edit</guimenu> menus, it
         will be displayed as
       </para>
