@@ -26,7 +26,7 @@
 #   ... and many others (see AUTHORS)
 
 SUBDIRS = \
-	nact								\
+	user-manual							\
 	reference							\
 	$(NULL)
 

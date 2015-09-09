@@ -28,19 +28,19 @@
 # from Migrating your documentation to gnome-doc-utils
 # http://live.gnome.org/GnomeDocUtilsMigrationHowTo
 #
-# The gnome-doc-utils packages produces the FileManager-Actions Configuration
-# Tool (NACT) Users's Manual as DocBook XML documents, suitable for Yelp,
-# the Gnome help system.
+# The gnome-doc-utils packages produces the FileManager-Actions
+# Configuration Tool Users's Manual as DocBook XML documents, suitable
+# for Yelp, the Gnome help system.
 #
 # At install time, it installs these .xml help files
-# in <datadir>/gnome/help/nautilus-actions-config-tool/<lang>.
+# in <datadir>/gnome/help/fma-config-tool/<lang>.
 # Missing tranlated images are replaced with symlinks to
 # ../../C/figures/<image.png>.
 #
-# --enable-html-manuals (resp. --enable-pdf-manuals) are configure options
-# which produce HTML (resp. PDF) formats. These options are always enabled
-# when making distcheck, so that all output formats for all known locales
-# are always included in the distributed tarball.
+# --enable-html-manuals (resp. --enable-pdf-manuals) are configure
+# options which produce HTML (resp. PDF) formats. These options are
+# always enabled when making distcheck, so that all output formats for
+# all known locales are always included in the distributed tarball.
 #
 # Do not confuse gnome-doc-utils which targets the help documentation
 # of the Gnome (i.e. gui) applications, and that we are using here to
@@ -54,7 +54,7 @@
 include $(srcdir)/gnome-doc-utils-na.make
 #include $(top_srcdir)/gnome-doc-utils.make
 
-DOC_MODULE = nautilus-actions-config-tool
+DOC_MODULE = fma-config-tool
 
 #DOC_ENTITIES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/*.xml | $(GREP) -v $(DOC_MODULE)))
 DOC_ENTITIES = \
