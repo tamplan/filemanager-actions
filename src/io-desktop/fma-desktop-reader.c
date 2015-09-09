@@ -87,7 +87,7 @@ static void               read_done_action_load_profile( const FMAIFactoryProvid
 GList *
 fma_desktop_reader_iio_provider_read_items( const FMAIIOProvider *provider, GSList **messages )
 {
-	static const gchar *thisfn = "io-desktop/fma_desktop_reader_iio_provider_read_items";
+	static const gchar *thisfn = "fma_desktop_reader_iio_provider_read_items";
 	GList *items;
 	GList *desktop_paths, *ip;
 	FMAIFactoryObject *item;

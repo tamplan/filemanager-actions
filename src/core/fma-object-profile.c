@@ -61,10 +61,10 @@ struct _FMAObjectProfilePrivate {
 #define PROFILE_NAME_PREFIX					"profile-"
 
 #define fma_object_is_file( obj )			(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_ISFILE )))
-#define fma_object_is_dir( obj )				(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_ISDIR )))
+#define fma_object_is_dir( obj )			(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_ISDIR )))
 #define fma_object_is_multiple( obj )		(( gboolean ) GPOINTER_TO_UINT( fma_ifactory_object_get_as_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_MULTIPLE )))
 
-extern FMADataGroup profile_data_groups [];	/* defined in na-item-profile-factory.c */
+extern FMADataGroup profile_data_groups [];	/* defined in fma-object-profile-factory.c */
 
 static FMAObjectIdClass *st_parent_class = NULL;
 

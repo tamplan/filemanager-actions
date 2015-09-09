@@ -267,7 +267,7 @@ fma_updater_check_item_writability_status( const FMAUpdater *updater, const FMAO
 		reason = IIO_PROVIDER_STATUS_WRITABLE;
 
 		/* Writability status of the item has been determined at load time
-		 * (cf. e.g. io-desktop/nadp-reader.c:read_done_item_is_writable()).
+		 * (cf. e.g. io-desktop/fma_desktop_writer_iio_provider_is_able_to_write()).
 		 * Though I'm plenty conscious that this status is subject to many
 		 * changes during the life of the item (e.g. by modifying permissions
 		 * on the underlying store), it is just more efficient to not reevaluate
