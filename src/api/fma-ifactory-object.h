@@ -34,7 +34,7 @@
  * SECTION: ifactory-object
  * @title: FMAIFactoryObject
  * @short_description: The #FMAObjectItem Interface v 1
- * @include: filemanager-actions/na-ifactory_object.h
+ * @include: filemanager-actions/na-ifactory-object.h
  *
  * This interface is implemented by #FMAObjectItem derived objects so that they
  * can take advantage of our data factory management system.
