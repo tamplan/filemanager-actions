@@ -79,7 +79,7 @@
  *  <table>
  *    <title>Historic of the versions of the #FMAIDuplicable interface</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
- *      <colspec colname="na-version" />
+ *      <colspec colname="fma-version" />
  *      <colspec colname="api-version" />
  *      <colspec colname="current" />
  *      <thead>
