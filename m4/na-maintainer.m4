@@ -69,7 +69,7 @@ AC_DEFUN([NA_MAINTAINER_CHECK_FOR_DEPRECATED],[
 	else
 		if test "${na_request_for_deprecated}" = "yes"; then
 			AC_MSG_WARN([API documentation will be incomplete as deprecated symbols are disabled])
-			let na_fatal_count+=1
+			let fma_fatal_count+=1
 		fi
 	fi
 

@@ -77,14 +77,14 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
 AM_GLIB_GNU_GETTEXT
 
 # a counter of fatal warnings emitted
-let na_fatal_count=0
-na_fatal_list=""
+let fma_fatal_count=0
+fma_fatal_list=""
 
 # GLib marshaling
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal, no)
 if test "${GLIB_GENMARSHAL}" = "no"; then
 	AC_MSG_WARN([glib2-devel installed, but glib-genmarshal not found])
-	let na_fatal_count+=1
+	let fma_fatal_count+=1
 fi
 # Have and want GConf support ?
 # As of 3.4 release, we are deprecating GConf, disabling it by default.
@@ -206,8 +206,8 @@ $as_echo "	Maintainer mode                 ${msg_maintainer_mode}
 	HTML User's Manuals generation  ${msg_html_manuals}
 	PDF User's Manuals generation   ${msg_pdf_manuals}
 "
-if test ${na_fatal_count} -gt 0; then
-	$as_echo "${na_fatal_list}
+if test ${fma_fatal_count} -gt 0; then
+	$as_echo "${fma_fatal_list}
 "
 	exit 1
 fi

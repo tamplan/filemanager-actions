@@ -63,10 +63,10 @@ AC_DEFUN([_FMA_CHECK_MODULE_MSG],[
 	if test "$1" = "no"; then
 		AC_MSG_RESULT([warning: $2])
 	else
-		let na_fatal_count+=1
-		AC_MSG_WARN([$2 (fatal_count=${na_fatal_count})])
-		if test "${na_fatal_list}" != ""; then na_fatal_list="${na_fatal_list}
+		let fma_fatal_count+=1
+		AC_MSG_WARN([$2 (fatal_count=${fma_fatal_count})])
+		if test "${fma_fatal_list}" != ""; then fma_fatal_list="${fma_fatal_list}
 "; fi
-		na_fatal_list="${na_fatal_list}$2"
+		fma_fatal_list="${fma_fatal_list}$2"
 	fi
 ])
