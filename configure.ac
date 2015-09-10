@@ -28,14 +28,17 @@
 AC_PREREQ([2.53])
 
 AC_INIT([FileManager-Actions],[3.4],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+AX_IS_RELEASE([git-directory])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
 
+# Code coverage
+AX_CODE_COVERAGE()
+
 AC_CONFIG_SRCDIR([src/ui/main.c])
 AC_CONFIG_HEADERS([src/config.h])
-
 AC_CONFIG_MACRO_DIR([m4])
 
 # check for compiler characteristics and options
@@ -53,8 +56,7 @@ AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} ${WARN_CFLAGS}"])
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
-# Gnome stuff
-GNOME_COMMON_INIT
+# Maintainer mode
 FMA_MAINTAINER_CHECK_MODE
 
 # libtool
@@ -70,11 +72,11 @@ fi
 source ${0%/*}/fma_required_versions
 
 # localization
-IT_PROG_INTLTOOL([${intltool_required}])
 GETTEXT_PACKAGE=${PACKAGE}
 AC_SUBST([GETTEXT_PACKAGE])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
 AM_GLIB_GNU_GETTEXT
+IT_PROG_INTLTOOL([${intltool_required}])
 
 # a counter of fatal warnings emitted
 let fma_fatal_count=0
@@ -105,14 +107,14 @@ FMA_CHECK_MODULE([UUID],    [uuid])
 FMA_CHECK_MODULE([SM],      [sm], [1.0])
 FMA_CHECK_MODULE([ICE],     [ice])
 
-# target a file manager (nautilus, nemo, ...)
-FMA_TARGET_FILE_MANAGER
-
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
 # print the debug output be printed to the console
 AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
+
+# target a file manager (nautilus, nemo, ...)
+FMA_TARGET_FILE_MANAGER
 
 # add --with-default-io-provider option
 FMA_SET_DEFAULT_IO_PROVIDER([io-desktop])

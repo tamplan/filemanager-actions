@@ -53,6 +53,10 @@
 # pwi 2013- 9-26
 # Get rid of 'target' environment variable, as doc generation is a
 # configure option.
+#
+# pwi 2015- 9-10
+# gnome-common is deprecated
+# see: https://wiki.gnome.org/Projects/GnomeCommon/Migration
 
 if [ ! -f configure.ac ]; then
 	echo "> This script is only meant to be run from the top source directory." 1>&2
@@ -62,12 +66,13 @@ fi
 maintainer_dir=$(cd ${0%/*}; pwd)
 top_srcdir="${maintainer_dir%/*}"
 
-PKG_NAME="filemanager-actions"
+PkgName=`autoconf --trace 'AC_INIT:$1' configure.ac`
+pkgname=$(echo $PkgName | tr '[[:upper:]]' '[[:lower:]]')
 
 # a filemanager-actions-x.y may remain after an aborted make distcheck
 # such a directory breaks gnome-autogen.sh generation
 # so clean it here
-for d in $(find ${top_srcdir} -maxdepth 2 -type d -name 'filemanager-actions-*'); do
+for d in $(find ${top_srcdir} -maxdepth 2 -type d -name "${pkgname}-\*"); do
 	echo "> Removing $d"
 	chmod -R u+w $d
 	rm -fr $d
@@ -76,17 +81,16 @@ done
 # tools required version
 source ${top_srcdir}/fma_required_versions
 
+echo "> Running aclocal"
+aclocal --install || exit 1
+
 # requires gtk-doc package
 # used for Developer Reference Manual generation (devhelp)
+echo "> Running gtkdocize"
 gtkdocize || exit 1
 
-which gnome-autogen.sh 1>/dev/null 2>&1 || {
-	echo "> You need to install gnome-common package" 1>&2
-	exit 1
-}
-
-echo "> Running gnome-autogen.sh"
-NOCONFIGURE=1 USE_GNOME2_MACROS=1 . gnome-autogen.sh
+echo "> Running autoreconf"
+autoreconf --verbose --force --install -Wno-portability || exit 1
 
 # pwi 2012-10-12
 # starting with FileManager-Actions 3.2.3, we let the GNOME-DOC-PREPARE do

@@ -36,7 +36,7 @@ dnl but gnome-autogen.sh forces its usage and gnome_common_init requires it
 dnl is nonetheless explicitely required by gnome_maintainer_mode_defines macro
 
 AC_DEFUN([FMA_MAINTAINER_CHECK_MODE],[
-	AC_REQUIRE([GNOME_MAINTAINER_MODE_DEFINES])
+	AM_MAINTAINER_MODE
 
 	msg_maintainer_mode="disabled"
 	AC_MSG_CHECKING([whether to enable maintainer mode])

@@ -30,6 +30,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	-DG_LOG_DOMAIN=\"FMA\"								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	$(CODE_COVERAGE_CFLAGS)								\
 	$(NULL)
 
 BUILT_SOURCES =
@@ -70,6 +71,7 @@ libfma_ldflags = \
 	-module 											\
 	-no-undefined										\
 	-avoid-version										\
+	$(CODE_COVERAGE_LDFLAGS)							\
 	$(NULL)
 
 if HAVE_NAUTILUS
@@ -105,3 +107,6 @@ EXTRA_DIST = \
 CLEANFILES = \
 	$(BUILT_SOURCES)									\
 	$(NULL)
+
+# Code coverage
+@CODE_COVERAGE_RULES@

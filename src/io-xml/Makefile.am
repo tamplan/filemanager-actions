@@ -38,6 +38,7 @@ AM_CPPFLAGS += \
 	-DG_LOG_DOMAIN=\"FMA\"								\
 	-DPROVIDER_ID=\"$(provider_id)\"					\
 	-DPROVIDER_DATADIR=\"$(provider_datadir)\"			\
+	$(CODE_COVERAGE_CFLAGS)								\
 	$(NULL)
 
 libfma_io_xml_la_SOURCES = \
@@ -63,6 +64,7 @@ libfma_io_xml_la_LDFLAGS = \
 	-module 											\
 	-no-undefined										\
 	-avoid-version										\
+	$(CODE_COVERAGE_LDFLAGS)							\
 	$(NULL)
 
 images_files = \
@@ -78,3 +80,6 @@ provider_data_DATA = \
 EXTRA_DIST = \
 	$(provider_data_DATA)								\
 	$(NULL)
+
+# Code coverage
+@CODE_COVERAGE_RULES@

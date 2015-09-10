@@ -30,6 +30,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	-DG_LOG_DOMAIN=\"FMA\"								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	$(CODE_COVERAGE_CFLAGS)								\
 	$(NULL)
 
 lib_sources = \
@@ -47,6 +48,7 @@ lib_ldflags = \
 	-module 											\
 	-no-undefined										\
 	-avoid-version										\
+	$(CODE_COVERAGE_LDFLAGS)							\
 	$(NULL)
 
 if HAVE_NAUTILUS
@@ -72,3 +74,6 @@ libfma_nemo_menu_la_CPPFLAGS = $(AM_CPPFLAGS) 			\
 	-DFMA_TARGET_LABEL=\"$(NEMO_LABEL)\"				\
 	$(NULL)
 endif
+
+# Code coverage
+@CODE_COVERAGE_RULES@

@@ -41,6 +41,7 @@ AM_CPPFLAGS += \
 	-DPKGUIDIR=\"$(ui_datadir)\"						\
 	$(egg_platform_defines)								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	$(CODE_COVERAGE_CFLAGS)								\
 	$(NULL)
 
 BUILT_SOURCES = \
@@ -148,6 +149,10 @@ fma_config_tool_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
+fma_config_tool_LDFLAGS = \
+	$(CODE_COVERAGE_LDFLAGS)							\
+	$(NULL)
+
 actions_files = \
 	fma-ui.actions										\
 	$(NULL)
@@ -198,3 +203,6 @@ EXTRA_DIST = \
 	$(applications_in_files)							\
 	$(ui_data_DATA)										\
 	$(NULL)
+
+# Code coverage
+@CODE_COVERAGE_RULES@

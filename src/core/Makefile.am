@@ -48,6 +48,7 @@ AM_CPPFLAGS += \
 	-DPKGIMPORTMODEDIR=\"$(importmode_datadir)\"		\
 	-DPKGIMPORTERASKDIR=\"$(importerask_datadir)\"		\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
+	$(CODE_COVERAGE_CFLAGS)								\
 	$(NULL)
 
 libfma_core_la_SOURCES = \
@@ -133,6 +134,7 @@ libfma_core_la_LDFLAGS = \
 	-no-undefined										\
 	-avoid-version										\
 	-fPIC												\
+	$(CODE_COVERAGE_LDFLAGS)							\
 	$(NULL)
 
 importerask_data_DATA = \
@@ -158,3 +160,6 @@ EXTRA_DIST = \
 	$(exportformat_data_DATA)							\
 	$(importmode_data_DATA)								\
 	$(NULL)
+
+# Code coverage
+@CODE_COVERAGE_RULES@
