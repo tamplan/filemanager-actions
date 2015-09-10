@@ -53,6 +53,7 @@
 
 #include $(srcdir)/gnome-doc-utils-na.make
 include $(top_srcdir)/gnome-doc-utils.make
+dist-hook: doc-dist-hook
 
 DOC_MODULE = fma-config-tool
 
@@ -60,9 +61,9 @@ DOC_MODULE = fma-config-tool
 DOC_ENTITIES = \
 	appendix-gnu-fdl-1.3.xml						\
 	articleinfo.xml									\
-	legalnotice.xml									\
 	fma-bugs.xml									\
 	fma-conditions.xml								\
+	fma-config-tool.xml								\
 	fma-edit.xml									\
 	fma-execution.xml								\
 	fma-export.xml									\
@@ -76,7 +77,7 @@ DOC_ENTITIES = \
 	fma-sorting.xml									\
 	fma-starting.xml								\
 	fma-where.xml									\
-	fma-config-tool.xml
+	legalnotice.xml
 
 #DOC_INCLUDES =
 
