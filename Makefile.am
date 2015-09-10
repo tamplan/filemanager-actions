@@ -60,6 +60,7 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	$(NULL)
 
 EXTRA_DIST = \
+	fma_required_versions				\
 	intltool-extract.in					\
 	intltool-merge.in					\
 	intltool-update.in					\

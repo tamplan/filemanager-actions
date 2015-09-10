@@ -315,7 +315,7 @@ fi
 # ---------------------------------------------------------------------
 # MAIN CODE
 
-for f in $(git ls-files src | grep '\.h$' | grep -v '^src/test'); do
+for f in $(git ls-files src | grep '\.h$' | grep -vE '^src/test|^src/io-gconf'); do
 	msg "checking for $f..." " "
 	tmpc="${maintainer_dir}/check-header.c"
 	cat <<! >${tmpc}
