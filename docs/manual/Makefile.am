@@ -51,6 +51,10 @@
 # to correctly generate POT files (cf. mail of Claude Paroz 2010-08-29
 # http://mail.gnome.org/archives/gnome-i18n/2010-August/msg00229.html).
 
+SUBDIRS = \
+	gdu-hack										\
+	$(NULL)
+
 #include $(srcdir)/gnome-doc-utils-na.make
 include $(top_srcdir)/gnome-doc-utils.make
 dist-hook: doc-dist-hook
