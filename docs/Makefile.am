@@ -26,7 +26,7 @@
 #   ... and many others (see AUTHORS)
 
 SUBDIRS = \
-	user-manual							\
+	manual								\
 	reference							\
 	$(NULL)
 

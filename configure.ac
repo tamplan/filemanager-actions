@@ -128,7 +128,7 @@ AC_CONFIG_FILES([
 	data/exports/Makefile
 	data/gconf-schemas/Makefile
 	docs/Makefile
-	docs/user-manual/Makefile
+	docs/manual/Makefile
 	docs/reference/Makefile
 	docs/reference/version.xml
 	icons/Makefile

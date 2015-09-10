@@ -72,7 +72,7 @@ pkgname=$(echo $PkgName | tr '[[:upper:]]' '[[:lower:]]')
 # a filemanager-actions-x.y may remain after an aborted make distcheck
 # such a directory breaks gnome-autogen.sh generation
 # so clean it here
-for d in $(find ${top_srcdir} -maxdepth 2 -type d -name "${pkgname}-\*"); do
+for d in $(find ${top_srcdir} -maxdepth 2 -type d -name "${pkgname}-*"); do
 	echo "> Removing $d"
 	chmod -R u+w $d
 	rm -fr $d
