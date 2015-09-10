@@ -1,0 +1,768 @@
+
+# ---------------------------------------------------------------------
+# Plugins — The FileManager-Actions extension interface definition v 1
+
+<SECTION>
+<FILE>extension</FILE>
+fma_extension_startup
+fma_extension_get_version
+fma_extension_list_types
+fma_extension_shutdown
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAIIOProvider — The I/O Provider Interface
+
+<SECTION>
+<FILE>iio-provider</FILE>
+FMA_TYPE_IIO_PROVIDER
+FMA_IIO_PROVIDER
+FMA_IS_IIO_PROVIDER
+FMA_IIO_PROVIDER_GET_INTERFACE
+FMAIIOProvider
+FMAIIOProviderInterface
+FMAIIOProviderWritabilityStatus
+FMAIIOProviderOperationStatus
+fma_iio_provider_item_changed
+
+<SUBSECTION Standard>
+fma_iio_provider_get_type
+
+<SUBSECTION Private>
+FMAIIOProviderInterfacePrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAIImporter — The Import Interface
+
+<SECTION>
+<FILE>iimporter</FILE>
+FMA_TYPE_IIMPORTER
+FMA_IIMPORTER
+FMA_IS_IIMPORTER
+FMA_IIMPORTER_GET_INTERFACE
+FMAIImporter
+FMAIImporterInterface
+FMAIImporterImportMode
+FMAIImporterImportStatus
+FMAIImporterAskUserFn
+FMAIImporterCheckFn
+FMAIImporterImportFromUriParms
+FMAIImporterImportFromUriParmsv2
+FMAIImporterManageImportModeParms
+fma_iimporter_import_from_uri
+fma_iimporter_manage_import_mode
+
+<SUBSECTION Standard>
+fma_iimporter_get_type
+
+<SUBSECTION Private>
+FMAIImporterInterfacePrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAIExporter — The Export Interface
+
+<SECTION>
+<FILE>iexporter</FILE>
+FMA_TYPE_IEXPORTER
+FMA_IEXPORTER
+FMA_IS_IEXPORTER
+FMA_IEXPORTER_GET_INTERFACE
+FMAIExporter
+FMAIExporterInterface
+FMAIExporterExportStatus
+FMAIExporterFormat
+FMAIExporterFormatv2
+FMAIExporterFileParms
+FMAIExporterFileParmsv2
+FMAIExporterBufferParms
+FMAIExporterBufferParmsv2
+
+<SUBSECTION Standard>
+fma_iexporter_get_type
+
+<SUBSECTION Private>
+FMAIExporterInterfacePrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# D-Bus — The D-Bus Services 
+
+<SECTION>
+<FILE>dbus</FILE>
+FILEMANAGER_ACTIONS_DBUS_SERVICE
+FILEMANAGER_ACTIONS_DBUS_TRACKER_PATH
+FILEMANAGER_ACTIONS_DBUS_TRACKER_IFACE
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAIFactoryProvider — The Data Factory Provider Interface v 1
+
+<SECTION>
+<FILE>ifactory-provider</FILE>
+FMA_TYPE_IFACTORY_PROVIDER
+FMA_IFACTORY_PROVIDER
+FMA_IS_IFACTORY_PROVIDER
+FMA_IFACTORY_PROVIDER_GET_INTERFACE
+FMAIFactoryProvider
+FMAIFactoryProviderInterface
+fma_ifactory_provider_read_item
+fma_ifactory_provider_write_item
+
+<SUBSECTION Standard>
+fma_ifactory_provider_get_type
+
+<SUBSECTION Private>
+FMAIFactoryProviderInterfacePrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAIFactoryObject — The #FMAObjectItem Interface v 1
+
+<SECTION>
+<FILE>ifactory-object</FILE>
+FMA_TYPE_IFACTORY_OBJECT
+FMA_IFACTORY_OBJECT
+FMA_IS_IFACTORY_OBJECT
+FMA_IFACTORY_OBJECT_GET_INTERFACE
+FMAIFactoryObject
+FMAIFactoryObjectInterface
+fma_ifactory_object_get_data_boxed
+fma_ifactory_object_get_data_groups
+fma_ifactory_object_get_as_void
+fma_ifactory_object_set_from_void
+
+<SUBSECTION Standard>
+fma_ifactory_object_get_type
+
+<SUBSECTION Private>
+FMAIFactoryObjectInterfacePrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMABoxed — The Data Base Class Definition
+
+<SECTION>
+<FILE>boxed</FILE>
+FMA_TYPE_BOXED
+FMA_BOXED
+FMA_IS_BOXED
+FMABoxed
+fma_boxed_set_type
+fma_boxed_are_equal
+fma_boxed_copy
+fma_boxed_dump
+fma_boxed_get_boolean
+fma_boxed_get_pointer
+fma_boxed_get_string
+fma_boxed_get_string_list
+fma_boxed_get_uint
+fma_boxed_get_uint_list
+fma_boxed_get_as_value
+fma_boxed_get_as_void
+fma_boxed_new_from_string
+fma_boxed_set_from_boxed
+fma_boxed_set_from_string
+fma_boxed_set_from_value
+fma_boxed_set_from_void
+
+<SUBSECTION Standard>
+fma_boxed_get_type
+FMA_BOXED_CLASS
+FMA_IS_BOXED_CLASS
+FMA_BOXED_GET_CLASS
+FMABoxedClass
+
+<SUBSECTION Private>
+FMABoxedPrivate
+FMABoxedClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMADataBoxed — The Elementary Data Class Definition
+
+<SECTION>
+<FILE>data-boxed</FILE>
+FMA_TYPE_DATA_BOXED
+FMA_DATA_BOXED
+FMA_IS_DATA_BOXED
+FMADataBoxed
+fma_data_boxed_new
+fma_data_boxed_get_data_def
+fma_data_boxed_get_param_spec
+fma_data_boxed_are_equal
+fma_data_boxed_is_default
+fma_data_boxed_is_valid
+fma_data_boxed_dump
+fma_data_boxed_set_data_def
+fma_data_boxed_get_as_string
+fma_data_boxed_get_as_void
+fma_data_boxed_get_as_value
+fma_data_boxed_set_from_boxed
+fma_data_boxed_set_from_string
+fma_data_boxed_set_from_value
+fma_data_boxed_set_from_void
+
+<SUBSECTION Standard>
+fma_data_boxed_get_type
+FMA_DATA_BOXED_CLASS
+FMA_IS_DATA_BOXED_CLASS
+FMA_DATA_BOXED_GET_CLASS
+FMADataBoxedClass
+
+<SUBSECTION Private>
+FMADataBoxedPrivate
+FMADataBoxedClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMADataType — The Data Factory Type Definitions
+
+<SECTION>
+<FILE>data-type</FILE>
+FMADataType
+fma_data_types_get_gconf_dump_key
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMADataDef, FMADataGroup — The Data Factory Structure Definitions
+
+<SECTION>
+<FILE>data-def</FILE>
+FMADataDef
+FMADataGroup
+fma_data_def_get_data_def
+</SECTION>
+
+# ---------------------------------------------------------------------
+# Constants — The Data Factory Constant Definitions
+
+<SECTION>
+<FILE>data-name</FILE>
+FMA_FACTORY_OBJECT_ID_GROUP
+FMAFO_DATA_ID
+FMAFO_DATA_LABEL
+FMAFO_DATA_PARENT
+FMAFO_DATA_CONDITIONS
+FMA_FACTORY_OBJECT_ITEM_GROUP
+FMAFO_DATA_IVERSION
+FMAFO_DATA_TYPE
+FMAFO_DATA_TOOLTIP
+FMAFO_DATA_ICON
+FMAFO_DATA_ICON_NOLOC
+FMAFO_DATA_DESCRIPTION
+FMAFO_DATA_SHORTCUT
+FMAFO_DATA_SUBITEMS
+FMAFO_DATA_SUBITEMS_SLIST
+FMAFO_DATA_EFMABLED
+FMAFO_DATA_READONLY
+FMAFO_DATA_PROVIDER
+FMAFO_DATA_PROVIDER_DATA
+FMA_FACTORY_OBJECT_ACTION_GROUP
+FMAFO_DATA_VERSION
+FMAFO_DATA_TARGET_SELECTION
+FMAFO_DATA_TARGET_LOCATION
+FMAFO_DATA_TARGET_TOOLBAR
+FMAFO_DATA_TOOLBAR_LABEL
+FMAFO_DATA_TOOLBAR_SAME_LABEL
+FMAFO_DATA_LAST_ALLOCATED
+FMA_FACTORY_ACTION_V1_GROUP
+FMA_FACTORY_OBJECT_MENU_GROUP
+FMA_FACTORY_OBJECT_PROFILE_GROUP
+FMAFO_DATA_DESCFMAME
+FMAFO_DATA_DESCFMAME_NOLOC
+FMAFO_DATA_PATH
+FMAFO_DATA_PARAMETERS
+FMAFO_DATA_WORKING_DIR
+FMAFO_DATA_EXECUTION_MODE
+FMAFO_DATA_STARTUP_NOTIFY
+FMAFO_DATA_STARTUP_WMCLASS
+FMAFO_DATA_EXECUTE_AS
+FMA_FACTORY_OBJECT_CONDITIONS_GROUP
+FMAFO_DATA_BASEFMAMES
+FMAFO_DATA_MATCHCASE
+FMAFO_DATA_MIMETYPES
+FMAFO_DATA_MIMETYPES_IS_ALL
+FMAFO_DATA_ISFILE
+FMAFO_DATA_ISDIR
+FMAFO_DATA_MULTIPLE
+FMAFO_DATA_SCHEMES
+FMAFO_DATA_FOLDERS
+FMAFO_DATA_SELECTION_COUNT
+FMAFO_DATA_ONLY_SHOW
+FMAFO_DATA_NOT_SHOW
+FMAFO_DATA_TRY_EXEC
+FMAFO_DATA_SHOW_IF_REGISTERED
+FMAFO_DATA_SHOW_IF_TRUE
+FMAFO_DATA_SHOW_IF_RUNNING
+FMAFO_DATA_CAPABILITITES
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAObject — The Deepest Base Class Definition 
+
+<SECTION>
+<FILE>object</FILE>
+FMA_TYPE_OBJECT
+FMA_OBJECT
+FMA_IS_OBJECT
+FMAObject
+FMAObjectClass
+fma_object_object_reset_origin
+fma_object_object_ref
+fma_object_object_unref
+fma_object_object_dump
+fma_object_object_dump_norec
+fma_object_object_dump_tree
+fma_object_object_check_status_rec
+fma_object_get_hierarchy
+fma_object_free_hierarchy
+fma_object_object_debug_invalid
+
+<SUBSECTION Standard>
+fma_object_object_get_type
+FMA_OBJECT_CLASS
+FMA_IS_OBJECT_CLASS
+FMA_OBJECT_GET_CLASS
+
+<SUBSECTION Private>
+FMAObjectPrivate
+FMAObjectClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAObjectId — The Identified Object Base Class Definition
+
+<SECTION>
+<FILE>object-id</FILE>
+<TITLE>FMAObjectId</TITLE>
+FMA_TYPE_OBJECT_ID
+FMA_OBJECT_ID
+FMA_IS_OBJECT_ID
+FMAObjectId
+FMAObjectIdClass
+fma_object_id_sort_alpha_asc
+fma_object_id_sort_alpha_desc
+fma_object_id_prepare_for_paste
+fma_object_id_set_copy_of_label
+fma_object_id_set_new_id
+
+<SUBSECTION Standard>
+fma_object_id_get_type
+FMA_OBJECT_ID_CLASS
+FMA_IS_OBJECT_ID_CLASS
+FMA_OBJECT_ID_GET_CLASS
+
+<SUBSECTION Private>
+FMAObjectIdPrivate
+FMAObjectIdClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAObjectItem — The Object Item Base Class Definition 
+
+<SECTION>
+<FILE>object-item</FILE>
+<TITLE>FMAObjectItem</TITLE>
+FMA_TYPE_OBJECT_ITEM
+FMA_OBJECT_ITEM
+FMA_IS_OBJECT_ITEM
+FMAObjectItem
+FMAItemTarget
+fma_object_item_is_finally_writable
+fma_object_item_set_writability_status
+fma_object_item_get_item
+fma_object_item_get_position
+fma_object_item_append_item
+fma_object_item_insert_at
+fma_object_item_insert_item
+fma_object_item_remove_item
+fma_object_item_get_items_count
+fma_object_item_count_items
+fma_object_item_copyref_items
+fma_object_item_free_items
+fma_object_item_rebuild_children_slist
+fma_object_item_deals_with_version
+
+<SUBSECTION Standard>
+fma_object_item_get_type
+FMA_OBJECT_ITEM_CLASS
+FMA_IS_OBJECT_ITEM_CLASS
+FMA_OBJECT_ITEM_GET_CLASS
+FMAObjectItemClass
+
+<SUBSECTION Private>
+FMAObjectItemPrivate
+FMAObjectItemClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAObjectAction — The Action Class Definition
+
+<SECTION>
+<FILE>object-action</FILE>
+<TITLE>FMAObjectAction</TITLE>
+FMA_TYPE_OBJECT_ACTION
+FMA_OBJECT_ACTION
+FMA_IS_OBJECT_ACTION
+FMAObjectAction
+fma_object_action_new
+fma_object_action_new_with_profile
+fma_object_action_new_with_defaults
+fma_object_action_get_new_profile_name
+fma_object_action_attach_profile
+fma_object_action_set_last_version
+
+<SUBSECTION Standard>
+fma_object_action_get_type
+FMA_OBJECT_ACTION_CLASS
+FMA_IS_OBJECT_ACTION_CLASS
+FMA_OBJECT_ACTION_GET_CLASS
+FMAObjectActionClass
+
+<SUBSECTION Private>
+FMAObjectActionPrivate
+FMAObjectActionClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAObjectProfile — The Action Profile Class Definition
+
+<SECTION>
+<FILE>object-profile</FILE>
+FMA_TYPE_OBJECT_PROFILE
+FMA_OBJECT_PROFILE
+FMA_IS_OBJECT_PROFILE
+FMAObjectProfile
+fma_object_profile_new
+fma_object_profile_new_with_defaults
+fma_object_profile_convert_v2_to_last
+
+<SUBSECTION Standard>
+fma_object_profile_get_type
+FMA_OBJECT_PROFILE_CLASS
+FMA_IS_OBJECT_PROFILE_CLASS
+FMA_OBJECT_PROFILE_GET_CLASS
+FMAObjectProfileClass
+
+<SUBSECTION Private>
+FMAObjectProfilePrivate
+FMAObjectProfileClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAObjectMenu — The Menu Class Definition
+
+<SECTION>
+<FILE>object-menu</FILE>
+FMA_TYPE_OBJECT_MENU
+FMA_OBJECT_MENU
+FMA_IS_OBJECT_MENU
+FMAObjectMenu
+fma_object_menu_new
+fma_object_menu_new_with_defaults
+
+<SUBSECTION Standard>
+fma_object_menu_get_type
+FMA_OBJECT_MENU_CLASS
+FMA_IS_OBJECT_MENU_CLASS
+FMA_OBJECT_MENU_GET_CLASS
+FMAObjectMenuClass
+
+<SUBSECTION Private>
+FMAObjectMenuPrivate
+FMAObjectMenuClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAIDuplicable — The Duplication Interface
+
+<SECTION>
+<FILE>iduplicable</FILE>
+FMA_TYPE_IDUPLICABLE
+FMA_IDUPLICABLE
+FMA_IS_IDUPLICABLE
+FMA_IDUPLICABLE_GET_INTERFACE
+FMAIDuplicable
+FMAIDuplicableInterface
+IDUPLICABLE_SIGNAL_MODIFIED_CHANGED
+IDUPLICABLE_SIGNAL_VALID_CHANGED
+fma_iduplicable_dispose
+fma_iduplicable_dump
+fma_iduplicable_duplicate
+fma_iduplicable_check_status
+fma_iduplicable_get_origin
+fma_iduplicable_is_valid
+fma_iduplicable_is_modified
+fma_iduplicable_set_origin
+fma_iduplicable_set_modified
+fma_iduplicable_register_consumer
+DuplicableMode
+
+<SUBSECTION Standard>
+fma_iduplicable_get_type
+
+<SUBSECTION Private>
+FMAIDuplicableInterfacePrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAIContext — The Contextual Interface
+
+<SECTION>
+<FILE>icontext</FILE>
+FMA_TYPE_ICONTEXT
+FMA_ICONTEXT_GET_INTERFACE
+FMAIContext
+FMAIContextInterfacePrivate
+FMAIContextInterface
+fma_icontext_are_equal
+fma_icontext_check_mimetypes
+fma_icontext_copy
+fma_icontext_is_candidate
+fma_icontext_is_valid
+fma_icontext_read_done
+fma_icontext_set_scheme
+fma_icontext_set_only_desktop
+fma_icontext_set_not_desktop
+fma_icontext_replace_folder
+
+<SUBSECTION Standard>
+FMA_ICONTEXT
+FMA_IS_ICONTEXT
+fma_icontext_get_type
+</SECTION>
+
+# ---------------------------------------------------------------------
+# API — The Common Public FMAObject API
+
+<SECTION>
+<FILE>object-api</FILE>
+fma_object_duplicate
+fma_object_check_status
+fma_object_get_origin
+fma_object_is_valid
+fma_object_is_modified
+fma_object_set_origin
+fma_object_set_modified
+fma_object_reset_origin
+fma_object_set_writability_status
+fma_object_is_finally_writable
+fma_object_check_mimetypes
+fma_object_dump
+fma_object_dump_norec
+fma_object_dump_tree
+fma_object_ref
+fma_object_unref
+fma_object_debug_invalid
+fma_object_get_id
+fma_object_get_label
+fma_object_get_label_noloc
+fma_object_get_parent
+fma_object_set_id
+fma_object_set_label
+fma_object_set_parent
+fma_object_sort_alpha_asc
+fma_object_sort_alpha_desc
+fma_object_prepare_for_paste
+fma_object_set_copy_of_label
+fma_object_set_new_id
+fma_object_get_tooltip
+fma_object_get_icon
+fma_object_get_icon_noloc
+fma_object_get_description
+fma_object_get_items
+fma_object_get_items_slist
+fma_object_is_enabled
+fma_object_is_readonly
+fma_object_get_provider
+fma_object_get_provider_data
+fma_object_get_iversion
+fma_object_get_shortcut
+fma_object_set_tooltip
+fma_object_set_icon
+fma_object_set_description
+fma_object_set_items
+fma_object_set_items_slist
+fma_object_set_enabled
+fma_object_set_readonly
+fma_object_set_provider
+fma_object_set_provider_data
+fma_object_set_iversion
+fma_object_set_shortcut
+fma_object_get_item
+fma_object_get_position
+fma_object_append_item
+fma_object_insert_at
+fma_object_insert_item
+fma_object_remove_item
+fma_object_get_items_count
+fma_object_count_items
+fma_object_copyref_items
+fma_object_free_items
+fma_object_get_version
+fma_object_is_target_selection
+fma_object_is_target_location
+fma_object_is_target_toolbar
+fma_object_get_toolbar_label
+fma_object_is_toolbar_same_label
+fma_object_get_last_allocated
+fma_object_set_version
+fma_object_set_target_selection
+fma_object_set_target_location
+fma_object_set_target_toolbar
+fma_object_set_toolbar_label
+fma_object_set_toolbar_same_label
+fma_object_set_last_allocated
+fma_object_set_last_version
+fma_object_reset_last_allocated
+fma_object_attach_profile
+fma_object_get_path
+fma_object_get_parameters
+fma_object_get_working_dir
+fma_object_get_execution_mode
+fma_object_get_startup_notify
+fma_object_get_startup_class
+fma_object_get_execute_as
+fma_object_set_path
+fma_object_set_parameters
+fma_object_set_working_dir
+fma_object_set_execution_mode
+fma_object_set_startup_notify
+fma_object_set_startup_class
+fma_object_set_execute_as
+fma_object_get_basenames
+fma_object_get_matchcase
+fma_object_get_mimetypes
+fma_object_get_all_mimetypes
+fma_object_get_folders
+fma_object_get_schemes
+fma_object_get_only_show_in
+fma_object_get_not_show_in
+fma_object_get_try_exec
+fma_object_get_show_if_registered
+fma_object_get_show_if_true
+fma_object_get_show_if_running
+fma_object_get_selection_count
+fma_object_get_capabilities
+fma_object_set_basenames
+fma_object_set_matchcase
+fma_object_set_mimetypes
+fma_object_set_all_mimetypes
+fma_object_set_folders
+fma_object_replace_folder
+fma_object_set_scheme
+fma_object_set_schemes
+fma_object_set_only_show_in
+fma_object_set_only_desktop
+fma_object_set_not_show_in
+fma_object_set_not_desktop
+fma_object_set_try_exec
+fma_object_set_show_if_registered
+fma_object_set_show_if_true
+fma_object_set_show_if_running
+fma_object_set_selection_count
+fma_object_set_capabilities
+</SECTION>
+
+# ---------------------------------------------------------------------
+# FMAGConfMonitor — The GConf Monitoring Class Definition
+
+<SECTION>
+<FILE>gconf-monitor</FILE>
+FMA_GCONF_MONITOR_TYPE
+FMA_GCONF_MONITOR
+FMA_IS_GCONF_MONITOR
+FMAGConfMonitor
+fma_gconf_monitor_new
+fma_gconf_monitor_release_monitors
+
+<SUBSECTION Standard>
+fma_gconf_monitor_get_type
+FMA_GCONF_MONITOR_CLASS
+FMA_IS_GCONF_MONITOR_CLASS
+FMA_GCONF_MONITOR_GET_CLASS
+FMAGConfMonitorClass
+
+<SUBSECTION Private>
+FMAGConfMonitorPrivate
+FMAGConfMonitorClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# GConf Misc — The Library Utilities 
+
+<SECTION>
+<FILE>gconf-utils</FILE>
+fma_gconf_utils_get_subdirs
+fma_gconf_utils_free_subdirs
+fma_gconf_utils_has_entry
+fma_gconf_utils_get_entries
+fma_gconf_utils_get_bool_from_entries
+fma_gconf_utils_get_string_from_entries
+fma_gconf_utils_get_string_list_from_entries
+fma_gconf_utils_dump_entries
+fma_gconf_utils_free_entries
+fma_gconf_utils_read_bool
+fma_gconf_utils_read_int
+fma_gconf_utils_read_string
+fma_gconf_utils_read_string_list
+fma_gconf_utils_write_bool
+fma_gconf_utils_write_int
+fma_gconf_utils_write_string
+fma_gconf_utils_write_string_list
+fma_gconf_utils_remove_entry
+fma_gconf_utils_slist_from_string
+fma_gconf_utils_slist_to_string
+</SECTION>
+
+# ---------------------------------------------------------------------
+# Core Misc — The Library Utilities 
+
+<SECTION>
+<FILE>core-utils</FILE>
+fma_core_utils_boolean_from_string
+fma_core_utils_str_add_prefix
+fma_core_utils_str_collate
+fma_core_utils_str_remove_char
+fma_core_utils_str_remove_suffix
+fma_core_utils_str_split_first_word
+fma_core_utils_str_subst
+fma_core_utils_slist_add_message
+fma_core_utils_slist_duplicate
+fma_core_utils_slist_dump
+fma_core_utils_slist_from_array
+fma_core_utils_slist_from_split
+fma_core_utils_slist_join_at_end
+fma_core_utils_slist_remove_ascii
+fma_core_utils_slist_remove_utf8
+fma_core_utils_slist_to_array
+fma_core_utils_slist_to_text
+fma_core_utils_slist_setup_element
+fma_core_utils_slist_count
+fma_core_utils_slist_find_negated
+fma_core_utils_slist_are_equal
+fma_core_utils_slist_free
+fma_core_utils_gstring_joinv
+fma_core_utils_selcount_get_ope_int
+fma_core_utils_dir_is_writable_path
+fma_core_utils_dir_is_writable_uri
+fma_core_utils_dir_list_perms
+fma_core_utils_dir_split_ext
+fma_core_utils_file_delete
+fma_core_utils_file_exists
+fma_core_utils_file_is_loadable
+fma_core_utils_file_load_from_uri
+fma_core_utils_print_version
+</SECTION>
+
+# ---------------------------------------------------------------------
+# Timeout convenience structure 
+
+<SECTION>
+<FILE>timeout</FILE>
+FMATimeout
+FMATimeoutFunc
+fma_timeout_event
+</SECTION>

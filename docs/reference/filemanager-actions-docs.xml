@@ -6,7 +6,7 @@
   <!ENTITY version SYSTEM "version.xml">
   <!ENTITY prodname "<productname>FileManager-Actions</productname>">
   <!ENTITY nautilus "<productname>Nautilus</productname>">
-  <!ENTITY nact     "<productname>FileManager-Actions Configuration Tool</productname>">
+  <!ENTITY fmact    "<productname>FileManager-Actions Configuration Tool</productname>">
   <!ENTITY lcomment "/*">
   <!ENTITY rcomment "*/">
 ]>
@@ -15,7 +15,7 @@
  - I would like to insert line breaks somewhere (e.g. inside of releaseinfo)
  - I would like to get rid of the extra space which comes with 'version.xml'
    and in general with all included entities
-   (see e.g. na-getting.xml)
+   (see e.g. fma-getting.xml)
 -->
 <book id="index">
   <bookinfo>
@@ -30,17 +30,20 @@
       <year>2010</year>
       <year>2011</year>
       <year>2012</year>
+      <year>2013</year>
+      <year>2014</year>
+      <year>2015</year>
 	  <holder>Pierre Wieser</holder>
     </copyright>
   </bookinfo>
 
   <chapter>
     <title>&prodname; Overview</title>
-    <xi:include href="na-what-is-it.xml" />
-    <xi:include href="na-getting.xml" />
-    <xi:include href="na-dist-content.xml" />
-    <xi:include href="na-compiling.xml" />
-    <xi:include href="na-about.xml" />
+    <xi:include href="fma-what-is-it.xml" />
+    <xi:include href="fma-getting.xml" />
+    <xi:include href="fma-dist-content.xml" />
+    <xi:include href="fma-compiling.xml" />
+    <xi:include href="fma-about.xml" />
   </chapter>
 
   <chapter>

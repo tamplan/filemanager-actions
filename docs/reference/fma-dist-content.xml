@@ -6,7 +6,7 @@
   <!ENTITY nautilus "<productname>Nautilus</productname>">
 ]>
 
-<refentry id="na-dist-content" revision="8 Dec 2010">
+<refentry id="fma-dist-content" revision="8 Dec 2010">
 
   <refmeta>
     <refentrytitle>Distribution content</refentrytitle>
@@ -33,12 +33,12 @@
         </para>
         <itemizedlist>
           <listitem>
-            a &nautilus; plugin, said <emphasis>menu</emphasis>,
+            a file-manager plugin, said <emphasis>menu</emphasis>,
             responsible for managing displayed menus and actions
             through &nautilus; extension system;
           </listitem>
           <listitem>
-            a &nautilus; plugin, said <emphasis>tracker</emphasis>,
+            a file-manager plugin, said <emphasis>tracker</emphasis>,
             which manages DBus services;
           </listitem>
           <listitem>
@@ -47,20 +47,13 @@
             create, delete and organize his collection of menus and actions;
           </listitem>
           <listitem>
-            <application>nautilus-actions-new</application> is a
+            <application>fma-new</application> is a
             command-line utility for defining a new action;
           </listitem>
           <listitem>
-            <application>nautilus-actions-run</application> is a
+            <application>fma-run</application> is a
             command-line utility for running an existing action,
-            taking into account the current &nautilus; selection;
-          </listitem>
-          <listitem>
-            <application>nautilus-actions-schemas</application>
-            is a command-line utility which outputs
-            to stdout the GConf schemas of the
-            <application>FileManager-Actions Configuration Tool</application>;
-            it rather targets packagers.
+            taking into account the current file-manager selection;
           </listitem>
         </itemizedlist>
       </listitem>

@@ -32,7 +32,7 @@
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make
 
-DOC_MODULE = nautilus-actions
+DOC_MODULE = filemanager-actions
 
 DOC_MODULE_VERSION = 3
 
@@ -68,7 +68,7 @@ endif
 #	--rebuild-sections
 SCAN_OPTIONS = \
 	--rebuild-types								\
-	--deprecated-guards=NA_ENABLE_DEPRECATED	\
+	--deprecated-guards=FMA_ENABLE_DEPRECATED	\
 	$(NULL)
 
 # The directory containing the source code. Relative to $(srcdir)

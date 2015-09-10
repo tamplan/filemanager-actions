@@ -2,24 +2,24 @@
 #                so forcing them here
 
 <FUNCTION>
-<NAME>NAIImporterCheckFn</NAME>
+<NAME>FMAIImporterCheckFn</NAME>
 <DEPRECATED/>
-<RETURNS>NAObjectItem *</RETURNS>
- const NAObjectItem *imported
+<RETURNS>FMAObjectItem *</RETURNS>
+ const FMAObjectItem *imported
  void *fn_data 
 </FUNCTION>
 
 <FUNCTION>
-<NAME>NAIImporterAskUserFn</NAME>
+<NAME>FMAIImporterAskUserFn</NAME>
 <DEPRECATED/>
 <RETURNS>guint</RETURNS>
- const NAObjectItem *imported
- const NAObjectItem *existing
+ const FMAObjectItem *imported
+ const FMAObjectItem *existing
  void *fn_data 
 </FUNCTION>
 
 <FUNCTION>
-<NAME>NATimeoutFunc</NAME>
+<NAME>FMATimeoutFunc</NAME>
 <RETURNS>void</RETURNS>
  void *user_data 
 </FUNCTION>

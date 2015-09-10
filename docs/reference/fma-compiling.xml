@@ -4,9 +4,10 @@
 [
   <!ENTITY prodname "<productname>FileManager-Actions</productname>">
   <!ENTITY nautilus "<productname>Nautilus</productname>">
+  <!ENTITY nemo     "<productname>Nemo</productname>">
 ]>
 
-<refentry id="na-compiling" revision="4 Dec 2010">
+<refentry id="fma-compiling" revision="10 sept 2015">
 
   <refmeta>
     <refentrytitle>Compiling the FileManager-Actions package</refentrytitle>
@@ -136,16 +137,14 @@
       </listitem>
       <listitem>
         <para>
-          <ulink url="http://www.gnome.org/~ebassi/source/">libunique</ulink>
-          is required so that the FileManager-Actions Configuration Tool only
-          executes one instance.
+          <ulink url="http://projects.gnome.org/nautilus/">&nautilus; extension</ulink>
+          is needed if you want build &nautilus; extension.
         </para>
       </listitem>
       <listitem>
         <para>
-          And, of course,
-          <ulink url="http://projects.gnome.org/nautilus/">&nautilus; extension</ulink>
-          is required because &prodname; is first a &nautilus; extension.
+          <ulink url="https://github.com/linuxmint/nemo/">&nemo; extension</ulink>
+          is needed if you want build &nemo; extension.
         </para>
       </listitem>
     </itemizedlist>
@@ -163,6 +162,9 @@
         <command>configure</command>
         <group>
           <arg>--with-nautilus-extdir=DIR</arg>
+        </group>
+        <group>
+          <arg>--with-nemo-extdir=DIR</arg>
         </group>
         <group>
           <arg>--with-default-io-provider=na-gconf|io-desktop</arg>
@@ -210,11 +212,43 @@
     </formalpara>
 
     <formalpara>
-      <title><systemitem>--with-default-io-provider=na-gconf|io-desktop</systemitem></title>
+      <title><systemitem>--with-nemo-extdir=DIR</systemitem></title>
       <para>
-        As of version 3.0, &prodname; may store menus and actions
-        both in GConf, which is the historical behavior, or as
-        <filename>.desktop</filename> files.
+        With this option, one may define an alternate directory where
+        our &nemo; extensions will be stored.
+      </para>
+      <para>
+        This is most commonly useful:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            In development mode, we only have to install symlinks
+            from &nemo; standard location to our development
+            tree once. Then, each new version of our libraries
+            will be automatically considered by &nemo;.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            When running <command>make distcheck</command>, so that
+            compiled libraries do not interfere with installed ones.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            When &nemo; is not installed itself in a standard
+            location.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </formalpara>
+
+    <formalpara>
+      <title><systemitem>--with-default-io-provider=io-desktop</systemitem></title>
+      <para>
+        As of version 3.4, &prodname; GConf is fully deprecated and its support
+        will be removed.
       </para>
       <para>
         This option lets the packager define which will be the
