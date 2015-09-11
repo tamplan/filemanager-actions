@@ -27,16 +27,56 @@
 
     <para>
       On UNIX, &prodname; uses the standard GNU build system,
-      using <ulink url="http://www.gnu.org/software/autoconf/">
-      <application>autoconf</application></ulink> for package
-      configuration and resolving portability issues,
-      <ulink url="http://www.gnu.org/software/automake/">
-      <application>automake</application></ulink> for building makefiles
-      that comply with the GNU Coding Standards, and
-      <ulink url="http://www.gnu.org/software/libtool/">
-      <application>libtool</application></ulink> for building shared
-      libraries on multiple platforms. The normal sequence for
-      compiling and installing the &prodname; package is thus:
+      using
+      <itemized list>
+        <listitem>
+          <para> 
+            <ulink url="http://www.gnu.org/software/autoconf/">
+            <application>autoconf</application></ulink> for configuring
+            the package and resolving portability issues,
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="http://www.gnu.org/software/automake/">
+            <application>automake</application></ulink> for building
+            makefiles that comply with the GNU Coding Standards; 
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="http://www.gnu.org/software/libtool/">
+            <application>libtool</application></ulink> for building
+            shared libraries which target multiple platforms;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="http://www.freedesktop.org/software/pkgconfig/">pkg-config</ulink>
+            for tracking the compilation flags needed by used libraries
+            (For each library, a small <literal>.pc</literal> text file is
+            installed in a standard location that contains the compilation
+            flags needed for that library along with version number
+            information);
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="http://www.gnu.org/software/make">GNU make</ulink>
+            for actually building.
+          </para>
+          <para>
+            The &prodname; makefiles will mostly work with different versions
+            of <command>make</command>. However, there tends to be
+            a few incompatibilities, so the &prodname; team recommends
+            installing <ulink url="http://www.gnu.org/software/make">GNU make</ulink>
+             if you don't already have it on your system.
+          </para>
+        </listitem>
+      </itemizedlist> 
+      
+      The normal sequence for compiling and installing the &prodname; 
+      package is thus:
 
       <literallayout>
         <userinput>./configure</userinput>
@@ -58,40 +98,6 @@
 
   <refsect1 id="dependencies">
     <title>Dependencies</title>
-
-    <para>
-      Before you can compile the &prodname; package, you need to have
-      various other tools and libraries installed on your
-      system. The two main tools needed during the build process (as
-      differentiated from the tools used in when creating &prodname;
-      mentioned above such as <application>autoconf</application>)
-      are <command>pkg-config</command> and GNU make.
-    </para>
-
-    <itemizedlist>
-      <listitem>
-        <para>
-          <ulink url="http://www.freedesktop.org/software/pkgconfig/">pkg-config</ulink>
-          is a tool for tracking the compilation flags needed for
-          libraries that are used by the &prodname; package.
-          (For each library, a small <literal>.pc</literal> text file is
-          installed in a standard location that contains the compilation
-          flags needed for that library along with version number
-          information.)
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          The &prodname; makefiles will mostly work with different versions
-          of <command>make</command>. However, there tends to be
-          a few incompatibilities, so the &prodname; team recommends
-          installing <ulink url="http://www.gnu.org/software/make">GNU
-          make</ulink> if you don't already have it on your system
-          and using it. (It may be called <command>gmake</command>
-          rather than <command>make</command>.)
-        </para>
-      </listitem>
-    </itemizedlist>
 
     <para>
       &prodname; depends on a number of other libraries.
@@ -138,13 +144,13 @@
       <listitem>
         <para>
           <ulink url="http://projects.gnome.org/nautilus/">&nautilus; extension</ulink>
-          is needed if you want build &nautilus; extension.
+          is needed if you want build &nautilus; extensions.
         </para>
       </listitem>
       <listitem>
         <para>
           <ulink url="https://github.com/linuxmint/nemo/">&nemo; extension</ulink>
-          is needed if you want build &nemo; extension.
+          is needed if you want build &nemo; extensions.
         </para>
       </listitem>
     </itemizedlist>
@@ -162,17 +168,13 @@
         <command>configure</command>
         <group>
           <arg>--with-nautilus-extdir=DIR</arg>
-        </group>
-        <group>
           <arg>--with-nemo-extdir=DIR</arg>
-        </group>
-        <group>
-          <arg>--with-default-io-provider=na-gconf|io-desktop</arg>
-        </group>
-        <group>
+          <!-- pwi 2015- 9-11
+               this is removed from the documentation
+               is io-gconf is deprecated
+          <arg>--with-default-io-provider=io-gconf|io-desktop</arg>
+               -->
           <arg>--enable-html-manuals[=gdt|db2html]</arg>
-        </group>
-        <group>
           <arg>--enable-pdf-manuals[=dblatex]</arg>
         </group>
       </cmdsynopsis>
@@ -180,42 +182,10 @@
 
     <formalpara>
       <title><systemitem>--with-nautilus-extdir=DIR</systemitem></title>
-      <para>
-        With this option, one may define an alternate directory where
-        our &nautilus; extensions will be stored.
-      </para>
-      <para>
-        This is most commonly useful:
-      </para>
-      <itemizedlist>
-        <listitem>
-          <para>
-            In development mode, we only have to install symlinks
-            from &nautilus; standard location to our development
-            tree once. Then, each new version of our libraries
-            will be automatically considered by &nautilus;.
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            When running <command>make distcheck</command>, so that
-            compiled libraries do not interfere with installed ones.
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            When &nautilus; is not installed itself in a standard
-            location.
-          </para>
-        </listitem>
-      </itemizedlist>
-    </formalpara>
-
-    <formalpara>
       <title><systemitem>--with-nemo-extdir=DIR</systemitem></title>
       <para>
         With this option, one may define an alternate directory where
-        our &nemo; extensions will be stored.
+        our file manager extensions will be stored.
       </para>
       <para>
         This is most commonly useful:
@@ -224,9 +194,9 @@
         <listitem>
           <para>
             In development mode, we only have to install symlinks
-            from &nemo; standard location to our development
+            from the file manager standard location to our development
             tree once. Then, each new version of our libraries
-            will be automatically considered by &nemo;.
+            will be automatically considered by the file manager.
           </para>
         </listitem>
         <listitem>
@@ -237,13 +207,14 @@
         </listitem>
         <listitem>
           <para>
-            When &nemo; is not installed itself in a standard
+            When the file manager is not installed itself in its standard
             location.
           </para>
         </listitem>
       </itemizedlist>
     </formalpara>
 
+<!--
     <formalpara>
       <title><systemitem>--with-default-io-provider=io-desktop</systemitem></title>
       <para>
@@ -261,6 +232,7 @@
         <filename>.desktop</filename> files.
       </para>
     </formalpara>
+    -->
 
     <formalpara>
       <title><systemitem>--enable-html-manuals[=gdt|db2html]</systemitem></title>
@@ -276,14 +248,14 @@
         realized through <application>gnome-doc-tool</application>
         or <application>db2html</application>.
         &prodname; defaults to use <application>gnome-doc-tool</application>
-        as the output format better sticks with those of
+        as its output format better sticks with those of
         <application>Yelp</application>.
       </para>
       <para>
         As this option is always set when running
         <command>make distcheck</command>, the packager can be
         mostly sure that the distributed manuals are up to date,
-        and may safely ignore this option.
+        and may safely ignore it.
       </para>
     </formalpara>
 
@@ -300,7 +272,7 @@
         As this option is always set when running
         <command>make distcheck</command>, the packager can be
         mostly sure that the distributed manuals are up to date,
-        and may safely ignore this option.
+        and may safely ignore it.
       </para>
     </formalpara>
 

@@ -54,7 +54,7 @@
  *  </para>
  *  <para>
  *   Below is a list of currently allocated export format identifiers.
- *   This list has been last updated on 2010, July 28th.
+ *   This list has been last updated on 2015, September 10th.
  *  </para>
  *  <table>
  *   <title>Currently allocated export format identifiers</title>
@@ -63,12 +63,16 @@
  *      <colspec colname="label" />
  *      <colspec colname="holder" />
  *      <colspec colname="allocated" align="center" />
+ *      <colspec colname="deprecated" />
+ *      <colspec colname="current" />
  *      <thead>
  *        <row>
  *          <entry>Identifier</entry>
  *          <entry>Name</entry>
  *          <entry>Holder</entry>
  *          <entry>Allocated on</entry>
+ *          <entry></entry>
+ *          <entry></entry>
  *        </row>
  *      </thead>
  *      <tbody>
@@ -77,30 +81,40 @@
  *          <entry>Reserved for &prodname; internal needs</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-02-15</entry>
+ *          <entry></entry>
+ *          <entry>current</entry>
  *        </row>
  *        <row>
  *          <entry><literal>Desktop1</literal></entry>
  *          <entry>FMA Desktop module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-07-28</entry>
+ *          <entry></entry>
+ *          <entry>current</entry>
  *        </row>
  *        <row>
  *          <entry><literal>GConfSchemaV1</literal></entry>
  *          <entry>FMA XML module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-02-15</entry>
+ *          <entry>deprecated</entry>
+ *          <entry></entry>
  *        </row>
  *        <row>
  *          <entry><literal>GConfSchemaV2</literal></entry>
  *          <entry>FMA XML module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-02-15</entry>
+ *          <entry>deprecated</entry>
+ *          <entry></entry>
  *        </row>
  *        <row>
  *          <entry><literal>GConfEntry</literal></entry>
  *          <entry>FMA XML module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-02-15</entry>
+ *          <entry>deprecated</entry>
+ *          <entry></entry>
  *        </row>
  *      </tbody>
  *    </tgroup>
@@ -114,8 +128,8 @@
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="fma-version" />
  *      <colspec colname="api-version" />
- *      <colspec colname="current" />
  *      <colspec colname="deprecated" />
+ *      <colspec colname="current" />
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
@@ -128,14 +142,14 @@
  *        <row>
  *          <entry>from 2.30 to 3.1.5</entry>
  *          <entry>1</entry>
- *          <entry></entry>
  *          <entry>deprecated</entry>
+ *          <entry></entry>
  *        </row>
  *        <row>
  *          <entry>since 3.2</entry>
  *          <entry>2</entry>
- *          <entry>current version</entry>
  *          <entry></entry>
+ *          <entry>current version</entry>
  *        </row>
  *      </tbody>
  *    </tgroup>
@@ -263,41 +277,10 @@ typedef struct {
  *
  * This structure describes a supported output format.
  * It must be provided by each #FMAIExporter implementation
- * (see e.g. <filename>src/io-xml/naxml-formats.c</filename>).
+ * (see e.g. <filename>src/io-xml/fma-xml-formats.c</filename>).
  *
  * When listing available export formats, the @provider must return a #GList
  * of these structures.
- *
- * <refsect2>
- *  <title>Versions historic</title>
- *  <table>
- *    <title>Historic of the versions of the #FMAIExporterFormatv2 structure</title>
- *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
- *      <colspec colname="fma-version" />
- *      <colspec colname="api-version" />
- *      <colspec colname="current" />
- *      <thead>
- *        <row>
- *          <entry>&prodname; version</entry>
- *          <entry>#FMAIExporterFormatv2 structure version</entry>
- *          <entry></entry>
- *        </row>
- *      </thead>
- *      <tbody>
- *        <row>
- *          <entry>since 2.30</entry>
- *          <entry>1</entry>
- *          <entry></entry>
- *        </row>
- *        <row>
- *          <entry>since 3.2</entry>
- *          <entry>2</entry>
- *          <entry>current version</entry>
- *        </row>
- *      </tbody>
- *    </tgroup>
- *  </table>
- * </refsect2>
  *
  * Since: 3.2
  */

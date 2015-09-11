@@ -77,7 +77,7 @@
  *       <para>
  *         Now that our elementary datas are banalized and de-structured,
  *         it is simple enough to describe each of these datas with all
- *         iss properties in one single, centralized, place.
+ *         its properties in one single, centralized, place.
  *       </para>
  *     </formalpara>
  *   </listitem>
@@ -190,7 +190,10 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_start ) ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
+	void          ( *read_start ) ( const FMAIFactoryProvider *reader,
+										void *reader_data,
+										const FMAIFactoryObject *object,
+										GSList **messages  );
 
 	/**
 	 * read_data:
@@ -209,7 +212,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	FMADataBoxed * ( *read_data )  ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, const FMADataDef *def, GSList **messages );
+	FMADataBoxed * ( *read_data )  ( const FMAIFactoryProvider *reader,
+										void *reader_data,
+										const FMAIFactoryObject *object,
+										const FMADataDef *def,
+										GSList **messages );
 
 	/**
 	 * read_done:
@@ -225,7 +232,10 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_done )  ( const FMAIFactoryProvider *reader, void *reader_data, const FMAIFactoryObject *object, GSList **messages  );
+	void          ( *read_done )  ( const FMAIFactoryProvider *reader,
+										void *reader_data,
+										const FMAIFactoryObject *object,
+										GSList **messages  );
 
 	/**
 	 * write_start:
@@ -241,7 +251,10 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_start )( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
+	guint         ( *write_start )( const FMAIFactoryProvider *writer,
+										void *writer_data,
+										const FMAIFactoryObject *object,
+										GSList **messages  );
 
 	/**
 	 * write_data:
@@ -261,7 +274,11 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_data ) ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, const FMADataBoxed *boxed, GSList **messages );
+	guint         ( *write_data ) ( const FMAIFactoryProvider *writer,
+										void *writer_data,
+										const FMAIFactoryObject *object,
+										const FMADataBoxed *boxed,
+										GSList **messages );
 
 	/**
 	 * write_done:
@@ -278,7 +295,10 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_done ) ( const FMAIFactoryProvider *writer, void *writer_data, const FMAIFactoryObject *object, GSList **messages  );
+	guint         ( *write_done ) ( const FMAIFactoryProvider *writer,
+										void *writer_data,
+										const FMAIFactoryObject *object,
+										GSList **messages  );
 }
 	FMAIFactoryProviderInterface;
 

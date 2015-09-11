@@ -143,7 +143,7 @@ get_list_of_desktop_paths( FMADesktopProvider *provider, GSList **messages )
 	 */
 	for( idir = xdg_dirs ; idir ; idir = idir->next ){
 
-		/* explore each N-A candidate subdirectory for each XDG dir
+		/* explore each FMA candidate subdirectory for each XDG dir
 		 */
 		for( isub = subdirs ; isub ; isub = isub->next ){
 
@@ -357,7 +357,7 @@ free_desktop_paths( GList *paths )
  * So we have to load the file into memory, and then try to load the key
  * file from the memory data.
  *
- * Starting with N-A 3.2, we only honor the version 2 of #FMAIImporter interface,
+ * Starting with FMA 3.2, we only honor the version 2 of #FMAIImporter interface,
  * thus no more checking here against possible duplicate identifiers.
  */
 guint

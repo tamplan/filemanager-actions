@@ -316,7 +316,7 @@ reader_new( void )
  *  then we do not return any error message at all, but just the 'unwilling to'
  *  code.
  *
- * Starting with N-A 3.2, we only honor the version 2 of #FMAIImporter interface,
+ * Starting with FMA 3.2, we only honor the version 2 of #FMAIImporter interface,
  * thus no more checking here against possible duplicate identifiers.
  */
 guint

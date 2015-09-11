@@ -130,7 +130,7 @@ set_log_handler( void )
  * we used to install a log handler for each and every log domain used
  * in FileManager-Actions ; this led to a fastidious enumeration
  * instead we install a default log handler which will receive all
- * debug messages, i.e. not only from N-A, but also from other code
+ * debug messages, i.e. not only from FMA, but also from other code
  * in the Nautilus process
  */
 static void

@@ -154,7 +154,7 @@ typedef struct {
 	 * @parms is supposed to map to FMAIImporterImportFromUriParms structure.
 	 *
 	 * Contrarily, if the provider implements the version 2 of the interface,
-	 * then @parms is supposed to map to a FMAIImporterImportFromUriParmsv2
+	 * then @parms is expected to map to a FMAIImporterImportFromUriParmsv2
 	 * structure.
 	 *
 	 * Return value: the return code of the operation.
@@ -183,7 +183,7 @@ typedef struct {
  * should be systematically regenerated as a unique id, regardless of the
  * asked import mode.
  *
- * Standard N-A callers provide a function which checks for the existance
+ * Standard FMA callers provide a function which checks for the existance
  * of the newly imported item :
  * <itemizedlist>
  *   <listitem>

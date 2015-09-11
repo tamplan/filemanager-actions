@@ -42,7 +42,7 @@
 #include "console-utils.h"
 
 /*
- * A program to update the N-A configuration files
+ * A program to update the FMA configuration files
  */
 
 #include <core/fma-settings.h>

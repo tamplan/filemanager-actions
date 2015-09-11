@@ -42,13 +42,13 @@
  *
  * <note>
  *   <para>
- *    To be really clear, &prodname; relies on &nautilus; in order
- *    to be able to register its own D-Bus services via the
+ *    To be really clear, &prodname; relies on a running file manager
+ *     in order to be able to register its own D-Bus services via the
  *    <emphasis>tracker</emphasis> plugin.
  *   </para>
  *   <para>
- *    If &nautilus; does not run, or the <emphasis>tracker</emphasis>
- *    plugin is not loaded at &nautilus; startup, then these D-Bus
+ *    If the file manager does not run, or the <emphasis>tracker</emphasis>
+ *    plugin is not loaded at file manager startup, then these D-Bus
  *    services will not be available.
  *   </para>
  * </note>

@@ -29,13 +29,13 @@
     <itemizedlist>
       <listitem>
         <para>
-          Program sources
+          Some executables
         </para>
         <itemizedlist>
           <listitem>
             a file-manager plugin, said <emphasis>menu</emphasis>,
             responsible for managing displayed menus and actions
-            through &nautilus; extension system;
+            through the file manager extension system;
           </listitem>
           <listitem>
             a file-manager plugin, said <emphasis>tracker</emphasis>,
@@ -51,15 +51,19 @@
             command-line utility for defining a new action;
           </listitem>
           <listitem>
+            <application>fma-print</application> is a
+            command-line utility for printing an action;
+          </listitem>
+          <listitem>
             <application>fma-run</application> is a
             command-line utility for running an existing action,
-            taking into account the current file-manager selection;
+            taking into account the current file-manager selection.
           </listitem>
         </itemizedlist>
       </listitem>
       <listitem>
         <para>
-          Documentation
+          The documentation
         </para>
         <itemizedlist>
           <listitem>
@@ -77,7 +81,7 @@
       </listitem>
       <listitem>
         <para>
-          Samples
+          Samples from the user's manual
         </para>
         <itemizedlist>
           <listitem>

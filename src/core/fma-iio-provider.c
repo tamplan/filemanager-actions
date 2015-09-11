@@ -187,7 +187,7 @@ do_is_able_to_write( const FMAIIOProvider *instance )
  * @instance: the calling #FMAIIOProvider.
  *
  * Informs &prodname; that this #FMAIIOProvider @instance has
- * detected a modification in (at least) one of its items (menu
+ * detected a modification in at least one of its items (menu
  * or action).
  *
  * This function may be triggered for each and every
@@ -196,12 +196,12 @@ do_is_able_to_write( const FMAIIOProvider *instance )
  *
  * When receiving this signal, the currently running program may just
  * want to immediately reload the current list of items, menus and actions
- * (this is for example what &nautilus; plugin does); it may also choose
- * to ask the user if he is willing to reload such a current list (and
- * this is the way &fmact; has chosen to deal with this message).
+ * (this is for example what the file manager plugins do); it may also
+ * choose to ask the user if he is willing to reload such a current list
+ *  (and this is the way &fmact; has chosen to deal with this message).
  *
- * Note that application FMAPivot/FMAUpdater pivot is typically the only
- * object connected to this signal. It acts so as a filtering proxy,
+ * Note that application FMAPivot/FMAUpdater pivot is typically the
+ * only object connected to this signal. It acts so as a filtering proxy,
  * re-emitting its own 'items-changed' signal for a whole set of detected
  * underlying modifications.
  *

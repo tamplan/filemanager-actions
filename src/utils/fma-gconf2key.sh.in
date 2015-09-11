@@ -689,7 +689,7 @@ writable = false
 let nbprefs=0
 
 if [ -e ${destconf} ]; then
-	msg "${destconf} already exists: do not replace it, update the N-A configuration file instead"
+	msg "${destconf} already exists: do not replace it, update the FMA configuration file instead"
 	command "@pkglibexecdir@/fma-set-conf --group 'io-provider fma-gconf' --key writable --type bool --value false"
 else
 	nbprefs=$(cat ${my_tmproot}.nact ${my_tmproot}.runtime ${my_tmproot}.io-provider_* 2>/dev/null | wc -l)

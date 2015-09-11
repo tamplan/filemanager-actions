@@ -39,11 +39,11 @@
 
   <chapter>
     <title>&prodname; Overview</title>
+    <xi:include href="fma-about.xml" />
     <xi:include href="fma-what-is-it.xml" />
     <xi:include href="fma-getting.xml" />
     <xi:include href="fma-dist-content.xml" />
     <xi:include href="fma-compiling.xml" />
-    <xi:include href="fma-about.xml" />
   </chapter>
 
   <chapter>
@@ -75,7 +75,7 @@
   </chapter>
 
   <chapter>
-    <title>NAObject Hierarchy</title>
+    <title>FMAObject Hierarchy</title>
     <xi:include href="xml/object.xml"/>
     <xi:include href="xml/object-id.xml"/>
     <xi:include href="xml/object-item.xml"/>

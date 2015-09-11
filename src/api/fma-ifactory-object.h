@@ -145,7 +145,8 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *copy )       ( FMAIFactoryObject *instance, const FMAIFactoryObject *source );
+	void          ( *copy )       ( FMAIFactoryObject *instance,
+										const FMAIFactoryObject *source );
 
 	/**
 	 * are_equal:
@@ -159,7 +160,8 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean      ( *are_equal )  ( const FMAIFactoryObject *a, const FMAIFactoryObject *b );
+	gboolean      ( *are_equal )  ( const FMAIFactoryObject *a,
+										const FMAIFactoryObject *b );
 
 	/**
 	 * is_valid:
@@ -186,7 +188,10 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_start ) ( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void          ( *read_start ) ( FMAIFactoryObject *instance,
+										const FMAIFactoryProvider *reader,
+										void *reader_data,
+										GSList **messages );
 
 	/**
 	 * read_done:
@@ -200,7 +205,10 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void          ( *read_done )  ( FMAIFactoryObject *instance, const FMAIFactoryProvider *reader, void *reader_data, GSList **messages );
+	void          ( *read_done )  ( FMAIFactoryObject *instance,
+										const FMAIFactoryProvider *reader,
+										void *reader_data,
+										GSList **messages );
 
 	/**
 	 * write_start:
@@ -216,7 +224,10 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_start )( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	guint         ( *write_start )( FMAIFactoryObject *instance,
+										const FMAIFactoryProvider *writer,
+										void *writer_data,
+										GSList **messages );
 
 	/**
 	 * write_done:
@@ -232,7 +243,10 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint         ( *write_done ) ( FMAIFactoryObject *instance, const FMAIFactoryProvider *writer, void *writer_data, GSList **messages );
+	guint         ( *write_done ) ( FMAIFactoryObject *instance,
+										const FMAIFactoryProvider *writer,
+										void *writer_data,
+										GSList **messages );
 }
 	FMAIFactoryObjectInterface;
 

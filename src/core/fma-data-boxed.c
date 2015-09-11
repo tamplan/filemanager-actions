@@ -319,9 +319,9 @@ fma_data_boxed_get_data_def( const FMADataBoxed *boxed )
  * @boxed: this #FMADataBoxed object.
  * @def: the new #FMADataDef to be set.
  *
- * Changes the #FMADataDef a @boxed points to:
- * -> the new type must be the same that the previous one.
- * -> value is unchanged.
+ * Changes the #FMADataDef a @boxed points to.
+ * The new type must be the same that the previous one.
+ * The value is left unchanged.
  *
  * Since: 2.30
  */
@@ -497,8 +497,8 @@ fma_data_boxed_get_as_value( const FMADataBoxed *boxed, GValue *value )
  *
  * Returns: the content of the @boxed.
  *
- * If of type NAFD_TYPE_STRING, NAFD_TYPE_LOCALE_STRING OR
- * NAFD_TYPE_STRING_LIST, then the content is returned in a newly
+ * If of type FMA_DATA_TYPE_STRING, FMA_DATA_TYPE_LOCALE_STRING OR
+ * FMA_DATA_TYPE_STRING_LIST, then the content is returned in a newly
  * allocated value, which should be released by the caller.
  *
  * Since: 2.30

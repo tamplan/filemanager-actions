@@ -41,7 +41,7 @@
  * to their own private storage subsystem.
  *
  * &prodname; core does not provide by itself input/output code. Instead,
- * we entirely relies on input/output facilities provided by implementations
+ * it entirely relies on input/output facilities provided by implementations
  * of this interface.
  *
  * &prodname; is bundled with several I/O providers.
@@ -58,7 +58,7 @@
  *     loading items
  *    </title>
  *    <para>
- *     Loading items is used both by the &nautilus; plugin, by the
+ *     Loading items is used both by the file manager plugins, by the
  *     &fmact; program, and by the command-line utilities.
  *    </para>
  *   </formalpara>
@@ -77,7 +77,7 @@
  *  <listitem>
  *   <formalpara>
  *    <title>
- *     informing &prodname; of extern modifications
+ *     informing &prodname; of external modifications
  *    </title>
  *    <para>
  *     The I/O provider should inform &prodname; when an item happens to
@@ -85,13 +85,13 @@
  *    </para>
  *   </formalpara>
  *   <para>
- *    This feature is only used by the &nautilus; plugin and by the
+ *    This feature is only used by the file manager plugins and by the
  *    &fmact; program.
  *   </para>
  *   <para>
  *    The #FMAIIOProvider interface does not define specific monitoring
  *    methods (but you can also take a glance at #FMATimeout object).
- *    Instead, it is waited that the I/O provider module takes care
+ *    Instead, it is expected that the I/O provider module takes care
  *    itself of managing its own monitoring services at
  *    load/unload time, calling the fma_iio_provider_item_changed()
  *    function when appropriate.
@@ -128,12 +128,16 @@
  *      <colspec colname="label" />
  *      <colspec colname="holder" />
  *      <colspec colname="allocated" align="center" />
+ *      <colspec colname="deprecated" />
+ *      <colspec colname="current" />
  *      <thead>
  *        <row>
  *          <entry>Identifier</entry>
  *          <entry>Name</entry>
  *          <entry>Holder</entry>
  *          <entry>Allocated on</entry>
+ *          <entry></entry>
+ *          <entry></entry>
  *        </row>
  *      </thead>
  *      <tbody>
@@ -142,24 +146,56 @@
  *          <entry>Reserved for &prodname; internal needs</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-01-28</entry>
+ *          <entry></entry>
+ *          <entry>current</entry>
+ *        </row>
+ *        <row>
+ *          <entry><literal>na-desktop</literal></entry>
+ *          <entry>NA Desktop I/O Provider</entry>
+ *          <entry>&prodname;</entry>
+ *          <entry>2009-12-16</entry>
+ *          <entry>deprecated</entry>
+ *          <entry></entry>
+ *        </row>
+ *        <row>
+ *          <entry><literal>na-gconf</literal></entry>
+ *          <entry>NA GConf I/O Provider</entry>
+ *          <entry>&prodname;</entry>
+ *          <entry>2009-12-16</entry>
+ *          <entry>deprecated</entry>
+ *          <entry></entry>
+ *        </row>
+ *        <row>
+ *          <entry><literal>na-xml</literal></entry>
+ *          <entry>NA XML module</entry>
+ *          <entry>&prodname;</entry>
+ *          <entry>2010-02-14</entry>
+ *          <entry>deprecated</entry>
+ *          <entry></entry>
  *        </row>
  *        <row>
  *          <entry><literal>io-desktop</literal></entry>
  *          <entry>FMA Desktop I/O Provider</entry>
  *          <entry>&prodname;</entry>
- *          <entry>2009-12-16</entry>
+ *          <entry>2015- 9-10</entry>
+ *          <entry></entry>
+ *          <entry>current</entry>
  *        </row>
  *        <row>
- *          <entry><literal>fma-gconf</literal></entry>
+ *          <entry><literal>io-gconf</literal></entry>
  *          <entry>FMA GConf I/O Provider</entry>
  *          <entry>&prodname;</entry>
- *          <entry>2009-12-16</entry>
+ *          <entry>2015- 9-10</entry>
+ *          <entry>deprecated</entry>
+ *          <entry></entry>
  *        </row>
  *        <row>
  *          <entry><literal>io-xml</literal></entry>
  *          <entry>FMA XML module</entry>
  *          <entry>&prodname;</entry>
- *          <entry>2010-02-14</entry>
+ *          <entry>2015- 9-10</entry>
+ *          <entry></entry>
+ *          <entry>current</entry>
  *        </row>
  *      </tbody>
  *    </tgroup>
@@ -297,7 +333,8 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	GList *  ( *read_items )         ( const FMAIIOProvider *instance, GSList **messages );
+	GList *  ( *read_items )         ( const FMAIIOProvider *instance,
+											GSList **messages );
 
 	/**
 	 * is_willing_to_write:
@@ -338,7 +375,7 @@ typedef struct {
 	 * I/O provider is actually willing to write.
 	 *
 	 * This condition is only relevant when trying to define new items,
-	 * to see if a willing_to provider is actually able to do write
+	 * to determine if a willing-to provider is actually able to do write
 	 * operations. It it not relevant for updating/deleting already
 	 * existing items as they have already checked their own runtime
 	 * writability status when read from the storage subsystems.
@@ -379,7 +416,9 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *write_item )         ( const FMAIIOProvider *instance, const FMAObjectItem *item, GSList **messages );
+	guint    ( *write_item )         ( const FMAIIOProvider *instance,
+											const FMAObjectItem *item,
+											GSList **messages );
 
 	/**
 	 * delete_item:
@@ -398,7 +437,9 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *delete_item )        ( const FMAIIOProvider *instance, const FMAObjectItem *item, GSList **messages );
+	guint    ( *delete_item )        ( const FMAIIOProvider *instance,
+											const FMAObjectItem *item,
+											GSList **messages );
 
 	/**
 	 * duplicate_data:
@@ -423,7 +464,10 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint    ( *duplicate_data )     ( const FMAIIOProvider *instance, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages );
+	guint    ( *duplicate_data )     ( const FMAIIOProvider *instance,
+											FMAObjectItem *dest,
+											const FMAObjectItem *source,
+											GSList **messages );
 }
 	FMAIIOProviderInterface;
 

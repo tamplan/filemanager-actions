@@ -636,11 +636,11 @@ fma_object_object_ref( FMAObject *object )
  * @object: a #FMAObject -derived object.
  *
  * Recursively unref the @object and all its children, decrementing their
- * reference_count by 1.
+ * reference count by 1.
  *
- * Note that we may want to free a copy+ref of a list of items whichy have
+ * Note that we may want to free a copy+ref of a list of items which have
  * had already disposed (which is probably a bug somewhere). So first test
- * is the object is still alive.
+ * is to determine if the object is still alive.
  *
  * Since: 2.30
  */

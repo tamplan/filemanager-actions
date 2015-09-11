@@ -78,7 +78,7 @@ G_BEGIN_DECLS
  * Since: 3.2
  *
  * This same enum used to be defined as FMAIImporterImportMode in api/fma-iimporter.h
- * header. The enum has been deprecated there in N-A 3.2 when the FMAIImporter v2
+ * header. The enum has been deprecated there in FMA 3.2 when the FMAIImporter v2
  * interface was defined. It has so been moved here with the FMAImporterImportMode
  * name.
  */

@@ -85,7 +85,8 @@
  *  </itemizedlist>
  *
  * In order to be recognized as a valid &prodname; plugin, the library
- * must at least export the functions described in this extension API.
+ * must at least export the functions described as mandatory in this
+ * extension API.
  *
  * <refsect2>
  *   <title>Developing a &prodname; plugin</title>
@@ -98,13 +99,13 @@
  * <application><ulink url="http://www.gnu.org/software/automake/">automake</ulink></application>
  * and
  * <application><ulink url="http://www.gnu.org/software/libtool/">libtool</ulink></application>
- * GNU applications.
+ * GNU tools.
  *       </para>
  *       <para>
  * In this case, it should be enough to use the <option>-module</option>
  * option in your <filename>Makefile.am</filename>, as in:
  * <programlisting>
- *   libna_io_desktop_la_LDFLAGS = -module -no-undefined -avoid-version
+ *   libfma_io_desktop_la_LDFLAGS = -module -no-undefined -avoid-version
  * </programlisting>
  *       </para>
  *    </refsect3>
@@ -160,8 +161,9 @@ G_BEGIN_DECLS
  * advantage of this call by initializing itself, registering its
  * internal #GType types, etc.
  *
- * A FileManager-Actions extension must implement this function in order
- * to be considered as a valid candidate to dynamic load.
+ * This function is mandatory: a FileManager-Actions extension must
+ * implement this function in order to be considered as a valid candidate
+ * to dynamic load.
  *
  * <example>
  *   <programlisting>
@@ -235,8 +237,9 @@ guint    fma_extension_get_version( void );
  * derived object for each returned #GType type, and associate these objects
  * to this library.
  *
- * A FileManager-Actions extension must implement this function in order
- * to be considered as a valid candidate to dynamic load.
+ * This function is mandatory: a FileManager-Actions extension must
+ * implement this function in order to be considered as a valid candidate
+ * to dynamic load.
  *
  * <example>
  *   <programlisting>
@@ -245,22 +248,22 @@ guint    fma_extension_get_version( void );
  *      * - be registered in fma_extension_startup()
  *      * - be addressed in fma_extension_list_types().
  *      &rcomment;
- *     #define NADP_TYPES_COUNT    1
+ *     #define TYPES_COUNT    1
  *
  *     guint
  *     fma_extension_list_types( const GType **types )
  *     {
- *          static GType types_list [1+NADP_TYPES_COUNT];
+ *          static GType types_list [1+TYPES_COUNT];
  *
  *          &lcomment; FMA_TYPE_DESKTOP_PROVIDER has been previously
  *           * registered in fma_extension_startup function
  *           &rcomment;
  *          types_list[0] = FMA_TYPE_DESKTOP_PROVIDER;
  *
- *          types_list[NADP_TYPES_COUNT] = 0;
+ *          types_list[TYPES_COUNT] = 0;
  *          *types = types_list;
  *
- *          return( NADP_TYPES_COUNT );
+ *          return( TYPES_COUNT );
  *     }
  *   </programlisting>
  * </example>
@@ -282,8 +285,9 @@ guint    fma_extension_list_types ( const GType **types );
  * release any resource, handle, and so on, it may have previously
  * allocated.
  *
- * A FileManager-Actions extension must implement this function in order
- * to be considered as a valid candidate to dynamic load.
+ * This function is mandatory: a FileManager-Actions extension must
+ * implement this function in order to be considered as a valid
+ * candidate to dynamic load.
  *
  * Since: 2.30
  */

@@ -124,7 +124,7 @@ GType    fma_pivot_get_type( void );
 
 /* Loadable population
  * NACT management user interface defaults to PIVOT_LOAD_ALL
- * N-A plugin set the loadable population to !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID
+ * FMA plugin set the loadable population to !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID
  */
 typedef enum {
 	PIVOT_LOAD_NONE     = 0,
