@@ -58,9 +58,9 @@ typedef void ( *FMATimeoutFunc )( void *user_data );
 
 /**
  * FMATimeout:
- * @timeout:   (i) timeout configurable parameter (ms)
- * @handler:   (i) handler function
- * @user_data: (i) user data
+ * @timeout:   timeout configurable parameter (ms)
+ * @handler:   handler function
+ * @user_data: user data
  *
  * This structure let the user (i.e. the code which uses it) manage functions
  * which should only be called after some time of inactivity, which is typically
@@ -72,7 +72,7 @@ typedef void ( *FMATimeoutFunc )( void *user_data );
  *
  * Such a structure must be allocated for each managed event.
  *
- * When an event is detected, the na_timeout_event() function must be called
+ * When an event is detected, the fma_timeout_event() function must be called
  * with this structure. The function makes sure that the @handler callback
  * will be triggered as soon as no event will be recorded after @timeout
  * milliseconds of inactivity.
@@ -90,7 +90,7 @@ typedef struct {
 }
 	FMATimeout;
 
-void na_timeout_event( FMATimeout *timeout );
+void fma_timeout_event( FMATimeout *timeout );
 
 G_END_DECLS
 

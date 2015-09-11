@@ -31,7 +31,7 @@
 #define __FILEMANAGER_ACTIONS_API_GCONF_MONITOR_H__
 
 #ifdef HAVE_GCONF
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /**
  * SECTION: gconf-monitor
  * @title: FMAGConfMonitor
@@ -83,6 +83,6 @@ void             fma_gconf_monitor_release_monitors( GList *monitors );
 
 G_END_DECLS
 
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 #endif /* HAVE_GCONF */
 #endif /* __FILEMANAGER_ACTIONS_API_GCONF_MONITOR_H__ */

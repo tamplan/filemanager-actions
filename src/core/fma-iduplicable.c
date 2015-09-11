@@ -272,7 +272,7 @@ fma_iduplicable_dump( const FMAIDuplicable *object )
 /**
  * fma_iduplicable_duplicate:
  * @object: the #FMAIDuplicable object to be duplicated.
- * @mode: the %DuplicableMode duplication mode.
+ * @mode: the %FMADuplicableMode duplication mode.
  *
  * Exactly duplicates a #FMAIDuplicable -implemented object, including
  * modification and validity status which are copied from @object to
@@ -466,7 +466,7 @@ fma_iduplicable_set_origin( FMAIDuplicable *object, const FMAIDuplicable *origin
 	str->origin = ( FMAIDuplicable * ) origin;
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /**
  * fma_iduplicable_set_modified:
  * @object: the #FMAIDuplicable object whose modification status is to be set.
@@ -487,7 +487,7 @@ fma_iduplicable_set_modified( FMAIDuplicable *object, gboolean modified )
 	str = get_duplicable_str( object );
 	str->modified = modified;
 }
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 static void
 v_copy( FMAIDuplicable *target, const FMAIDuplicable *source, guint mode )

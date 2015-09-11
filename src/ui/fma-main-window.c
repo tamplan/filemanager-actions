@@ -942,7 +942,7 @@ fma_main_window_block_reload( FMAMainWindow *window )
 
 		g_debug( "%s: blocking %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
 		g_signal_handler_block( window->private->updater, window->private->pivot_handler_id );
-		na_timeout_event( &window->private->pivot_timeout );
+		fma_timeout_event( &window->private->pivot_timeout );
 	}
 }
 

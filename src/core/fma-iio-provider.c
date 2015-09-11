@@ -198,7 +198,7 @@ do_is_able_to_write( const FMAIIOProvider *instance )
  * want to immediately reload the current list of items, menus and actions
  * (this is for example what &nautilus; plugin does); it may also choose
  * to ask the user if he is willing to reload such a current list (and
- * this is the way &nact; has chosen to deal with this message).
+ * this is the way &fmact; has chosen to deal with this message).
  *
  * Note that application FMAPivot/FMAUpdater pivot is typically the only
  * object connected to this signal. It acts so as a filtering proxy,

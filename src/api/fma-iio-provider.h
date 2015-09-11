@@ -59,7 +59,7 @@
  *    </title>
  *    <para>
  *     Loading items is used both by the &nautilus; plugin, by the
- *     &nact; program, and by the command-line utilities.
+ *     &fmact; program, and by the command-line utilities.
  *    </para>
  *   </formalpara>
  *  </listitem>
@@ -69,7 +69,7 @@
  *     creating, updating or deleting items
  *    </title>
  *    <para>
- *     Updating items is a feature only used by the &nact; program and
+ *     Updating items is a feature only used by the &fmact; program and
  *     by some command-line utilities.
  *    </para>
  *   </formalpara>
@@ -86,7 +86,7 @@
  *   </formalpara>
  *   <para>
  *    This feature is only used by the &nautilus; plugin and by the
- *    &nact; program.
+ *    &fmact; program.
  *   </para>
  *   <para>
  *    The #FMAIIOProvider interface does not define specific monitoring

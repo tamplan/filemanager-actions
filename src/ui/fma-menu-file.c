@@ -295,7 +295,7 @@ fma_menu_file_save_items( FMAMainWindow *window )
 
 	for( it = items ; it ; it = it->next ){
 		save_item( window, sdata->updater, FMA_OBJECT_ITEM( it->data ), &messages );
-		duplicate = FMA_OBJECT_ITEM( fma_object_duplicate( it->data, DUPLICATE_REC ));
+		duplicate = FMA_OBJECT_ITEM( fma_object_duplicate( it->data, FMA_DUPLICATE_REC ));
 		fma_object_reset_origin( it->data, duplicate );
 		fma_object_check_status( it->data );
 		new_pivot = g_list_prepend( new_pivot, duplicate );
@@ -392,7 +392,7 @@ install_autosave( FMAMainWindow *main_window )
 static void
 on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer new_value, gpointer user_data )
 {
-	na_timeout_event( &st_autosave_prefs_timeout );
+	fma_timeout_event( &st_autosave_prefs_timeout );
 }
 
 static void

@@ -367,7 +367,7 @@ fma_data_boxed_get_param_spec( const FMADataDef *def )
 	return( spec );
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /**
  * fma_data_boxed_are_equal:
  * @a: the first #FMADataBoxed object.
@@ -386,7 +386,7 @@ fma_data_boxed_are_equal( const FMADataBoxed *a, const FMADataBoxed *b )
 
 	return( fma_boxed_are_equal( FMA_BOXED( a ), FMA_BOXED( b )));
 }
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 /**
  * fma_data_boxed_is_default:
@@ -443,7 +443,7 @@ fma_data_boxed_is_valid( const FMADataBoxed *boxed )
 	return( is_valid );
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /**
  * fma_data_boxed_dump:
  * @boxed: this #FMADataBoxed object.
@@ -573,7 +573,7 @@ fma_data_boxed_set_from_void( FMADataBoxed *boxed, const void *value )
 {
 	fma_boxed_set_from_void( FMA_BOXED( boxed ), value );
 }
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 static GParamSpec *
 bool_spec( const FMADataDef *def )

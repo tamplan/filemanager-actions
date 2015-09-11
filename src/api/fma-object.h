@@ -164,7 +164,7 @@ void       fma_object_object_dump            ( const FMAObject *object );
 void       fma_object_object_dump_norec      ( const FMAObject *object );
 void       fma_object_object_dump_tree       ( GList *tree );
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 GList     *fma_object_get_hierarchy          ( const FMAObject *object );
 void       fma_object_free_hierarchy         ( GList *hierarchy );
 #endif

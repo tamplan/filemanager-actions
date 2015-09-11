@@ -34,7 +34,7 @@
 #include <api/fma-gconf-monitor.h>
 
 #ifdef HAVE_GCONF
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 
 /* private class data
  */
@@ -307,5 +307,5 @@ release_monitor( FMAGConfMonitor *monitor )
 	}
 }
 
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 #endif /* HAVE_GCONF */

@@ -72,7 +72,7 @@ static void            write_done_write_subitems_list( FMADesktopFile *ndp, FMAO
 
 static ExportFormatFn *find_export_format_fn( const gchar *format );
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 static ExportFormatFn *find_export_format_fn_from_quark( GQuark format );
 #endif
 
@@ -371,7 +371,7 @@ fma_desktop_writer_iexporter_export_to_buffer( const FMAIExporter *instance, FMA
 
 	if( code == FMA_IEXPORTER_CODE_OK ){
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
 			fmt = find_export_format_fn_from_quark((( FMAIExporterBufferParms * ) parms )->format );
 		} else {
@@ -431,7 +431,7 @@ fma_desktop_writer_iexporter_export_to_file( const FMAIExporter *instance, FMAIE
 
 	if( code == FMA_IEXPORTER_CODE_OK ){
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
 			fmt = find_export_format_fn_from_quark((( FMAIExporterFileParms * ) parms )->format );
 		} else {
@@ -653,7 +653,7 @@ find_export_format_fn( const gchar *format )
 	return( found );
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 static ExportFormatFn *
 find_export_format_fn_from_quark( GQuark format )
 {

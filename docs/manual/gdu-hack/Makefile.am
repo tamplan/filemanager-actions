@@ -88,6 +88,7 @@ myall:
 	for langdir in $$langdirs; do \
 		lang=`basename $$langdir`; \
 		if [ -e $$langdir/$(DOC_MODULE).xml ]; then \
+			$(MKDIR_P) $$manualbuilddir/$$lang; \
 			touch $$manualbuilddir/$$lang/$$lang.mo; \
 			cp $$langdir/$(DOC_MODULE).xml $$manualbuilddir/$$lang/; \
 		fi; \

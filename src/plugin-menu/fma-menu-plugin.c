@@ -693,7 +693,7 @@ expand_tokens_item( const FMAObjectItem *src, FMATokens *tokens )
 	GList *subitems, *it;
 	FMAObjectItem *item;
 
-	item = FMA_OBJECT_ITEM( fma_object_duplicate( src, DUPLICATE_OBJECT ));
+	item = FMA_OBJECT_ITEM( fma_object_duplicate( src, FMA_DUPLICATE_OBJECT ));
 
 	/* label, tooltip and icon name
 	 * plus the toolbar label if this is an action
@@ -843,7 +843,7 @@ create_item_from_profile( FMAObjectProfile *profile, guint target, GList *files,
 	FMAObjectProfile *duplicate;
 
 	action = FMA_OBJECT_ACTION( fma_object_get_parent( profile ));
-	duplicate = FMA_OBJECT_PROFILE( fma_object_duplicate( profile, DUPLICATE_ONLY ));
+	duplicate = FMA_OBJECT_PROFILE( fma_object_duplicate( profile, FMA_DUPLICATE_ONLY ));
 	fma_object_set_parent( duplicate, NULL );
 
 	item = create_menu_item( FMA_OBJECT_ITEM( action ), target );
@@ -1086,7 +1086,7 @@ on_pivot_items_changed_handler( FMAPivot *pivot, FMAMenuPlugin *plugin )
 
 	if( !plugin->private->dispose_has_run ){
 
-		na_timeout_event( &plugin->private->change_timeout );
+		fma_timeout_event( &plugin->private->change_timeout );
 	}
 }
 
@@ -1101,7 +1101,7 @@ on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpoi
 
 	if( !plugin->private->dispose_has_run ){
 
-		na_timeout_event( &plugin->private->change_timeout );
+		fma_timeout_event( &plugin->private->change_timeout );
 	}
 }
 

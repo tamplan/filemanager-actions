@@ -1163,7 +1163,7 @@ on_keyfile_changed( GFileMonitor *monitor,
 		GFile *file, GFile *other_file, GFileMonitorEvent event_type )
 {
 	settings_new();
-	na_timeout_event( &st_settings->private->timeout );
+	fma_timeout_event( &st_settings->private->timeout );
 }
 
 static void

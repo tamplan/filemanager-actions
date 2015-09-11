@@ -48,7 +48,7 @@
 #define SIZE_MIN		  1
 #define SIZE_MAX	1048576		/* 1 MB */
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 static GSList  *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
 #endif
 static gboolean info_dir_is_writable( GFile *file, const gchar *path );
@@ -72,7 +72,7 @@ fma_core_utils_boolean_from_string( const gchar *string )
 	return( g_ascii_strcasecmp( string, "true" ) == 0 || atoi( string ) != 0 );
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /**
  * fma_core_utils_str_add_prefix:
  * @prefix: the prefix to be prepended.
@@ -127,7 +127,7 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
 	g_free( source );
 	return( strlist );
 }
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 /**
  * fma_core_utils_str_collate:

@@ -613,7 +613,7 @@ drop_inside( FMATreeModel *model, GtkTreePath *dest, GtkSelectionData  *selectio
 				g_object_unref( current );
 
 				if( copy_data ){
-					inserted = ( FMAObject * ) fma_object_duplicate( current, DUPLICATE_REC );
+					inserted = ( FMAObject * ) fma_object_duplicate( current, FMA_DUPLICATE_REC );
 					fma_object_set_origin( inserted, NULL );
 					fma_object_check_status( inserted );
 					relabel = fma_updater_should_pasted_be_relabeled( updater, inserted );

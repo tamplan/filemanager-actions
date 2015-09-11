@@ -238,8 +238,8 @@ object_copy( FMAObject *target, const FMAObject *source, guint mode )
 
 	if( !dest->private->dispose_has_run && !src->private->dispose_has_run ){
 
-		if( mode == DUPLICATE_REC ||
-			( mode == DUPLICATE_OBJECT && G_OBJECT_TYPE( source ) == FMA_TYPE_OBJECT_ACTION )){
+		if( mode == FMA_DUPLICATE_REC ||
+			( mode == FMA_DUPLICATE_OBJECT && G_OBJECT_TYPE( source ) == FMA_TYPE_OBJECT_ACTION )){
 
 				copy_children( dest, src, mode );
 		}

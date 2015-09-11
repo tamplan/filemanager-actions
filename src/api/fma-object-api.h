@@ -212,7 +212,7 @@ G_BEGIN_DECLS
 #define fma_object_set_selection_count( obj, cond )      fma_ifactory_object_set_from_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_SELECTION_COUNT, ( const void * )( cond ))
 #define fma_object_set_capabilities( obj, cap )          fma_ifactory_object_set_from_void( FMA_IFACTORY_OBJECT( obj ), FMAFO_DATA_CAPABILITITES, ( const void * )( cap ))
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 #define fma_object_set_modified( obj, modified )         fma_iduplicable_set_modified( FMA_IDUPLICABLE( obj ), ( modified ))
 #endif
 

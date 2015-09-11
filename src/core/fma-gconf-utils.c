@@ -41,9 +41,9 @@
 static void        dump_entry( GConfEntry *entry, void *user_data );
 static GConfValue *read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfValueType type );
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 static gboolean    sync_gconf( GConfClient *gconf, gchar **message );
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 /**
  * fma_gconf_utils_get_subdirs:
@@ -526,7 +526,7 @@ fma_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
 	return( list_strings );
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /**
  * fma_gconf_utils_write_bool:
  * @gconf: a GConfClient instance.
@@ -792,7 +792,7 @@ fma_gconf_utils_slist_to_string( GSList *slist )
 
 	return( g_string_free( str, FALSE ));
 }
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 static GConfValue *
 read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfValueType type )
@@ -827,7 +827,7 @@ read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfVal
 	return( value );
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 static gboolean
 sync_gconf( GConfClient *gconf, gchar **message )
 {
@@ -847,6 +847,6 @@ sync_gconf( GConfClient *gconf, gchar **message )
 
 	return( ret );
 }
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 #endif /* HAVE_GCONF */

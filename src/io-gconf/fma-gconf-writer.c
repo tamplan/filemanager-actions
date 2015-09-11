@@ -45,7 +45,7 @@
 #include "fma-gconf-writer.h"
 #include "fma-gconf-keys.h"
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 static void write_start_write_type( FMAGConfProvider *provider, FMAObjectItem *item );
 static void write_start_write_version( FMAGConfProvider *provider, FMAObjectItem *item );
 #endif
@@ -56,7 +56,7 @@ static void write_start_write_version( FMAGConfProvider *provider, FMAObjectItem
 gboolean
 fma_gconf_writer_iio_provider_is_willing_to_write( const FMAIIOProvider *provider )
 {
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 	return( TRUE );
 #else
 	return( FALSE );
@@ -77,7 +77,7 @@ fma_gconf_writer_iio_provider_is_willing_to_write( const FMAIIOProvider *provide
 gboolean
 fma_gconf_writer_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
 {
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 	static const gchar *thisfn = "fma_gconf_writer_iio_provider_is_able_to_write";
 	static const gchar *path = "/apps/nautilus-actions/foo";
 	FMAGConfProvider *self;
@@ -119,7 +119,7 @@ fma_gconf_writer_iio_provider_is_able_to_write( const FMAIIOProvider *provider )
 #endif
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /*
  * update an existing item or write a new one
  * in all cases, it is much more easy to delete the existing  entries
@@ -393,4 +393,4 @@ fma_gconf_writer_write_done( const FMAIFactoryProvider *writer, void *writer_dat
 {
 	return( IIO_PROVIDER_CODE_OK );
 }
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */

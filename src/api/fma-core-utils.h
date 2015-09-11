@@ -47,7 +47,7 @@ gboolean fma_core_utils_boolean_from_string( const gchar *string );
 
 /* string manipulation
  */
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 gchar   *fma_core_utils_str_add_prefix( const gchar *prefix, const gchar *str );
 #endif
 int      fma_core_utils_str_collate( const gchar *str1, const gchar *str2 );

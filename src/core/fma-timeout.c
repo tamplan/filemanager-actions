@@ -37,11 +37,11 @@ static gboolean on_timeout_event_timeout( FMATimeout *timeout );
 static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 /**
- * na_timeout_event:
+ * fma_timeout_event:
  * @timeout: the #FMATimeout structure which will handle this event.
  */
 void
-na_timeout_event( FMATimeout *event )
+fma_timeout_event( FMATimeout *event )
 {
 	g_return_if_fail( event != NULL );
 

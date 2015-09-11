@@ -698,7 +698,7 @@ fma_clipboard_primary_set( FMAClipboard *clipboard, GList *items, gint mode )
 
 		for( it = items ; it ; it = it->next ){
 			user_data->items =
-					g_list_prepend( user_data->items, fma_object_duplicate( it->data, DUPLICATE_REC ));
+					g_list_prepend( user_data->items, fma_object_duplicate( it->data, FMA_DUPLICATE_REC ));
 		}
 		user_data->items = g_list_reverse( user_data->items );
 
@@ -748,7 +748,7 @@ fma_clipboard_primary_get( FMAClipboard *clipboard, gboolean *relabel )
 
 			if( user_data ){
 				for( it = user_data->items ; it ; it = it->next ){
-					obj = FMA_OBJECT( fma_object_duplicate( it->data, DUPLICATE_REC ));
+					obj = FMA_OBJECT( fma_object_duplicate( it->data, FMA_DUPLICATE_REC ));
 					fma_object_set_origin( obj, NULL );
 					items = g_list_prepend( items, obj );
 				}

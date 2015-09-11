@@ -631,7 +631,7 @@ fma_pivot_on_item_changed_handler( FMAIIOProvider *provider, FMAPivot *pivot  )
 	if( !pivot->private->dispose_has_run ){
 		g_debug( "%s: provider=%p, pivot=%p", thisfn, ( void * ) provider, ( void * ) pivot );
 
-		na_timeout_event( &pivot->private->change_timeout );
+		fma_timeout_event( &pivot->private->change_timeout );
 	}
 }
 

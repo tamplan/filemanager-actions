@@ -191,18 +191,21 @@ typedef struct {
 #define IDUPLICABLE_SIGNAL_VALID_CHANGED		"iduplicable-valid-changed"
 
 /**
- * DuplicateMode:
- * @DUPLICATE_ONLY:   only duplicates the provided object.
- * @DUPLICATE_OBJECT: only duplicate a menu
- *                    (a menu with some subitems is duplicated to an empty menu)
- * @DUPLICATE_REC:    recursively duplicates all the provided hierarchy.
+ * FMADuplicableMode:
+ * @FMA_DUPLICATE_ONLY:   only duplicates the provided object.
+ * @FMA_DUPLICATE_OBJECT: only duplicate a menu
+ *                        (a menu with some subitems is duplicated to an
+ *                        empty menu)
+ * @FMA_DUPLICATE_REC:    recursively duplicates all the provided hierarchy.
+ *
+ * The duplication mode which is to be applied to the supplied object.
  */
 typedef enum {
-	DUPLICATE_ONLY = 1,
-	DUPLICATE_OBJECT,
-	DUPLICATE_REC
+	FMA_DUPLICATE_ONLY = 1,
+	FMA_DUPLICATE_OBJECT,
+	FMA_DUPLICATE_REC
 }
-	DuplicableMode;
+	FMADuplicableMode;
 
 GType           fma_iduplicable_get_type         ( void );
 
@@ -219,8 +222,8 @@ void            fma_iduplicable_set_origin       ( FMAIDuplicable *object, const
 
 void            fma_iduplicable_register_consumer( GObject *consumer );
 
-#ifdef NA_ENABLE_DEPRECATED
-void            fma_iduplicable_set_modified( FMAIDuplicable *object, gboolean modified );
+#ifdef FMA_ENABLE_DEPRECATED
+void            fma_iduplicable_set_modified     ( FMAIDuplicable *object, gboolean modified );
 #endif
 
 G_END_DECLS

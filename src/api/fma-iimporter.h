@@ -165,7 +165,7 @@ typedef struct {
 }
 	FMAIImporterInterface;
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /**
  * FMAIImporterCheckFn:
  * @imported: the currently imported #FMAObjectItem -derived object.
@@ -344,7 +344,7 @@ typedef struct {
 }
 	FMAIImporterImportFromUriParms;
 
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 /**
  * FMAIImporterImportStatus:

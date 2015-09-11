@@ -95,7 +95,7 @@ gboolean          fma_data_boxed_is_valid       ( const FMADataBoxed *boxed );
 
 /* These functions are deprecated starting with 3.1.0
  */
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 gboolean          fma_data_boxed_are_equal      ( const FMADataBoxed *a, const FMADataBoxed *b );
 void              fma_data_boxed_dump           ( const FMADataBoxed *boxed );
 gchar            *fma_data_boxed_get_as_string  ( const FMADataBoxed *boxed );
@@ -105,7 +105,7 @@ void              fma_data_boxed_set_from_boxed ( FMADataBoxed *boxed, const FMA
 void              fma_data_boxed_set_from_string( FMADataBoxed *boxed, const gchar *value );
 void              fma_data_boxed_set_from_value ( FMADataBoxed *boxed, const GValue *value );
 void              fma_data_boxed_set_from_void  ( FMADataBoxed *boxed, const void *value );
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 G_END_DECLS
 

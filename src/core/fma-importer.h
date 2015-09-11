@@ -65,7 +65,7 @@
 
 G_BEGIN_DECLS
 
-#ifndef NA_ENABLE_DEPRECATED
+#ifndef FMA_ENABLE_DEPRECATED
 /*
  * FMAImporterImportMode:
  * @IMPORTER_MODE_NO_IMPORT: a "do not import" mode.

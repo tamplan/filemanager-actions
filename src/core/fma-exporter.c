@@ -123,7 +123,7 @@ exporter_get_formats( const FMAIExporter *exporter )
 
 	if( FMA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
 		if( version == 1 ){
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 			const FMAIExporterFormat *strv1;
 			strv1 = FMA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
 			while( strv1->format ){

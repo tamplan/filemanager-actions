@@ -63,7 +63,7 @@ GSList  *fma_gconf_utils_read_string_list ( GConfClient *gconf, const gchar *pat
 
 /* Writing in GConf is deprecated since 3.1.0
  */
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 gboolean fma_gconf_utils_write_bool       ( GConfClient *gconf, const gchar *path, gboolean value, gchar **message );
 gboolean fma_gconf_utils_write_int        ( GConfClient *gconf, const gchar *path, gint value, gchar **message );
 gboolean fma_gconf_utils_write_string     ( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message );
@@ -71,7 +71,7 @@ gboolean fma_gconf_utils_write_string_list( GConfClient *gconf, const gchar *pat
 gboolean fma_gconf_utils_remove_entry     ( GConfClient *gconf, const gchar *path, gchar **message );
 GSList  *fma_gconf_utils_slist_from_string( const gchar *value );
 gchar   *fma_gconf_utils_slist_to_string  ( GSList *slist );
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 G_END_DECLS
 

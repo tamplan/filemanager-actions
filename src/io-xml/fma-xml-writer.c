@@ -117,7 +117,7 @@ static xmlDocPtr       build_xml_doc( FMAXMLWriter *writer );
 static gchar          *convert_to_gconf_slist( const gchar *str );
 static ExportFormatFn *find_export_format_fn( const gchar *format );
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 static ExportFormatFn *find_export_format_fn_from_quark( GQuark format );
 #endif
 
@@ -292,7 +292,7 @@ fma_xml_writer_export_to_buffer( const FMAIExporter *instance, FMAIExporterBuffe
 		writer->private->provider = ( FMAIExporter * ) instance;
 		writer->private->exported = parms->exported;
 		writer->private->messages = parms->messages;
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
 			writer->private->fn_str = find_export_format_fn_from_quark((( FMAIExporterBufferParms * ) parms )->format );
 		} else {
@@ -350,7 +350,7 @@ fma_xml_writer_export_to_file( const FMAIExporter *instance, FMAIExporterFilePar
 		writer->private->provider = ( FMAIExporter * ) instance;
 		writer->private->exported = parms->exported;
 		writer->private->messages = parms->messages;
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
 			writer->private->fn_str = find_export_format_fn_from_quark((( FMAIExporterFileParms * ) parms )->format );
 			format2 = g_quark_to_string((( FMAIExporterFileParms * ) parms )->format );
@@ -781,7 +781,7 @@ find_export_format_fn( const gchar *format )
 	return( found );
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 static ExportFormatFn *
 find_export_format_fn_from_quark( GQuark format )
 {

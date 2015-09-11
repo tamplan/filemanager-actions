@@ -657,7 +657,7 @@ fma_object_object_unref( FMAObject *object )
 	}
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /*
  * build the class hierarchy
  * returns a list of GObjectClass, which starts with FMAObject,
@@ -725,7 +725,7 @@ fma_object_free_hierarchy( GList *hierarchy )
 {
 	g_list_free( hierarchy );
 }
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 /**
  * fma_object_object_debug_invalid:

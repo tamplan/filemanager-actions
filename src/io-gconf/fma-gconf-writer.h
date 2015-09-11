@@ -44,7 +44,7 @@ gboolean fma_gconf_writer_iio_provider_is_able_to_write   ( const FMAIIOProvider
 
 /* Writing into GConf is deprecated since 3.1.0
  */
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 guint    fma_gconf_writer_iio_provider_write_item         ( const FMAIIOProvider *provider,
 																const FMAObjectItem *item,
 																GSList **message );
@@ -70,7 +70,7 @@ guint    fma_gconf_writer_write_done                      ( const FMAIFactoryPro
 																void *writer_data,
 																const FMAIFactoryObject *object,
 																GSList **messages  );
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 G_END_DECLS
 

@@ -406,7 +406,7 @@ fma_menu_edit_duplicate( FMAMainWindow *main_window )
 	items = fma_object_copyref_items( sdata->selected_items );
 
 	for( it = items ; it ; it = it->next ){
-		obj = FMA_OBJECT( fma_object_duplicate( it->data, DUPLICATE_REC ));
+		obj = FMA_OBJECT( fma_object_duplicate( it->data, FMA_DUPLICATE_REC ));
 		action = NULL;
 
 		/* duplicating a profile

@@ -676,7 +676,7 @@ fma_tree_model_fill( FMATreeModel *model, GList *items )
 		gtk_tree_store_clear( ts_model );
 
 		for( it = items ; it ; it = it->next ){
-			duplicate = ( FMAObject * ) fma_object_duplicate( it->data, DUPLICATE_REC );
+			duplicate = ( FMAObject * ) fma_object_duplicate( it->data, FMA_DUPLICATE_REC );
 			fma_object_check_status( duplicate );
 			fill_tree_store( ts_model, model->private->treeview, duplicate, NULL );
 			fma_object_unref( duplicate );

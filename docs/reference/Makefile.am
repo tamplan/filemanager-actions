@@ -56,10 +56,10 @@ content_files = \
 	$(auto_created_files)
 
 if !HAVE_GCONF
-ignore_headers = na-gconf-monitor.h
+ignore_headers = fma-gconf-monitor.h
 else
 if !ENABLE_DEPRECATED
-ignore_headers = na-gconf-monitor.h
+ignore_headers = fma-gconf-monitor.h
 endif
 endif
 
@@ -96,7 +96,7 @@ core_libdir = $(top_builddir)/src/core/.libs
 
 AM_LDFLAGS += \
 	$(NAUTILUS_ACTIONS_LIBS)					\
-	-L$(core_libdir) -lna-core					\
+	-L$(core_libdir) -lfma-core					\
 	$(NULL)
 
 # Need this to be able to set ourselves GTKDOC_RUN

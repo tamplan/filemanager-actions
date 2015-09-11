@@ -156,7 +156,7 @@ G_BEGIN_DECLS
 typedef struct _FMAIExporter                    FMAIExporter;
 typedef struct _FMAIExporterInterfacePrivate    FMAIExporterInterfacePrivate;
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /**
  * FMAIExporterFormat:
  * @format:      format identifier (ascii).
@@ -241,7 +241,7 @@ typedef struct {
 }
 	FMAIExporterBufferParms;
 
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */
 
 /**
  * FMAIExporterFormatv2:

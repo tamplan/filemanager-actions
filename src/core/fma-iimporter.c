@@ -50,7 +50,7 @@ static void  interface_base_init( FMAIImporterInterface *klass );
 static void  interface_base_finalize( FMAIImporterInterface *klass );
 static guint iimporter_get_version( const FMAIImporter *instance );
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 static void  renumber_label_item( FMAIImporterManageImportModeParms *parms );
 #endif
 
@@ -180,7 +180,7 @@ fma_iimporter_import_from_uri( const FMAIImporter *importer, FMAIImporterImportF
 	return( code );
 }
 
-#ifdef NA_ENABLE_DEPRECATED
+#ifdef FMA_ENABLE_DEPRECATED
 /**
  * fma_iimporter_manage_import_mode:
  * @parms: a #FMAIImporterManageImportModeParms struct.
@@ -315,4 +315,4 @@ renumber_label_item( FMAIImporterManageImportModeParms *parms )
 	g_free( tmp );
 	g_free( label );
 }
-#endif /* NA_ENABLE_DEPRECATED */
+#endif /* FMA_ENABLE_DEPRECATED */

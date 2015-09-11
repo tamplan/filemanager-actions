@@ -371,7 +371,7 @@ fma_desktop_provider_on_monitor_event( FMADesktopProvider *provider )
 
 	if( !provider->private->dispose_has_run ){
 
-		na_timeout_event( &provider->private->timeout );
+		fma_timeout_event( &provider->private->timeout );
 	}
 }
 
