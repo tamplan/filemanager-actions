@@ -322,7 +322,7 @@ iexporter_get_version( const FMAIExporter *exporter )
 static gchar *
 iexporter_get_name( const FMAIExporter *exporter )
 {
-	return( g_strdup( "NA Desktop Exporter" ));
+	return( g_strdup( "FMA Desktop Exporter" ));
 }
 
 static void *

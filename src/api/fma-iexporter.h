@@ -80,25 +80,25 @@
  *        </row>
  *        <row>
  *          <entry><literal>Desktop1</literal></entry>
- *          <entry>NA Desktop module</entry>
+ *          <entry>FMA Desktop module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-07-28</entry>
  *        </row>
  *        <row>
  *          <entry><literal>GConfSchemaV1</literal></entry>
- *          <entry>NA XML module</entry>
+ *          <entry>FMA XML module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-02-15</entry>
  *        </row>
  *        <row>
  *          <entry><literal>GConfSchemaV2</literal></entry>
- *          <entry>NA XML module</entry>
+ *          <entry>FMA XML module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-02-15</entry>
  *        </row>
  *        <row>
  *          <entry><literal>GConfEntry</literal></entry>
- *          <entry>NA XML module</entry>
+ *          <entry>FMA XML module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-02-15</entry>
  *        </row>

@@ -145,19 +145,19 @@
  *        </row>
  *        <row>
  *          <entry><literal>io-desktop</literal></entry>
- *          <entry>NA Desktop I/O Provider</entry>
+ *          <entry>FMA Desktop I/O Provider</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2009-12-16</entry>
  *        </row>
  *        <row>
  *          <entry><literal>fma-gconf</literal></entry>
- *          <entry>NA GConf I/O Provider</entry>
+ *          <entry>FMA GConf I/O Provider</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2009-12-16</entry>
  *        </row>
  *        <row>
  *          <entry><literal>io-xml</literal></entry>
- *          <entry>NA XML module</entry>
+ *          <entry>FMA XML module</entry>
  *          <entry>&prodname;</entry>
  *          <entry>2010-02-14</entry>
  *        </row>
