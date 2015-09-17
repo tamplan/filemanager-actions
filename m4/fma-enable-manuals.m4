@@ -111,6 +111,14 @@ AC_DEFUN([_AC_ARG_FMA_ENABLE_PDF_MANUALS],[
 			[build PDF user's manuals @<:@dblatex@:>@]),
 			[enable_pdf_manuals=$enableval],
 			[enable_pdf_manuals="no"])
+	dnl
+	dnl Check for dblatex/fop (for pdf output)
+	dnl from https://github.com/GNOME/gtk-doc/blob/master/configure.ac
+	dnl
+	AC_PATH_PROG([DBLATEX], [dblatex])
+	if test -z "$DBLATEX"; then
+		AC_MSG_WARN([dblatex not found, so no pdf output from xml])
+	fi
 ])
 
 AC_DEFUN([_CHECK_FOR_PDF_MANUALS],[
