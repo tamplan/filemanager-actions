@@ -24,6 +24,27 @@
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
+#
+# pwi 2015- 9-17 gtk-doc
+# --enable-gtk-doc
+#   doesn't build anything if neither --enable-gtk-doc-html nor
+#   --enable-gtk-doc-pdf is set
+# --enable-gtk-doc-html
+#   is only considered if --enable-gtk-doc is also set
+#   builds html/ and xml/ subdirectories
+#   installs html/ subdir only in DESTDIR/share/gtk-doc/html/filemanager-actions-3
+#   (xml/ subdir doesn't seem to be used)
+# --enable-gtk-doc-pdf:
+#   uses gtkdoc-mkpdf
+#   requires dblatex or fop
+#   doesn't work for now (see below)
+#
+# pwi 2015- 9-17 gtk-doc-1.24-1.fc22.noarch
+# It seems that gtkdoc-mkpdf, which may use dblatex or fop, is actually
+# unable to build any pdf document as the corresponding variables are
+# unset in the script.
+# These variables are unset as if the package had been built without
+# the corresponding utilities be available on the package build system.
 
 #
 # FileManager-Actions Reference Manual
