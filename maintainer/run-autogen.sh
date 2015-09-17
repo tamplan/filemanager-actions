@@ -151,6 +151,8 @@ conf_args="\${conf_args} --with-nautilus-extdir=\${heredir}/_install/lib/nautilu
 conf_args="\${conf_args} --with-nemo-extdir=\${heredir}/_install/lib/nemo"
 conf_args="\${conf_args} --enable-maintainer-mode"
 conf_args="\${conf_args} --disable-scrollkeeper"
+conf_args="\${conf_args} --enable-gtk-doc"
+conf_args="\${conf_args} --enable-gtk-doc-html"
 conf_args="\${conf_args} $*"
 conf_args="\${conf_args} \$*"
 

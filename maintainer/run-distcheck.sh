@@ -34,21 +34,25 @@ fi
 maintainer_dir=$(cd ${0%/*}; pwd)
 top_srcdir="${maintainer_dir%/*}"
 
-builddir="${top_srcdir}/_build"
-installdir="${top_srcdir}/_install"
+PkgName=`autoconf --trace 'AC_INIT:$1' configure.ac`
+pkgname=$(echo $PkgName | tr '[[:upper:]]' '[[:lower:]]')
 
 # a filemanager-actions-x.y may remain after an aborted make distcheck
 # such a directory breaks gnome-autogen.sh generation
 # so clean it here
-for d in $(find ${top_srcdir} -maxdepth 2 -type d -name 'filemanager-actions-*'); do
+for d in $(find ${top_srcdir} -maxdepth 2 -type d -name "${pkgname}-*"); do
+	echo "> Removing $d"
 	chmod -R u+w $d
 	rm -fr $d
 done
 
+builddir="${top_srcdir}/_build"
+installdir="${top_srcdir}/_install"
+
 rm -fr ${builddir}
 rm -fr ${installdir}
-find ${top_srcdir}/docs/user-manual -type f -name '*.html' -o -name '*.pdf' | xargs rm -f
-find ${top_srcdir}/docs/user-manual \( -type d -o -type l \) -name 'stylesheet-images' -o -name 'admon' | xargs rm -fr
+find ${top_srcdir}/docs/manual -type f -name '*.html' -o -name '*.pdf' | xargs rm -f
+find ${top_srcdir}/docs/manual \( -type d -o -type l \) -name 'stylesheet-images' -o -name 'admon' | xargs rm -fr
 
 ${maintainer_dir}/run-autogen.sh --enable-deprecated --enable-gtk-doc --enable-html-manuals &&
 	${maintainer_dir}/check-po.sh -nodummy &&
