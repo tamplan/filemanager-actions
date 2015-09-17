@@ -129,7 +129,6 @@ AC_CONFIG_FILES([
 	data/gconf-schemas/Makefile
 	docs/Makefile
 	docs/manual/Makefile
-	docs/manual/gdu-hack/Makefile
 	docs/reference/Makefile
 	docs/reference/version.xml
 	icons/Makefile
