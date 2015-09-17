@@ -44,20 +44,16 @@
 #
 # Do not confuse gnome-doc-utils which targets the help documentation
 # of the Gnome (i.e. gui) applications, and that we are using here to
-# generate html and pdf NACT user's manuals, with gtk-doc which rather
+# generate html and pdf FMACT user's manuals, with gtk-doc which rather
 # targets the developer documentation (see docs/reference).
 #
 # Do not use the $(NULL) syntax here as this may prevent Damned-Lies
 # to correctly generate POT files (cf. mail of Claude Paroz 2010-08-29
 # http://mail.gnome.org/archives/gnome-i18n/2010-August/msg00229.html).
 
-SUBDIRS = \
-	gdu-hack										\
-	$(NULL)
-
 #include $(srcdir)/gnome-doc-utils-na.make
 include $(top_srcdir)/gnome-doc-utils.make
-dist-hook: doc-dist-hook
+dist-hook: omf-dist-hook doc-dist-hook
 
 DOC_MODULE = fma-config-tool
 
@@ -142,3 +138,11 @@ DOC_FIGURES = \
 
 #DOC_LINGUAS = $(patsubst $(srcdir)/%,%,$(shell find $(srcdir) -mindepth 1 -maxdepth 1 -type d | $(GREP) -v $(srcdir)/C))
 DOC_LINGUAS = de el es fr sl
+
+# Rationale: standard gnome-doc-utils.make only distributes  .omf.in
+# we add here all generated .omf
+omf-dist-hook:
+	manualbuilddir=`cd $(builddir); pwd`; \
+	for omf in `ls -1 $$manualbuilddir/*.omf`; do \
+		$(INSTALL_DATA) -v $$omf $(distdir)/; \
+	done
