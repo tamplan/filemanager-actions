@@ -1,4 +1,3 @@
-data/gconf-schemas/nautilus-actions-prefs.schemas.in
 src/core/fma-exporter.c
 src/core/fma-about.c
 src/core/fma-desktop-environment.c
