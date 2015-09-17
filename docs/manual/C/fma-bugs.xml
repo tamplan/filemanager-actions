@@ -41,8 +41,6 @@
     <para>
       As of version 3.0, suggested shortcut, as described in &desema; cannot be
       configured in &appname;, and is not honored by the menu plugin.
-    </para>
-    <para>
       But, thanks to the tracker plugin, you are always able to define a shortcut
       at the desktop level, assigning this shortcut to the fma-run program, making
       it execute the action of your choice.
