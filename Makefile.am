@@ -38,11 +38,11 @@ SUBDIRS = \
 	po									\
 	$(NULL)
 
-# - nautilus-extdir is a foo directory so that make distcheck has a vpath
-#   which is prefixed with a make variable, instead of hardcoded as returned
-#   by pkg-config
+# - nautilus/nemo-extdir are fake directories so that make distcheck
+#   has a vpath which is prefixed with a make variable, instead of an
+#   hardcoded as returned by pkg-config
 # - do not try to install schemas when making distcheck
-# - do not rebuild NACT manuals
+# - do not rebuild FMACT manuals
 # - gtk-doc requires to be enabled when making dist
 # - GNOME_DOC_DEFINES tries to disable scrollkeeper, but the set is
 #   overriden but this one

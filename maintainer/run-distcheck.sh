@@ -54,7 +54,7 @@ rm -fr ${installdir}
 find ${top_srcdir}/docs/manual -type f -name '*.html' -o -name '*.pdf' | xargs rm -f
 find ${top_srcdir}/docs/manual \( -type d -o -type l \) -name 'stylesheet-images' -o -name 'admon' | xargs rm -fr
 
-${maintainer_dir}/run-autogen.sh --enable-deprecated --enable-gtk-doc --enable-html-manuals &&
+${maintainer_dir}/run-autogen.sh --enable-deprecated &&
 	${maintainer_dir}/check-po.sh -nodummy &&
 	${maintainer_dir}/check-headers.sh -nodummy -builddir="${builddir}" &&
 	desktop-file-validate ${installdir}/share/applications/fma-ui.desktop &&
