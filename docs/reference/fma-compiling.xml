@@ -28,7 +28,7 @@
     <para>
       On UNIX, &prodname; uses the standard GNU build system,
       using
-      <itemized list>
+      <itemizedlist>
         <listitem>
           <para> 
             <ulink url="http://www.gnu.org/software/autoconf/">
@@ -169,11 +169,7 @@
         <group>
           <arg>--with-nautilus-extdir=DIR</arg>
           <arg>--with-nemo-extdir=DIR</arg>
-          <!-- pwi 2015- 9-11
-               this is removed from the documentation
-               is io-gconf is deprecated
           <arg>--with-default-io-provider=io-gconf|io-desktop</arg>
-               -->
           <arg>--enable-html-manuals[=gdt|db2html]</arg>
           <arg>--enable-pdf-manuals[=dblatex]</arg>
         </group>
@@ -214,7 +210,6 @@
       </itemizedlist>
     </formalpara>
 
-<!--
     <formalpara>
       <title><systemitem>--with-default-io-provider=io-desktop</systemitem></title>
       <para>
@@ -232,7 +227,6 @@
         <filename>.desktop</filename> files.
       </para>
     </formalpara>
-    -->
 
     <formalpara>
       <title><systemitem>--enable-html-manuals[=gdt|db2html]</systemitem></title>
