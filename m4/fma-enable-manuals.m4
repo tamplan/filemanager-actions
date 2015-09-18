@@ -50,9 +50,6 @@ AC_DEFUN([FMA_ENABLE_MANUALS],[
 	
 	_CHECK_FOR_HTML_MANUALS
 	_CHECK_FOR_PDF_MANUALS
-
-	AM_CONDITIONAL([ENABLE_MANUALS],
-		[test "x${enable_html_manuals}" != "xno" || test "x${enable_pdf_manuals}" != "xno"])
 ])
 
 AC_DEFUN([_AC_ARG_FMA_ENABLE_HTML_MANUALS],[
@@ -99,8 +96,6 @@ AC_DEFUN([_CHECK_FOR_HTML_MANUALS],[
 
 	AC_SUBST([WITH_DB2HTML],[${with_db2html}])
 	AC_SUBST([WITH_GDT],[${with_gdt}])
-
-	AM_CONDITIONAL([ENABLE_HTML_MANUALS], [test "x${enable_html_manuals}" != "xno"])
 ])
 
 AC_DEFUN([_AC_ARG_FMA_ENABLE_PDF_MANUALS],[
@@ -111,14 +106,6 @@ AC_DEFUN([_AC_ARG_FMA_ENABLE_PDF_MANUALS],[
 			[build PDF user's manuals @<:@dblatex@:>@]),
 			[enable_pdf_manuals=$enableval],
 			[enable_pdf_manuals="no"])
-	dnl
-	dnl Check for dblatex/fop (for pdf output)
-	dnl from https://github.com/GNOME/gtk-doc/blob/master/configure.ac
-	dnl
-	AC_PATH_PROG([DBLATEX], [dblatex])
-	if test -z "$DBLATEX"; then
-		AC_MSG_WARN([dblatex not found, so no pdf output from xml])
-	fi
 ])
 
 AC_DEFUN([_CHECK_FOR_PDF_MANUALS],[
@@ -141,6 +128,4 @@ AC_DEFUN([_CHECK_FOR_PDF_MANUALS],[
 			AC_MSG_ERROR([dblatex has not been found, unable to generate PDF manuals])
 		fi
 	fi
-
-	AM_CONDITIONAL([ENABLE_PDF_MANUALS], [test "x${enable_pdf_manuals}" != "xno"])
 ])
