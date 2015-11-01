@@ -1,114 +1,103 @@
-TODO
-====
+FileManager-Actions - TODO
 
-- have all TODOs go to gnome bugzilla
-- update the supported environments
-- review the packaging rules
- (with or without gtk2, with or without gconf, ith or without doc, with which doc tool)
+ Summary
+ =======
 
-N-A BUGS
-========
-- 2011-11-15: an action with one profile - if the action has a property set to empty
-  'folders=' and the profile does not have the property set, then set_defaults on the
-  profile set the default property (here, 'folders=/') instead of taking the action
-  value. On the UI, updating an action's property means updating the current profile.
-  This is ok as long as the action is also set  (...) there is one profile and the
-  action's property was not the default
+   TODO
+   DONE
 
-- 2011-11-28 import assistant: intro label should be wrappable
+-----------------------------------------------------------------------
+ TODO
+ ====
 
-- 2011-11-28 import assistant: importer ask format; long descriptions
-  should be a long wrappable line
+   2 2011-11-28 import assistant: intro label should be wrappable
 
-- 2011-11-28 have a padding (6) on top of gtkfilechooser (import & export assistants)
-  not gtk3 : gtk2 only
+   3 2011-11-28 import assistant: importer ask format; long descriptions
+                should be a long wrappable line
 
-- 2011-11-28 already existing item when importing should keep the same size
-  between invocations
-  2011-11-30 this is ok on f14 f16 ubu10 and almost on ubu11
-  (ubu11): z-order is ok the first time, but comes back to the previous
-  behavior starting with the second time (maybe a theme problem ?)
+   4 2011-11-28 have a padding (6) on top of gtkfilechooser (import &
+                export assistants) not gtk3 : gtk2 only
 
-- 2011-12-06: after unsuccessfully tried to import via dnd:
-   Gtk-CRITICAL **: gtk_tree_view_scroll_to_cell: assertion `tree_view->priv->tree != NULL' failed
+   5 2011-11-28 already existing item when importing should keep the same
+                size between invocations
+     2011-11-30 this is ok on f14 f16 ubu10 and almost on ubu11
+                (ubu11): z-order is ok the first time, but comes back to
+                the previous behavior starting with the second time
+                (maybe a theme problem ?)
 
-- 2011-12-22 export assistant
-  when exporting a menu, only desktop format is available ?
+   6 2011-12-06 after unsuccessfully tried to import via dnd:
+                Gtk-CRITICAL **: gtk_tree_view_scroll_to_cell:
+                assertion `tree_view->priv->tree != NULL' failed
 
-Plan de test: NACT should be able to import all types of actions and menus,
-kindly fixing small errors.
-- for each and every released version, have an example of each available export format
-  with lists of items and at least two profiles if feature is available
+   7 2011-12-22 export assistant
+                when exporting a menu, only desktop format is available
 
-- 2011-12-22 export assistant
-  the items list should it be presented as a flat list ? or as an expanded one ?
+   8 2011-12-22 export assistant
+                the items list should it be presented as a flat list ?
+                or as an expanded one ?
 
-- 2012-01-12 environment tab
-  in the list of desktop checkboxes, the item which is not grayed is that which
-  would be selected if the list would be active -> but should be grayed
-  vubuntu10: exhibits the bug
-  fedora14, fedora16, vubuntu11: ok
+   9 2012-01-12 environment tab
+                in the list of desktop checkboxes, the item which is not
+                grayed is that which would be selected if the list would
+                be active -> but should be grayed
+                vubuntu10: exhibits the bug
+                fedora14, fedora16, vubuntu11: ok
 
-- 2012-01-16: (LXDE) unable to drag and drop to PcmanFM
-  na_core_utils_dir_is_writable_uri( "/tmp" ): is_writable=False
-  and desktop hangs
+  10 2012-01-16 LXDE: unable to drag and drop to PcmanFM
+                na_core_utils_dir_is_writable_uri( "/tmp" ):
+                is_writable=False
+                and desktop hangs
 
-- 2012-01-29: na-icontext.c:is_candidate_for_show_if_registered()
-  implement GDBus
+  11 2012-01-29 na-icontext.c:is_candidate_for_show_if_registered()
+                implement GDBus
 
-- 2012-01-29: NactTreeModel is not released at end when dnd
+  12 2012-01-29: NactTreeModel is not released at end when dnd
 
-- 2012-02-14: opening the menubar triggers the on_tree_view_focus_out, thus disabling
-  the edit items (this is not the desired behavior when we access a menu)
-  Fedora14: OK
-  Fedora16: bug exhibits
-  Ubuntu10: OK
-  Ubuntu11: bug exhibits
-  This may have something to do with the way we manage the GtkActions
-  Also see glade source.
+  13 2012-02-14 opening the menubar triggers the on_tree_view_focus_out,
+                thus disabling the edit items (this is not the desired
+                behavior when we access a menu)
+                Fedora14: OK
+                Fedora16: bug exhibits
+                Ubuntu10: OK
+                Ubuntu11: bug exhibits
+                This may have something to do with the way we manage the
+                GtkActions
+                Also see glade source.
 
-Plan de test: NACT should be able to import all types of actions and menus,
-kindly fixing small errors.
-- for each and every released version, have an example of each available export format
-  with lists of items and at least two profiles if feature is available
+  15 2012- 6-25 ubuntu 12 requires libtool (+ autotools-dev libltdl-dev)
+                20120625: ubuntu 12 requires intltool (+ autoconf automake
+                gettext libencode-locale-perl libfile-listing-perl
+                libfont-afm-perl libgettextpo0 libhtml-form-perl libhtml-format-perl
+                libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl
+                libhttp-cookies-perl libhttp-daemon-perl libhttp-date-perl
+                libhttp-message-perl libhttp-negotiate-perl libio-socket-inet6-perl
+                libio-socket-ssl-perl liblwp-mediatypes-perl liblwp-protocol-https-perl
+                libmailtools-perl libnet-http-perl libnet-ssleay-perl libsocket6-perl
+                libtimedate-perl libunistring0 liburi-perl libwww-perl
+                libwww-robotrules-perl libxml-parser-perl m4 patch)
 
-- 20120625: unable to build NA-3.2.2 on Ubuntu 8 LTS
-	not even find GTK 2/3 libraries
+  16 2012-10-19 the last commit - to disable xml2po usage - has introduced
+                a regression
+                target are evaluated even if not built (and so there is an
+                error if we do not know any prerequisites)
+                reproduce by building from an empty tree with --disable-manuals
 
-- 20120625: ubuntu 12 requires libtool (+ autotools-dev libltdl-dev)
-- 20120625: ubuntu 12 requires intltool (+ autoconf automake gettext libencode-locale-perl libfile-listing-perl
-  libfont-afm-perl libgettextpo0 libhtml-form-perl libhtml-format-perl
-  libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl
-  libhttp-cookies-perl libhttp-daemon-perl libhttp-date-perl
-  libhttp-message-perl libhttp-negotiate-perl libio-socket-inet6-perl
-  libio-socket-ssl-perl liblwp-mediatypes-perl liblwp-protocol-https-perl
-  libmailtools-perl libnet-http-perl libnet-ssleay-perl libsocket6-perl
-  libtimedate-perl libunistring0 liburi-perl libwww-perl
-  libwww-robotrules-perl libxml-parser-perl m4 patch)
+  17 2011- 2-21 implement startup mode
 
-- 20121019: the last commit - to disable xml2po usage - has introduced a regression:
-  target are evaluated even if not built (and so there is an error if we do not know
-  any prerequisites)
-  reproduce by building from an empty tree with --disable-manuals
+  18 2011- 2-21 implement execute as user
 
-TODO
-====
-- 2011-02-21: implement startup mode
+  19 2010- 6-17 implement shortcut button in NactIPropertiesTab page
 
-- 2011-02-21: implement execute as user
+  20 2010- 8- 9 in v1.x until ??, %f used to be the basename!!
 
-- 2010-06-17: implement shortcut button in NactIPropertiesTab page
+  21 2010-12-30 gtk-doc 1.15
+                "Use of uninitialized value within %DeclarationTypes in
+                lc at /usr/bin/gtkdoc-mkdb line 929" when building XML
 
-- 2010-08-09: in v1.x until ??, %f used to be the basename!!
+  22 2011- 2- 7 is_level_zero_writable: should be monitored
+                for now, is only evaluated when NAUpdater is instanciated
 
-- 2010-12-30: gtk-doc 1.15
-  "Use of uninitialized value within %DeclarationTypes in lc at /usr/bin/gtkdoc-mkdb line 929"
-  when building XML
-
-- 2011-02-07: is_level_zero_writable: should be monitored
-  for now, is only evaluated when NAUpdater is instanciated
-
-- 2011-02-07: are_preferences_locked: should be monitored
+  23 2011-02-07: are_preferences_locked: should be monitored
   for now, is only evaluated when NAUpdater is instanciated
 
 - 2011-02-12: should we have a NAKeyFile shared between i/o-desktop and settings ?
@@ -182,6 +171,99 @@ TODO
   --enable-gconf is auto
 
 - 2013- 9- 2: shouldn't check and require GConf if --disable-gconf
+xxxx 2014- 2-25 see if uuid is always relevant
+
+xxxx 2014- 2-25 NAUTILUS_ACTIONS_DEBUG: is it useful ?
+
+xxxx 2014- 4-29 base_gtk_utils_get_pixbuf: listen for icon theme changes
+
+xxxx 2014- 4-30 base-assistant/dialog/window shouldn't include
+                nact-application.h to have NACT_EXIT_CODE
+
+xxxx 2014- 5- 4 we (should) now have GDBus: get rid of HAVE_GDBUS and
+                HAVE_DBUS_GLIB conditionals
+
+xxxx 2014- 5- 4 fix docs generation, reviewing what must the options be
+
+xxxx 2014- 5- 4 restore menu item tooltips
+
+xxxx 2014- 5- 7 use GResource
+
+xxxx 2014- 5-11 Get rid of base_window_signal_xxx family
+
+xxxx 2014- 6- 2 base_gtk_utils_widget_set_color: to be written
+
+xxxx 2014- 6- 2 get rid of deprecated GtkAlignment
+
+xxxx 2014- 6- 4 use composite widget (template)
+
+xxxx 2015- 9- 7 review Preferences dialog box
+
+xxxx 2015- 9- 9 nautilus/nemo: have file_manager_file_info_create_for_uri ?
+                would replace FMASelectedInfo class
+
+xxxx 2015- 9-10 remove all GConf stuff:
+                - io-gconf i/o provider
+                - fma-print-schemas
+                - gconf-migration code
+
+xxxx 2015- 9-10 add json import/export
+
+xxxx 2015- 9-10 element formalpara: validity error : Element formalpara
+                content does not follow the DTD, expecting 
+                (title , indexterm* , para), got (title para para )
+
+xxxx 2015- 9-10 use AX_COMPILER_FLAGS
+
+xxxx 2015- 9-10 use AM_GNU_GETTEXT instead of AM_GLIB_GNU_GETTEXT
+
+xxxx 2015- 9-10 xmllint --noout --noent --path C:../../../../docs/user-manual/C --xinclude --postvalid ../../../../docs/user-manual/C/fma-config-tool.xml
+                document does not validate
+
+xxxx 2015- 9-11 replace FMADataFactory with GVariant ?
+
+xxxx 2015- 9-11 replace fma_required_versions with a JSON file with some
+                perl snippets to transform for configure.ac and 
+                maintainer/run-autogen.sh
+
+xxxx 2015- 9-17 gtk-doc: usage of templates is deprecated
+
+xxxx 2015- 9-21 instead of:
+                  whether GConf is required... no
+                have:
+                  whether GConf is enabled... auto
+                  whether GConf is available... no|yes
+
+-----------------------------------------------------------------------
+ DONE
+ ====
+
+   1 2011-11-15 an action with one profile - if the action has a property
+                set to empty 'folders=' and the profile does not have the
+                property set, then set_defaults on the profile set the
+                default property (here, 'folders=/') instead of taking
+                the action value. On the UI, updating an action's property
+                means updating the current profile. This is ok as long as
+                the action is also set  (...) there is one profile and the
+                action's property was not the default
+     2015- 9-21 ok (obsolete) as of 3.4
+
+  14 2012- 6-25 unable to build NA-3.2.2 on Ubuntu 8 LTS
+	            not even find GTK 2/3 libraries
+	 2015- 9-21 ok (obsolete) as of 3.4
+
+-----------------------------------------------------------------------
+ P. Wieser - Created on 2010, june 15th
+             Last updated on 2015, sept. 21st
+
+
+N-A BUGS
+========
+
+Plan de test: NACT should be able to import all types of actions and menus,
+kindly fixing small errors.
+- for each and every released version, have an example of each available export format
+  with lists of items and at least two profiles if feature is available
 
 N-A ENHANCEMENTS
 ================

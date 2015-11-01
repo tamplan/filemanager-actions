@@ -92,13 +92,6 @@ gtkdocize || exit 1
 echo "> Running autoreconf"
 autoreconf --verbose --force --install -Wno-portability || exit 1
 
-# pwi 2012-10-12
-# starting with FileManager-Actions 3.2.3, we let the GNOME-DOC-PREPARE do
-# its stuff, but get rid of the gnome-doc-utils.make standard file, as
-# we are using our own hacked version
-# (see full rationale in docs/nact/gnome-doc-utils-na.make)
-#rm -f gnome-doc-utils.make
-
 runconf="${top_srcdir}/run-configure.sh"
 echo "> Generating ${runconf}"
 cat <<EOF >${runconf}
