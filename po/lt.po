@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: nautilus-actions HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-08-02 10:02+0000\n"
-"PO-Revision-Date: 2014-08-03 21:56+0300\n"
+"POT-Creation-Date: 2016-01-08 15:49+0000\n"
+"PO-Revision-Date: 2016-01-08 18:14+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: UTF-8\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:1
 msgid "Ask for a confirmation when quitting by Esc"
@@ -40,7 +40,6 @@ msgid "If TRUE, assistant may be closed by hitting the Esc key."
 msgstr "Jei TEIGIAMA, pagalbininką galima užverti paspaudžiant Esc klavišą."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:5
-#| msgid "Whether the Esc key should close the assistants"
 msgid "Whether the auto-save feature should be activated"
 msgstr "Ar turi būti aktyvinta automatinio įrašymo galimybė"
 
@@ -69,7 +68,7 @@ msgid ""
 "window manager."
 msgstr ""
 "Eksportavimo pagalbininko lango padėtis ir dydis ; numatytieji nustatomi "
-"langų tvarkyklės."
+"langų tvarkytuvės."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:11
 msgid "Last selected folder"
@@ -85,20 +84,6 @@ msgid "Preferred export format"
 msgstr "Pageidaujamas eksportavimo formatas"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:14
-#| msgid ""
-#| "This is the preferred export format, used as a default when exporting "
-#| "items, or dropping them outside of the application. Possible values are: "
-#| "- \"GConfSchemaV1\": this used to be the historical export format. The "
-#| "exported file may later be imported via Import assistant of the Nautilus "
-#| "Actions Configuration Tool, or via the gconftool-2 --import-schema-file "
-#| "command-line tool. - \"GConfSchemaV2\": a lighter while still compatible "
-#| "schema. The exported file may later be imported via Import assistant of "
-#| "the Nautilus Actions Configuration Tool, or via the gconftool-2 --import-"
-#| "schema-file command-line tool. - \"GConfEntry\": this should be the "
-#| "preferred format for newly exported actions. The exported file may later "
-#| "be imported via Import assistant of the Nautilus Actions Configuration "
-#| "Tool, or via the gconftool-2 --load command-line tool. - \"Ask\": the "
-#| "user will be asked at runtime for the format he wishes use."
 msgid ""
 "This is the preferred export format, used as a default when exporting items, "
 "or dropping them outside of the application. Possible values are: - "
@@ -138,7 +123,7 @@ msgid ""
 "is set by the window manager."
 msgstr ""
 "Komandų parinkėjo lango padėtis ir dydis komandų kortelėje ; numatytieji "
-"nustatomi langų tvarkyklės."
+"nustatomi langų tvarkytuvės."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:17
 msgid "Last folder selected when browsing for a command in the Command tab."
@@ -151,7 +136,8 @@ msgstr "Legendos dialogo padėtis ir dydis"
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:19
 msgid ""
 "Position and size of the Legend dialog ; default is set by the UI manager."
-msgstr "Legendos dialogo padėtis ir dydis ; numatytuosius nustato UI valdyklė."
+msgstr ""
+"Legendos dialogo padėtis ir dydis ; numatytuosius nustato UI tvarkytuvė."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:20
 msgid "Position and size of the URI chooser window"
@@ -163,7 +149,7 @@ msgid ""
 "set by the window manager."
 msgstr ""
 "URI parinkėjo lango padėtis ir dydis aplankų kortelėje ; numatytieji "
-"nustatomi langų tvarkyklės."
+"nustatomi langų tvarkytuvės."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:22
 msgid "Last folder selected when browsing for an URI in the Folders tab."
@@ -179,20 +165,13 @@ msgid ""
 "by the window manager."
 msgstr ""
 "Sąveikos dialogo padėtis ir dydis importavimo metu ; numatytieji nustatomi "
-"langų tvarkyklės."
+"langų tvarkytuvės."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:25
-#| msgid "Last import mode choosen by the user"
 msgid "Last import mode chosen by the user"
 msgstr "Paskutinė naudotojo pasirinkta importavimo veiksena"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
-#| msgid ""
-#| "Last import mode choosen by the user when he is asked for in import mode. "
-#| "Possible values are: - \"NoImport\": do not import an action whose UUID "
-#| "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
-#| "already exists, - \"Override\": override the existing action with the "
-#| "imported one."
 msgid ""
 "Last import mode chosen by the user when he was asked for an import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
@@ -215,7 +194,7 @@ msgid ""
 "window manager."
 msgstr ""
 "Importavimo pagalbininko lango padėtis ir dydis ; numatytieji nustatomi "
-"langų tvarkyklės."
+"langų tvarkytuvės."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:29
 msgid ""
@@ -237,12 +216,6 @@ msgid "Import mode"
 msgstr "Importavimo veiksena"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:33
-#| msgid ""
-#| "Last import mode choosen in the Import assistant. Possible values are : - "
-#| "\"NoImport\": do not import an action whose UUID already exists, - "
-#| "\"Renumber\": allocate a new UUID if the imported UUID already exists, - "
-#| "\"Override\": override the existing action with the imported one, - \"Ask"
-#| "\": ask the user each time."
 msgid ""
 "Last import mode chosen in the Import assistant. Possible values are : - "
 "\"NoImport\": do not import an action whose UUID already exists, - \"Renumber"
@@ -273,10 +246,6 @@ msgid "Add an 'About' item in the Nautilus context menu"
 msgstr "Įtraukti „Apie“ punktą į Nautilus kontekstinį meniu"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:37
-#| msgid ""
-#| "If TRUE, and if the user has defined a single root menu for its actions, "
-#| "then an 'About Nautilus Actions' will be displayed at end of the first "
-#| "submenu."
 msgid ""
 "If TRUE, and if the user has defined a single root menu for its actions, "
 "then an 'About Nautilus-Actions' will be displayed at end of the first "
@@ -297,21 +266,17 @@ msgid ""
 "maintained in descending alphabetical order. - \"ManualOrder\": user is free "
 "to reorder them via Nautilus-Actions configuration tool."
 msgstr ""
-"Šis nustatymas nurodo pageidaujamą rikiavimo tvarką. Galimos reikšmės: - "
+"Ši nuostata nurodo pageidaujamą rikiavimo tvarką. Galimos reikšmės: - "
 "„AscendingOrder“: veiksmai laikomi abėcėlės tvarka (istorinė elgsena). - "
 "„DescendingOrder“: veiksmai laikomi atvirkštine abėcėlės tvarka. - "
 "„ManualOrder“: naudotojas gali laisvai perrikiuoti juos naudodamas Nautilus-"
-"Actions configuration tool."
+"Actions konfigūravimo įrankį."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:40
-#| msgid "Define a 'Nautilus Actions' root menu"
 msgid "Define a 'Nautilus-Actions actions' root menu"
 msgstr "Apibrėžti „Nautilus veiksmų“ šakninį meniu"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:41
-#| msgid ""
-#| "If TRUE, then a 'Nautilus Actions' item will be defined in the Nautilus "
-#| "context menu, and will a root menu of all available actions."
 msgid ""
 "If TRUE, then a 'Nautilus-Actions actions' item will be defined in the "
 "Nautilus context menu, and will be the root menu of all available actions."
@@ -385,7 +350,7 @@ msgstr "Pagrindinio polangio padėtis"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:57
 msgid "Width of the main window pane ; default is set by the UI manager."
-msgstr "Pagrindinio polangio plotis ; numatytąjį nustato sąsajos valdyklė."
+msgstr "Pagrindinio polangio plotis ; numatytąjį nustato sąsajos tvarkytuvė."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:58
 msgid "Display Tools toolbar"
@@ -403,28 +368,24 @@ msgstr "Pagrindinio lango padėtis ir dydis"
 msgid ""
 "Position and size of the main window ; default is set by the window manager."
 msgstr ""
-"Pagrindinio lango padėtis ir dydis ; numatytieji nustatomi langų tvarkyklės."
+"Pagrindinio lango padėtis ir dydis ; numatytieji nustatomi langų tvarkytuvės."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:62
 msgid "Position and size of the preferences dialog"
-msgstr "Nustatymų dialogo padėtis ir dydis"
+msgstr "Nuostatų dialogo padėtis ir dydis"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:63
 msgid ""
 "Position and size of the preferences dialog ; default is set by the window "
 "manager."
 msgstr ""
-"Nustatymų dialogo padėtis ir dydis ; numatytieji nustatomi langų tvarkyklės."
+"Nuostatų dialogo padėtis ir dydis ; numatytieji nustatomi langų tvarkytuvės."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:64
 msgid "List of default schemes"
 msgstr "Numatytųjų schemų sąrašas"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
-#| msgid ""
-#| "The list of schemes proposed by default on each new profile. A default "
-#| "default list is harcoded in nautilus-actions-config-tool, which may be "
-#| "updated by the user."
 msgid ""
 "The list of schemes proposed by default on each new profile. A default "
 "default list is hardcoded in nautilus-actions-config-tool, which may be "
@@ -457,9 +418,6 @@ msgid "Whether the GConf I/O provider is locked"
 msgstr "Ar GConf įvedimo/išvedimo tiekėjas yra užrakintas"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:69
-#| msgid ""
-#| "When set to true (most probably as a mandatory key), this prevents all "
-#| "items, menus and actions, readen from GConf to being modified in NACT."
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, read from GConf to being modified in NACT."
@@ -469,13 +427,9 @@ msgstr ""
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:70
 msgid "Whether the Desktop I/O provider is locked"
-msgstr "Ar darbastalio įvedimo/išvedimo tiekėjas yra užrakintas"
+msgstr "Ar darbalaukio įvedimo/išvedimo tiekėjas yra užrakintas"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:71
-#| msgid ""
-#| "When set to true (most probably as a mandatory key), this prevents all "
-#| "items, menus and actions, readen from .desktop files to being modified in "
-#| "NACT."
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, read from .desktop files to being modified in NACT."
@@ -498,30 +452,22 @@ msgstr ""
 #. i18n: NAIExporter is an interface name, do not even try to translate
 #: ../src/core/na-exporter.c:60
 #, c-format
-#| msgid "No NAIExporter implementation found for %s format."
 msgid "No NAIExporter implementation found for '%s' format."
 msgstr "Nerasta NAIExporter realizacija „%s“ formatui."
 
 #. i18n: NAIExporter is an interface name, do not even try to translate
 #: ../src/core/na-exporter.c:304
 #, c-format
-#| msgid "NAIExporter %s doesn't implement 'to_buffer' interface."
 msgid "%s NAIExporter doesn't implement 'to_buffer' interface."
 msgstr "NAIExporter %s nerealizuoja „to_buffer“ interfeiso."
 
 #. i18n: NAIExporter is an interface name, do not even try to translate
 #: ../src/core/na-exporter.c:377
 #, c-format
-#| msgid "NAIExporter %s doesn't implement 'to_file' interface."
 msgid "%s NAIExporter doesn't implement 'to_file' interface."
 msgstr "NAIExporter %s nerealizuoja „to_file“ interfeiso."
 
 #: ../src/core/na-about.c:70
-#| msgid ""
-#| "Nautilus Actions Configuration Tool is free software; you can "
-#| "redistribute it and/or modify it under the terms of the GNU General "
-#| "Public License as published by the Free Software Foundation; either "
-#| "version 2 of the License, or (at your option) any later version."
 msgid ""
 "Nautilus-Actions Configuration Tool is free software; you can redistribute "
 "it and/or modify it under the terms of the GNU General Public License as "
@@ -534,11 +480,6 @@ msgstr ""
 "pasirinkta) bet kuri vėlesnė versija."
 
 #: ../src/core/na-about.c:74
-#| msgid ""
-#| "Nautilus Actions Configuration Tool is distributed in the hope that it "
-#| "will be useful, but WITHOUT ANY WARRANTY; without even the implied "
-#| "warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-#| "GNU General Public License for more details."
 msgid ""
 "Nautilus-Actions Configuration Tool is distributed in the hope that it will "
 "be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
@@ -551,11 +492,6 @@ msgstr ""
 "Licencijoje."
 
 #: ../src/core/na-about.c:78
-#| msgid ""
-#| "You should have received a copy of the GNU General Public License along "
-#| "with Nautilus Actions Configuration Tool ; if not, write to the Free "
-#| "Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA "
-#| "02110-1301, USA."
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Nautilus-Actions Configuration Tool ; if not, write to the Free Software "
@@ -579,16 +515,11 @@ msgstr "GNOME vertimo projektas <gnome-i18n@gnome.org>"
 
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
 #: ../src/core/na-about.c:127
-#| msgid "Nautilus Actions"
 msgid "Nautilus-Actions"
 msgstr "Nautilus veiksmai"
 
 #: ../src/core/na-about.c:161
 #, c-format
-#| msgid ""
-#| "Copyright %s 2005 The GNOME Foundation\n"
-#| "Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
-#| "Copyright %s 2009, 2010, 2011 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
@@ -600,24 +531,23 @@ msgstr ""
 
 #: ../src/core/na-desktop-environment.c:39
 msgid "GNOME desktop"
-msgstr "GNOME darbastalis"
+msgstr "GNOME darbalaukis"
 
 #: ../src/core/na-desktop-environment.c:40
 msgid "KDE desktop"
-msgstr "KDE darbastalis"
+msgstr "KDE darbalaukis"
 
 #: ../src/core/na-desktop-environment.c:41
-#| msgid "KDE desktop"
 msgid "LXDE desktop"
-msgstr "LXDE darbastalis"
+msgstr "LXDE darbalaukis"
 
 #: ../src/core/na-desktop-environment.c:42
 msgid "ROX desktop"
-msgstr "ROX darbastalis"
+msgstr "ROX darbalaukis"
 
 #: ../src/core/na-desktop-environment.c:43
 msgid "XFCE desktop"
-msgstr "XFCE darbastalis"
+msgstr "XFCE darbalaukis"
 
 #: ../src/core/na-desktop-environment.c:44
 msgid "Legacy systems"
@@ -630,13 +560,6 @@ msgstr "Šablonų atitinkančių pasirinktą bylą(as)/aplanką(us) sąrašas"
 #. i18n: wildcard characters '*' and '?' should be considered as literals,
 #. *  and not be translated
 #: ../src/core/na-icontext-factory.c:54
-#| msgid ""
-#| "A list of strings with joker '*' or '?' to be matched against the name(s) "
-#| "of the selected file(s)/folder(s). Each selected items must match at "
-#| "least one of the filename patterns for the action or the menu be "
-#| "candidate to display.\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to '*'."
 msgid ""
 "A list of strings with joker '*' or '?' to be matched against the name(s) of "
 "the selected file(s)/folder(s). Each selected item must match at least one "
@@ -659,7 +582,7 @@ msgid ""
 "include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr ""
 "Šablonas, kurį turėtų atitikti bylų/aplankų keliai. Galima naudoti ženklus "
-"„?“ arba „*“, Turite tai nurodyti parinktį  kiekvienam šablonui"
+"„?“ arba „*“. Kiekvienam reikiamam šablonui turite nustatyti vieną parametrą"
 
 #. i18n: the "<EXPR>" is just an abbreviation for "an expression",
 #. *  so is tranlatable
@@ -700,12 +623,6 @@ msgstr "Šablonų sąrašas pažymėtų failų/aplankų MIME tipams"
 
 #. i18n: wildcard character '*' is taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:116
-#| msgid ""
-#| "A list of strings with joker '*' to be matched against the mimetypes of "
-#| "the selected file(s)/folder(s). Each selected items must match at least "
-#| "one of the mimetype patterns for the action to appear.\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to '*/*'."
 msgid ""
 "A list of strings with joker '*' to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected item must match at least one of "
@@ -721,37 +638,20 @@ msgstr ""
 
 #. i18n: wildcard character '*' is taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:135
-#| msgid ""
-#| "A pattern to be matched against mimetypes of selected file(s)/folder(s). "
-#| "May include wildcards (* or ?). You must set one option for each pattern "
-#| "you need"
 msgid ""
 "A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
 "include the asterisk wildcard '*'. You must set one option for each pattern "
 "you need"
 msgstr ""
 "Šablonas, kurį turėtų atitikti failų ar aplankų MIME tipai. Galima naudoti "
-"ženklus „*“. Turite tai nurodyti kiekvienam šablonui"
+"ženklus „*“. Kiekvienam reikiamam šablonui turite nustatyti vieną parametrą"
 
 #: ../src/core/na-icontext-factory.c:179
-#| msgid "Whether the profile applies to folders"
 msgid "Whether the profile applies to files (deprecated option, see mimetype)"
 msgstr "Ar profilis taikomas failams (pasenęs parametras, žiūrėkite mimetype)"
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:181
-#| msgid ""
-#| "Set to 'true' if the selection can have files, to 'false' otherwise.\n"
-#| "This setting is tied in with the 'isdir' setting. The valid combinations "
-#| "are: \n"
-#| "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
-#| "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-#| "isfile=TRUE and isdir=TRUE: the selection may hold both files and "
-#| "folders\n"
-#| "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-#| "configuration will never appear).\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to 'true'."
 msgid ""
 "Set to 'true' if the selection can have files, to 'false' otherwise.\n"
 "This setting is tied in with the 'isdir' setting. The valid combinations "
@@ -777,7 +677,6 @@ msgstr ""
 "Numatyta teigiama."
 
 #: ../src/core/na-icontext-factory.c:210
-#| msgid "Whether the profile applies to folders"
 msgid ""
 "Whether the profile applies to folders (deprecated option, see mimetype)"
 msgstr ""
@@ -785,18 +684,6 @@ msgstr ""
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:212
-#| msgid ""
-#| "Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
-#| "This setting is tied in with the 'isfile' setting. The valid combinations "
-#| "are: \n"
-#| "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
-#| "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-#| "isfile=TRUE and isdir=TRUE: the selection may hold both files and "
-#| "folders\n"
-#| "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-#| "configuration will never appear).\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to 'false'."
 msgid ""
 "Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
 "This setting is tied in with the 'isfile' setting. The valid combinations "
@@ -822,7 +709,6 @@ msgstr ""
 "Numatyta neigiama."
 
 #: ../src/core/na-icontext-factory.c:244
-#| msgid "Whether the selection may be multiple"
 msgid ""
 "Whether the selection may be multiple (deprecated option, see selection "
 "count)"
@@ -873,7 +759,7 @@ msgid ""
 msgstr ""
 "Nurodo tinkamų schemų sąrašą pritaikymui pasirinktiems elementams. Schema, "
 "tai protokolas, naudojamas pasiekti byloms. Naudotinas raktažodis toks, koks "
-"naudojamas failų tvarkyklės URI.\n"
+"naudojamas failų tvarkytuvės URI.\n"
 "Tinkamo URI pavyzdžiai:\n"
 "- file:///tmp/foo.txt\n"
 "sftp:///root@tai.pavyzdys.net/tmp/foo.txt\n"
@@ -883,7 +769,7 @@ msgstr ""
 "„ftp“: bylos prieinamos per FTP\n"
 "„smb“: bylos prieinamos per Samba (Windows dalijamas katalogas)\n"
 "„dav“: bylos prieinamos per WebDav\n"
-"Visos jūsų failų tvarkyklės naudojamos schemos čia gali būti naudojamos.\n"
+"Visos jūsų failų tvarkytuvės naudojamos schemos čia gali būti naudojamos.\n"
 "Tai žinoma galioja tik jei kas nors yra pasirinkta arba kai taikoma speciali "
 "„x-nautilus-desktop“ schema.\n"
 "Numatyta „file“."
@@ -893,8 +779,8 @@ msgid ""
 "A valid GIO scheme where the selected file(s)/folder(s) should be located. "
 "You must set one option for each scheme you need"
 msgstr ""
-"Tinkama GIO schema, kur turi būti surasti pasirinkti failai/aplankai. Turite "
-"tai nurodyti kiekvienai reikiamai schemai."
+"Tinkama GIO schema, kur turi būti surasti pasirinkti failai/aplankai. "
+"Kiekvienai reikiamai schemai turite nustatyti vieną parametrą"
 
 #. i18n: "<STRING>" is just an abbreviation for "a string", so is tranlatable
 #: ../src/core/na-icontext-factory.c:306
@@ -930,8 +816,8 @@ msgid ""
 "The path of a (parent) directory for which the item will be displayed. You "
 "must set one option for each folder you need"
 msgstr ""
-"(Tėvinio) aplanko kelias, kuriam elementas bus rodomas. Turite pasirinkti "
-"kiekvienam reikiamam aplankui."
+"(Tėvinio) aplanko kelias, kuriam elementas bus rodomas. Kiekvienam reikiamam "
+"aplankui turite nustatyti vieną parametrą"
 
 #. i18n: "<PATH>" is just an abbreviation for "a folder path", so is tranlatable
 #. i18n: "<PATH>" is the path to a binary, so may be tranlatable
@@ -960,7 +846,6 @@ msgstr ""
 "Numatyta „>0“."
 
 #: ../src/core/na-icontext-factory.c:356
-#| msgid "Operator of the selection count relation"
 msgid "Selection count relation [>0]"
 msgstr "Pažymėjimų skaičiaus ryšio operatorius [>0]"
 
@@ -973,20 +858,17 @@ msgid "Defaults to all."
 msgstr "Numatytas visus."
 
 #: ../src/core/na-icontext-factory.c:379
-#| msgid ""
-#| "The path of a (parent) directory for which the item will be displayed. "
-#| "You must set one option for each folder you need"
 msgid ""
 "The name of an only desktop environment where the item must be displayed. "
 "You must set one option for each environment you want"
 msgstr ""
-"Darbastalio aplinka, kurioje elementas bus rodomas. Turite pasirinkti "
-"kiekvienai aplinkai"
+"Darbalaukio aplinka, kurioje elementas bus rodomas. Kiekvienai norimai "
+"aplinkai turite nustatyti vieną parametrą"
 
 #. i18n: "<DESKTOP>" is just a placeholder for "a desktop name", so is tranlatable
 #: ../src/core/na-icontext-factory.c:382 ../src/core/na-icontext-factory.c:406
 msgid "<DESKTOP>"
-msgstr "<DESKTOP>"
+msgstr "<DARBALAUKIS>"
 
 #: ../src/core/na-icontext-factory.c:388
 msgid "Not show in environment"
@@ -997,15 +879,12 @@ msgid "Defaults to none."
 msgstr "Numatytas nieko."
 
 #: ../src/core/na-icontext-factory.c:403
-#| msgid ""
-#| "The path of a (parent) directory for which the item will be displayed. "
-#| "You must set one option for each folder you need"
 msgid ""
 "The name of a desktop environment where the item must not be displayed. You "
 "must set one option for each environment you want"
 msgstr ""
-"Darbastalio aplinka, kurioje elementas bus rodomas. Turite pasirinkti "
-"kiekvienai norimai aplinkai"
+"Darbalaukio aplinka, kurioje elementas bus rodomas. Kiekvienai norimai "
+"aplinkai turite nustatyti vieną parametrą"
 
 #: ../src/core/na-icontext-factory.c:412
 msgid "Try exec"
@@ -1013,12 +892,6 @@ msgstr "Bandyti exec"
 
 #. i18n: TryExec is a keyword of the specification, it is not translatable
 #: ../src/core/na-icontext-factory.c:414
-#| msgid ""
-#| "Note that, when specified, only the presence and the executability status "
-#| "of the specified file are checked.\n"
-#| "Parameters may appear in TryExec value, and will be substituted at "
-#| "runtime.\n"
-#| "Defaults to successful."
 msgid ""
 "Note that, when specified, only the presence and the executability status of "
 "the specified file are checked.\n"
@@ -1042,13 +915,6 @@ msgstr "Rodyti, jei registruota"
 
 #. i18n: ShowIfRegistered is a keyword of the specification, it is not translatable
 #: ../src/core/na-icontext-factory.c:441
-#| msgid ""
-#| "The well-known name of a DBus service.\n"
-#| "The item will be candidate if the named service is registered on session "
-#| "DBus at runtime.\n"
-#| "Parameters may appear in ShowIfRegistered value, and will be substituted "
-#| "at runtime.\n"
-#| "Defaults to successful."
 msgid ""
 "The well-known name of a DBus service.\n"
 "The item will be candidate if the named service is registered on session "
@@ -1070,7 +936,6 @@ msgstr "Tarnybos pavadinimas, kuri turi būti priregistruota seanso DBus"
 
 #: ../src/core/na-icontext-factory.c:459 ../src/core/na-icontext-factory.c:512
 #: ../src/core/na-icontext-factory.c:545
-#| msgid "<PATH|NAME>"
 msgid "<NAME>"
 msgstr "<NAME>"
 
@@ -1080,12 +945,6 @@ msgstr "Rodyti jei teigiama"
 
 #. i18n: ShowIfTrue is a keyword of the specification, it is not translatable
 #: ../src/core/na-icontext-factory.c:467
-#| msgid ""
-#| "A command which, when executed, should output a string on stdout.\n"
-#| "The item will be candidate if the outputed string is equal to \"true\".\n"
-#| "Parameters may appear in ShowIfTrue value, and will be substituted at "
-#| "runtime.\n"
-#| "Defaults to successful."
 msgid ""
 "A command which, when executed, should output a string on stdout.\n"
 "The item will be candidate if the outputed string is equal to \"true\".\n"
@@ -1110,13 +969,6 @@ msgstr "Rodyti jei vykdoma"
 
 #. i18n: ShowIfRunning is a keyword of the specification, it is not translatable
 #: ../src/core/na-icontext-factory.c:494
-#| msgid ""
-#| "The name of a process.\n"
-#| "The item will be candidate if the process name is found in memory at "
-#| "runtime.\n"
-#| "Parameters may appear in ShowIfRunning value, and will be substituted at "
-#| "runtime.\n"
-#| "Defaults to successful."
 msgid ""
 "The name of a process.\n"
 "The item will be candidate if the process name is found in memory at "
@@ -1143,18 +995,6 @@ msgstr "Galimybės"
 #. i18n: 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' are all keywords
 #. *  of the specification; they are not translatable
 #: ../src/core/na-icontext-factory.c:521
-#| msgid ""
-#| "A list of capabilities each item of the selection must satisfy in order "
-#| "the item be candidate.\n"
-#| "Capabilities may be negated.\n"
-#| "Capabilities have to be choosen between following predefined ones:\n"
-#| "- Owner: current user is the owner of selected items\n"
-#| "- Readable: selected items are readable by user (probably more usefull "
-#| "when negated)\n"
-#| "- Writable: selected items are writable by user\n"
-#| "- Executable: selected items are executable by user\n"
-#| "- Local: selected items are local.\n"
-#| "Defaults to empty list."
 msgid ""
 "A list of capabilities each item of the selection must satisfy in order for "
 "the item to be candidate.\n"
@@ -1212,7 +1052,6 @@ msgstr "Esamas elementas buvo perrašytas naudotojo prašymu."
 
 #: ../src/core/na-iimporter.c:286 ../src/core/na-importer.c:344
 #, c-format
-#| msgid "Item ID %s already exists."
 msgid "Item %s already exists."
 msgstr "Elementas %s jau yra."
 
@@ -1268,9 +1107,6 @@ msgstr ""
 "Atsargiai: ši veiksena gali būti pavojinga. Antrą kartą nebus klausiama."
 
 #: ../src/core/na-importer.c:88
-#| msgid ""
-#| "You will be asked for the format to choose each time an item is about to "
-#| "be exported."
 msgid "You will be asked each time an imported ID already exists."
 msgstr "Bus klausiama kiekvieną kartą, kai importuotas ID jau yra."
 
@@ -1283,15 +1119,11 @@ msgstr "%s nėra įkeliamas (tuščias, per didelis arba ne įprastinis failas)"
 #. l10n: 'ImporterAskDialog' is the dialog name: do not translate
 #: ../src/core/na-importer-ask.c:270
 #, c-format
-#| msgid "Unable to load the XML definition from %s."
 msgid "Unable to load 'ImporterAskDialog' from %s"
 msgstr "Nepavyko įkelti „ImporterAskDialog“ iš %s"
 
 #: ../src/core/na-importer-ask.c:401
 #, c-format
-#| msgid ""
-#| "The action \"%s\" imported from \"%s\" has the same identifiant than the "
-#| "already existing \"%s\"."
 msgid ""
 "The action \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
@@ -1301,9 +1133,6 @@ msgstr ""
 
 #: ../src/core/na-importer-ask.c:407
 #, c-format
-#| msgid ""
-#| "The menu \"%s\" imported from \"%s\" has the same identifiant than the "
-#| "already existing \"%s\"."
 msgid ""
 "The menu \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
@@ -1324,10 +1153,6 @@ msgid "Re_member my choice in future import operations"
 msgstr "Įsi_minti pasirinkimą būsimiems importo veiksmams"
 
 #: ../src/core/na-io-provider.c:69
-#| msgid ""
-#| "Program flow error.\n"
-#| "Please, be kind enough to fill out a bug report on http://bugzilla.gnome."
-#| "org."
 msgid ""
 "Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
 "org/enter_bug.cgi?product=nautilus-actions."
@@ -1336,7 +1161,6 @@ msgstr ""
 "product=nautilus-actions."
 
 #: ../src/core/na-io-provider.c:1364
-#| msgid "unavailable I/O provider"
 msgid "Unavailable I/O provider."
 msgstr "Nepasiekiamas įvedimo/išvedimo tiekėjas"
 
@@ -1349,7 +1173,6 @@ msgid "I/O provider is not willing to write."
 msgstr "Įvedimo/išvedimo tiekėjas nerašo."
 
 #: ../src/core/na-io-provider.c:1376
-#| msgid "I/O provider is not willing to write."
 msgid "I/O provider announces itself as unable to write."
 msgstr "Įvedimo/išvedimo tiekėjas nerašo."
 
@@ -1426,7 +1249,6 @@ msgid "Profile automatically created from pre-v2 action"
 msgstr "Profilis automatiškai sukurtas iš prieš-v2 veiksmo"
 
 #: ../src/core/na-object-action-factory.c:80
-#| msgid "Targets the location context menu"
 msgid "Targets the selection context menu"
 msgstr "Taikosi į žymėjimo kontekstinį meniu"
 
@@ -1445,7 +1267,6 @@ msgstr ""
 "Numatyta TEIGIAMA."
 
 #: ../src/core/na-object-action-factory.c:99
-#| msgid "Targets the selection context menu (default)"
 msgid "Targets the selection context menu [true]"
 msgstr "Taikosi į žymėjimo kontekstinį meniu [teigiama]"
 
@@ -1468,7 +1289,6 @@ msgstr ""
 "Numatyta NEIGIAMA."
 
 #: ../src/core/na-object-action-factory.c:125
-#| msgid "Targets the location context menu"
 msgid "Targets the location context menu [false]"
 msgstr "Taikosi į vietos kontekstinį meniu [false]"
 
@@ -1489,7 +1309,6 @@ msgstr ""
 "Numatyta NEIGIAMA."
 
 #: ../src/core/na-object-action-factory.c:150
-#| msgid "Targets the toolbar"
 msgid "Targets the toolbar [false]"
 msgstr "Taikosi į įrankinę [false]"
 
@@ -1504,9 +1323,9 @@ msgid ""
 "preferences.\n"
 "Defaults to label of the context menu when not set or empty."
 msgstr ""
-"Užrašas rodomas šalia piktogramos failų naršyklės įrankinėje.\n"
-"Tikrasis vaizdavimas gali priklausyti nuo asmeninių darbastalio aplinkos "
-"nustatymų.\n"
+"Užrašas rodomas šalia piktogramos failų tvarkytuvės įrankinėje.\n"
+"Tikrasis vaizdavimas gali priklausyti nuo asmeninių darbalaukio aplinkos "
+"nuostatų.\n"
 "Numatyta kontekstinio meniu užrašas, kai nenurodyta arba tuščia."
 
 #. i18n: copied items have a label as 'Copy of original label'
@@ -1541,7 +1360,7 @@ msgid ""
 "when the selection matches the appearance condition settings.\n"
 "It is also used as a default for the toolbar label of an action."
 msgstr ""
-"Meniu punkto užrašas bus rodomas failų naršyklės kontekstiniame meniu, kai "
+"Meniu punkto užrašas bus rodomas failų tvarkytuvės kontekstiniame meniu, kai "
 "pažymėjimas atitinka išvaizdos sąlygos nustatymus.\n"
 "Jis taip pat naudojamas kaip numatytas įrankinės veiksmo užrašas."
 
@@ -1559,7 +1378,7 @@ msgid ""
 "when the user points to the file manager context menu item with his/her "
 "mouse."
 msgstr ""
-"Meniu punkto paaiškinimas, kuris bus rodomas failų naršyklės būsenos "
+"Meniu punkto paaiškinimas, kuris bus rodomas failų tvarkytuvės būsenos "
 "juostoje, kai naudotojas užves pelės žymeklį virš to meniu punkto."
 
 #: ../src/core/na-object-item-factory.c:142
@@ -1574,7 +1393,7 @@ msgid ""
 "May be the localized name of a themed icon, or a full path to any "
 "appropriate image."
 msgstr ""
-"Meniu punkto piktograma, kuri bus rodoma failų naršyklės kontekstiniame "
+"Meniu punkto piktograma, kuri bus rodoma failų tvarkytuvės kontekstiniame "
 "meniu, šalia užrašo, kai pasirinkti elementai atitiks išvaizdos kriterijus.\n"
 "Gali būti lokalizuotas temos piktogramos pavadinimas arba pilnas kelias iki "
 "paveikslėlio."
@@ -1633,7 +1452,6 @@ msgstr ""
 "elementai yra prijungiami skaitymo operacijų seka."
 
 #: ../src/core/na-object-item-factory.c:293
-#| msgid "Whether the action or the menu is enabled (default)"
 msgid "Whether the action or the menu is enabled"
 msgstr "Ar veiksmas arba meniu yra leidžiamas"
 
@@ -1644,11 +1462,10 @@ msgid ""
 "Defaults to TRUE."
 msgstr ""
 "Jei veiksmas arba meniu yra draudžiamas, jis niekada nepasirodys failų "
-"naršyklės kontekstiniame meniu.\n"
+"tvarkytuvės kontekstiniame meniu.\n"
 "Numatyta TEIGIAMA."
 
 #: ../src/core/na-object-item-factory.c:310
-#| msgid "Whether the action or the menu is enabled (default)"
 msgid "Whether the action or the menu is enabled [enabled]"
 msgstr "Ar veiksmas arba meniu yra leidžiamas [leidžiamas]"
 
@@ -1696,7 +1513,7 @@ msgid ""
 "the file manager context menu or in the toolbar."
 msgstr ""
 "Paleidžiamos komandos, kuri bus vykdoma naudotojui pasirinkus atitinkamą "
-"punktą failų naršyklės kontekstiniame meniu arba įrankinėje, kelias."
+"punktą failų tvarkytuvės kontekstiniame meniu arba įrankinėje, kelias."
 
 #: ../src/core/na-object-profile-factory.c:127
 msgid "Parameters of the command"
@@ -1704,47 +1521,6 @@ msgstr "Komandos parametrai"
 
 #. too long string for iso c: (max=509)
 #: ../src/core/na-object-profile-factory.c:129
-#| msgid ""
-#| "The parameters of the command to be executed when the user selects the "
-#| "menu item in the file manager context menu or in the toolbar.\n"
-#| "The parameters may contain some special tokens which are replaced by the "
-#| "informations provided by the file manager before starting the command:\n"
-#| "- up to version \"2.0\":\n"
-#| "  %d: base folder of the selected file(s)\n"
-#| "  %f: the name of the selected file or the first one if several are "
-#| "selected\n"
-#| "  %h: hostname of the URI\n"
-#| "  %m: space-separated list of the basenames of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %M: space-separated list of the selected file(s)/folder(s), with their "
-#| "full paths\n"
-#| "  %p: port number of the first URI\n"
-#| "  %R: space-separated list of selected URIs\n"
-#| "  %s: scheme of the URI\n"
-#| "  %u: URI\n"
-#| "  %U: username of the URI\n"
-#| "  %%: a percent sign.- starting from version '1':\n"
-#| "  %b: (first) basename of the selected file(s)/folder(s)\n"
-#| "  %B: space-separated list of the basenames of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %c: count the selected file(s)/folder(s)\n"
-#| "  %d: (first) base directory of the selected file(s)/folder(s)\n"
-#| "  %D: space-separated list of base directories of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %f: (first) filename of the selected file(s)/folder(s)\n"
-#| "  %F: space-separated list of the filenames of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %h: hostname of the (first) URI\n"
-#| "  %n: username of the (first) URI\n"
-#| "  %p: port number of the (first) URI\n"
-#| "  %s: scheme of the (first) URI\n"
-#| "  %u: (first) URI\n"
-#| "  %U: space-separated list of selected URIs\n"
-#| "  %w: (first) basename without the extension\n"
-#| "  %W: space-separated list of basenames without the extension\n"
-#| "  %x: (first) extension\n"
-#| "  %X: space-separated list of the extensions\n"
-#| "  %%: a percent sign."
 msgid ""
 "The parameters of the command to be executed when the user selects the menu "
 "item in the file manager context menu or in the toolbar.\n"
@@ -1797,9 +1573,9 @@ msgid ""
 "  %%: a percent sign."
 msgstr ""
 "Komandos parametrai vykdymui, kai naudotojas pasirenka meniu punktą failų "
-"naršyklės kontekstiniame meniu arba įrankių juostoje.\n"
+"tvarkytuvės kontekstiniame meniu arba įrankių juostoje.\n"
 "Parametrai gali turėti kai kurias specialias leksemas, kurios bus pakeistos "
-"failų naršyklės pateiktais duomenimis prieš vykdant komandą:\n"
+"failų tvarkytuvės pateiktais duomenimis prieš vykdant komandą:\n"
 "- iki versijos „2.0“:\n"
 "  %d: pažymėtų failų bazinis aplankas\n"
 "  %f: pažymėto failo arba pirmojo iš pažymėtų pavadinimas\n"
@@ -1856,19 +1632,6 @@ msgstr "Vykdymo režimas"
 
 #. i18n: 'Normal', 'Terminal', 'Embedded' and 'DisplayOutput' are non-translatable keywords
 #: ../src/core/na-object-profile-factory.c:213
-#| msgid ""
-#| "Execution mode of the program.\n"
-#| "This may be choosen between following values:\n"
-#| "- Normal: starts as a standard graphical user interface\n"
-#| "- Terminal: starts the preferred terminal of the graphical environment, "
-#| "and runs the command in it\n"
-#| "- Embedded: makes use of a special feature of the file manager which "
-#| "allows a terminal to be ran inside of it; an acceptable fallback is "
-#| "Terminal\n"
-#| "- DisplayOutput: the ran terminal may be closed at end of the command, "
-#| "but standard streams (stdout, stderr) should be collected and displayed; "
-#| "an acceptable fallback is Terminal.\n"
-#| "Defaults to \"Normal\"."
 msgid ""
 "Execution mode of the program.\n"
 "This may be chosen between following values:\n"
@@ -1887,8 +1650,8 @@ msgstr ""
 "- Normal: paleidžia kaip įprastinę grafinę naudotojo sąsają\n"
 "- Terminal: paleidžia pageidaujamą grafinės aplinko terminalą ir paleidžia "
 "komandą jame\n"
-"- Embedded: išnaudoja failų naršyklės specialią savybę, leidžiančią paleisti "
-"terminalą jos viduje; priimtina atsarginė elgsena yra Terminal\n"
+"- Embedded: išnaudoja failų tvarkytuvės specialią savybę, leidžiančią "
+"paleisti terminalą jos viduje; priimtina atsarginė elgsena yra Terminal\n"
 "- DisplayOutput: paleistas terminalas gali būti užvertas pabaigoje, bet "
 "standartiniai srautai (stdout, stderr) turi būti surinkti ir parodyti; "
 "priimtina atsarginė elgsena yra terminalas.\n"
@@ -1923,14 +1686,6 @@ msgid "Execute as user"
 msgstr "Vykdyti kaip naudotojas"
 
 #: ../src/core/na-object-profile-factory.c:291
-#| msgid ""
-#| "The user the command must be ran as. The user may be identified by its "
-#| "numeric UID or by its login.\n"
-#| "The implementation should ignore a profile defining a non-existing UID or "
-#| "login as a value for the ExecuteAs key.\n"
-#| "The implementation might require the presence of a well-configured "
-#| "subsystem (e.g. sudo).\n"
-#| "Defaults to empty: the command will be executed as the current user."
 msgid ""
 "The user the command must be ran as. The user may be identified by its "
 "numeric UID or by its login.\n"
@@ -1949,12 +1704,10 @@ msgid "Error when querying informations for %s URI: %s"
 msgstr "Klaida užklausiant informacijos %s URI: %s"
 
 #: ../src/core/na-tokens.c:250
-#| msgid "file:///path/to/file1.text"
 msgid "file:///path/to/file1.mid"
 msgstr "file:///kelias/iki/failo1.mid"
 
 #: ../src/core/na-tokens.c:251
-#| msgid "file:///path/to/file2.text"
 msgid "file:///path/to/file2.jpeg"
 msgstr "file:///kelias/iki/failo2.jpeg"
 
@@ -1975,12 +1728,10 @@ msgid "user"
 msgstr "naudotojas"
 
 #: ../src/core/na-tokens.c:431
-#| msgid "Output of the program"
 msgid "Output of the run command"
 msgstr "Programos išvedimas"
 
 #: ../src/core/na-tokens.c:439
-#| msgid "Choosing a command"
 msgid "Run command:"
 msgstr "Vykdymo komanda:"
 
@@ -1989,29 +1740,18 @@ msgid "Standard output:"
 msgstr "Standartinė išvestis:"
 
 #: ../src/core/na-tokens.c:441
-#| msgid "Syntax error: %s\n"
 msgid "Standard error:"
 msgstr "Sintaksės klaida:"
 
 #: ../src/io-desktop/nadp-desktop-provider.c:259
 msgid "Nautilus-Actions Desktop I/O Provider"
-msgstr "Nautilus-Actions darbastalio įvesties/išvesties tiekėjas"
+msgstr "Nautilus-Actions darbalaukio įvesties/išvesties tiekėjas"
 
 #: ../src/io-desktop/nadp-formats.c:56
-#| msgid "Export as a GConf _dump file"
 msgid "Export as a ._desktop file"
-msgstr "Eksportuoti kaip .desktop failą"
+msgstr "Eksportuoti kaip ._desktop failą"
 
 #: ../src/io-desktop/nadp-formats.c:57
-#| msgid ""
-#| "This format has been introduced in v 1.11 serie, and should be the "
-#| "preferred format for newly exported items.\n"
-#| "It is not backward compatible with previous Nautilus Actions "
-#| "Configuration Tool versions,\n"
-#| "though it may still be imported via standard GConf command-line tools.\n"
-#| "The exported dump file may later be imported via :\n"
-#| "- Import assistant of a compatible Nautilus Actions Configuration Tool,\n"
-#| "- or via the gconftool-2 --load command-line tool."
 msgid ""
 "This format has been introduced with v 3.0 serie, and should be your newly "
 "preferred format when exporting items.\n"
@@ -2026,7 +1766,7 @@ msgstr ""
 "Šis formatas įtrauktas v 3.0 serijoje ir turėtų būti mėgiamiausias formatas "
 "naujai eksportuojamiems elementams.\n"
 "Jis leidžia lengvai dalintis savo veiksmais su visu pasauliu, įskaitant "
-"naudotojus su kitomis darbastalio aplinkomis, kol jų programos realizuoja "
+"naudotojus su kitomis darbalaukio aplinkomis, kol jų programos realizuoja "
 "DES-EMA specifikaciją, kuris aprašo šį formatą.\n"
 "Eksportuotas .desktop failas gali būti vėliau importuotas naudojant:\n"
 "- Nautilus-Actions konfigūracijos įrankio importo pagalbininką,\n"
@@ -2034,9 +1774,8 @@ msgstr ""
 "- nukopijuojant jį į XDG_DATA_DIRS/file-manager/actions katalogą."
 
 #: ../src/io-desktop/nadp-reader.c:64
-#| msgid "The I/O provider is not willing to do that."
 msgid "The Desktop I/O Provider is not able to handle the URI"
-msgstr "Darbastalio įvedimo/išvedimo tiekėjas negali apdoroti šio URI"
+msgstr "Darbalaukio įvedimo/išvedimo tiekėjas negali apdoroti šio URI"
 
 #. i18n: 'type' is the nature of the item: Action or Menu
 #: ../src/io-desktop/nadp-reader.c:292
@@ -2079,7 +1818,6 @@ msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
 msgstr "Nežinomas tipas %s rastas eilutėje %d, tikintis veiksmo arba meniu."
 
 #: ../src/io-xml/naxml-reader.c:154
-#| msgid "The I/O provider is not willing to do that."
 msgid "The XML I/O Provider is not able to handle the URI"
 msgstr "XML įvedimo/išvedimo tiekėjas negali apdoroti šio URI"
 
@@ -2088,11 +1826,6 @@ msgid "Export as a _full GConf schema file"
 msgstr "Eksportuoti kai _pilną GConf schemos failą"
 
 #: ../src/io-xml/naxml-formats.c:56
-#| msgid ""
-#| "This used to be the historical export format.\n"
-#| "The exported schema file may later be imported via :\n"
-#| "- Import assistant of the Nautilus Actions Configuration Tool,\n"
-#| "- or via the gconftool-2 --import-schema-file command-line tool."
 msgid ""
 "This used to be the historical export format.\n"
 "The exported schema file may later be imported via :\n"
@@ -2111,15 +1844,6 @@ msgid "Export as a _light GConf schema (v2) file"
 msgstr "Eksportuoti kaip _supaprastintą GConf schemos (v2) failą"
 
 #: ../src/io-xml/naxml-formats.c:68
-#| msgid ""
-#| "This format has been introduced in v 1.11 serie.\n"
-#| "This is the lightest schema still compatible with GConf command-line "
-#| "tools,\n"
-#| "while keeping backward compatibility with older Nautilus Actions "
-#| "Configuration Tool versions.\n"
-#| "The exported schema file may later be imported via :\n"
-#| "- Import assistant of the Nautilus Actions Configuration Tool,\n"
-#| "- or via the gconftool-2 --import-schema-file command-line tool."
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "This is the lightest schema still compatible with GConf command-line tools, "
@@ -2144,15 +1868,6 @@ msgid "Export as a GConf _dump file"
 msgstr "Eksportuoti kai GConf san_dėlio failą"
 
 #: ../src/io-xml/naxml-formats.c:83
-#| msgid ""
-#| "This format has been introduced in v 1.11 serie, and should be the "
-#| "preferred format for newly exported items.\n"
-#| "It is not backward compatible with previous Nautilus Actions "
-#| "Configuration Tool versions,\n"
-#| "though it may still be imported via standard GConf command-line tools.\n"
-#| "The exported dump file may later be imported via :\n"
-#| "- Import assistant of a compatible Nautilus Actions Configuration Tool,\n"
-#| "- or via the gconftool-2 --load command-line tool."
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "Tough not backward compatible with Nautilus-Actions Configuration Tool "
@@ -2204,7 +1919,6 @@ msgid "Application name"
 msgstr "Programos pavadinimas"
 
 #: ../src/nact/base-application.c:210
-#| msgid "Quit the application"
 msgid "The name of the application"
 msgstr "Programos pavadinimas"
 
@@ -2217,12 +1931,10 @@ msgid "A short description to be displayed in the first line of --help output"
 msgstr "Trumpas aprašymas, rodomas pirmoje --help išvesties eilutėje"
 
 #: ../src/nact/base-application.c:225
-#| msgid "no name"
 msgid "Icon name"
 msgstr "Piktogramos pavadinimas"
 
 #: ../src/nact/base-application.c:226
-#| msgid "Unable to set the default icon for the application."
 msgid "The name of the icon of the application"
 msgstr "Programos piktogramos pavadinimas"
 
@@ -2231,7 +1943,6 @@ msgid "UniqueApp name"
 msgstr "UniqueApp pavadinimas"
 
 #: ../src/nact/base-application.c:234
-#| msgid "Quit the application"
 msgid "The Unique name of the application"
 msgstr "Unikalus programos pavadinimas"
 
@@ -2240,7 +1951,6 @@ msgid "Return code"
 msgstr "Grįžimo kodas"
 
 #: ../src/nact/base-application.c:242
-#| msgid "Quit the application"
 msgid "The return code of the application"
 msgstr "Programos grįžimo kodas"
 
@@ -2273,7 +1983,6 @@ msgstr "Ar tikrai norite užverti pagalbininką ?"
 
 #: ../src/nact/base-iunique.c:207
 #, c-format
-#| msgid "Another instance of the application is already running."
 msgid ""
 "Another instance of %s is already running.\n"
 "Please switch back to it."
@@ -2290,7 +1999,6 @@ msgid "XML UI filename"
 msgstr "XML UI failo pavadinimas"
 
 #: ../src/nact/base-window.c:205
-#| msgid "No filename provided for the UI XML definition."
 msgid "The filename which contains the XML UI definition"
 msgstr "Failas, kuriame yra XML UI apibrėžimas"
 
@@ -2304,22 +2012,18 @@ msgid ""
 msgstr "Ar BaseWindow išskiria naują GtkBuilder kiekvieną kartą atvėrus"
 
 #: ../src/nact/base-window.c:220
-#| msgid "no name"
 msgid "Toplevel name"
 msgstr "Aukščiausio lygio pavadinimas"
 
 #: ../src/nact/base-window.c:221
-#| msgid "The internal identifiant of the action to be launched"
 msgid "The internal GtkBuildable name of the toplevel window"
 msgstr "Vidinis GtkBuildable pavadinimas aukščiausio lygio langui"
 
 #: ../src/nact/base-window.c:228
-#| msgid "Quit the application"
 msgid "BaseApplication"
 msgstr "BaseApplication"
 
 #: ../src/nact/base-window.c:229
-#| msgid "Another instance of the application is already running."
 msgid "A pointer (not a reference) to the BaseApplication instance"
 msgstr "Rodyklė (ne nuoroda) į BaseApplication"
 
@@ -2332,14 +2036,13 @@ msgid "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
 msgstr "Rodyklė (ne nuoroda) į šio BaseWindow BaseWindow tėvą"
 
 #: ../src/nact/base-window.c:242
-#| msgid "no name"
 msgid "WSP name"
 msgstr "WSP pavadinimas"
 
 #: ../src/nact/base-window.c:243
 msgid ""
 "The string which handles the window size and position in user preferences"
-msgstr "Eilutė, kuri apdoroja lango dydį ir padėtį naudotojo nustatymuose"
+msgstr "Eilutė, kuri apdoroja lango dydį ir padėtį naudotojo nuostatose"
 
 #: ../src/nact/base-window.c:250
 msgid "Destroy the Gtk toplevel"
@@ -2356,7 +2059,6 @@ msgstr "Nepavyko pakrauti %s UI XML apibrėžimo: %s"
 
 #: ../src/nact/base-window.c:750
 #, c-format
-#| msgid "Unable to load %s XML definition."
 msgid "Unable to load %s dialog definition."
 msgstr "Nepavyko įkelti %s dialogo aprašymo."
 
@@ -2383,12 +2085,12 @@ msgstr "Programa nepriima dokumentų komandinėje eilutėje"
 #: ../src/nact/egg-desktop-file.c:1166
 #, c-format
 msgid "Unrecognized launch option: %d"
-msgstr "Neatpažinta paleidimo parinktis: %d"
+msgstr "Neatpažintas paleidimo parametras: %d"
 
 #: ../src/nact/egg-desktop-file.c:1365
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Negalima perduoti dokumento URI desktop įrašui „tipas=saitas“"
+msgstr "Negalima perduoti dokumento URI darbalaukio įrašui „tipas=saitas“"
 
 #: ../src/nact/egg-desktop-file.c:1386
 #, c-format
@@ -2397,7 +2099,7 @@ msgstr "Nepaleidžiamas elementas"
 
 #: ../src/nact/egg-sm-client.c:239
 msgid "Disable connection to session manager"
-msgstr "Uždrausti prisijungimą prie sesijų tvarkyklės"
+msgstr "Uždrausti prisijungimą prie sesijų tvarkytuvės"
 
 #: ../src/nact/egg-sm-client.c:242
 msgid "Specify file containing saved configuration"
@@ -2409,7 +2111,7 @@ msgstr "FAILAS"
 
 #: ../src/nact/egg-sm-client.c:245
 msgid "Specify session management ID"
-msgstr "Nurodykite sesijos valdymo ID"
+msgstr "Nurodykite sesijos tvarkymo ID"
 
 #: ../src/nact/egg-sm-client.c:245
 msgid "ID"
@@ -2417,19 +2119,17 @@ msgstr "ID"
 
 #: ../src/nact/egg-sm-client.c:267
 msgid "Session management options:"
-msgstr "Sesijos valdymo parinktys:"
+msgstr "Sesijos tvarkymo parametrai:"
 
 #: ../src/nact/egg-sm-client.c:268
 msgid "Show session management options"
-msgstr "Rodyti sesijos valdymo parinktis"
+msgstr "Rodyti sesijos tvarkymo parametrus"
 
 #: ../src/nact/nact-application.c:57 ../src/nact/nact.desktop.in.h:1
-#| msgid "Nautilus Actions Configuration Tool"
 msgid "Nautilus-Actions Configuration Tool"
 msgstr "Nautilus-Actions konfigūracijos įrankis"
 
 #: ../src/nact/nact-application.c:58
-#| msgid "A graphical interface to create and edit your Nautilus actions."
 msgid "A user interface to edit your own contextual actions"
 msgstr "Naudotojo sąsaja Nautilus veiksmams kurti bei keisti."
 
@@ -2464,7 +2164,6 @@ msgstr "Elementas yra vietinis"
 #. i18n: add a comment when a capability is already used by current item
 #: ../src/nact/nact-add-capability-dialog.c:528
 #, c-format
-#| msgid "%s (already used)"
 msgid "%s (already inserted)"
 msgstr "%s (jau įterptas)"
 
@@ -2473,9 +2172,8 @@ msgid "Adding a new capability"
 msgstr "Pridedama nauja galimybė"
 
 #: ../src/nact/nact-add-capability.ui.h:2
-#| msgid "<b>Menu editable properties</b>"
 msgid "<b>Managed capabilities</b>"
-msgstr "<b>Valdomos galimybės</b>"
+msgstr "<b>Tvarkomos galimybės</b>"
 
 #: ../src/nact/nact-add-scheme.ui.h:1
 msgid "Adding a new scheme"
@@ -2499,7 +2197,6 @@ msgid "You may not have write permissions on selected folder."
 msgstr "Galbūt neturite teisių rašyti į nurodytą aplanką."
 
 #: ../src/nact/nact-assistant-export.ui.h:1
-#| msgid "Export existing configs"
 msgid "Exporting actions"
 msgstr "Eksportuojami veiksmai"
 
@@ -2526,7 +2223,6 @@ msgid "Selecting the exported actions"
 msgstr "Žymimi eksportuojami veiksmai"
 
 #: ../src/nact/nact-assistant-export.ui.h:8
-#| msgid "Select a folder"
 msgid "Selecting the target folder"
 msgstr "Pasirenkamas paskirties aplankas"
 
@@ -2535,7 +2231,6 @@ msgid "Which format should I use when exporting these items ?"
 msgstr "Kokį formatą naudoti eksportuojant šiuos elementus?"
 
 #: ../src/nact/nact-assistant-export.ui.h:10
-#| msgid "Preferred export format"
 msgid "Selecting the export format"
 msgstr "Pasirenkamas eksporto formatas"
 
@@ -2553,17 +2248,14 @@ msgid "Summary"
 msgstr "Santrauka"
 
 #: ../src/nact/nact-assistant-export.ui.h:14
-#| msgid "Selected files have been proceeded :"
 msgid "Selected items have been proceeded:"
 msgstr "Pradėtas darbas su pažymėtais elementais:"
 
 #: ../src/nact/nact-assistant-export.ui.h:15
-#| msgid "Export existing configs"
 msgid "Export is done"
 msgstr "Eksportas atliktas"
 
 #: ../src/nact/nact-assistant-export.ui.h:16
-#| msgid "Define a new action"
 msgid "Exporting an action"
 msgstr "Eksportuojamas veiksmas"
 
@@ -2583,7 +2275,6 @@ msgstr "Importavimas sėkmingas"
 #. i18n: this is the globally unique identifier and the label of the newly imported action
 #: ../src/nact/nact-assistant-import.c:813
 #, c-format
-#| msgid "UUID: %s\t%s"
 msgid "Id.: %s\t%s"
 msgstr "Id.: %s\t%s"
 
@@ -2593,7 +2284,6 @@ msgid "Not imported"
 msgstr "Neimportuotas"
 
 #: ../src/nact/nact-assistant-import.ui.h:1
-#| msgid "Import new configurations"
 msgid "Importing actions"
 msgstr "Importuoti veiksmus"
 
@@ -2604,7 +2294,6 @@ msgid ""
 msgstr "Šis pagalbininkas padės importuoti elementus, veiksmus ir memiu."
 
 #: ../src/nact/nact-assistant-import.ui.h:3
-#| msgid "Select the file you want to import."
 msgid "Selecting files to import"
 msgstr "Pasirenkami failai importui"
 
@@ -2625,17 +2314,14 @@ msgid "When importing an item whose ID already exists:"
 msgstr "Kai importuojamas elementas kurio ID jau yra:"
 
 #: ../src/nact/nact-assistant-import.ui.h:9
-#| msgid "Selected files have been proceeded :"
 msgid "Selected files have been proceeded:"
 msgstr "Pradėtas darbas su pasirinktais failais:"
 
 #: ../src/nact/nact-assistant-import.ui.h:10
-#| msgid "Import mode"
 msgid "Import is done"
 msgstr "Importas atliktas"
 
 #: ../src/nact/nact.desktop.in.h:2
-#| msgid "Add an 'About' item in the Nautilus context menu"
 msgid "Configure items to be added to the Nautilus context menus"
 msgstr "Konfigūruokite elementus, pridedamus į Nautilus kontekstinius meniu"
 
@@ -2975,7 +2661,7 @@ msgstr ""
 #. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
 #: ../src/nact/nact-menubar.c:118
 msgid "Edit your preferences"
-msgstr "Keisti nustatymus"
+msgstr "Keisti nuostatas"
 
 #: ../src/nact/nact-menubar.c:120
 msgid "_Expand all"
@@ -3001,9 +2687,6 @@ msgstr "_Importo pagalbininkas..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Import item
 #: ../src/nact/nact-menubar.c:131
-#| msgid ""
-#| "Import one or more actions from external (XML) files into your "
-#| "configuration"
 msgid "Import one or more actions from external files into your configuration"
 msgstr ""
 "Importuoti vieną ar daugiau veiksmų iš išorinių failų į jūsų konfigūraciją"
@@ -3014,8 +2697,6 @@ msgstr "_Eksporto pagalbininkas..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Export item
 #: ../src/nact/nact-menubar.c:135
-#| msgid ""
-#| "Export one or more actions from your configuration to external XML files"
 msgid "Export one or more actions from your configuration to external files"
 msgstr ""
 "Eksportuoti vieną ar daugiau veiksmų iš jūsų konfigūracijos į išorinius "
@@ -3145,17 +2826,14 @@ msgid "Save error"
 msgstr "Įrašymo klaida"
 
 #: ../src/nact/nact-menubar-file.c:53
-#| msgid "Some items have been modified."
 msgid "Some items may not have been saved"
 msgstr "Kai kurie elementai nebuvo įrašyti"
 
 #: ../src/nact/nact-menubar-file.c:54
-#| msgid "Unable to drop here as level zero is not writable"
 msgid "Unable to rewrite the level-zero items list"
 msgstr "Negalima perrašyti nulinio lygio elementų sąrašo"
 
 #: ../src/nact/nact-menubar-file.c:55
-#| msgid "Some items have been modified."
 msgid "Some items have not been deleted"
 msgstr "Kai kurie elementai nebuvo ištrinti"
 
@@ -3168,9 +2846,8 @@ msgid "Automatically saving pending modifications..."
 msgstr "Automatiškai įrašomi atlikti pakeitimai..."
 
 #: ../src/nact/nact-preferences.ui.h:1
-#| msgid "Nautilus Actions"
 msgid "Nautilus-Actions Preferences"
-msgstr "Nautilus-Actions nustatymai"
+msgstr "Nautilus-Actions nuostatos"
 
 #: ../src/nact/nact-preferences.ui.h:2
 msgid "_Ascending alphabetical order"
@@ -3211,12 +2888,10 @@ msgstr ""
 "naudotojo sąsajoje turi būti nustatyta rankomis."
 
 #: ../src/nact/nact-preferences.ui.h:8
-#| msgid "<b>File Pattern</b>"
 msgid "<b>Items ordering</b>"
 msgstr "<b>Elementų rikiavimas</b>"
 
 #: ../src/nact/nact-preferences.ui.h:9
-#| msgid "Define a 'Nautilus Actions' root menu"
 msgid "_Create a root 'Nautilus-Actions' menu"
 msgstr "Sukurti šakninį „Nautilus veiksmų“ meniu"
 
@@ -3225,11 +2900,10 @@ msgid ""
 "When this option is checked, menus and actions will actually be displayed as "
 "sub-items of a root 'Nautilus-Actions' menu in the Nautilus context menu."
 msgstr ""
-"Kai šis parametras nustatytas, meniu ir veiksmai bus rodomi kaip šakninio "
+"Kai šis parametras pažymėtas, meniu ir veiksmai bus rodomi kaip šakninio "
 "elemento „Nautilus veiksmai“ po-meniu Nautilus kontekstiniame meniu."
 
 #: ../src/nact/nact-preferences.ui.h:11
-#| msgid "Add an 'About' item in the Nautilus context menu"
 msgid "Add an 'A_bout Nautilus-Actions' item in the Nautilus context menus"
 msgstr "Įtraukti „_Apie Nautilus veiksmus“ punktą į Nautilus kontekstinį meniu"
 
@@ -3241,14 +2915,13 @@ msgid ""
 "the Nautilus context menu (e.g. when having checked the root 'Nautilus-"
 "Actions' menu option above)."
 msgstr ""
-"Kai šis parametras nustatytas, elementas „Apie Nautilus veiksmus“ bus "
+"Kai šis parametras pažymėtas, elementas „Apie Nautilus veiksmus“ bus "
 "pridėtas į šakninį Nautilus veiksmų meniu Nautilus kontekstiniame meniu.\n"
 "Pastaba: šis elementas bus rodomas tik jei unikalus meniu yra apibrėžtas "
 "Nautilus kontekstiniame meniu (pvz. pažymėjus šakninį „Nautilus veiksmų“ "
 "meniu parametrą aukščiau)."
 
 #: ../src/nact/nact-preferences.ui.h:14
-#| msgid "<b>Nautilus Menu Item</b>"
 msgid "<b>Nautilus menu layout</b>"
 msgstr "<b>Nautilus meniu išdėstymas</b>"
 
@@ -3263,9 +2936,8 @@ msgstr ""
 "rodomi Nautilus kontekstiniame meniu."
 
 #: ../src/nact/nact-preferences.ui.h:16
-#| msgid "Edit your preferences"
 msgid "_Runtime preferences"
-msgstr "_Vykdymo nustatymai"
+msgstr "_Vykdymo nuostatos"
 
 #: ../src/nact/nact-preferences.ui.h:17
 msgid ""
@@ -3282,13 +2954,12 @@ msgid "_Command pattern :"
 msgstr "_Komandos šablonas :"
 
 #: ../src/nact/nact-preferences.ui.h:20
-#| msgid "<b>Action editable properties</b>"
 msgid "<b>Execution in a terminal</b>"
 msgstr "<b>Vykdymas terminale</b>"
 
 #: ../src/nact/nact-preferences.ui.h:21
 msgid "Running _desktop environment :"
-msgstr "Naudojama _darbastalio aplinka :"
+msgstr "Naudojama _darbalaukio aplinka :"
 
 #: ../src/nact/nact-preferences.ui.h:22
 msgid "<i>Currently detected :</i>"
@@ -3297,7 +2968,7 @@ msgstr "<i>Šiuo metu aptikta :</i>"
 #: ../src/nact/nact-preferences.ui.h:23
 #: ../src/nact/nautilus-actions-config-tool.ui.h:210
 msgid "<b>Desktop environment</b>"
-msgstr "<b>Darbastalio aplinka</b>"
+msgstr "<b>Darbalaukio aplinka</b>"
 
 #: ../src/nact/nact-preferences.ui.h:24
 msgid "This tab lets you specify parameters needed for some execution modes."
@@ -3314,7 +2985,6 @@ msgid "What to do when pasting or duplicating an item in the tree ?"
 msgstr "Ką daryti įdedant ar dubliuojant elementą medyje?"
 
 #: ../src/nact/nact-preferences.ui.h:27
-#| msgid "New _menu"
 msgid "Relabel _menus"
 msgstr "Pervadinti _meniu"
 
@@ -3339,7 +3009,6 @@ msgstr ""
 "bus pervadintas „... kopija“."
 
 #: ../src/nact/nact-preferences.ui.h:31
-#| msgid "New _profile"
 msgid "Relabel _profiles"
 msgstr "Pervadinti _profilius"
 
@@ -3356,7 +3025,6 @@ msgid "<b>Relabeling items</b>"
 msgstr "<b>Elementų pervadinimas</b>"
 
 #: ../src/nact/nact-preferences.ui.h:34
-#| msgid "Whether the Esc key should close the assistants"
 msgid "Esc key _quits the assistant"
 msgstr "Ar Esc klavišas turėtų _užverti pagalbininkus"
 
@@ -3371,7 +3039,6 @@ msgstr ""
 "mygtuką „Atsisakyti“."
 
 #: ../src/nact/nact-preferences.ui.h:36
-#| msgid "Ask for a confirmation when quitting by Esc"
 msgid "Ask for a _confirmation when quitting the assistant on Esc key"
 msgstr "Klausti pa_tvirtinimo išeinant su Esc klavišu"
 
@@ -3418,13 +3085,12 @@ msgid ""
 "This tab allows the user to choose custom preferences for the Nautilus-"
 "Actions Configuration Tool user interface."
 msgstr ""
-"Ši kortelė leidžia pasirinkti specifinius nustatymus Nautilus-Actions "
+"Ši kortelė leidžia pasirinkti specifines nuostatas Nautilus-Actions "
 "konfigūracijos įrankio naudotojo sąsajai."
 
 #: ../src/nact/nact-preferences.ui.h:45
-#| msgid "Edit your preferences"
 msgid "_UI Preferences"
-msgstr "_Sąsajos nustatymai"
+msgstr "_Sąsajos nuostatos"
 
 #: ../src/nact/nact-preferences.ui.h:46
 msgid ""
@@ -3435,7 +3101,6 @@ msgstr ""
 "buvo nustatyta, kad jau yra elementas tokiu pat identifikatoriumi?"
 
 #: ../src/nact/nact-preferences.ui.h:47
-#| msgid "Import mode"
 msgid "<b>Import mode</b>"
 msgstr "<b>Importavimo veiksena</b>"
 
@@ -3444,12 +3109,10 @@ msgid "This tab lets you decide on the default behavior of import operations."
 msgstr "Ši kortelė leidžia pasirinkti numatytąją importo veiksmų elgseną."
 
 #: ../src/nact/nact-preferences.ui.h:49
-#| msgid "Import OK"
 msgid "_Import"
 msgstr "_Importavimas"
 
 #: ../src/nact/nact-preferences.ui.h:50
-#| msgid "Preferred export format"
 msgid "What is your preferred export format ?"
 msgstr "Pageidaujamas eksportavimo formatas"
 
@@ -3462,7 +3125,6 @@ msgid "This tab lets you decide on the default behavior of export operations."
 msgstr "Ši kortelė leidžia pasirinkti numatytą eksporto veiksmų elgseną."
 
 #: ../src/nact/nact-preferences.ui.h:53
-#| msgid "Import/Export"
 msgid "_Export"
 msgstr "_Eksportas"
 
@@ -3489,7 +3151,6 @@ msgid "Click to remove the selected default scheme."
 msgstr "Spauskite numatytajai schema pašalinti."
 
 #: ../src/nact/nact-preferences.ui.h:59
-#| msgid "List of default schemes"
 msgid "<b>Default schemes</b>"
 msgstr "<b>Numatytosios schemos</b>"
 
@@ -3533,7 +3194,6 @@ msgid "_Down"
 msgstr "_Žemyn"
 
 #: ../src/nact/nact-preferences.ui.h:66
-#| msgid "<b>Action editable properties</b>"
 msgid "<b>Activation and priority</b>"
 msgstr "<b>Aktyvinimas ir prioritetas</b>"
 
@@ -3546,7 +3206,6 @@ msgstr ""
 "tvarka jie bus bandomi įrašant naują elementą."
 
 #: ../src/nact/nact-preferences.ui.h:68
-#| msgid "I/O Provider"
 msgid "I/O _Providers"
 msgstr "Įvedimo/išvedimo _tiekėjas"
 
@@ -3641,12 +3300,10 @@ msgid "The GtkTreeView which relies on this NactTreeModel"
 msgstr "GtkTreeView, kuris remiasi šiuo NactTreeModel"
 
 #: ../src/nact/nact-tree-model.c:239
-#| msgid "Execution mode"
 msgid "Edition mode"
 msgstr "Redagavimo veiksena"
 
 #: ../src/nact/nact-tree-model.c:240
-#| msgid "Execution mode"
 msgid "Edition vs. Selection mode"
 msgstr "Redagavimo ir žymėjimo veiksena"
 
@@ -3682,7 +3339,6 @@ msgstr "BaseWindow tėvas"
 
 #. i18n: NactTreeView property short description
 #: ../src/nact/nact-tree-view.c:224
-#| msgid "_Maintainer"
 msgid "Container"
 msgstr "Konteineris"
 
@@ -3704,12 +3360,12 @@ msgstr "GtkTreeView elemento pavadinimas"
 #. i18n: NactTreeView property short description
 #: ../src/nact/nact-tree-view.c:243
 msgid "Management mode"
-msgstr "Valdymo veiksena"
+msgstr "Tvarkymo veiksena"
 
 #. i18n: NactTreeView property long description
 #: ../src/nact/nact-tree-view.c:245
 msgid "Management mode of the tree view, selection or edition"
-msgstr "Medžio rodinio rodymo, žymėjimo ar keitimo valdymo veiksena"
+msgstr "Medžio rodinio rodymo, žymėjimo ar keitimo tvarkymo veiksena"
 
 #. i18n: NactTreeView property short description
 #: ../src/nact/nact-tree-view.c:255
@@ -3718,7 +3374,6 @@ msgstr "Leisti perspėjimus"
 
 #. i18n: NactTreeView property loong description
 #: ../src/nact/nact-tree-view.c:257
-#| msgid "Whether the selection may be multiple"
 msgid "Whether notifications are allowed"
 msgstr "Ar leidžiami pranešimai"
 
@@ -3799,7 +3454,6 @@ msgstr ""
 "tarpais skiriamas bazinių pavadinimų sąrašas pažymėtiems failams/aplankams."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:27
-#| msgid "Delete the selected item(s)"
 msgid "count of selected item(s)."
 msgstr "pažymėtų elementų skaičius."
 
@@ -3947,7 +3601,6 @@ msgstr ""
 "nieko nedaranti operatorius, kuris priverčia daugiskaitinę vykdymo formą."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:71
-#| msgid "Item is local"
 msgid "Items _list :"
 msgstr "Elementų _sąrašas :"
 
@@ -3964,7 +3617,6 @@ msgid "Sort the list in ascending alphabetical order."
 msgstr "Rikiuoti sąrašą abėcėlės tvarka."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:75
-#| msgid "Targets the location context menu"
 msgid "Display item in _selection context menu"
 msgstr "Rodyti elementą _žymėjimo kontekstiniame meniu"
 
@@ -3973,57 +3625,45 @@ msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "context menu, with a non-empty selection."
 msgstr ""
-"Kai pažymėta, elementas bus kandidatas rodymui failų tvarkyklės "
+"Kai pažymėta, elementas bus kandidatas rodymui failų tvarkytuvės "
 "kontekstiniame meniu, kai žymėjimas netuščias."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:77
 msgid "The label of the item in the file manager context menus."
-msgstr "Elemento etiketė failų tvarkyklės kontekstiniame meniu."
+msgstr "Elemento etiketė failų tvarkytuvės kontekstiniame meniu."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:78
 msgid "_Context label :"
 msgstr "_Konteksto etiketė :"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:79
-#| msgid "Targets the location context menu"
 msgid "Display item in _location context menu"
 msgstr "Rodyti elemento _vietos kontekstiniame meniu"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:80
-#| msgid ""
-#| "The icon of the menu item that will appear next to the label in the file "
-#| "manager context menu when the selection matches the appearance conditions "
-#| "settings.\n"
-#| "May be the localized name of a themed icon, or a full path to any "
-#| "appropriate image."
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "context menu when the selection is empty.\n"
 "In this case, the defined conditions will be applied to the current "
 "displayed folder."
 msgstr ""
-"Kai pažymėta, elementas bus kandidatas rodymui failų tvarkyklės "
+"Kai pažymėta, elementas bus kandidatas rodymui failų tvarkytuvės "
 "kontekstiniame meniu, kai žymėjimas yra tuščias.\n"
 "Tuo atveju aprašytos sąlygos bus taikomos šiuo metu rodomam aplankui."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:82
-#| msgid "Display the File toolbar"
 msgid "Display item in the _toolbar"
 msgstr "Rodyti elementą į_rankinėje"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:83
-#| msgid ""
-#| "Whether the action is candidate to be displayed in file manager toolbar.\n"
-#| "This only applies to current location.\n"
-#| "Note that menus are never displayed in the toolbar.\n"
-#| "Defaults to FALSE."
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "toolbar.\n"
 "In this case, the defined conditions will be applied to the current folder, "
 "and do not depend of the possible current selection."
 msgstr ""
-"Kai pažymėta, elementas bus kandidatas rodymui failų tvarkyklės įrankinėje.\n"
+"Kai pažymėta, elementas bus kandidatas rodymui failų tvarkytuvės "
+"įrankinėje.\n"
 "Tuo atveju aprašytos sąlygos bus taikomos esamam aplankui ir nepriklauso nuo "
 "galimo žymėjimo."
 
@@ -4039,43 +3679,38 @@ msgstr ""
 "Kai pažymėta, etiketė įrankinėje bus ta pati, kaip ir kontekstiniame meniu."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:87
-#| msgid "Display the File toolbar"
 msgid "The label displayed in the file manager toolbar."
-msgstr "Etiketė, rodoma failų tvarkyklės įrankinėje."
+msgstr "Etiketė, rodoma failų tvarkytuvės įrankinėje."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:88
 msgid "T_oolbar label :"
 msgstr "Į_rankinės etiketė :"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:89
-#| msgid "Tooltip:"
 msgid "Toolti_p :"
 msgstr "_Paaiškinimas :"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:90
-#| msgid "Icon:"
 msgid "_Icon :"
 msgstr "P_iktograma :"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:91
 msgid "The tooltip displayed in the file manager user interface."
-msgstr "Paaiškinimas, rodomas failų tvarkyklės naudotojo sąsajoje."
+msgstr "Paaiškinimas, rodomas failų tvarkytuvės naudotojo sąsajoje."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:92
 msgid "The icon displayed in the file manager user interface."
-msgstr "Piktograma, rodoma failų tvarkyklės naudotojo sąsajoje."
+msgstr "Piktograma, rodoma failų tvarkytuvės naudotojo sąsajoje."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:93
 msgid "The name of a themed icon or the filename of an image."
 msgstr "Temos piktogramos pavadinimas arba paveikslėlio failo pavadinimas."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:94
-#| msgid "_Browse"
 msgid "_Browse..."
 msgstr "_Naršyti..."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:95
-#| msgid "<b>Nautilus Menu Item</b>"
 msgid "<b>Nautilus Item</b>"
 msgstr "<b>Nautilus elementas</b>"
 
@@ -4091,22 +3726,18 @@ msgid "Just a label to remind you why you have created this profile."
 msgstr "Paprastas tekstas, leidžiantis prisiminti, kam sukūrėte šį profilį."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:99
-#| msgid "Label:"
 msgid "_Label :"
 msgstr "_Užrašas:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:100
-#| msgid "<b>File Pattern</b>"
 msgid "<b>Profile</b>"
 msgstr "<b>Profilis</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:101
-#| msgid "Path:"
 msgid "_Path :"
 msgstr "_Kelias:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:102
-#| msgid "Parameters:"
 msgid "P_arameters :"
 msgstr "P_arametrai:"
 
@@ -4121,7 +3752,6 @@ msgstr ""
 "kintamasis PATH."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:105
-#| msgid "Parameters of the command"
 msgid "The parameters of the command."
 msgstr "Komandos parametrai."
 
@@ -4130,19 +3760,14 @@ msgid "Le_gend"
 msgstr "Le_genda"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:107
-#| msgid "Working directory"
 msgid "_Working directory :"
 msgstr "_Darbinis katalogas :"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:108
-#| msgid ""
-#| "The working directory the command will be started in.\n"
-#| "Defaults to \"%d\"."
 msgid "The default working directory the command should be started in."
 msgstr "Numatytasis darbinis katalogas, kuriame vykdyti komandą."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:109
-#| msgid "_Browse"
 msgid "B_rowse..."
 msgstr "_Naršyti..."
 
@@ -4197,7 +3822,7 @@ msgid ""
 "allow a terminal to be ran inside of it.\n"
 "An acceptable fallback is running in the standard terminal."
 msgstr ""
-"Šis parametras leidžia naudoti specialią failų tvarkyklės savybę, kuri "
+"Šis parametras leidžia naudoti specialią failų tvarkytuvės savybę, kuri "
 "leidžia terminalą vykdyti jos viduje.\n"
 "Priimtina atsarginė veiksena yra vykdyti standartiniame terminale."
 
@@ -4218,7 +3843,6 @@ msgstr ""
 "Priimtina atsarginė veiksena yra vykdyti standartiniame terminale."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:126
-#| msgid "Execution mode"
 msgid "<b>Execution mode</b>"
 msgstr "<b>Vykdymo veiksena</b>"
 
@@ -4227,7 +3851,6 @@ msgid "Note: this is not yet implemented in Nautilus-Actions.\n"
 msgstr "Pastaba: tai dar nerealizuota Nautlus veiksmuose.\n"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:129
-#| msgid "Startup notify"
 msgid "_Startup notify"
 msgstr "_Paleidimo pranešimas"
 
@@ -4239,14 +3862,13 @@ msgid ""
 "Only relevant when chosen execution mode is Normal."
 msgstr ""
 "Kai pažymėta, žinoma, kad vykdoma komanda siųs „remove“ pranešimą "
-"darbastalio aplinkai.\n"
+"darbalaukio aplinkai.\n"
 "Daugiau informacijos rasite Startup Notification Protocol specifikacijoje.\n"
 "Taikoma tik kai pasirinkta vykdymo veiksena yra normali."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:133
-#| msgid "Startup WM Class"
 msgid "Startup Window Manager _class :"
-msgstr "Paleidžiama langų tvarkyklės _klasė :"
+msgstr "Paleidžiama langų tvarkytuvės _klasė :"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:134
 msgid ""
@@ -4255,7 +3877,7 @@ msgid ""
 "See the Startup Notification Protocol Specification for more details.\n"
 "Only relevant when chosen execution mode is Normal."
 msgstr ""
-"Kai nurodyta, tai turėtų būti langų tvarkyklės klasė bent vienam langui "
+"Kai nurodyta, tai turėtų būti langų tvarkytuvės klasė bent vienam langui "
 "vykdymo komandoje.\n"
 "Daugiau informacijos rasite Startup Notification Protocol specifikacijoje.\n"
 "Taikoma tik jei pasirinkta vykdymo veiksena yra normali."
@@ -4269,7 +3891,6 @@ msgid "Note: this is not yet implemented in Nautilus-Actions."
 msgstr "Pastaba: tai dar nerealizuota Nautilus veiksmuose."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:139
-#| msgid "Execute as user"
 msgid "Execute as _user :"
 msgstr "Vykdyti kaip na_udotojas :"
 
@@ -4285,7 +3906,6 @@ msgstr ""
 "Palikite lauką tuščią komandos vykdymui dabartiniu naudotoju."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:143
-#| msgid "Execute as user"
 msgid "<b>Execute as user</b>"
 msgstr "<b>Vykdyti kaip naudotojas</b>"
 
@@ -4296,7 +3916,6 @@ msgid ""
 msgstr "Ši sudėtingesnė kortelė leidžia nurodyti, kaip bus vykdoma komanda."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:145
-#| msgid "Execution mode"
 msgid "E_xecution"
 msgstr "_Vykdymas"
 
@@ -4337,14 +3956,12 @@ msgid "Match _case"
 msgstr "Atitikti raidžių _registrą"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:153
-#| msgid "Set it if the basename patterns are case insensitive"
 msgid "Click to define the above basename filters as case sensitive."
 msgstr ""
 "Spauskite aukščiau aprašytiems bazinių pavadinimų filtrams skirti raidžių "
 "registrą."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:154
-#| msgid "<b>Appears if selection contains</b>"
 msgid "<b>Basenames conditions</b>"
 msgstr "<b>Bazinių pavadinimų sąlygos</b>"
 
@@ -4361,7 +3978,6 @@ msgstr ""
 "pavadinimams elementas neturi pasirodyti."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:157
-#| msgid "Basename filter"
 msgid "_Basenames"
 msgstr "_Baziniai pavadinimai"
 
@@ -4417,7 +4033,6 @@ msgstr ""
 "neturi būti matomas."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:168
-#| msgid "Mimetype filter"
 msgid "_Mimetypes"
 msgstr "_MIME tipai"
 
@@ -4477,7 +4092,6 @@ msgstr ""
 "neturi būti matomas."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:179
-#| msgid "folder"
 msgid "_Folders"
 msgstr "_Aplankai"
 
@@ -4508,7 +4122,6 @@ msgid "Click to add a new scheme filter."
 msgstr "Spauskite norėdami pridėti naują schemos filtrą."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:184
-#| msgid "Defaults to all."
 msgid "De_faults..."
 msgstr "_Numatytosios..."
 
@@ -4568,7 +4181,6 @@ msgid "Click to remove the current capability."
 msgstr "Spauskite dabartinei galimybei pašalinti."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:196
-#| msgid "<b>Appears if selection contains</b>"
 msgid "<b>Capabilities conditions</b>"
 msgstr "<b>Galimybių sąlygos</b>"
 
@@ -4586,7 +4198,6 @@ msgstr ""
 "matomas."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:199
-#| msgid "Capabilities"
 msgid "Ca_pabilities"
 msgstr "_Galimybės"
 
@@ -4598,7 +4209,7 @@ msgid ""
 msgstr ""
 "Tai yra sudėtingesnė sąlyga, paremta dabartinio žymėjimo dydžiu.\n"
 "Jei dabartinis žymėjimas neatitinka šios sąlygos, tuomet elementas nebus "
-"rodomas failų tvarkyklės kontekstiniuose meniu ar įrankinėje."
+"rodomas failų tvarkytuvės kontekstiniuose meniu ar įrankinėje."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:202
 msgid "_Count :"
@@ -4614,21 +4225,20 @@ msgid ""
 "First choose on the left if the item depends of a particular desktop "
 "environment, then select on the right the adequate desktop environment."
 msgstr ""
-"Tai yra sudėtingesnė sąlyga pagal darbastalio aplinką.\n"
+"Tai yra sudėtingesnė sąlyga pagal darbalaukio aplinką.\n"
 "Pirmiausia kairėje pasirinkite, ar elementas priklauso nuo tam tikros "
-"darbastalio aplinkos, tuomet dešinėje pasirinkite atitinkamą darbastalio "
+"darbalaukio aplinkos, tuomet dešinėje pasirinkite atitinkamą darbalaukio "
 "aplinką."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:206
 msgid "Item may appear depending of the desktop environment."
-msgstr "Elementas bus matomas priklausomai nuo darbastalio aplinkos."
+msgstr "Elementas bus matomas priklausomai nuo darbalaukio aplinkos."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:207
 msgid "_Always appears"
 msgstr "_Visada matomas"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:208
-#| msgid "Only show in environment"
 msgid "_Only appears in selected environments"
 msgstr "Matomas _tik pažymėtose aplinkose"
 
@@ -4703,12 +4313,10 @@ msgstr ""
 "Tai galima naudoti pavyzdžiui tikrinti, ar yra tam tikras demonas."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:226
-#| msgid "_Browse"
 msgid "Brow_se..."
 msgstr "_Naršyti..."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:227
-#| msgid "<b>Action editable properties</b>"
 msgid "<b>Execution environment</b>"
 msgstr "<b>Vykdymo aplinka</b>"
 
@@ -4719,7 +4327,7 @@ msgid ""
 "context menu."
 msgstr ""
 "Šis kortelė leidžia nustatyti kai kurias sudėtingesnes sąlygas, kurias turi "
-"tenkinti pažymėti failai, kad elementas būtų matomas failų tvarkyklės "
+"tenkinti pažymėti failai, kad elementas būtų matomas failų tvarkytuvės "
 "kontekstiniame meniu."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:229
@@ -4727,7 +4335,6 @@ msgid "_Environment"
 msgstr "_Aplinka"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:230
-#| msgid "Description"
 msgid "_Description :"
 msgstr "_Aprašymas :"
 
@@ -4744,21 +4351,16 @@ msgid "E_nabled"
 msgstr "Į_jungta"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:233
-#| msgid ""
-#| "If the or the menu action is disabled, it will never appear in the file "
-#| "manager context menu.\n"
-#| "Defaults to TRUE."
 msgid ""
 "Check the box to enable this item.\n"
 "If unchecked, then the item will never appear in the file manager context "
 "menus or toolbar."
 msgstr ""
 "Pažymėkite langelį šiam elementui įjungti.\n"
-"Jei nepažymėta, tuomet elementas niekada nebus matomas failų tvarkyklės "
+"Jei nepažymėta, tuomet elementas niekada nebus matomas failų tvarkytuvės "
 "kontekstiniame meniu ar įrankinėje."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:235
-#| msgid "Suggested shortcut"
 msgid "Suggested _shortcut :"
 msgstr "Siūlomas _trumpinys :"
 
@@ -4777,7 +4379,6 @@ msgid "Id. :"
 msgstr "Id. :"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:241
-#| msgid "I/O Provider"
 msgid "I/O provider :"
 msgstr "I/O tiekėjas :"
 
@@ -4796,7 +4397,6 @@ msgstr ""
 "naudotojo žinyną."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:245
-#| msgid "<b>Menu editable properties</b>"
 msgid "<b>Read-only properties</b>"
 msgstr "<b>Savybės tik skaitymui</b>"
 
@@ -4814,14 +4414,11 @@ msgstr "_Savybės"
 
 #. i18n: label of an automagic root submenu
 #: ../src/plugin-menu/nautilus-actions.c:933
-#| msgid "Nautilus Actions Configuration"
 msgid "Nautilus-Actions actions"
 msgstr "Nautilus veiksmų veiksmai"
 
 #. i18n: tooltip of an automagic root submenu
 #: ../src/plugin-menu/nautilus-actions.c:935
-#| msgid ""
-#| "A submenu which embeds the currently available Nautilus Actions extensions"
 msgid ""
 "A submenu which embeds the currently available Nautilus-Actions actions and "
 "menus"
@@ -4829,12 +4426,10 @@ msgstr ""
 "Po-meniu, kuris laiko šiuo metu prieinamus Nautilus veiksmų veiksmus ir meniu"
 
 #: ../src/plugin-menu/nautilus-actions.c:979
-#| msgid "About Nautilus Actions"
 msgid "About Nautilus-Actions"
 msgstr "Apie Nautilus veiksmus"
 
 #: ../src/plugin-menu/nautilus-actions.c:980
-#| msgid "Display information about Nautilus Actions"
 msgid "Display some information about Nautilus-Actions"
 msgstr "Rodyti informaciją apie Nautilus veiksmus"
 
@@ -4871,7 +4466,7 @@ msgstr ""
 #: ../src/utils/nautilus-actions-print.c:183
 #: ../src/utils/nautilus-actions-run.c:210
 msgid "Miscellaneous options"
-msgstr "Įvairios parinktys"
+msgstr "Įvairūs parametrai"
 
 #: ../src/test/test-reader.c:151 ../src/utils/na-delete-xmltree.c:113
 #: ../src/utils/na-print-schemas.c:112 ../src/utils/na-set-conf.c:120
@@ -4898,9 +4493,6 @@ msgid "Try %s --help for usage.\n"
 msgstr "Bandykite %s --help dėl naudojimo.\n"
 
 #: ../src/utils/console-utils.c:53
-#| msgid ""
-#| "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer "
-#| "to mail to <maintainer@nautilus-actions.org>.\n"
 msgid ""
 "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions,\n"
@@ -4911,7 +4503,6 @@ msgstr ""
 "arba galite siųsti laišką adresu <maintainer@nautilus-actions.org>.\n"
 
 #: ../src/utils/na-delete-xmltree.c:68
-#| msgid "The URI of the file to be imported"
 msgid "The XPath to the tree to be deleted"
 msgstr "Trinamo medžio XPath"
 
@@ -4921,13 +4512,11 @@ msgstr "XML realizacijos failo pavadinimas"
 
 #: ../src/utils/na-delete-xmltree.c:128
 #, c-format
-#| msgid "Error: uri is mandatory.\n"
 msgid "Error: a XPath is mandatory.\n"
 msgstr "Klaida: XPath yra privalomas.\n"
 
 #: ../src/utils/na-delete-xmltree.c:133
 #, c-format
-#| msgid "Error: an action label is mandatory.\n"
 msgid "Error: a XML filename is mandatory.\n"
 msgstr "Klaida: XML failo pavadinimas yra privalomas.\n"
 
@@ -4937,19 +4526,16 @@ msgstr "Ištrinti XPath iš XML dokumento."
 
 #: ../src/utils/na-delete-xmltree.c:213
 #, c-format
-#| msgid "Error: unable to create %s dir: %s"
 msgid "Error: unable to parse file '%s'\n"
 msgstr "Klaida: nepavyko perskaityti failo „%s“\n"
 
 #: ../src/utils/na-delete-xmltree.c:220
 #, c-format
-#| msgid "Error: unable to create %s dir: %s"
 msgid "Error: unable to create new XPath context\n"
 msgstr "Klaida: negalima sukurti naujo XPath konteksto\n"
 
 #: ../src/utils/na-delete-xmltree.c:228
 #, c-format
-#| msgid "Error: unable to create %s dir: %s"
 msgid "Error: unable to evaluate XPath expression '%s'\n"
 msgstr "Klaida: negalima įvertinti XPath išraiškos „%s“\n"
 
@@ -4958,17 +4544,14 @@ msgid "Output the schema on stdout"
 msgstr "Išvesti schemą į stdout"
 
 #: ../src/utils/na-print-schemas.c:67
-#| msgid "Output the schema on stdout"
 msgid "Output the action schemas [default]"
 msgstr "Išvesti veiksmo schemas [numatyta]"
 
 #: ../src/utils/na-print-schemas.c:68
-#| msgid "Output the schema on stdout"
 msgid "Output the menu schemas"
 msgstr "Išvesti meniu schemas"
 
 #: ../src/utils/na-print-schemas.c:162
-#| msgid "Output the Nautilus Actions GConf schema on stdout."
 msgid "Output the Nautilus-Actions GConf schemas on stdout."
 msgstr "Išvesti Nautilus veiksmų GConf schemas standartinėje išvestyje."
 
@@ -5006,19 +4589,16 @@ msgid "The value to be set"
 msgstr "Nustatoma vertė"
 
 #: ../src/utils/na-set-conf.c:75
-#| msgid "Output the version number, and exit gracefully [no]"
 msgid "Output the version number and exit gracefully"
 msgstr "Išvesti versijos numerį ir gražiai išeiti"
 
 #: ../src/utils/na-set-conf.c:136
 #, c-format
-#| msgid "Error: uri is mandatory.\n"
 msgid "Error: a group is mandatory.\n"
 msgstr "Klaida: grupė yra privaloma.\n"
 
 #: ../src/utils/na-set-conf.c:141
 #, c-format
-#| msgid "Error: uri is mandatory.\n"
 msgid "Error: a key is mandatory.\n"
 msgstr "Klaida: raktas yra privalomas.\n"
 
@@ -5035,7 +4615,6 @@ msgstr "Klaida: nežinomas tipas: %s. Naudokite „str“, „int“ arba „boo
 
 #: ../src/utils/na-set-conf.c:164
 #, c-format
-#| msgid "Error: uri is mandatory.\n"
 msgid "Error: a value is mandatory.\n"
 msgstr "Klaida: vertė yra privaloma.\n"
 
@@ -5044,12 +4623,10 @@ msgid "Set it if the item should be disabled at creation"
 msgstr "Nustatykite, jei elementas turi būti uždraustas sukūrimo metu"
 
 #: ../src/utils/nautilus-actions-new.c:137
-#| msgid "Set it if the item doesn't target the context menu"
 msgid "Set it if the item doesn't target the selection context menu"
 msgstr "Nustatyti, jei elementas nesitaiko į žymėjimo kontekstinį meniu"
 
 #: ../src/utils/nautilus-actions-new.c:139
-#| msgid "Set it if the item doesn't target the context menu"
 msgid "Set it if the item doesn't target the location context menu"
 msgstr "Nustatyti, jei elementas nesitaiko į vietos kontekstinį meniu"
 
@@ -5062,18 +4639,15 @@ msgid "Set it if the basename patterns are case insensitive"
 msgstr "Nustatyti, jei katalogų šablonai skiria didžiąsias ir mažąsias raides"
 
 #: ../src/utils/nautilus-actions-new.c:149
-#| msgid "Output the schema on stdout"
 msgid "Output the new item content on stdout (default)"
 msgstr "Išvesti naujo elemento turinį standartinėje išvestyje (numatyta)"
 
 #: ../src/utils/nautilus-actions-new.c:150
-#| msgid "File is not a valid .desktop file"
 msgid "Create the new item as a .desktop file"
 msgstr "Sukurti naują elementą kaip .desktop failą"
 
 #: ../src/utils/nautilus-actions-new.c:161
 #, c-format
-#| msgid "Error: '%s' and '%s' options cannot both be specified.\n"
 msgid "Error: '%s' and '%s' options cannot both be specified\n"
 msgstr "Klaida: „%s“ ir „%s“ parametrai negali būti nurodyti kartu.\n"
 
@@ -5090,22 +4664,13 @@ msgstr "Klaida: veiksmo užrašas yra privalomas.\n"
 #: ../src/utils/nautilus-actions-new.c:266
 #, c-format
 msgid "Error: only one output option may be specified.\n"
-msgstr "Klaida: tik viena išvedimo parinktis gali būti nustatyta.\n"
+msgstr "Klaida: gali būti nustatytas tik vienas išvedimo parametras.\n"
 
 #: ../src/utils/nautilus-actions-new.c:352
-#| msgid "Define a new action"
 msgid "Define a new action."
 msgstr "Apibrėžti naują veiksmą."
 
 #: ../src/utils/nautilus-actions-new.c:355
-#| msgid ""
-#| "Define a new action.\n"
-#| "\n"
-#| "  The created action defaults to be written to stdout.\n"
-#| "  It can also be written to an output folder, in a file later suitable "
-#| "for an import in NACT.\n"
-#| "  Or you may choose to directly write the action into your GConf "
-#| "configuration."
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -5129,7 +4694,6 @@ msgstr "Pasirinkite, kur programa sukuria veiksmą"
 
 #. i18n: 'na-desktop' is a plugin identifier - do not translate
 #: ../src/utils/nautilus-actions-new.c:595
-#| msgid "Error: unable to find 'na-gconf' provider."
 msgid "Error: unable to find 'na-desktop' i/o provider."
 msgstr "Klaida: nepavyko rasti „na-desktop“ i/o tiekėjo."
 
@@ -5139,7 +4703,6 @@ msgid "Print a menu or an action to stdout."
 msgstr "Atspausdinti meniu ar veiksmą standartinėje išvestyje."
 
 #: ../src/utils/nautilus-actions-print.c:60
-#| msgid "The internal identifiant of the action to be launched"
 msgid "The identifier of the menu or the action to be printed"
 msgstr "Meniu ar veiksmo identifikatorius atspausdinimui"
 
@@ -5150,7 +4713,6 @@ msgstr "Eksporto formatas [Desktop1]"
 
 #: ../src/utils/nautilus-actions-print.c:125
 #, c-format
-#| msgid "Error: action id is mandatory.\n"
 msgid "Error: a menu or action id is mandatory.\n"
 msgstr "Klaida: meniu ar veiksmo id yra privalomas.\n"
 
@@ -5162,12 +4724,10 @@ msgstr "Klaida: %s: nežinomas eksporto formatas.\n"
 
 #: ../src/utils/nautilus-actions-print.c:206
 #, c-format
-#| msgid "Error: action '%s' doesn't exist.\n"
 msgid "Error: item '%s' doesn't exist.\n"
 msgstr "Klaida: veiksmo „%s“ nėra.\n"
 
 #: ../src/utils/nautilus-actions-run.c:59
-#| msgid "The internal identifiant of the action to be launched"
 msgid "The internal identifier of the action to be launched"
 msgstr "Vidinis veiksmo identifikatorius paleidimui"
 
@@ -5176,7 +4736,7 @@ msgid ""
 "A target, file or folder, for the action. More than one options may be "
 "specified"
 msgstr ""
-"Tikslas, failas arba aplankas, veiksmui. Gali būti nurodytos kelios parinktys"
+"Tikslas, failas arba aplankas, veiksmui. Gali būti nurodyti keli parametrai"
 
 #: ../src/utils/nautilus-actions-run.c:134
 #, c-format
