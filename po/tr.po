@@ -1,0 +1,4862 @@
+#
+# Muhammet Kara <muhammetk@gmail.com>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nautilus-actions master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=nautilus-actions&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-03-19 11:25+0000\n"
+"PO-Revision-Date: 2016-03-19 17:04+0200\n"
+"Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
+"Language-Team: Turkish <gnome-turk@gnome.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 2.91.6\n"
+"X-POOTLE-MTIME: 1426188009.000000\n"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:1
+msgid "Ask for a confirmation when quitting by Esc"
+msgstr "Esc ile çıkış yapıldığında onay için sor"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:2
+msgid ""
+"If TRUE, a confirmation will be requested when quitting an assistant by "
+"hitting the Esc key."
+msgstr ""
+"TRUE ise, asistandan Esc ile çıkıldığı zaman, bir onaylama istenecektir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:3
+msgid "Whether the Esc key should close the assistants"
+msgstr "Esk tuşunun asistanı kapatıp kapatmayacağı"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:4
+msgid "If TRUE, assistant may be closed by hitting the Esc key."
+msgstr "TRUE ise, asitandan Esc tuşuna basarak doğrudan çıkılabilinir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:5
+msgid "Whether the auto-save feature should be activated"
+msgstr "Otomatik kaydetme özelliğinin aktif olup olmayacağı"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:6
+msgid ""
+"If TRUE, the pending modifications will be periodically and automatically "
+"saved."
+msgstr ""
+"TRUE ise, bekleyen değişiklikler dönemsel ve otomatik olarak kaydedilecektir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:7
+msgid "Periodicity of the auto-save"
+msgstr "Dönemsel olarak otomatik kaydetme"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:8
+msgid "Defines the periodicity in minutes of the automatic save."
+msgstr "Otomatik kaydetmenin dönemselliğini dakika cinsinden tanımlar."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:9
+msgid "Position and size of the export assistant window"
+msgstr "Dışa aktarım asistanı penceresinin konumu ve boyutu"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:10
+msgid ""
+"Position and size of the export assistant window ; default is set by the "
+"window manager."
+msgstr ""
+"Dışa aktarım asistanı penceresinin konum ve boyutu ; varsayılan değer "
+"pencere yöneticisi tarafından ayarlanır."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:11
+msgid "Last selected folder"
+msgstr "Son seçili klasör"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:12
+msgid ""
+"Last folder selected when choosing a folder where to export the actions."
+msgstr "Dışa aktarılacak eylemlerin klasörü seçilirkenki son seçilmiş klasör"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:13
+msgid "Preferred export format"
+msgstr "Tercih edilen dışa aktarım biçimi"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:14
+msgid ""
+"This is the preferred export format, used as a default when exporting items, "
+"or dropping them outside of the application. Possible values are: - "
+"\"GConfSchemaV1\": this used to be the historical export format. The "
+"exported file may later be imported via Import assistant of the Nautilus-"
+"Actions Configuration Tool, or via the gconftool-2 --import-schema-file "
+"command-line tool. - \"GConfSchemaV2\": a lighter while still compatible "
+"schema. The exported file may later be imported via Import assistant of the "
+"Nautilus-Actions Configuration Tool, or via the gconftool-2 --import-schema-"
+"file command-line tool. - \"GConfEntry\": this should be the preferred "
+"format for newly exported actions. The exported file may later be imported "
+"via Import assistant of the Nautilus-Actions Configuration Tool, or via the "
+"gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
+"runtime for the format he wishes to use."
+msgstr ""
+"Bu tercih edilen dışa aktarım biçimi, varsayılan olarak, ögeleri dışarı "
+"aktarırken veya onları uygulamanın dışına çıkarırken kullanılır. Olası "
+"değerler: - \"GConfSchemaV1\": bu tarihsel bir dışa aktarım biçimidir. Dışa "
+"aktarılmış dosya ileride Nautilus-Actions Yapılandırma Aracı 'nın içe "
+"aktarım asistanı ile tekrardan içe alınabilir veya gconftool2 --import-"
+"schema-file komutu ile de olabilir. - \"GConfSchemaV2\": uyumlu bir şema ile "
+"hafiftir. Dışa aktarılmış dosya ileride Nautilus-Actions Yapılandırma Aracı "
+"'nın içe aktarım asistanı ile tekrardan içe alınabilir veya gconftool-2 --"
+"import-schema-file komutu ile de olabilir. - \"GConfEntry\": bu yeni dışa "
+"aktarılmış eylemler için tercih edilen biçimdir. Dışa aktarılmış dosya "
+"ileride Nautilus-Actions Yapılandırma Aracı 'nın içe aktarım asistanı ile "
+"tekrardan içe alınabilir veya gconftool-2 --load komutu ile de olabilir. - "
+"\"Ask\": kullanıcı, çalışma zamanında, kendi dilediği biçimi sorabilir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:15
+msgid "Position and size of the command chooser window"
+msgstr "Komut seçme penceresinin konum ve boyutu"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:16
+msgid ""
+"Position and size of the command chooser window in the Command tab ; default "
+"is set by the window manager."
+msgstr ""
+"Komut sekmesindeki komut seçme penceresinin konum ve boyutu ; varsayılan "
+"olarak pencere yöneticisi tarafından ayarlanır."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:17
+msgid "Last folder selected when browsing for a command in the Command tab."
+msgstr ""
+"Komut sekmesindeki bir komut için tarama yapılırkenki son seçili klasör."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:18
+msgid "Position and size of the Legend dialog"
+msgstr "Açıklamalar penceresinin konumu ve boyutu"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:19
+msgid ""
+"Position and size of the Legend dialog ; default is set by the UI manager."
+msgstr ""
+"Açıklamalar penceresinin konumu ve boyutu ; varsayılan ayar kullanıcı "
+"arayüzü yöneticisi tarafından belirlenir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:20
+msgid "Position and size of the URI chooser window"
+msgstr "Seçici penceresinin konumu ve boyutu"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:21
+msgid ""
+"Position and size of the URI chooser window in the Folders tab ; default is "
+"set by the window manager."
+msgstr ""
+"Klasörler sekmesindeki seçici penceresinin konumu ve boyutu ; varsayılan "
+"ayar pencere yöneticisi tarafından belirlenir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:22
+msgid "Last folder selected when browsing for an URI in the Folders tab."
+msgstr ""
+"Klasörler sekmesindeki bir URI için tarama yapıldığında ki seçili son klasör"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:23
+msgid "Position and size of the interaction dialog at import time"
+msgstr "İçe aktarma süresindeki etkileşim penceresinin konumu ve boyutu"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:24
+msgid ""
+"Position and size of the interaction dialog at import time ; default is set "
+"by the window manager."
+msgstr ""
+"İçe aktarma süresindeki etkileşim penceresinin konumu ve boyutu ; varsayılan "
+"ayar pencere yönetisi tarfından belirlenir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:25
+msgid "Last import mode chosen by the user"
+msgstr "Kullanıcı tarafından seçilmiş son içe aktarma kipi"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
+msgid ""
+"Last import mode chosen by the user when he was asked for an import mode. "
+"Possible values are: - \"NoImport\": do not import an action whose UUID "
+"already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
+"already exists, - \"Override\": override the existing action with the "
+"imported one."
+msgstr ""
+"Kullanıcı içe aktarma kipini sorduğu zaman onun tarafından seçilmiş son içe "
+"aktarma kipi. Olası değerler: - \"NoImport\": UUID zaten mevcut olan birşeyi "
+"aktarma, - \"Renumber\": içe aktarılmış UUID zaten mevcutsa, yeni bir UUID "
+"tahsis eder, - \"Override\": mevcut eylemi yeni içe aktarılmış olan ile "
+"değiştirir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:27
+msgid "Position and size of the import assistant window"
+msgstr "Asistan penceresinin konumu ve boyutu"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:28
+msgid ""
+"Position and size of the import assistant window ; default is set by the "
+"window manager."
+msgstr ""
+"Asistan penceresinin konumu ve boyutu ; varsayılan değer pencere yöneticisi "
+"tarafından belirlenir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:29
+msgid ""
+"Last folder selected when choosing a folder from where import new actions."
+msgstr "İçe aktarılan eylemlerden bir klasör seçilirken, seçilmiş son klasör."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:30
+msgid "Keep last chosen import mode"
+msgstr "Son seçilmiş içeri aktarma kipini sakla"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:31
+msgid "Whether the import system should reuse the last chosen import mode."
+msgstr ""
+"İçe aktarım sisteminin son seçilmiş içe aktarım kipini yeniden kullanıp "
+"kullanmayacağı."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:32
+msgid "Import mode"
+msgstr "İçer aktarma kipi"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:33
+msgid ""
+"Last import mode chosen in the Import assistant. Possible values are : - "
+"\"NoImport\": do not import an action whose UUID already exists, - \"Renumber"
+"\": allocate a new UUID if the imported UUID already exists, - \"Override\": "
+"override the existing action with the imported one, - \"Ask\": ask the user "
+"each time."
+msgstr ""
+"İçe aktarma asistanında son seçilmiş içe aktarma kipi: Olası değerler : - "
+"\"NoImport\": UUID zaten mevcut olan eylemi içe aktarmaz, - \"Renumber\": "
+"UUID zaten mevcut olanlar için yeni bir UUID tahsis eder, - \"Override\": "
+"mevcut eylemin üstüne içe aktarılanı yazar, - \"Ask\": her seferinde "
+"kullanıcıya sorar."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:34
+msgid "I/O providers Write priority"
+msgstr "G/Ç sağlayıcların Yazma önceliği"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:35
+msgid ""
+"The order in which I/O providers are tested when we need to write a new item "
+"down to a storage subsystem."
+msgstr ""
+"Depolama sistemine yeni bir öge yazmaya ihtiyacımız olduğunda ki G/Ç "
+"sağlayıcılarının test etme sırası."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:36
+msgid "Add an 'About' item in the Nautilus context menu"
+msgstr "Nautilus bağlam menüsüne, \"Hakkında\" ögesi ekle"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:37
+msgid ""
+"If TRUE, and if the user has defined a single root menu for its actions, "
+"then an 'About Nautilus-Actions' will be displayed at end of the first "
+"submenu."
+msgstr ""
+"TRUE ise ve o eylemler için kullanıcı tekil kök menuüsünde tanımlıysa, "
+"\"Nautilus-Actions Hakkında\" alt menüde gözükecektir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:38
+msgid "Sort mode"
+msgstr "Sıralama kipi"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:39
+msgid ""
+"This preference indicates the preferred sort mode. Possible values are : - "
+"\"AscendingOrder\": the actions are maintained in ascending alphabetical "
+"order (historical behavior). - \"DescendingOrder\": the actions are "
+"maintained in descending alphabetical order. - \"ManualOrder\": user is free "
+"to reorder them via Nautilus-Actions configuration tool."
+msgstr ""
+"Bu tercih, tercih sıralam kipini gösterir. Olası değerler : - "
+"\"AscendingOrder\": eylemler alfabetik (tarihsel olarak) artan şeklinde "
+"tutulur. - \"DescendingOrder\": eylemler alfabetik azalan şeklinde tutulur. "
+"- \"ManualOrder\" kullanıcı, Nautilus-Actions yapılandırma aracını "
+"kullanarak ögeleri yeniden sıralamada özgürdür."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:40
+msgid "Define a 'Nautilus-Actions actions' root menu"
+msgstr "\"Nautilus-Actions eylemleri\" kök menüsü tanımla"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:41
+msgid ""
+"If TRUE, then a 'Nautilus-Actions actions' item will be defined in the "
+"Nautilus context menu, and will be the root menu of all available actions."
+msgstr ""
+"TRUE ise, \"Nautilus-Actions eylemleri\" ögesi Nautilus bağlam menüsünde "
+"tanımlanacaktır ve tüm kullanılabilir eylemler menünün kökünde olacaktır."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:42
+msgid "List of items at first level of the hierarchy"
+msgstr "Hiyerarşinin birinci seviyesindeki ögelerin listesi"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:43
+msgid ""
+"UUID of the items at the first level of the hierarchy. If this key is not "
+"found or empty, then all found items are considered as a flat list."
+msgstr ""
+"Hiyerarşinin birinci seviyesindeki ögelerin UUID 'si. Eğer bu anahtar "
+"bulunamaz ya da boş ise, bulunan tüm ögeler düz bir liste olarak kabul "
+"edilir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:44
+msgid "Whether actions should be relabeled when pasted or duplicated"
+msgstr ""
+"Eylemler yapışıtırıldığında veya çoğaltıldığında yeniden etiketlenip "
+"etiketlenmeyeceği"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:45
+msgid "Whether actions should be relabeled when pasted or duplicated."
+msgstr ""
+"Eylemler yapışıtırıldığında veya çoğaltıldığında yeniden etiketlenip "
+"etiketlenmeyeceği."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:46
+msgid "Whether menus should be relabeled when pasted or duplicated"
+msgstr ""
+"Menüler yapışıtırıldığında veya çoğaltıldığında yeniden etiketlenip "
+"etiketlenmeyeceği"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:47
+msgid "Whether menus should be relabeled when pasted or duplicated."
+msgstr ""
+"Menüler yapışıtırıldığında veya çoğaltıldığında yeniden etiketlenip "
+"etiketlenmeyeceği."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:48
+msgid "Whether profiles should be relabeled when pasted or duplicated"
+msgstr ""
+"Profiller yapışıtırıldığında veya çoğaltıldığında yeniden etiketlenip "
+"etiketlenmeyeceği"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:49
+msgid "Whether profiles should be relabeled when pasted or duplicated."
+msgstr ""
+"Profiller yapışıtırıldığında veya çoğaltıldığında yeniden etiketlenip "
+"etiketlenmeyeceği."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:50
+msgid "Display Edit toolbar"
+msgstr "Düzenle araç çubuğunu göster"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:51
+msgid "Whether to display or not the Edit toolbar in the main window."
+msgstr "Düzenle araç çubuğunun, ana pencerede görünüp görünmeyeceği."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:52
+msgid "Display File toolbar"
+msgstr "Görünüm araç çubuğunu göster"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:53
+msgid "Whether to display or not the File toolbar in the main window."
+msgstr "Görünüm araç çubuğunun, ana pencerede görünüp görünmeyeceği."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:54
+msgid "Display Help toolbar"
+msgstr "Yardım araç çubuğunu göster"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:55
+msgid "Whether to display or not the Help toolbar in the main window."
+msgstr "Yardım araç çubuğunun, ana pencerede görünüp görünmeyeceği."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:56
+msgid "Main pane position"
+msgstr "Ana çerçeve konumu"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:57
+msgid "Width of the main window pane ; default is set by the UI manager."
+msgstr ""
+"Pencere çerçevesinin genişliği ; varsayılan değer kullanıcı arayüzü "
+"yöneticisi tarafından belirlenir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:58
+msgid "Display Tools toolbar"
+msgstr "Araçlar araç çubuğunu göster"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:59
+msgid "Whether to display or not the Tools toolbar in the main window."
+msgstr "Araçlar araç çubuğunun, ana pencerede görünüp görünmeyeceği."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:60
+msgid "Position and size of the main window"
+msgstr "Ana pencerenin konumu ve boyutu"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:61
+msgid ""
+"Position and size of the main window ; default is set by the window manager."
+msgstr ""
+"Ana pencerenin konumu ve boyutu ; varsayılan değer, pencere yöneticisi "
+"tarafından belirlenir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:62
+msgid "Position and size of the preferences dialog"
+msgstr "Tercihler penceresinin konumu ve boyutu"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:63
+msgid ""
+"Position and size of the preferences dialog ; default is set by the window "
+"manager."
+msgstr ""
+"Tercihler penceresinin konumu ve boyutu ; varsayılan değer, pencere "
+"yöneticisi tarafından belirlenir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:64
+msgid "List of default schemes"
+msgstr "Varsayılan şemaların listesi"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
+msgid ""
+"The list of schemes proposed by default on each new profile. A default "
+"default list is hardcoded in nautilus-actions-config-tool, which may be "
+"updated by the user."
+msgstr ""
+"Her bir yeni profilde varsayılan olarak önerilen şemaların listesi. "
+"Varsayılan liste doğrudan nautilus-actions-config-tool içine gömülmüştür ve "
+"kullanıcı tarafından güncellenebilir."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:66
+msgid "Whether the whole configuration is locked"
+msgstr "Tüm yapılandırmanın kilitlenip kilitlenemeyeceği"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:67
+msgid ""
+"The whole configuration must be understood here as the global set and order "
+"of menus and actions. When this configuration is locked, then the user is no "
+"more able to modify nor create or delete any menu or action. All items are "
+"read-only. As the order of items is also locked, the level zero itself "
+"cannot be modified, and the user is unable to reorder the items."
+msgstr ""
+"Burada tüm yapılandırma, evrensel ayarlar, menülerin ve eylemlerin sırası "
+"olarak anlaşılmış olmalıdır. Yapılandırma kilitlendiğinde, kullanıcı artık "
+"menü veya eylemde bir değişiklik yada ekleme yapamaz. Tüm ögeler salt okunur "
+"olur. Aynı zamanda ögelerin sıralarıda kilitlenir ve kullanıcı artık onları "
+"yeniden sıraya koyamaz."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:68
+msgid "Whether the GConf I/O provider is locked"
+msgstr "GConf G/Ç sağlayıcısının kilitli olup olmayacağı"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:69
+msgid ""
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, read from GConf to being modified in NACT."
+msgstr ""
+"true olarak ayarlandığında (büyük olasılıkla zorunlu anahtar olarak), bu tüm "
+"ögeleri, menüleri ve eylemleri etkiler, GConf üzerinden NACT değişikliği "
+"okunur."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:70
+msgid "Whether the Desktop I/O provider is locked"
+msgstr "Masaüstü G/Ç sağlayıcısının kilitli olup olmayacağı"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:71
+msgid ""
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, read from .desktop files to being modified in NACT."
+msgstr ""
+"tur olarak ayarlandığında (büyük olasılıkla zorunlu anahtar olarak), bu tüm "
+"ögeleri, menüleri ve eylemleri etkiler NACT üzerinde değişiklik için ."
+"desktop dosyasından okuma yapılır."
+
+#: ../src/core/na-exporter.c:53 ../src/core/na-importer.c:87
+msgid "_Ask me"
+msgstr "_Bana sor"
+
+#: ../src/core/na-exporter.c:54
+msgid ""
+"You will be asked for the format to choose each time an item is about to be "
+"exported."
+msgstr ""
+"Dışa aktarılmak üzere olan öge, her seferinde, seçilecek biçim için size "
+"soru sorulacak."
+
+#. i18n: NAIExporter is an interface name, do not even try to translate
+#: ../src/core/na-exporter.c:60
+#, c-format
+msgid "No NAIExporter implementation found for '%s' format."
+msgstr "NAIExporter gerçeklemesi '%s' biçimi için bulunamadı."
+
+#. i18n: NAIExporter is an interface name, do not even try to translate
+#: ../src/core/na-exporter.c:304
+#, c-format
+msgid "%s NAIExporter doesn't implement 'to_buffer' interface."
+msgstr "%s NAIExporter, 'to_buffer' arayüzü için gerçeklenmedi."
+
+#. i18n: NAIExporter is an interface name, do not even try to translate
+#: ../src/core/na-exporter.c:377
+#, c-format
+msgid "%s NAIExporter doesn't implement 'to_file' interface."
+msgstr "%s NAIExporter, 'to_file' arayüzü için gerçeklenmedi."
+
+#: ../src/core/na-about.c:70
+msgid ""
+"Nautilus-Actions Configuration Tool is free software; you can redistribute "
+"it and/or modify it under the terms of the GNU General Public License as "
+"published by the Free Software Foundation; either version 2 of the License, "
+"or (at your option) any later version."
+msgstr ""
+"Nautilus-Actions Yapılandırma Aracı özgür bir yazılımdır, onu Özgür Yazılım "
+"Vakfı'nın yayınladığı GNU Genel Kamu Lisansı'nın 2. sürümü veya (tercihinize "
+"bağlı) daha sonraki sürümleri altında dağıtabilir ve/veya "
+"değiştirebilirsiniz."
+
+#: ../src/core/na-about.c:74
+msgid ""
+"Nautilus-Actions Configuration Tool is distributed in the hope that it will "
+"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
+"Public License for more details."
+msgstr ""
+"Nautilus-Actions Yapılandırma Aracı faydalı olacağı umut edilerek "
+"dağıtılmaktadır, fakat HİÇBİR GARANTİSİ YOKTUR; hatta ÜRÜN DEĞERİ ya da BİR "
+"AMACA UYGUNLUK gibi garantiler de vermez.  Lütfen GNU Genel Kamu Lisansı'nı "
+"daha fazla detay için inceleyin."
+
+#: ../src/core/na-about.c:78
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"Nautilus-Actions Configuration Tool ; if not, write to the Free Software "
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
+"USA."
+msgstr ""
+"Nautilus-Actions Yapılandırma Aracı ile GNU General Public License bir "
+"kopyasını birlikte almış olmalısınız; değilse, Free Software Foundation, "
+"Inc, 51 Franklin Street, Beşinci Kat, Boston, MA 02110-1301, ABD adresine "
+"yazın."
+
+#. i10n: "Nautilus actions" here is not a typo; this does not refer to the
+#. * Nautilus-Actions product, but to the actions which are to be added to Nautilus
+#: ../src/core/na-about.c:100
+msgid "A graphical interface to create and edit your Nautilus actions."
+msgstr ""
+"Nautilus eylemlerinizi oluşturmak ve düzenlemek için bir grafiksel arayüz."
+
+#: ../src/core/na-about.c:106
+msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
+msgstr "GNOME Çeviri Projesi <gnome-i18n@gnome.org>"
+
+#. i18n: title of the About dialog box, when seen from Nautilus file manager
+#: ../src/core/na-about.c:127
+msgid "Nautilus-Actions"
+msgstr "Nautilus-Actions"
+
+#: ../src/core/na-about.c:161
+#, c-format
+msgid ""
+"Copyright %s 2005 The GNOME Foundation\n"
+"Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright %s 2009-2014 Pierre Wieser <pwieser@trychlos.org>"
+msgstr ""
+"Telif Hakkı %s 2005 The GNOME Foundation\n"
+"Telif Hakkı %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
+"Telif Hakkı %s 2009-2014 Pierre Wieser <pwieser@trychlos.org>"
+
+#: ../src/core/na-desktop-environment.c:39
+msgid "GNOME desktop"
+msgstr "GNOME masaüstü"
+
+#: ../src/core/na-desktop-environment.c:40
+msgid "KDE desktop"
+msgstr "KDE masaüstü"
+
+#: ../src/core/na-desktop-environment.c:41
+msgid "LXDE desktop"
+msgstr "LXDE masaüstü"
+
+#: ../src/core/na-desktop-environment.c:42
+msgid "ROX desktop"
+msgstr "ROX masaüstü"
+
+#: ../src/core/na-desktop-environment.c:43
+msgid "XFCE desktop"
+msgstr "XFCE masaüstü"
+
+#: ../src/core/na-desktop-environment.c:44
+msgid "Legacy systems"
+msgstr "Eski Sistemler"
+
+#: ../src/core/na-icontext-factory.c:51
+msgid "List of patterns to be matched against the selected file(s)/folder(s)"
+msgstr "Seçilmiş dosya(lar)/klasör(ler) ile eşleşen desenlerin listesi"
+
+#. i18n: wildcard characters '*' and '?' should be considered as literals,
+#. *  and not be translated
+#: ../src/core/na-icontext-factory.c:54
+msgid ""
+"A list of strings with joker '*' or '?' to be matched against the name(s) of "
+"the selected file(s)/folder(s). Each selected item must match at least one "
+"of the filename patterns for the action or the menu be candidate to "
+"display.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*'."
+msgstr ""
+"Joker '*' veya '?' ile seçilmiş dosya(lar)/klasör(ler) ile eşleşmesi için "
+"gereken dizgelerin bir listesi. Her bir seçilmiş oge, eylem veya menüde "
+"gözükebilmesi için en az bir dosya adı deseni ile eşleşmek zorundadır.\n"
+"Bu sadece bir dosya seçimi olduğunda geçerlidir.\n"
+"'*' varsayılandır."
+
+#. i18n: wildcard characters '*' and '?' should be considered as literalls,
+#. *  and not be translated
+#: ../src/core/na-icontext-factory.c:75
+msgid ""
+"A pattern to be matched against basenames of selected file(s)/folder(s). May "
+"include wildcards (* or ?). You must set one option for each pattern you need"
+msgstr ""
+"Seçili dosya(lar)/klasör(ler) ve onların taban adları ile eşleşen bir desen. "
+"Jokerler içerebilir. İhtiyacınız olan her bir öge için bu seçeneği ayarlamak "
+"zorundasınız."
+
+#. i18n: the "<EXPR>" is just an abbreviation for "an expression",
+#. *  so is tranlatable
+#. i18n: "<EXPR>" is just an abbreviation for "an expression", so is tranlatable
+#: ../src/core/na-icontext-factory.c:80 ../src/core/na-icontext-factory.c:139
+#: ../src/core/na-icontext-factory.c:358
+msgid "<EXPR>"
+msgstr "<İFADE>"
+
+#: ../src/core/na-icontext-factory.c:86
+msgid "Whether the specified basenames are case sensitive (default)"
+msgstr ""
+"Belirtilmiş taban adlarının büyük küçük harf duyarlı olup olmadığı "
+"(varsayılan)"
+
+#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:88
+msgid ""
+"Must be set to 'true' if the filename patterns are case sensitive, to "
+"'false' otherwise. E.g., if you need to match a filename in a case-sensitive "
+"manner, set this key to 'true'. If you also want, for example '*.jpg' to "
+"match 'photo.JPG', then set 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
+msgstr ""
+"Eğer dosya adı desenleri büyük küçük harf duyarlılarsa, değer 'true' olmak "
+"zorundadır, değilse 'false' olmalıdır. Örn. büyük küçük harf duyarlı bir "
+"dosya adı ile eşleştirmeniz gerekirse, bu değeri 'true' yapın. Aynı zamanda "
+"'*.jpg' gibi birşeyin 'photo.JPG' ile de eşleşmesini istiyorsanız, değeri "
+"'false' yapın.\n"
+"Bu sadece bir seçim gerektiğinde geçerlidir.\n"
+"Varsayılan 'true'."
+
+#: ../src/core/na-icontext-factory.c:114
+msgid ""
+"List of patterns to be matched against the mimetypes of the selected file(s)/"
+"folder(s)"
+msgstr ""
+"Seçili dosya(lar)/klasör(ler) ve onların mime türleri ile eşleşen desenlerin "
+"listesi"
+
+#. i18n: wildcard character '*' is taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:116
+msgid ""
+"A list of strings with joker '*' to be matched against the mimetypes of the "
+"selected file(s)/folder(s). Each selected item must match at least one of "
+"the mimetype patterns for the action to appear.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*/*'."
+msgstr ""
+"Joker '*' veya '?' ile seçilmiş mime türlerinin, dosya(lar)/klasör(ler) ile "
+"eşleşmesi için gereken dizgelerin bir listesi. Her bir seçilmiş oge, eylem "
+"veya menüde gözükebilmesi için en az bir mime türü deseni ile eşleşmek "
+"zorundadır. \n"
+"Bu sadece bir dosya seçimi olduğunda geçerlidir.\n"
+"'*' varsayılandır."
+
+#. i18n: wildcard character '*' is taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:135
+msgid ""
+"A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
+"include the asterisk wildcard '*'. You must set one option for each pattern "
+"you need"
+msgstr ""
+"Seçili dosya(lar)/klasör(ler) ve onların mime türleri ile eşleşen bir desen. "
+"Joker içerebilir. İhtiyacınız olan her bir öge için bu seçeneği ayarlamak "
+"zorundasınız."
+
+#: ../src/core/na-icontext-factory.c:179
+msgid "Whether the profile applies to files (deprecated option, see mimetype)"
+msgstr ""
+"Profilin dosyalara uygulanıp uygulanmayacağı (kullanılmayan seçenek, mime "
+"türüne göz atın)"
+
+#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:181
+msgid ""
+"Set to 'true' if the selection can have files, to 'false' otherwise.\n"
+"This setting is tied in with the 'isdir' setting. The valid combinations "
+"are: \n"
+"isfile='true' and isdir='false': the selection may hold only files\n"
+"isfile='false' and isdir='true': the selection may hold only folders\n"
+"isfile='true' and isdir='true': the selection may hold both files and "
+"folders\n"
+"isfile='false' and isdir='false': this is an invalid combination (your "
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
+msgstr ""
+"Seçimin dosyaları varsa 'true', yoksa 'false' ayarlayın.\n"
+"Bu seçenek , 'isdir' seçeneğiyle birbirine bağlıdır. Geçerli birleşimler:\n"
+"isfile='true' ve isdir='false': seçim sadece dosyaları içerebilir\n"
+"isfile='false' and isdir='true': seçim sadece klasörleri içerebilir\n"
+"isfile='true' and isdir='true': seçim hem dosyaları hem de klasörleri "
+"içerebilir\n"
+"isfile='false' and isdir='false': bu birleşim geçersizdir (yapılandırmanız "
+"asla gözükmez).\n"
+"Bu açıkça, sadece seçim olduğunda uygulanır.\n"
+"Varsayılan 'true'."
+
+#: ../src/core/na-icontext-factory.c:210
+msgid ""
+"Whether the profile applies to folders (deprecated option, see mimetype)"
+msgstr ""
+"Profilin klasörlere uygulanıp uygulanmayacağı (kullanılmayan seçenek, mime "
+"türüne göz atın)"
+
+#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:212
+msgid ""
+"Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
+"This setting is tied in with the 'isfile' setting. The valid combinations "
+"are: \n"
+"isfile='true' and isdir='false': the selection may hold only files\n"
+"isfile='false' and isdir='true': the selection may hold only folders\n"
+"isfile='true' and isdir='true': the selection may hold both files and "
+"folders\n"
+"isfile='false' and isdir='false': this is an invalid combination (your "
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
+msgstr ""
+"Seçimin klasörleri varsa 'true', yoksa 'false' ayarlayın.\n"
+"Bu seçenek, 'isdir' seçeneğiyle birbirine bağlıdır. Geçerli birleşimler:\n"
+"isfile='true' ve isdir='false': seçim sadece dosyaları içerebilir\n"
+"isfile='false' and isdir='true': seçim sadece klasörleri içerebilir\n"
+"isfile='true' and isdir='true': seçim hem dosyaları hem de klasörleri "
+"içerebilir\n"
+"isfile='false' and isdir='false': bu birleşim geçersizdir (yapılandırmanız "
+"asla gözükmez).\n"
+"Bu açıkça, sadece seçim olduğunda uygulanır.\n"
+"Varsayılan 'true'."
+
+#: ../src/core/na-icontext-factory.c:244
+msgid ""
+"Whether the selection may be multiple (deprecated option, see selection "
+"count)"
+msgstr ""
+"Seçimin çoklu olup olamayacağı (kullanılmayan seçenek, seçim sayısına göz "
+"atın)"
+
+#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:246
+msgid ""
+"If you need more than one files or folders to be selected, set this key to "
+"'true'. If you want just one file or folder, set it to 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
+msgstr ""
+"Birden çok dosya ve klasörü seçme durumunuz varsa, bu anahtarı 'true' yapın. "
+"Eğer sadece tek bir dosya veya klasör seçiyorsanız, 'false' yapın.\n"
+"Bu açıkça, sadece seçim olduğunda uygulanır.\n"
+"Varsayılan 'true'."
+
+#: ../src/core/na-icontext-factory.c:270
+msgid ""
+"List of schemes to be matched against those of selected file(s)/folder(s)"
+msgstr "Seçilmiş dosya(lar)/klasör(ler) ile eşleşen şemaların listesi"
+
+#. too long string for iso c: 510 (max=509)
+#. i18n: schemes (sftp, ssh, ftp, file, etc.) are standard keywords which define
+#. *  the access protocol to an object, they should not be translated
+#: ../src/core/na-icontext-factory.c:274
+msgid ""
+"Defines the list of valid schemes to be matched against the selected items. "
+"The scheme is the protocol used to access the files. The keyword to use is "
+"the one used in the URI by the file manager.\n"
+"Examples of valid URI include:\n"
+"- file:///tmp/foo.txt\n"
+"- sftp:///root@test.example.net/tmp/foo.txt\n"
+"The most common schemes are:\n"
+"'file': local files\n"
+"'sftp': files accessed via SSH\n"
+"'ftp': files accessed via FTP\n"
+"'smb': files accessed via Samba (Windows share)\n"
+"'dav': files accessed via WebDAV.\n"
+"All schemes used by your favorite file manager may be used here.\n"
+"This obviously only applies when there is a selection, or when targeting the "
+"special 'x-nautilus-desktop' scheme.\n"
+"Defaults to 'file'."
+msgstr ""
+"Seçili öğeler ile eşleşen, geçerli şemaların listesini tanımlar. Şema, "
+"dosyalara erişim için kullanılan bir protokoldür. Kullanılan anahtar sözcük, "
+"dosya yöneticisi tarafından URI içinden alınır ve kullanılır.\n"
+"Geçerli URI örnekleri:\n"
+"- file:///tmp/foo.txt\n"
+"- sftp:///root@test.deneme.net/tmp/foo.txt\n"
+"En çok kullanılan şemalar:\n"
+"'file': yerel dosyalar\n"
+"'sftp': SSH üzerinden dosya erişimi\n"
+"'ftp': FTP üzerinden dosya erşimi\n"
+"'smb': Samba üzerinden dosya erişimi (Windows paylaşımı)\n"
+"'dav': WebDAV üzerinden dosya erişimi.\n"
+"Tüm şemalar gözde dosya yöneticiniz tarafından burada kullanılabilir.\n"
+"Bu açıkça, sadece seçim olduğunda ya da özel 'x-nautilus-desktop' şemanızı "
+"hedeflediğinzde uygulanır.\n"
+"Varsayılan 'file'."
+
+#: ../src/core/na-icontext-factory.c:303
+msgid ""
+"A valid GIO scheme where the selected file(s)/folder(s) should be located. "
+"You must set one option for each scheme you need"
+msgstr ""
+"Seçilmiş dosya(lar)/klasör(ler) konumlandığı yerde geçerli bir GIO şeması. "
+"Size gerekli her bir şema için bir seçenek ayarlamalısınız."
+
+#. i18n: "<STRING>" is just an abbreviation for "a string", so is tranlatable
+#: ../src/core/na-icontext-factory.c:306
+#: ../src/core/na-object-action-factory.c:175
+#: ../src/core/na-object-item-factory.c:112
+#: ../src/core/na-object-item-factory.c:136
+#: ../src/core/na-object-profile-factory.c:182
+#: ../src/utils/na-delete-xmltree.c:68 ../src/utils/na-delete-xmltree.c:70
+#: ../src/utils/na-set-conf.c:61 ../src/utils/na-set-conf.c:63
+#: ../src/utils/na-set-conf.c:66 ../src/utils/na-set-conf.c:68
+#: ../src/utils/nautilus-actions-print.c:60
+#: ../src/utils/nautilus-actions-print.c:63
+#: ../src/utils/nautilus-actions-run.c:59
+msgid "<STRING>"
+msgstr "<DİZGE>"
+
+#: ../src/core/na-icontext-factory.c:312
+msgid "List of folders"
+msgstr "Klasörlerin listesi"
+
+#: ../src/core/na-icontext-factory.c:313
+msgid ""
+"Defines the list of valid paths to be matched against the current folder.\n"
+" All folders 'under' the specified path are considered valid.\n"
+"Defaults to '/'."
+msgstr ""
+"Mevcut klasör ile eşleşen, geçerli yolların listesini tanımlar.\n"
+" Belirtilen yolun altındaki tüm klasörler geçerli sayılır.\n"
+"Varsayılan '/'."
+
+#: ../src/core/na-icontext-factory.c:329
+msgid ""
+"The path of a (parent) directory for which the item will be displayed. You "
+"must set one option for each folder you need"
+msgstr ""
+"Ögenin gösterileceği (üst) dizinin yolu. Size gerekli her bir klasör için "
+"bir seçenek ayarlamalısınız."
+
+#. i18n: "<PATH>" is just an abbreviation for "a folder path", so is tranlatable
+#. i18n: "<PATH>" is the path to a binary, so may be tranlatable
+#: ../src/core/na-icontext-factory.c:332 ../src/core/na-icontext-factory.c:433
+#: ../src/core/na-icontext-factory.c:486
+#: ../src/core/na-object-profile-factory.c:117
+#: ../src/core/na-object-profile-factory.c:205
+msgid "<PATH>"
+msgstr "<YOL>"
+
+#: ../src/core/na-icontext-factory.c:338
+msgid "Operator of the selection count relation"
+msgstr "Seçim sayısı ilişkisinin operatörü"
+
+#: ../src/core/na-icontext-factory.c:339
+msgid ""
+"Whether this profile may be selected depending of the count of the "
+"selection.\n"
+"This is a string of the form \"{'<'|'='|'>'} number\".\n"
+"Examples of valid strings are: \"=0\", \"> 1\", \"< 10\".\n"
+"Defaults to \">0\"."
+msgstr ""
+"Seçim sayısının seçilen sayısına bağımlılığının olup olmayacağı.\n"
+"Bu \"{'<'|'='|'>'} numara\" biçiminde bir dizgedir.\n"
+"Geçerli dizgelerin örnekleri: \"=0\", \"> 1\", \"< 10\".\n"
+"Varsayıllan \">0\"."
+
+#: ../src/core/na-icontext-factory.c:356
+msgid "Selection count relation [>0]"
+msgstr "Seçim sayısı ilişkisi [>0]"
+
+#: ../src/core/na-icontext-factory.c:364
+msgid "Only show in environment"
+msgstr "Sadece ortamda göster"
+
+#: ../src/core/na-icontext-factory.c:365
+msgid "Defaults to all."
+msgstr "Tümünü varsayılan."
+
+#: ../src/core/na-icontext-factory.c:379
+msgid ""
+"The name of an only desktop environment where the item must be displayed. "
+"You must set one option for each environment you want"
+msgstr ""
+"Ögenin gösterilmek zorunda olduğu tek bir masaüstü ortamının adı. "
+"İstediğiniz her bir ortam için bir seçenek ayarlamak zorundasınız."
+
+#. i18n: "<DESKTOP>" is just a placeholder for "a desktop name", so is tranlatable
+#: ../src/core/na-icontext-factory.c:382 ../src/core/na-icontext-factory.c:406
+msgid "<DESKTOP>"
+msgstr "<MASAÜSTÜ>"
+
+#: ../src/core/na-icontext-factory.c:388
+msgid "Not show in environment"
+msgstr "Ortamda gösterme"
+
+#: ../src/core/na-icontext-factory.c:389
+msgid "Defaults to none."
+msgstr "Hiçbiri varsayılan değil."
+
+#: ../src/core/na-icontext-factory.c:403
+msgid ""
+"The name of a desktop environment where the item must not be displayed. You "
+"must set one option for each environment you want"
+msgstr ""
+"Ögenin gösterilmek zorunda olmadığı tek bir masaüstü ortamının adı. "
+"İstediğiniz her bir ortam için bir seçenek ayarlamak zorundasınız. "
+
+#: ../src/core/na-icontext-factory.c:412
+msgid "Try exec"
+msgstr "Yürütmeyi dene"
+
+#. i18n: TryExec is a keyword of the specification, it is not translatable
+#: ../src/core/na-icontext-factory.c:414
+msgid ""
+"Note that, when specified, only the presence and the executability status of "
+"the specified file are checked.\n"
+"Parameters may appear in 'TryExec' value, and will be substituted at "
+"runtime.\n"
+"Defaults to successful."
+msgstr ""
+"Belirtildiği zaman, belirtilen dosyanın, sadece varlığı ve çalışabilir "
+"durumda olduğu kontrol edilir.\n"
+"Parametreler, 'TryExec' değeri içinde görünebilir ve çalışma zamanında "
+"yerine koyulabilir.\n"
+"Varsayılan başarılıdır."
+
+#: ../src/core/na-icontext-factory.c:431
+msgid "the path to a file whose executability is to be checked"
+msgstr "çalıştırılabilir olduğu kontrol edilen dosyanın yolu"
+
+#: ../src/core/na-icontext-factory.c:439
+msgid "Show if registered"
+msgstr "Kayıtlı ise göster"
+
+#. i18n: ShowIfRegistered is a keyword of the specification, it is not translatable
+#: ../src/core/na-icontext-factory.c:441
+msgid ""
+"The well-known name of a DBus service.\n"
+"The item will be candidate if the named service is registered on session "
+"DBus at runtime.\n"
+"Parameters may appear in 'ShowIfRegistered' value, and will be substituted "
+"at runtime.\n"
+"Defaults to successful."
+msgstr ""
+"Bir DBus hizmetinin bilindik ismi.\n"
+"Adlandırılmış hizmet, çalışma zamanında, DBus oturumunda kayıtlı ise aday "
+"olacaktır.\n"
+"Parametreler, 'ShowIfRegistered' değeri içinde görülebilir ve çalışma "
+"zamanında yerine koyulabilir.\n"
+"Varsayılan başarılıdır."
+
+#: ../src/core/na-icontext-factory.c:458
+msgid "The name of a service which must be registered on session DBus"
+msgstr "DBus oturumunda kayıtlı olmak zaorunda olan hizmetin adı"
+
+#: ../src/core/na-icontext-factory.c:459 ../src/core/na-icontext-factory.c:512
+#: ../src/core/na-icontext-factory.c:545
+msgid "<NAME>"
+msgstr "<AD>"
+
+#: ../src/core/na-icontext-factory.c:465
+msgid "Show if True"
+msgstr "True ise göster"
+
+#. i18n: ShowIfTrue is a keyword of the specification, it is not translatable
+#: ../src/core/na-icontext-factory.c:467
+msgid ""
+"A command which, when executed, should output a string on stdout.\n"
+"The item will be candidate if the outputed string is equal to \"true\".\n"
+"Parameters may appear in 'ShowIfTrue' value, and will be substituted at "
+"runtime.\n"
+"Defaults to successful."
+msgstr ""
+"Bir komut, nerede ve ne zaman yürütülürse, starndar çıktıya bir dizge basmak "
+"zorundadır.\n"
+"Eğer çıktı değeri, 'true' ile eşitse, öge bir adaydır.\n"
+"Parametreler, 'ShowIfTrue' değeri içinde görülebilir ve çalışma zamanında "
+"yerine koyulabilir.\n"
+"Varsayılan başarılıdır."
+
+#. i18n: 'true' is to be taken as a literal, must not be translated
+#: ../src/core/na-icontext-factory.c:485
+msgid "The path to a command which will display the 'true' string"
+msgstr "'true' dizgesinin gösterecek komutun yolu"
+
+#: ../src/core/na-icontext-factory.c:492
+msgid "Show if running"
+msgstr "Çalışıyor ise göster"
+
+#. i18n: ShowIfRunning is a keyword of the specification, it is not translatable
+#: ../src/core/na-icontext-factory.c:494
+msgid ""
+"The name of a process.\n"
+"The item will be candidate if the process name is found in memory at "
+"runtime.\n"
+"Parameters may appear in 'ShowIfRunning' value, and will be substituted at "
+"runtime.\n"
+"Defaults to successful."
+msgstr ""
+"Bir sürecin adı.\n"
+"Süreç adı, çalışma zamanı içinde bellekte bulunursa, öge aday olacaktır.\n"
+"Parametreler, 'ShowIfRunning' değeri içinde görülebilir ve çalışma zamanında "
+"yerine koyulabilir.\n"
+"Varsayılan başarılıdır."
+
+#: ../src/core/na-icontext-factory.c:511
+msgid "The name of a binary which must be running"
+msgstr "Çalışmak zorunda olan ikili dosyanın adı"
+
+#: ../src/core/na-icontext-factory.c:518
+msgid "Capabilities"
+msgstr "Yetenekler"
+
+#. i18n: 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' are all keywords
+#. *  of the specification; they are not translatable
+#: ../src/core/na-icontext-factory.c:521
+msgid ""
+"A list of capabilities each item of the selection must satisfy in order for "
+"the item to be candidate.\n"
+"Capabilities may be negated.\n"
+"Capabilities have to be chosen between following predefined ones:\n"
+"- 'Owner': current user is the owner of selected items\n"
+"- 'Readable': selected items are readable by user (probably more usefull "
+"when negated)\n"
+"- 'Writable': selected items are writable by user\n"
+"- 'Executable': selected items are executable by user\n"
+"- 'Local': selected items are local.\n"
+"Defaults to empty list."
+msgstr ""
+"Seçimin her bir ögesinin yeteneklerinin listesi, ögelerin aday olabilmesi "
+"için gereken sırayı sağlamak zorundadır.\n"
+"Yetenekler olumsuz olabilirler.\n"
+"Yetenekler, önceden tanımlanmış seçenekler arasından seçilmek zorundadır:\n"
+"- 'Owner': mevcut kullanıcı seçilmiş ögelerin sahibidir\n"
+"- 'Readable': seçilmeiş ögeler kullanıcı tarafından okunabilirdir (olumsuz "
+"olduğunda daha kullanışlı olabilir)\n"
+"- 'Writable': seçilmiş ögeler kullanıcı tarafından yazılabilirdir\n"
+"- 'Executable': seçilmiş ögeler kullanıcı tarafından çalıştırılabilirdir\n"
+"- 'Local' seçilmiş ögeler yereldir.\n"
+"Varsayılan boş listedir."
+
+#: ../src/core/na-icontext-factory.c:543
+msgid ""
+"The name of a capability the selection must meet. May be 'Owner', "
+"'Readable', 'Writable', 'Executable' or 'Local'"
+msgstr ""
+"Seçim yeteneğinin adı bilindik olmalıdır. Seçenekler, 'Owner', 'Readable', "
+"'Writable', 'Executable' veya 'Local' dir"
+
+#: ../src/core/na-iimporter.c:239 ../src/core/na-importer.c:293
+msgid ""
+"Item was renumbered because the caller did not provide any check function."
+msgstr ""
+"Çağrıcı, herhangi bir kontrol işlevi sağlamadığından dolayı, öge yeniden "
+"numaralandırılmıştır."
+
+#: ../src/core/na-iimporter.c:254
+msgid ""
+"Item was renumbered because the caller did not provide any ask user function."
+msgstr ""
+"Çağrıcı, herhangi bir kullanıcıya sorma işlevi sağlamadığından dolayı, öge "
+"yeniden numaralandırılmıştır."
+
+#: ../src/core/na-iimporter.c:273 ../src/core/na-importer.c:326
+msgid "Item was renumbered due to user request."
+msgstr "Kullanıcı isteğinden dolayı, öge yeniden numaralandırılmıştır."
+
+#: ../src/core/na-iimporter.c:279 ../src/core/na-importer.c:335
+msgid "Existing item was overriden due to user request."
+msgstr "Kullanıcı isteğinden dolayı, mevcut öge geçersiz kılınmıştır."
+
+#: ../src/core/na-iimporter.c:286 ../src/core/na-importer.c:344
+#, c-format
+msgid "Item %s already exists."
+msgstr "%s ögesi zaten mevcut."
+
+#: ../src/core/na-iimporter.c:288 ../src/core/na-importer.c:350
+msgid "Import was canceled due to user request."
+msgstr "Kullanıcı isteğinden dolayı, içe aktarma iptal edilmiştir."
+
+#. i18n: the action has been renumbered during import operation
+#: ../src/core/na-iimporter.c:311 ../src/core/na-importer.c:417
+msgid "(renumbered)"
+msgstr "(yeniden numaralandırılmış)"
+
+#: ../src/core/na-importer.c:58
+msgid "Do _not import the item"
+msgstr "Ögeyi içe _aktarma"
+
+#: ../src/core/na-importer.c:59
+msgid ""
+"This used to be the historical behavior.\n"
+"The selected file will be marked as \"NOT OK\" in the Summary page.\n"
+"The existing item will not be modified."
+msgstr ""
+"Bu tarihi bir davranış olarak kullanılıyor.\n"
+"Seçilmiş dosya, Özet sayfasında 'TAMAM DEĞİL' olarak işaretlenecek.\n"
+"Mevcut öge değiştirilmeyecek."
+
+#: ../src/core/na-importer.c:66
+msgid "Import the item, _allocating it a new identifier"
+msgstr "Ögeyi, kendisine yeni bir kimlik t_ahsis ederek içe aktar"
+
+#: ../src/core/na-importer.c:67
+msgid ""
+"The selected file will be imported with a slightly modified label indicating "
+"the renumbering.\n"
+"The existing item will not be modified."
+msgstr ""
+"Seçilmiş dosya, yeniden numaralandırmayı da içeren ufak bir değişiklik ile "
+"içe aktarılacak.\n"
+"Mevcut öge değiştirilmeyecek."
+
+#: ../src/core/na-importer.c:74
+msgid "_Override the existing item"
+msgstr "Mevcut ögenin _üzerinde yaz"
+
+#: ../src/core/na-importer.c:75
+msgid ""
+"The item found in the selected file will silently override the current one "
+"which has the same identifier.\n"
+"Be warned: this mode may be dangerous. You will not be prompted another time."
+msgstr ""
+"Seçilmiş dosya içinde bulunan öge, kendisiyle aynı kimliğe sahip olan mevcut "
+"ögenin üzerine sessizce yazacak.\n"
+"Dikkatli Olun: bu kip tehlikeli olabilir. Bu size bir daha sorulmayacak. "
+
+#: ../src/core/na-importer.c:88
+msgid "You will be asked each time an imported ID already exists."
+msgstr ""
+"İçe aktarılmış kimlik zaten mevcut olduğu her zaman, tekrardan soru "
+"sorulacak."
+
+#. i18n: '%s' stands for the file URI
+#: ../src/core/na-importer.c:101
+#, c-format
+msgid "%s is not loadable (empty or too big or not a regular file)"
+msgstr "%s yüklenebilir değil (boş, çok büyük ya da düzgün bir dosya değil)"
+
+#. l10n: 'ImporterAskDialog' is the dialog name: do not translate
+#: ../src/core/na-importer-ask.c:270
+#, c-format
+msgid "Unable to load 'ImporterAskDialog' from %s"
+msgstr "%s üzerinden 'ImporterAskDialog' yükelenemedi"
+
+#: ../src/core/na-importer-ask.c:401
+#, c-format
+msgid ""
+"The action \"%s\" imported from \"%s\" has the same identifier than the "
+"already existing \"%s\"."
+msgstr ""
+"\"%s\" eylemi, \"%s\" üzerinden içe aktarıldı. Bu zaten mevcut olan \"%s\" "
+"ile aynı kimliğe sahip."
+
+#: ../src/core/na-importer-ask.c:407
+#, c-format
+msgid ""
+"The menu \"%s\" imported from \"%s\" has the same identifier than the "
+"already existing \"%s\"."
+msgstr ""
+"\"%s\" menüsü, '%s' üzerinden içe aktarıldı. Bu zaten mevcut olan \"%s\" ile "
+"aynı kimliğe sahip."
+
+#: ../src/core/na-importer-ask.ui.h:1
+msgid "Already existing item"
+msgstr "Zaten mevcut olan öge"
+
+#: ../src/core/na-importer-ask.ui.h:2
+msgid "What should I do with this ?"
+msgstr "Bunun ile ne yapmalıyım ?"
+
+#: ../src/core/na-importer-ask.ui.h:3
+msgid "Re_member my choice in future import operations"
+msgstr "Gelecek içe aktarma işlemlerinde seçimimi _hatırla"
+
+#: ../src/core/na-io-provider.c:69
+msgid ""
+"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
+"org/enter_bug.cgi?product=nautilus-actions."
+msgstr ""
+"Lütfen https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions "
+"üzerinde bir hata raporlama nezaketini gösterin."
+
+#: ../src/core/na-io-provider.c:1364
+msgid "Unavailable I/O provider."
+msgstr "Kullanılabilir olmayan G/Ç sağlayıcısı."
+
+#: ../src/core/na-io-provider.c:1368
+msgid "I/O provider implementation lacks of required API."
+msgstr "Gerekli API için G/Ç sağlayıcı gerçeklemesinin eksikleri."
+
+#: ../src/core/na-io-provider.c:1372
+msgid "I/O provider is not willing to write."
+msgstr "G/Ç sağlayıcısı, yazma için hazır değil."
+
+#: ../src/core/na-io-provider.c:1376
+msgid "I/O provider announces itself as unable to write."
+msgstr "G/Ç sağlayıcısı, kendini yazabilir olmayan olarak açıklar."
+
+#: ../src/core/na-io-provider.c:1380
+msgid "I/O provider has been locked down by an administrator."
+msgstr "G/Ç sağlayıcısı, yönetici tarafından kilitlenmiş."
+
+#: ../src/core/na-io-provider.c:1384
+msgid "I/O provider has been locked down by the user."
+msgstr "G/Ç sağlayıcısı, kullanıcı tarafından kilitlenmiş."
+
+#: ../src/core/na-io-provider.c:1388
+msgid "Item is read-only."
+msgstr "Öge, salt okunur."
+
+#: ../src/core/na-io-provider.c:1392
+msgid "No writable I/O provider found."
+msgstr "Yazılabilir bir G/Ç sağlayıcısı bulunamadı."
+
+#: ../src/core/na-io-provider.c:1397
+#, c-format
+msgid ""
+"Item is not writable for an unknown reason (%d).\n"
+"%s"
+msgstr ""
+"Bilinmeyen bir sebepten (%d) dolayı, öge yazılabilir değil.\n"
+"%s"
+
+#: ../src/core/na-io-provider.c:1420
+msgid "OK."
+msgstr "TAMAM."
+
+#: ../src/core/na-io-provider.c:1424
+#, c-format
+msgid ""
+"Program flow error.\n"
+"%s"
+msgstr ""
+"Program akışı hatası.\n"
+"%s"
+
+#: ../src/core/na-io-provider.c:1428
+msgid "The I/O provider is not willing to do that."
+msgstr "G/Ç sağlayıcısı, bunu yapabilmek için hazır değil."
+
+#: ../src/core/na-io-provider.c:1432
+msgid "Write error in I/O provider."
+msgstr "G/Ç sağlayıcısında yazma hatası."
+
+#: ../src/core/na-io-provider.c:1436
+msgid "Unable to delete GConf schemas."
+msgstr "GConf şemaları silinemedi."
+
+#: ../src/core/na-io-provider.c:1440
+msgid "Unable to delete configuration."
+msgstr "Yapılandırma silinemedi."
+
+#: ../src/core/na-io-provider.c:1444
+#, c-format
+msgid ""
+"Unknown return code (%d).\n"
+"%s"
+msgstr ""
+"Bilinmeyen dönüş kodu (%d).\n"
+"%s"
+
+#. i18n: default label for a new action
+#: ../src/core/na-object-action.c:59
+msgid "New Nautilus action"
+msgstr "Yeni Nautilus eylemi"
+
+#: ../src/core/na-object-action.c:492
+msgid "Profile automatically created from pre-v2 action"
+msgstr "Profil, pre-v2 eylemi tarafından otomatik olarak oluşturuldu"
+
+#: ../src/core/na-object-action-factory.c:80
+msgid "Targets the selection context menu"
+msgstr "Seçim bağlam menüsünü hedefler"
+
+#: ../src/core/na-object-action-factory.c:81
+msgid ""
+"Whether the action targets the selection file manager context menus.\n"
+"This used to be the historical behavior.\n"
+"Note that menus are always potential candidate to the display in selection "
+"context menus provided that they contain at least one action.\n"
+"Defaults to TRUE."
+msgstr ""
+"Eylemin, seçim dosya yöneticisi bağlam menülerini hedefleyip hedeflemediği.\n"
+"Bu tarihsel davranış olarak kullanılır.\n"
+"Menüler, herzaman en az bir eylem içermek için sağlanmış, seçim içeriğinde "
+"gösterilmek için olası adaylar olduğunu unutmayın.\n"
+"Varsayılan TRUE."
+
+#: ../src/core/na-object-action-factory.c:99
+msgid "Targets the selection context menu [true]"
+msgstr "Seçim bağlam menüsünü hedefler [true]"
+
+#: ../src/core/na-object-action-factory.c:106
+msgid "Targets the location context menu"
+msgstr "Konum bağlam menüsünü hedefler"
+
+#: ../src/core/na-object-action-factory.c:107
+#, fuzzy
+msgid ""
+"Whether the action targets the file manager context menus when there is no "
+"selection, thus applying to current location.\n"
+"Note that menus are always potential candidate to the display in selection "
+"context menus provided that they contain at least one action.\n"
+"Defaults to FALSE"
+msgstr ""
+"Eylemin, seçim yokken, mevcut konumu uygulamak için dosya yönetim bağlam "
+"menüsünü hedefleyip hedeflemeyeceği.\n"
+"Menüler, herzaman en az bir eylem içermek için sağlanmış, seçim içeriğinde "
+"gösterilmek için olası adaylar olduğunu unutmayın.\n"
+"Varsayılan FALSE"
+
+#: ../src/core/na-object-action-factory.c:125
+msgid "Targets the location context menu [false]"
+msgstr "Konum içerik menüsünü hedefler [false]"
+
+#: ../src/core/na-object-action-factory.c:132
+msgid "Targets the toolbar"
+msgstr "Araç çubuğunu hedefler"
+
+#: ../src/core/na-object-action-factory.c:133
+msgid ""
+"Whether the action is candidate to be displayed in file manager toolbar.\n"
+"This only applies to current location.\n"
+"Note that menus are never displayed in the toolbar.\n"
+"Defaults to FALSE."
+msgstr ""
+"Eylemin, dosya yönetim çubuğunda gösterilmesi için aday olup olmadığı.\n"
+"Bu sadece mevcut konuma eklenir.\n"
+"Menülerin hiçbir zaman araç çubuğunda gösterilmediğini unutmayın.\n"
+"Varsayılan FALSE."
+
+#: ../src/core/na-object-action-factory.c:150
+msgid "Targets the toolbar [false]"
+msgstr "Araç çubuğunu hedefler [false]"
+
+#: ../src/core/na-object-action-factory.c:157
+msgid "Label of the toolbar item"
+msgstr "Araç çubuğu ögesinin etiketi"
+
+#: ../src/core/na-object-action-factory.c:158
+msgid ""
+"The label displayed besides of the icon in the file manager toolbar.\n"
+"Note that actual display may depend of your own Desktop Environment "
+"preferences.\n"
+"Defaults to label of the context menu when not set or empty."
+msgstr ""
+"Etiket, dosya yöneticisi çubuğunda simgenin yanında gösterilir.\n"
+"Güncel görüntünün kullandığının Masaüstü Ortamı 'nın tercihlerine bağımlı "
+"olabileceğini unutmayın.\n"
+"Ayarlanmadığında veya boş olduğunda, içerik menüsünün etiketi varsayılandır."
+
+#. i18n: copied items have a label as 'Copy of original label'
+#: ../src/core/na-object-id.c:329
+#, c-format
+msgid "Copy of %s"
+msgstr "%s ögesinin kopyası"
+
+#: ../src/core/na-object-item-factory.c:65
+msgid "Type of the item"
+msgstr "Ögenin türü"
+
+#: ../src/core/na-object-item-factory.c:66
+msgid ""
+"Defines if the item is an action or a menu. Possible values are :\n"
+"- 'Action',\n"
+"- 'Menu'.\n"
+"The value is case sensitive and must not be localized."
+msgstr ""
+"Ögenin bir eylemde veya bir menüde olmasını tanımlar. Olası değerler :\n"
+"- 'Action',\n"
+"- 'Menu',\n"
+"Bu değer, büyük küçük harf duyarlı ve yerelleştirilmiş olmalıdır."
+
+#: ../src/core/na-object-item-factory.c:94
+msgid "Label of the context menu item (mandatory)"
+msgstr "İçerik menüsü ögesinin etiketi (zorunlu)"
+
+#: ../src/core/na-object-item-factory.c:95
+msgid ""
+"The label of the menu item that will appear in the file manager context menu "
+"when the selection matches the appearance condition settings.\n"
+"It is also used as a default for the toolbar label of an action."
+msgstr ""
+"Seçim, görünüm durumu ayarlarıyla eşleştiğinde, menü ögesinin etiketi, dosya "
+"yöneticisi içeriği menüsünde gözükecek.\n"
+"Aynı zamanda bir eylemin araç çubuğu için varsayılan olarak kullanılacaktır."
+
+#: ../src/core/na-object-item-factory.c:99
+msgid "Empty label"
+msgstr "Boş etiket"
+
+#: ../src/core/na-object-item-factory.c:118
+msgid "Tooltip of the context menu item"
+msgstr "İçerik menüsü ögesinin ipucu"
+
+#: ../src/core/na-object-item-factory.c:119
+msgid ""
+"The tooltip of the menu item that will appear in the file manager statusbar "
+"when the user points to the file manager context menu item with his/her "
+"mouse."
+msgstr ""
+"Kullanıcı, faresini kullanarak dosya yöneticisi içerik menüsünü işaret "
+"ettiği zaman dosya yöneticisi durum çubuğunda gözükecek menü ögesinin ipucu."
+
+#: ../src/core/na-object-item-factory.c:142
+msgid "Icon of the context menu item"
+msgstr "İçerik menüsü ögesinin simgesi"
+
+#: ../src/core/na-object-item-factory.c:143
+msgid ""
+"The icon of the menu item that will appear next to the label in the file "
+"manager context menu when the selection matches the appearance conditions "
+"settings.\n"
+"May be the localized name of a themed icon, or a full path to any "
+"appropriate image."
+msgstr ""
+"Seçimin, görünüm durumları ayarları ile eşleştiği zaman, dosya yöneticisi "
+"içerik menüsünde gözükecek olan bir sonraki etiketin, menü ögesinin "
+"simgesi.\n"
+"Temalı simgenin yerelleştirilmiş adı olabilir veya uygun resmin tüm yolu "
+"olabilir."
+
+#: ../src/core/na-object-item-factory.c:161
+msgid "<PATH|NAME>"
+msgstr "<YOL|AD>"
+
+#: ../src/core/na-object-item-factory.c:191
+msgid "Description relative to the item"
+msgstr "Öge ile işikili olan tanımlama"
+
+#: ../src/core/na-object-item-factory.c:192
+msgid ""
+"Some text which explains the goal of the menu or the action.\n"
+"May be used, e.g. when displaying available items on a web site."
+msgstr ""
+"Menü veya eylemin amacını açıklayan metin.\n"
+"Kullanılabilir, örn. kullanılabilir ögelerin, bir web sitesinde gösterildiğ "
+"zaman."
+
+#: ../src/core/na-object-item-factory.c:214
+msgid "Suggested shortcut"
+msgstr "Önerilen kısayol"
+
+#: ../src/core/na-object-item-factory.c:215
+msgid ""
+"A shortcut suggested for the action or the menu.\n"
+"Please note that this might be only a suggestion as the shortcut may be "
+"already reserved for another use. Implementation should not override an "
+"already existing shortcut to define this one.\n"
+"The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n"
+"Defaults to empty."
+msgstr ""
+"Eylem veya menü için önerilen bir kısayol.\n"
+"Bu kısayolun, zaten önceden kullanılan bir kısayol ile kullanılmayan bir "
+"kısyol olduğundan emin olun. Bu gerçekleme zaten kullanılan bir kısayolun "
+"üstüne yazmamalıdır.\n"
+"Kullanım biçimi, \"<Control>a\" veya \"<Shift><Alt>F1\". şeklinde "
+"olmalıdır.\n"
+"Varsayılan yoktur."
+
+#: ../src/core/na-object-item-factory.c:268
+msgid "List of subitem ids"
+msgstr "alt öge kimliklerinin listesi"
+
+#: ../src/core/na-object-item-factory.c:269
+msgid ""
+"Ordered list of the IDs of the subitems. This may be actions or menus if the "
+"item is a menu, or profiles if the item is an action.\n"
+"If this list doesn't exist or is empty for an action or a menu, subitems are "
+"attached in the order of the read operations."
+msgstr ""
+"Alt ögelerin kimliklerinin sıralı listesi. Öge bir menü ise eylem ve menü, "
+"eylem ise profil olabilirler.\n"
+"Bu liste, bir eylem veya bir menü için mevcut değil ya da boş ise, alt "
+"ögeler yazma işlemlerinin sırasına eklenmişlerdir."
+
+#: ../src/core/na-object-item-factory.c:293
+msgid "Whether the action or the menu is enabled"
+msgstr "Eylem veya menünün etkin olup olmaması"
+
+#: ../src/core/na-object-item-factory.c:294
+msgid ""
+"If the or the menu action is disabled, it will never appear in the file "
+"manager context menu.\n"
+"Defaults to TRUE."
+msgstr ""
+"Menü eylemi kapalıysa, dosya yöneticisi içerik menüsünde hiçbir zaman "
+"gözükmeyecek.\n"
+"Varsayılan TRUE."
+
+#: ../src/core/na-object-item-factory.c:310
+msgid "Whether the action or the menu is enabled [enabled]"
+msgstr "Eylem veya menünün etkin olup olmaması [enabled]"
+
+#: ../src/core/na-object-item-factory.c:409
+msgid "Version of the format"
+msgstr "Biçimin sürümü"
+
+#: ../src/core/na-object-item-factory.c:410
+msgid ""
+"The version of the configuration format that will be used to manage backward "
+"compatibility."
+msgstr ""
+"Geriye dönük uyumluluğun yönetilmesi için kullanılan yapılandırma biçiminin "
+"sürümü."
+
+#. i18n: default label for a new menu
+#: ../src/core/na-object-menu.c:57
+msgid "New Nautilus menu"
+msgstr "Yeni Nautilus menüsü"
+
+#. i18n: label for the default profile
+#: ../src/core/na-object-profile.c:768
+msgid "Default profile"
+msgstr "Varsayılan profil"
+
+#: ../src/core/na-object-profile-factory.c:49
+msgid "Name of the profile"
+msgstr "Profilin adı"
+
+#: ../src/core/na-object-profile-factory.c:50
+msgid ""
+"May be used as a description for the function of the profile.\n"
+"If not set, it defaults to an auto-generated name."
+msgstr ""
+"Profilin işlevi için tanımlama olarak kullanılabilir.\n"
+"Ayarlı değilse, otomatik oluşuturulmuş ad kullanılır."
+
+#: ../src/core/na-object-profile-factory.c:100
+msgid "Path of the command"
+msgstr "Komutun yolu"
+
+#: ../src/core/na-object-profile-factory.c:101
+msgid ""
+"The path of the command to be executed when the user select the menu item in "
+"the file manager context menu or in the toolbar."
+msgstr ""
+"Kullanıcı, dosya yöneticisi içerik menüsünde veya araç çubuğunda, menü "
+"ögesini seçtiğinde yürütülecek komutun yolu."
+
+#: ../src/core/na-object-profile-factory.c:127
+msgid "Parameters of the command"
+msgstr "Komutun parametreleri"
+
+#. too long string for iso c: (max=509)
+#: ../src/core/na-object-profile-factory.c:129
+msgid ""
+"The parameters of the command to be executed when the user selects the menu "
+"item in the file manager context menu or in the toolbar.\n"
+"The parameters may contain some special tokens which are replaced by the "
+"informations provided by the file manager before starting the command:\n"
+"- up to version 2.0:\n"
+"  %d: base folder of the selected file(s)\n"
+"  %f: the name of the selected file or the first one if several are "
+"selected\n"
+"  %h: hostname of the URI\n"
+"  %m: space-separated list of the basenames of the selected file(s)/"
+"folder(s)\n"
+"  %M: space-separated list of the selected file(s)/folder(s), with their "
+"full paths\n"
+"  %p: port number of the first URI\n"
+"  %R: space-separated list of selected URIs\n"
+"  %s: scheme of the URI\n"
+"  %u: URI\n"
+"  %U: username of the URI\n"
+"  %%: a percent sign.\n"
+"- starting from version 3:\n"
+"  %b: (first) basename\n"
+"  %B: space-separated list of the basenames of the selected file(s)/"
+"folder(s)\n"
+"  %c: count the selected file(s)/folder(s)\n"
+"  %d: (first) base directory\n"
+"  %D: space-separated list of base directories of the selected file(s)/"
+"folder(s)\n"
+"  %f: (first) filename\n"
+"  %F: space-separated list of the filenames of the selected file(s)/"
+"folder(s)\n"
+"  %h: hostname of the (first) URI\n"
+"  %m: (first) mimetype\n"
+"  %M: space-separated list of the mimetypes of the selected file(s)/"
+"folder(s)\n"
+"  %n: username of the (first) URI\n"
+"  %o: no-op operator which forces the singular form of execution (since "
+"3.0.2)\n"
+"  %O: no-op operator which forces the plural form of execution (since "
+"3.0.2)\n"
+"  %p: port number of the (first) URI\n"
+"  %s: scheme of the (first) URI\n"
+"  %u: (first) URI\n"
+"  %U: space-separated list of the URIs of the selected file(s)/folder(s)\n"
+"  %w: (first) basename without the extension\n"
+"  %W: space-separated list of basenames without the extension\n"
+"  %x: (first) extension\n"
+"  %X: space-separated list of the extensions of the selected file(s)/"
+"folder(s)\n"
+"  %%: a percent sign."
+msgstr ""
+"Kullanıcı, dosya yöneticisi içerik menüsünde veya araç çubuğunda, menü "
+"ögesini seçtiğinde yürütülecek komutun yolu.\n"
+"Parametreler, komut başlamadan önce, dosya yöneticisi tarafından sağlanan "
+"bilgileri kullanarak bazı özel simgeler barındırabilirler:\n"
+"- sürüm 2.0 ve üstü:\n"
+"  %d: seçilmiş dosya(lar) için ana klasör\n"
+"  %f: seçilmiş dosya veya çoklu seçimdeki ilk dosyanın adı\n"
+"  %h: Adresin makine adı\n"
+"  %m: seçilmiş dosya ve klasörlerin ana adlarının, boşluk ile ayrılmış "
+"listesi\n"
+"  %M: seçilmiş dosya ve klasörlerin ve tam yollarının, boşluk ile ayrılmış "
+"listesi\n"
+"  %p: İlk adresin bağlantı noktası numarası\n"
+"  %R: Seçilmiş URI 'lerin boşluk ile ayrılmış listesi\n"
+"  %s: URI şeması \n"
+"  %u: URI\n"
+"  %U: URI 'nin kullanıcı adı\n"
+"  %%: yüzde işareti.\n"
+"- sürüm 3.0 ve üstü:\n"
+"  %b: (ilk) ana adı\n"
+"  %B: seçilmiş dosya ve klasörlerin ana adlarının boşluk ile ayrılmış "
+"listesi\n"
+"  %c: seçilmiş dosya ve klasörlerin sayısı\n"
+"  %d: (ilk) ana dizin\n"
+"  %D: seçilmiş dosya ve klasörlerin ana dizinlerinin boşluk ile ayrılmış "
+"listesi\n"
+"  %f: (ilk) dosya adı\n"
+"  %F: seçilmiş dosya ve klasörlerin dosya adlarının boşluk ile ayrılmış "
+"listesi\n"
+"  %h: (ilk) URI 'nin makine adı\n"
+"  %m: (ilk) mime türü\n"
+"  %M: seçilmiş dosya ve klasörlerin mime türlerinin boşluk ile ayrılmış "
+"listesi\n"
+"  %n: (ilk) URI 'nin kullanıcı adı\n"
+"  %o: Çalışmanın tekil biçiminde olmasını zorlayan no-op operatörü (3.0.2 "
+"'den beri)\n"
+"  %O: Çalışmanın tekil biçiminde olmasını zorlayan no-op operatörü (3.0.2 "
+"'den beri)\n"
+"  %p: (ilk) URI 'nin bağlantı noktası numarası\n"
+"  %s: (ilk) URI 'nin şeması\n"
+"  %u: (ilk) URI\n"
+"  %U: seçilmiş dosya ve klasörlerin URI 'lerinin boşluk ile ayrılmış "
+"listesi\n"
+"  %w: (ilk) uzantısı olmadan ana adı\n"
+"  %W: uzantısı olmadan ana adların boşluk ile ayrılmış listesi\n"
+"  %x: (ilk) uzantı\n"
+"  %X: seçilmiş dosya ve klasörlerin ana uzantılarının boşluk ile ayrılmış "
+"listesi\n"
+"  %%: yüzden işareti.."
+
+#: ../src/core/na-object-profile-factory.c:188
+msgid "Working directory"
+msgstr "Çalışma dizini"
+
+#: ../src/core/na-object-profile-factory.c:189
+#, c-format
+msgid ""
+"The working directory the command will be started in.\n"
+"Defaults to \"%d\"."
+msgstr ""
+"Komutun içinde başlayacağı çalışma dizini.\n"
+"Varsayılan \"%d\"."
+
+#: ../src/core/na-object-profile-factory.c:211
+msgid "Execution mode"
+msgstr "Çalıştırma kipi"
+
+#. i18n: 'Normal', 'Terminal', 'Embedded' and 'DisplayOutput' are non-translatable keywords
+#: ../src/core/na-object-profile-factory.c:213
+msgid ""
+"Execution mode of the program.\n"
+"This may be chosen between following values:\n"
+"- Normal: starts as a standard graphical user interface\n"
+"- Terminal: starts the preferred terminal of the graphical environment, and "
+"runs the command in it\n"
+"- Embedded: makes use of a special feature of the file manager which allows "
+"a terminal to be ran inside of it; an acceptable fallback is Terminal\n"
+"- DisplayOutput: the ran terminal may be closed at end of the command, but "
+"standard streams (stdout, stderr) should be collected and displayed; an "
+"acceptable fallback is Terminal.\n"
+"Defaults to \"Normal\"."
+msgstr ""
+"Programın çalıştırma kipi.\n"
+"Şu değerlerin arasından seçim yapılmalıdır:\n"
+"- Normal: standart grafiksel kullanıcı arayüzü olarak başlar\n"
+"- Terminal: grafik ortamında tercih edilen terminalin içinde komut "
+"çalıştırılarak başlar\n"
+"- Embedded: terminalin içinde başlamasına izin veren, özel bir özellik ve ya "
+"dosya yöneticisinin içinde kullanılır; kabul edilebilir geri dönüş Terminal\n"
+"- DisplayOutput: çalışan terminal komut bittiğinde kapanabilir ancak "
+"standart akışlar (stdout, stdin) bunları toplayıp gösterebilir; kabul "
+"edilebilir ger dönüş Terminal.\n"
+"Varsayılan \"Normal\"."
+
+#: ../src/core/na-object-profile-factory.c:244
+msgid "Startup notify"
+msgstr "Başlangıç uyarısı"
+
+#: ../src/core/na-object-profile-factory.c:245
+msgid ""
+"Only relevant when ExecutionMode=Normal.\n"
+"Defaults to FALSE."
+msgstr ""
+"Sadece ExecutionMode=Normal olduğunda uygundur.\n"
+"Varsayılan FALSE."
+
+#: ../src/core/na-object-profile-factory.c:267
+msgid "Startup WM Class"
+msgstr "Başlangıç WM Sınıfı"
+
+#: ../src/core/na-object-profile-factory.c:268
+msgid ""
+"Only relevant when ExecutionMode=Normal.\n"
+"Defaults to empty."
+msgstr ""
+"Sadece ExecutionMode=Normal olduğunda uygundur.\n"
+"Varsayılan boş."
+
+#: ../src/core/na-object-profile-factory.c:290
+msgid "Execute as user"
+msgstr "Kullanıcı olarak yürüt"
+
+#: ../src/core/na-object-profile-factory.c:291
+msgid ""
+"The user the command must be ran as. The user may be identified by its "
+"numeric UID or by its login.\n"
+"The profile is ignored if defined with a non-existing UID or login.\n"
+"Defaults to empty: the command will be executed as the current user."
+msgstr ""
+"Komutu kendisi olarak çalışması gereken kullanıcı. Kulanıcı, kendisine ait "
+"sayısal UID olarak tanımlanır veya yaptığı giriş olarak tanımlanır.\n"
+"Profil, mevcut olmayan bir UID veya giriş var ise, yoksayılır.\n"
+"Varsayılan boş: komut mevcut kullanıcı tarafından yürütülecektir."
+
+#: ../src/core/na-selected-info.c:869
+#, c-format
+msgid "Error when querying informations for %s URI: %s"
+msgstr "%s URI için bilgiler sorgulanırken hata oluştu: %s"
+
+#: ../src/core/na-tokens.c:250
+msgid "file:///path/to/file1.mid"
+msgstr "dosya:///yol/dosya1.mid"
+
+#: ../src/core/na-tokens.c:251
+msgid "file:///path/to/file2.jpeg"
+msgstr "dosya:///yol/dosya2.jpeg"
+
+#: ../src/core/na-tokens.c:252
+msgid "audio/x-midi"
+msgstr "audio/x-midi"
+
+#: ../src/core/na-tokens.c:253
+msgid "image/jpeg"
+msgstr "image/jpeg"
+
+#: ../src/core/na-tokens.c:255
+msgid "test.example.net"
+msgstr "test.example.net"
+
+#: ../src/core/na-tokens.c:256
+msgid "user"
+msgstr "kullanıcı"
+
+#: ../src/core/na-tokens.c:431
+msgid "Output of the run command"
+msgstr "Çalışmış komutun çıktısı"
+
+#: ../src/core/na-tokens.c:439
+msgid "Run command:"
+msgstr "Komut çalıştır:"
+
+#: ../src/core/na-tokens.c:440
+msgid "Standard output:"
+msgstr "Standart çıktı:"
+
+#: ../src/core/na-tokens.c:441
+msgid "Standard error:"
+msgstr "Standart hata:"
+
+#: ../src/io-desktop/nadp-desktop-provider.c:259
+msgid "Nautilus-Actions Desktop I/O Provider"
+msgstr "Nautilus-Actions Masaüstü G/Ç Sağlayıcısı"
+
+#: ../src/io-desktop/nadp-formats.c:56
+msgid "Export as a ._desktop file"
+msgstr "_desktop dosyası olarak dışa aktar"
+
+#: ../src/io-desktop/nadp-formats.c:57
+msgid ""
+"This format has been introduced with v 3.0 serie, and should be your newly "
+"preferred format when exporting items.\n"
+"It let you easily share your actions with the whole world, including with "
+"users of other desktop environments, as long as their own application "
+"implements the DES-EMA specification which describes this format.\n"
+"The exported .desktop file may later be imported via :\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory."
+msgstr ""
+"Bu biçim 3.0 serisi ile birlikte tanıtıldı ve sizin için dışa aktarmada "
+"tercih edilen olmalıdır.\n"
+"Eylemlerinizi tüm dünya ile kolayca paylaşmanıza olanak tanır ve masaüstü "
+"ortamlarınız, DES-EMA tanımlaması olan uygulamarınızı içerir.\n"
+"Dışa aktarılmış .desktop dosyası sonradan şu şekilde içeri alınabilir :\n"
+"- Nautilus-Actions yapılandırma aracının içe aktarma asistanı,\n"
+"- Nautilus-Actions yapılandırma aracına sürükleyip bırakarak.\n"
+"- XDG_VERİ_DİZİNİ/file-manager/actions dizininin içine kopyalayarak."
+
+#: ../src/io-desktop/nadp-reader.c:64
+msgid "The Desktop I/O Provider is not able to handle the URI"
+msgstr "Masaüstü G/Ç Sağlayıcısı URI işleyemiyor"
+
+#. i18n: 'type' is the nature of the item: Action or Menu
+#: ../src/io-desktop/nadp-reader.c:292
+#, c-format
+msgid "unknown type: %s"
+msgstr "bilinmeyen tür: %s"
+
+#: ../src/io-gconf/nagp-gconf-provider.c:247
+msgid "Nautilus-Actions GConf I/O Provider"
+msgstr "Nautilus-Actions GConf G/Ç Sağlayıcısı"
+
+#: ../src/io-xml/naxml-reader.c:147
+msgid "Item ID not found."
+msgstr "Ögenin kimliği bulunamadı."
+
+#: ../src/io-xml/naxml-reader.c:148
+#, c-format
+msgid "Unwaited key path %s while importing a menu."
+msgstr "Menü içeri aktarılırken, %s beklenmeyen anahtar yolu var."
+
+#: ../src/io-xml/naxml-reader.c:149
+#, c-format
+msgid "Element %s at line %d already found, ignored."
+msgstr "Öge %s %d satırında zaten mevcut, yoksayıldı."
+
+#: ../src/io-xml/naxml-reader.c:150
+#, c-format
+msgid "Invalid item ID: waited for %s, found %s at line %d."
+msgstr "Geçersiz öge kimliği: %s için beklendi, %s bulundu, %d satırında"
+
+#: ../src/io-xml/naxml-reader.c:151
+#, c-format
+msgid "Unknown element %s found at line %d while waiting for %s."
+msgstr "Bilinmeyen öge %s bulundu, %d satırında, %s için beklenirken."
+
+#. i18n: do not translate keywords 'Action' nor 'Menu'
+#: ../src/io-xml/naxml-reader.c:153
+#, c-format
+msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
+msgstr ""
+"Bilinmeyen öge %s bulundu, %d satırında, Eylem veya Menü için beklenirken."
+
+#: ../src/io-xml/naxml-reader.c:154
+msgid "The XML I/O Provider is not able to handle the URI"
+msgstr "XML G/Ç Sağlayıcısı URI 'yi işleyemiyor"
+
+#: ../src/io-xml/naxml-formats.c:55
+msgid "Export as a _full GConf schema file"
+msgstr "_Tam bir GConf şema dosyası olarak dışa aktar"
+
+#: ../src/io-xml/naxml-formats.c:56
+msgid ""
+"This used to be the historical export format.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+"Bu, tarihsel dışa aktarma biçimi olarak kullanılır.\n"
+"Dışa aktarılmış şema dosyası sonradan şu şekilde içeri aktarılabilir :\n"
+"- Nautilus-Actions yapılandırma aracının içe aktarma asistanı ile,\n"
+"- Nautilus-Actions yapılandırma aracına sürükleyip bırakarak.\n"
+"- gconftool-2 --import-schema-file komut satırı aracını kullanarak."
+
+#: ../src/io-xml/naxml-formats.c:67
+msgid "Export as a _light GConf schema (v2) file"
+msgstr "_Küçük bir GConf şema dosyası olarak dışa aktar"
+
+#: ../src/io-xml/naxml-formats.c:68
+msgid ""
+"This format has been introduced in v 1.11 serie.\n"
+"This is the lightest schema still compatible with GConf command-line tools, "
+"while keeping backward compatibility with the Nautilus-Actions Configuration "
+"Tool oldest versions.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+"Bu biçim, 1.11 serisi ile birlikte tanıtıldı.\n"
+"Bu, GConf komut satırı araçları ile uyumlu en hafif şemadır. Nautilus-"
+"Actions Yapılandırma Aracının eski sürümleriyle geriye dönük uyumu vardır.\n"
+"Dışa aktarılmış şema dosyası sonrada şu şekilde içeri aktarılabilir :\n"
+"- Nautilus-Actions yapılandırma aracının içe aktarma asistanı ile,\n"
+"- Nautilus-Actions yapılandırma aracına sürükleyip bırakarak.\n"
+"- gconftool-2 --import-schema-file komut satırı aracını kullanarak."
+
+#: ../src/io-xml/naxml-formats.c:82
+msgid "Export as a GConf _dump file"
+msgstr "GConf _döküm dosyası olarak dışa aktar"
+
+#: ../src/io-xml/naxml-formats.c:83
+msgid ""
+"This format has been introduced in v 1.11 serie.\n"
+"Tough not backward compatible with Nautilus-Actions Configuration Tool "
+"versions previous to 1.11, it may still be imported via standard GConf "
+"command-line tools.\n"
+"The exported dump file may later be imported via :\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool (1.11 and "
+"above),\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool (1.11 and "
+"above),\n"
+"- or via the gconftool-2 --load command-line tool."
+msgstr ""
+"Bu biçim, 1.11 serisi ile birlikte tanıtıldı.\n"
+"Ancak Nautilus-Actions yapılandırma aracının 1.11 öncesi sürümleriyle uyumlu "
+"değildir. Standart GConf komut satırı araçlarıyla içe aktarılabilir.\n"
+"Dışa aktarılmış şema dosyası sonrada şu şekilde içeri aktarılabilir :\n"
+"- Nautilus-Actions yapılandırma aracının içe aktarma asistanı ile (1.11 ve "
+"üstü),\n"
+"- Nautilus-Actions yapılandırma aracına sürükleyip bırakarak. (1.11 ve "
+"üstü)\n"
+"- gconftool-2 --import-schema-file komut satırı aracını kullanarak. "
+
+#: ../src/nact/base-application.c:186
+msgid "Arguments count"
+msgstr "Değişken sayısı"
+
+#: ../src/nact/base-application.c:187
+msgid "The count of command-line arguments"
+msgstr "Komut satırı değişkenlerinin sayısı"
+
+#: ../src/nact/base-application.c:194
+msgid "Arguments"
+msgstr "Değişkenler"
+
+#: ../src/nact/base-application.c:195
+msgid "The array of command-line arguments"
+msgstr "Komut satırı değişkenlerinin dizisi"
+
+#: ../src/nact/base-application.c:202
+msgid "Option entries"
+msgstr "Seçenek girdileri"
+
+#: ../src/nact/base-application.c:203
+msgid "The array of command-line option definitions"
+msgstr "Komut satırı seçeneği tanımlamalarının dizisi"
+
+#: ../src/nact/base-application.c:209
+msgid "Application name"
+msgstr "Uygulama adı"
+
+#: ../src/nact/base-application.c:210
+msgid "The name of the application"
+msgstr "Uygulamanın adı"
+
+#: ../src/nact/base-application.c:217 ../src/nact/nact-schemes-list.c:167
+msgid "Description"
+msgstr "Tanımlama"
+
+#: ../src/nact/base-application.c:218
+msgid "A short description to be displayed in the first line of --help output"
+msgstr "--help çıktısının ilk satırında gösterilecek kısa bir tanımlama"
+
+#: ../src/nact/base-application.c:225
+msgid "Icon name"
+msgstr "Simge adı"
+
+#: ../src/nact/base-application.c:226
+msgid "The name of the icon of the application"
+msgstr "Uygulama simgesinin adı"
+
+#: ../src/nact/base-application.c:233
+msgid "UniqueApp name"
+msgstr "Eşsiz uygulama adı"
+
+#: ../src/nact/base-application.c:234
+msgid "The Unique name of the application"
+msgstr "Uygulamanın eşsiz adı"
+
+#: ../src/nact/base-application.c:241
+msgid "Return code"
+msgstr "Dönüş kodu"
+
+#: ../src/nact/base-application.c:242
+msgid "The return code of the application"
+msgstr "Uygulamanın dönüş kodu"
+
+#: ../src/nact/base-application.c:605
+msgid "Unable to interpret command-line arguments"
+msgstr "Komut satırı değişkenleri yorumlanamıyor"
+
+#: ../src/nact/base-assistant.c:151
+msgid "Quit on Escape"
+msgstr "Escape tuşu ile Çıkış"
+
+#: ../src/nact/base-assistant.c:152
+msgid "Should the assistant 'Quit' when the user hits Escape ?"
+msgstr "Kullanıcı Escape tuşuna bastığında, asistandan çıkılsın mı?"
+
+#: ../src/nact/base-assistant.c:159
+msgid "Warn on Escape"
+msgstr "Eskape tuşu uyarısı"
+
+#: ../src/nact/base-assistant.c:160
+msgid ""
+"Should the user be asked to confirm when exiting the assistant via Escape ?"
+msgstr "Kullanıcı Escape tuşu ile çıkmak istediğinde onaylama sorulsun mu?"
+
+#: ../src/nact/base-assistant.c:460
+msgid "Are you sure you want to quit this assistant ?"
+msgstr "Asistandan çıkmak istediğinizden emin misiniz?"
+
+#: ../src/nact/base-iunique.c:207
+#, c-format
+msgid ""
+"Another instance of %s is already running.\n"
+"Please switch back to it."
+msgstr ""
+"%s ögesinin bir başka örneği zaten çalışıyor.\n"
+"Lütfen ona dönün."
+
+#: ../src/nact/base-iunique.c:210
+msgid "The application is not unique"
+msgstr "Uygulama eşsiz değil"
+
+#: ../src/nact/base-window.c:204
+msgid "XML UI filename"
+msgstr "XML kullanıcı arayüzü dosya adı"
+
+#: ../src/nact/base-window.c:205
+msgid "The filename which contains the XML UI definition"
+msgstr "Dosya adı XML kullanıcı arayüzü tanımlaması içerir"
+
+#: ../src/nact/base-window.c:212
+msgid "Has its own GtkBuilder"
+msgstr "Kendi GtkBuilder 'ına sahip"
+
+#: ../src/nact/base-window.c:213
+msgid ""
+"Whether this BaseWindow reallocates a new GtkBuilder each time it is opened"
+msgstr ""
+"BaseWindow ögesinin her seferinde yeni bir GtkBuilder tahsis edip etmeyeceği"
+
+#: ../src/nact/base-window.c:220
+msgid "Toplevel name"
+msgstr "Üst seviye adı"
+
+#: ../src/nact/base-window.c:221
+msgid "The internal GtkBuildable name of the toplevel window"
+msgstr "Üst seviye pencerenin, dahili GtkBuildable adı"
+
+#: ../src/nact/base-window.c:228
+msgid "BaseApplication"
+msgstr "Ana Uygulama"
+
+#: ../src/nact/base-window.c:229
+msgid "A pointer (not a reference) to the BaseApplication instance"
+msgstr "Ana Uygulama örneğine bir işaretçi (referans değil)"
+
+#: ../src/nact/base-window.c:235 ../src/nact/nact-tree-model.c:225
+msgid "Parent BaseWindow"
+msgstr "Üst Ana Pencere"
+
+#: ../src/nact/base-window.c:236
+msgid "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
+msgstr "Bu Ana Pencerenin, üst Ana Penceresine bir işaretçi (referans değil)"
+
+#: ../src/nact/base-window.c:242
+msgid "WSP name"
+msgstr "WSP adı"
+
+#: ../src/nact/base-window.c:243
+msgid ""
+"The string which handles the window size and position in user preferences"
+msgstr "Kullanıcı tercihlerindeki, pencere boyutu ve konumunu işleyen dizge"
+
+#: ../src/nact/base-window.c:250
+msgid "Destroy the Gtk toplevel"
+msgstr "üst seviye Gtk sil"
+
+#: ../src/nact/base-window.c:251
+msgid "Whether the embedded Gtk Toplevel should be destroyed at dispose time"
+msgstr "Üst seviye gömülü Gtk ortadan kaldırılırken silinip silinmeyeceği"
+
+#: ../src/nact/base-window.c:735
+#, c-format
+msgid "Unable to load %s UI XML definition: %s"
+msgstr "%s kullanıcı arayüzü XML tanımlaması yüklenemiyor: %s"
+
+#: ../src/nact/base-window.c:750
+#, c-format
+msgid "Unable to load %s dialog definition."
+msgstr "%s penceresi tanımlaması yüklenemiyor."
+
+#: ../src/nact/egg-desktop-file.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "Dosya geçerli .desktop dosyası değil"
+
+#: ../src/nact/egg-desktop-file.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "Tanınmayan desktop dosyası Sürümü '%s'"
+
+#: ../src/nact/egg-desktop-file.c:957
+#, c-format
+msgid "Starting %s"
+msgstr "%s başlatılıyor"
+
+#: ../src/nact/egg-desktop-file.c:1098
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "Uygulama komut satırında belgeleri kabul etmiyor"
+
+#: ../src/nact/egg-desktop-file.c:1166
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "Tanınmayan başlama seçeneği: %d"
+
+#: ../src/nact/egg-desktop-file.c:1365
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "Bir 'Type=Link' masaüstü girişine belge URI 'leri geçilemez"
+
+#: ../src/nact/egg-desktop-file.c:1386
+#, c-format
+msgid "Not a launchable item"
+msgstr "Başlatılabilir bir öge değil"
+
+#: ../src/nact/egg-sm-client.c:239
+msgid "Disable connection to session manager"
+msgstr "Oturum yöneticisine bağlantıyı kapat"
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "Specify file containing saved configuration"
+msgstr "Kaydedilmiş yapılandırma içeren dosyayı belirtin"
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "FILE"
+msgstr "DOSYA"
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "Specify session management ID"
+msgstr "Oturum yönetim kimliğini belirt"
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "ID"
+msgstr "Kimlik"
+
+#: ../src/nact/egg-sm-client.c:267
+msgid "Session management options:"
+msgstr "Oturum yönetimi seçenekleri:"
+
+#: ../src/nact/egg-sm-client.c:268
+msgid "Show session management options"
+msgstr "Oturum yönetimi seçeneklerini göster"
+
+#: ../src/nact/nact-application.c:57 ../src/nact/nact.desktop.in.h:1
+msgid "Nautilus-Actions Configuration Tool"
+msgstr "Nautilus-Actions Yapılandırma Aracı"
+
+#: ../src/nact/nact-application.c:58
+msgid "A user interface to edit your own contextual actions"
+msgstr "Kendi bağlamsal eylemlerini düzenlemesi için bir kullanıcı arayüzü"
+
+#: ../src/nact/nact-application.c:66
+msgid "Set it to run multiple instances of the program [unique]"
+msgstr "Programın örneklerinin çoklu çalışmasını ayarla [unique]"
+
+#: ../src/nact/nact-application.c:68
+msgid "Output the version number, and exit gracefully [no]"
+msgstr "Çıktı sürüm numarası ve graceful çıkış [hayır]"
+
+#: ../src/nact/nact-add-capability-dialog.c:74
+msgid "User is the owner of the item"
+msgstr "Ögenin sahibi olan kullanıcı"
+
+#: ../src/nact/nact-add-capability-dialog.c:75
+msgid "Item is readable by the user"
+msgstr "Öge, kullanıcı tarafından okunabilir"
+
+#: ../src/nact/nact-add-capability-dialog.c:76
+msgid "Item is writable by the user"
+msgstr "Öge, kullanıcı tarafından yazılabilir"
+
+#: ../src/nact/nact-add-capability-dialog.c:77
+msgid "Item is executable by the user"
+msgstr "Öge, kullanıcı tarafından çalıştırılabilir"
+
+#: ../src/nact/nact-add-capability-dialog.c:78
+msgid "Item is local"
+msgstr "Öge yerel"
+
+#. i18n: add a comment when a capability is already used by current item
+#: ../src/nact/nact-add-capability-dialog.c:528
+#, c-format
+msgid "%s (already inserted)"
+msgstr "%s (zaten eklenmiş)"
+
+#: ../src/nact/nact-add-capability.ui.h:1
+msgid "Adding a new capability"
+msgstr "Yeni bir yetenek ekleme"
+
+#: ../src/nact/nact-add-capability.ui.h:2
+msgid "<b>Managed capabilities</b>"
+msgstr "<b>Yönetilen yetenekler</b>"
+
+#: ../src/nact/nact-add-scheme.ui.h:1
+msgid "Adding a new scheme"
+msgstr "Yeni bir şema ekleme"
+
+#: ../src/nact/nact-add-scheme.ui.h:2
+msgid "<b>Scheme</b>"
+msgstr "<b>Şema</b>"
+
+#: ../src/nact/nact-assistant-export.c:814
+msgid "Export canceled due to user action."
+msgstr "Kullanıcı eylemi nedeniyle dışa aktarma iptal edildi"
+
+#. i18n: action as been successfully exported to <filename>
+#: ../src/nact/nact-assistant-export.c:892
+msgid "Successfully exported as"
+msgstr "Başarıyla dışa aktarıldı"
+
+#: ../src/nact/nact-assistant-export.c:921
+msgid "You may not have write permissions on selected folder."
+msgstr "Seçilmiş klasörde yazma haklarına sahip değilsiniz."
+
+#: ../src/nact/nact-assistant-export.ui.h:1
+msgid "Exporting actions"
+msgstr "Eylemleri dışa aktarma"
+
+#: ../src/nact/nact-assistant-export.ui.h:2
+msgid "This assistant will guide you through the process of exporting actions."
+msgstr "Asistan, eylemleri aktarma işlemi için size kılavuzluk yapacak."
+
+#: ../src/nact/nact-assistant-export.ui.h:3
+msgid "Actions _list :"
+msgstr "Eylemler _listesi :"
+
+#: ../src/nact/nact-assistant-export.ui.h:4
+msgid ""
+"Please select one or more actions to be exported.\n"
+"\n"
+"You may use Ctrl and Shift keys to extend the selection."
+msgstr ""
+"Lütfen dışa aktarmak için bir veya daha fazla eylem seçiniz.\n"
+"\n"
+"Ctrl ve Shift tuşlarını kullanarak seçiminizi genişletebilirsiniz."
+
+#: ../src/nact/nact-assistant-export.ui.h:7
+msgid "Selecting the exported actions"
+msgstr "Dışa aktarılmış eylemlerin seçimi"
+
+#: ../src/nact/nact-assistant-export.ui.h:8
+msgid "Selecting the target folder"
+msgstr "Hedef klasör seçimi"
+
+#: ../src/nact/nact-assistant-export.ui.h:9
+msgid "Which format should I use when exporting these items ?"
+msgstr "Bu ögelerin dışa aktarılırken hangi biçim kullanılmalıdır ?"
+
+#: ../src/nact/nact-assistant-export.ui.h:10
+msgid "Selecting the export format"
+msgstr "Dışa aktarma biçimi seçimi"
+
+#: ../src/nact/nact-assistant-export.ui.h:11
+msgid "About to export selected items:"
+msgstr "Seçili ögelerin dışa aktarımı hakkında:"
+
+#: ../src/nact/nact-assistant-export.ui.h:12
+msgid "Into the destination folder:"
+msgstr "Hedef klasör içine:"
+
+#: ../src/nact/nact-assistant-export.ui.h:13
+#: ../src/nact/nact-assistant-import.ui.h:8
+msgid "Summary"
+msgstr "Özet"
+
+#: ../src/nact/nact-assistant-export.ui.h:14
+msgid "Selected items have been proceeded:"
+msgstr "Seçilmiş ögeler devam edilmiş:"
+
+#: ../src/nact/nact-assistant-export.ui.h:15
+msgid "Export is done"
+msgstr "Dışa aktarma bitti"
+
+#: ../src/nact/nact-assistant-export.ui.h:16
+msgid "Exporting an action"
+msgstr "Bir eylemi dışa aktarma"
+
+#: ../src/nact/nact-assistant-export.ui.h:17
+msgid "Which format should I choose to export it ?"
+msgstr "Dışa aktarma için seçmem gereken biçim hangisi?"
+
+#: ../src/nact/nact-assistant-export.ui.h:18
+msgid "Re_member my choice in future export operations"
+msgstr "Gelecekteki dışa aktarma işlemlerinde, seçimimi _hatırla"
+
+#. i18n: indicate that the file has been successfully imported
+#: ../src/nact/nact-assistant-import.c:809
+msgid "Import OK"
+msgstr "İçe aktarma TAMAM"
+
+#. i18n: this is the globally unique identifier and the label of the newly imported action
+#: ../src/nact/nact-assistant-import.c:813
+#, c-format
+msgid "Id.: %s\t%s"
+msgstr "Kimlik: %s\t%s"
+
+#. i18n: indicate that the file was not imported
+#: ../src/nact/nact-assistant-import.c:823
+msgid "Not imported"
+msgstr "İçe aktarılmamış"
+
+#: ../src/nact/nact-assistant-import.ui.h:1
+msgid "Importing actions"
+msgstr "İçe aktarım eylemleri"
+
+#: ../src/nact/nact-assistant-import.ui.h:2
+msgid ""
+"This assistant will guide you through the process of importing items, "
+"actions or menus."
+msgstr ""
+"Bu asistan, ögelerin, eylemlerin veya menülerin içeri aktarım işlemi için "
+"size kılavuzluk edecektir."
+
+#: ../src/nact/nact-assistant-import.ui.h:3
+msgid "Selecting files to import"
+msgstr "İçe aktarılacak dosyaların seçimi"
+
+#: ../src/nact/nact-assistant-import.ui.h:4
+msgid "What should I do when importing an item whose ID already exists ?"
+msgstr ""
+"Zaten bir kimliği mevcut olan bir ögenin içeri aktarımı sırasında ne "
+"yapmalıyım ?"
+
+#: ../src/nact/nact-assistant-import.ui.h:5
+msgid "Managing duplicates"
+msgstr "Çiftlerin yönetimi"
+
+#: ../src/nact/nact-assistant-import.ui.h:6
+msgid "About to import selected files:"
+msgstr "Seçilmiş dosyaları içe aktarılması hakkında:"
+
+#: ../src/nact/nact-assistant-import.ui.h:7
+msgid "When importing an item whose ID already exists:"
+msgstr "Zaten bir kimliğe sahip olan bir öge içe aktarılırken:"
+
+#: ../src/nact/nact-assistant-import.ui.h:9
+msgid "Selected files have been proceeded:"
+msgstr "Seçili dosyalar devam edilmiş:"
+
+#: ../src/nact/nact-assistant-import.ui.h:10
+msgid "Import is done"
+msgstr "İçe aktarma bitti"
+
+#: ../src/nact/nact.desktop.in.h:2
+msgid "Configure items to be added to the Nautilus context menus"
+msgstr "Nautilus içerik menüsüne eklenecek ögeleri yapılandır"
+
+#. i18n: The action <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:405
+#, c-format
+msgid "The action \"%s\" is about to be exported."
+msgstr "\"%s\" eylemi dışa aktarılmak üzere."
+
+#. i18n: The menu <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:408
+#, c-format
+msgid "The menu \"%s\" is about to be exported."
+msgstr "\"%s\" menüsü dışa aktarılmak üzere."
+
+#: ../src/nact/nact-iaction-tab.c:626
+msgid "Caution: a label is mandatory for the action or the menu."
+msgstr "Dikkat: bir etiket, eylem veya menü için zorunludur."
+
+#: ../src/nact/nact-ibasenames-tab.c:219
+msgid "Basename filter"
+msgstr "Ana ad süzgeci"
+
+#: ../src/nact/nact-icapabilities-tab.c:198
+msgid "Capability filter"
+msgstr "Yetenek süzgeci"
+
+#: ../src/nact/nact-icommand-tab.c:570
+msgid "Choosing a command"
+msgstr "Bir komut seçme"
+
+#: ../src/nact/nact-icommand-tab.c:610
+msgid "Choosing a working directory"
+msgstr "Bir çalışma dizini seçme"
+
+#: ../src/nact/nact-icon-chooser.ui.h:1
+msgid "Icon Chooser"
+msgstr "Simge Seçici"
+
+#: ../src/nact/nact-icon-chooser.ui.h:2
+msgid "_Themed icons"
+msgstr "_Temalı simgeler"
+
+#: ../src/nact/nact-icon-chooser.ui.h:3
+msgid "Icons by _path"
+msgstr "_Yol üzerinden simgeler"
+
+#: ../src/nact/nact-ienvironment-tab.c:71
+msgid "(strictly lesser than)"
+msgstr "(kesinlikle daha küçük)"
+
+#: ../src/nact/nact-ienvironment-tab.c:72
+msgid "(equal to)"
+msgstr "(eşit)"
+
+#: ../src/nact/nact-ienvironment-tab.c:73
+msgid "(strictly greater than)"
+msgstr "(kesinlikle daha büyük)"
+
+#: ../src/nact/nact-ienvironment-tab.c:769
+#: ../src/nact/nact-ienvironment-tab.c:827
+msgid "Choosing an executable"
+msgstr "Çalıştırılabilir seçme"
+
+#: ../src/nact/nact-ifolders-tab.c:203
+msgid "Folder filter"
+msgstr "Klasör süzgeci"
+
+#. i18n: title of the FileChoose dialog when selecting an URI which
+#. * will be compare to Nautilus 'current_folder'
+#.
+#: ../src/nact/nact-ifolders-tab.c:263 ../src/nact/nact-ifolders-tab.c:291
+msgid "Select a folder"
+msgstr "Bir klasör seç"
+
+#: ../src/nact/nact-imimetypes-tab.c:203
+msgid "Mimetype filter"
+msgstr "Mime türü süzgeci"
+
+#. i18n: label of the push button when there is not yet any shortcut
+#: ../src/nact/nact-iproperties-tab.c:53
+#: ../src/nact/nautilus-actions-config-tool.ui.h:236
+msgid "None"
+msgstr "Yok"
+
+#: ../src/nact/nact-iproperties-tab.c:288
+msgid "Me_nu"
+msgstr "Me_nü"
+
+#: ../src/nact/nact-iproperties-tab.c:289
+msgid "<b>Menu editable properties</b>"
+msgstr "<b>Menü düzenlenebilir özellikleri</b>"
+
+#: ../src/nact/nact-iproperties-tab.c:291
+#: ../src/nact/nautilus-actions-config-tool.ui.h:97
+msgid "_Action"
+msgstr "_Eylem"
+
+#: ../src/nact/nact-iproperties-tab.c:292
+#: ../src/nact/nautilus-actions-config-tool.ui.h:239
+msgid "<b>Action editable properties</b>"
+msgstr "<b>Eylem düzenlenebilir özellikleri</b>"
+
+#: ../src/nact/nact-ischemes-tab.c:201
+msgid "Scheme filter"
+msgstr "Şema süzgeci"
+
+#: ../src/nact/nact-main-window.c:344
+msgid "Current NAObjectItem"
+msgstr "Mevcut NAObjectItem"
+
+#: ../src/nact/nact-main-window.c:345
+msgid "A pointer to the currently edited NAObjectItem, an action or a menu"
+msgstr "Henüz düzenlenmiş NAObjectItem işaretçisi, bir eylem ve ya bir menü"
+
+#: ../src/nact/nact-main-window.c:351
+msgid "Current NAObjectProfile"
+msgstr "Mevcut NAObjectProfile"
+
+#: ../src/nact/nact-main-window.c:352
+msgid "A pointer to the currently edited NAObjectProfile"
+msgstr "Henüz düzenlenmiş NAObjectProfile işaretçisi"
+
+#: ../src/nact/nact-main-window.c:358
+msgid "Current NAIContext"
+msgstr "Mevcut NAIContext"
+
+#: ../src/nact/nact-main-window.c:359
+msgid "A pointer to the currently edited NAIContext"
+msgstr "Henüz düzenlenmiş NAIContext işaretçisi"
+
+#: ../src/nact/nact-main-window.c:365
+msgid "Editable item ?"
+msgstr "Düzenlebilir öge ?"
+
+#: ../src/nact/nact-main-window.c:366
+msgid "Whether the item will be able to be updated against its I/O provider"
+msgstr "Ögenin kendi G/Ç sağlayıcısı tarafından güncellenip güncellenemeyeceği"
+
+#: ../src/nact/nact-main-window.c:373
+msgid "No edition reason"
+msgstr "Düzenleme sebebi yok"
+
+#: ../src/nact/nact-main-window.c:374
+msgid "Why is this item not editable"
+msgstr "Öge neden düzenlenebilir değil"
+
+#: ../src/nact/nact-main-window.c:1267
+msgid ""
+"One or more actions have been modified in the filesystem.\n"
+"You could keep to work with your current list of actions, or you may want to "
+"reload a fresh one."
+msgstr ""
+"Dosya sisteminde, bir veya daha gazla eylem değiştirilmiş.\n"
+"Mevcut eylemler listeniz ile çalışmaya devam edebilir ve ya yeni bir "
+"tanesini yeniden yükleyebilirsiniz."
+
+#: ../src/nact/nact-main-window.c:1274
+msgid ""
+"Note that reloading a fresh list of actions requires that you give up with "
+"your current modifications."
+msgstr ""
+"Yeni bir eylemler listesinin yeniden yüklenmesi, mevcut değişikliklerinizden "
+"vazgeçmeniz anlamına gelmektedir."
+
+#: ../src/nact/nact-main-window.c:1280
+msgid "Do you want to reload a fresh list of actions ?"
+msgstr ""
+"Yeni bir eylemler listesini yeniden yüklemek istediğinizden emin misiniz?"
+
+#: ../src/nact/nact-main-window.c:1303
+msgid ""
+"Reloading a fresh list of actions requires that you give up with your "
+"current modifications."
+msgstr ""
+"Yeni bir eylemler listesinin yeniden yüklenmesi, mevcut değişikliklerinizden "
+"vazgeçmeniz anlamına gelmektedir."
+
+#: ../src/nact/nact-main-window.c:1306
+msgid "Do you really want to do this ?"
+msgstr "Gerçekten bunu yapmak istiyor musunuz?"
+
+#: ../src/nact/nact-main-window.c:1424
+#, c-format
+msgid "Some items have been modified."
+msgstr "Bazı ögeler değiştirilmiş."
+
+#: ../src/nact/nact-main-window.c:1425
+msgid "Are you sure you want to quit without saving them ?"
+msgstr "Kaydetmeden çıkmak istediğinizden emin misiniz ?"
+
+#: ../src/nact/nact-match-list.c:88
+msgid "Must match one of"
+msgstr "Şunlardan biri ile eşleşmek zorunda:"
+
+#: ../src/nact/nact-match-list.c:89
+msgid "Must match all of"
+msgstr "Şunların hepsi ile eşleşmek zorunda:"
+
+#. i18n: label of the header of a column which let the user select a negative filter
+#: ../src/nact/nact-match-list.c:245
+msgid "Must not match any of"
+msgstr "Şunlardan hiçbiri ile eşleşmek zorunda değil:"
+
+#: ../src/nact/nact-match-list.c:548
+#, c-format
+msgid ""
+"'%s' filter already exists in the list.\n"
+"Please provide another one."
+msgstr ""
+"'%s' süzgeci zaten listede mevcut.\n"
+"Lütfen başka bir tanesini temin edin."
+
+#. i18n notes : new filter for a new row in a match/no match list
+#: ../src/nact/nact-match-list.c:926
+msgid "new-filter"
+msgstr "yeni-süzgeç"
+
+#: ../src/nact/nact-menubar.c:59 ../src/nact/nact-menubar.c:170
+msgid "_File"
+msgstr "_Dosya"
+
+#: ../src/nact/nact-menubar.c:60 ../src/nact/nact-menubar.c:174
+msgid "_Edit"
+msgstr "_Düzenle"
+
+#: ../src/nact/nact-menubar.c:61
+msgid "_View"
+msgstr "_Görünüm"
+
+#: ../src/nact/nact-menubar.c:62
+msgid "_Toolbars"
+msgstr "_Araç Çubukları"
+
+#: ../src/nact/nact-menubar.c:63 ../src/nact/nact-menubar.c:178
+msgid "_Tools"
+msgstr "_Araçlar"
+
+#: ../src/nact/nact-menubar.c:64
+msgid "_Maintainer"
+msgstr "_Proje Yürütücüsü"
+
+#: ../src/nact/nact-menubar.c:65 ../src/nact/nact-menubar.c:182
+msgid "_Help"
+msgstr "_Yardım"
+
+#: ../src/nact/nact-menubar.c:66
+msgid "Notebook _tabs"
+msgstr "Diz üstü bilgisayar _sekmeleri"
+
+#: ../src/nact/nact-menubar.c:68
+msgid "New _menu"
+msgstr "Yeni _menü"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
+#: ../src/nact/nact-menubar.c:70
+msgid "Insert a new menu at the current position"
+msgstr "Mevcut konuma yeni bir menü ekle"
+
+#: ../src/nact/nact-menubar.c:72
+msgid "_New action"
+msgstr "_Yeni eylem"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New action' item
+#: ../src/nact/nact-menubar.c:74
+msgid "Define a new action"
+msgstr "Yeni bir eylem tanımla"
+
+#: ../src/nact/nact-menubar.c:76
+msgid "New _profile"
+msgstr "Yeni _profil"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
+#: ../src/nact/nact-menubar.c:78
+msgid "Define a new profile attached to the current action"
+msgstr "Mevcut eyleme eklenmiş yeni bir profil tanımla"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Save' item
+#: ../src/nact/nact-menubar.c:82
+msgid ""
+"Record all the modified actions. Invalid actions will be silently ignored"
+msgstr "Tüm değiştirilmiş eylemleri kaydet. Geçersiz eylemler yok sayılacak"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Quit' item
+#: ../src/nact/nact-menubar.c:86
+msgid "Quit the application"
+msgstr "Uygulamadan çık"
+
+#. i18n: tooltip displayed in the status bar when selecting the Cut item
+#: ../src/nact/nact-menubar.c:90
+msgid "Cut the selected item(s) to the clipboard"
+msgstr "Seçilmiş ögeyi/ögeleri kes ve panoya yapıştır"
+
+#. i18n: tooltip displayed in the status bar when selecting the Copy item
+#: ../src/nact/nact-menubar.c:94
+msgid "Copy the selected item(s) to the clipboard"
+msgstr "Seçilmiş ögeyi/ögeleri panoya kopyala"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste item
+#: ../src/nact/nact-menubar.c:98
+msgid "Insert the content of the clipboard just before the current position"
+msgstr "Mevcut konumun bir öncesin panonun içeriğini yapıştır"
+
+#: ../src/nact/nact-menubar.c:100
+msgid "Paste _into"
+msgstr "_İçine yapıştır"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste Into item
+#: ../src/nact/nact-menubar.c:102
+msgid "Insert the content of the clipboard as first child of the current item"
+msgstr "Mevcut ögenin ilk altı olarak, panonun içeriğini ekle"
+
+#: ../src/nact/nact-menubar.c:104
+msgid "D_uplicate"
+msgstr "_Çoğalt"
+
+#. i18n: tooltip displayed in the status bar when selecting the Duplicate item
+#: ../src/nact/nact-menubar.c:106
+msgid "Duplicate the selected item(s)"
+msgstr "Seçilmiş ögeyi/ögeleri çoğalt"
+
+#. i18n: tooltip displayed in the status bar when selecting the Delete item
+#: ../src/nact/nact-menubar.c:110
+msgid "Delete the selected item(s)"
+msgstr "Seçilmiş ögeyi/ögeleri sil"
+
+#: ../src/nact/nact-menubar.c:112
+msgid "_Reload the items"
+msgstr "Ögeleri _yeniden yükle"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
+#: ../src/nact/nact-menubar.c:114
+msgid ""
+"Cancel your current modifications and reload the initial list of menus and "
+"actions"
+msgstr ""
+"Mevcut değişikliklerinizi iptal eder ve menü/eylem listesinin ilk halini "
+"geri yükler"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
+#: ../src/nact/nact-menubar.c:118
+msgid "Edit your preferences"
+msgstr "Tercihlerinizi düzenleyin"
+
+#: ../src/nact/nact-menubar.c:120
+msgid "_Expand all"
+msgstr "Tümünü _genişlet"
+
+#. i18n: tooltip displayed in the status bar when selecting the Expand all item
+#: ../src/nact/nact-menubar.c:122
+msgid "Entirely expand the items hierarchy"
+msgstr "Ögelerin hiyerarşisini tamamen genişlet"
+
+#: ../src/nact/nact-menubar.c:124
+msgid "_Collapse all"
+msgstr "Tümünü _daralt"
+
+#. i18n: tooltip displayed in the status bar when selecting the Collapse all item
+#: ../src/nact/nact-menubar.c:126
+msgid "Entirely collapse the items hierarchy"
+msgstr "Ögelerin hiyerarşisini tamamen daralt"
+
+#: ../src/nact/nact-menubar.c:129
+msgid "_Import assistant..."
+msgstr "Asistan _içe aktar..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Import item
+#: ../src/nact/nact-menubar.c:131
+msgid "Import one or more actions from external files into your configuration"
+msgstr ""
+"Harici dosyalardan, kendi yapılandırmanıza bir veya daha fazla eylem içeri "
+"aktarın"
+
+#: ../src/nact/nact-menubar.c:133
+msgid "E_xport assistant..."
+msgstr "Asistan _dışa aktar..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Export item
+#: ../src/nact/nact-menubar.c:135
+msgid "Export one or more actions from your configuration to external files"
+msgstr ""
+"Kendi yapılandırmanızdan, harici dosyaya bir veya daha fazla eylem dışa aktar"
+
+#: ../src/nact/nact-menubar.c:138
+msgid "_Dump the selection"
+msgstr "Seçimi _dök"
+
+#. i18n: tooltip displayed in the status bar when selecting the Dump selection item
+#: ../src/nact/nact-menubar.c:140
+msgid "Recursively dump selected items"
+msgstr "Seçilmiş ögeleri yinelemeli olarak dök"
+
+#: ../src/nact/nact-menubar.c:142
+msgid "_Brief tree store dump"
+msgstr "_Özet ağaç depo dökümü"
+
+#. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
+#: ../src/nact/nact-menubar.c:144
+msgid "Briefly dump the tree store"
+msgstr "Kısaca ağaç deposunu dök"
+
+#: ../src/nact/nact-menubar.c:146
+msgid "_List modified items"
+msgstr "Değiştirilmiş ögeleri _listele"
+
+#. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
+#: ../src/nact/nact-menubar.c:148
+msgid "List the modified items"
+msgstr "Değiştirilmiş ögeleri listele"
+
+#: ../src/nact/nact-menubar.c:150
+msgid "_Dump the clipboard"
+msgstr "Panoyu _dök"
+
+#. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
+#: ../src/nact/nact-menubar.c:152
+msgid "Dump the content of the clipboard object"
+msgstr "Pano nesnesinin içeriğini dök"
+
+#: ../src/nact/nact-menubar.c:158
+msgid "Contents"
+msgstr "İçindekiler"
+
+#. i18n: tooltip displayed in the status bar when selecting the Help item
+#: ../src/nact/nact-menubar.c:160
+msgid "Display help about this program"
+msgstr "Bu program hakkında yardım göster"
+
+#. i18n: tooltip displayed in the status bar when selecting the About item
+#: ../src/nact/nact-menubar.c:164
+msgid "Display informations about this program"
+msgstr "Bu program hakkında bilgiler göster"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
+#: ../src/nact/nact-menubar.c:172
+msgid "Display the File toolbar"
+msgstr "Dosya araç çubuğunu göster"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
+#: ../src/nact/nact-menubar.c:176
+msgid "Display the Edit toolbar"
+msgstr "Araç çubuğu Düzenle göster"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
+#: ../src/nact/nact-menubar.c:180
+msgid "Display the Tools toolbar"
+msgstr "Araçlar araç çubuğunu göster"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
+#: ../src/nact/nact-menubar.c:184
+msgid "Display the Help toolbar"
+msgstr "Yardım araç çubuğunu göster"
+
+#: ../src/nact/nact-menubar.c:190
+msgid "On the _left"
+msgstr "So_lda"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the left' item
+#: ../src/nact/nact-menubar.c:192
+msgid "Display the notebook tabs on the left side"
+msgstr "Diz üstü bilgisayar sekmelerini sol tarafta göster"
+
+#: ../src/nact/nact-menubar.c:194
+msgid "On the _right"
+msgstr "Sa_ğda"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the right' item
+#: ../src/nact/nact-menubar.c:196
+msgid "Display the notebook tabs on the right side"
+msgstr "Diz üstü bilgisayar sekmelerini sağ tarafta göster"
+
+#: ../src/nact/nact-menubar.c:198
+msgid "On the _top"
+msgstr "Üs_tte"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the top' item
+#: ../src/nact/nact-menubar.c:200
+msgid "Display the notebook tabs on the top side"
+msgstr "Diz üstü bilgisayar sekmelerini üstte göster"
+
+#: ../src/nact/nact-menubar.c:202
+msgid "On the _bottom"
+msgstr "_Altta"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the bottom' item
+#: ../src/nact/nact-menubar.c:204
+msgid "Display the notebook tabs on the bottom side"
+msgstr "Diz üstü bilgisayar sekmelerini altta göster"
+
+#: ../src/nact/nact-menubar.c:718
+#, c-format
+msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
+msgstr " %d menu, %d eylem, %d profil şu anda yüklü"
+
+#: ../src/nact/nact-menubar-edit.c:222
+msgid "Not all items have been cut as following ones are not modifiable:"
+msgstr "Tüm ögeleri şu şekilde kesilmemiş olanlar değiştirilebilir değildir:"
+
+#: ../src/nact/nact-menubar-edit.c:470
+msgid "Not all items have been deleted as following ones are not modifiable:"
+msgstr "Tüm ögeleri şu şekilde silinmemiş olanlar değiştirilebilir değildir:"
+
+#: ../src/nact/nact-menubar-file.c:52
+msgid "Save error"
+msgstr "Kaydetme hatası"
+
+#: ../src/nact/nact-menubar-file.c:53
+msgid "Some items may not have been saved"
+msgstr "Bazı ögeler kaydedilmemiş olabilir"
+
+#: ../src/nact/nact-menubar-file.c:54
+msgid "Unable to rewrite the level-zero items list"
+msgstr "Sıfır seviye ögeleri listesi yeniden yazılamıyor"
+
+#: ../src/nact/nact-menubar-file.c:55
+msgid "Some items have not been deleted"
+msgstr "Bazı ögeler silinmemiş olabilir"
+
+#: ../src/nact/nact-menubar-file.c:201
+msgid "New profile"
+msgstr "Yeni profil"
+
+#: ../src/nact/nact-menubar-file.c:489
+msgid "Automatically saving pending modifications..."
+msgstr "Beklenen değişiklikleri otomatik olarak kaydetme..."
+
+#: ../src/nact/nact-preferences.ui.h:1
+msgid "Nautilus-Actions Preferences"
+msgstr "Nautilus-Actions Tercihleri"
+
+#: ../src/nact/nact-preferences.ui.h:2
+msgid "_Ascending alphabetical order"
+msgstr "Alfabetik _artan sıralı"
+
+#: ../src/nact/nact-preferences.ui.h:3
+msgid ""
+"Menus and actions will be displayed in the ascending alphabetical order of "
+"their label, both in the Nautilus context menu and in the NACT user "
+"interface."
+msgstr ""
+"Menüler ve eylemler, kendi etiketlerinde alfabetik artan sıralı olarak "
+"gösterilecekler, hem Nautilus içerik menüsünde hem de NACT kullanıcı "
+"arayüzünde"
+
+#: ../src/nact/nact-preferences.ui.h:4
+msgid "_Descending alphabetical order"
+msgstr "Alfabetik a_zalan sıralı"
+
+#: ../src/nact/nact-preferences.ui.h:5
+msgid ""
+"Menus and actions will be displayed in the descending alphabetical order of "
+"their label, both in the Nautilus context menu and in the NACT user "
+"interface."
+msgstr ""
+"Menüler ve eylemler, kendi etiketlerinde alfabetik azalan sıralı olarak "
+"gösterilecekler, hem Nautilus içerik menüsünde hem de NACT kullanıcı "
+"arayüzünde"
+
+#: ../src/nact/nact-preferences.ui.h:6
+msgid "_Manual order"
+msgstr "_Elle sıralı"
+
+#: ../src/nact/nact-preferences.ui.h:7
+msgid ""
+"Display order of menus and actions, both in the Nautilus context menu and in "
+"the NACT user interface, must be manually adjusted."
+msgstr ""
+"Menülerin ve eylemleri gösterilme sırası, hem Nautilus içerik menüsünde hem "
+"de NACT kullanıcı arayüzünde, elle ayarlanmış olmak zorundadır."
+
+#: ../src/nact/nact-preferences.ui.h:8
+msgid "<b>Items ordering</b>"
+msgstr "<b>Ögeleri sıralama</b>"
+
+#: ../src/nact/nact-preferences.ui.h:9
+msgid "_Create a root 'Nautilus-Actions' menu"
+msgstr "Bir kök 'Nautilus-Actions' menüsü _oluştur"
+
+#: ../src/nact/nact-preferences.ui.h:10
+msgid ""
+"When this option is checked, menus and actions will actually be displayed as "
+"sub-items of a root 'Nautilus-Actions' menu in the Nautilus context menu."
+msgstr ""
+"Bu seçenek işaretlendiğinde, menüler ve eylemler, Nautilus içerik menüsünde "
+"'Nautilus-Actions' kök menüsünün bir alt ögesi olarak gösterilecektir."
+
+#: ../src/nact/nact-preferences.ui.h:11
+msgid "Add an 'A_bout Nautilus-Actions' item in the Nautilus context menus"
+msgstr "'Nautilus-Actions _Hakkında' ögesini, Nautilus içerik menüsüne ekle"
+
+#: ../src/nact/nact-preferences.ui.h:12
+msgid ""
+"When this option is checked, an 'About Nautilus-Actions' item will be added "
+"to the root Nautilus-Actions menu in the Nautilus context menu.\n"
+"Note that this item will be displayed only if a unique menu is defined in "
+"the Nautilus context menu (e.g. when having checked the root 'Nautilus-"
+"Actions' menu option above)."
+msgstr ""
+"Bu seçenek işaretlendiğinde, Nautilus içerik menüsüne, bir 'Nautilus-Actions "
+"Hakkında' ögesi, Nautilus-Actions menüsünün köküne eklenecektir.\n"
+"Öge, Nautilus içerik menüsünde, sadece eşsiz menüde tanımlanmışsa "
+"gösterilecektir (örn. aşağıdaki kök 'Nautilus-Actions' menüsü seçeneği "
+"seçildiğinde)."
+
+#: ../src/nact/nact-preferences.ui.h:14
+msgid "<b>Nautilus menu layout</b>"
+msgstr "<b>Nautilus menü yerleşimi</b>"
+
+#: ../src/nact/nact-preferences.ui.h:15
+msgid ""
+"This tab lets you choose how the actions are ordered in the displayed list "
+"as well as in the Nautilus context menu. You may also choose here how "
+"actions will be displayed in the Nautilus context menu."
+msgstr ""
+"Bu sekme, Nautilus içerik menüsünde olduğu gibi, göstilen listedeki "
+"eylemleri hangi sırada olacağını seçmenize izin verir. Aynı zamanda "
+"eylemlerin Nautilus içerik menüsünde nasıl görüneceğinide seçebilirsiniz."
+
+#: ../src/nact/nact-preferences.ui.h:16
+msgid "_Runtime preferences"
+msgstr "_Çalışma zamanı tercihleri"
+
+#: ../src/nact/nact-preferences.ui.h:17
+msgid ""
+"Specify here the command to run and keep opened a terminal.\n"
+"This command should include a 'COMMAND' keyword, which will be substituted "
+"at runtime with the action path and parameters."
+msgstr ""
+"Açılmış bir terminalde çalışacak ve duracak komutu burada belirtin.\n"
+"Bu komut, 'COMMAND' anahtar sözcüğünü içermelidir ve çalışma zamanında eylem "
+"yolu ve parametreleri ile yer değiştirecektir."
+
+#: ../src/nact/nact-preferences.ui.h:19
+msgid "_Command pattern :"
+msgstr "_Komut deseni :"
+
+#: ../src/nact/nact-preferences.ui.h:20
+msgid "<b>Execution in a terminal</b>"
+msgstr "<b>Terminal içinde çalışma</b>"
+
+#: ../src/nact/nact-preferences.ui.h:21
+msgid "Running _desktop environment :"
+msgstr "Çalışan _masaüstü ortamı :"
+
+#: ../src/nact/nact-preferences.ui.h:22
+msgid "<i>Currently detected :</i>"
+msgstr "<i>Şu anda algılananlar :</i>"
+
+#: ../src/nact/nact-preferences.ui.h:23
+#: ../src/nact/nautilus-actions-config-tool.ui.h:210
+msgid "<b>Desktop environment</b>"
+msgstr "<b>Masaüstü ortamı</b>"
+
+#: ../src/nact/nact-preferences.ui.h:24
+msgid "This tab lets you specify parameters needed for some execution modes."
+msgstr ""
+"Bu sekme, bazı çalıştırma kipleri için gerekli olan parametreleri "
+"belirmenizi sağlar."
+
+#: ../src/nact/nact-preferences.ui.h:25
+msgid "Runtime E_xecution"
+msgstr "Çalışma Zamanı _Çalışması"
+
+#: ../src/nact/nact-preferences.ui.h:26
+msgid "What to do when pasting or duplicating an item in the tree ?"
+msgstr ""
+"Öge için ağaç üzerinde, yapıştırma veya çoğaltma işlemi yapıldığında ne "
+"olacağı ?"
+
+#: ../src/nact/nact-preferences.ui.h:27
+msgid "Relabel _menus"
+msgstr "_Menüleri yeniden etiketle"
+
+#: ../src/nact/nact-preferences.ui.h:28
+msgid ""
+"When a menu is copied/pasted, or duplicated, the new menu will be relabelled "
+"as 'Copy of ...'."
+msgstr ""
+"Bir menü kopyalandığında/yapıştırıldığında ya da çoğaltıldığında, yeni menü "
+"'Şunun kopyası ...' şeklinde yeniden etiketlenecektir."
+
+#: ../src/nact/nact-preferences.ui.h:29
+msgid "Relabel _actions"
+msgstr "_Eylemleri yeniden etiketle"
+
+#: ../src/nact/nact-preferences.ui.h:30
+msgid ""
+"When an action is copied/pasted, or duplicated, the new action will be "
+"relabelled as 'Copy of ...'."
+msgstr ""
+"Bir eylem kopyalandığında/yapıştırıldığında ya da çoğaltıldığında, yeni menü "
+"'Şunun kopyası: ...' şeklinde yeniden etiketlenecektir."
+
+#: ../src/nact/nact-preferences.ui.h:31
+msgid "Relabel _profiles"
+msgstr "_Profilleri yeniden etiketle"
+
+#: ../src/nact/nact-preferences.ui.h:32
+msgid ""
+"When a profile is copied/pasted, or duplicated, the new profile will be "
+"relabelled as 'Copy of ...'."
+msgstr ""
+"Bir profil kopyalandığında/yapıştırıldığında ya da çoğaltıldığında, yeni "
+"menü 'Şunun kopyası ...' şeklinde yeniden etiketlenecektir."
+
+#: ../src/nact/nact-preferences.ui.h:33
+msgid "<b>Relabeling items</b>"
+msgstr "<b>Ögeleri yeniden etiketleme</b>"
+
+#: ../src/nact/nact-preferences.ui.h:34
+msgid "Esc key _quits the assistant"
+msgstr "Esc tuşu asistandan _çıkar"
+
+#: ../src/nact/nact-preferences.ui.h:35
+msgid ""
+"When this option is checked, the 'Escape' key will let you quit the current "
+"assistant. Else, quitting the assistant is only possible by hitting the "
+"'Cancel' button."
+msgstr ""
+"Bu seçenek işaretlendiğinde, 'Escape' tuşu mevcut asistandan çıkmanıza izin "
+"verecektir. Yoksa, asistandan çıkma, sadece 'İptal' düğöesine basarak "
+"gerçekleşebilir."
+
+#: ../src/nact/nact-preferences.ui.h:36
+msgid "Ask for a _confirmation when quitting the assistant on Esc key"
+msgstr "Asistandan Esc tuşu ile çıkıldığında bir _onaylama sor"
+
+#: ../src/nact/nact-preferences.ui.h:37
+msgid ""
+"This option is only relevant when the 'Escape' key lets the user quit the "
+"assistant. When checked, the user will be prompted for a confirmation in "
+"order to help prevent erroneous hits of the Esc key."
+msgstr ""
+"Bu seçenek sadece 'Escape' tuşuyla çıkış yapıldığı zaman uygundur. "
+"Seçildiğinde, yanlışlıkla basılmış Esc tuşuna karşı bir onaylama mesajı "
+"kullanıcıya gösterilecektir. "
+
+#: ../src/nact/nact-preferences.ui.h:38
+msgid "<b>Assistants</b>"
+msgstr "<b>Asistanlar</b>"
+
+#: ../src/nact/nact-preferences.ui.h:39
+msgid "Automatically _saves pending modifications"
+msgstr "Bekleyen değişiklikler otomatik olarak _kaydedilir"
+
+#: ../src/nact/nact-preferences.ui.h:40
+msgid ""
+"When this option is checked, pending modification will be periodically and "
+"automatically saved."
+msgstr ""
+"Bu seçenek seçildiğinde, bekleyen değişiklikler düzenli aralıklarla otomatik "
+"olarak kaydedilecektir."
+
+#: ../src/nact/nact-preferences.ui.h:41
+msgid "Periodicity :"
+msgstr "Tekrarlanma:"
+
+#: ../src/nact/nact-preferences.ui.h:42
+msgid "minutes"
+msgstr "dakika"
+
+#: ../src/nact/nact-preferences.ui.h:43
+msgid "<b>Auto-save</b>"
+msgstr "<b>Otomatik kaydet</b>"
+
+#: ../src/nact/nact-preferences.ui.h:44
+msgid ""
+"This tab allows the user to choose custom preferences for the Nautilus-"
+"Actions Configuration Tool user interface."
+msgstr ""
+"Bu sekme, Nautilus Actions yapılandırma aracı kullanıcı arayüzü için "
+"kullanıcıya, özel tercihler seçme izni verir."
+
+#: ../src/nact/nact-preferences.ui.h:45
+msgid "_UI Preferences"
+msgstr "_UI Tercihleri"
+
+#: ../src/nact/nact-preferences.ui.h:46
+msgid ""
+"What to do when an item, action or menu, selected to be imported, has the "
+"same identifier that a currently existing one ?"
+msgstr ""
+"İçeri aktarılmak için seçilmiş bir öge, eylem veya menünün, şuanda mevcut "
+"olanlarla aynı tanımlayıcıya sahip olduğu zaman ne yapılacağı?"
+
+#: ../src/nact/nact-preferences.ui.h:47
+msgid "<b>Import mode</b>"
+msgstr "<b>İçe aktarma kipi</b>"
+
+#: ../src/nact/nact-preferences.ui.h:48
+msgid "This tab lets you decide on the default behavior of import operations."
+msgstr ""
+"Bu sekme, içe aktarma işlemlerinin varsayılan davranışına karar vermenizi "
+"sağlar."
+
+#: ../src/nact/nact-preferences.ui.h:49
+msgid "_Import"
+msgstr "_İçe Aktar"
+
+#: ../src/nact/nact-preferences.ui.h:50
+msgid "What is your preferred export format ?"
+msgstr "Tercih ettiğiniz dışa aktarma biçimi nedir?"
+
+#: ../src/nact/nact-preferences.ui.h:51
+msgid "<b>Export format</b>"
+msgstr "<b>Dışa aktarma biçimi</b>"
+
+#: ../src/nact/nact-preferences.ui.h:52
+msgid "This tab lets you decide on the default behavior of export operations."
+msgstr ""
+"Bu sekme, dışa aktarma işlemlerinin varsayılan davranışına karar vermenizi "
+"sağlar. "
+
+#: ../src/nact/nact-preferences.ui.h:53
+msgid "_Export"
+msgstr "_Dışa Aktar"
+
+#: ../src/nact/nact-preferences.ui.h:54
+msgid ""
+"You may define here any number of schemes. They will be proposed as default "
+"schemes when defining conditions for an action.\n"
+"If the list becomes empty, NACT will automatically refill in with this "
+"default list.\n"
+"You can add a new scheme by clicking on the '+' button."
+msgstr ""
+"Buraya herhangi bir sayıda şema tanımlayabilirsiniz. Bir eylem için durumlar "
+"tanımlandığında, onlar varsayılan şemalar olarak önerilecekler.\n"
+"Eğer liste boşsa, NACT otomatik olarak, varsayılan liste ile yeniden "
+"doldurulacaktır.\n"
+"'+' tuşuna basarak yeni bir şema ekleyebilirsiniz."
+
+#: ../src/nact/nact-preferences.ui.h:57
+msgid "Click to add a new default scheme."
+msgstr "Yeni bir varsayılan şema eklemek için tıklayın."
+
+#: ../src/nact/nact-preferences.ui.h:58
+msgid "Click to remove the selected default scheme."
+msgstr "Seçilmiş varsayılan şemayı kaldırmak için tıklayın."
+
+#: ../src/nact/nact-preferences.ui.h:59
+msgid "<b>Default schemes</b>"
+msgstr "<b>Varsayılan şemalar</b>"
+
+#: ../src/nact/nact-preferences.ui.h:60
+msgid ""
+"This tab lets you decide which schemes are proposed by default when editing "
+"advanced conditions for an item."
+msgstr ""
+"Bu sekme, bir öge için gelişmiş durumlar düzenlendiğinde, varsayılan olarak "
+"hangi şemanın önerileceğine tanımlamanıza izin verir."
+
+#: ../src/nact/nact-preferences.ui.h:61
+#: ../src/nact/nautilus-actions-config-tool.ui.h:190
+msgid "_Schemes"
+msgstr "_Şemalar"
+
+#: ../src/nact/nact-preferences.ui.h:62
+msgid ""
+"Define here, for available I/O providers, if you want them to be read at "
+"startup, to be writable, and the order in which they will be tested when "
+"trying to write a new menu or action."
+msgstr ""
+"Buraya tanımla, kullanılabilir G/Ç sağlayıcıları için, başlangıçta okumak "
+"istiyorsanız, yazılabilir olursa, yeni bir menü veya eylem yazma denenirken, "
+"test edilecektir."
+
+#: ../src/nact/nact-preferences.ui.h:63
+msgid "_Up"
+msgstr "_Yukarı"
+
+#: ../src/nact/nact-preferences.ui.h:64
+msgid ""
+"Move up the selected I/O provider in the order of priority when trying to "
+"write a new item."
+msgstr ""
+"Yeni bir öge yazmaya çalışırken, seçilmiş G/Ç sağlayıcısını öncelik sırasına "
+"göre yukarı kaydır"
+
+#: ../src/nact/nact-preferences.ui.h:65
+msgid "_Down"
+msgstr "_Aşağı"
+
+#: ../src/nact/nact-preferences.ui.h:66
+msgid "<b>Activation and priority</b>"
+msgstr "<b>Etkinleştirme ve öncelik</b>"
+
+#: ../src/nact/nact-preferences.ui.h:67
+msgid ""
+"This tab lets you decide whether the I/O providers are enabled or not, and "
+"in which order they will be tried when writing a new item."
+msgstr ""
+"Bu sekme, yeni bir öge yazılırken, G/Ç sağlayıcılarının etkin olup "
+"olmayacağını ve hangi sırada olacaklarına karar vermenize izin verir."
+
+#: ../src/nact/nact-preferences.ui.h:68
+msgid "I/O _Providers"
+msgstr "G/Ç _Sağlayıcıları"
+
+#. i18n: the user is not willing to identify his current desktop environment,
+#. *       and prefers rely on the runtime detection
+#: ../src/nact/nact-preferences-editor.c:118
+msgid "Rely on runtime detection"
+msgstr "Çalışma zamanı algılamasına bağlı"
+
+#: ../src/nact/nact-preferences-editor.c:819
+msgid "Ex.:"
+msgstr "Örn.:"
+
+#: ../src/nact/nact-providers-list.c:137
+msgid "Readable"
+msgstr "Okunabilir"
+
+#: ../src/nact/nact-providers-list.c:151
+msgid "Writable"
+msgstr "Yazılabilir"
+
+#: ../src/nact/nact-providers-list.c:165
+msgid "I/O Provider"
+msgstr "G/Ç Sağlayıcı"
+
+#. i18n: default name when the I/O providers doesn't provide one
+#: ../src/nact/nact-providers-list.c:261
+msgid "no name"
+msgstr "ad yok"
+
+#. i18n: name displayed when the corresponding I/O provider is unavailable at runtime
+#: ../src/nact/nact-providers-list.c:265
+msgid "unavailable I/O provider"
+msgstr "kullanılamaz G/Ç sağlayıcısı"
+
+#: ../src/nact/nact-schemes-list.c:155
+msgid "Keyword"
+msgstr "Anahtar sözcük"
+
+#. i18n notes : description of 'file' scheme
+#: ../src/nact/nact-schemes-list.c:283
+msgid "Local files"
+msgstr "Yerel dosyalar"
+
+#. i18n notes : description of 'sftp' scheme
+#: ../src/nact/nact-schemes-list.c:285
+msgid "SSH files"
+msgstr "SSH dosyaları"
+
+#. i18n notes : description of 'smb' scheme
+#: ../src/nact/nact-schemes-list.c:287
+msgid "Windows files"
+msgstr "Windows dosyaları"
+
+#. i18n notes : description of 'ftp' scheme
+#: ../src/nact/nact-schemes-list.c:289
+msgid "FTP files"
+msgstr "FTP dosyaları"
+
+#. i18n notes : description of 'dav' scheme
+#: ../src/nact/nact-schemes-list.c:291
+msgid "WebDAV files"
+msgstr "WebDav dosyaları"
+
+#. i18n: add a comment when a scheme is already used by current item
+#: ../src/nact/nact-schemes-list.c:400
+#, c-format
+msgid "%s (already used)"
+msgstr "%s (zaten kullanılmış)"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../src/nact/nact-schemes-list.c:701
+msgid "new-scheme"
+msgstr "yeni-şema"
+
+#: ../src/nact/nact-schemes-list.c:702
+msgid "New scheme description"
+msgstr "Yeni şema tanımlaması"
+
+#: ../src/nact/nact-tree-model.c:226
+msgid ""
+"A pointer (not a reference) to the BaseWindow parent of the embedding "
+"treeview"
+msgstr ""
+"Gömme treeview ögesinin üstü BaseWindow üzerine işaretçi (referans değil)"
+
+#: ../src/nact/nact-tree-model.c:232
+msgid "Embedding GtkTreeView"
+msgstr "Gömme GtkTreeView"
+
+#: ../src/nact/nact-tree-model.c:233
+msgid "The GtkTreeView which relies on this NactTreeModel"
+msgstr "Kendi NactTreeModel ögesine dayanan GtkTreeView"
+
+#: ../src/nact/nact-tree-model.c:239
+msgid "Edition mode"
+msgstr "Düzenleme kipi"
+
+#: ../src/nact/nact-tree-model.c:240
+msgid "Edition vs. Selection mode"
+msgstr "Düzenleme vs. Seçim kipi"
+
+#: ../src/nact/nact-tree-model-dnd.c:120
+msgid "Unable to drop a profile here"
+msgstr "Burada bir profil kaldırılamıyor"
+
+#: ../src/nact/nact-tree-model-dnd.c:121
+msgid "Unable to drop an action or a menu here"
+msgstr "Burada bir eylem veya bir menü kaldırılamıyor"
+
+#: ../src/nact/nact-tree-model-dnd.c:122
+msgid "Unable to drop here as parent is not writable"
+msgstr "Burada üst olarak kaldır yazılabilir değil"
+
+#: ../src/nact/nact-tree-model-dnd.c:123
+msgid "Unable to drop here as level zero is not writable"
+msgstr "Burada sıfır seviye olarak kaldırma yazılabilir değil"
+
+#: ../src/nact/nact-tree-model-dnd.c:939
+msgid "Some messages have occurred during drop operation."
+msgstr "Kaldırma işlemi sırasında bazı iletiler oluştu."
+
+#. i18n: this is a class name and should not be translated
+#: ../src/nact/nact-tree-view.c:215
+msgid "BaseWindow"
+msgstr "BaseWindow"
+
+#. i18n: NactTreeView property long description
+#: ../src/nact/nact-tree-view.c:217
+msgid "The BaseWindow parent"
+msgstr "BaseWindow üstü"
+
+#. i18n: NactTreeView property short description
+#: ../src/nact/nact-tree-view.c:224
+msgid "Container"
+msgstr "Kap"
+
+#. i18n: NactTreeView property long description
+#: ../src/nact/nact-tree-view.c:226
+msgid "A GtkContainer which contains the GtkTreeView widget"
+msgstr "GtkContainer, GtkTreeView parçacığını içerir"
+
+#. i18n: NactTreeView property short description
+#: ../src/nact/nact-tree-view.c:233
+msgid "Widget name"
+msgstr "Parçacık adı"
+
+#. i18n: NactTreeView property long description
+#: ../src/nact/nact-tree-view.c:235
+msgid "The name of GtkTreeView widget"
+msgstr "GtkTreeView parçacığının adı"
+
+#. i18n: NactTreeView property short description
+#: ../src/nact/nact-tree-view.c:243
+msgid "Management mode"
+msgstr "Yönetim kipi"
+
+#. i18n: NactTreeView property long description
+#: ../src/nact/nact-tree-view.c:245
+msgid "Management mode of the tree view, selection or edition"
+msgstr "Ağaç görünümü, seçimi veya düzenlemenin yönetim kipi"
+
+#. i18n: NactTreeView property short description
+#: ../src/nact/nact-tree-view.c:255
+msgid "Allow notify"
+msgstr "Uyarıya izin ver"
+
+#. i18n: NactTreeView property loong description
+#: ../src/nact/nact-tree-view.c:257
+msgid "Whether notifications are allowed"
+msgstr "Uyarıların çalışıp çalışmayacağı"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:1
+msgid "End of session"
+msgstr "Oturumun sonu"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:2
+msgid "_Save and quit"
+msgstr "_Kaydet ve çık"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:3
+msgid "_Quit without saving"
+msgstr "Kaydetmeden _çık"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:4
+msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
+msgstr "<span size=\"larger\"><b>Parametre Açıklamaları</b></span>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:6
+#, no-c-format
+msgid "<b>%b</b> :"
+msgstr "<b>%b</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:8
+#, no-c-format
+msgid "<b>%B</b> :"
+msgstr "<b>%B</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:10
+#, no-c-format
+msgid "<b>%c</b> :"
+msgstr "<b>%c</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:12
+#, no-c-format
+msgid "<b>%d</b> :"
+msgstr "<b>%d</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:14
+#, no-c-format
+msgid "<b>%D</b> :"
+msgstr "<b>%D</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:16
+#, no-c-format
+msgid "<b>%p</b> :"
+msgstr "<b>%p</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:18
+#, no-c-format
+msgid "<b>%s</b> :"
+msgstr "<b>%s</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:20
+#, no-c-format
+msgid "<b>%u</b> :"
+msgstr "<b>%u</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:22
+#, no-c-format
+msgid "<b>%U</b> :"
+msgstr "<b>%U</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:24
+#, no-c-format
+msgid "<b>%%</b> :"
+msgstr "<b>%%</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:25
+msgid "(first) basename."
+msgstr "(ilk) taban adı."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:26
+msgid ""
+"space-separated list of the basenames of the selected file(s)/folder(s)."
+msgstr ""
+"seçilmiş dosya(lar)/klasör(ler) için tabanadların boşluk ile ayrılmış "
+"listesi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:27
+msgid "count of selected item(s)."
+msgstr "seçilmiş ögenin/ögelerin sayısı."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:28
+msgid "(first) base directory."
+msgstr "(ilk) taban dizin."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:29
+msgid ""
+"space-separated list of the base directories of the selected file(s)/"
+"folder(s)."
+msgstr ""
+"seçilmiş dosya(lar)/klasör(ler) için taban dizinlerin boşluk ile ayrılmış "
+"listesi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:30
+msgid "port number of the (first) selected URI."
+msgstr "(ilk) seçilmiş URI 'nin bağlantı noktası numarası."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:31
+msgid "scheme of the (first) selected URI."
+msgstr "(ilk) seçilmiş URI 'nin şeması."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:32
+msgid "(first) URI."
+msgstr "(ilk) URI."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:33
+msgid "space-separated list of the URIs of the selected file(s)/folder(s)."
+msgstr ""
+"seçilmiş dosya(lar)/klasör(ler) için URI 'lerin boşluk ile ayrılmış listesi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:34
+msgid "a percent sign."
+msgstr "yüzde işareti."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:36
+#, no-c-format
+msgid "<b>%f</b> :"
+msgstr "<b>%f</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:37
+msgid "(first) filename."
+msgstr "(ilk) dosya adı."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:39
+#, no-c-format
+msgid "<b>%F</b> :"
+msgstr "<b>%F</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:40
+msgid ""
+"space-separated list of the filenames of the selected file(s)/folder(s)."
+msgstr ""
+"seçilmiş dosya(lar)/klasör(ler) için dosya adlarının boşluk ile ayrılmış "
+"listesi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:42
+#, no-c-format
+msgid "<b>%h</b> :"
+msgstr "<b>%h</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:43
+msgid "hostname of the (first) selected URI."
+msgstr "(ilk) seçilmiş URI 'nin makine adı."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:45
+#, no-c-format
+msgid "<b>%n</b> :"
+msgstr "<b>%n</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:46
+msgid "username of the (first) selected URI."
+msgstr "(ilk) seçilmiş URI 'nin kullanıcı adı."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:47
+msgid "(first) basename without the extension."
+msgstr "uzantısız (ilk) taban adı."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:48
+msgid "space-separated list of the basenames without the extension."
+msgstr ""
+"seçilmiş dosya(lar)/klasör(ler) için uzantısın taban adlarının boşluk ile "
+"ayrılmış listesi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:49
+msgid "(first) extension."
+msgstr "(ilk) uzantı."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:50
+msgid ""
+"space-separated list of the extensions of the selected file(s)/folder(s)."
+msgstr ""
+"seçilmiş dosya(lar)/klasör(ler) için uzantıların boşluk ile ayrılmış listesi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:52
+#, no-c-format
+msgid "<b>%w</b> :"
+msgstr "<b>%w</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:54
+#, no-c-format
+msgid "<b>%W</b> :"
+msgstr "<b>%W</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:56
+#, no-c-format
+msgid "<b>%x</b> :"
+msgstr "<b>%x</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:58
+#, no-c-format
+msgid "<b>%X</b> :"
+msgstr "<b>%X</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:60
+#, no-c-format
+msgid "<b>%m</b> :"
+msgstr "<b>%m</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:62
+#, no-c-format
+msgid "<b>%M</b> :"
+msgstr "<b>%M</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:63
+msgid "(first) mimetype."
+msgstr "(ilk) mime türü."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:64
+msgid ""
+"space-separated list of the mimetypes of the selected file(s)/folder(s)."
+msgstr ""
+"seçilmiş dosya(lar)/klasör(ler) için mime türlerinin boşluk ile ayrılmış "
+"listesi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:66
+#, no-c-format
+msgid "<b>%o</b> :"
+msgstr "<b>%o</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:68
+#, no-c-format
+msgid "<b>%O</b> :"
+msgstr "<b>%O</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:69
+msgid "no-op operator which forces a singular form of execution."
+msgstr "Çalışmanın tekil biçemini zorlayan no-op işlemi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:70
+msgid "no-op operator which forces a plural form of execution."
+msgstr "Çalışmanın çoğul biçemini zorlayan no-op işlemi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:71
+msgid "Items _list :"
+msgstr "Ögeler _listesi :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:72
+msgid "Sort the list in descending alphabetical order."
+msgstr "Listeyi azalan alfabeti sırada sırala."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:73
+msgid "Do not sort the list, letting you manually reorder the items."
+msgstr "Listeyi sıralama, ögeleri elle yeniden sıralmanıza izin verir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:74
+msgid "Sort the list in ascending alphabetical order."
+msgstr "Listeyi artan alfabetik sırada sırala."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:75
+msgid "Display item in _selection context menu"
+msgstr "_Seçim içerik menüsünde ögeyi göster"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:76
+msgid ""
+"When checked, the item will be candidate to be displayed in the file manager "
+"context menu, with a non-empty selection."
+msgstr ""
+"Seçili olduğunda, öge, dosya yöneticisi içerik menüsünde bir aday olarak boş "
+"olmayan bir seçim ile gösterilecektir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:77
+msgid "The label of the item in the file manager context menus."
+msgstr "Dosya yöneticisi içerik menüsündeki ögenin etiketi."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:78
+msgid "_Context label :"
+msgstr "_içerik etiketi :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:79
+msgid "Display item in _location context menu"
+msgstr "Ögeyi _konum içerik menüsünde göster"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:80
+msgid ""
+"When checked, the item will be candidate to be displayed in the file manager "
+"context menu when the selection is empty.\n"
+"In this case, the defined conditions will be applied to the current "
+"displayed folder."
+msgstr ""
+"Seçili olduğunda, öge, dosya yöneticisi içerik menüsünde bir aday olarak boş "
+"bir seçim ile gösterilecektir.\n"
+"Bu durumda tanımlanmış durumlar, mevcut gösterilen klasöre eklenecektir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:82
+msgid "Display item in the _toolbar"
+msgstr "Ögeyi _araç çubuğunda göster"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:83
+msgid ""
+"When checked, the item will be candidate to be displayed in the file manager "
+"toolbar.\n"
+"In this case, the defined conditions will be applied to the current folder, "
+"and do not depend of the possible current selection."
+msgstr ""
+"Seçili olduğunda, öge, dosya yöneticisi araç çubuğunda bir aday olarak "
+"gösterilecektir.\n"
+"Bu durumda tanımlanmı durumlar mevcut klasöre eklenecek ve olası mevcut "
+"seçime bağlı olmayacaktır."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:85
+msgid "Use s_ame label for icon in the toolbar"
+msgstr "Araç çubuğundaki simge için _aynı etiketi kullan"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:86
+msgid ""
+"When checked, the label displayed in the toolbar will be the same that the "
+"one displayed in the context menus."
+msgstr ""
+"Seçili olduğunda, araç çubuğunda gösterilen etiket, içerik menüsünde "
+"gösterilenle aynı olacaktır."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:87
+msgid "The label displayed in the file manager toolbar."
+msgstr "Dosya yöneticisi araç çubuğunda gösterilen etiket."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:88
+msgid "T_oolbar label :"
+msgstr "Araç _Çubuğu etiketi :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:89
+msgid "Toolti_p :"
+msgstr "İ_pucu :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:90
+msgid "_Icon :"
+msgstr "_Simge :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:91
+msgid "The tooltip displayed in the file manager user interface."
+msgstr "Dosya yöneticisi kullanıcı arayüzünde gösterilen ipucu."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:92
+msgid "The icon displayed in the file manager user interface."
+msgstr "Dosya yöneticisi kullanıcı arayüzünde gösterilen simge."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:93
+msgid "The name of a themed icon or the filename of an image."
+msgstr "Tema simgesinin adı veya resmin dosya adı."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:94
+msgid "_Browse..."
+msgstr "_Gözat..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:95
+msgid "<b>Nautilus Item</b>"
+msgstr "<b>Nautilus Ögesi</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:96
+msgid ""
+"This tab lets you determine the main characteristics of the currently "
+"selected item."
+msgstr ""
+"Bu sekme, mevcut seçilmiş ögenin ana karakterini belirlemenize izin verir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:98
+msgid "Just a label to remind you why you have created this profile."
+msgstr "Bu profili neden oluşturduğunuzu hatırlatan bir etiket."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:99
+msgid "_Label :"
+msgstr "_Etiket :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:100
+msgid "<b>Profile</b>"
+msgstr "<b>Profil</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:101
+msgid "_Path :"
+msgstr "_Yol :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:102
+msgid "P_arameters :"
+msgstr "P_arametreler :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:103
+msgid ""
+"The path of the command.\n"
+"If this is not an absolute path, then the PATH environment variable at "
+"execution time will be considered."
+msgstr ""
+"Komutun yolu.\n"
+"Eğer bu yol mutlak değilse, çalışma zamanında PATH çevre değişkeni "
+"kullanılacaktır."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:105
+msgid "The parameters of the command."
+msgstr "Komutun parametreleri."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:106
+msgid "Le_gend"
+msgstr "Açık_lamalar"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:107
+msgid "_Working directory :"
+msgstr "_Çalışma dizini :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:108
+msgid "The default working directory the command should be started in."
+msgstr "Komutun çalışması gerek varsayılan çalışma dizini."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:109
+msgid "B_rowse..."
+msgstr "G_özat..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:110
+msgid "Example"
+msgstr "Örnek"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:111
+msgid "<b>Command</b>"
+msgstr "<b>Komut</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:112
+msgid ""
+"This tab lets you choose the command to be executed, along with its "
+"parameters.\n"
+"Defining several profiles lets you have several commands, each applying with "
+"a different set of conditions."
+msgstr ""
+"Bu sekme, bir komutu parametreleriyle birlikte yürütmenize izin verir.\n"
+"Farklı profiller, farklı komutlara izin verir, bunların her biri farklı "
+"durum kümeleriyle uygulanabilirler."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:114
+msgid "_Command"
+msgstr "_Komut"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:115
+msgid "_Normal"
+msgstr "_Normal"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:116
+msgid "The command will be started as a standard graphical user interface."
+msgstr "Standart grafiksel kullanıcı arayüzü olarak başlayacak komut."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:117
+msgid "In a _terminal"
+msgstr "_Terminal içinde"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:118
+msgid ""
+"The command will be started in the preferred terminal of the graphical "
+"environment."
+msgstr ""
+"Grafiksel ortamın tercih edilmiş terminali içinde başlayacak olan komut."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:119
+msgid "_Embedded"
+msgstr "_Gömülü"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:120
+msgid ""
+"This option makes use of a special feature of the file manager, which would "
+"allow a terminal to be ran inside of it.\n"
+"An acceptable fallback is running in the standard terminal."
+msgstr ""
+"Bu seçenek, dosya yöneticisinin diğer bir özelliğini kullandırır, ayrıca "
+"terminalin de içinde çalışmasına olanak sağlar.\n"
+"Kabul edilebilir bir yedeği de, standart terminalde çalıştırır."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:122
+msgid "_Display output"
+msgstr "_Çıktıyı görüntüle"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:123
+msgid ""
+"The command will be run in a terminal.\n"
+"The terminal will be closed at the end of the execution; standard error and "
+"output streams will be displayed.\n"
+"An acceptable fallback is running in the standard terminal."
+msgstr ""
+"Komut, terminal içinde çalışacak.\n"
+"Çalışmanın sonunda terminal kapanacaktır; stardart hata ve çıktı akışı "
+"görüntülenecektir.\n"
+"Kabul edilebilir bir yedeği de, standart terminalde çalıştırır."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:126
+msgid "<b>Execution mode</b>"
+msgstr "<b>Çalışma kipi</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:127
+msgid "Note: this is not yet implemented in Nautilus-Actions.\n"
+msgstr "Not: Bu, Nautilus-Actions için henüz gerçeklenmemiştir.\n"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:129
+msgid "_Startup notify"
+msgstr "_Başlangıç uyarısı"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:130
+msgid ""
+"When checked, it is known that the run command will send a \"remove\" "
+"message to the desktop environment.\n"
+"See the Startup Notification Protocol Specification for more details.\n"
+"Only relevant when chosen execution mode is Normal."
+msgstr ""
+"Seçili olduğunda, bu çalışacak komutun, masaüstü ortamına bir \"kaldır\" "
+"komutu göndereceği bilinmektedir.\n"
+"Ayrıntılı bilgi için Başlangıç Bildirimi Protokolü Tanımlamasına gözatın.\n"
+"Sadece, seçilmiş çalışma kipi Normal iken uygundur."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:133
+msgid "Startup Window Manager _class :"
+msgstr "Başlangıç Penceresi Yöneticisi _sınıfı :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:134
+msgid ""
+"When specified, this should be the name of a WM class of at least one window "
+"of the run command.\n"
+"See the Startup Notification Protocol Specification for more details.\n"
+"Only relevant when chosen execution mode is Normal."
+msgstr ""
+"Belirtildiğinde, çalışacak komutun, en az bir penceredeki WM sınıfının "
+"olması gereken adını belirtir.\n"
+"Ayrıntılı bilgi için Başlangıç Bildirimi Protokolü Tanımlamasına gözatın.\n"
+"Sadece, seçilmiş çalışma kipi Normal iken uygundur."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:137
+msgid "<b>Startup mode</b>"
+msgstr "<b>Başlangıç kipi</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:138
+msgid "Note: this is not yet implemented in Nautilus-Actions."
+msgstr "Not: Bu, Nautilus-Actions için henüz gerçeklenmemiştir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:139
+msgid "Execute as _user :"
+msgstr "_kullanıcı olarak yürüt :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:140
+msgid ""
+"Enter here the user the command should be ran as.\n"
+"The user may be defined by his numeric UID or his login name.\n"
+"Leave the field empty to run the command as the current user."
+msgstr ""
+"Komutu hangi kullanıcı tarafından çalıştırılacağını buraya girin.\n"
+"Kullanıcı, kendi UID değeri ya da girişte kullandığı ad olarak "
+"tanımlanabilir.\n"
+"Komutu mevcut kullanıcı ile çalıştırmak için alanı boş bırakın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:143
+msgid "<b>Execute as user</b>"
+msgstr "<b>Kullanıcı olarak yürüt</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:144
+msgid ""
+"This advanced tab lets you precisely define how your command will be "
+"executed."
+msgstr ""
+"Bu gelişmiş sekme, komutunuz nasıl yürütüleceğini kesin olarak tanımlamanıza "
+"izin verir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:145
+msgid "E_xecution"
+msgstr "Y_ürütme"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:146
+msgid ""
+"The current item will appear if the basename of each element of the "
+"selection matches one filter of the 'Must match one of' column, while not "
+"matching any of the filters of the 'Must not match any of' column."
+msgstr ""
+"Her bir ögenin taban adı, 'Şunlardan biri ile eşleşmek zorunda' sütunundaki "
+"süzgeç seçimleriyle eşleşiyor, 'Şunlardan hiçbiri ile eşleşmek zorunda "
+"değil' sütunundaki süzgeç ile eşleşmiyorsa, mevcut öge gözükecektir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:147
+msgid ""
+"This list lets you determine for which basenames the currently selected item "
+"will be displayed in the Nautilus context menu.\n"
+"Basenames may use '*' and '?' wildcards.\n"
+"Basenames may be negated to specify for which basenames your item must not "
+"appear."
+msgstr ""
+"Bu liste, Nautilus içerik menüsünde gösterilecek olan mevcut seçilmiş öge "
+"taban adı için karar vermenize olanak tanır.\n"
+"Taban adları '*' ve '?' jokerlerini kullanabilirler.\n"
+"Taban adları, görünmemesi gereken ögenizin taban adı için olum belirtim "
+"yapabilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:150
+msgid "Click to add a new basename filter."
+msgstr "Yeni bir taban adı süzgeçi eklemek için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:151
+msgid "Click to remove the current basename filter."
+msgstr "Mevcut taban adı süzgeçini kaldırmak için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:152
+msgid "Match _case"
+msgstr "Büyük/kü_çük harf duyarlı"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:153
+msgid "Click to define the above basename filters as case sensitive."
+msgstr ""
+"Alttaki taban adı filtresini büyük/küçük harf duyarlı yapmak için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:154
+msgid "<b>Basenames conditions</b>"
+msgstr "<b>Taban adları durumları</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:155
+msgid ""
+"This tab lets you determine for which basenames the currently selected item "
+"will be displayed in the Nautilus context menu.\n"
+"Basenames may be negated to specify for which basenames your item must not "
+"appear."
+msgstr ""
+"Bu sekme, Nautilus içerik menüsünde gösterilecek olan seçilmiş ögenin taban "
+"adını belirlemenize izin verir.\n"
+"Taban adları, görünmemesi gereken ögenizin taban adı için olum belirtim "
+"yapabilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:157
+msgid "_Basenames"
+msgstr "_Taban adları"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:158
+msgid ""
+"The current item will appear if the mimetype of each element of the "
+"selection matches one filter of the 'Must match one of' column, while not "
+"matching any of the filters of the 'Must not match any of' column."
+msgstr ""
+"Her bir ögenin mime türü, 'Şunlardan biri ile eşleşmek zorunda' sütunundaki "
+"süzgeç seçimleriyle eşleşiyor, 'Şunlardan hiçbiri ile eşleşmek zorunda "
+"değil' sütunundaki süzgeç ile eşleşmiyorsa, mevcut öge gözükecektir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:159
+msgid ""
+"This list lets you determine for which mimetypes the currently selected item "
+"will be displayed in the Nautilus context menu.\n"
+"Mimetypes may be specified as '*', '*/*', 'group/*' or 'group/subgroup'.\n"
+"Mimetypes may be negated to specify for which type of objects your item must "
+"not appear."
+msgstr ""
+"Bu liste, Nautilus içerik menüsünde gösterilecek olan mevcut seçilmiş ögenin "
+"mime türünü belirlemenize olanak tanır.\n"
+"Mime türleri \"*\", \"*/*\", \"group/*\" veya \"group/altgroup\" şeklinde "
+"belirtilebilir.\n"
+"Mime türleri, ögenizin görünmek zorunda olduğu türü olumsuz kılabilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:162
+msgid "Click to add a new mimetype filter."
+msgstr "Yeni bir mime türü süzgeci eklemek için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:163
+msgid "Click to remove the current mimetype filter."
+msgstr "Mevcut mime türü süzgecini kaldırmak için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:164
+msgid "<b>Mimetypes conditions</b>"
+msgstr "<b>Mime türü durumları</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:165
+msgid ""
+"This tab lets you determine for which mimetypes the currently selected item "
+"will be displayed in the Nautilus context menu.\n"
+"Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
+"Mimetypes may be negated to specify for which type of objects your item must "
+"not appear."
+msgstr ""
+"Bu sekme, Nautilus içerik menüsünde gösterilecek olan mevcut seçilmiş ögenin "
+"mime türünü belirlemenize olanak tanır.\n"
+"Mime türleri \"*\", \"*/*\", \"group/*\" veya \"group/altgroup\" şeklinde "
+"belirtilebilir.\n"
+"Mime türleri, ögenizin görünmek zorunda olduğu türü olumsuz kılabilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:168
+msgid "_Mimetypes"
+msgstr "_Mime türleri"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:169
+msgid ""
+"The current item will appear if the location of each element of the "
+"selection is one or inside one of the paths of the 'Must match one of' "
+"column, while not being one or inside one of the 'Must not match any of' "
+"column."
+msgstr ""
+"Her bir ögenin konumu, 'Şunlardan biri ile eşleşmek zorunda' sütunundaki "
+"süzgeç seçimleriyle eşleşiyor, 'Şunlardan hiçbiri ile eşleşmek zorunda "
+"değil' sütunundaki süzgeç ile eşleşmiyorsa, mevcut öge gözükecektir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:170
+msgid ""
+"This list lets you determine where (in which folders) the currently selected "
+"files must be found in order for the item to be displayed in the Nautilus "
+"context menu.\n"
+"Folders may use '*' or '?' wildcards.\n"
+"Folder filters may be negated to specify for which folders your item must "
+"not appear."
+msgstr ""
+"Bu sekme, Nautilus içerik menüsünde gösterilecek olan mevcut seçilmiş ögenin "
+"nerede (klasör) olması gerektiğini belirlemenize olanak tanır.\n"
+"Klasörler '*' veya '?' jokerlerini kullanabilirler.\n"
+"Klasörler, ögenizin görünmek zorunda olmadığı klasörü olumsuz kılabilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:173
+msgid "Click to add a new folder filter."
+msgstr "Yeni bir klasör süzgeci eklemek için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:174
+msgid "Click to browse the filesystem in order to select a new folder filter."
+msgstr ""
+"Yeni bir klasör süzgeci seçmek yerine dosya sisteminine göz atmak için "
+"tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:175
+msgid "Click to remove the current folder filter."
+msgstr "Mevcut klasör süzgecini kaldırmak için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:176
+msgid "<b>Folders conditions</b>"
+msgstr "<b>Klasörlerin durumları</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:177
+msgid ""
+"This tab lets you determine where (in which folders) the currently selected "
+"files must be found in order for the item to be displayed in the Nautilus "
+"context menu.\n"
+"Folder filters may be negated to specify for which folders your item must "
+"not appear."
+msgstr ""
+"Bu sekme, Nautilus içerik menüsünde gösterilecek olan mevcut seçilmiş ögenin "
+"nerede (klasör) olması gerektiğini belirlemenize olanak tanır.\n"
+"Klasörler, ögenizin görünmek zorunda olmadığı klasörü olumsuz kılabilir. "
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:179
+msgid "_Folders"
+msgstr "_Klasörler"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:180
+msgid ""
+"The current item will appear if the scheme of each element of the selection "
+"matches one of the 'Must match one of' column, while not matching any of the "
+"'Must not match any of' column."
+msgstr ""
+"Her bir ögenin şeması, 'Şunlardan biri ile eşleşmek zorunda' sütunundaki "
+"süzgeç seçimleriyle eşleşiyor, 'Şunlardan hiçbiri ile eşleşmek zorunda "
+"değil' sütunundaki süzgeç ile eşleşmiyorsa, mevcut öge gözükecektir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:181
+msgid ""
+"This list lets you determine which schemes the currently selected files must "
+"satisfy in order for the item to be displayed in the Nautilus context menu.\n"
+"Filters may be negated to specify for which schemes your item must not "
+"appear."
+msgstr ""
+"Bu liste, Nautilus içerik menüsünde gösterilmesi için seçilmiş dosyaların, "
+"öge için yapmak zorunlu olduğu şemayı belirlemenize izin verir.\n"
+"Süzgeçler, ögenizin görünmek zorunda olmadığı şemaları olumsuz olarak "
+"belirtebilirler."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:183
+msgid "Click to add a new scheme filter."
+msgstr "Yeni bir şema süzgeci için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:184
+msgid "De_faults..."
+msgstr "Var_sayılanlar..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:185
+msgid "Click to select a new scheme filter among default schemes."
+msgstr ""
+"Varsayılan şemaların arasından yeni bir şema süzgeci seçmek için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:186
+msgid "Click to remove the current scheme filter."
+msgstr "Mevcut şema süzgecini kaldırmak için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:187
+msgid "<b>Schemes conditions</b>"
+msgstr "<b>Şemaların durumları</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:188
+msgid ""
+"This tab lets you determine which schemes the currently selected files must "
+"satisfy in order for the item to be displayed in the Nautilus context menu.\n"
+"Filters may be negated to specify for which schemes your item must not "
+"appear."
+msgstr ""
+"Bu sekme, Nautilus içerik menüsünde gösterilmesi için seçilmiş dosyaların, "
+"öge için yapmak zorunlu olduğu şemayı belirlemenize izin verir.\n"
+"Süzgeçler, ögenizin görünmek zorunda olmadığı şemaları olumsuz olarak "
+"belirtebilirler."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:191
+msgid ""
+"The current item will appear if each element of the selection matches all "
+"capabilities of the 'Must match all of' column, while not matching any "
+"capability of the 'Must not match any of' column."
+msgstr ""
+"Her bir öge, 'Şunların hepsi ile eşleşmek zorunda' sütunundaki süzgeç "
+"seçimleriyle eşleşiyor, 'Şunlardan hiçbiri ile eşleşmek zorunda değil' "
+"sütunundaki süzgeç ile eşleşmiyorsa, mevcut öge gözükecektir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:192
+msgid ""
+"This list lets you determine which capabilities the currently selected files "
+"must satisfy in order for the item to be displayed in the Nautilus context "
+"menu.\n"
+"Capabilities may be negated to specify for which capabilities your item must "
+"not appear."
+msgstr ""
+"Bu liste, Nautilus içerik menüsünde gösterilmesi için seçilmiş dosyaların, "
+"hangi yetenekleri olacağını, sırayla belirlemenize izin verir.\n"
+"Yetenekler, ögenizin görünmek zorunda olmadığı yetenekleri olumsuz olarak "
+"belirtebilirler."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:194
+msgid "Click to add a new capability filter."
+msgstr "Yeni bir yetenek süzgeci eklemek için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:195
+msgid "Click to remove the current capability."
+msgstr "Mevcut yeteneği kaldırmak için tıklayın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:196
+msgid "<b>Capabilities conditions</b>"
+msgstr "<b>Yetenekleri durumları</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:197
+msgid ""
+"This tab lets you determine which capabilities the currently selected files "
+"must satisfy in order for the item to be displayed in the Nautilus context "
+"menu.\n"
+"Filters may be negated to specify for which capabilities your item must not "
+"appear."
+msgstr ""
+"Bu liste, Nautilus içerik menüsünde gösterilmesi için seçilmiş dosyaların, "
+"hangi yetenekleri olacağını, sırayla belirlemenize izin verir.\n"
+"Filtreler, ögenizin görünmek zorunda olmadığı yetenekleri olumsuz olarak "
+"belirtebilirler."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:199
+msgid "Ca_pabilities"
+msgstr "Yetene_kler"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:200
+msgid ""
+"This is an advanced condition based on the count of the current selection.\n"
+"If the current selection does not match this condition, then the item will "
+"not be displayed in the file manager context menus or toolbar."
+msgstr ""
+"Bu, mevcut seçimin sayısı ile ilgili gelişmiş durumdur.\n"
+"Eğer mevcut seçim bu durum ile eşleşmiyorsa, öge dosya yöneticisi içeriği "
+"menülerinde veya araç çubuğunda gözükmeyecektir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:202
+msgid "_Count :"
+msgstr "_Sayı :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:203
+msgid "<b>Appears if selection contains</b>"
+msgstr "<b>Seçim şunları içeriyorsa gösterir</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:204
+msgid ""
+"This is an advanced condition based on the running desktop environment.\n"
+"First choose on the left if the item depends of a particular desktop "
+"environment, then select on the right the adequate desktop environment."
+msgstr ""
+"Bu, çalışan masaüstü ortamın ile ilgili geçişmiş bir durumdur.\n"
+"Öge, belirli bir masaüstü ortamına bağlı ise soldaki ilk seçim, değilse "
+"sağdaki uygun masaüstü ortamıdır."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:206
+msgid "Item may appear depending of the desktop environment."
+msgstr "Öge, masaüstü ortamına bağlı olarak gözükebilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:207
+msgid "_Always appears"
+msgstr "_Her zaman görünür"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:208
+msgid "_Only appears in selected environments"
+msgstr "_Sadece seçilmiş ortamlarda görünür"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:209
+msgid "_Never appears in selected environments"
+msgstr "Seçilmiş ortamlarda _asla görünmez"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:211
+msgid "Appears if the file is e_xecutable :"
+msgstr "Dosya _çalıştırılabilir ise görünür :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:212
+msgid ""
+"This is an advanced condition based on the presence of an executable file on "
+"the file system.\n"
+"This may be used for example to test for a prerequisite package."
+msgstr ""
+"Bu gelişmiş durum, dosya sistemindeki bir çalıştırılabilir dosyanın durumuna "
+"bağlıdır.\n"
+"Bir ön gereklilik paketine örnek test yapmak için kullanılabilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:214
+msgid "Bro_wse..."
+msgstr "Göz_at..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:215
+msgid "Appears if the name is _registered on D-Bus :"
+msgstr "Adı D-Bus üzerinde _kayıtlı ise gözükür :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:216
+msgid ""
+"This is an advanced condition based on the presence of a particular service "
+"on the D-Bus system.\n"
+"This may be used for example for testing that a prerequisite service is "
+"currently available."
+msgstr ""
+"Bu gelişmiş durum, belirli bir hizmetin D-Bus sistemi üzerinde olmasına "
+"bağlıdır.\n"
+"Kullanılabilir olan bir ön gereklili paketine örnek test yapmak için "
+"kullannılabilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:218
+msgid "Appears if the command outputs \"_true\" :"
+msgstr "Komut çıktısı \"_true\" ise gözükür :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:219
+msgid ""
+"This is an advanced condition based on a runtime result.\n"
+"Enter here a command which is able to display the exact \"true\" string on "
+"its standard output.\n"
+"This may be used for example for testing a complex condition."
+msgstr ""
+"Bu gelişmiş durum, bir çalışma zamanı sonucuna bağlıdır.\n"
+"Buraya standart çıktısında aynen \"true\" yazacak bir komutu girin.\n"
+"Karmaşık bir durumu test etmek için bir örnek olarak kullanılabilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:222
+msgid "Appears if the _binary is running :"
+msgstr "Bir _binary çalışıyorsa gözükür :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:223
+msgid ""
+"This is an advanced condition based on the presence of a running binary.\n"
+"Note that only the basename of the binary is checked, not its dirname nor "
+"its parameters.\n"
+"This may be used for example for testing the presence of a prerequisite "
+"daemon."
+msgstr ""
+"Bu, ikiliğin çalışmasının varlığına bağlı olan gelişmiş bir durumdur.\n"
+"Sadece ikilinin taban adı kontrol edilmiş, dizin adı veya parametreler "
+"kontrol edilmemiştir.\n"
+"Bu, bir önkoşul artalan sürcenin varlığının testi için bir örnek olarak "
+"kullanılabilir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:226
+msgid "Brow_se..."
+msgstr "Göz_at..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:227
+msgid "<b>Execution environment</b>"
+msgstr "<b>Yürütme ortamı</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:228
+msgid ""
+"This tab lets you determine some advanced conditions the currently selected "
+"files must satisfy in order for the item to be displayed in the file manager "
+"context menu."
+msgstr ""
+"Bu sekme, zaten seçili dosyalarda, dosya yöneticisi içerik menüsünde "
+"görüntülenecek öge sırasını tahmin etmek için, size bazı gelişmiş durumlar "
+"sunmaktadır."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:229
+msgid "_Environment"
+msgstr "_Ortam"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:230
+msgid "_Description :"
+msgstr "_Tanımlama :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:231
+msgid ""
+"Enter here a free text which may be used (e.g. in a Web service or in a "
+"search tool) to describe your item."
+msgstr ""
+"Buraya, ögenizi tanımlamak için bir metin giriniz (örn. Web hizmetinde ya da "
+"arama aracı gibi)."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:232
+msgid "E_nabled"
+msgstr "E_tkin"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:233
+msgid ""
+"Check the box to enable this item.\n"
+"If unchecked, then the item will never appear in the file manager context "
+"menus or toolbar."
+msgstr ""
+"Ögeyi etkinleştirmek için kutuyu işaretleyin.\n"
+"İşaretli değilse, öge hiçbir zaman dosya yöneticisi çerik menülerinde veya "
+"araç çubuğunda gözükmeyecek."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:235
+msgid "Suggested _shortcut :"
+msgstr "Önerilen _kısayol :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:237
+msgid ""
+"Enter here the keyboard touch combination you suggest as a shortcut to your "
+"action.\n"
+"Note: this is not yet implemented in Nautilus-Actions."
+msgstr ""
+"Buraya, eyleminiz için bir kısayol olarak önerdiğiniz klavye tuş birleşimini "
+"girin.\n"
+"Not: bu henüz Nautilus-Actions içinde gerçeklenmiş değildir."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:240
+msgid "Id. :"
+msgstr "Kimlik. :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:241
+msgid "I/O provider :"
+msgstr "G/Ç sağlayıcısı :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:242
+msgid "Read-only item"
+msgstr "Salt okunur öge"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:243
+msgid ""
+"This box is checked if the item cannot be edited.\n"
+"There may be multiple reasons for why an item cannot be edited. See your "
+"User's Manual."
+msgstr ""
+"Öge düzenlenebilir değilse, bu kutu işaretlidir.\n"
+"Ögenin neden düzenlenebilir olmadığının birden çok sebebi olabilir. "
+"Kullanıcı Klavuzu 'nuza gözatın."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:245
+msgid "<b>Read-only properties</b>"
+msgstr "<b>Salt okunu özellikleri</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:246
+msgid ""
+"This tab lets you edit some miscellaneous properties, and access some non-"
+"modifiable information."
+msgstr ""
+"Bu sekme, çeşitli özellikleri düzenlemenize ve değişiklik yapılamayan bazı "
+"bilgilere erişmenize olanak tanır."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:247
+msgid "P_roperties"
+msgstr "Ö_zellikler"
+
+#. i18n: label of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:933
+msgid "Nautilus-Actions actions"
+msgstr "Nautilus-Actions eylemleri"
+
+#. i18n: tooltip of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:935
+msgid ""
+"A submenu which embeds the currently available Nautilus-Actions actions and "
+"menus"
+msgstr "Mevcut Nautilus-Actions eylemlerini ve menülerini gömen bir alt menü"
+
+#: ../src/plugin-menu/nautilus-actions.c:979
+msgid "About Nautilus-Actions"
+msgstr "Nautilus-Actions Hakkında"
+
+#: ../src/plugin-menu/nautilus-actions.c:980
+msgid "Display some information about Nautilus-Actions"
+msgstr "Nautilus-Actions hakkında bilgi göster"
+
+#: ../src/test/test-reader.c:48
+msgid "The URI of the file to be imported"
+msgstr "İçe aktarılacak dosyanın URI 'si"
+
+#: ../src/test/test-reader.c:48 ../src/utils/nautilus-actions-run.c:61
+msgid "<URI>"
+msgstr "<URI>"
+
+#: ../src/test/test-reader.c:55 ../src/utils/na-delete-xmltree.c:77
+#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:157
+#: ../src/utils/nautilus-actions-print.c:70
+#: ../src/utils/nautilus-actions-run.c:68
+msgid "Output the version number"
+msgstr "Çıktı sürüm numarası"
+
+#: ../src/test/test-reader.c:108
+msgid "Import a file."
+msgstr "Bir dosya içe aktar."
+
+#: ../src/test/test-reader.c:122
+msgid ""
+"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
+"mail to <maintainer@nautilus-actions.org>.\n"
+msgstr ""
+"Hata raporlarını http://bugzilla.gnome.org adresinden gönderbilir veya "
+"<maintainer@nautilus-actions.org> mailini tercih edebilirsiniz.\n"
+
+#: ../src/test/test-reader.c:130 ../src/utils/na-delete-xmltree.c:183
+#: ../src/utils/na-print-schemas.c:191 ../src/utils/na-set-conf.c:208
+#: ../src/utils/nautilus-actions-new.c:387
+#: ../src/utils/nautilus-actions-print.c:183
+#: ../src/utils/nautilus-actions-run.c:210
+msgid "Miscellaneous options"
+msgstr "Çeşitli seçenekler"
+
+#: ../src/test/test-reader.c:151 ../src/utils/na-delete-xmltree.c:113
+#: ../src/utils/na-print-schemas.c:112 ../src/utils/na-set-conf.c:120
+#: ../src/utils/nautilus-actions-new.c:207
+#: ../src/utils/nautilus-actions-print.c:110
+#: ../src/utils/nautilus-actions-run.c:119
+#, c-format
+msgid "Syntax error: %s\n"
+msgstr "Sözdizimi hatası: %s\n"
+
+#: ../src/test/test-reader.c:166
+#, c-format
+msgid "Error: uri is mandatory.\n"
+msgstr "Hata: uri zorunlu.\n"
+
+#. i18: '--help' is a command-line option - do not translate
+#: ../src/test/test-reader.c:178 ../src/utils/na-delete-xmltree.c:197
+#: ../src/utils/na-print-schemas.c:304 ../src/utils/na-set-conf.c:222
+#: ../src/utils/nautilus-actions-new.c:632
+#: ../src/utils/nautilus-actions-print.c:240
+#: ../src/utils/nautilus-actions-run.c:484
+#, c-format
+msgid "Try %s --help for usage.\n"
+msgstr "Kullanım için %s --help yazın.\n"
+
+#: ../src/utils/console-utils.c:53
+msgid ""
+"Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=nautilus-actions,\n"
+"or you may prefer to mail to <maintainer@nautilus-actions.org>.\n"
+msgstr ""
+"Hata raporlarını https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-"
+"actions adresinden gönderbilir,\n"
+"ayrıca <maintainer@nautilus-actions.org> e-posta adresini de "
+"kullanabilirsiniz.\n"
+
+#: ../src/utils/na-delete-xmltree.c:68
+msgid "The XPath to the tree to be deleted"
+msgstr "Silinecek ağaç için XPath"
+
+#: ../src/utils/na-delete-xmltree.c:70
+msgid "The filename of the XML backend"
+msgstr "XML arka yüzün dosya adı"
+
+#: ../src/utils/na-delete-xmltree.c:128
+#, c-format
+msgid "Error: a XPath is mandatory.\n"
+msgstr "Hata: bir XPath zorunlu.\n"
+
+#: ../src/utils/na-delete-xmltree.c:133
+#, c-format
+msgid "Error: a XML filename is mandatory.\n"
+msgstr "Hata: bir XML dosya adı zorunlu.\n"
+
+#: ../src/utils/na-delete-xmltree.c:164
+msgid "Delete a XPath from a XML document."
+msgstr "XML belgesinden bir XPath sil."
+
+#: ../src/utils/na-delete-xmltree.c:213
+#, c-format
+msgid "Error: unable to parse file '%s'\n"
+msgstr "Hata: '%s' dosyası ayrıştırılamıyor\n"
+
+#: ../src/utils/na-delete-xmltree.c:220
+#, c-format
+msgid "Error: unable to create new XPath context\n"
+msgstr "Hata: yeni XPath içeriği oluşturulamıyor\n"
+
+#: ../src/utils/na-delete-xmltree.c:228
+#, c-format
+msgid "Error: unable to evaluate XPath expression '%s'\n"
+msgstr "Hata: '%s' XPath ifadesi ölçülemiyor\n"
+
+#: ../src/utils/na-print-schemas.c:62
+msgid "Output the schema on stdout"
+msgstr "Şemayı standart çıktıya yazdır"
+
+#: ../src/utils/na-print-schemas.c:67
+msgid "Output the action schemas [default]"
+msgstr "Eylem şemalarını yazdır [default]"
+
+#: ../src/utils/na-print-schemas.c:68
+msgid "Output the menu schemas"
+msgstr "Menü şemalarını yazdır"
+
+#: ../src/utils/na-print-schemas.c:162
+msgid "Output the Nautilus-Actions GConf schemas on stdout."
+msgstr "Nautilus-Actions GConf şemalarını standart çıktıya yazdır."
+
+#: ../src/utils/na-print-schemas.c:166
+msgid ""
+"As of version 3.1.0, GConf as an I/O provider is deprecated.\n"
+"This program is no more maintained."
+msgstr ""
+"3.1.0 sürümden itibaren, bir G/Ç sağlayıcısı olarak GConf önerilmiyor.\n"
+"Bu program artık sürdürülmüyor."
+
+#: ../src/utils/na-print-schemas.c:185
+msgid "Type options"
+msgstr "Tür seçenekleri"
+
+#: ../src/utils/na-set-conf.c:50
+msgid "Set a key=value pair in a key file."
+msgstr "Bir anahtar dosyasına, anahtar=değer ikilisi ayarla"
+
+#: ../src/utils/na-set-conf.c:61
+msgid "The group to be updated"
+msgstr "Güncellenecek grup"
+
+#: ../src/utils/na-set-conf.c:63
+msgid "The key to be updated"
+msgstr "Güncellenecek anahtar"
+
+#. i18n: 'str', 'int' and 'bool' are literal values: do not translate
+#: ../src/utils/na-set-conf.c:66
+msgid "The type of the value to be set, may be 'str', 'int' or 'bool'"
+msgstr "Ayarlanacak değerin türü, 'str', 'int' veya 'bool' olabilir"
+
+#: ../src/utils/na-set-conf.c:68
+msgid "The value to be set"
+msgstr "Ayarlanacak değer"
+
+#: ../src/utils/na-set-conf.c:75
+msgid "Output the version number and exit gracefully"
+msgstr "Sürüm numarasını yazdır ve graceful çık"
+
+#: ../src/utils/na-set-conf.c:136
+#, c-format
+msgid "Error: a group is mandatory.\n"
+msgstr "Hata: bir grup zorunlu.\n"
+
+#: ../src/utils/na-set-conf.c:141
+#, c-format
+msgid "Error: a key is mandatory.\n"
+msgstr "Hata: bir anahtar zorunlu.\n"
+
+#: ../src/utils/na-set-conf.c:146
+#, c-format
+msgid "Error: a type is mandatory for setting/updating a value.\n"
+msgstr "Hata: bir değerin ayarı/güncellemesi için bir tür zorunlu.\n"
+
+#. i18n: 'str', 'int' and 'bool' are literal values: do not translate
+#: ../src/utils/na-set-conf.c:157
+#, c-format
+msgid "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n"
+msgstr "Hata: bilinmeyen tür: %s. 'str', 'int' veya 'bool' kullanın.\n"
+
+#: ../src/utils/na-set-conf.c:164
+#, c-format
+msgid "Error: a value is mandatory.\n"
+msgstr "Hata: değer zorunlu.\n"
+
+#: ../src/utils/nautilus-actions-new.c:135
+msgid "Set it if the item should be disabled at creation"
+msgstr "Ögenin başlangıçta kapalı olması gerekiyorsa, ayarla"
+
+#: ../src/utils/nautilus-actions-new.c:137
+msgid "Set it if the item doesn't target the selection context menu"
+msgstr "Öge, seçim içerik menüsünü hedeflemiyorsa, ayarla"
+
+#: ../src/utils/nautilus-actions-new.c:139
+msgid "Set it if the item doesn't target the location context menu"
+msgstr "Öge, konum içerik menüsünü hedeflemiyorsa, ayarla"
+
+#: ../src/utils/nautilus-actions-new.c:141
+msgid "Set it if the item doesn't target the toolbar"
+msgstr "Öge, araç çubuğunu hedeflemiyorsa, ayarla"
+
+#: ../src/utils/nautilus-actions-new.c:143
+msgid "Set it if the basename patterns are case insensitive"
+msgstr "Taban adı desenleri, büyük küçük harf duyarlı değilse, ayarla"
+
+#: ../src/utils/nautilus-actions-new.c:149
+msgid "Output the new item content on stdout (default)"
+msgstr "Yeni öge içeriğini, standar çıktıya (varsayılan) yazdır"
+
+#: ../src/utils/nautilus-actions-new.c:150
+msgid "Create the new item as a .desktop file"
+msgstr "Yeni ögeyi .desktop dosyası olarak oluştur"
+
+#: ../src/utils/nautilus-actions-new.c:161
+#, c-format
+msgid "Error: '%s' and '%s' options cannot both be specified\n"
+msgstr "Hata: '%s' ve '%s' seçeneklerinin ikiside belirtilemiyor\n"
+
+#: ../src/utils/nautilus-actions-new.c:162
+#, c-format
+msgid "'%s' option is deprecated, see %s\n"
+msgstr "'%s' seçeneği kullanılmıyor, see %s\n"
+
+#: ../src/utils/nautilus-actions-new.c:220
+#, c-format
+msgid "Error: an action label is mandatory.\n"
+msgstr "Hata: bir eylem etiketi zorunlu.\n"
+
+#: ../src/utils/nautilus-actions-new.c:266
+#, c-format
+msgid "Error: only one output option may be specified.\n"
+msgstr "Hata: sadece bir çıktı seçeneği belirtilebilir.\n"
+
+#: ../src/utils/nautilus-actions-new.c:352
+msgid "Define a new action."
+msgstr "Yeni bir eylem tanımla."
+
+#: ../src/utils/nautilus-actions-new.c:355
+msgid ""
+"The created action defaults to be written to stdout.\n"
+"It can also be written to an output folder, in a file later suitable for an "
+"import in NACT.\n"
+"Or you may choose to directly write the action into your Nautilus-Actions "
+"configuration."
+msgstr ""
+"Oluşturulmuş eylem varsayılan olarak standart çıktıya yazılacaktır.\n"
+"Ayrıca, NACT işlemi için uygun bir dosya içinde bir çıktı klasörüne de "
+"yazıllır.\n"
+"Veya direk olarak yazdırmak istediğiniz eylemi, Nautilus-Actions "
+"yapılandırmasından seçebilirsiniz."
+
+#: ../src/utils/nautilus-actions-new.c:381
+msgid "Output of the program"
+msgstr "Programın çıktısı"
+
+#: ../src/utils/nautilus-actions-new.c:381
+msgid "Choose where the program creates the action"
+msgstr "Programın, eylemi yaratacağı yeri seçin"
+
+#. i18n: 'na-desktop' is a plugin identifier - do not translate
+#: ../src/utils/nautilus-actions-new.c:595
+msgid "Error: unable to find 'na-desktop' i/o provider."
+msgstr "Hata: 'na-desktop' g/ç sağlayıcısı bulunamadı."
+
+#. i18n: nautilus-actions-print program summary
+#: ../src/utils/nautilus-actions-print.c:55
+msgid "Print a menu or an action to stdout."
+msgstr "Menüyü veya eylemi standart çıktıya yazdır."
+
+#: ../src/utils/nautilus-actions-print.c:60
+msgid "The identifier of the menu or the action to be printed"
+msgstr "Yazdırılacak menünün veya eylemin tanımlayıcısı"
+
+#. i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable
+#: ../src/utils/nautilus-actions-print.c:63
+msgid "An export format [Desktop1]"
+msgstr "Bir dışa aktarma biçimi [Masaüstü1]"
+
+#: ../src/utils/nautilus-actions-print.c:125
+#, c-format
+msgid "Error: a menu or action id is mandatory.\n"
+msgstr "Hata: bir menü veya eylem kimliği zorunlu.\n"
+
+#. i18n: %s stands for the id of the export format, and is not translatable
+#: ../src/utils/nautilus-actions-print.c:141
+#, c-format
+msgid "Error: %s: unknown export format.\n"
+msgstr "Hata: %s: bilinmeyen dışa aktarma biçimi.\n"
+
+#: ../src/utils/nautilus-actions-print.c:206
+#, c-format
+msgid "Error: item '%s' doesn't exist.\n"
+msgstr "Hata: '%s' ögesi mevcut değil.\n"
+
+#: ../src/utils/nautilus-actions-run.c:59
+msgid "The internal identifier of the action to be launched"
+msgstr "Başlatılacak eylemin dahili tanımlayıcısı"
+
+#: ../src/utils/nautilus-actions-run.c:61
+msgid ""
+"A target, file or folder, for the action. More than one options may be "
+"specified"
+msgstr ""
+"Eylem için bir hedef, dosya ya da klasör. Birden fazla seçenek belirtilebilir"
+
+#: ../src/utils/nautilus-actions-run.c:134
+#, c-format
+msgid "Error: action id is mandatory.\n"
+msgstr "Hata: eylem kimliği zorunlu.\n"
+
+#: ../src/utils/nautilus-actions-run.c:159
+#, c-format
+msgid "No current selection. Nothing to do. Exiting.\n"
+msgstr "Mevcut seçim yok. Yapılacak birşey yok. Çıkılıyor.\n"
+
+#: ../src/utils/nautilus-actions-run.c:164
+#, c-format
+msgid "Action %s is not a valid candidate. Exiting.\n"
+msgstr "%s eylemi, geçerli bir aday değil. Çıkılıyor.\n"
+
+#: ../src/utils/nautilus-actions-run.c:170
+#, c-format
+msgid "No valid profile is candidate to execution. Exiting.\n"
+msgstr "Yürütme için geçerli bir aday profil yok. Çıkılıyor.\n"
+
+#: ../src/utils/nautilus-actions-run.c:191
+msgid "Execute an action on the specified target."
+msgstr "Belirtilmiş hedefte bir eylemi yürüt."
+
+#: ../src/utils/nautilus-actions-run.c:236
+#, c-format
+msgid "Error: action '%s' doesn't exist.\n"
+msgstr "Hata: '%s' eylemi mevcut değil.\n"
+
+#: ../src/utils/nautilus-actions-run.c:240
+#, c-format
+msgid "Error: action '%s' is disabled.\n"
+msgstr "Hata: '%s' eylemi etkin değil.\n"
+
+#: ../src/utils/nautilus-actions-run.c:245
+#, c-format
+msgid "Error: action '%s' is not valid.\n"
+msgstr "Hata: '%s' eylemi geçerli değil.\n"
+
+#: ../src/utils/nautilus-actions-run.c:331
+#, c-format
+msgid "Error: unable to get a connection to session DBus: %s"
+msgstr "Hata: DBus oturumuna bağlantı açılamyır: %s"
+
+#: ../src/utils/nautilus-actions-run.c:344
+#, c-format
+msgid "Error: unable to get a proxy on %s service"
+msgstr "Hata: %s hizmetinde bir vekil sunucu alınamıyor"
+
+#: ../src/utils/nautilus-actions-run.c:354
+#, c-format
+msgid "Error on GetSelectedPaths call: %s"
+msgstr "Hata: GetSelectedPaths çağrılarına: %s"
