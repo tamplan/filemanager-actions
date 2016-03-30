@@ -2991,7 +2991,7 @@ msgstr ""
 
 #: ../src/nact/nact-preferences.ui.h:16
 msgid "_Runtime preferences"
-msgstr "Předvolby _běhu"
+msgstr "_Běh"
 
 #: ../src/nact/nact-preferences.ui.h:17
 msgid ""
@@ -3032,7 +3032,7 @@ msgstr ""
 
 #: ../src/nact/nact-preferences.ui.h:25
 msgid "Runtime E_xecution"
-msgstr "_Běhové provádění"
+msgstr "Provádění _běhu"
 
 #: ../src/nact/nact-preferences.ui.h:26
 msgid "What to do when pasting or duplicating an item in the tree ?"
