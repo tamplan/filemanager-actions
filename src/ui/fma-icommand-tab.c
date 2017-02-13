@@ -330,7 +330,7 @@ on_tree_selection_changed( FMATreeView *tview, GList *selected_items, FMAIComman
 			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 	g_debug( "%s: profile=%p (%s)",
-			thisfn, ( void * ) profile, G_OBJECT_TYPE_NAME( profile ));
+			thisfn, ( void * ) profile, profile ? G_OBJECT_TYPE_NAME( profile ) : "null" );
 
 	enable_tab = ( profile != NULL );
 	fma_main_tab_enable_page( FMA_MAIN_WINDOW( instance ), TAB_COMMAND, enable_tab );
