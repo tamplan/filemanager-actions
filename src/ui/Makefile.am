@@ -158,7 +158,7 @@ fma_config_tool_LDFLAGS = \
 	$(NULL)
 
 actions_files = \
-	fma-ui.actions										\
+	fma-config-tool.actions								\
 	$(NULL)
 
 ui_files = \

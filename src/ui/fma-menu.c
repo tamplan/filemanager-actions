@@ -47,7 +47,7 @@
 #include "fma-preferences-editor.h"
 #include "fma-tree-view.h"
 
-static const gchar *st_uixml_actions      = PKGUIDIR "/fma-ui.actions";
+static const gchar *st_uixml_actions      = PKGUIDIR "/fma-config-tool.actions";
 static const gchar *st_ui_app_menu        = "app-menu";
 static const gchar *st_ui_menubar         = "menubar";
 static const gchar *st_ui_maintainer_menu = "maintainer";
