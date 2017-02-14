@@ -1,8 +1,33 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0" encoding="utf-8"?>
 <omf>
   <resource>
+    <creator>pwieser@trychlos.org (Pierre Wieser)</creator>
+    <maintainer>pwieser@trychlos.org (Pierre Wieser)</maintainer>
+    <title>FileManager-Actions configuration tool User's Manual</title>
+    <date>September 2015</date>
+    <version identifier="FileManager-Actions configuration tool User's Manual v 3.4" date="September 2015"/>
     <subject category="GNOME|Utilities"/>
+    <description>
+    
+      FileManager-Actions is a file manager extension whose principal function
+      is to allow the user to add arbitrary actions to the file manager
+      context menus. These actions may be organized in menus and submenus,
+      exported and shared with other desktop environments.
+    
+    
+      This manual describes the FileManager-Actions configuration tool user interface, and explains how
+      you may configure your menus and actions, making them be displayed
+      and applied depending on specific conditions.
+    
+    
+      Starting with its 3.4 version, FileManager-Actions is compatible with both
+      Nautilus and Nemo Gnome file-managers.
+    
+    </description>
     <type>user's guide</type>
+    <format mime="text/xml" dtd="-//OASIS//DTD DocBook XML V4.5//EN"/>
+    <identifier url="file:///home/pierre/data/eclipse/nautilus-actions/_install/share/gnome/help/fma-config-tool/fr/fma-config-tool.xml"/>
+    <language code="fr"/>
     <relation seriesid="0ef1bb15-2edd-ef24-7941-18db1cc3da9c90"/>
     <rights type="GNU FDL" license.version="1.3" holder="Pierre Wieser"/>
   </resource>
