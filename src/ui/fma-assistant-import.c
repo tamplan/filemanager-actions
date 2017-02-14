@@ -655,9 +655,14 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	g_return_if_fail( FMA_IS_ASSISTANT_IMPORT( wnd ));
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
+
 	window = FMA_ASSISTANT_IMPORT( wnd );
 	g_object_get( G_OBJECT( window ), BASE_PROP_MAIN_WINDOW, &main_window, NULL );
-	application = FMA_APPLICATION( base_window_get_application( main_window ));
+	application = FMA_APPLICATION( base_window_get_application( BASE_WINDOW( wnd )));
+	g_debug( "%s: main_window=%p (%s), application=%p (%s)",
+			thisfn, main_window, main_window ? G_OBJECT_TYPE_NAME( main_window ) : "null",
+			application, application ? G_OBJECT_TYPE_NAME( application ) : "null" );
+
 	updater = fma_application_get_updater( application );
 
 	memset( &importer_parms, '\0', sizeof( FMAImporterParms ));

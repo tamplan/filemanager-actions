@@ -40,10 +40,11 @@
 #include "fma-menu.h"
 #include "fma-menu-edit.h"
 #include "fma-menu-file.h"
+#include "fma-menu-tools.h"
 #include "fma-menu-view.h"
 /*
+#include "fma-menu-help.h"
 #include "fma-menu-maintainer.h"
-#include "fma-menu-tools.h"
 */
 #include "fma-preferences-editor.h"
 #include "fma-tree-view.h"
@@ -662,8 +663,8 @@ on_update_sensitivities( FMAMainWindow *window, void *empty )
 		fma_menu_file_update_sensitivities( window );
 		fma_menu_edit_update_sensitivities( window );
 		fma_menu_view_update_sensitivities( window );
-		/*fma_menu_tools_update_sensitivities( window );
-		fma_menu_maintainer_update_sensitivities( window );
+		fma_menu_tools_update_sensitivities( window );
+		/*fma_menu_maintainer_update_sensitivities( window );
 		fma_menu_help_update_sensitivities( window );*/
 	}
 }
@@ -740,12 +741,14 @@ static void
 on_win_export( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	fma_menu_tools_export( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_import( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	fma_menu_tools_import( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void

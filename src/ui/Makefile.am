@@ -121,6 +121,8 @@ fma_config_tool_SOURCES = \
 	fma-menu-edit.h										\
 	fma-menu-file.c										\
 	fma-menu-file.h										\
+	fma-menu-tools.c									\
+	fma-menu-tools.h									\
 	fma-menu-view.c										\
 	fma-menu-view.h										\
 	fma-preferences-editor.c							\
