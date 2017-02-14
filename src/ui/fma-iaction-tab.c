@@ -700,7 +700,7 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, FMAIActionTab *instance 
 
 				if( same_label ){
 					label = fma_object_get_label( item );
-					label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
+					label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionToolbarLabelEntry" );
 					gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 					g_free( label );
 				}
@@ -726,7 +726,7 @@ toolbar_same_label_set_sensitive( FMAIActionTab *instance, FMAObjectItem *item )
 	gboolean readonly;
 
 	readonly = item ? fma_object_is_readonly( item ) : FALSE;
-	toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
+	toggle = GTK_TOGGLE_BUTTON( fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ToolbarSameLabelButton" ));
 	target_toolbar = item && FMA_IS_OBJECT_ACTION( item ) ? fma_object_is_target_toolbar( FMA_OBJECT_ACTION( item )) : FALSE;
 	gtk_widget_set_sensitive( GTK_WIDGET( toggle ), target_toolbar && !readonly );
 }
@@ -741,7 +741,7 @@ setup_toolbar_label( FMAIActionTab *instance, FMAObjectItem *item, const gchar *
 
 	if( item && FMA_IS_OBJECT_ACTION( item )){
 		if( fma_object_is_toolbar_same_label( item )){
-			label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
+			label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionToolbarLabelEntry" );
 			gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		}
 	}
@@ -787,7 +787,7 @@ toolbar_label_set_sensitive( FMAIActionTab *instance, FMAObjectItem *item )
 
 	is_action = item && FMA_IS_OBJECT_ACTION( item );
 	same_label = is_action ? fma_object_is_toolbar_same_label( FMA_OBJECT_ACTION( item )) : FALSE;
-	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
+	label_widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionToolbarLabelEntry" );
 	gtk_widget_set_sensitive( label_widget, is_action && !same_label );
 }
 
@@ -846,7 +846,7 @@ on_icon_browse( GtkButton *button, FMAIActionTab *instance )
 		new_icon_name = fma_icon_chooser_choose_icon( FMA_MAIN_WINDOW( instance ), icon_name );
 
 		if( g_utf8_collate( icon_name, new_icon_name ) != 0 ){
-			icon_entry = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconEntry" );
+			icon_entry = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( instance ), "ActionIconEntry" );
 			gtk_entry_set_text( GTK_ENTRY( icon_entry ), new_icon_name );
 		}
 
