@@ -95,15 +95,16 @@ fi
 # will emit a warning.
 FMA_CHECK_FOR_GCONF
 
-# As of 3.4 release, remove Gtk+2 support, only allowing for Gtk+3
-dnl aclocal complains if the comma is not just after the square bracket
+# As of 3.4 release, oldest supported version is Ubuntu 12.04 LTS Precise Pangolin
+# cf. fma_required_versions
+# aclocal complains if the comma is not just after the square bracket
 FMA_CHECK_MODULE([GTK3],    [gtk+-3.0],   [${gtk_required}])
 FMA_CHECK_MODULE([GLIB],    [glib-2.0],   [${glib_required}])
 FMA_CHECK_MODULE([GMODULE], [gmodule-2.0],[${glib_required}])
 FMA_CHECK_MODULE([GIO_UNIX],[gio-unix-2.0])
 FMA_CHECK_MODULE([GTOP],    [libgtop-2.0],[${gtop_required}])
 FMA_CHECK_MODULE([LIBXML],  [libxml-2.0], [${xml_required}])
-FMA_CHECK_MODULE([UUID],    [uuid])
+FMA_CHECK_MODULE([UUID],    [uuid],       [${uuid_required}])
 FMA_CHECK_MODULE([SM],      [sm], [1.0])
 FMA_CHECK_MODULE([ICE],     [ice])
 
