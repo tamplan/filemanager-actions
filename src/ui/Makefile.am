@@ -29,7 +29,7 @@ bin_PROGRAMS = \
 	fma-config-tool										\
 	$(NULL)
 
-ui_datadir = $(pkgdatadir)/ui
+ui_datadir = $(datadir)/fma-config-tool
 
 egg_platform_defines = -DEGG_SM_CLIENT_BACKEND_XSMP
 

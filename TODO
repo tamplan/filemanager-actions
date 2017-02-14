@@ -234,9 +234,6 @@ xxxx 2015- 9-21 instead of:
                   whether GConf is enabled... auto
                   whether GConf is available... no|yes
 
-xxxx 2017- 2-14 Error loading icon from file '/home/pierre/data/eclipse/nautilus-actions/_install/share/icons/hicolor/48x48/apps/filemanager-actions.png'
-                + icon should be named fma-config-tool (same than the program)
-
 xxxx 2017- 2-14 FMA-Message: base_gtk_utils_widget_set_color: to be written
 
 xxxx 2017- 2-14 fma-menu::on_app_help() help file should be named fma-config-tool (same than the program)
