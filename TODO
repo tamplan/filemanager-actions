@@ -239,15 +239,9 @@ xxxx 2017- 2-14 Error loading icon from file '/home/pierre/data/eclipse/nautilus
 
 xxxx 2017- 2-14 FMA-Message: base_gtk_utils_widget_set_color: to be written
 
-xxxx 2017- 2-14 implement maintainer menu
-
-xxxx 2017- 2-14 desktop file should be named fma-config-tool (same than the program)
-
 xxxx 2017- 2-14 fma-menu::on_app_help() help file should be named fma-config-tool (same than the program)
 
 xxxx 2017- 2-14 export assistant does not allow multiple selection
-
-xxxx 2017- 2-14 fma-ui.actions should be renamed fma-config-tool
 
 xxxx 2017- 2-14 does the 'tree-context' menu id still is useful ?
 

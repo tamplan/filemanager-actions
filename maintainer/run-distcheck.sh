@@ -57,5 +57,5 @@ find ${top_srcdir}/docs/manual \( -type d -o -type l \) -name 'stylesheet-images
 ${maintainer_dir}/run-autogen.sh --enable-deprecated &&
 	${maintainer_dir}/check-po.sh -nodummy &&
 	${maintainer_dir}/check-headers.sh -nodummy -builddir="${builddir}" &&
-	desktop-file-validate ${installdir}/share/applications/fma-ui.desktop &&
+desktop-file-validate ${installdir}/share/applications/fma-config-tool.desktop &&
 	make -C ${builddir} distcheck

@@ -190,7 +190,7 @@ ui_data_DATA = \
 
 @INTLTOOL_DESKTOP_RULE@
 
-applications_in_files = fma-ui.desktop.in
+applications_in_files = fma-config-tool.desktop.in
 
 applications_files = $(applications_in_files:.desktop.in=.desktop)
 

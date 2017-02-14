@@ -62,7 +62,7 @@ src/ui/fma-schemes-list.c
 [type: gettext/glade] src/ui/fma-toolbar.ui
 src/ui/fma-tree-model-dnd.c
 [type: gettext/glade] src/ui/fma-config-tool.actions
-src/ui/fma-ui.desktop.in
+src/ui/fma-config-tool.desktop.in
 src/plugin-menu/fma-menu-plugin.c
 src/test/test-reader.c
 src/utils/console-utils.c

@@ -2149,7 +2149,7 @@ msgstr "Opcije upravnika sesije:"
 msgid "Show session management options"
 msgstr "Prikazuje opcije upravnika sesijom"
 
-#: ../src/nact/nact-application.c:57 ../src/nact/nact.desktop.in.h:1
+#: ../src/nact/nact-application.c:57 ../src/ui/fma-config-tool.desktop.in.h:1
 msgid "Nautilus-Actions Configuration Tool"
 msgstr "Nautilus-akcijski konfiguracioni alat"
 
@@ -2346,7 +2346,7 @@ msgstr "Odabrane datoteke su se nastavile:"
 msgid "Import is done"
 msgstr "Uvoz je obavljen"
 
-#: ../src/nact/nact.desktop.in.h:2
+#: ../src/ui/fma-config-tool.in.h:2
 msgid "Configure items to be added to the Nautilus context menus"
 msgstr ""
 "Konfigurisanje stavki koje treba dodati u Nautilusove kontekstne menije"
