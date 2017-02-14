@@ -370,11 +370,13 @@ initialize_gtk( FMAImporterAsk *dialog, GtkWindow *toplevel )
 	static const gchar *thisfn = "fma_importer_ask_initialize_gtk";
 	GtkWidget *container;
 
-	g_return_if_fail( FMA_IS_IMPORTER_ASK( dialog ));
-
 	g_debug( "%s: dialog=%p, toplevel=%p", thisfn, ( void * ) dialog, ( void * ) toplevel );
 
-	container = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
+	g_return_if_fail( FMA_IS_IMPORTER_ASK( dialog ));
+
+	container = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeBox" );
+	g_return_if_fail( container && GTK_IS_CONTAINER( container ));
+
 	fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( dialog ), container, FALSE );
 }
 
@@ -412,7 +414,7 @@ initialize_window( FMAImporterAsk *editor, GtkWindow *toplevel )
 	gtk_label_set_text( GTK_LABEL( widget ), label );
 	g_free( label );
 
-	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
+	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeBox" );
 	mode_id = fma_settings_get_string( IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
 	fma_ioptions_list_set_default( FMA_IOPTIONS_LIST( editor ), widget, mode_id );
 	g_free( mode_id );
@@ -433,7 +435,9 @@ get_selected_mode( FMAImporterAsk *editor )
 	GtkWidget *button;
 	gboolean keep;
 
-	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskModeVBox" );
+	widget = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskModeBox" );
+	g_return_if_fail( widget && GTK_IS_CONTAINER( widget ));
+
 	mode = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), widget );
 
 	mode_id = fma_ioption_get_id( mode );

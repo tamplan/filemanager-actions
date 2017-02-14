@@ -313,6 +313,8 @@ FileManager-Actions - TODO
 
 - 2012-01-02 have a libexec binary which just print the tree of items
 
+  86 2017- 2-14 import assistant: in selection item, double click should go to the next page
+
 -----------------------------------------------------------------------
  DONE
  ====

@@ -816,7 +816,7 @@ assist_prepare_exportdone( FMAAssistantExport *window, GtkAssistant *assistant, 
 
 	errors = 0;
 	width = 15;
-	vbox = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p5-SummaryVBox" );
+	vbox = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p5-SummaryParent" );
 	g_return_if_fail( GTK_IS_BOX( vbox ));
 
 	/* for each item:

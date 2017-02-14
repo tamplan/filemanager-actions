@@ -625,7 +625,7 @@ prepare_confirm( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidget 
 	mode_label = fma_ioption_get_label( window->private->mode );
 	label2 = fma_core_utils_str_remove_char( mode_label, "_" );
 	mode_description = fma_ioption_get_description( window->private->mode );
-	text = g_markup_printf_escaped( "%s\n\n<span style=\"italic\">%s</span>", label2, mode_description );
+	text = g_markup_printf_escaped( "%s\n<span style=\"italic\">%s</span>", label2, mode_description );
 	gtk_label_set_markup( GTK_LABEL( label ), text );
 	g_free( text );
 	g_free( mode_description );
@@ -761,7 +761,7 @@ prepare_importdone( FMAAssistantImport *window, GtkAssistant *assistant, GtkWidg
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
 	width = 15;
-	vbox = find_widget_from_page( page, "p4-SummaryVBox" );
+	vbox = find_widget_from_page( page, "p4-SummaryParent" );
 	g_return_if_fail( GTK_IS_BOX( vbox ));
 
 #if !GTK_CHECK_VERSION( 3,0,0 )

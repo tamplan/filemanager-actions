@@ -280,7 +280,7 @@ options_list_free_ask_option( const FMAIOptionsList *instance, GtkWidget *contai
  * pseudo properties are set:
  * - against the instance: whether it has been initialized
  * - against the parent container: editable, sensitive, default and current options
- * - against each option container when drawing inside of a VBox: the corresponding option
+ * - against each option container when drawing inside of a Box: the corresponding option
  */
 /* whether the container has been initialized
  *
@@ -489,15 +489,15 @@ fma_ioptions_list_gtk_init( const FMAIOptionsList *instance, GtkWidget *containe
 {
 	static const gchar *thisfn = "fma_ioptions_list_gtk_init";
 
-	g_return_if_fail( FMA_IS_IOPTIONS_LIST( instance ));
-
-	check_for_initializations( instance, container_parent );
-
 	g_debug( "%s: instance=%p (%s), container_parent=%p (%s), with_ask=%s",
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
 			( void * ) container_parent, G_OBJECT_TYPE_NAME( container_parent ),
 			with_ask ? "True":"False" );
+
+	g_return_if_fail( FMA_IS_IOPTIONS_LIST( instance ));
+
+	check_for_initializations( instance, container_parent );
 
 	if( GTK_IS_BOX( container_parent )){
 		radio_button_create_group( instance, container_parent, with_ask );
