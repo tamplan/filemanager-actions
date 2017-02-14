@@ -57,7 +57,6 @@
 #include "fma-menu.h"
 #include "fma-status-bar.h"
 #include "fma-tree-view.h"
-#include "fma-confirm-logout.h"
 #include "fma-sort-buttons.h"
 
 /* private instance data
@@ -1258,35 +1257,6 @@ fma_main_window_quit( FMAMainWindow *window )
 
 	return( terminated );
 }
-
-#if 0
-/*
- * signal handler
- * should return %FALSE if it is not willing to quit
- * this will also stop the emission of the signal (i.e. the first FALSE wins)
- */
-static gboolean
-on_base_quit_requested( FMAApplication *application, FMAMainWindow *window )
-{
-	static const gchar *thisfn = "fma_main_window_on_base_quit_requested";
-	gboolean willing_to;
-
-	g_return_val_if_fail( FMA_IS_MAIN_WINDOW( window ), TRUE );
-
-	willing_to = TRUE;
-
-	if( !window->private->dispose_has_run ){
-
-		g_debug( "%s: application=%p, window=%p", thisfn, ( void * ) application, ( void * ) window );
-
-		if( window->private->is_tree_modified ){
-			willing_to = fma_confirm_logout_run( window );
-		}
-	}
-
-	return( willing_to );
-}
-#endif
 
 /*
  * triggered when the user clicks on the top right [X] button

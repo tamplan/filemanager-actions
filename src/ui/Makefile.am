@@ -82,8 +82,6 @@ fma_config_tool_SOURCES = \
 	fma-assistant-import.h								\
 	fma-clipboard.c										\
 	fma-clipboard.h										\
-	fma-confirm-logout.c								\
-	fma-confirm-logout.h								\
 	fma-export-ask.c									\
 	fma-export-ask.h									\
 	fma-iaction-tab.c									\
@@ -166,7 +164,6 @@ ui_files = \
 	fma-add-scheme.ui									\
 	fma-assistant-export.ui								\
 	fma-assistant-import.ui								\
-	fma-confirm-logout.ui								\
 	fma-export-ask.ui									\
 	fma-icon-chooser.ui									\
 	fma-legend.ui										\
