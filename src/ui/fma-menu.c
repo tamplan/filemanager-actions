@@ -40,18 +40,17 @@
 #include "fma-menu.h"
 #include "fma-menu-edit.h"
 #include "fma-menu-file.h"
+#include "fma-menu-maintainer.h"
 #include "fma-menu-tools.h"
 #include "fma-menu-view.h"
-/*
-#include "fma-menu-help.h"
-#include "fma-menu-maintainer.h"
-*/
+
 #include "fma-preferences-editor.h"
 #include "fma-tree-view.h"
 
-static const gchar *st_uixml_actions    = PKGUIDIR "/fma-ui.actions";
-static const gchar *st_ui_app_menu      = "app-menu";
-static const gchar *st_ui_menubar       = "menubar";
+static const gchar *st_uixml_actions      = PKGUIDIR "/fma-ui.actions";
+static const gchar *st_ui_app_menu        = "app-menu";
+static const gchar *st_ui_menubar         = "menubar";
+static const gchar *st_ui_maintainer_menu = "maintainer";
 
 static void on_app_about( GSimpleAction *action, GVariant *parameter, gpointer user_data );
 static void on_app_help( GSimpleAction *action, GVariant *parameter, gpointer user_data );
@@ -228,6 +227,17 @@ fma_menu_app( FMAApplication *application )
 		} else {
 			gtk_application_set_menubar( GTK_APPLICATION( application ), menubar );
 		}
+
+#ifdef FMA_MAINTAINER_MODE
+		GMenuModel *maintainer_mm = G_MENU_MODEL( gtk_builder_get_object( builder, st_ui_maintainer_menu ));
+		if( !maintainer_mm ){
+			g_warning( "%s: unable to find '%s' object in '%s' file",
+					thisfn, st_ui_maintainer_menu, st_uixml_actions );
+		} else {
+			gint count = g_menu_model_get_n_items( menubar );
+			g_menu_insert_submenu( G_MENU( menubar ), count-1, _( "_Maintainer" ), maintainer_mm );
+		}
+#endif
 
 	} else {
 		g_warning( "%s: %s", thisfn, error->message );
@@ -662,10 +672,9 @@ on_update_sensitivities( FMAMainWindow *window, void *empty )
 
 		fma_menu_file_update_sensitivities( window );
 		fma_menu_edit_update_sensitivities( window );
-		fma_menu_view_update_sensitivities( window );
+		fma_menu_maintainer_update_sensitivities( window );
 		fma_menu_tools_update_sensitivities( window );
-		/*fma_menu_maintainer_update_sensitivities( window );
-		fma_menu_help_update_sensitivities( window );*/
+		fma_menu_view_update_sensitivities( window );
 	}
 }
 
@@ -673,6 +682,7 @@ static void
 on_win_brief_tree_store_dump( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	fma_menu_maintainer_brief_tree_store_dump( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
@@ -711,12 +721,14 @@ static void
 on_win_dump_clipboard( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	fma_menu_maintainer_dump_clipboard( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
 on_win_dump_selection( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	fma_menu_maintainer_dump_selection( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
@@ -755,6 +767,7 @@ static void
 on_win_list_modified_items( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	fma_menu_maintainer_list_modified_items( FMA_MAIN_WINDOW( user_data ));
 }
 
 static void
@@ -810,6 +823,7 @@ static void
 on_win_test_function( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 {
 	g_return_if_fail( user_data && FMA_IS_MAIN_WINDOW( user_data ));
+	fma_menu_maintainer_test_function( FMA_MAIN_WINDOW( user_data ));
 }
 
 /*

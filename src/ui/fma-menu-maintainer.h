@@ -27,19 +27,25 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_FMA_MENU_TOOLS_H__
-#define __UI_FMA_MENU_TOOLS_H__
+#ifndef __UI_FMA_MENU_MAINTAINER_H__
+#define __UI_FMA_MENU_MAINTAINER_H__
 
 #include "fma-main-window-def.h"
 
 G_BEGIN_DECLS
 
-void fma_menu_tools_update_sensitivities( FMAMainWindow *main_window );
+void fma_menu_maintainer_update_sensitivities ( FMAMainWindow *main_window );
 
-void fma_menu_tools_import              ( FMAMainWindow *main_window );
+void fma_menu_maintainer_dump_selection       ( FMAMainWindow *main_window );
 
-void fma_menu_tools_export              ( FMAMainWindow *main_window );
+void fma_menu_maintainer_brief_tree_store_dump( FMAMainWindow *main_window );
+
+void fma_menu_maintainer_list_modified_items  ( FMAMainWindow *main_window );
+
+void fma_menu_maintainer_dump_clipboard       ( FMAMainWindow *main_window );
+
+void fma_menu_maintainer_test_function        ( FMAMainWindow *main_window );
 
 G_END_DECLS
 
-#endif /* __UI_FMA_MENU_TOOLS_H__ */
+#endif /* __UI_FMA_MENU_MAINTAINER_H__ */

@@ -94,11 +94,13 @@ fma_menu_file_update_sensitivities( FMAMainWindow *main_window )
 	 * we must have at least one writable provider
 	 */
 	new_item_enabled = sdata->is_parent_writable && sdata->has_writable_providers;
-	g_debug( "%s: is_parent_writable=%s, has_writable_providers=%s, new_item_enabled=%s",
-			thisfn,
-			sdata->is_parent_writable ? "True":"False",
-			sdata->has_writable_providers ? "True":"False",
-			new_item_enabled ? "True":"False" );
+	if( 0 ){
+		g_debug( "%s: is_parent_writable=%s, has_writable_providers=%s, new_item_enabled=%s",
+				thisfn,
+				sdata->is_parent_writable ? "True":"False",
+				sdata->has_writable_providers ? "True":"False",
+				new_item_enabled ? "True":"False" );
+	}
 	fma_menu_enable_item( main_window, "new-menu", new_item_enabled );
 	fma_menu_enable_item( main_window, "new-action", new_item_enabled );
 
