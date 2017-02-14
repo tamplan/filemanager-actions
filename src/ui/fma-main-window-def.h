@@ -87,6 +87,7 @@
  * [X] End of initialization process
  */
 
+#include <glib-object.h>
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
