@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.20.0 -->
 <interface>
   <requires lib="gtk+" version="3.4"/>
   <object class="GtkWindow" id="MainWindow">
@@ -9,22 +9,25 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="row_spacing">2</property>
+        <property name="column_spacing">4</property>
         <child>
           <object class="GtkPaned" id="main-paned">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="margin_left">2</property>
+            <property name="margin_right">2</property>
             <child>
               <object class="GtkGrid" id="grid2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">4</property>
                 <property name="margin_right">2</property>
-                <property name="row_spacing">3</property>
+                <property name="row_spacing">2</property>
+                <property name="column_spacing">4</property>
                 <child>
                   <object class="GtkGrid" id="grid3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="column_spacing">4</property>
+                    <property name="column_spacing">2</property>
                     <child>
                       <object class="GtkLabel" id="ActionsListLabel">
                         <property name="visible">True</property>
@@ -151,9 +154,11 @@
                   <object class="GtkGrid" id="grid100">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
+                    <property name="row_spacing">2</property>
+                    <property name="column_spacing">4</property>
                     <child>
                       <object class="GtkFrame" id="frame110">
                         <property name="visible">True</property>
@@ -165,9 +170,9 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
-                            <property name="row_spacing">3</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
                             <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkCheckButton" id="ActionTargetSelectionButton">
@@ -176,7 +181,6 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">When checked, the item will be candidate to be displayed in the file manager context menu, with a non-empty selection.</property>
-                                <property name="halign">start</property>
                                 <property name="use_underline">True</property>
                                 <property name="xalign">0.5</property>
                                 <property name="draw_indicator">True</property>
@@ -194,7 +198,6 @@
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">When checked, the item will be candidate to be displayed in the file manager context menu when the selection is empty.
 In this case, the defined conditions will be applied to the current displayed folder.</property>
-                                <property name="halign">start</property>
                                 <property name="use_underline">True</property>
                                 <property name="xalign">0.5</property>
                                 <property name="draw_indicator">True</property>
@@ -238,7 +241,6 @@ In this case, the defined conditions will be applied to the current displayed fo
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">When checked, the item will be candidate to be displayed in the file manager toolbar.
 In this case, the defined conditions will be applied to the current folder, and do not depend of the possible current selection.</property>
-                                <property name="halign">start</property>
                                 <property name="use_underline">True</property>
                                 <property name="xalign">0.5</property>
                                 <property name="draw_indicator">True</property>
@@ -255,7 +257,6 @@ In this case, the defined conditions will be applied to the current folder, and 
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">When checked, the label displayed in the toolbar will be the same that the one displayed in the context menus.</property>
-                                <property name="halign">start</property>
                                 <property name="use_underline">True</property>
                                 <property name="xalign">0.5</property>
                                 <property name="draw_indicator">True</property>
@@ -334,7 +335,8 @@ In this case, the defined conditions will be applied to the current folder, and 
                               <object class="GtkGrid" id="grid7">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="column_spacing">4</property>
+                                <property name="row_spacing">2</property>
+                                <property name="column_spacing">2</property>
                                 <child>
                                   <object class="GtkAspectFrame" id="ActionIconFrame">
                                     <property name="visible">True</property>
@@ -434,9 +436,11 @@ In this case, the defined conditions will be applied to the current folder, and 
                   <object class="GtkGrid" id="grid200">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
+                    <property name="row_spacing">2</property>
+                    <property name="column_spacing">4</property>
                     <child>
                       <object class="GtkFrame" id="frame210">
                         <property name="visible">True</property>
@@ -448,8 +452,8 @@ In this case, the defined conditions will be applied to the current folder, and 
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
                             <property name="row_spacing">2</property>
                             <property name="column_spacing">4</property>
                             <child>
@@ -505,9 +509,9 @@ In this case, the defined conditions will be applied to the current folder, and 
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
-                            <property name="row_spacing">3</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
                             <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkLabel" id="CommandPathLabel">
@@ -515,7 +519,6 @@ In this case, the defined conditions will be applied to the current folder, and 
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">_Path :</property>
                                 <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">CommandPathEntry</property>
                                 <property name="xalign">1</property>
                               </object>
                               <packing>
@@ -529,7 +532,6 @@ In this case, the defined conditions will be applied to the current folder, and 
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">P_arameters :</property>
                                 <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">CommandParametersEntry</property>
                                 <property name="xalign">1</property>
                               </object>
                               <packing>
@@ -551,107 +553,118 @@ In this case, the defined conditions will be applied to the current folder, and 
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="CommandPathEntry">
+                              <object class="GtkGrid">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="tooltip_text" translatable="yes">The path of the command.
-If this is not an absolute path, then the PATH environment variable at execution time will be considered.</property>
-                                <property name="hexpand">True</property>
-                                <property name="invisible_char">●</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkEntry" id="CommandParametersEntry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="tooltip_text" translatable="yes">The parameters of the command.</property>
-                                <property name="invisible_char">●</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="CommandPathButton">
-                                <property name="label" translatable="yes">_Browse...</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="use_underline">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkToggleButton" id="CommandLegendButton">
-                                <property name="label" translatable="yes">Le_gend</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="use_underline">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="CommandWorkingDirectoryButton">
-                                <property name="label" translatable="yes">B_rowse...</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="use_underline">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkEntry" id="WorkingDirectoryEntry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="tooltip_text" translatable="yes">The default working directory the command should be started in.</property>
-                                <property name="hexpand">True</property>
-                                <property name="invisible_char">●</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkExpander" id="expander1">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="row_spacing">2</property>
+                                <property name="column_spacing">2</property>
                                 <child>
-                                  <object class="GtkLabel" id="CommandExampleLabel">
+                                  <object class="GtkEntry" id="CommandPathEntry">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="halign">start</property>
-                                    <property name="label" translatable="yes">Example</property>
-                                    <property name="wrap">True</property>
-                                    <attributes>
-                                      <attribute name="style" value="italic"/>
-                                      <attribute name="scale" value="0.80000000000000004"/>
-                                    </attributes>
+                                    <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">The path of the command.
+If this is not an absolute path, then the PATH environment variable at execution time will be considered.</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="invisible_char">●</property>
                                   </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
                                 </child>
-                                <child type="label">
-                                  <object class="GtkLabel" id="label1">
+                                <child>
+                                  <object class="GtkButton" id="CommandPathButton">
+                                    <property name="label" translatable="yes">_Browse...</property>
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">&lt;small&gt;&lt;i&gt;Example&lt;/i&gt;&lt;/small&gt;</property>
-                                    <property name="use_markup">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="use_underline">True</property>
                                   </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="row_spacing">2</property>
+                                <property name="column_spacing">2</property>
+                                <child>
+                                  <object class="GtkEntry" id="CommandParametersEntry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">The parameters of the command.</property>
+                                    <property name="invisible_char">●</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkToggleButton" id="CommandLegendButton">
+                                    <property name="label" translatable="yes">Le_gend</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="use_underline">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="row_spacing">2</property>
+                                <property name="column_spacing">2</property>
+                                <child>
+                                  <object class="GtkExpander" id="expander1">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <child>
+                                      <object class="GtkLabel" id="CommandExampleLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">Example</property>
+                                        <property name="wrap">True</property>
+                                        <attributes>
+                                          <attribute name="style" value="italic"/>
+                                          <attribute name="scale" value="0.80000000000000004"/>
+                                        </attributes>
+                                      </object>
+                                    </child>
+                                    <child type="label">
+                                      <object class="GtkLabel" id="label1">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">&lt;small&gt;&lt;i&gt;Example&lt;/i&gt;&lt;/small&gt;</property>
+                                        <property name="use_markup">True</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                    <property name="width">2</property>
+                                  </packing>
                                 </child>
                               </object>
                               <packing>
@@ -660,7 +673,42 @@ If this is not an absolute path, then the PATH environment variable at execution
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="row_spacing">2</property>
+                                <property name="column_spacing">2</property>
+                                <child>
+                                  <object class="GtkEntry" id="WorkingDirectoryEntry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">The default working directory the command should be started in.</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="invisible_char">●</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="CommandWorkingDirectoryButton">
+                                    <property name="label" translatable="yes">B_rowse...</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="use_underline">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">3</property>
+                              </packing>
                             </child>
                             <child>
                               <placeholder/>
@@ -704,9 +752,9 @@ Defining several profiles lets you have several commands, each applying with a d
                   <object class="GtkGrid" id="grid300">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
                     <child>
                       <object class="GtkFrame" id="frame310">
                         <property name="visible">True</property>
@@ -718,8 +766,8 @@ Defining several profiles lets you have several commands, each applying with a d
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
                             <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkLabel" id="ExecutionModeLabel">
@@ -738,7 +786,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">The command will be started as a standard graphical user interface.</property>
-                                <property name="halign">start</property>
                                 <property name="use_underline">True</property>
                                 <property name="xalign">0.5</property>
                                 <property name="active">True</property>
@@ -756,7 +803,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">The command will be started in the preferred terminal of the graphical environment.</property>
-                                <property name="halign">start</property>
                                 <property name="use_underline">True</property>
                                 <property name="xalign">0.5</property>
                                 <property name="draw_indicator">True</property>
@@ -775,7 +821,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">This option makes use of a special feature of the file manager, which would allow a terminal to be ran inside of it.
 An acceptable fallback is running in the standard terminal.</property>
-                                <property name="halign">start</property>
                                 <property name="use_underline">True</property>
                                 <property name="xalign">0.5</property>
                                 <property name="draw_indicator">True</property>
@@ -795,7 +840,6 @@ An acceptable fallback is running in the standard terminal.</property>
                                 <property name="tooltip_text" translatable="yes">The command will be run in a terminal.
 The terminal will be closed at the end of the execution; standard error and output streams will be displayed.
 An acceptable fallback is running in the standard terminal.</property>
-                                <property name="halign">start</property>
                                 <property name="use_underline">True</property>
                                 <property name="xalign">0.5</property>
                                 <property name="draw_indicator">True</property>
@@ -842,9 +886,9 @@ An acceptable fallback is running in the standard terminal.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
-                            <property name="row_spacing">3</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
                             <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkCheckButton" id="StartupNotifyButton">
@@ -855,7 +899,6 @@ An acceptable fallback is running in the standard terminal.</property>
                                 <property name="tooltip_text" translatable="yes">When checked, it is known that the run command will send a "remove" message to the desktop environment.
 See the Startup Notification Protocol Specification for more details.
 Only relevant when chosen execution mode is Normal.</property>
-                                <property name="halign">start</property>
                                 <property name="use_underline">True</property>
                                 <property name="xalign">0.5</property>
                                 <property name="draw_indicator">True</property>
@@ -923,8 +966,9 @@ Only relevant when chosen execution mode is Normal.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
                             <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkLabel" id="ExecuteAsLabel">
@@ -992,9 +1036,9 @@ Leave the field empty to run the command as the current user.</property>
                   <object class="GtkGrid" id="grid400">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
                     <child>
                       <object class="GtkFrame" id="frame410">
                         <property name="visible">True</property>
@@ -1006,8 +1050,8 @@ Leave the field empty to run the command as the current user.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
                             <property name="row_spacing">3</property>
                             <child>
                               <object class="GtkLabel" id="label411">
@@ -1026,7 +1070,7 @@ Leave the field empty to run the command as the current user.</property>
                               <object class="GtkGrid" id="grid411">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="column_spacing">4</property>
+                                <property name="column_spacing">2</property>
                                 <child>
                                   <object class="GtkScrolledWindow" id="scrolledwindow412">
                                     <property name="visible">True</property>
@@ -1059,7 +1103,7 @@ Basenames may be negated to specify for which basenames your item must not appea
                                   <object class="GtkGrid" id="grid412">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="row_spacing">3</property>
+                                    <property name="row_spacing">2</property>
                                     <child>
                                       <object class="GtkButton" id="AddBasenameButton">
                                         <property name="visible">True</property>
@@ -1167,9 +1211,11 @@ Basenames may be negated to specify for which basenames your item must not appea
                   <object class="GtkGrid" id="grid500">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
+                    <property name="row_spacing">2</property>
+                    <property name="column_spacing">4</property>
                     <child>
                       <object class="GtkFrame" id="frame510">
                         <property name="visible">True</property>
@@ -1181,9 +1227,10 @@ Basenames may be negated to specify for which basenames your item must not appea
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
-                            <property name="row_spacing">3</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
+                            <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkLabel" id="label511">
                                 <property name="visible">True</property>
@@ -1201,7 +1248,8 @@ Basenames may be negated to specify for which basenames your item must not appea
                               <object class="GtkGrid" id="grid511">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="column_spacing">4</property>
+                                <property name="row_spacing">2</property>
+                                <property name="column_spacing">2</property>
                                 <child>
                                   <object class="GtkScrolledWindow" id="scrolledwindow512">
                                     <property name="visible">True</property>
@@ -1231,7 +1279,7 @@ Mimetypes may be negated to specify for which type of objects your item must not
                                   <object class="GtkGrid" id="grid512">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="row_spacing">3</property>
+                                    <property name="row_spacing">2</property>
                                     <child>
                                       <object class="GtkButton" id="AddMimetypeButton">
                                         <property name="visible">True</property>
@@ -1322,9 +1370,11 @@ Mimetypes may be negated to specify for which type of objects your item must not
                   <object class="GtkGrid" id="grid600">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
+                    <property name="row_spacing">2</property>
+                    <property name="column_spacing">4</property>
                     <child>
                       <object class="GtkFrame" id="frame610">
                         <property name="visible">True</property>
@@ -1336,10 +1386,10 @@ Mimetypes may be negated to specify for which type of objects your item must not
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
-                            <property name="row_spacing">3</property>
-                            <property name="column_spacing">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
+                            <property name="column_spacing">2</property>
                             <child>
                               <object class="GtkLabel" id="label611">
                                 <property name="visible">True</property>
@@ -1383,7 +1433,7 @@ Folder filters may be negated to specify for which folders your item must not ap
                               <object class="GtkGrid" id="grid611">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="row_spacing">3</property>
+                                <property name="row_spacing">2</property>
                                 <child>
                                   <object class="GtkButton" id="AddFolderButton">
                                     <property name="visible">True</property>
@@ -1481,9 +1531,9 @@ Folder filters may be negated to specify for which folders your item must not ap
                   <object class="GtkGrid" id="grid700">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
                     <child>
                       <object class="GtkFrame" id="frame710">
                         <property name="visible">True</property>
@@ -1495,10 +1545,10 @@ Folder filters may be negated to specify for which folders your item must not ap
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
-                            <property name="row_spacing">3</property>
-                            <property name="column_spacing">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
+                            <property name="column_spacing">2</property>
                             <child>
                               <object class="GtkLabel" id="label711">
                                 <property name="visible">True</property>
@@ -1543,7 +1593,7 @@ Filters may be negated to specify for which schemes your item must not appear.</
                               <object class="GtkGrid" id="grid711">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="row_spacing">3</property>
+                                <property name="row_spacing">2</property>
                                 <child>
                                   <object class="GtkButton" id="AddSchemeButton">
                                     <property name="visible">True</property>
@@ -1641,9 +1691,9 @@ Filters may be negated to specify for which schemes your item must not appear.</
                   <object class="GtkGrid" id="grid800">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
                     <child>
                       <object class="GtkFrame" id="frame810">
                         <property name="visible">True</property>
@@ -1655,10 +1705,10 @@ Filters may be negated to specify for which schemes your item must not appear.</
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
-                            <property name="row_spacing">3</property>
-                            <property name="column_spacing">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
+                            <property name="column_spacing">2</property>
                             <child>
                               <object class="GtkLabel" id="label77">
                                 <property name="visible">True</property>
@@ -1703,8 +1753,7 @@ Capabilities may be negated to specify for which capabilities your item must not
                               <object class="GtkGrid" id="grid820">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="row_spacing">3</property>
-                                <property name="column_spacing">3</property>
+                                <property name="row_spacing">2</property>
                                 <child>
                                   <object class="GtkButton" id="AddCapabilityButton">
                                     <property name="visible">True</property>
@@ -1788,9 +1837,10 @@ Filters may be negated to specify for which capabilities your item must not appe
                   <object class="GtkGrid" id="grid900">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
+                    <property name="row_spacing">2</property>
                     <child>
                       <object class="GtkFrame" id="frame910">
                         <property name="visible">True</property>
@@ -1802,8 +1852,8 @@ Filters may be negated to specify for which capabilities your item must not appe
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
                             <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkLabel" id="label17">
@@ -1877,8 +1927,8 @@ Filters may be negated to specify for which capabilities your item must not appe
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
                             <property name="row_spacing">3</property>
                             <property name="column_spacing">4</property>
                             <child>
@@ -1937,7 +1987,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                   </object>
                                   <packing>
                                     <property name="left_attach">0</property>
-                                    <property name="top_attach">0</property>
+                                    <property name="top_attach">1</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -1954,7 +2004,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                   </object>
                                   <packing>
                                     <property name="left_attach">0</property>
-                                    <property name="top_attach">1</property>
+                                    <property name="top_attach">2</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -1971,7 +2021,17 @@ Filters may be negated to specify for which capabilities your item must not appe
                                   </object>
                                   <packing>
                                     <property name="left_attach">0</property>
-                                    <property name="top_attach">2</property>
+                                    <property name="top_attach">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
                                   </packing>
                                 </child>
                               </object>
@@ -2007,9 +2067,9 @@ Filters may be negated to specify for which capabilities your item must not appe
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
-                            <property name="row_spacing">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
                             <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkLabel" id="label55">
@@ -2064,13 +2124,37 @@ Filters may be negated to specify for which capabilities your item must not appe
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="TryExecEntry">
+                              <object class="GtkGrid">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="tooltip_text" translatable="yes">This is an advanced condition based on the presence of an executable file on the file system.
+                                <property name="can_focus">False</property>
+                                <property name="column_spacing">2</property>
+                                <child>
+                                  <object class="GtkButton" id="TryExecButton">
+                                    <property name="label" translatable="yes">Bro_wse...</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="use_underline">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="TryExecEntry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">This is an advanced condition based on the presence of an executable file on the file system.
 This may be used for example to test for a prerequisite package.</property>
-                                <property name="hexpand">True</property>
-                                <property name="invisible_char">●</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="invisible_char">●</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -2078,13 +2162,34 @@ This may be used for example to test for a prerequisite package.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="ShowIfRegisteredEntry">
+                              <object class="GtkGrid">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="tooltip_text" translatable="yes">This is an advanced condition based on the presence of a particular service on the D-Bus system.
+                                <property name="can_focus">False</property>
+                                <property name="column_spacing">2</property>
+                                <child>
+                                  <object class="GtkEntry" id="ShowIfRegisteredEntry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">This is an advanced condition based on the presence of a particular service on the D-Bus system.
 This may be used for example for testing that a prerequisite service is currently available.</property>
-                                <property name="hexpand">True</property>
-                                <property name="invisible_char">●</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="invisible_char">●</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="ShowIfRegisteredLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -2092,14 +2197,35 @@ This may be used for example for testing that a prerequisite service is currentl
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="ShowIfTrueEntry">
+                              <object class="GtkGrid">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="tooltip_text" translatable="yes">This is an advanced condition based on a runtime result.
+                                <property name="can_focus">False</property>
+                                <property name="column_spacing">2</property>
+                                <child>
+                                  <object class="GtkEntry" id="ShowIfTrueEntry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">This is an advanced condition based on a runtime result.
 Enter here a command which is able to display the exact "true" string on its standard output.
 This may be used for example for testing a complex condition.</property>
-                                <property name="hexpand">True</property>
-                                <property name="invisible_char">●</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="invisible_char">●</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="ShowIfTrueLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -2107,51 +2233,43 @@ This may be used for example for testing a complex condition.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="ShowIfRunningEntry">
+                              <object class="GtkGrid">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="tooltip_text" translatable="yes">This is an advanced condition based on the presence of a running binary.
+                                <property name="can_focus">False</property>
+                                <property name="column_spacing">2</property>
+                                <child>
+                                  <object class="GtkButton" id="ShowIfRunningButton">
+                                    <property name="label" translatable="yes">Brow_se...</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="use_underline">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="ShowIfRunningEntry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">This is an advanced condition based on the presence of a running binary.
 Note that only the basename of the binary is checked, not its dirname nor its parameters.
 This may be used for example for testing the presence of a prerequisite daemon.</property>
-                                <property name="hexpand">True</property>
-                                <property name="invisible_char">●</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="invisible_char">●</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="top_attach">3</property>
                               </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="TryExecButton">
-                                <property name="label" translatable="yes">Bro_wse...</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="use_underline">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="ShowIfRunningButton">
-                                <property name="label" translatable="yes">Brow_se...</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="use_underline">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
                             </child>
                           </object>
                         </child>
@@ -2191,9 +2309,9 @@ This may be used for example for testing the presence of a prerequisite daemon.<
                   <object class="GtkGrid" id="gridA00">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">4</property>
-                    <property name="margin_right">4</property>
-                    <property name="margin_bottom">4</property>
+                    <property name="margin_left">2</property>
+                    <property name="margin_right">2</property>
+                    <property name="margin_bottom">2</property>
                     <child>
                       <object class="GtkFrame" id="frameA10">
                         <property name="visible">True</property>
@@ -2206,10 +2324,10 @@ This may be used for example for testing the presence of a prerequisite daemon.<
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
                             <property name="vexpand">True</property>
-                            <property name="row_spacing">3</property>
+                            <property name="row_spacing">2</property>
                             <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkCheckButton" id="ActionEnabledButton">
@@ -2342,19 +2460,19 @@ Note: this is not yet implemented in FileManager-Actions.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
-                            <property name="margin_right">4</property>
-                            <property name="margin_bottom">4</property>
-                            <property name="row_spacing">3</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="row_spacing">2</property>
                             <property name="column_spacing">4</property>
                             <child>
                               <object class="GtkCheckButton" id="ActionReadonlyButton">
                                 <property name="label" translatable="yes">Read-only item</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="focus_on_click">False</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">This box is checked if the item cannot be edited.
 There may be multiple reasons for why an item cannot be edited. See your User's Manual.</property>
-                                <property name="focus_on_click">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -2467,30 +2585,6 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
             <child>
               <placeholder/>
             </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -2528,8 +2622,9 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
+      <widget name="CommandWorkingDirectoryButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
@@ -2538,6 +2633,14 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
       <widget name="CommandPathLabel"/>
       <widget name="CommandParametersLabel"/>
       <widget name="CommandWDLabel"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup" id="EnvironmentExecutionSizeGroup">
+    <widgets>
+      <widget name="TryExecButton"/>
+      <widget name="ShowIfRunningButton"/>
+      <widget name="ShowIfRegisteredLabel"/>
+      <widget name="ShowIfTrueLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="EnvironmentLabelSizeGroup">

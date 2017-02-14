@@ -265,12 +265,12 @@ ioptions_list_get_options( const FMAIOptionsList *instance, GtkWidget *container
 
 	options = NULL;
 
-	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
+	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatParent" )){
 		application = FMA_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
 		updater = fma_application_get_updater( application );
 		options = fma_exporter_get_formats( FMA_PIVOT( updater ));
 
-	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
+	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeParent" )){
 		options = fma_importer_get_modes();
 
 	} else {
@@ -289,10 +289,10 @@ ioptions_list_free_options( const FMAIOptionsList *instance, GtkWidget *containe
 
 	g_return_if_fail( FMA_IS_PREFERENCES_EDITOR( instance ));
 
-	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
+	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatParent" )){
 		fma_exporter_free_formats( options );
 
-	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
+	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeParent" )){
 		fma_importer_free_modes( options );
 
 	} else {
@@ -312,10 +312,10 @@ ioptions_list_get_ask_option( const FMAIOptionsList *instance, GtkWidget *contai
 
 	option = NULL;
 
-	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
+	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatParent" )){
 		option = fma_exporter_get_ask_option();
 
-	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
+	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeParent" )){
 		option = fma_importer_get_ask_mode();
 
 	} else {
@@ -488,10 +488,10 @@ on_base_initialize_gtk( FMAPreferencesEditor *editor, GtkDialog *toplevel, gpoin
 
 		desktop_create_model( editor );
 
-		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
+		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeParent" );
 		fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( editor ), container, TRUE );
 
-		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
+		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatParent" );
 		fma_ioptions_list_gtk_init( FMA_IOPTIONS_LIST( editor ), container, TRUE );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
@@ -544,7 +544,7 @@ on_base_initialize_window( FMAPreferencesEditor *editor, gpointer user_data )
 
 		/* fourth tab: import mode
 		 */
-		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
+		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeParent" );
 		import_mode = fma_settings_get_string( IPREFS_IMPORT_PREFERRED_MODE, NULL, &editor->private->import_mode_mandatory );
 		fma_ioptions_list_set_editable(
 				FMA_IOPTIONS_LIST( editor ), container,
@@ -556,7 +556,7 @@ on_base_initialize_window( FMAPreferencesEditor *editor, gpointer user_data )
 
 		/* fifth tab: export format
 		 */
-		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
+		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatParent" );
 		export_format = fma_settings_get_string( IPREFS_EXPORT_PREFERRED_FORMAT, NULL, &editor->private->export_format_mandatory );
 		fma_ioptions_list_set_editable(
 				FMA_IOPTIONS_LIST( editor ), container,
@@ -1243,7 +1243,7 @@ on_dialog_ok( BaseDialog *dialog )
 		/* fourth tab: import mode
 		 */
 		if( !editor->private->import_mode_mandatory ){
-			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
+			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeParent" );
 			option = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), container );
 			g_return_if_fail( FMA_IS_IMPORT_MODE( option ));
 			import_mode = fma_ioption_get_id( option );
@@ -1254,7 +1254,7 @@ on_dialog_ok( BaseDialog *dialog )
 		/* fifth tab: export format
 		 */
 		if( !editor->private->export_format_mandatory ){
-			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
+			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatParent" );
 			option = fma_ioptions_list_get_selected( FMA_IOPTIONS_LIST( editor ), container );
 			g_debug( "fma_preferences_editor_on_dialog_ok: option=%p", ( void * ) option );
 			g_return_if_fail( FMA_IS_EXPORT_FORMAT( option ));
