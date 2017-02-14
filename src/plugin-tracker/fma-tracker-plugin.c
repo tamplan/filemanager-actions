@@ -33,11 +33,11 @@
 
 #include <gio/gio.h>
 
-#include <api/fma-dbus.h>
-#include <api/fma-fm-defines.h>
+#include "api/fma-dbus.h"
+#include "api/fma-fm-defines.h"
 
-#include "fma-tracker-plugin.h"
-#include "fma-tracker-gdbus.h"
+#include "plugin-tracker/fma-tracker-plugin.h"
+#include "plugin-tracker/fma-tracker-gdbus.h"
 
 /* private class data
  */
