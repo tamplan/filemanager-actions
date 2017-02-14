@@ -117,7 +117,7 @@ struct _FMASettingsPrivate {
 	FMATimeout timeout;
 };
 
-#define GROUP_NACT						"nact"
+#define GROUP_NACT						"fma-config-tool"
 #define GROUP_RUNTIME					"runtime"
 
 typedef struct {
