@@ -88,8 +88,8 @@ typedef struct {
 #define TREE_SIGNAL_CONTEXT_MENU			    "tree-signal-open-popup"
 
 typedef enum {
-	TREE_MODE_EDITION = 1,
-	TREE_MODE_SELECTION,
+	TREE_MODE_EDITION = 1,				/* main window */
+	TREE_MODE_SELECTION,				/* export assistant */
 	/*< private >*/
 	TREE_MODE_N_MODES
 }

@@ -110,7 +110,7 @@ static void        folder_chooser_initialize_gtk( FMAAssistantExport *window );
 static void        format_tree_view_initialize_gtk( FMAAssistantExport *window );
 static void        on_base_initialize_base_window( FMAAssistantExport *window, void *empty );
 static void        on_base_all_widgets_showed( FMAAssistantExport *window, void *empty );
-static void        on_items_tree_view_selection_changed( FMAAssistantExport *window, GList *selected_items, gpointer user_data );
+static void        on_items_tree_view_selection_changed( FMATreeView *tview, GList *selected_items, FMAAssistantExport *window );
 static void        on_folder_chooser_selection_changed( GtkFileChooser *chooser, FMAAssistantExport *window );
 static void        assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 static void        assist_prepare_confirm( FMAAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
@@ -301,8 +301,6 @@ instance_dispose( GObject *window )
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		self->private->dispose_has_run = TRUE;
-
-		g_object_unref( self->private->items_view );
 
 		if( self->private->selected_items ){
 			self->private->selected_items = fma_object_free_items( self->private->selected_items );
@@ -541,7 +539,7 @@ on_base_all_widgets_showed( FMAAssistantExport *window, void *empty )
 		 */
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
-				G_OBJECT( window ),
+				G_OBJECT( window->private->items_view ),
 				TREE_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_items_tree_view_selection_changed ));
 
@@ -563,7 +561,7 @@ on_base_all_widgets_showed( FMAAssistantExport *window, void *empty )
 }
 
 static void
-on_items_tree_view_selection_changed( FMAAssistantExport *window, GList *selected_items, gpointer user_data )
+on_items_tree_view_selection_changed( FMATreeView *tview, GList *selected_items, FMAAssistantExport *window )
 {
 	static const gchar *thisfn = "fma_assistant_export_on_items_tree_view_selection_changed";
 	GtkAssistant *assistant;
@@ -574,9 +572,9 @@ on_items_tree_view_selection_changed( FMAAssistantExport *window, GList *selecte
 
 	if( !window->private->dispose_has_run ){
 
-		g_debug( "%s: window=%p, selected_items=%p (count=%d), user_data=%p",
-			thisfn, ( void * ) window,
-			( void * ) selected_items, g_list_length( selected_items ), ( void * ) user_data );
+		g_debug( "%s: tview=%p, selected_items=%p (count=%d), window=%p",
+			thisfn, ( void * ) tview,
+			( void * ) selected_items, g_list_length( selected_items ), ( void * ) window );
 
 		if( window->private->selected_items ){
 			window->private->selected_items = fma_object_free_items( window->private->selected_items );

@@ -516,7 +516,9 @@ initialize_gtk( FMATreeView *view )
 	gtk_tree_view_column_set_sort_column_id( column, TREE_COLUMN_LABEL );
 	gtk_tree_view_append_column( GTK_TREE_VIEW( tview ), column );
 
-	/* allow multiple selection
+	/* always allow multiple selection
+	 * - from main window: dnd to a file manager as a shortcut to export assistant
+	 * - export assistant: selection of items
 	 */
 	selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( tview ));
 	gtk_tree_selection_set_mode( selection, GTK_SELECTION_MULTIPLE );
@@ -578,16 +580,24 @@ fma_tree_view_set_edition_mode( FMATreeView *view, guint mode )
 
 		priv->mode = mode;
 
-		if( priv->mode == TREE_MODE_EDITION ){
+		switch( priv->mode ){
 
-			column = gtk_tree_view_get_column( priv->tree_view, TREE_COLUMN_LABEL );
-			renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-			renderer = GTK_CELL_RENDERER( renderers->data );
-			gtk_tree_view_column_set_cell_data_func(
-					column, renderer, ( GtkTreeCellDataFunc ) display_label, view, NULL );
+			/* main window */
+			case TREE_MODE_EDITION:
 
-			fma_tree_ieditable_initialize(
-					FMA_TREE_IEDITABLE( view ), priv->tree_view, priv->window );
+				column = gtk_tree_view_get_column( priv->tree_view, TREE_COLUMN_LABEL );
+				renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
+				renderer = GTK_CELL_RENDERER( renderers->data );
+				gtk_tree_view_column_set_cell_data_func(
+						column, renderer, ( GtkTreeCellDataFunc ) display_label, view, NULL );
+
+				fma_tree_ieditable_initialize(
+						FMA_TREE_IEDITABLE( view ), priv->tree_view, priv->window );
+				break;
+
+			/* export assistant */
+			case TREE_MODE_SELECTION:
+				break;
 		}
 
 		tmodel = gtk_tree_view_get_model( priv->tree_view );

@@ -1205,7 +1205,7 @@ display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsTy
 }
 
 /**
- * Records a connected signal, to be disconnected at NactWindow dispose.
+ * Records a connected signal, to be disconnected at BaseWindow dispose.
  */
 gulong
 base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn )
