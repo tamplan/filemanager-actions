@@ -105,8 +105,6 @@ gchar          *fma_application_get_application_name( const FMAApplication *appl
 
 FMAUpdater     *fma_application_get_updater         ( const FMAApplication *application );
 
-gboolean        fma_application_is_willing_to_quit  ( const FMAApplication *application );
-
 G_END_DECLS
 
 #endif /* __UI_FMA_APPLICATION_H__ */

@@ -105,8 +105,6 @@ FMA_CHECK_MODULE([GIO_UNIX],[gio-unix-2.0])
 FMA_CHECK_MODULE([GTOP],    [libgtop-2.0],[${gtop_required}])
 FMA_CHECK_MODULE([LIBXML],  [libxml-2.0], [${xml_required}])
 FMA_CHECK_MODULE([UUID],    [uuid],       [${uuid_required}])
-FMA_CHECK_MODULE([SM],      [sm], [1.0])
-FMA_CHECK_MODULE([ICE],     [ice])
 
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
