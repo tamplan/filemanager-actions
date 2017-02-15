@@ -6,7 +6,7 @@
 
   <name xml:lang="en">FileManager-Actions</name>
 
-  <category rdf:resource="http://api.gnome.org/doap-extensions#desktop" />
+  <category rdf:resource="http://api.gnome.org/doap-extensions#apps" />
 
   <shortdesc xml:lang="en">A file-manager extension which offers user configurable context menu actions</shortdesc>
 
