@@ -32,7 +32,7 @@
 	  &prodname; is compliant with 
       <ulink role="online-location" url="http://www.nautilus-actions.org/?q=node/377/">DES-EMA</ulink>
 	  specification. This means that actions and menus defined in &prodname;
-	  will be shareable with the compliant desktop environments.
+	  are shareable with the compliant desktop environments.
 	</para>
   </refsect1>
 

@@ -127,15 +127,6 @@
       </listitem>
       <listitem>
         <para>
-          <ulink url="http://www.x.org/">libSM</ulink> and
-          <ulink url="http://www.x.org/">libICE</ulink>
-          are used as a session management libraries, in order to be sure the session
-          will not terminate without at least proposing the user to save his
-          modifications.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
           <ulink url="ftp://ftp.kernel.org/pub/linux/utils/util-linux-ng">libUUID</ulink>
           is the universally unique ID library used to automatically generate a
           unique identifier at item creation.
@@ -147,12 +138,14 @@
           is needed if you want build &nautilus; extensions.
         </para>
       </listitem>
+      <!--
       <listitem>
         <para>
           <ulink url="https://github.com/linuxmint/nemo/">&nemo; extension</ulink>
           is needed if you want build &nemo; extensions.
         </para>
       </listitem>
+      -->
     </itemizedlist>
   </refsect1>
 
@@ -168,7 +161,9 @@
         <command>configure</command>
         <group>
           <arg>--with-nautilus-extdir=DIR</arg>
+          <!--
           <arg>--with-nemo-extdir=DIR</arg>
+          -->
           <arg>--with-default-io-provider=io-gconf|io-desktop</arg>
           <arg>--enable-html-manuals[=gdt|db2html]</arg>
           <arg>--enable-pdf-manuals[=dblatex]</arg>
@@ -178,7 +173,9 @@
 
     <formalpara>
       <title><systemitem>--with-nautilus-extdir=DIR</systemitem></title>
+      <!--
       <title><systemitem>--with-nemo-extdir=DIR</systemitem></title>
+      -->
       <para>
         With this option, one may define an alternate directory where
         our file manager extensions will be stored.
