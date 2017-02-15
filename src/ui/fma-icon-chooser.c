@@ -360,10 +360,6 @@ on_base_initialize_gtk( FMAIconChooser *editor, GtkDialog *toplevel, gpointer us
 		 */
 		GtkDialog *dialog = GTK_DIALOG( base_window_get_gtk_toplevel( BASE_WINDOW( editor )));
 		g_signal_connect( G_OBJECT( dialog ), "destroy", G_CALLBACK( on_destroy ), NULL );
-
-#if !GTK_CHECK_VERSION( 2,22,0 )
-		gtk_dialog_set_has_separator( toplevel, FALSE );
-#endif
 	}
 }
 

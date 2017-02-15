@@ -671,16 +671,6 @@ assist_prepare_confirm( FMAAssistantExport *window, GtkAssistant *assistant, Gtk
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
-#if !GTK_CHECK_VERSION( 3,0,0 )
-	/* Note that, at least, in Gtk 2.20 (Ubuntu 10) and 2.22 (Fedora 14), GtkLabel
-	 * queues its resize (when the text is being set), but the actual resize does
-	 * not happen immediately - We have to wait until Gtk 3.0, most probably due
-	 * to the new width-for-height and height-for-width features...
-	 */
-	GtkWidget *vbox = fma_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmVBox" );
-	gtk_container_set_resize_mode( GTK_CONTAINER( vbox ), GTK_RESIZE_IMMEDIATE );
-#endif
-
 	/* display the items to be exported
 	 */
 	text = NULL;
