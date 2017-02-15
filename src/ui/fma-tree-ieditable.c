@@ -535,7 +535,7 @@ add_to_deleted_rec( IEditableData *ied, FMAObject *object )
 static void
 decrement_counters( FMATreeIEditable *view, IEditableData *ied, GList *items )
 {
-	static const gchar *thisfn = "nact_tree_editable_decrement_counters";
+	static const gchar *thisfn = "fma_tree_ieditable_decrement_counters";
 	gint menus, actions, profiles;
 
 	g_debug( "%s: view=%p, ied=%p, items=%p (count=%u)",

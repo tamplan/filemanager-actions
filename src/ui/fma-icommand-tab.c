@@ -636,7 +636,7 @@ parse_parameters( FMAICommandTab *instance )
 static void
 update_example_label( FMAICommandTab *instance, FMAObjectProfile *profile )
 {
-	/*static const char *thisfn = "nact_iconditions_update_example_label";*/
+	/*static const char *thisfn = "fma_icommand_tab_update_example_label";*/
 	gchar *newlabel;
 	gchar *parameters;
 	GtkWidget *example_widget;

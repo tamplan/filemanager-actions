@@ -31,7 +31,7 @@
 #define __UI_NACT_TREE_TREE_IEDITABLE_H__
 
 /**
- * SECTION: nact-tree_ieditable
+ * SECTION: fma-tree_ieditable
  * @title: FMATreeIEditable
  * @short_description: The FMATreeIEditable interface definition
  * @include: ui/fma-tree-ieditable.h

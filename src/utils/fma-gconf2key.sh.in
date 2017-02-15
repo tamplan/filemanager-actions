@@ -485,7 +485,7 @@ fi
 destdir=${conf_dir}/@PACKAGE@
 command "mkdir -m ${dir_mode} -p ${destdir}"
 destconf=${destdir}/@PACKAGE@.conf
-rm -f ${my_tmproot}.nact
+rm -f ${my_tmproot}.fma
 rm -f ${my_tmproot}.runtime
 rm -f ${my_tmproot}.io-provider_*
 
@@ -493,97 +493,97 @@ if [ "${opt_admin}" = "no" ]; then
 	gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 		case ${key} in
 			add-capability-dialog)
-				add_pref "nact" "capability-add-capability-wsp" list "${value}"
+				add_pref "fma-config-tool" "capability-add-capability-wsp" list "${value}"
 				;;
 			add-scheme-dialog)
-				add_pref "nact" "scheme-add-scheme-wsp" list "${value}"
+				add_pref "fma-config-tool" "scheme-add-scheme-wsp" list "${value}"
 				;;
 			assistant-esc-confirm)
-				add_pref "nact" "${key}" str "${value}"
+				add_pref "fma-config-tool" "${key}" str "${value}"
 				;;
 			assistant-esc-quit)
-				add_pref "nact" "${key}" str "${value}"
+				add_pref "fma-config-tool" "${key}" str "${value}"
 				;;
 			auto-save-on)
-				add_pref "nact" "main-save-auto" str "${value}"
+				add_pref "fma-config-tool" "main-save-auto" str "${value}"
 				;;
 			auto-save-period)
-				add_pref "nact" "main-save-period" str "${value}"
+				add_pref "fma-config-tool" "main-save-period" str "${value}"
 				;;
 			export-assistant)
-				add_pref "nact" "export-assistant-wsp" list "${value}"
+				add_pref "fma-config-tool" "export-assistant-wsp" list "${value}"
 				;;
 			export-ask-user)
-				add_pref "nact" "export-ask-user-wsp" list "${value}"
+				add_pref "fma-config-tool" "export-ask-user-wsp" list "${value}"
 				;;
 			export-ask-user-last-format)
-				add_pref "nact" "${key}" str "${value}"
+				add_pref "fma-config-tool" "${key}" str "${value}"
 				;;
 			export-folder-uri)
-				add_pref "nact" "export-assistant-lfu" str "${value}"
+				add_pref "fma-config-tool" "export-assistant-lfu" str "${value}"
 				;;
 			export-format)
-				add_pref "nact" "export-preferred-format" str "${value}"
+				add_pref "fma-config-tool" "export-preferred-format" str "${value}"
 				;;
 			icommand-command-chooser)
-				add_pref "nact" "command-command-chooser-wsp" list "${value}"
+				add_pref "fma-config-tool" "command-command-chooser-wsp" list "${value}"
 				;;
 			icommand-folder-uri)
-				add_pref "nact" "command-command-chooser-lfu" list "${value}"
+				add_pref "fma-config-tool" "command-command-chooser-lfu" list "${value}"
 				;;
 			icommand-legend-dialog)
-				add_pref "nact" "command-legend-wsp" list "${value}"
+				add_pref "fma-config-tool" "command-legend-wsp" list "${value}"
 				;;
 			icommand-working-dir-dialog)
-				add_pref "nact" "command-working-dir-chooser-wsp" list "${value}"
+				add_pref "fma-config-tool" "command-working-dir-chooser-wsp" list "${value}"
 				;;
 			icommand-working-dir-uri)
-				add_pref "nact" "command-working-dir-chooser-lfu" str "${value}"
+				add_pref "fma-config-tool" "command-working-dir-chooser-lfu" str "${value}"
 				;;
 			icons-chooser)
-				add_pref "nact" "item-icon-chooser-wsp" list "${value}"
+				add_pref "fma-config-tool" "item-icon-chooser-wsp" list "${value}"
 				;;
 			icons-path)
-				add_pref "nact" "item-icon-chooser-last-file-uri" str "${value}"
+				add_pref "fma-config-tool" "item-icon-chooser-last-file-uri" str "${value}"
 				;;
 			ienvironment-show-if-running-dialog)
-				add_pref "nact" "environment-show-if-running-wsp" list "${value}"
+				add_pref "fma-config-tool" "environment-show-if-running-wsp" list "${value}"
 				;;
 			ienvironment-show-if-running-uri)
-				add_pref "nact" "environment-show-if-running-lfu" str "${value}"
+				add_pref "fma-config-tool" "environment-show-if-running-lfu" str "${value}"
 				;;
 			ienvironment-try-exec-dialog)
-				add_pref "nact" "environment-try-exec-wsp" list "${value}"
+				add_pref "fma-config-tool" "environment-try-exec-wsp" list "${value}"
 				;;
 			ienvironment-try-exec-uri)
-				add_pref "nact" "environment-try-exec-lfu" str "${value}"
+				add_pref "fma-config-tool" "environment-try-exec-lfu" str "${value}"
 				;;
 			ifolders-chooser)
-				add_pref "nact" "folder-chooser-wsp" list "${value}"
+				add_pref "fma-config-tool" "folder-chooser-wsp" list "${value}"
 				;;
 			ifolders-path)
-				add_pref "nact" "folder-chooser-lfu" str "file://${value}"
+				add_pref "fma-config-tool" "folder-chooser-lfu" str "file://${value}"
 				;;
 			import-ask-user)
-				add_pref "nact" "import-ask-user-wsp" list "${value}"
+				add_pref "fma-config-tool" "import-ask-user-wsp" list "${value}"
 				;;
 			import-ask-user-last-mode)
-				add_pref "nact" "${key}" str "${value}"
+				add_pref "fma-config-tool" "${key}" str "${value}"
 				;;
 			import-assistant)
-				add_pref "nact" "import-assistant-wsp" list "${value}"
+				add_pref "fma-config-tool" "import-assistant-wsp" list "${value}"
 				;;
 			import-folder-uri)
-				add_pref "nact" "import-assistant-lfu" str "${value}"
+				add_pref "fma-config-tool" "import-assistant-lfu" str "${value}"
 				;;
 			import-keep-choice)
-				add_pref "nact" "import-ask-user-keep-last-choice" list "${value}"
+				add_pref "fma-config-tool" "import-ask-user-keep-last-choice" list "${value}"
 				;;
 			import-mode)
-				add_pref "nact" "import-preferred-mode" str "${value}"
+				add_pref "fma-config-tool" "import-preferred-mode" str "${value}"
 				;;
 			io-providers-order)
-				add_pref "nact" "io-providers-write-order" list "${value}"
+				add_pref "fma-config-tool" "io-providers-write-order" list "${value}"
 				;;
 			iprefs-add-about-item)
 				add_pref "runtime" "items-add-about-item" str "${value}"
@@ -601,37 +601,37 @@ if [ "${opt_admin}" = "no" ]; then
 				add_pref "runtime" "items-level-zero-order" list "${value}"
 				;;
 			iprefs-relabel-actions)
-				add_pref "nact" "relabel-when-duplicate-action" str "${value}"
+				add_pref "fma-config-tool" "relabel-when-duplicate-action" str "${value}"
 				;;
 			iprefs-relabel-menus)
-				add_pref "nact" "relabel-when-duplicate-menu" str "${value}"
+				add_pref "fma-config-tool" "relabel-when-duplicate-menu" str "${value}"
 				;;
 			iprefs-relabel-profiles)
-				add_pref "nact" "relabel-when-duplicate-profile" str "${value}"
+				add_pref "fma-config-tool" "relabel-when-duplicate-profile" str "${value}"
 				;;
 			main-edit-toolbar)
-				add_pref "nact" "main-toolbar-edit-display" str "${value}"
+				add_pref "fma-config-tool" "main-toolbar-edit-display" str "${value}"
 				;;
 			main-file-toolbar)
-				add_pref "nact" "main-toolbar-file-display" str "${value}"
+				add_pref "fma-config-tool" "main-toolbar-file-display" str "${value}"
 				;;
 			main-help-toolbar)
-				add_pref "nact" "main-toolbar-help-display" str "${value}"
+				add_pref "fma-config-tool" "main-toolbar-help-display" str "${value}"
 				;;
 			main-tools-toolbar)
-				add_pref "nact" "main-toolbar-tools-display" str "${value}"
+				add_pref "fma-config-tool" "main-toolbar-tools-display" str "${value}"
 				;;
 			main-paned)
-				add_pref "nact" "main-paned-width" str "${value}"
+				add_pref "fma-config-tool" "main-paned-width" str "${value}"
 				;;
 			main-window)
-				add_pref "nact" "main-window-wsp" list "${value}"
+				add_pref "fma-config-tool" "main-window-wsp" list "${value}"
 				;;
 			preferences-editor)
-				add_pref "nact" "preferences-wsp" list "${value}"
+				add_pref "fma-config-tool" "preferences-wsp" list "${value}"
 				;;
 			schemes)
-				add_pref "nact" "scheme-default-list" list "${value}"
+				add_pref "fma-config-tool" "scheme-default-list" list "${value}"
 				;;
 		esac
 	done
@@ -692,15 +692,15 @@ if [ -e ${destconf} ]; then
 	msg "${destconf} already exists: do not replace it, update the FMA configuration file instead"
 	command "@pkglibexecdir@/fma-set-conf --group 'io-provider fma-gconf' --key writable --type bool --value false"
 else
-	nbprefs=$(cat ${my_tmproot}.nact ${my_tmproot}.runtime ${my_tmproot}.io-provider_* 2>/dev/null | wc -l)
+	nbprefs=$(cat ${my_tmproot}.fma ${my_tmproot}.runtime ${my_tmproot}.io-provider_* 2>/dev/null | wc -l)
 
 	if [ ${nbprefs} -gt 0 ]; then
 		rm -f ${destconf}
-		if [ -s ${my_tmproot}.nact ]; then
+		if [ -s ${my_tmproot}.fma ]; then
 			cat <<! >>${destconf}
 
-[nact]
-$(sort < ${my_tmproot}.nact 2>/dev/null)
+[fma-config-tool]
+$(sort < ${my_tmproot}.fma 2>/dev/null)
 !
 		fi
 		if [ -s ${my_tmproot}.runtime ]; then

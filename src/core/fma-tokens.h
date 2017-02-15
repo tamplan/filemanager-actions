@@ -46,12 +46,12 @@
  * plugin, attaching the result to each item in the context menu.
  *
  * Adding a parameter requires updating of:
- * - doc/nact/C/figures/nact-legend.png screenshot
- * - doc/nact/C/nact-execution.xml "Multiple execution" paragraph
+ * - docs/manual/C/figures/fma-legend.png screenshot
+ * - docs/manual/C/fma-execution.xml "Multiple execution" paragraph
  * - src/core/fma-tokens.c::is_singular_exec() function
  * - src/core/fma-tokens.c::parse_singular() function
- * - src/nact/filemanager-actions-config-tool.ui:LegendDialog labels
  * - src/core/fma-object-profile-factory.c:FMAFO_DATA_PARAMETERS comment
+ * - src/ui/fma-legend.ui:LegendDialog labels
  *
  * Valid parameters are :
  *

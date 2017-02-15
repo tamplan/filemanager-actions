@@ -741,7 +741,7 @@ assist_prepare_confirm( FMAAssistantExport *window, GtkAssistant *assistant, Gtk
 }
 
 /*
- * As of 1.11, nact_gconf_writer doesn't return any error message.
+ * As of 1.11, fma_gconf_writer doesn't return any error message.
  * An error is simply indicated by returning a null filename.
  * So we provide a general error message.
  */
