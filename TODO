@@ -10,87 +10,11 @@ FileManager-Actions - TODO
  TODO
  ====
 
-   3 2011-11-28 import assistant: importer ask format; long descriptions
-                should be a long wrappable line
-
-   4 2011-11-28 have a padding (6) on top of gtkfilechooser (import &
-                export assistants) not gtk3 : gtk2 only
-
-   5 2011-11-28 already existing item when importing should keep the same
-                size between invocations
-     2011-11-30 this is ok on f14 f16 ubu10 and almost on ubu11
-                (ubu11): z-order is ok the first time, but comes back to
-                the previous behavior starting with the second time
-                (maybe a theme problem ?)
-
-   6 2011-12-06 after unsuccessfully tried to import via dnd:
-                Gtk-CRITICAL **: gtk_tree_view_scroll_to_cell:
-                assertion `tree_view->priv->tree != NULL' failed
-
-   7 2011-12-22 export assistant
-                when exporting a menu, only desktop format is available
-
-   8 2011-12-22 export assistant
-                the items list should it be presented as a flat list ?
-                or as an expanded one ?
-
-   9 2012-01-12 environment tab
-                in the list of desktop checkboxes, the item which is not
-                grayed is that which would be selected if the list would
-                be active -> but should be grayed
-                vubuntu10: exhibits the bug
-                fedora14, fedora16, vubuntu11: ok
-
-  10 2012-01-16 LXDE: unable to drag and drop to PcmanFM
-                na_core_utils_dir_is_writable_uri( "/tmp" ):
-                is_writable=False
-                and desktop hangs
-
-  11 2012-01-29 na-icontext.c:is_candidate_for_show_if_registered()
-                implement GDBus
-
-  12 2012-01-29: NactTreeModel is not released at end when dnd
-
-  13 2012-02-14 opening the menubar triggers the on_tree_view_focus_out,
-                thus disabling the edit items (this is not the desired
-                behavior when we access a menu)
-                Fedora14: OK
-                Fedora16: bug exhibits
-                Ubuntu10: OK
-                Ubuntu11: bug exhibits
-                This may have something to do with the way we manage the
-                GtkActions
-                Also see glade source.
-
-  15 2012- 6-25 ubuntu 12 requires libtool (+ autotools-dev libltdl-dev)
-                20120625: ubuntu 12 requires intltool (+ autoconf automake
-                gettext libencode-locale-perl libfile-listing-perl
-                libfont-afm-perl libgettextpo0 libhtml-form-perl libhtml-format-perl
-                libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl
-                libhttp-cookies-perl libhttp-daemon-perl libhttp-date-perl
-                libhttp-message-perl libhttp-negotiate-perl libio-socket-inet6-perl
-                libio-socket-ssl-perl liblwp-mediatypes-perl liblwp-protocol-https-perl
-                libmailtools-perl libnet-http-perl libnet-ssleay-perl libsocket6-perl
-                libtimedate-perl libunistring0 liburi-perl libwww-perl
-                libwww-robotrules-perl libxml-parser-perl m4 patch)
-
-  16 2012-10-19 the last commit - to disable xml2po usage - has introduced
-                a regression
-                target are evaluated even if not built (and so there is an
-                error if we do not know any prerequisites)
-                reproduce by building from an empty tree with --disable-manuals
-
   17 2011- 2-21 implement startup mode
 
   18 2011- 2-21 implement execute as user
 
-  19 2010- 6-17 implement shortcut button in NactIPropertiesTab page
-
-  20 2010- 8- 9 in v1.x until ??, %f used to be the basename!!
-
-  21 2010-12-30 gtk-doc 1.15
-                "Use of uninitialized value within %DeclarationTypes in
-                lc at /usr/bin/gtkdoc-mkdb line 929" when building XML
+  19 2010- 6-17 implement shortcut button in IPropertiesTab page
 
   22 2011- 2- 7 is_level_zero_writable: should be monitored
                 for now, is only evaluated when NAUpdater is instanciated
@@ -98,23 +22,7 @@ FileManager-Actions - TODO
   23 2011-02-07 are_preferences_locked: should be monitored
                 for now, is only evaluated when NAUpdater is instanciated
 
-  24 2011-02-12 should we have a NAKeyFile shared between i/o-desktop and settings ?
-
-  25 2011-02-23: implement item separator
-
-  26 2011-02-23 desktop environment
-                accept a default at compile time
-                accept as a runtime user preference (may be mandatory)
-
-  27 2011-06-08 when getting an elementary data, we should get the default value if it is not set ?
-                to determine if a value is set, have a na_object_is_data_set (see na_object_item_deals_with_version)
-                this should let us get ride of na_factory_object_set_defaults() function
-
-  28 2011-06-08 get ride of NADataBoxed ?
-
-  29 2011-11-29 exporter ask: add an option: do not import
-
-  30 2011-11-29 exporter ask and importer ask, add a button cancel all
+  25 2011-02-23 implement item separator (to build menu section)
 
   31 2011-11-29 in IActionsList, be able to extend the selection just by dragging the mouse
                 as in GtkFileChooser when selecting several files
@@ -123,55 +31,18 @@ FileManager-Actions - TODO
 
   33 2011-12-04 support GObject introspection
 
-  34 2011-12-10 document supported distributions
-
   35 2011-12-12 have an option to display two rows in nact when we have an
                 action with only one profile (see #666093)
+     2017- 2-15 + when importing an action, move non standard conditions on
+                the action to the unique profile
 
   36 2011-12-28 when in maintainer mode, disable all compiler optimizations
-
-  37 2012-01-01 when keeping an hidden window, do not save/restore its position
-                each time, just keep its current position
 
   38 2012-01-02 when importing items via dnd, the messages do not specify to
                 which item they relate - but should!
 
-  39 2012-01-05 libunique is deprecated (mail E. Bassi gtk-app-devel dec. 2011)
-                GApplication may replace the feature since 2.30 (fedora 16 level)
-
-  40 2012-01-28 when gio >= 2.30, remove dbus-glib
-
-  41 2012-01-31 add a field on NADataDef to point when a data may embed some
-                parameters and should be expanded in nautilus-actions plugin
-
   42 2012-02-01 have all tabs of the main window scrollable
                 and keep their order in user settings
-
-  43 2012-02-06 should be able to install even if docs are not present
-
-  44 2012-02-09 review (one more time) the check_status calls
-                before trying to insert an item, we check it and its children (or should so
-                because the status of an object is not dependant of those of its parent)
-                so the nact_tree_view_insert_items() functions family should only need to
-                na_object_check_status_up()
-
-  45 2012-02-14 review update sensitivities to take advantage (?) of GtkAction
-
-  46 2012-02-14 a tree view status changed signal has not sense, rather define an
-                object status changed
-
-  47 2012-03-01 About nact: add documented by
-
-  48 2012-10-10 when checking for utilities in configure.ac, check for all
-                and only then display the result (so that we have all missing packages
-                in one time)
-
-  49 2012-10-11 should not block if GCONF devel library is not installed when
-                --enable-gconf is auto
-
-  50 2013- 9- 2 shouldn't check and require GConf if --disable-gconf
-  
-  51 2014- 2-25 see if uuid is always relevant
 
   52 2014- 2-25 NAUTILUS_ACTIONS_DEBUG: is it useful ?
 
@@ -180,24 +51,17 @@ FileManager-Actions - TODO
   54 2014- 4-30 base-assistant/dialog/window shouldn't include
                 nact-application.h to have NACT_EXIT_CODE
 
-  55 2014- 5- 4 we (should) now have GDBus: get rid of HAVE_GDBUS and
-                HAVE_DBUS_GLIB conditionals
-
   56 2014- 5- 4 fix docs generation, reviewing what must the options be
 
   57 2014- 5- 4 restore menu item tooltips
 
   58 2014- 5- 7 use GResource
 
-  59 2014- 5-11 Get rid of base_window_signal_xxx family
-
   60 2014- 6- 2 base_gtk_utils_widget_set_color: to be written
 
   61 2014- 6- 2 get rid of deprecated GtkAlignment
 
   62 2014- 6- 4 use composite widget (template)
-
-  63 2015- 9- 7 review Preferences dialog box
 
   64 2015- 9- 9 nautilus/nemo: have file_manager_file_info_create_for_uri ?
                 would replace FMASelectedInfo class
@@ -220,12 +84,6 @@ FileManager-Actions - TODO
   70 2015- 9-10 xmllint --noout --noent --path C:../../../../docs/user-manual/C --xinclude --postvalid ../../../../docs/user-manual/C/fma-config-tool.xml
                 document does not validate
 
-  71 2015- 9-11 replace FMADataFactory with GVariant ?
-
-  72 2015- 9-11 replace fma_required_versions with a JSON file with some
-                perl snippets to transform for configure.ac and 
-                maintainer/run-autogen.sh
-
   73 2015- 9-17 gtk-doc: usage of templates is deprecated
 
   74 2015- 9-21 instead of:
@@ -240,7 +98,8 @@ FileManager-Actions - TODO
 
   77 2017- 2-14 export assistant does not allow multiple selection
 
-  78 2017- 2-14 does the 'tree-context' menu id still is useful ?
+  78 2017- 2-14 fma-config-tool.actions: does the 'tree-context' menu id
+                still is useful ?
 
   79 2017- 2-14 if scrollkeeper is enabled, then check for scrollkeeper
 
@@ -253,67 +112,61 @@ FileManager-Actions - TODO
 
   83 2010-08-09 plugins should be able to provide a preference page
 
-  84 2010-09-30 export format and d&d format should be separated preferences
-
   85 2010-06-17 ui enhancement
                 all edition (entry, buttons, etc.) fields should have a small emblem when read-only.
 
-  86 2017- 2-14 add a 'why this item is invalid'
+  87 2017- 2-14 add a 'why this item is invalid'
 
-  86 2017- 2-14 enhancement.ui: review toolbars layout
-                so that detacheable toolbars do not take so such big extra space
-
-  86 2017- 2-14 enhancement.management: we should be able to fully export a configuration
+  88 2017- 2-14 enhancement.management: we should be able to fully export a configuration
                 this implies exporting menus and full tree
                 + restore hierarchy on import (see bug 626337)
 
-  86 2017- 2-14 enhancement.ui: rows implicitely selected should have a special display
+  89 2017- 2-14 enhancement.ui: rows implicitely selected should have a special display
                 (as a sort of 'transparent' selection)
 
-  86 2017- 2-14 enhancement.ui: review statusbar layout
+  90 2017- 2-14 enhancement.ui: review statusbar layout
                 do not add extra height to statusbar
                 better encapsulate statusbar, lock indicator, possibly other indicators
 
-  86 2017- 2-14 enhancement.config: na_pivot_is_level_zero_writable:
-                the provider which hosts the level-zero list of items should be a configuration option
-                (current is GConf)
+  92 2017- 2-14 DBus service: list current I/O providers
 
-  86 2017- 2-14 DBus service: list current I/O providers
+  93 2017- 2-14 DBus service: import/export an action or a menu
 
-  86 2017- 2-14 DBus service: import/export an action or a menu
+  95 2017- 2-14 export: add a overwrite page: what to do if file already exists ?
 
-  86 2017- 2-14 nact: new action assistant
-
-  86 2017- 2-14 export: add a overwrite page: what to do if file already exists ?
-
-  86 2017- 2-14 IActionTab: check_label has became useless since validity is global
+  96 2017- 2-14 IActionTab: check_label has became useless since validity is global
                 to the action - remove, or extend to each field which can led to
                 unvalidity
 
-  86 2017- 2-14 for each toolbar, let the user choose which buttons are displayed
+  97 2017- 2-14 for each toolbar, let the user choose which buttons are displayed
 
-  86 2017- 2-14 have a preference for modified and invalid fonts
+  98 2017- 2-14 have a preference for modified and invalid fonts
 
-  86 2017- 2-14 undo manager (at least Ctrl-Z)
+  99 2017- 2-14 undo manager (at least Ctrl-Z)
 
- 2010-08-20: add an item in the context menu to explain why other actions
-  are not displayed
+ 105 2012-01-02 when a window does not have yet a wsp, then default to position it
+                against its parent
 
-  86 2017- 2-14 export-ask: the keep last choice check box should be as editable that export format
+ 106 2012-01-02 have a libexec binary which just print the tree of items
 
-- 2011-05-20: should have an option to run in debug mode and dump whole configuration
-  so that a user can click on a button, and then send a zipped log to the maintainer
+ 107 2017- 2-14 import assistant: in selection item, double click should go to the next page
 
-- 2011-12-05: convert NAObject to GNode ?
+ 108 2010-12-13 --enable-gtk-doc-pdf does not generate a pdf, but should
 
-- 2011-12-26: display/edit mandatory preferences ?
+ 109 2012-10-12 migrate from gnome-doc-utils to yelp
+                see https://live.gnome.org/GnomeGoals/NewDocumentationInfrastructure
 
-- 2012-01-02 when a window does not have yet a wsp, then default to position it
-  against its parent
+ 110 2012-10-15 MSGFMT is called four times at once
+                while XML2PO is called once for each linguas
+                we should rather have MSGFMT called besides of XML2PO
 
-- 2012-01-02 have a libexec binary which just print the tree of items
+ 111 2012-10-15 check the status of the Fedora bug which was opened about
+                erroneous url - add a bug on help non being installed
+                (not even packaged)
 
-  86 2017- 2-14 import assistant: in selection item, double click should go to the next page
+ 112 2012-10-17 it appears that de.xml doesn't validate
+
+ 113
 
 -----------------------------------------------------------------------
  DONE
@@ -332,111 +185,227 @@ FileManager-Actions - TODO
    2 2011-11-28 import assistant: intro label should be wrappable
      2017- 2-14 done
 
+   3 2011-11-28 import assistant: importer ask format; long descriptions
+                should be a long wrappable line
+     2017- 2-15 done
+
+   4 2011-11-28 have a padding (6) on top of gtkfilechooser (import &
+                export assistants) not gtk3 : gtk2 only
+     2017- 2-15 obsolete
+
+   5 2011-11-28 already existing item when importing should keep the same
+                size between invocations
+     2011-11-30 this is ok on f14 f16 ubu10 and almost on ubu11
+                (ubu11): z-order is ok the first time, but comes back to
+                the previous behavior starting with the second time
+                (maybe a theme problem ?)
+     2017- 2-15 obsolete
+
+   6 2011-12-06 after unsuccessfully tried to import via dnd:
+                Gtk-CRITICAL **: gtk_tree_view_scroll_to_cell:
+                assertion `tree_view->priv->tree != NULL' failed
+     2017- 2-15 DnD is successful (Fedora 24)
+
+   7 2011-12-22 export assistant
+                when exporting a menu, only desktop format is available
+     2017- 2-15 obsolete
+
+   8 2011-12-22 export assistant
+                the items list should it be presented as a flat list ?
+                or as an expanded one ?
+     2017- 2-15 is presented as the original tree, fully expanded
+
+   9 2012-01-12 environment tab
+                in the list of desktop checkboxes, the item which is not
+                grayed is that which would be selected if the list would
+                be active -> but should be grayed
+                vubuntu10: exhibits the bug
+                fedora14, fedora16, vubuntu11: ok
+     2017- 2-15 obsolete
+
+  10 2012-01-16 LXDE: unable to drag and drop to PcmanFM
+                na_core_utils_dir_is_writable_uri( "/tmp" ):
+                is_writable=False
+                and desktop hangs
+     2017- 2-15 obsolete
+
+  11 2012-01-29 na-icontext.c:is_candidate_for_show_if_registered()
+                implement GDBus
+     2017- 2-15 obsolete
+
+  12 2012-01-29 NactTreeModel is not released at end when dnd
+     2017- 2-15 obsolete
+
+  13 2012-02-14 opening the menubar triggers the on_tree_view_focus_out,
+                thus disabling the edit items (this is not the desired
+                behavior when we access a menu)
+                Fedora14: OK
+                Fedora16: bug exhibits
+                Ubuntu10: OK
+                Ubuntu11: bug exhibits
+                This may have something to do with the way we manage the
+                GtkActions
+                Also see glade source.
+     2017- 2-15 obsolete
+
   14 2012- 6-25 unable to build NA-3.2.2 on Ubuntu 8 LTS
 	            not even find GTK 2/3 libraries
 	 2015- 9-21 ok (obsolete) as of 3.4
 
+  15 2012- 6-25 ubuntu 12 requires libtool (+ autotools-dev libltdl-dev)
+                20120625: ubuntu 12 requires intltool (+ autoconf automake
+                gettext libencode-locale-perl libfile-listing-perl
+                libfont-afm-perl libgettextpo0 libhtml-form-perl libhtml-format-perl
+                libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl
+                libhttp-cookies-perl libhttp-daemon-perl libhttp-date-perl
+                libhttp-message-perl libhttp-negotiate-perl libio-socket-inet6-perl
+                libio-socket-ssl-perl liblwp-mediatypes-perl liblwp-protocol-https-perl
+                libmailtools-perl libnet-http-perl libnet-ssleay-perl libsocket6-perl
+                libtimedate-perl libunistring0 liburi-perl libwww-perl
+                libwww-robotrules-perl libxml-parser-perl m4 patch)
+     2017- 2-15 cancelled
+
+  16 2012-10-19 the last commit - to disable xml2po usage - has introduced
+                a regression
+                target are evaluated even if not built (and so there is an
+                error if we do not know any prerequisites)
+                reproduce by building from an empty tree with --disable-manuals
+     2017- 2-15 cancelled
+
+  20 2010- 8- 9 in v1.x until ??, %f used to be the basename!!
+     2017- 2-15 obsolete
+
+  21 2010-12-30 gtk-doc 1.15
+                "Use of uninitialized value within %DeclarationTypes in
+                lc at /usr/bin/gtkdoc-mkdb line 929" when building XML
+     2017- 2-15 obsolete
+
+  24 2011-02-12 should we have a NAKeyFile shared between i/o-desktop and settings ?
+     2017- 2-15 No!
+
+  26 2011-02-23 desktop environment
+                accept a default at compile time
+                accept as a runtime user preference (may be mandatory)
+     2017- 2-15 no
+
+  27 2011-06-08 when getting an elementary data, we should get the default value if it is not set ?
+                to determine if a value is set, have a na_object_is_data_set (see na_object_item_deals_with_version)
+                this should let us get ride of na_factory_object_set_defaults() function
+     2017- 2-15 obsolete
+
+  28 2011-06-08 get ride of NADataBoxed ?
+     2017- 2-15 No
+
+  29 2011-11-29 exporter ask: add an option: do not import
+     2017- 2-15 done
+
+  30 2011-11-29 exporter ask and importer ask, add a button cancel all
+     2017- 2-15 done
+
+  34 2011-12-10 document supported distributions
+     2017- 2-15 done
+
+  37 2012-01-01 when keeping an hidden window, do not save/restore its position
+                each time, just keep its current position
+     2017- 2-15 useless
+
+  39 2012-01-05 libunique is deprecated (mail E. Bassi gtk-app-devel dec. 2011)
+                GApplication may replace the feature since 2.30 (fedora 16 level)
+     2017- 2-15 done
+
+  40 2012-01-28 when gio >= 2.30, remove dbus-glib
+     2017- 2-15 done
+
+  41 2012-01-31 add a field on NADataDef to point when a data may embed some
+                parameters and should be expanded in nautilus-actions plugin
+     2017- 2-15 cancelled (as I no more know what it means)
+
+  43 2012-02-06 should be able to install even if docs are not present
+     2017- 2-15 cancelled as the whole documentation build needs full review
+
+  44 2012-02-09 review (one more time) the check_status calls
+                before trying to insert an item, we check it and its children (or should so
+                because the status of an object is not dependant of those of its parent)
+                so the nact_tree_view_insert_items() functions family should only need to
+                na_object_check_status_up()
+     2017- 2-15 obsolete
+
+  45 2012-02-14 review update sensitivities to take advantage (?) of GtkAction
+     2017- 2-15 obsolete
+
+  46 2012-02-14 a tree view status changed signal has not sense, rather define an
+                object status changed
+     2017- 2-15 useless
+
+  47 2012-03-01 About nact: add documented by
+     2017- 2-15 done
+
+  48 2012-10-10 when checking for utilities in configure.ac, check for all
+                and only then display the result (so that we have all missing packages
+                in one time)
+     2017- 2-15 done
+
+  49 2012-10-11 should not block if GCONF devel library is not installed when
+                --enable-gconf is auto
+     2017- 2-15 done
+
+  50 2013- 9- 2 shouldn't check nor require GConf if --disable-gconf
+     2017- 2-15 done
+  
+  51 2014- 2-25 see if uuid is always relevant
+     2017- 2-15 yes
+
+  55 2014- 5- 4 we (should) now have GDBus: get rid of HAVE_GDBUS and
+                HAVE_DBUS_GLIB conditionals
+     2017- 2-15 done
+
+  59 2014- 5-11 Get rid of base_window_signal_xxx family
+     2017- 2-15 useless with these base classes (rather use m y library)
+
+  63 2015- 9- 7 review Preferences dialog box
+     2017- 2-15 done
+
+  71 2015- 9-11 replace FMADataFactory with GVariant ?
+     2017- 2-15 no added value
+
+  72 2015- 9-11 replace fma_required_versions with a JSON file with some
+                perl snippets to transform for configure.ac and 
+                maintainer/run-autogen.sh
+     2017- 2-15 no added value
+
+  84 2010-09-30 export format and d&d format should be separated preferences
+     2017- 2-15 no
+
+  86 2017- 2-14 enhancement.ui: review toolbars layout
+                so that detacheable toolbars do not take so such big extra space
+     2017- 2-15 this appears to be no more the case
+
+  91 2017- 2-14 enhancement.config: na_pivot_is_level_zero_writable:
+                the provider which hosts the level-zero list of items should be a configuration option
+                (current is GConf)
+     2017- 2-15 useless
+
+  94 2017- 2-14 nact: new action assistant
+     2017- 2-15 cancelled
+
+ 100 2010-08-20 add an item in the context menu to explain why other actions
+                are not displayed
+     2017- 2-15 cancelled as duplicate of #87
+
+ 101 2017- 2-14 export-ask: the keep last choice check box should be as editable that export format
+     2017- 2-15 cancelled: I do not known what this means
+
+ 102 2011-05-20 should have an option to run in debug mode and dump whole
+                configuration, so that a user can click on a button, and
+                then send a zipped log to the maintainer
+     2017- 2-15 cancelled
+
+ 103 2011-12-05 convert NAObject to GNode ?
+     2017- 2-15 cancelled (maybe in another application)
+
+ 104 2011-12-26 display/edit mandatory preferences ?
+     2017- 2-15 cancelled
+
 -----------------------------------------------------------------------
  P. Wieser - Created on 2010, june 15th
-             Last updated on 2017, feb 14th
-
-OTHER ENHANCEMENTS
-==================
-- GOptions request enhancement so that the help for an option could be
-  multiline (by defining an optional maximum width)
-
-- GConf Editor request enhancement: one should be able to refresh the hierarchy
-  (F5 ?)
-
-- Nautilus: implement menu separator for plugins
-
-- 2012-06-04: review GnomeGoals https://live.gnome.org/GnomeGoals/
-
-OTHER BUGS
-==========
-- 2011-02-21: nautilus: calls menu_provider_get_file_items() api each time we are
-  activating a menu; as the call is made without any indication about the currently
-  activated item, we have no other option than just recreate the menu; this is
-  very expensive in computation time
-
-- GLib bug for g_utf8_collate_key_for_filename()
-  (see the 26 exported actions, and the screenshot of Nautilus view)
-
-- Gtk bug: Nautilus doesn't display the actions in the order of the provided
-  GList in its context menu (seems as if a cache would keep the actions which
-  were already here the previous time - to be confirmed)
-
-- Gtk bug: gtk_tree_path_up returns TRUE even if there is no parent
-  cf. commit 5ee6938486cd82f1274969506873df950348dd61 and before
-  function nact-tree-model.c::add_parent
-  recreate a small code which reproduces this bug and open in bugzilla
-
-- Nautilus bug when dnd to nautilus on other screen
-  see https://bugzilla.gnome.org/show_bug.cgi?id=593453
-
-- intltool: should implement standard targets for users
-  (cf. 14.6 make.html GNU Make manual).
-  As of 0.41.1, the absence of these standard targets prevents users
-  (which are actually package developers) to provide any html, pdf, ...
-  targets
-
-- 2010-12-13: --enable-gtk-doc-pdf does not generate a pdf, but should
-
-- 2011-02-23: it seems that Nautilus 2.30.1 calls get_file_items even when are 
-  opening a submenu ?
-
-- 2011-02-23: also it seems that Nautilus 2.30.1 free our menus (probably because 
-  it is an item of its own menu), but not recursively the items of this menu.
-
-- 2011-12-19: pcleantmp.sh doesn't handle filename with spaces
-
-- 2012-01-23: docbook-utils-0.6.14
-  db2html begins by emptying the target directory, even if it also
-  contains the source file
-
-- 2012-01-25: gnome-doc-utils: install target does not check if translations
-  exist (e.g. sl/.xml) before trying to install, so aborts
-  -> install should build translations before installing
-  (the same way we compile programs before installing them)
-
-- 2012-10-12: migrate from gnome-doc-utils to yelp
-  see https://live.gnome.org/GnomeGoals/NewDocumentationInfrastructure
-
-- 2012-10-15:
-  MSGFMT is called four times at once
-  while XML2PO is called once for each linguas
-  we should rather have MSGFMT called besides of XML2PO
-
-- 2012-10-15: install sshd and ssh keys on vubuntu8/10/11/12
-
-- 2012-10-15; open all bugs in Bugzilla
-
-- 2012-10-15: check the status of the Fedora bug which was opened about
-  erroneous url - add a bug on help non being installed (not even packaged)
-
-- 2012-10-17: it appears that de.xml doesn't validate
-
-NOTES
-=====
-- Note about the schemas in Nautilus Actions:
-  a) actions are identified by uuid
-  b) so, all GConf keys have a path with the uuid of the action
-  c) I'm not willing to write a schema for each and every uuid
-  d) so, as of 1.11.2, the provided schema is general and should apply
-     to all actions
-  e) but there is not yet an API to set a GConfMetaInfo for a key
-     note that gconftool-2 --dump is able to export for each entry a
-     <schema_key> which includes the path to the general schema key
-     but we cannot set it programatically (bad !)
-
-- 20100408: gconf_concat_dir_and_key: have seen this as deprecated, but do not
-  find again the reference :(
-  not even in unstable library on the web
-  http://library.gnome.org/devel/gconf/unstable/gconf-gconf.html#gconf-concat-dir-and-key
-
-- "x-nautilus-desktop:///" is rather a scheme than a folder => actually is an URI
-
-- default has changed for schemes (was coded as 'file' instead of '*')
-  when version is recorded (as 1.4.1 or 2.0) then schemes is reliable
-  when version is not recorded, it is a 2.30 serie, and scheme is not recorded when default (i.e. file)
-  do not try to force anything than that, but this will have to be documented
+             Last updated on 2017, feb 15th
