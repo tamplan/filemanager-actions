@@ -23,10 +23,10 @@
       you may configure your menus and actions, making them be displayed
       and applied depending on specific conditions.
     </para>
-    <para>
+    <!-- <para>
       Starting with its 3.4 version, &prodname; is compatible with both
       &nautilus; and &nemo; Gnome file-managers.
-    </para>
+    </para> -->
   </abstract>
 
   <releaseinfo revision="&manrevision;" role="stub">

@@ -14,14 +14,9 @@
       context menus. These actions may be organized in menus and submenus,
       exported and shared with other desktop environments.
     
-    
       This manual describes the FileManager-Actions configuration tool user interface, and explains how
       you may configure your menus and actions, making them be displayed
       and applied depending on specific conditions.
-    
-    
-      Starting with its 3.4 version, FileManager-Actions is compatible with both
-      Nautilus and Nemo Gnome file-managers.
     
     </description>
     <type>user's guide</type>
