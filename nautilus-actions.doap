@@ -7,6 +7,7 @@
   <name xml:lang="en">FileManager-Actions</name>
 
   <category rdf:resource="http://api.gnome.org/doap-extensions#apps" />
+  <programming-language>C</programming-language>
 
   <shortdesc xml:lang="en">A file-manager extension which offers user configurable context menu actions</shortdesc>
 
@@ -20,7 +21,6 @@
   <homepage rdf:resource="http://www.nautilus-actions.org" />
 
   <download-page rdf:resource="http://www.nautilus-actions.org/downloads" />
-
   <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=filemanager-actions" />
 
   <mailing-list rdf:resource="http://mailman.nautilus-actions.org/listinfo" />
