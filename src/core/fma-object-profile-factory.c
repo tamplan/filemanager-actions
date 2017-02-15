@@ -90,8 +90,8 @@ static FMADataDef data_def_profile [] = {
 				NULL },
 
 	/* Path and Parameters are two separate data both in GConf, in GConf-derived
-	 * export files and in NACT. Only in desktop files, they are merged as only
-	 * one 'Exec' data which is splitted at read time.
+	 * export files and in fma-config-tool user interface. Only in desktop files,
+	 * they are merged as only one 'Exec' data which is splitted at read time.
 	 */
 	{ FMAFO_DATA_PATH,
 				TRUE,

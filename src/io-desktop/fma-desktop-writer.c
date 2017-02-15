@@ -305,8 +305,8 @@ desktop_weak_notify( FMADesktopFile *ndf, GObject *item )
 
 /*
  * Implementation of FMAIIOProvider::duplicate_data
- * Add a ref on FMADesktopFile data, so that unreffing origin object in NACT
- * does not invalid duplicated pointer
+ * Add a ref on FMADesktopFile data, so that unreffing origin object in
+ * fma-config-tool user interface does not invalid duplicated pointer.
  */
 guint
 fma_desktop_writer_iio_provider_duplicate_data( const FMAIIOProvider *provider, FMAObjectItem *dest, const FMAObjectItem *source, GSList **messages )

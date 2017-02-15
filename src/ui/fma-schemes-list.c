@@ -550,17 +550,17 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
 
 	stop = FALSE;
 
-	if( event->keyval == NACT_KEY_F2 ){
+	if( event->keyval == FMA_KEY_F2 ){
 		edit_inline( window );
 		stop = TRUE;
 	}
 
-	if( event->keyval == NACT_KEY_Insert || event->keyval == NACT_KEY_KP_Insert ){
+	if( event->keyval == FMA_KEY_Insert || event->keyval == FMA_KEY_KP_Insert ){
 		insert_new_row( window );
 		stop = TRUE;
 	}
 
-	if( event->keyval == NACT_KEY_Delete || event->keyval == NACT_KEY_KP_Delete ){
+	if( event->keyval == FMA_KEY_Delete || event->keyval == FMA_KEY_KP_Delete ){
 		delete_row( window );
 		stop = TRUE;
 	}

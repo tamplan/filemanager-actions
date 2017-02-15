@@ -651,15 +651,15 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, FMATreeView *view )
 {
 	gboolean stop = FALSE;
 
-	if( event->keyval == NACT_KEY_Return || event->keyval == NACT_KEY_KP_Enter ){
+	if( event->keyval == FMA_KEY_Return || event->keyval == FMA_KEY_KP_Enter ){
 		toggle_collapse( view );
 		stop = TRUE;
 	}
-	if( event->keyval == NACT_KEY_Right ){
+	if( event->keyval == FMA_KEY_Right ){
 		navigate_to_child( view );
 		stop = TRUE;
 	}
-	if( event->keyval == NACT_KEY_Left ){
+	if( event->keyval == FMA_KEY_Left ){
 		navigate_to_parent( view );
 		stop = TRUE;
 	}

@@ -123,7 +123,7 @@ GType    fma_pivot_get_type( void );
 #define PIVOT_SIGNAL_ITEMS_CHANGED				"pivot-items-changed"
 
 /* Loadable population
- * NACT management user interface defaults to PIVOT_LOAD_ALL
+ * fma-config-tool user interface defaults to PIVOT_LOAD_ALL
  * FMA plugin set the loadable population to !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID
  */
 typedef enum {

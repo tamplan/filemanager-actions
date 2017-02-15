@@ -261,7 +261,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, FMATreeIEditable *i
 {
 	gboolean stop = FALSE;
 
-	if( event->keyval == NACT_KEY_F2 ){
+	if( event->keyval == FMA_KEY_F2 ){
 		inline_edition( instance );
 		stop = TRUE;
 	}

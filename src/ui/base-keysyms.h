@@ -41,16 +41,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_KEY_Escape    (GDK_KEY_Escape)
-#define NACT_KEY_Insert    (GDK_KEY_Insert)
-#define NACT_KEY_Delete    (GDK_KEY_Delete)
-#define NACT_KEY_Return    (GDK_KEY_Return)
-#define NACT_KEY_KP_Delete (GDK_KEY_KP_Delete)
-#define NACT_KEY_KP_Enter  (GDK_KEY_KP_Enter)
-#define NACT_KEY_KP_Insert (GDK_KEY_KP_Insert)
-#define NACT_KEY_Left      (GDK_KEY_Left)
-#define NACT_KEY_Right     (GDK_KEY_Right)
-#define NACT_KEY_F2        (GDK_KEY_F2)
+#define FMA_KEY_Escape    (GDK_KEY_Escape)
+#define FMA_KEY_Insert    (GDK_KEY_Insert)
+#define FMA_KEY_Delete    (GDK_KEY_Delete)
+#define FMA_KEY_Return    (GDK_KEY_Return)
+#define FMA_KEY_KP_Delete (GDK_KEY_KP_Delete)
+#define FMA_KEY_KP_Enter  (GDK_KEY_KP_Enter)
+#define FMA_KEY_KP_Insert (GDK_KEY_KP_Insert)
+#define FMA_KEY_Left      (GDK_KEY_Left)
+#define FMA_KEY_Right     (GDK_KEY_Right)
+#define FMA_KEY_F2        (GDK_KEY_F2)
 
 G_END_DECLS
 

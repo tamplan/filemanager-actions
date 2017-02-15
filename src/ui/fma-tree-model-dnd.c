@@ -86,8 +86,6 @@
 #define XDS_ATOM						gdk_atom_intern( "XdndDirectSave0", FALSE )
 #define XDS_FILENAME					"xds.txt"
 
-#define NACT_ATOM						gdk_atom_intern( "XdndFileManagerActions", FALSE )
-
 /* as a dnd source, we provide
  * - a special XdndNautilusAction format for internal move/copy
  * - a XdndDirectSave, suitable for exporting to a file manager
@@ -570,7 +568,7 @@ drop_inside( FMATreeModel *model, GtkTreePath *dest, GtkSelectionData  *selectio
 	items_view = fma_main_window_get_items_view( main_window );
 
 	/*
-	 * NACT format (may embed profiles, or not)
+	 * fma-config-tool format (may embed profiles, or not)
 	 * 	with profiles: only valid dest is inside an action
 	 *  without profile: only valid dest is outside (besides of) an action
 	 */

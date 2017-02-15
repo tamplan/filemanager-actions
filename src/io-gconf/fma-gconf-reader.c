@@ -292,8 +292,8 @@ read_done_action_read_profiles( const FMAIFactoryProvider *provider, FMAObjectAc
 	list_profiles = fma_gconf_utils_get_subdirs( FMA_GCONF_PROVIDER( provider )->private->gconf, data->path );
 
 	/* read profiles in the specified order
-	 * as a protection against bugs in NACT, we check that profile has not
-	 * already been loaded
+	 * as a protection against bugs in fma-config-tool, we check that
+	 * profile has not already been loaded
 	 */
 	for( ip = order ; ip ; ip = ip->next ){
 		profile_id = ( gchar * ) ip->data;

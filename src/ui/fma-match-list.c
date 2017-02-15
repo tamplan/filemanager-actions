@@ -523,21 +523,21 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListData *data
 
 	stop = FALSE;
 
-	if( event->keyval == NACT_KEY_F2 ){
+	if( event->keyval == FMA_KEY_F2 ){
 		if( data->editable_filter ){
 			edit_inline( data );
 			stop = TRUE;
 		}
 	}
 
-	if( event->keyval == NACT_KEY_Insert || event->keyval == NACT_KEY_KP_Insert ){
+	if( event->keyval == FMA_KEY_Insert || event->keyval == FMA_KEY_KP_Insert ){
 		if( data->editable_item ){
 			insert_new_row( data );
 			stop = TRUE;
 		}
 	}
 
-	if( event->keyval == NACT_KEY_Delete || event->keyval == NACT_KEY_KP_Delete ){
+	if( event->keyval == FMA_KEY_Delete || event->keyval == FMA_KEY_KP_Delete ){
 		if( data->editable_item ){
 			delete_current_row( data );
 			stop = TRUE;

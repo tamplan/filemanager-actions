@@ -717,7 +717,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, FMAIconChooser *edi
 	if( !editor->private->dispose_has_run ){
 
 		/* inhibit Escape key */
-		if( event->keyval == NACT_KEY_Escape ){
+		if( event->keyval == FMA_KEY_Escape ){
 			stop = TRUE;
 		}
 	}

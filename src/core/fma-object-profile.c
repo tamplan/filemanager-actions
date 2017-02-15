@@ -651,9 +651,10 @@ read_done_ending( FMAObjectProfile *profile )
 }
 
 /*
- * GConf used to store command path and parameters as two separated fields
- * Desktop store them as one field
- * NACT displays and edits them as two fields (this let us have Browse and Legend buttons)
+ * GConf used to store command path and parameters as two separated fields;
+ * Desktop store them as one field;
+ * fma-config-tool user interface displays and edits them as two fields
+ * (this let us have Browse and Legend buttons)
  * => so we definitively keep them as separated boxed in our internal objects
  */
 static void

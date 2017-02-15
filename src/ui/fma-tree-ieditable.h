@@ -27,8 +27,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __UI_NACT_TREE_TREE_IEDITABLE_H__
-#define __UI_NACT_TREE_TREE_IEDITABLE_H__
+#ifndef __UI_FMA_TREE_IEDITABLE_H__
+#define __UI_FMA_TREE_IEDITABLE_H__
 
 /**
  * SECTION: fma-tree_ieditable
@@ -113,4 +113,4 @@ gboolean fma_tree_ieditable_is_level_zero_modified( const FMATreeIEditable *inst
 
 G_END_DECLS
 
-#endif /* __UI_NACT_TREE_TREE_IEDITABLE_H__ */
+#endif /* __UI_FMA_TREE_IEDITABLE_H__ */

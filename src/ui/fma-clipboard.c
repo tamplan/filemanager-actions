@@ -80,7 +80,7 @@ struct _FMAClipboardPrivate {
 };
 
 #define FMA_CLIPBOARD_ATOM			gdk_atom_intern( "_FMA_CLIPBOARD", FALSE )
-#define FMA_CLIPBOARD_NACT_ATOM		gdk_atom_intern( "ClipboardFileManagerActions", FALSE )
+#define FMA_CLIPBOARD_FMA_ATOM		gdk_atom_intern( "ClipboardFileManagerActions", FALSE )
 
 enum {
 	FMA_CLIPBOARD_FORMAT_FMA = 0,
@@ -342,7 +342,7 @@ fma_clipboard_dnd_get_data( FMAClipboard *clipboard, gboolean *copy_data )
 
 	if( !clipboard->private->dispose_has_run ){
 
-		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, FMA_CLIPBOARD_NACT_ATOM );
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, FMA_CLIPBOARD_FMA_ATOM );
 		if( selection ){
 			data = ( FMAClipboardDndData * ) gtk_selection_data_get_data( selection );
 
@@ -416,7 +416,7 @@ fma_clipboard_dnd_drag_end( FMAClipboard *clipboard )
 
 	if( !clipboard->private->dispose_has_run ){
 
-		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, FMA_CLIPBOARD_NACT_ATOM );
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, FMA_CLIPBOARD_FMA_ATOM );
 		g_debug( "%s: selection=%p", thisfn, ( void * ) selection );
 
 		if( selection ){
@@ -740,7 +740,7 @@ fma_clipboard_primary_get( FMAClipboard *clipboard, gboolean *relabel )
 
 	if( !clipboard->private->dispose_has_run ){
 
-		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, FMA_CLIPBOARD_NACT_ATOM );
+		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, FMA_CLIPBOARD_FMA_ATOM );
 
 		if( selection ){
 			user_data = ( PrimaryData * ) gtk_selection_data_get_data( selection );

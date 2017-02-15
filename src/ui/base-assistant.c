@@ -396,7 +396,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseAssistant *assi
 
 	if( !assistant->private->dispose_has_run ){
 
-		if( event->keyval == NACT_KEY_Escape && assistant->private->quit_on_escape ){
+		if( event->keyval == FMA_KEY_Escape && assistant->private->quit_on_escape ){
 
 				assistant->private->escape_key_pressed = TRUE;
 				toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( assistant ));

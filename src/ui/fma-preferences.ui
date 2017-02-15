@@ -88,7 +88,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="tooltip_text" translatable="yes">Menus and actions will be displayed in the ascending alphabetical order of their label, both in the Nautilus context menu and in the NACT user interface.</property>
+                            <property name="tooltip_text" translatable="yes">Menus and actions will be displayed in the ascending alphabetical order of their label, both in the Nautilus context menu and in the fma-config-tool user interface.</property>
                             <property name="use_underline">True</property>
                             <property name="active">True</property>
                             <property name="draw_indicator">True</property>
@@ -104,7 +104,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="tooltip_text" translatable="yes">Menus and actions will be displayed in the descending alphabetical order of their label, both in the Nautilus context menu and in the NACT user interface.</property>
+                            <property name="tooltip_text" translatable="yes">Menus and actions will be displayed in the descending alphabetical order of their label, both in the Nautilus context menu and in the fma-config-tool user interface.</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
                             <property name="group">OrderAlphaAscButton</property>
@@ -120,7 +120,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="tooltip_text" translatable="yes">Display order of menus and actions, both in the Nautilus context menu and in the NACT user interface, must be manually adjusted.</property>
+                            <property name="tooltip_text" translatable="yes">Display order of menus and actions, both in the Nautilus context menu and in the fma-config-tools user interface, must be manually adjusted.</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
                             <property name="group">OrderAlphaAscButton</property>
@@ -960,7 +960,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="tooltip_text" translatable="yes">You may define here any number of schemes. They will be proposed as default schemes when defining conditions for an action.
-If the list becomes empty, NACT will automatically refill in with this default list.
+If the list becomes empty, fma-config-tool will automatically re-fill in with this default list.
 You can add a new scheme by clicking on the '+' button.</property>
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>

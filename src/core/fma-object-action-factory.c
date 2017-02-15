@@ -176,7 +176,7 @@ static FMADataDef data_def_action [] = {
 
 	/* this data has been introduced in 2.29.1 and has been left up to 2.29.4
 	 * it has been removed starting with 2.29.5
-	 * it is now only used in the NACT user interface
+	 * it is now only used in the fma-config-tool user interface
 	 * it is so left readable, but no more writable (obsolete)
 	 */
 	{ FMAFO_DATA_TOOLBAR_SAME_LABEL,
