@@ -26,7 +26,6 @@ src/ui/base-assistant.c
 src/ui/base-gtk-utils.c
 src/ui/base-window.c
 src/ui/egg-desktop-file.c
-src/ui/egg-sm-client.c
 src/ui/fma-application.c
 src/ui/fma-add-capability-dialog.c
 [type: gettext/glade] src/ui/fma-add-capability.ui
@@ -35,7 +34,6 @@ src/ui/fma-assistant-export.c
 [type: gettext/glade] src/ui/fma-assistant-export.ui
 src/ui/fma-assistant-import.c
 [type: gettext/glade] src/ui/fma-assistant-import.ui
-[type: gettext/glade] src/ui/fma-confirm-logout.ui
 src/ui/fma-export-ask.c
 [type: gettext/glade] src/ui/fma-export-ask.ui
 src/ui/fma-iaction-tab.c
