@@ -27,11 +27,15 @@
 
 # serial 4 renamed as FMA_CHECK_FOR_GCONF
 
-dnl let the user choose whether to compile with GConf enabled
+dnl let the user choose whether to compile with GConf support
 dnl --enable-gconf
 dnl
-dnl defaults to disabling GConf, only searching for a GConf subsystem
-dnl when the '--enable-gconf' option is specified.
+dnl Building the GConf support means:
+dnl - installing the GConf schemas
+dnl - building the 'na-gconf' I/O provider.
+dnl
+dnl Default is to disable this GConf support, only searching for a GConf
+dnl subsystem when the '--enable-gconf' option is explicitly specified.
 dnl
 dnl Please note that, from the packager point of view, we should have
 dnl both GConf2 and GConf2-devel package, in order to be able to build
