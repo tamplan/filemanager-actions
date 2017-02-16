@@ -36,9 +36,9 @@
 #
 # distribution                       release date  end of life
 # ---------------------------------  ------------  -----------
-# Ubuntu 12.04 LTS Precise Pangolin  2012-04-26    [2017-04]
 # Debian 7.x Wheezy                  2013-05-04    [2018-05]
 # Fedora 24                          2016-06-21    [2017-07]
+# Ubuntu 12.04 LTS Precise Pangolin  2012-04-26    [2017-04]
 
 gtk_required=3.4.1
 glib_required=2.32.1

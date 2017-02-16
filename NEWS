@@ -3,12 +3,11 @@ Version 3.4
 
 	Release date
 
-	Libraries supported versions:
+	Target distributions:
 
-		The work on this version started on february 2015. At this date,
-		we target to support:
-		- Debian 7.0 Wheezy, published on 2013-05-04
-		- Unbuntu 12.04 LTS The Precise Pangolin, published on 2012-04-16.
+		- Debian 7.0 Wheezy, until 2018-05 (eol).
+		- Fedora 24, until 2017-07 (eol).
+		- Unbuntu 12.04 LTS The Precise Pangolin, until 2014-04 (eol).
 
 	What's new here:
 
@@ -22,6 +21,8 @@ Version 3.4
 
 		As we target now GLib 2.32, support for legacy compatibility
 		layers is removed: dbus-glib-1, libICE, libSM.
+
+	New and updated translations:
 
 Version 3.2.4
 =============
@@ -1517,4 +1518,3 @@ Version 1.10.1
 		Introduce new intltool (Christian Persch)
 
 		Double-clicking on an action now directly opens the editor
-	
