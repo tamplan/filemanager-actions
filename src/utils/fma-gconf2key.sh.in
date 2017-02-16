@@ -478,8 +478,8 @@ if [ "${opt_admin}" = "no" ]; then
 fi
 
 # we are using this same script to migrate preferences to .conf files
-# mandatory preferences go to SYSCONFDIR/xdg/filemanager-actions/nautilus-actions.conf
-# while user preferences go to HOME/.config/filemanager-actions/nautilus-actions.conf
+# mandatory preferences go to SYSCONFDIR/xdg/filemanager-actions/filemanager-actions.conf
+# while user preferences go to HOME/.config/filemanager-actions/filemanager-actions.conf
 # Note also that the GConf I/O provider will be disabled for writings
 # after this migration
 destdir=${conf_dir}/@PACKAGE@
