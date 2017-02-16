@@ -72,7 +72,7 @@
 #fi
 
 # we shouldn't run this script from the maintainer machine
-if [ "$(uname -n)" -eq "xps13" ]; then
+if [ "$(uname -n)" = "xps13" ]; then
 	echo "> This script should be run from the oldest targeted distribution." 1>&2
 	exit 1
 fi
