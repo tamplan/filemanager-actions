@@ -44,13 +44,20 @@ dnl usage:  FMA_ENABLE_DOCS
 AC_DEFUN([FMA_ENABLE_DOCS],[
 	AC_REQUIRE([_AC_ARG_FMA_ENABLE_DOCS])dnl
 
-	enable_deprecated="yes"
-	enable_gconf="yes"
-	enable_scrollkeeper="yes"
-	enable_gtk_doc="yes"
-	enable_gtk_doc_html="yes"
-	enable_html_manuals="yes"
-	enable_pdf_manuals="yes"
+	AC_MSG_CHECKING([whether to build all the documentation stuff])
+
+	if test "${enable_docs}" = "yes"; then
+		AC_MSG_RESULT([yes])
+		enable_deprecated="yes"
+		enable_gconf="yes"
+		enable_scrollkeeper="yes"
+		enable_gtk_doc="yes"
+		enable_gtk_doc_html="yes"
+		enable_html_manuals="yes"
+		enable_pdf_manuals="yes"
+	else
+		AC_MSG_RESULT([no])
+	fi
 ])
 
 AC_DEFUN([_AC_ARG_FMA_ENABLE_DOCS],[
