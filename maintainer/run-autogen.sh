@@ -59,7 +59,8 @@
 # see: https://wiki.gnome.org/Projects/GnomeCommon/Migration
 
 if [ ! -f configure.ac ]; then
-	echo "> This script is only meant to be run from the top source directory." 1>&2
+	echo "> This script is a maintainer-only script." 1>&2
+	echo "> It is only meant to be run from the top source directory." 1>&2
 	exit 1
 fi
 

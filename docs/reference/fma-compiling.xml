@@ -162,7 +162,7 @@
         <group>
           <arg>--with-nautilus-extdir=DIR</arg>
           <!--
-          <arg>--with-nemo-extdir=DIR</arg>
+          <arg>with-nemo-extdir=DIR</arg>
           -->
           <arg>--with-default-io-provider=io-gconf|io-desktop</arg>
           <arg>--enable-html-manuals[=gdt|db2html]</arg>
@@ -174,7 +174,7 @@
     <formalpara>
       <title><systemitem>--with-nautilus-extdir=DIR</systemitem></title>
       <!--
-      <title><systemitem>--with-nemo-extdir=DIR</systemitem></title>
+      <title><systemitem>with-nemo-extdir=DIR</systemitem></title>
       -->
       <para>
         With this option, one may define an alternate directory where

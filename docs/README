@@ -1,13 +1,31 @@
 docs
 ----
-As of FileManager-Actions 3.4, the documentation is composed of two
-main parts:
-- the Reference Manual describes all features of the product, rather
-  targeting developers and packagers;
-- the FileManager-Actions Configuration Tool User's Manual.
+ As of FileManager-Actions 3.4, the documentation is composed of two
+ main parts:
 
-All the documentation, whether it targets users or developers, is made
-of architecture-independent files, and so default to be included in the
-distributed tarball.
+ - the Reference Manual describes all features of the product, rather
+   targeting developers and packagers;
 
-P. Wieser, last updated on sept. 2015
+ - the FileManager-Actions Configuration Tool User's Manual.
+
+ All the documentation, whether it targets users or developers, is made
+ of architecture-independent files, and so default to be included in the
+ distributed tarball.
+
+Build system rationale
+----------------------
+ As all the documentation is distributed, the following rules apply:
+
+ - default options do not build the documentation
+ 
+ - because the packager is able to install the documentation from the
+   distributed tarball, it is enough if only the maintainer is able to
+   build this documentation
+
+ - as a consequence, while the source build system must stay compatible
+   with the oldest targeted distribution, the documentation build system
+   may be more recent, as it will only be run on the maintainer
+   development machine
+
+-----------------------------------------------------------------------
+ P. Wieser, last updated on feb. 2017
