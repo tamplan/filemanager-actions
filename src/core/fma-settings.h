@@ -42,8 +42,8 @@
  * - a per-user configuration.
  *
  * The configuration is implemented as keyed files:
- * - global configuration is sysconfdir/xdg/filemanager-actions/nautilus-actions.conf
- * - per-user configuration is HOME/.config/filemanager-actions/nautilus-actions.conf
+ * - global configuration is sysconfdir/xdg/filemanager-actions/filemanager-actions.conf
+ * - per-user configuration is HOME/.config/filemanager-actions/filemanager-actions.conf
  *
  * Each setting may so have its own read-only attribute, whether it
  * has been read from the global configuration or from the
