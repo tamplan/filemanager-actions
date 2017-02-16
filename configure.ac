@@ -88,6 +88,12 @@ if test "${GLIB_GENMARSHAL}" = "no"; then
 	AC_MSG_WARN([glib2-devel installed, but glib-genmarshal not found])
 	let fma_fatal_count+=1
 fi
+
+# add --enable-docs (for all documentation stuff)
+# have to be set early in the configure.ac in order to set all needed
+# variables
+FMA_ENABLE_DOCS
+
 # Have and want GConf support ?
 # As of 3.4 release, we are deprecating GConf, disabling it by default.
 # We only search for the libraries when explicitely required from 
@@ -117,6 +123,26 @@ FMA_TARGET_FILE_MANAGER
 
 # add --with-default-io-provider option
 FMA_SET_DEFAULT_IO_PROVIDER([io-desktop])
+
+# Enable deprecated functions ?
+FMA_MAINTAINER_CHECK_FOR_DEPRECATED
+
+# check for gtk-doc
+# - starting with gtk-doc 1.16, is able to handle srcdir != builddir
+# - API documentation should not be built (would be incomplete) when deprecated
+#   symbols are not enabled
+GTK_DOC_CHECK([1.16],[--flavour no-tmpl])
+if test "${enable_gtk_doc}" = "yes" -a "${enable_deprecated}" = "no"; then
+	AC_MSG_WARN([API documentation will be incomplete as deprecated symbols are disabled])
+fi
+
+# check for gnome-doc-utils
+# - starting with N-A 3.1.5, gnome-doc-utils is no more required when one want
+#   compile the tarball distribution (i.e. without regenerating users's manuals)
+GNOME_DOC_INIT(,,[gdu_cv_have_gdu=no])
+
+# add --enable-html-manuals and --enable-pdf-manuals configure options
+FMA_ENABLE_MANUALS
 
 ###
 
@@ -151,26 +177,6 @@ AC_CONFIG_FILES([
 	src/ui/Makefile
 	src/utils/Makefile
 ])
-
-# Enable deprecated functions ?
-FMA_MAINTAINER_CHECK_FOR_DEPRECATED
-
-# check for gtk-doc
-# - starting with gtk-doc 1.16, is able to handle srcdir != builddir
-# - API documentation should not be built (would be incomplete) when deprecated
-#   symbols are not enabled
-GTK_DOC_CHECK([1.16],[--flavour no-tmpl])
-if test "${enable_gtk_doc}" = "yes" -a "${enable_deprecated}" = "no"; then
-	AC_MSG_WARN([API documentation will be incomplete as deprecated symbols are disabled])
-fi
-
-# check for gnome-doc-utils
-# - starting with N-A 3.1.5, gnome-doc-utils is no more required when one want
-#   compile the tarball distribution (i.e. without regenerating users's manuals)
-GNOME_DOC_INIT(,,[gdu_cv_have_gdu=no])
-
-# add --enable-html-manuals and --enable-pdf-manuals configure options
-FMA_ENABLE_MANUALS
 
 # display and keep configuration informations
 config_options="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g'`" 

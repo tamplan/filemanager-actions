@@ -44,9 +44,9 @@ schemas_DATA = $(schemas_files)
 @INTLTOOL_SCHEMAS_RULE@
 
 if GCONF_SCHEMAS_INSTALL
-NA_INSTALL_SCHEMAS  = yes
+FMA_INSTALL_SCHEMAS  = yes
 else
-NA_INSTALL_SCHEMAS = no
+FMA_INSTALL_SCHEMAS = no
 endif
 
 EXTRA_DIST = \
@@ -54,7 +54,7 @@ EXTRA_DIST = \
 	$(NULL)
 
 install-data-hook:
-	@if test "$(NA_INSTALL_SCHEMAS)" = "yes"; then \
+	@if test "$(FMA_INSTALL_SCHEMAS)" = "yes"; then \
 		if test `id -u` != 0; then \
 			echo "***"; \
 			echo "*** You need to be root to install GConf schemas"; \
@@ -69,7 +69,7 @@ install-data-hook:
 CLEANFILES = $(schemas_files)
 
 uninstall-hook:
-	@if test "$(NA_INSTALL_SCHEMAS)" = "yes"; then \
+	@if test "$(FMA_INSTALL_SCHEMAS)" = "yes"; then \
 		for p in $(schemas_DATA); do \
 			GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-uninstall-rule $$p; \
 		done \

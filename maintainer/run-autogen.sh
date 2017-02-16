@@ -34,7 +34,7 @@
 #    maintainer development box (and thus are installed in maintainer/
 #    directory), while run-configure.sh is meant to build
 #    from anywhere (thus simulating the packager machines, and is so
-#    built at the root of the source tree)
+#    created at the root of the source tree)
 # -> on the maintainer development box, _build and _install are
 #    subdirectories of the root source tree
 # -> on the virtual guests simulating packager machines, _build and
@@ -42,13 +42,13 @@
 #    running run-configure.sh
 #
 # pwi 2013- 9-26
-# As a recall, I use two configurations for two distinct uses:
-# - first, and the most often, i.e. when developing the code, I try to
-#   not use any deprecated function; I so ask to configure to just
-#   disable them..
-# - but, when updating the developer reference manual, I want deprecated
-#   functions to be at least listed as deprecated, and I so to enable
-#   there deprecated functions with configure.
+# As a recall, I mainly use two configurations:
+# - in day-to-day development. when developing the code, deprecated
+#   functions are not used (should not be used at least); configure
+#   is so run with default features only;
+# - but, when updating the developer reference manual and when building
+#   the distributed tarball, I want deprecated functions to be declared
+#   and documentation build tools to be used.
 #
 # pwi 2013- 9-26
 # Get rid of 'target' environment variable, as doc generation is a
@@ -57,16 +57,31 @@
 # pwi 2015- 9-10
 # gnome-common is deprecated
 # see: https://wiki.gnome.org/Projects/GnomeCommon/Migration
+#
+# pwi 2017- 2-16
+# The 'configure' script is to be run in all targeted distributions.
+# In order to avoid versions issues, the script itself should be built
+# from the oldest distribution.
+# This implies that documentation build tools (gtk-doc, gnome-doc-utils,
+# pdflatex, etc.) should also be installed on this distribution.
 
-if [ ! -f configure.ac ]; then
-	echo "> This script is a maintainer-only script." 1>&2
-	echo "> It is only meant to be run from the top source directory." 1>&2
+#if [ ! -f configure.ac ]; then
+#	echo "> This script is a maintainer-only script." 1>&2
+#	echo "> It is only meant to be run from the top source directory." 1>&2
+#	exit 1
+#fi
+
+# we shouldn't run this script from the maintainer machine
+if [ "$(uname -n)" -eq "xps13" ]; then
+	echo "> This script should be run from the oldest targeted distribution." 1>&2
 	exit 1
 fi
 
 maintainer_dir=$(cd ${0%/*}; pwd)
 top_srcdir="${maintainer_dir%/*}"
 
+(
+cd "${top_srcdir}"
 PkgName=`autoconf --trace 'AC_INIT:$1' configure.ac`
 pkgname=$(echo $PkgName | tr '[[:upper:]]' '[[:lower:]]')
 
@@ -79,16 +94,14 @@ for d in $(find ${top_srcdir} -maxdepth 2 -type d -name "${pkgname}-*"); do
 	rm -fr $d
 done
 
-# tools required version
-source ${top_srcdir}/fma_required_versions
-
 echo "> Running aclocal"
-aclocal --install || exit 1
+m4_dir=`autoconf --trace 'AC_CONFIG_MACRO_DIR:$1' configure.ac`
+aclocal -I "${m4_dir}" --install || exit 1
 
 # requires gtk-doc package
 # used for Developer Reference Manual generation (devhelp)
 echo "> Running gtkdocize"
-gtkdocize || exit 1
+gtkdocize --copy || exit 1
 
 echo "> Running autoreconf"
 autoreconf --verbose --force --install -Wno-portability || exit 1
@@ -144,11 +157,7 @@ conf_args="\${conf_args} --sysconfdir=/etc"
 conf_args="\${conf_args} --with-nautilus-extdir=\${heredir}/_install/lib/nautilus"
 conf_args="\${conf_args} --with-nemo-extdir=\${heredir}/_install/lib/nemo"
 conf_args="\${conf_args} --enable-maintainer-mode"
-conf_args="\${conf_args} --enable-scrollkeeper"
-conf_args="\${conf_args} --enable-gtk-doc"
-conf_args="\${conf_args} --enable-gtk-doc-html"
-conf_args="\${conf_args} --enable-html-manuals"
-conf_args="\${conf_args} --enable-pdf-manuals"
+conf_args="\${conf_args} --enable-docs"
 conf_args="\${conf_args} $*"
 conf_args="\${conf_args} \$*"
 
@@ -166,3 +175,4 @@ chmod a+x ${runconf}
 ${runconf} &&
 make -C _build &&
 make -C _build install
+)
