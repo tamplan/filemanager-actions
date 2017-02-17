@@ -56,6 +56,10 @@ main( int argc, char *argv[] )
 	FMAApplication *appli;
 	int ret;
 
+#if !GLIB_CHECK_VERSION( 2,36, 0 )
+	g_type_init();
+#endif
+
 	set_log_handler();
 
 	/* pwi 2011-01-05
