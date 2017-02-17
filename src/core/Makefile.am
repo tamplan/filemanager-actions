@@ -41,7 +41,6 @@ AM_CPPFLAGS += \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
 	-DPKGLIBEXECDIR=\""$(pkglibexecdir)"\"				\
-	-DSYSCONFDIR=\"$(sysconfdir)\"						\
 	-DG_LOG_DOMAIN=\"FMA\"								\
 	-DICON_FNAME=\"$(icon_fname)\"						\
 	-DPKGEXPORTFORMATDIR=\"$(exportformat_datadir)\"	\
