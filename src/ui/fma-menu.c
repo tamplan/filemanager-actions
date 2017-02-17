@@ -259,7 +259,11 @@ on_app_about( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 
 	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
+#if GTK_CHECK_VERSION( 3, 6, 0 )
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
+#else
+	window = fma_application_get_main_window( FMA_APPLICATION( user_data ));
+#endif
 	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
 
 	fma_about_display( window );
@@ -288,7 +292,11 @@ on_app_preferences( GSimpleAction *action, GVariant *parameter, gpointer user_da
 
 	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
+#if GTK_CHECK_VERSION( 3, 6, 0 )
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
+#else
+	window = fma_application_get_main_window( FMA_APPLICATION( user_data ));
+#endif
 	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
 
 	fma_preferences_editor_run( FMA_MAIN_WINDOW( window ));
@@ -301,7 +309,11 @@ on_app_quit( GSimpleAction *action, GVariant *parameter, gpointer user_data )
 
 	g_return_if_fail( user_data && FMA_IS_APPLICATION( user_data ));
 
+#if GTK_CHECK_VERSION( 3, 6, 0 )
 	window = gtk_application_get_active_window( GTK_APPLICATION( user_data ));
+#else
+	window = fma_application_get_main_window( FMA_APPLICATION( user_data ));
+#endif
 	g_return_if_fail( window && FMA_IS_MAIN_WINDOW( window ));
 
 	fma_main_window_quit( FMA_MAIN_WINDOW( window ));

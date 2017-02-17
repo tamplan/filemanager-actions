@@ -710,7 +710,13 @@ setup_main_ui( FMAMainWindow *main_window )
 	/* no error condition here:
 	 * If there is an error opening the file or parsing the description
 	 * then the program will be aborted. */
+#if GTK_CHECK_VERSION( 3, 10, 0 )
 	builder = gtk_builder_new_from_file( st_xmlui_filename );
+#else
+	builder = gtk_builder_new();
+	guint ret = gtk_builder_add_from_file( builder, st_xmlui_filename, NULL );
+	g_return_if_fail( ret > 0 );
+#endif
 	top_window = gtk_builder_get_object( builder, st_toplevel_name );
 	g_return_if_fail( top_window && GTK_IS_WINDOW( top_window ));
 

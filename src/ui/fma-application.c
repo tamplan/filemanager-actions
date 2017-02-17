@@ -55,6 +55,7 @@ struct _FMAApplicationPrivate {
 	int             code;
 
 	FMAUpdater      *updater;
+	FMAMainWindow   *main_window;
 };
 
 static const gchar *st_application_name	= N_( "FileManager-Actions Configuration Tool" );
@@ -445,6 +446,7 @@ static void
 application_activate( GApplication *application )
 {
 	static const gchar *thisfn = "fma_application_activate";
+	FMAApplicationPrivate *priv;
 	GList *windows_list;
 	FMAMainWindow *main_window;
 
@@ -452,6 +454,7 @@ application_activate( GApplication *application )
 
 	g_return_if_fail( application && FMA_IS_APPLICATION( application ));
 
+	priv = FMA_APPLICATION( application )->private;
 	windows_list = gtk_application_get_windows( GTK_APPLICATION( application ));
 
 	/* if the application is unique, have only one main window */
@@ -469,6 +472,9 @@ application_activate( GApplication *application )
 	}
 
 	g_return_if_fail( main_window && FMA_IS_MAIN_WINDOW( main_window ));
+
+	priv->main_window = main_window;
+
 	gtk_window_present( GTK_WINDOW( main_window ));
 }
 
@@ -548,4 +554,27 @@ fma_application_get_updater( const FMAApplication *application )
 	}
 
 	return( updater );
+}
+
+/**
+ * fma_application_get_main_window:
+ * @application: this FMAApplication object.
+ *
+ * Returns: the main window.
+ */
+GtkWindow *
+fma_application_get_main_window( FMAApplication *application )
+{
+	FMAApplicationPrivate *priv;
+
+	g_return_val_if_fail( application && FMA_IS_APPLICATION( application ), NULL );
+
+	priv = application->private;
+
+	if( !priv->dispose_has_run ){
+
+		return( GTK_WINDOW( priv->main_window ));
+	}
+
+	return( NULL );
 }

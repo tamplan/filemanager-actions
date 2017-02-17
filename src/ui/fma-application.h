@@ -105,6 +105,8 @@ gchar          *fma_application_get_application_name( const FMAApplication *appl
 
 FMAUpdater     *fma_application_get_updater         ( const FMAApplication *application );
 
+GtkWindow      *fma_application_get_main_window     ( FMAApplication *application );
+
 G_END_DECLS
 
 #endif /* __UI_FMA_APPLICATION_H__ */

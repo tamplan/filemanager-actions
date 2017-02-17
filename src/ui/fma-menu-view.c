@@ -132,7 +132,12 @@ setup_toolbars_submenu( FMAMainWindow *window )
 {
 	GtkBuilder *builder;
 
+#if GTK_CHECK_VERSION( 3, 10, 0 )
 	builder = gtk_builder_new_from_file( st_toolbar_ui );
+#else
+	builder = gtk_builder_new();
+	gtk_builder_add_from_file( builder, st_toolbar_ui, NULL );
+#endif
 
 	setup_toolbar( window, builder, TOOLBAR_FILE_ID );
 	setup_toolbar( window, builder, TOOLBAR_EDIT_ID );
