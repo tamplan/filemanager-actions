@@ -1,8 +1,14 @@
-maintainer
------------
-This directory contains some development tools which are expected to be
-used only by the maintainer.
-These tools are not distributed in the tarball, and are only present in
-git (that I use here as some sort of backup repository).
+ maintainer
+ -----------
+ This directory contains some development tools which are expected to be
+ used only by the maintainer.
+ These tools are not distributed in the tarball, and are only present in
+ git (that I use here as some sort of backup repository).
 
-P. Wieser, Jan. 2014
+ Running
+ -------
+ G_MESSAGES_DEBUG=FMA gdb ./_install/bin/fma-config-tool
+
+-----------------------------------------------------------------------
+ P. Wieser, created on jan. 2014
+            last updated on feb. 2017
