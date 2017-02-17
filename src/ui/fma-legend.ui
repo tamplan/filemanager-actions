@@ -6,13 +6,13 @@
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
     <child>
-      <object class="GtkGrid">
+      <object class="GtkGrid" id="grid1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="row_spacing">2</property>
         <property name="column_spacing">4</property>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkGrid" id="grid11">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="row_spacing">2</property>
@@ -48,7 +48,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSeparator">
+          <object class="GtkSeparator" id="separator12">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -58,7 +58,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkGrid" id="grid13">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_left">20</property>
@@ -487,7 +487,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="label12">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">: space-separated list of the URIs of the selected file(s)/folder(s).</property>

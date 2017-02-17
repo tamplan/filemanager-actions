@@ -553,7 +553,7 @@ In this case, the defined conditions will be applied to the current folder, and 
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="grid221">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="row_spacing">2</property>
@@ -592,7 +592,7 @@ If this is not an absolute path, then the PATH environment variable at execution
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="grid222">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="row_spacing">2</property>
@@ -629,7 +629,7 @@ If this is not an absolute path, then the PATH environment variable at execution
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="grid223">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="row_spacing">2</property>
@@ -673,7 +673,7 @@ If this is not an absolute path, then the PATH environment variable at execution
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="grid224">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="row_spacing">2</property>
@@ -2025,7 +2025,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="label925">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                   </object>
@@ -2124,7 +2124,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="grid931">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="column_spacing">2</property>
@@ -2162,7 +2162,7 @@ This may be used for example to test for a prerequisite package.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="grid932">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="column_spacing">2</property>
@@ -2197,7 +2197,7 @@ This may be used for example for testing that a prerequisite service is currentl
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="grid933">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="column_spacing">2</property>
@@ -2233,7 +2233,7 @@ This may be used for example for testing a complex condition.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="grid934">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="column_spacing">2</property>
@@ -2582,6 +2582,30 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
           <object class="GtkGrid" id="main-toolbar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
             <child>
               <placeholder/>
             </child>

@@ -713,9 +713,14 @@ setup_main_ui( FMAMainWindow *main_window )
 #if GTK_CHECK_VERSION( 3, 10, 0 )
 	builder = gtk_builder_new_from_file( st_xmlui_filename );
 #else
+	GError *error = NULL;
 	builder = gtk_builder_new();
-	guint ret = gtk_builder_add_from_file( builder, st_xmlui_filename, NULL );
-	g_return_if_fail( ret > 0 );
+	guint ret = gtk_builder_add_from_file( builder, st_xmlui_filename, &error );
+	if( ret == 0 ){
+		g_warning( "setup_main_ui: %s", error->message );
+		g_error_free( error );
+		return;
+	}
 #endif
 	top_window = gtk_builder_get_object( builder, st_toplevel_name );
 	g_return_if_fail( top_window && GTK_IS_WINDOW( top_window ));

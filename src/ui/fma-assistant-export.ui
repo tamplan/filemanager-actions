@@ -126,7 +126,7 @@ You may use Ctrl and Shift keys to extend the selection.</property>
             <property name="row_spacing">2</property>
             <property name="column_spacing">4</property>
             <child>
-              <object class="GtkLabel" id="p3-l4-label1">
+              <object class="GtkLabel" id="p3-label1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Which format should I use when exporting these items ?</property>
@@ -182,7 +182,7 @@ You may use Ctrl and Shift keys to extend the selection.</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="p4-label1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">About to export selected items:</property>
@@ -210,7 +210,7 @@ You may use Ctrl and Shift keys to extend the selection.</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="p4-label2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_top">8</property>
@@ -280,11 +280,11 @@ You may use Ctrl and Shift keys to extend the selection.</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkScrolledWindow" id="p5-scrolled1">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <object class="GtkViewport">
+              <object class="GtkViewport" id="p5-viewport1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="shadow_type">none</property>
@@ -310,7 +310,7 @@ You may use Ctrl and Shift keys to extend the selection.</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="p5-label1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Selected items have been proceeded:</property>

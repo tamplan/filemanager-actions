@@ -47,7 +47,7 @@
         <property name="can_focus">False</property>
         <property name="row_spacing">2</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="p2-label1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">What should I do when importing an item whose ID already exists ?</property>
@@ -73,19 +73,13 @@
             <property name="rules_hint">True</property>
             <property name="show_expanders">False</property>
             <child internal-child="selection">
-              <object class="GtkTreeSelection"/>
+              <object class="GtkTreeSelection" id="p2-selection1"/>
             </child>
           </object>
           <packing>
             <property name="left_attach">0</property>
             <property name="top_attach">1</property>
           </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
         </child>
       </object>
       <packing>
@@ -97,7 +91,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="p3-label1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">About to import selected files:</property>
@@ -125,7 +119,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="p3-label2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_top">8</property>
@@ -167,7 +161,7 @@
         <property name="row_spacing">2</property>
         <property name="column_spacing">4</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="p4-label1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Selected files have been proceeded:</property>

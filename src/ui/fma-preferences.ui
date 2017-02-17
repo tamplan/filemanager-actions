@@ -2,6 +2,22 @@
 <!-- Generated with glade 3.20.0 -->
 <interface>
   <requires lib="gtk+" version="3.4"/>
+  <object class="GtkImage" id="image">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="xalign">0</property>
+    <property name="stock">gtk-go-up</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-missing-image</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-go-down</property>
+  </object>
   <object class="GtkDialog" id="PreferencesDialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -74,7 +90,7 @@
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid11">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -154,7 +170,7 @@
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid12">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -240,7 +256,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid21">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -313,9 +329,13 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid22">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="margin_left">8</property>
+                        <property name="margin_right">2</property>
+                        <property name="margin_top">2</property>
+                        <property name="margin_bottom">2</property>
                         <property name="hexpand">True</property>
                         <property name="row_spacing">2</property>
                         <property name="column_spacing">4</property>
@@ -417,7 +437,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid31">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -429,7 +449,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                           <object class="GtkLabel" id="label45">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="ypad">6</property>
                             <property name="label" translatable="yes">What to do when pasting or duplicating an item in the tree ?</property>
                             <property name="wrap">True</property>
                             <property name="xalign">0</property>
@@ -440,7 +459,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkGrid">
+                          <object class="GtkGrid" id="grid311">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_left">8</property>
@@ -520,7 +539,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid32">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -582,7 +601,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid33">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -606,7 +625,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkGrid">
+                          <object class="GtkGrid" id="grid331">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="column_spacing">4</property>
@@ -707,7 +726,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid41">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -720,7 +739,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                           <object class="GtkLabel" id="label8">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="ypad">10</property>
                             <property name="label" translatable="yes">What to do when an item, action or menu, selected to be imported, has the same identifier that a currently existing one ?</property>
                             <property name="wrap">True</property>
                             <property name="xalign">0</property>
@@ -795,7 +813,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid51">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -808,7 +826,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                           <object class="GtkLabel" id="label5">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="ypad">10</property>
                             <property name="label" translatable="yes">What is your preferred export format ?</property>
                             <property name="wrap">True</property>
                             <property name="xalign">0</property>
@@ -884,7 +901,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid61">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -895,7 +912,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                         <property name="row_spacing">2</property>
                         <property name="column_spacing">2</property>
                         <child>
-                          <object class="GtkGrid">
+                          <object class="GtkGrid" id="grid611">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="row_spacing">2</property>
@@ -941,9 +958,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                 <property name="top_attach">1</property>
                               </packing>
                             </child>
-                            <child>
-                              <placeholder/>
-                            </child>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -968,7 +982,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                                 <property name="rules_hint">True</property>
                                 <property name="show_expanders">False</property>
                                 <child internal-child="selection">
-                                  <object class="GtkTreeSelection"/>
+                                  <object class="GtkTreeSelection" id="selection13"/>
                                 </child>
                               </object>
                             </child>
@@ -1028,7 +1042,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="grid71">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">8</property>
@@ -1054,7 +1068,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                                 <property name="rules_hint">True</property>
                                 <property name="show_expanders">False</property>
                                 <child internal-child="selection">
-                                  <object class="GtkTreeSelection"/>
+                                  <object class="GtkTreeSelection" id="selection14"/>
                                 </child>
                               </object>
                             </child>
@@ -1065,7 +1079,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkGrid">
+                          <object class="GtkGrid" id="grid711">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="row_spacing">2</property>
@@ -1101,9 +1115,6 @@ You can add a new scheme by clicking on the '+' button.</property>
                                 <property name="left_attach">0</property>
                                 <property name="top_attach">1</property>
                               </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
                             </child>
                           </object>
                           <packing>
@@ -1165,21 +1176,5 @@ You can add a new scheme by clicking on the '+' button.</property>
       <widget name="label711"/>
       <widget name="label721"/>
     </widgets>
-  </object>
-  <object class="GtkImage" id="image">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="xalign">0</property>
-    <property name="stock">gtk-go-up</property>
-  </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-missing-image</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-go-down</property>
   </object>
 </interface>
