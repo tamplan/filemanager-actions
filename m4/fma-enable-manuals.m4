@@ -42,6 +42,10 @@ dnl   output PDF manuals for all locales
 dnl   only use dblatex for now
 dnl   only '=dblatex' option is recognized for now.
 dnl
+dnl Defined conditionals:
+dnl   BUILD_HTML_MANUALS
+dnl   BUILD_PDF_MANUALS
+dnl
 dnl usage:  FMA_ENABLE_MANUALS
 
 AC_DEFUN([FMA_ENABLE_MANUALS],[
@@ -49,7 +53,10 @@ AC_DEFUN([FMA_ENABLE_MANUALS],[
 	AC_REQUIRE([_AC_ARG_FMA_ENABLE_PDF_MANUALS])dnl
 	
 	_CHECK_FOR_HTML_MANUALS
+	AM_CONDITIONAL([BUILD_HTML_MANUALS], [test "${enable_html_manuals}" = "yes"])
+
 	_CHECK_FOR_PDF_MANUALS
+	AM_CONDITIONAL([BUILD_PDF_MANUALS], [test "${enable_pdf_manuals}" = "yes"])
 ])
 
 AC_DEFUN([_AC_ARG_FMA_ENABLE_HTML_MANUALS],[
@@ -92,6 +99,7 @@ AC_DEFUN([_CHECK_FOR_HTML_MANUALS],[
 		else
 			msg_html_manuals="${msg_html_manuals} gnome-doc-tool"
 		fi
+		enable_html_manuals="yes"
 	fi
 
 	AC_SUBST([WITH_DB2HTML],[${with_db2html}])
@@ -126,6 +134,8 @@ AC_DEFUN([_CHECK_FOR_PDF_MANUALS],[
 		fi
 		if test "x${with_dblatex}" = "xno"; then
 			AC_MSG_ERROR([dblatex has not been found, unable to generate PDF manuals])
+		else
+			enable_pdf_manuals="yes"
 		fi
 	fi
 ])
