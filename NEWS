@@ -22,6 +22,8 @@ Version 3.4
 		As we target now GLib 2.32, support for legacy compatibility
 		layers is removed: dbus-glib-1, libICE, libSM.
 
+        Add support for Caja filemanager (thanks to Wolfgang Ulbrich <mate@raveit.de>).
+
 	New and updated translations:
 
 Version 3.2.4

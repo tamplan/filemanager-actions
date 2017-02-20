@@ -60,6 +60,8 @@ void
 nautilus_module_initialize( GTypeModule *module )
 #elif FMA_TARGET_ID == NEMO_ID
 nemo_module_initialize( GTypeModule *module )
+#elif FMA_TARGET_ID == CAJA_ID
+caja_module_initialize( GTypeModule *module )
 #endif
 {
 	static const gchar *thisfn = "fma_tracker_module_" FMA_TARGET_LABEL "_module_initialize";
@@ -80,6 +82,8 @@ void
 nautilus_module_list_types( const GType **types, int *num_types )
 #elif FMA_TARGET_ID == NEMO_ID
 nemo_module_list_types( const GType **types, int *num_types )
+#elif FMA_TARGET_ID == CAJA_ID
+caja_module_list_types( const GType **types, int *num_types )
 #endif
 {
 	static const gchar *thisfn = "fma_tracker_module_" FMA_TARGET_LABEL "_module_list_types";
@@ -97,6 +101,8 @@ void
 nautilus_module_shutdown( void )
 #elif FMA_TARGET_ID == NEMO_ID
 nemo_module_shutdown( void )
+#elif FMA_TARGET_ID == CAJA_ID
+caja_module_shutdown( void )
 #endif
 {
 	static const gchar *thisfn = "fma_tracker_module_" FMA_TARGET_LABEL "_module_shutdown";

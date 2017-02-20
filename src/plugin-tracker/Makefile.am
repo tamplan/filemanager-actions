@@ -100,6 +100,19 @@ libfma_nemo_tracker_la_CPPFLAGS = $(AM_CPPFLAGS)		\
 	$(NULL)
 endif
 
+if HAVE_CAJA
+caja_extensiondir = $(CAJA_EXTENSIONS_DIR)
+caja_extension_LTLIBRARIES = libfma-caja-tracker.la
+nodist_libfma_caja_tracker_la_SOURCES = $(nodist_libfma_sources)
+libfma_caja_tracker_la_SOURCES = $(libfma_sources)
+libfma_caja_tracker_la_LIBADD = $(libfma_ldadd)
+libfma_caja_tracker_la_LDFLAGS = $(libfma_ldflags)
+libfma_caja_tracker_la_CPPFLAGS = $(AM_CPPFLAGS)		\
+	-DFMA_TARGET_ID=$(CAJA_ID)							\
+	-DFMA_TARGET_LABEL=\"$(CAJA_LABEL)\"				\
+	$(NULL)
+endif
+
 EXTRA_DIST = \
 	fma-tracker-gdbus.xml								\
 	$(NULL)

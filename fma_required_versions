@@ -51,6 +51,7 @@ uuid_required=1.6.2
 # File-managers
 nautilus_required=3.4.1
 nemo_required=1.8					# appeared with Trusty 14 LTS
+caja_required=1.16.0                # gtk+-3 version are in f25, ubuntu-16.10, next debian
 
 REQUIRED_INTLTOOL_VERSION=${intltool_required}
 

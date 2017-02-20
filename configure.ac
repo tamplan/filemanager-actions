@@ -117,7 +117,7 @@ AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 # print the debug output be printed to the console
 AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
 
-# target a file manager (nautilus, nemo, ...)
+# target a file manager (nautilus, nemo, caja, ...)
 FMA_TARGET_FILE_MANAGER
 
 # add --with-default-io-provider option
@@ -199,6 +199,10 @@ fi
 if test "${with_nemo_ok}" = "yes"; then
 	$as_echo "	Targeting Nemo
 	  installing extensions in      ${with_nemo_extdir}"
+fi
+if test "${with_caja_ok}" = "yes"; then
+	$as_echo "	Targeting Caja
+	  installing extensions in      ${with_caja_extdir}"
 fi
 $as_echo "	GConf enabled                   ${enable_gconf}"
 if test "${enable_gconf}" = "yes"; then

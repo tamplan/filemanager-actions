@@ -63,6 +63,7 @@ AC_DEFUN([FMA_TARGET_FILE_MANAGER],[
 
 	_AC_FMA_WITH_NAUTILUS
 	_AC_FMA_WITH_NEMO
+	_AC_FMA_WITH_CAJA
 
 	if test ${fma_fm_count} -eq 0; then
 		_FMA_CHECK_MODULE_MSG([yes],[No suitable target file manager found])
@@ -126,4 +127,27 @@ AC_DEFUN([_AC_FMA_WITH_NEMO],[
 	fi
 
 	AM_CONDITIONAL([HAVE_NEMO], [test "${with_nemo_ok}" = "yes"])
+])
+
+# targeting file manager: caja
+# user may specify --with[out]-caja; default is to rely on the
+#  availability of the extensions libraries/apis
+# requires: caja-devel be installed
+# supplementary options: --with-caja-extdir
+AC_DEFUN([_AC_FMA_WITH_CAJA],[
+
+	_AC_FMA_WITHAFM([caja],[Caja])
+
+	let fma_fm_candidate+=1
+	AC_SUBST([CAJA_ID],[${fma_fm_candidate}])
+	AC_SUBST([CAJA_LABEL],[Caja])
+	AC_DEFINE_UNQUOTED([CAJA_ID],[${fma_fm_candidate}],[Identify the candidate file manager])
+
+	AS_IF([test "$with_caja" != "no"],[FMA_CHECK_FOR_CAJA])
+
+	if test "${with_caja_ok}" = "yes"; then
+		let fma_fm_count+=1
+	fi
+
+	AM_CONDITIONAL([HAVE_CAJA], [test "${with_caja_ok}" = "yes"])
 ])

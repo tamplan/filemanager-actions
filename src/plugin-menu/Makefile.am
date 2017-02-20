@@ -75,5 +75,17 @@ libfma_nemo_menu_la_CPPFLAGS = $(AM_CPPFLAGS) 			\
 	$(NULL)
 endif
 
+if HAVE_CAJA
+caja_extensiondir = $(CAJA_EXTENSIONS_DIR)
+caja_extension_LTLIBRARIES = libfma-caja-menu.la
+libfma_caja_menu_la_SOURCES = $(lib_sources)
+libfma_caja_menu_la_LIBADD = $(lib_libadd)
+libfma_caja_menu_la_LDFLAGS = $(lib_ldflags)
+libfma_caja_menu_la_CPPFLAGS = $(AM_CPPFLAGS) 			\
+	-DFMA_TARGET_ID=$(CAJA_ID)							\
+	-DFMA_TARGET_LABEL=\"$(CAJA_LABEL)\"				\
+	$(NULL)
+endif
+
 # Code coverage
 @CODE_COVERAGE_RULES@

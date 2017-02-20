@@ -43,6 +43,10 @@
 #include <libnemo-extension/nemo-extension-types.h>
 #include <libnemo-extension/nemo-menu-provider.h>
 #include <libnemo-extension/nemo-file-info.h>
+#elif FMA_TARGET_ID == CAJA_ID
+#include <libcaja-extension/caja-extension-types.h>
+#include <libcaja-extension/caja-menu-provider.h>
+#include <libcaja-extension/caja-file-info.h>
 #endif
 
 G_BEGIN_DECLS
@@ -89,6 +93,27 @@ G_BEGIN_DECLS
 #define file_manager_file_info_list_copy                      nemo_file_info_list_copy
 #define file_manager_file_info_list_free                      nemo_file_info_list_free
 #define file_manager_menu_provider_emit_items_updated_signal  nemo_menu_provider_emit_items_updated_signal
+#elif FMA_TARGET_ID == CAJA_ID
+#define FILE_MANAGER_TYPE_MENU_PROVIDER                       CAJA_TYPE_MENU_PROVIDER
+#define FILE_MANAGER_MENU_PROVIDER                            CAJA_MENU_PROVIDER
+#define FILE_MANAGER_IS_MENU                                  CAJA_IS_MENU
+#define FILE_MANAGER_MENU_ITEM                                CAJA_MENU_ITEM
+#define FILE_MANAGER_FILE_INFO                                CAJA_FILE_INFO
+#define FileManagerMenuProviderIface                          CajaMenuProviderIface
+#define FileManagerMenuProvider                               CajaMenuProvider
+#define FileManagerMenuItem                                   CajaMenuItem
+#define FileManagerMenu                                       CajaMenu
+#define FileManagerFileInfo                                   CajaFileInfo
+#define file_manager_menu_new                                 caja_menu_new
+#define file_manager_menu_append_item                         caja_menu_append_item
+#define file_manager_menu_item_new                            caja_menu_item_new
+#define file_manager_menu_item_set_submenu                    caja_menu_item_set_submenu
+#define file_manager_menu_item_list_free                      caja_menu_item_list_free
+#define file_manager_file_info_get_uri                        caja_file_info_get_uri
+#define file_manager_file_info_get_mime_type                  caja_file_info_get_mime_type
+#define file_manager_file_info_list_copy                      caja_file_info_list_copy
+#define file_manager_file_info_list_free                      caja_file_info_list_free
+#define file_manager_menu_provider_emit_items_updated_signal  caja_menu_provider_emit_items_updated_signal
 #endif
 
 G_END_DECLS
