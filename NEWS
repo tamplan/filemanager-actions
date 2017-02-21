@@ -7,7 +7,7 @@ Version 3.4
 
 		- Debian 7.0 Wheezy, until 2018-05 (eol).
 		- Fedora 24, until 2017-07 (eol).
-		- Unbuntu 12.04 LTS The Precise Pangolin, until 2014-04 (eol).
+		- Unbuntu 14.04 LTS The Trusty Tahr, until 2019-04 (eol).
 
 	What's new here:
 
@@ -25,6 +25,16 @@ Version 3.4
         Add support for Caja filemanager (thanks to Wolfgang Ulbrich <mate@raveit.de>).
 
 	New and updated translations:
+
+        - bs (Samir Ribic)
+        - cs (Marek Černocký)
+        - de (Mario Blättermann)
+        - el (Maria Mavridou)
+        - lt (Aurimas Černius)
+        - pt (Pedro Albuquerque)
+        - sr (Мирослав Николић)
+        - sv (Josef Andersson, Anders Jonsson)
+        - tr (Necdet Yücel)
 
 Version 3.2.4
 =============
