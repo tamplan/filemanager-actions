@@ -170,16 +170,24 @@ FileManager-Actions - TODO
                 checking for gtkdoc-rebase... /usr/bin/gtkdoc-rebase
                 checking for gtkdoc-mkpdf... /usr/bin/gtkdoc-mkpdf
                 checking whether to build gtk-doc documentation... no
-                Should actually check whether to build the doc before
-                checking for gtk-doc  tools
+                -> Should actually check whether to build the doc before
+                   checking for gtk-doc  tools
 
  114 2017- 2-16 checking gnome-doc-utils >= 0.3.2... yes
                 checking whether to build HTML manuals... no
                 checking whether to build PDF manuals... no
-                Should actually check whether to build the manuals before
-                checking for g-d-u tools
+                -> Should actually check whether to build the manuals before
+                   checking for g-d-u tools
 
- 115
+ 115 2017- 2-20 /home/pierre/host/data/eclipse/nautilus-actions/configure  --prefix=/home/pierre/fm-actions/_install --with-nautilus-extdir=/home/pierre/fm-actions/_install/lib/nautilus --enable-maintainer-mode  --enable-docs
+                configure: WARNING: Unable to determine Nemo extension folder, please use --with-nemo-extdir option
+                -> this message should not occur as --with-nemo-extdir has not been specified
+
+ 116 2017- 2-20 should check for scrollkeeper if html manuals are to be built
+
+ 117 2017- 2-20 omf files are not built on make install, but only on make
+
+ 118
 
 -----------------------------------------------------------------------
  DONE
