@@ -5,6 +5,42 @@
  These tools are not distributed in the tarball, and are only present in
  git (that I use here as some sort of backup repository).
 
+ Build system rationale
+ ----------------------
+ Documentation only includes architecture-independant files, and is thus
+ fully included in the distributed tarball.
+
+ - default is to not build the documentation
+
+ - because the packager will be able to install the documentation from
+   the distributed tarball, it is enough if only the maintainer is able
+   to build this documentation
+
+ - it is up to the maintainer to choose where to build the documentation:
+   > either in the oldest targeted distribution
+   > either in its own development machine.
+
+   The first choice (the oldest system) might be more secure as it will
+   embed in aclocal.m4 a version number compatible with all other systems.
+   Contrarily, we are not sure that choosing the second option (the newest
+   system) does not lead to some issues in older systems.
+
+ - depending on the build tools version, the distribution may have to be
+   build on the oldest or the newest system.
+   For example, Debian 7 Wheezy (gtk-doc 1.18) requires gtk-doc to be
+   enabled, while this is no more true with Fedora 24 (gtk-doc 1.25).
+
+# in Debian 7 wheezy:
+# apt-get install autoconf automake pkg-config gtk-doc-tools libglib2.0-dev libgtk-3-dev libgtop2-dev libxml2-dev uuid-dev gnome-doc-utils libgconf2-dev dblatex libnautilus-extension-dev scrollkeeper
+
+ Building the distributed tarball
+ --------------------------------
+ The whole process is managed by the 'run-distcheck.sh' script:
+
+ - it first reconfigure (gtkdocize+autoreconf) the whole source tree
+ - it then rebuild all sources and generates all the documentation
+ - last it makes distcheck.
+
  Running
  -------
  G_MESSAGES_DEBUG=FMA gdb ./_install/bin/fma-config-tool
