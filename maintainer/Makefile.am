@@ -35,6 +35,9 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
+# This seems to be an 'egg and chicken' problem: this source program
+# has nothing to do in the distributed tarball, but has to be present
+# in order to be able to make distcheck
 check_header_SOURCES = \
 	check-header.c												\
 	$(NULL)
@@ -43,7 +46,3 @@ check_header_LDADD = \
 	$(top_builddir)/src/core/libfma-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
-
-# this is just a fake code to have the make behave well
-check-header.c:
-	[ -s $@ ] || echo "int main( int argc, char **argv ){ return 0; }" > $@
