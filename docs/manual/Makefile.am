@@ -132,13 +132,10 @@ DOC_FIGURES = \
 	figures/start-zenity-result.png					\
 	figures/stock-icon-about.png
 
-if BUILD_HTML_MANUALS
 include $(top_srcdir)/gnome-doc-utils.make
-else
-if BUILD_PDF_MANUALS
-include $(top_srcdir)/gnome-doc-utils.make
-endif
-endif
+
+# the name of the directory which contains the HTML user's manual
+TARGET_DIR = fma-config-tool
 
 #DOC_LINGUAS = $(patsubst $(srcdir)/%,%,$(shell find $(srcdir) -mindepth 1 -maxdepth 1 -type d | $(GREP) -v $(srcdir)/C))
 DOC_LINGUAS = de el es fr sl
@@ -319,7 +316,7 @@ exec_db2html = \
 	eval $$cmd >/dev/null; \
 	find . -type d -name '*.junk' | xargs rm -fr
 
-# Install HTML manuals in <htmldir>/<lang>/fmact/ subdirectory;
+# Install HTML manuals in <htmldir>/<lang>/$(TARGET_DIR)/ subdirectory;
 # where <htmldir> defaults to <pkgdocdir>/html
 # Note: we do honor here --htmldir autotools configuration option.
 # Manuals may be installed from builddir, if they just have been built,
@@ -333,7 +330,7 @@ install-html-manuals:
 	fi; \
 	echo "  Installing in $$_instd ..."; \
 	for lc in C $(DOC_LINGUAS); do \
-		_instdir="$$_instd/$$lc/fmact"; \
+		_instdir="$$_instd/$$lc/$(TARGET_DIR)"; \
 		if test -f "$(builddir)/$$lc/$(DOC_MODULE).html"; then \
 			d="$(builddir)"; \
 		elif test -f "$(srcdir)/$$lc/$(DOC_MODULE).html"; then \
@@ -352,7 +349,7 @@ install-html-manuals:
 # 2: locale
 # 3: target dir
 install_html_doc = \
-	if test "$(opt_verbose)" = ""; then echo "    $(2)/fmact/$(DOC_MODULE).html"; fi; \
+	if test "$(opt_verbose)" = ""; then echo "    $(2)/$(TARGET_DIR)/$(DOC_MODULE).html"; fi; \
 	$(MKDIR_P) $(3); \
 	cp -p $(opt_verbose) "$(1)/$(2)/$(DOC_MODULE).html" $(3)/
 
@@ -364,7 +361,7 @@ install_html_doc = \
 install_html_images = \
 	if grep -lq $(4) "$(1)/$(2)/$(DOC_MODULE).html"; then \
 		if test -d "$(1)/$(2)/$(4)"; then \
-			if test "$(opt_verbose)" = ""; then echo "    $(2)/fmact/$(4)"; fi; \
+			if test "$(opt_verbose)" = ""; then echo "    $(2)/$(TARGET_DIR)/$(4)"; fi; \
 			cmd="cp -rp $(opt_verbose) \"$(1)/$(2)/$(4)\" $(3)/"; eval $$cmd; \
 			chmod -R u+w $(3); \
 			if test "$(opt_verbose)" != ""; then echo $$cmd; fi; \
@@ -378,7 +375,7 @@ install_html_images = \
 # 2: locale
 # 3: target dir
 install_html_figs = \
-	if test "$(opt_verbose)" = ""; then echo "    $(2)/fmact/figures"; fi; \
+	if test "$(opt_verbose)" = ""; then echo "    $(2)/$(TARGET_DIR)/figures"; fi; \
 	figdir="$(3)/figures"; \
 	if ! test -d "$$figdir"; then $(MKDIR_P) "$$figdir"; fi; \
 	for fig in $(DOC_FIGURES); do \
@@ -386,7 +383,7 @@ install_html_figs = \
 		if test -f $${figsrc} -a ! -h $${figsrc}; then \
 			cmd="$(INSTALL_DATA) $${figsrc} $${figdir}/"; \
 		else \
-			cmd="(cd $${figdir} && $(LN_S) -f ../../../C/fmact/$$fig)"; \
+			cmd="(cd $${figdir} && $(LN_S) -f ../../../C/$(TARGET_DIR)/$$fig)"; \
 		fi; \
 		if test "$(opt_verbose)" != ""; then echo $$cmd; fi; \
 		eval $$cmd; \
