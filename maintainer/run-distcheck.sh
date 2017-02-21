@@ -26,15 +26,10 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-if [ ! -f configure.ac ]; then
-	echo "> This script is only meant to be run from the top source directory." 1>&2
-	exit 1
-fi
-
 maintainer_dir=$(cd ${0%/*}; pwd)
 top_srcdir="${maintainer_dir%/*}"
 
-PkgName=`autoconf --trace 'AC_INIT:$1' configure.ac`
+PkgName=`autoconf --trace 'AC_INIT:$1' "${top_srcdir}/configure.ac"`
 pkgname=$(echo $PkgName | tr '[[:upper:]]' '[[:lower:]]')
 
 # a filemanager-actions-x.y may remain after an aborted make distcheck
@@ -46,16 +41,16 @@ for d in $(find ${top_srcdir} -maxdepth 2 -type d -name "${pkgname}-*"); do
 	rm -fr $d
 done
 
-builddir="${top_srcdir}/_build"
-installdir="${top_srcdir}/_install"
+builddir="./_build"
+installdir="./_install"
 
 rm -fr ${builddir}
 rm -fr ${installdir}
 find ${top_srcdir}/docs/manual -type f -name '*.html' -o -name '*.pdf' | xargs rm -f
 find ${top_srcdir}/docs/manual \( -type d -o -type l \) -name 'stylesheet-images' -o -name 'admon' | xargs rm -fr
 
-${maintainer_dir}/run-autogen.sh --enable-deprecated &&
+${maintainer_dir}/run-autogen.sh --enable-docs &&
 	${maintainer_dir}/check-po.sh -nodummy &&
 	${maintainer_dir}/check-headers.sh -nodummy -builddir="${builddir}" &&
-desktop-file-validate ${installdir}/share/applications/fma-config-tool.desktop &&
+	desktop-file-validate ${installdir}/share/applications/fma-config-tool.desktop &&
 	make -C ${builddir} distcheck
