@@ -54,6 +54,3 @@ nemo_required=1.8					# appeared with Trusty 14 LTS
 caja_required=1.16.0                # gtk+-3 version are in f25, ubuntu-16.10, next debian
 
 REQUIRED_INTLTOOL_VERSION=${intltool_required}
-
-# in Debian:
-# apt-get install autoconf automake pkg-config gtk-doc-tools libglib2.0-dev libgtk-3-dev libgtop2-dev libxml2-dev uuid-dev gnome-doc-utils libgconf2-dev dblatex libnautilus-extension-dev
