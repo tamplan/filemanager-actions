@@ -166,7 +166,20 @@ FileManager-Actions - TODO
 
  112 2012-10-17 it appears that de.xml doesn't validate
 
- 113
+ 113 2017- 2-16 checking for gtkdoc-check... /usr/bin/gtkdoc-check
+                checking for gtkdoc-rebase... /usr/bin/gtkdoc-rebase
+                checking for gtkdoc-mkpdf... /usr/bin/gtkdoc-mkpdf
+                checking whether to build gtk-doc documentation... no
+                Should actually check whether to build the doc before
+                checking for gtk-doc  tools
+
+ 114 2017- 2-16 checking gnome-doc-utils >= 0.3.2... yes
+                checking whether to build HTML manuals... no
+                checking whether to build PDF manuals... no
+                Should actually check whether to build the manuals before
+                checking for g-d-u tools
+
+ 115
 
 -----------------------------------------------------------------------
  DONE

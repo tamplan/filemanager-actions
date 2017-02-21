@@ -51,8 +51,6 @@
 # to correctly generate POT files (cf. mail of Claude Paroz 2010-08-29
 # http://mail.gnome.org/archives/gnome-i18n/2010-August/msg00229.html).
 
-include $(top_srcdir)/gnome-doc-utils.make
-
 DOC_MODULE = fma-config-tool
 
 #DOC_ENTITIES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/*.xml | $(GREP) -v $(DOC_MODULE)))
@@ -133,6 +131,14 @@ DOC_FIGURES = \
 	figures/start-context-menu-nautilus.png			\
 	figures/start-zenity-result.png					\
 	figures/stock-icon-about.png
+
+if BUILD_HTML_MANUALS
+include $(top_srcdir)/gnome-doc-utils.make
+else
+if BUILD_PDF_MANUALS
+include $(top_srcdir)/gnome-doc-utils.make
+endif
+endif
 
 #DOC_LINGUAS = $(patsubst $(srcdir)/%,%,$(shell find $(srcdir) -mindepth 1 -maxdepth 1 -type d | $(GREP) -v $(srcdir)/C))
 DOC_LINGUAS = de el es fr sl
@@ -261,7 +267,11 @@ MAINTAINERCLEANFILES =
 MANUALS_HTML = $(MANUALS_XML:%.xml=%.html)
 MAINTAINERCLEANFILES += $(MANUALS_HTML)
 
+if BUILD_HTML_MANUALS
 all-html-manuals: $(MANUALS_HTML)
+else
+all-html-manuals:
+endif
 
 # The rule here is: only rebuild html/ files if corresponding xml has changed
 # .xml themselves are distributed, so are not modified when building from a
@@ -438,7 +448,11 @@ MANUALS_PDF = $(MANUALS_XML:%.xml=%.pdf)
 
 MAINTAINERCLEANFILES += $(MANUALS_PDF)
 
+if BUILD_PDF_MANUALS
 all-pdf-manuals: $(MANUALS_PDF)
+else
+all-pdf-manuals:
+endif
 
 # workaround against l10n bug #664768
 # pdflatex cannot generate some localized pdf

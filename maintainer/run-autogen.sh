@@ -61,15 +61,13 @@
 # pwi 2017- 2-16
 # The 'configure' script is to be run in all targeted distributions.
 # In order to avoid versions issues, the script itself should be built
-# from the oldest distribution.
+# from the oldest targeted distribution.
 # This implies that documentation build tools (gtk-doc, gnome-doc-utils,
 # pdflatex, etc.) should also be installed on this distribution.
-
-#if [ ! -f configure.ac ]; then
-#	echo "> This script is a maintainer-only script." 1>&2
-#	echo "> It is only meant to be run from the top source directory." 1>&2
-#	exit 1
-#fi
+# As a consequence, documentation is better to be built on this same
+# oldest targeted distribution.
+# As a second consequence, there is no need to install documentation
+# build tools in the maintainer main machine.
 
 # we shouldn't run this script from the maintainer machine
 if [ "$(uname -n)" = "xps13" ]; then
@@ -81,30 +79,31 @@ maintainer_dir=$(cd ${0%/*}; pwd)
 top_srcdir="${maintainer_dir%/*}"
 
 (
-cd "${top_srcdir}"
-PkgName=`autoconf --trace 'AC_INIT:$1' configure.ac`
-pkgname=$(echo $PkgName | tr '[[:upper:]]' '[[:lower:]]')
+ cd "${top_srcdir}"
+ PkgName=`autoconf --trace 'AC_INIT:$1' configure.ac`
+ pkgname=$(echo $PkgName | tr '[[:upper:]]' '[[:lower:]]')
 
-# a filemanager-actions-x.y may remain after an aborted make distcheck
-# such a directory breaks gnome-autogen.sh generation
-# so clean it here
-for d in $(find ${top_srcdir} -maxdepth 2 -type d -name "${pkgname}-*"); do
+ # a filemanager-actions-x.y may remain after an aborted make distcheck
+ # such a directory breaks gnome-autogen.sh generation
+ # so clean it here
+ for d in $(find ${top_srcdir} -maxdepth 2 -type d -name "${pkgname}-*"); do
 	echo "> Removing $d"
 	chmod -R u+w $d
 	rm -fr $d
-done
+ done
 
-echo "> Running aclocal"
-m4_dir=`autoconf --trace 'AC_CONFIG_MACRO_DIR:$1' configure.ac`
-aclocal -I "${m4_dir}" --install || exit 1
+ echo "> Running aclocal"
+ m4_dir=`autoconf --trace 'AC_CONFIG_MACRO_DIR:$1' configure.ac`
+ aclocal -I "${m4_dir}" --install || exit 1
 
-# requires gtk-doc package
-# used for Developer Reference Manual generation (devhelp)
-echo "> Running gtkdocize"
-gtkdocize --copy || exit 1
+ # requires gtk-doc package
+ # used for Developer Reference Manual generation (devhelp)
+ echo "> Running gtkdocize"
+ gtkdocize --copy || exit 1
 
-echo "> Running autoreconf"
-autoreconf --verbose --force --install -Wno-portability || exit 1
+ echo "> Running autoreconf"
+ autoreconf --verbose --force --install -Wno-portability || exit 1
+)
 
 runconf="${top_srcdir}/run-configure.sh"
 echo "> Generating ${runconf}"
@@ -142,7 +141,8 @@ cat <<EOF >${runconf}
 #   on $(date) - Please do not manually modify it.
 
 # top_srcdir here is the root of the source directory
-top_srcdir="\$(cd \${0%/*}; pwd)"
+#top_srcdir="\$(cd \${0%/*}; pwd)"
+top_srcdir="${top_srcdir}"
 
 # heredir is the root of the _build/_install directories
 heredir=\$(pwd)
@@ -153,12 +153,10 @@ cd \${heredir}/_build
 conf_cmd="\${top_srcdir}/configure"
 conf_args="${conf_args}"
 conf_args="\${conf_args} --prefix=\${heredir}/_install"
-conf_args="\${conf_args} --sysconfdir=/etc"
 conf_args="\${conf_args} --with-nautilus-extdir=\${heredir}/_install/lib/nautilus"
 conf_args="\${conf_args} --with-nemo-extdir=\${heredir}/_install/lib/nemo"
 conf_args="\${conf_args} --with-caja-extdir=\${heredir}/_install/lib/caja"
 conf_args="\${conf_args} --enable-maintainer-mode"
-conf_args="\${conf_args} --enable-docs"
 conf_args="\${conf_args} $*"
 conf_args="\${conf_args} \$*"
 
@@ -170,10 +168,11 @@ tput sgr0
 \${conf_cmd} \${conf_args}
 EOF
 
+set -x
 echo "> Executing ${runconf}
 "
-chmod a+x ${runconf}
-${runconf} &&
+chmod a+x ${runconf} &&
+cp ${runconf} . &&
+./${runconf##*/} &&
 make -C _build &&
 make -C _build install
-)

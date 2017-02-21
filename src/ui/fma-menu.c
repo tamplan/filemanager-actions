@@ -237,6 +237,9 @@ fma_menu_app( FMAApplication *application )
 			gint count = g_menu_model_get_n_items( menubar );
 			g_menu_insert_submenu( G_MENU( menubar ), count-1, _( "_Maintainer" ), maintainer_mm );
 		}
+#else
+		/* useless debug, just to prevent any compilation warning on unused variable */
+		g_debug( "%s: unused maintainer menu %s", thisfn, st_ui_maintainer_menu );
 #endif
 
 	} else {
