@@ -212,7 +212,7 @@ fma_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointe
 
 	g_debug( "%s: path=%s, user_data=%p", thisfn, path, ( void * ) user_data );
 
-	monitor = g_object_new( FMA_GCONF_MONITOR_TYPE, NULL );
+	monitor = g_object_new( FMA_TYPE_GCONF_MONITOR, NULL );
 
 	monitor->private->path = g_strdup( path );
 	monitor->private->preload = GCONF_CLIENT_PRELOAD_RECURSIVE;

@@ -50,12 +50,12 @@
 
 G_BEGIN_DECLS
 
-#define FMA_GCONF_MONITOR_TYPE                ( fma_gconf_monitor_get_type())
-#define FMA_GCONF_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_GCONF_MONITOR_TYPE, FMAGConfMonitor ))
-#define FMA_GCONF_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_GCONF_MONITOR_TYPE, FMAGConfMonitorClass ))
-#define FMA_IS_GCONF_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_GCONF_MONITOR_TYPE ))
-#define FMA_IS_GCONF_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_GCONF_MONITOR_TYPE ))
-#define FMA_GCONF_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_GCONF_MONITOR_TYPE, FMAGConfMonitorClass ))
+#define FMA_TYPE_GCONF_MONITOR                ( fma_gconf_monitor_get_type())
+#define FMA_GCONF_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, FMA_TYPE_GCONF_MONITOR, FMAGConfMonitor ))
+#define FMA_GCONF_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, FMA_TYPE_GCONF_MONITOR, FMAGConfMonitorClass ))
+#define FMA_IS_GCONF_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, FMA_TYPE_GCONF_MONITOR ))
+#define FMA_IS_GCONF_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), FMA_TYPE_GCONF_MONITOR ))
+#define FMA_GCONF_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), FMA_TYPE_GCONF_MONITOR, FMAGConfMonitorClass ))
 
 typedef struct _FMAGConfMonitorPrivate        FMAGConfMonitorPrivate;
 
