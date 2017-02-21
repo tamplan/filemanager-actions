@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 # FileManager-Actions
 # A file-manager extension which offers configurable context menu actions.
 #
@@ -109,7 +109,7 @@ function msg_version
 	pck_version=$(grep '^PACKAGE_VERSION' ${makefile} 2>/dev/null | awk '{ print $3 }')
 	echo "
  ${pck_name} v ${pck_version}
- Copyright (C) 2010, 2011, 2012, 2013 Pierre Wieser."
+ Copyright (C) 2010-2017 Pierre Wieser."
 }
 
 # initialize common command-line options
@@ -203,11 +203,11 @@ do
 		# these options take a mandatory argument
 		# since, we didn't find it in 'option', so it should be
 		# next word in the command line
-		--p | -po | -pot | -potf | -potfi | -potfil | -potfile)
+		--p | --po | --pot | --potf | --potfi | --potfil | --potfile)
 			optarg=$1
 			shift
 			;;
-	esac
+		esac
 
 	# now process options and their argument
 	case ${option} in
@@ -233,9 +233,9 @@ do
 			[ "${opt_verbose}" = "yes" ] && msg "setting opt_version to 'no'"
 			opt_version="no"
 			;;
-		--p | -po | -pot | -potf | -potfi | -potfil | -potfile)
+		--p | --po | --pot | --potf | --potfi | --potfil | --potfile)
 			[ "${opt_verbose}" = "yes" ] && msg "setting opt_potfile to '${optarg}'"
-			opt_version="no"
+			opt_potfile="${optarg}"
 			;;
 		--verb | --verbo | --verbos | --verbose)
 			;;
@@ -301,7 +301,7 @@ if [ "${opt_version}" = "yes" ]; then
 	exit
 fi
 
-if [ ! -r ${opt_potfile} ]; then
+if [ ! -r "${top_srcdir}/${opt_potfile}" ]; then
 	msgerr "${opt_potfile}: file not found or not readable"
 	let errs+=1
 fi
@@ -319,11 +319,13 @@ totpass=5
 nbpass=0
 
 # first, check that all .ui are in po/POTFILE.in
-nbfiles=0
-nberrs=0
 let nbpass+=1
-msg "pass ${nbpass}/${totpass}: checking that all .ui are in ${opt_potfile}..."
-for f in $(git ls-files *.ui); do
+(
+ cd "${top_srcdir}"
+ nbfiles=0
+ nberrs=0
+ msg "pass ${nbpass}/${totpass}: checking that all .ui are in ${opt_potfile}..."
+ for f in $(git ls-files *.ui); do
 	if [ "$(grep -xe "\[type:\s*gettext/glade]\s*${f}" ${opt_potfile})" = "" ]; then
 		msg "  ${f} should be added to ${opt_potfile}"
 		let nberrs+=1
@@ -331,17 +333,18 @@ for f in $(git ls-files *.ui); do
 		msg "  ${f}: OK"
 	fi
 	let nbfiles+=1
-done
-msg "  nbfiles=${nbfiles} error(s)=${nberrs}"
-let errs+=${nberrs}
+ done
+ msg "  nbfiles=${nbfiles} error(s)=${nberrs}"
+ let errs+=${nberrs}
+)
 
 # second, check that all .ui in PO exist
+let nbpass+=1
 nbfiles=0
 nberrs=0
-let nbpass+=1
 msg "pass ${nbpass}/${totpass}: checking that all .ui from ${opt_potfile} actually exist..."
-for f in $(grep -e '\.ui$' ${opt_potfile} | sed 's,\[type:\s*gettext/glade]\s*,,'); do
-	if [ ! -r ${f} ]; then
+for f in $(grep -e '\.ui$' "${top_srcdir}/${opt_potfile}" | sed 's,\[type:\s*gettext/glade]\s*,,'); do
+	if [ ! -r "${top_srcdir}/${f}" ]; then
 		msg "  ${f} should be removed from ${opt_potfile}"
 		let nberrs+=1
 	elif [ "${opt_verbose}" = "yes" ]; then
@@ -353,11 +356,13 @@ msg "  nbfiles=${nbfiles} error(s)=${nberrs}"
 let errs+=${nberrs}
 
 # third, check that all files which use _( construct are in PO
-nbfiles=0
-nberrs=0
 let nbpass+=1
-msg "pass ${nbpass}/${totpass}: checking that all translatable files are in ${opt_potfile}..."
-for f in $(git grep -I '_(' src | cut -d: -f1 | sort -u); do
+(
+ cd "${top_srcdir}"
+ nbfiles=0
+ nberrs=0
+ msg "pass ${nbpass}/${totpass}: checking that all translatable files are in ${opt_potfile}..."
+ for f in $(git grep -I '_(' src | cut -d: -f1 | sort -u); do
 	if [ "$(grep -x ${f} ${opt_potfile})" != "${f}" ]; then
 		msg "  ${f} should be added to ${opt_potfile}"
 		let nberrs+=1
@@ -365,17 +370,18 @@ for f in $(git grep -I '_(' src | cut -d: -f1 | sort -u); do
 		msg "  ${f}: OK"
 	fi
 	let nbfiles+=1
-done
-msg "  nbfiles=${nbfiles} error(s)=${nberrs}"
-let errs+=${nberrs}
+ done
+ msg "  nbfiles=${nbfiles} error(s)=${nberrs}"
+ let errs+=${nberrs}
+)
 
 # fourth, check that all files in PO actually use the _( construct
+let nbpass+=1
 nbfiles=0
 nberrs=0
-let nbpass+=1
 msg "pass ${nbpass}/${totpass}: checking that all files in ${opt_potfile} actually use the '_(' construct..."
-for f in $(grep -E '^src/' ${opt_potfile} | grep -vE '\.ui$' | grep -vE '\.in$'); do
-	grep '_(' ${f} 1>/dev/null 2>&1
+for f in $(grep -E '^src/' "${top_srcdir}/${opt_potfile}" | grep -vE '\.ui$' | grep -vE '\.in$'); do
+	grep '_(' "${top_srcdir}/${f}" 1>/dev/null 2>&1
 	if [ $? -ne 0 ]; then
 		msg "  ${f} should be removed from ${opt_potfile}"
 		let nberrs+=1
@@ -388,11 +394,13 @@ msg "  nbfiles=${nbfiles} error(s)=${nberrs}"
 let errs+=${nberrs}
 
 # last, check that all files which include gi18n.h are relevant
-nbfiles=0
-nberrs=0
 let nbpass+=1
-msg "pass ${nbpass}/${totpass}: checking that all files have a good reason to include gi18n.h..."
-for f in $(git grep '#include <glib/gi18n.h>' src | cut -d: -f1 | sort -u); do
+(
+ cd "${top_srcdir}"
+ nbfiles=0
+ nberrs=0
+ msg "pass ${nbpass}/${totpass}: checking that all files have a good reason to include gi18n.h..."
+ for f in $(git grep '#include <glib/gi18n.h>' src | cut -d: -f1 | sort -u); do
 	grep '_(' ${f} 1>/dev/null 2>&1
 	if [ $? -ne 0 ]; then
 		msg "  ${f} should not include <glib/gi18n.h>"
@@ -401,9 +409,10 @@ for f in $(git grep '#include <glib/gi18n.h>' src | cut -d: -f1 | sort -u); do
 		msg "  ${f}: OK"
 	fi
 	let nbfiles+=1
-done
-msg "  nbfiles=${nbfiles} error(s)=${nberrs}"
-let errs+=${nberrs}
+ done
+ msg "  nbfiles=${nbfiles} error(s)=${nberrs}"
+ let errs+=${nberrs}
+)
 
 msg "total: ${errs} error(s)."
 
