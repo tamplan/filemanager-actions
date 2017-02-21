@@ -28,48 +28,35 @@
 ACLOCAL_AMFLAGS = -I m4
 
 # src/ must be built before maintainer/
+# docs/ must be built after src/
 SUBDIRS = \
 	data								\
-	docs								\
+	icons								\
 	m4									\
 	src									\
+	docs								\
 	maintainer							\
-	icons								\
 	po									\
 	$(NULL)
 
-# - nautilus/nemo-extdir are fake directories so that make distcheck
+# - nautilus-extdir is a fake directory so that make distcheck
 #   has a vpath which is prefixed with a make variable, instead of an
 #   hardcoded as returned by pkg-config
-# - do not try to install schemas when making distcheck
-# - do not rebuild FMACT manuals
-# - gtk-doc requires to be enabled when making dist
-# - GNOME_DOC_DEFINES tries to disable scrollkeeper, but the set is
-#   overriden but this one
+# - do not try to install schemas when making distcheck (defaults to be disabled)
+# - do not rebuild fma-config-tool manuals (defaults to be disabled)
+# - Debian 7 Wheezy requires gtk-doc to be enabled (v1.18)
+#   while this is no more needed in Fedora 24 (v1.25)
 DISTCHECK_CONFIGURE_FLAGS = \
 	--with-nautilus-extdir='$${libdir}/nautilus/extensions-3.0-distcheck' \
-	--with-nemo-extdir='$${libdir}/nemo/extensions-3.0-distcheck' \
-	--enable-silent-rules				\
 	--enable-as-needed					\
-	--disable-scrollkeeper				\
-	--disable-schemas-install			\
-	--enable-deprecated					\
 	--enable-gtk-doc					\
-	--disable-html-manuals				\
-	--disable-pdf-manuals				\
 	$(NULL)
 
 EXTRA_DIST = \
 	fma_required_versions				\
-	intltool-extract.in					\
-	intltool-merge.in					\
-	intltool-update.in					\
 	$(NULL)
 
 DISTCLEANFILES = \
-	intltool-extract					\
-	intltool-merge						\
-	intltool-update						\
 	$(NULL)
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
@@ -82,6 +69,7 @@ dist_pkgdoc_DATA = \
 	ChangeLog-2010						\
 	ChangeLog-2011						\
 	ChangeLog-2012						\
+	ChangeLog-2014						\
 	COPYING								\
 	COPYING-DOCS						\
 	INSTALL								\
