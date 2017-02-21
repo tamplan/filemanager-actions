@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 # FileManager-Actions
 # A file-manager extension which offers configurable context menu actions.
 #
@@ -111,7 +111,7 @@ function msg_version
 	pck_version=$(grep '^PACKAGE_VERSION' ${makefile} 2>/dev/null | awk '{ print $3 }')
 	echo "
  ${pck_name} v ${pck_version}
- Copyright (C) 2010, 2011, 2012, 2013 Pierre Wieser."
+ Copyright (C) 2010-2017 Pierre Wieser."
 }
 
 # initialize common command-line options
