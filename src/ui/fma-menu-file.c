@@ -432,7 +432,7 @@ autosave_callback( FMAMainWindow *main_window )
 	g_debug( "fma_menu_file_autosave_callback" );
 
 	bar = fma_main_window_get_statusbar( main_window );
-	fma_status_bar_display_status( bar, context, _( "Automatically saving pending modifications..." ));
+	fma_status_bar_display_status( bar, context, _( "Automatically saving pending modifications…" ));
 	fma_menu_file_save_items( main_window );
 	fma_status_bar_hide_status( bar, context );
 

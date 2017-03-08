@@ -56,7 +56,7 @@ static NAExporterFormatStr st_format_ask = {
 };
 
 /* i18n: FMAIExporter is an interface name, do not even try to translate */
-#define NO_IMPLEMENTATION_MSG			N_( "No FMAIExporter implementation found for '%s' format." )
+#define NO_IMPLEMENTATION_MSG			N_( "No FMAIExporter implementation found for “%s” format." )
 
 static GList *exporter_get_formats( const FMAIExporter *exporter );
 static void   exporter_free_formats( const FMAIExporter *exporter, GList * str_list );
@@ -300,7 +300,7 @@ fma_exporter_to_buffer( const FMAPivot *pivot,
 		} else {
 			name = exporter_get_name( exporter );
 			/* i18n: FMAIExporter is an interface name, do not even try to translate */
-			msg = g_strdup_printf( _( "%s FMAIExporter doesn't implement 'to_buffer' interface." ), name );
+			msg = g_strdup_printf( _( "%s FMAIExporter doesn’t implement “to_buffer” interface." ), name );
 			*messages = g_slist_append( *messages, msg );
 			g_free( name );
 		}
@@ -373,7 +373,7 @@ fma_exporter_to_file( const FMAPivot *pivot,
 		} else {
 			name = exporter_get_name( exporter );
 			/* i18n: FMAIExporter is an interface name, do not even try to translate */
-			msg = g_strdup_printf( _( "%s FMAIExporter doesn't implement 'to_file' interface." ), name );
+			msg = g_strdup_printf( _( "%s FMAIExporter doesn’t implement “to_file” interface." ), name );
 			*messages = g_slist_append( *messages, msg );
 			g_free( name );
 		}

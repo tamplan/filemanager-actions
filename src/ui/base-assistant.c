@@ -143,7 +143,7 @@ class_init( BaseAssistantClass *klass )
 			g_param_spec_boolean(
 					BASE_PROP_QUIT_ON_ESCAPE,
 					_( "Quit on Escape" ),
-					_( "Should the assistant 'Quit' when the user hits Escape ?" ),
+					_( "Should the assistant “Quit” when the user hits Escape ?" ),
 					FALSE,
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 

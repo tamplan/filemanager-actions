@@ -134,11 +134,11 @@ static GOptionEntry st_added_entries[] = {
 	{ "disabled"             , 'E', 0, G_OPTION_ARG_NONE        , &disabled,
 			N_( "Set it if the item should be disabled at creation" ), NULL },
 	{ "nocontext"            , 'C', 0, G_OPTION_ARG_NONE        , &nocontext,
-			N_( "Set it if the item doesn't target the selection context menu" ), NULL },
+			N_( "Set it if the item doesn’t target the selection context menu" ), NULL },
 	{ "nolocation"           , 'T', 0, G_OPTION_ARG_NONE        , &nolocation,
-			N_( "Set it if the item doesn't target the location context menu" ), NULL },
+			N_( "Set it if the item doesn’t target the location context menu" ), NULL },
 	{ "notoolbar"            , 'O', 0, G_OPTION_ARG_NONE        , &notoolbar,
-			N_( "Set it if the item doesn't target the toolbar" ), NULL },
+			N_( "Set it if the item doesn’t target the toolbar" ), NULL },
 	{ "nocase"               , 'A', 0, G_OPTION_ARG_NONE        , &nocase,
 			N_( "Set it if the basename patterns are case insensitive" ), NULL },
 	{ NULL }
@@ -158,8 +158,8 @@ static GOptionEntry misc_entries[] = {
 	{ NULL }
 };
 
-#define CANNOT_BOTH		_( "Error: '%s' and '%s' options cannot both be specified\n" )
-#define DEPRECATED		_( "'%s' option is deprecated, see %s\n" )
+#define CANNOT_BOTH		_( "Error: “%s” and “%s” options cannot both be specified\n" )
+#define DEPRECATED		_( "“%s” option is deprecated, see %s\n" )
 
 static GOptionEntry   *build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds );
 static GOptionContext *init_options( void );
@@ -593,8 +593,8 @@ output_to_desktop( FMAObjectAction *action, GSList **msgs )
 		code = ( ret == IIO_PROVIDER_CODE_OK );
 
 	} else {
-		/* i18n: 'io-desktop' is a plugin identifier - do not translate */
-		*msgs = g_slist_append( *msgs, _( "Error: unable to find 'io-desktop' i/o provider." ));
+		/* i18n: “io-desktop” is a plugin identifier - do not translate */
+		*msgs = g_slist_append( *msgs, _( "Error: unable to find “io-desktop” i/o provider." ));
 		code = FALSE;
 	}
 
@@ -630,7 +630,7 @@ output_to_stdout( const FMAObjectAction *action, GSList **msgs )
 static void
 exit_with_usage( void )
 {
-	/* i18: '--help' is a command-line option - do not translate */
+	/* i18: “--help” is a command-line option - do not translate */
 	g_printerr( _( "Try %s --help for usage.\n" ), g_get_prgname());
 	exit( EXIT_FAILURE );
 }

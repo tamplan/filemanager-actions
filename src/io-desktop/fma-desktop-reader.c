@@ -288,7 +288,7 @@ item_from_desktop_file( const FMADesktopProvider *provider, FMADesktopFile *ndf,
 		item = FMA_IFACTORY_OBJECT( fma_object_menu_new());
 
 	} else {
-		/* i18n: 'type' is the nature of the item: Action or Menu */
+		/* i18n: “type” is the nature of the item: Action or Menu */
 		fma_core_utils_slist_add_message( messages, _( "unknown type: %s" ), type );
 	}
 

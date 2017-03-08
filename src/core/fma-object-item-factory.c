@@ -64,8 +64,8 @@ FMADataDef data_def_item [] = {
 				FALSE,
 				N_( "Type of the item" ),
 				N_( "Defines if the item is an action or a menu. Possible values are :\n" \
-					"- 'Action',\n" \
-					"- 'Menu'.\n" \
+					"• “Action”,\n" \
+					"• “Menu”.\n" \
 					"The value is case sensitive and must not be localized." ),
 				FMA_DATA_TYPE_STRING,
 				NULL,
@@ -216,7 +216,7 @@ FMADataDef data_def_item [] = {
 					"Please note that this might be only a suggestion as the shortcut may " \
 					"be already reserved for another use. Implementation should not override " \
 					"an already existing shortcut to define this one.\n" \
-					"The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n" \
+					"The format may look like “<Control>a” or “<Shift><Alt>F1”.\n" \
 					"Defaults to empty." ),
 				FMA_DATA_TYPE_STRING,
 				"",
@@ -268,7 +268,7 @@ FMADataDef data_def_item [] = {
 				N_( "List of subitem ids" ),
 				N_( "Ordered list of the IDs of the subitems. This may be actions or menus " \
 					"if the item is a menu, or profiles if the item is an action.\n" \
-					"If this list doesn't exist or is empty for an action or a menu, " \
+					"If this list doesn’t exist or is empty for an action or a menu, " \
 					"subitems are attached in the order of the read operations." ),
 				FMA_DATA_TYPE_STRING_LIST,
 				NULL,

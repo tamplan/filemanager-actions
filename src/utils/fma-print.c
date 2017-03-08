@@ -59,7 +59,7 @@ static GOptionEntry entries[] = {
 	{ "id"                   , 'i', 0, G_OPTION_ARG_STRING        , &id,
 			N_( "The identifier of the menu or the action to be printed" ), N_( "<STRING>" ) },
 	{ "format"               , 'f', 0, G_OPTION_ARG_STRING,     &format,
-	/* i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable */
+	/* i18n: “Desktop1” here is the internal identifier of an export format; it is not translatable */
 			N_( "An export format [Desktop1]" ), N_( "<STRING>" ) },
 	{ NULL }
 };
@@ -203,7 +203,7 @@ get_item( const gchar *id )
 	item = fma_pivot_get_item( pivot, id );
 
 	if( !item ){
-		g_printerr( _( "Error: item '%s' doesn't exist.\n" ), id );
+		g_printerr( _( "Error: item “%s” doesn’t exist.\n" ), id );
 	}
 
 	return( item );

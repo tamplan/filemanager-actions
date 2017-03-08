@@ -239,7 +239,7 @@ on_browse_folder_clicked( GtkButton *button, FMAIFoldersTab *instance )
 	uri = NULL;
 
 	/* i18n: title of the FileChoose dialog when selecting an URI which
-	 * will be compare to Nautilus 'current_folder'
+	 * will be compare to Nautilus “current_folder”
 	 */
 	dialog = gtk_file_chooser_dialog_new( _( "Select a folder" ),
 			GTK_WINDOW( instance ),

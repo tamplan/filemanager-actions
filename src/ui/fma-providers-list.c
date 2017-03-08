@@ -257,7 +257,7 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 			g_free( libelle );
 
 			if( fma_io_provider_is_available( provider )){
-				/* i18n: default name when the I/O providers doesn't provide one */
+				/* i18n: default name when the I/O providers doesn’t provide one */
 				libelle = g_strdup_printf( "<%s: %s>", id, _( "no name" ));
 
 			} else {

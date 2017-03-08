@@ -61,9 +61,9 @@ static sExportFormat st_desktop_formats[] = {
 				"as long as their own application implements the DES-EMA specification " \
 				"which describes this format.\n" \
 				"The exported .desktop file may later be imported via :\n" \
-				"- Import assistant of the FileManager-Actions Configuration Tool,\n" \
-				"- drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
-				"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory." ),
+				"• Import assistant of the FileManager-Actions Configuration Tool,\n" \
+				"• drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
+				"• or by copying it into a XDG_DATA_DIRS/file-manager/actions directory." ),
 			"fma-desktop-export.png" },
 
 	{ NULL }

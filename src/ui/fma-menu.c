@@ -93,79 +93,79 @@ typedef struct {
 
 static sActionEntry st_app_entries[] = {
 		{{ "about", on_app_about },
-				/* i18n: status bar tooltip displayed on 'About' item navigation */
+				/* i18n: status bar tooltip displayed on “About” item navigation */
 				N_( "Display informations about this program" )},
 		{{ "help", on_app_help },
-				/* i18n: status bar tooltip displayed on 'Help' item navigation */
+				/* i18n: status bar tooltip displayed on “Help” item navigation */
 				N_( "Display help about this program" )},
 		{{ "preferences", on_app_preferences },
-				/* i18n: status bar tooltip displayed on 'Preferences' item navigation */
+				/* i18n: status bar tooltip displayed on “Preferences” item navigation */
 				N_( "Edit your preferences" )},
 		{{ "quit", on_app_quit },
-				/* i18n: status bar tooltip displayed on 'Quit' item navigation */
+				/* i18n: status bar tooltip displayed on “Quit” item navigation */
 				N_( "Quit the application" )},
 };
 
 static sActionEntry st_menubar_entries[] = {
 		{{ "new-menu", on_win_new_menu },
-				/* i18n: status bar tooltip displayed on 'New menu' item navigation */
+				/* i18n: status bar tooltip displayed on “New menu” item navigation */
 				N_( "Insert a new menu at the current position" )},
 		{{ "new-action", on_win_new_action },
-				/* i18n: status bar tooltip displayed on 'New action' item navigation */
+				/* i18n: status bar tooltip displayed on “New action” item navigation */
 				N_( "Define a new action" )},
 		{{ "new-profile", on_win_new_profile },
-				/* i18n: status bar tooltip displayed on 'New profile' item navigation */
+				/* i18n: status bar tooltip displayed on “New profile” item navigation */
 				N_( "Define a new profile attached to the current action" )},
 		{{ "save", on_win_save },
-				/* i18n: status bar tooltip displayed on 'Save' item navigation */
+				/* i18n: status bar tooltip displayed on “Save” item navigation */
 				N_( "Record all the modified actions. Invalid actions will be silently ignored" )},
 		{{ "cut", on_win_cut },
-				/* i18n: status bar tooltip displayed on 'Cut' item navigation */
+				/* i18n: status bar tooltip displayed on “Cut” item navigation */
 				N_( "Cut the selected item(s) to the clipboard" )},
 		{{ "copy", on_win_copy },
-				/* i18n: status bar tooltip displayed on 'Copy' item navigation */
+				/* i18n: status bar tooltip displayed on “Copy” item navigation */
 				N_( "Copy the selected item(s) to the clipboard" )},
 		{{ "paste", on_win_paste },
-				/* i18n: status bar tooltip displayed on 'Paste' item navigation */
+				/* i18n: status bar tooltip displayed on “Paste” item navigation */
 				N_( "Insert the content of the clipboard just before the current position" )},
 		{{ "paste-into", on_win_paste_into },
-				/* i18n: status bar tooltip displayed on 'Paste into' item navigation */
+				/* i18n: status bar tooltip displayed on “Paste into” item navigation */
 				N_( "Insert the content of the clipboard as first child of the current item" )},
 		{{ "duplicate", on_win_duplicate },
-				/* i18n: status bar tooltip displayed on 'Duplicate' item navigation */
+				/* i18n: status bar tooltip displayed on “Duplicate” item navigation */
 				N_( "Duplicate the selected item(s)" )},
 		{{ "delete", on_win_delete },
-				/* i18n: status bar tooltip displayed on 'Delete' item navigation */
+				/* i18n: status bar tooltip displayed on “Delete” item navigation */
 				N_( "Delete the selected item(s)" )},
 		{{ "reload", on_win_reload },
-				/* i18n: status bar tooltip displayed on 'Reload items' item navigation */
+				/* i18n: status bar tooltip displayed on “Reload items” item navigation */
 				N_( "Cancel your current modifications and reload the initial list of menus and actions" )},
 		{{ "expand", on_win_expand_all },
-				/* i18n: status bar tooltip displayed on 'Expand all' item navigation */
+				/* i18n: status bar tooltip displayed on “Expand all” item navigation */
 				N_( "Entirely expand the items hierarchy" )},
 		{{ "collapse", on_win_collapse_all },
-				/* i18n: status bar tooltip displayed on 'Collapse all' item navigation */
+				/* i18n: status bar tooltip displayed on “Collapse all” item navigation */
 				N_( "Entirely collapse the items hierarchy" )},
 		{{ "toolbar-file", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
-				/* i18n: status bar tooltip displayed on 'Toolbars/File' item navigation */
+				/* i18n: status bar tooltip displayed on “Toolbars/File” item navigation */
 				N_( "Display the File toolbar" )},
 		{{ "toolbar-edit", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
-				/* i18n: status bar tooltip displayed on 'Toolbars/Edit' item navigation */
+				/* i18n: status bar tooltip displayed on “Toolbars/Edit” item navigation */
 				N_( "Display the Edit toolbar" )},
 		{{ "toolbar-tools", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
-				/* i18n: status bar tooltip displayed on 'Toolbars/Tools' item navigation */
+				/* i18n: status bar tooltip displayed on “Toolbars/Tools” item navigation */
 				N_( "Display the Tools toolbar" )},
 		{{ "toolbar-help", on_win_toolbar_activate, NULL, "false", on_win_toolbar_changed_state },
-				/* i18n: status bar tooltip displayed on 'Toolbars/Help' item navigation */
+				/* i18n: status bar tooltip displayed on “Toolbars/Help” item navigation */
 				N_( "Display the Help toolbar" )},
 		{{ "tab-position", on_win_notebook_tab_position_activate, "s", "string 'left'", on_win_notebook_tab_position_changed_state },
-				/* i18n: status bar tooltip displayed on 'Notebook labels' items navigation */
+				/* i18n: status bar tooltip displayed on “Notebook labels” items navigation */
 				N_( "Switch the position of the notebook tabs" )},
 		{{ "import", on_win_import },
-				/* i18n: status bar tooltip displayed on 'Import' item navigation */
+				/* i18n: status bar tooltip displayed on “Import” item navigation */
 				N_( "Import one or more actions from external files into your configuration" )},
 		{{ "export", on_win_export },
-				/* i18n: status bar tooltip displayed on 'Export' item navigation */
+				/* i18n: status bar tooltip displayed on “Export” item navigation */
 				N_( "Export one or more actions from your configuration to external files" )},
 		{{ "dump-selection", on_win_dump_selection },
 				"Recursively dump selected items" },

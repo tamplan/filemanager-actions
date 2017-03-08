@@ -180,11 +180,11 @@
                         <property name="hexpand">True</property>
                         <child>
                           <object class="GtkCheckButton" id="CreateRootMenuButton">
-                            <property name="label" translatable="yes">_Create a root 'FileManager-Actions' menu</property>
+                            <property name="label" translatable="yes">_Create a root “FileManager-Actions” menu</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="tooltip_text" translatable="yes">When this option is checked, menus and actions will actually be displayed as sub-items of a root 'FileManager-Actions' menu in the Nautilus context menu.</property>
+                            <property name="tooltip_text" translatable="yes">When this option is checked, menus and actions will actually be displayed as sub-items of a root “FileManager-Actions” menu in the Nautilus context menu.</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
                           </object>
@@ -195,12 +195,12 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="AddAboutButton">
-                            <property name="label" translatable="yes">Add an 'A_bout FileManager-Actions' item in the Nautilus context menus</property>
+                            <property name="label" translatable="yes">Add an “A_bout FileManager-Actions” item in the Nautilus context menus</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="tooltip_text" translatable="yes">When this option is checked, an 'About FileManager-Actions' item will be added to the root FileManager-Actions menu in the Nautilus context menu.
-Note that this item will be displayed only if a unique menu is defined in the Nautilus context menu (e.g. when having checked the root 'FileManager-Actions' menu option above).</property>
+                            <property name="tooltip_text" translatable="yes">When this option is checked, an “About FileManager-Actions” item will be added to the root FileManager-Actions menu in the Nautilus context menu.
+Note that this item will be displayed only if a unique menu is defined in the Nautilus context menu (e.g. when having checked the root “FileManager-Actions” menu option above).</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
                           </object>
@@ -470,7 +470,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <property name="tooltip_text" translatable="yes">When a menu is copied/pasted, or duplicated, the new menu will be relabelled as 'Copy of ...'.</property>
+                                <property name="tooltip_text" translatable="yes">When a menu is copied/pasted, or duplicated, the new menu will be relabelled as “Copy of …”.</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -485,7 +485,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <property name="tooltip_text" translatable="yes">When an action is copied/pasted, or duplicated, the new action will be relabelled as 'Copy of ...'.</property>
+                                <property name="tooltip_text" translatable="yes">When an action is copied/pasted, or duplicated, the new action will be relabelled as “Copy of …”.</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -500,7 +500,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <property name="tooltip_text" translatable="yes">When a profile is copied/pasted, or duplicated, the new profile will be relabelled as 'Copy of ...'.</property>
+                                <property name="tooltip_text" translatable="yes">When a profile is copied/pasted, or duplicated, the new profile will be relabelled as “Copy of …”.</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -553,7 +553,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="tooltip_text" translatable="yes">When this option is checked, the 'Escape' key will let you quit the current assistant. Else, quitting the assistant is only possible by hitting the 'Cancel' button.</property>
+                            <property name="tooltip_text" translatable="yes">When this option is checked, the “Escape” key will let you quit the current assistant. Else, quitting the assistant is only possible by hitting the “Cancel” button.</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
                           </object>
@@ -568,7 +568,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="tooltip_text" translatable="yes">This option is only relevant when the 'Escape' key lets the user quit the assistant. When checked, the user will be prompted for a confirmation in order to help prevent erroneous hits of the Esc key.</property>
+                            <property name="tooltip_text" translatable="yes">This option is only relevant when the “Escape” key lets the user quit the assistant. When checked, the user will be prompted for a confirmation in order to help prevent erroneous hits of the Esc key.</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
                           </object>
@@ -975,7 +975,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                 <property name="can_focus">True</property>
                                 <property name="tooltip_text" translatable="yes">You may define here any number of schemes. They will be proposed as default schemes when defining conditions for an action.
 If the list becomes empty, fma-config-tool will automatically re-fill in with this default list.
-You can add a new scheme by clicking on the '+' button.</property>
+You can add a new scheme by clicking on the “+” button.</property>
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="headers_visible">False</property>

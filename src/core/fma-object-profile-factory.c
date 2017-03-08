@@ -130,7 +130,7 @@ static FMADataDef data_def_profile [] = {
 					"item in the file manager context menu or in the toolbar.\n" \
 					"The parameters may contain some special tokens which are replaced by the " \
 					"informations provided by the file manager before starting the command:\n" \
-					"- up to version 2.0:\n" \
+					"• up to version 2.0:\n" \
 					"  %d: base folder of the selected file(s)\n" \
 					"  %f: the name of the selected file or the first one if several are selected\n" \
 					"  %h: hostname of the URI\n" \
@@ -142,7 +142,7 @@ static FMADataDef data_def_profile [] = {
 					"  %u: URI\n" \
 					"  %U: username of the URI\n" \
 					"  %%: a percent sign.\n" \
-					"- starting from version 3:\n" \
+					"• starting from version 3:\n" \
 					"  %b: (first) basename\n" \
 					"  %B: space-separated list of the basenames of the selected file(s)/folder(s)\n" \
 					"  %c: count the selected file(s)/folder(s)\n" \
@@ -187,7 +187,7 @@ static FMADataDef data_def_profile [] = {
 				TRUE,
 				N_( "Working directory" ),
 				N_( "The working directory the command will be started in.\n" \
-					"Defaults to \"%d\"." ),
+					"Defaults to “%d”." ),
 				FMA_DATA_TYPE_STRING,
 				"%d",
 				FALSE,
@@ -209,15 +209,15 @@ static FMADataDef data_def_profile [] = {
 				TRUE,
 				TRUE,
 				N_( "Execution mode" ),
-				/* i18n: 'Normal', 'Terminal', 'Embedded' and 'DisplayOutput' are non-translatable keywords */
+				/* i18n: “Normal”, “Terminal”, “Embedded” and “DisplayOutput” are non-translatable keywords */
 				N_( "Execution mode of the program.\n" \
 					"This may be chosen between following values:\n" \
-					"- Normal: starts as a standard graphical user interface\n" \
-					"- Terminal: starts the preferred terminal of the graphical environment, " \
+					"• “Normal”: starts as a standard graphical user interface\n" \
+					"• “Terminal”: starts the preferred terminal of the graphical environment, " \
 						"and runs the command in it\n" \
-					"- Embedded: makes use of a special feature of the file manager which allows " \
+					"• “Embedded”: makes use of a special feature of the file manager which allows " \
 						"a terminal to be ran inside of it; an acceptable fallback is Terminal\n" \
-					"- DisplayOutput: the ran terminal may be closed at end of the command, but " \
+					"• “DisplayOutput”: the ran terminal may be closed at end of the command, but " \
 						"standard streams (stdout, stderr) should be collected and displayed; " \
 						"an acceptable fallback is Terminal.\n" \
 					"Defaults to \"Normal\"." ),

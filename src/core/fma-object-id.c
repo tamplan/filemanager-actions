@@ -325,7 +325,7 @@ fma_object_id_set_copy_of_label( FMAObjectId *object )
 
 		label = fma_object_get_label( object );
 
-		/* i18n: copied items have a label as 'Copy of original label' */
+		/* i18n: copied items have a label as “Copy of original label” */
 		new_label = g_strdup_printf( _( "Copy of %s" ), label );
 
 		fma_object_set_label( object, new_label );

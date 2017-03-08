@@ -266,8 +266,8 @@ import_ask_new( GtkWindow *parent )
 		} else {
 			toplevel = GTK_WINDOW( gtk_builder_get_object( builder, "ImporterAskDialog" ));
 			if( !toplevel ){
-				/* l10n: 'ImporterAskDialog' is the dialog name: do not translate */
-				gtk_message_dialog_new( parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _( "Unable to load 'ImporterAskDialog' from %s" ), st_uixml );
+				/* l10n: “ImporterAskDialog” is the dialog name: do not translate */
+				gtk_message_dialog_new( parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _( "Unable to load “ImporterAskDialog” from %s" ), st_uixml );
 				g_object_unref( dialog );
 				dialog = NULL;
 
@@ -396,13 +396,13 @@ initialize_window( FMAImporterAsk *editor, GtkWindow *toplevel )
 	if( FMA_IS_OBJECT_ACTION( editor->private->importing )){
 		/* i18n: The action <action_label> imported from <file> has the same id than <existing_label> */
 		label = g_strdup_printf(
-				_( "The action \"%s\" imported from \"%s\" has the same identifier than the already existing \"%s\"." ),
+				_( "The action “%s” imported from “%s” has the same identifier than the already existing “%s”." ),
 				imported_label, editor->private->parms->uri, existing_label );
 
 	} else {
 		/* i18n: The menu <menu_label> imported from <file> has the same id than <existing_label> */
 		label = g_strdup_printf(
-				_( "The menu \"%s\" imported from \"%s\" has the same identifier than the already existing \"%s\"." ),
+				_( "The menu “%s” imported from “%s” has the same identifier than the already existing “%s”." ),
 				imported_label, editor->private->parms->uri, existing_label );
 	}
 

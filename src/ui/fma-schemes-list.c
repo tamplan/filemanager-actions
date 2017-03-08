@@ -279,15 +279,15 @@ init_view_get_default_default_list( SchemesListData *data )
 {
 	GSList *list = NULL;
 
-	/* i18n notes : description of 'file' scheme */
+	/* i18n notes : description of “file” scheme */
 	list = g_slist_append( list, g_strdup_printf( "file|%s", _( "Local files")));
-	/* i18n notes : description of 'sftp' scheme */
+	/* i18n notes : description of “sftp” scheme */
 	list = g_slist_append( list, g_strdup_printf( "sftp|%s", _( "SSH files")));
-	/* i18n notes : description of 'smb' scheme */
+	/* i18n notes : description of “smb” scheme */
 	list = g_slist_append( list, g_strdup_printf( "smb|%s", _( "Windows files")));
-	/* i18n notes : description of 'ftp' scheme */
+	/* i18n notes : description of “ftp” scheme */
 	list = g_slist_append( list, g_strdup_printf( "ftp|%s", _( "FTP files")));
-	/* i18n notes : description of 'dav' scheme */
+	/* i18n notes : description of “dav” scheme */
 	list = g_slist_append( list, g_strdup_printf( "dav|%s", _( "WebDAV files")));
 
 	return( list );

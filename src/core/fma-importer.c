@@ -57,7 +57,7 @@ static FMAImportModeStr st_import_modes[] = {
 			"NoImport",
 			N_( "Do _not import the item" ),
 			N_( "This used to be the historical behavior.\n" \
-				"The selected file will be marked as \"NOT OK\" in the Summary page.\n" \
+				"The selected file will be marked as “NOT OK” in the Summary page.\n" \
 				"The existing item will not be modified." ),
 			"fma-import-mode-no-import.png" },
 
@@ -97,7 +97,7 @@ static guint              ask_user_for_mode( const FMAObjectItem *importing, con
 static guint              get_id_from_string( const gchar *str );
 static FMAIOption        *get_mode_from_struct( const FMAImportModeStr *str );
 
-/* i18n: '%s' stands for the file URI */
+/* i18n: “%s” stands for the file URI */
 #define ERR_NOT_LOADABLE	_( "%s is not loadable (empty or too big or not a regular file)" )
 
 /*

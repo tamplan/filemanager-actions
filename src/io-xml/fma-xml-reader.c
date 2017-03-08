@@ -149,7 +149,7 @@ static RootNodeStr st_root_node_str[] = {
 #define ERR_NODE_ALREADY_FOUND		_( "Element %s at line %d already found, ignored." )
 #define ERR_NODE_INVALID_ID			_( "Invalid item ID: waited for %s, found %s at line %d." )
 #define ERR_NODE_UNKNOWN			_( "Unknown element %s found at line %d while waiting for %s." )
-/* i18n: do not translate keywords 'Action' nor 'Menu' */
+/* i18n: do not translate keywords “Action” nor “Menu” */
 #define ERR_NODE_UNKNOWN_TYPE		_( "Unknown type %s found at line %d, while waiting for Action or Menu." )
 #define ERR_NOT_IOXML				_( "The XML I/O Provider is not able to handle the URI" )
 

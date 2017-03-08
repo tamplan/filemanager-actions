@@ -476,7 +476,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 		dialog = gtk_message_dialog_new(
 				GTK_WINDOW( data->window ),
 				GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
-				_( "'%s' filter already exists in the list.\nPlease provide another one." ), text );
+				_( "“%s” filter already exists in the list.\nPlease provide another one." ), text );
 		gtk_dialog_run( GTK_DIALOG( dialog ));
 		gtk_widget_destroy( dialog );
 

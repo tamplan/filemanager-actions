@@ -233,16 +233,16 @@ get_action( const gchar *id )
 	action = ( FMAObjectAction * ) fma_pivot_get_item( pivot, id );
 
 	if( !action ){
-		g_printerr( _( "Error: action '%s' doesn't exist.\n" ), id );
+		g_printerr( _( "Error: action “%s” doesn’t exist.\n" ), id );
 
 	} else {
 		if( !fma_object_is_enabled( action )){
-			g_printerr( _( "Error: action '%s' is disabled.\n" ), id );
+			g_printerr( _( "Error: action “%s” is disabled.\n" ), id );
 			g_object_unref( action );
 			action = NULL;
 		}
 		if( !fma_object_is_valid( action )){
-			g_printerr( _( "Error: action '%s' is not valid.\n" ), id );
+			g_printerr( _( "Error: action “%s” is not valid.\n" ), id );
 			g_object_unref( action );
 			action = NULL;
 		}

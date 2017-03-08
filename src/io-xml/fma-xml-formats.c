@@ -55,9 +55,9 @@ static NaxmlExportFormat fma_xml_formats[] = {
 			N_( "Export as a _full GConf schema file" ),
 			N_( "This used to be the historical export format.\n" \
 				"The exported schema file may later be imported via :\n" \
-				"- Import assistant of the FileManager-Actions Configuration Tool,\n" \
-				"- drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
-				"- or via the gconftool-2 --import-schema-file command-line tool." ),
+				"• Import assistant of the FileManager-Actions Configuration Tool,\n" \
+				"• drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
+				"• or via the gconftool-2 --import-schema-file command-line tool." ),
 			"fma-xml-export-schemas-v1.png" },
 
 	/* GCONF_SCHEMA_V2: the lightest schema still compatible with gconftool-2 --install-schema-file
@@ -70,9 +70,9 @@ static NaxmlExportFormat fma_xml_formats[] = {
 				"while keeping backward compatibility with the FileManager-Actions Configuration " \
 				"Tool oldest versions.\n"
 				"The exported schema file may later be imported via :\n" \
-				"- Import assistant of the FileManager-Actions Configuration Tool,\n" \
-				"- drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
-				"- or via the gconftool-2 --import-schema-file command-line tool." ),
+				"• Import assistant of the FileManager-Actions Configuration Tool,\n" \
+				"• drag-n-drop into the FileManager-Actions Configuration Tool,\n" \
+				"• or via the gconftool-2 --import-schema-file command-line tool." ),
 			"fma-xml-export-schemas-v2.png" },
 
 	/* GCONF_ENTRY: not a schema, but a dump of the GConf entry
@@ -85,9 +85,9 @@ static NaxmlExportFormat fma_xml_formats[] = {
 				"Configuration Tool versions previous to 1.11, " \
 				"it may still be imported via standard GConf command-line tools.\n" \
 				"The exported dump file may later be imported via :\n" \
-				"- Import assistant of the FileManager-Actions Configuration Tool (1.11 and above),\n" \
-				"- drag-n-drop into the FileManager-Actions Configuration Tool (1.11 and above),\n" \
-				"- or via the gconftool-2 --load command-line tool." ),
+				"• Import assistant of the FileManager-Actions Configuration Tool (1.11 and above),\n" \
+				"• drag-n-drop into the FileManager-Actions Configuration Tool (1.11 and above),\n" \
+				"• or via the gconftool-2 --load command-line tool." ),
 			"fma-xml-export-dump.png" },
 
 	{ NULL }

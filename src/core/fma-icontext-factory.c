@@ -49,14 +49,14 @@ FMADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "List of patterns to be matched against the selected file(s)/folder(s)" ),
-				/* i18n: wildcard characters '*' and '?' should be considered as literals,
+				/* i18n: wildcard characters “*” and “?” should be considered as literals,
 				 *  and not be translated */
-				N_( "A list of strings with joker '*' or '?' to be matched against the name(s) " \
+				N_( "A list of strings with joker “*” or “?” to be matched against the name(s) " \
 					"of the selected file(s)/folder(s). Each selected item must match at least " \
 					"one of the filename patterns for the action or the menu be candidate to " \
 					"display.\n" \
 					"This obviously only applies when there is a selection.\n" \
-					"Defaults to '*'." ),
+					"Defaults to “*”." ),
 				FMA_DATA_TYPE_STRING_LIST,
 				"*",
 				FALSE,
@@ -70,7 +70,7 @@ FMADataDef data_def_conditions [] = {
 				"basename",
 				0,
 				G_OPTION_ARG_STRING_ARRAY,
-				/* i18n: wildcard characters '*' and '?' should be considered as literalls,
+				/* i18n: wildcard characters “*” and “?” should be considered as literalls,
 				 *  and not be translated */
 				N_( "A pattern to be matched against basenames of selected file(s)/folder(s). " \
 					"May include wildcards (* or ?). " \
@@ -84,13 +84,13 @@ FMADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Whether the specified basenames are case sensitive (default)" ),
-				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
-				N_( "Must be set to 'true' if the filename patterns are case sensitive, to 'false' " \
+				/* i18n: “true” and “false” values are taken literally, and should not be translated */
+				N_( "Must be set to “true” if the filename patterns are case sensitive, to “false” " \
 					"otherwise. E.g., if you need to match a filename in a case-sensitive manner, " \
-					"set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', " \
-					"then set 'false'.\n" \
+					"set this key to “true”. If you also want, for example “*.jpg” to match “photo.JPG”, " \
+					"then set “false”.\n" \
 					"This obviously only applies when there is a selection.\n" \
-					"Defaults to 'true'." ),
+					"Defaults to “true”." ),
 				FMA_DATA_TYPE_BOOLEAN,
 				"true",
 				FALSE,
@@ -112,12 +112,12 @@ FMADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "List of patterns to be matched against the mimetypes of the selected file(s)/folder(s)" ),
-				/* i18n: wildcard character '*' is taken literally, and should not be translated */
-				N_( "A list of strings with joker '*' to be matched against the mimetypes of the " \
+				/* i18n: wildcard character “*” is taken literally, and should not be translated */
+				N_( "A list of strings with joker “*” to be matched against the mimetypes of the " \
 					"selected file(s)/folder(s). Each selected item must match at least one of " \
 					"the mimetype patterns for the action to appear.\n" \
 					"This obviously only applies when there is a selection.\n" \
-					"Defaults to '*/*'." ),
+					"Defaults to “*/*”." ),
 				FMA_DATA_TYPE_STRING_LIST,
 				"*",
 				FALSE,
@@ -131,9 +131,9 @@ FMADataDef data_def_conditions [] = {
 				"mimetype",
 				0,
 				G_OPTION_ARG_STRING_ARRAY,
-				/* i18n: wildcard character '*' is taken literally, and should not be translated */
+				/* i18n: wildcard character “*” is taken literally, and should not be translated */
 				N_( "A pattern to be matched against mimetypes of selected file(s)/folder(s). " \
-					"May include the asterisk wildcard '*'. " \
+					"May include the asterisk wildcard “*”. " \
 					"You must set one option for each pattern you need" ),
 				/* i18n: "<EXPR>" is just an abbreviation for "an expression", so is tranlatable */
 				N_( "<EXPR>" ) },
@@ -150,7 +150,7 @@ FMADataDef data_def_conditions [] = {
 				FALSE,
 				TRUE,
 				"Does the mimetypes list is generic ?",
-				"The generic wildcard may be coded as '*', or '*/*' or 'all' or 'all/*' or 'all/all'. "
+				"The generic wildcard may be coded as “*”, or '*/*' or 'all' or 'all/*' or 'all/all'. "
 				"In each case, we will try to spend as less time as possible to check " \
 				"selection mimetypes",
 				FMA_DATA_TYPE_BOOLEAN,
@@ -177,16 +177,16 @@ FMADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				N_( "Whether the profile applies to files (deprecated option, see mimetype)" ),
-				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
-				N_( "Set to 'true' if the selection can have files, to 'false' otherwise.\n" \
-					"This setting is tied in with the 'isdir' setting. The valid combinations are: \n" \
-					"isfile='true' and isdir='false': the selection may hold only files\n" \
-					"isfile='false' and isdir='true': the selection may hold only folders\n" \
-					"isfile='true' and isdir='true': the selection may hold both files and folders\n" \
-					"isfile='false' and isdir='false': this is an invalid combination " \
+				/* i18n: “true” and “false” values are taken literally, and should not be translated */
+				N_( "Set to “true” if the selection can have files, to “false” otherwise.\n" \
+					"This setting is tied in with the “isdir” setting. The valid combinations are: \n" \
+					"isfile=“true” and isdir=“false”: the selection may hold only files\n" \
+					"isfile=“false” and isdir=“true”: the selection may hold only folders\n" \
+					"isfile=“true” and isdir=“true”: the selection may hold both files and folders\n" \
+					"isfile=“false” and isdir=“false”: this is an invalid combination " \
 					"(your configuration will never appear).\n" \
 					"This obviously only applies when there is a selection.\n" \
-					"Defaults to 'true'." ),
+					"Defaults to “true”." ),
 				FMA_DATA_TYPE_BOOLEAN,
 				"true",
 				FALSE,
@@ -208,16 +208,16 @@ FMADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				N_( "Whether the profile applies to folders (deprecated option, see mimetype)" ),
-				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
-				N_( "Set to 'true' if the selection can have folders, to 'false' otherwise.\n" \
-					"This setting is tied in with the 'isfile' setting. The valid combinations are: \n" \
-					"isfile='true' and isdir='false': the selection may hold only files\n" \
-					"isfile='false' and isdir='true': the selection may hold only folders\n" \
-					"isfile='true' and isdir='true': the selection may hold both files and folders\n" \
-					"isfile='false' and isdir='false': this is an invalid combination " \
+				/* i18n: “true” and “false” values are taken literally, and should not be translated */
+				N_( "Set to “true” if the selection can have folders, to “false” otherwise.\n" \
+					"This setting is tied in with the “isfile” setting. The valid combinations are: \n" \
+					"isfile=“true” and isdir=“false”: the selection may hold only files\n" \
+					"isfile=“false” and isdir=“true”: the selection may hold only folders\n" \
+					"isfile=“true” and isdir=“true”: the selection may hold both files and folders\n" \
+					"isfile=“false” and isdir=“false”: this is an invalid combination " \
 					"(your configuration will never appear).\n" \
 					"This obviously only applies when there is a selection.\n" \
-					"Defaults to 'false'." ),
+					"Defaults to “false”." ),
 				FMA_DATA_TYPE_BOOLEAN,
 				"false",
 				FALSE,
@@ -242,11 +242,11 @@ FMADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				N_( "Whether the selection may be multiple (deprecated option, see selection count)" ),
-				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
+				/* i18n: “true” and “false” values are taken literally, and should not be translated */
 				N_( "If you need more than one files or folders to be selected, set this " \
-					"key to 'true'. If you want just one file or folder, set it to 'false'.\n" \
+					"key to “true”. If you want just one file or folder, set it to “false”.\n" \
 					"This obviously only applies when there is a selection.\n" \
-					"Defaults to 'false'." ),
+					"Defaults to “false”." ),
 				FMA_DATA_TYPE_BOOLEAN,
 				"false",
 				FALSE,
@@ -275,18 +275,18 @@ FMADataDef data_def_conditions [] = {
 					"items. The scheme is the protocol used to access the files. The " \
 					"keyword to use is the one used in the URI by the file manager.\n" \
 					"Examples of valid URI include:\n" \
-					"- file:///tmp/foo.txt\n" \
-					"- sftp:///root@test.example.net/tmp/foo.txt\n" \
+					"• file:///tmp/foo.txt\n" \
+					"• sftp:///root@test.example.net/tmp/foo.txt\n" \
 					"The most common schemes are:\n" \
-					"'file': local files\n" \
-					"'sftp': files accessed via SSH\n" \
-					"'ftp': files accessed via FTP\n" \
-					"'smb': files accessed via Samba (Windows share)\n" \
-					"'dav': files accessed via WebDAV.\n" \
+					"• “file”: local files\n" \
+					"• “sftp”: files accessed via SSH\n" \
+					"• “ftp”: files accessed via FTP\n" \
+					"• “smb”: files accessed via Samba (Windows share)\n" \
+					"• “dav”: files accessed via WebDAV.\n" \
 					"All schemes used by your favorite file manager may be used here.\n" \
 					"This obviously only applies when there is a selection, " \
-					"or when targeting the special 'x-nautilus-desktop' scheme.\n" \
-					"Defaults to 'file'." ),
+					"or when targeting the special “x-nautilus-desktop” scheme.\n" \
+					"Defaults to “file”." ),
 				FMA_DATA_TYPE_STRING_LIST,
 				"*",
 				FALSE,
@@ -311,8 +311,8 @@ FMADataDef data_def_conditions [] = {
 				TRUE,
 				N_( "List of folders" ),
 				N_( "Defines the list of valid paths to be matched against the current folder.\n " \
-					"All folders 'under' the specified path are considered valid.\n" \
-					"Defaults to '/'." ),
+					"All folders “under” the specified path are considered valid.\n" \
+					"Defaults to “/”." ),
 				FMA_DATA_TYPE_STRING_LIST,
 				"/",
 				FALSE,
@@ -337,9 +337,9 @@ FMADataDef data_def_conditions [] = {
 				TRUE,
 				N_( "Operator of the selection count relation" ),
 				N_( "Whether this profile may be selected depending of the count of the selection.\n" \
-					"This is a string of the form \"{'<'|'='|'>'} number\".\n" \
-					"Examples of valid strings are: \"=0\", \"> 1\", \"< 10\".\n" \
-					"Defaults to \">0\"." ),
+					"This is a string of the form “{'<'|'='|'>'} number”.\n" \
+					"Examples of valid strings are: “=0”, “> 1”, “< 10”.\n" \
+					"Defaults to “>0”." ),
 				FMA_DATA_TYPE_STRING,
 				">0",
 				FALSE,
@@ -413,7 +413,7 @@ FMADataDef data_def_conditions [] = {
 				/* i18n: TryExec is a keyword of the specification, it is not translatable */
 				N_( "Note that, when specified, only the presence and the executability status of " \
 					"the specified file are checked.\n" \
-					"Parameters may appear in 'TryExec' value, and will be substituted at runtime.\n" \
+					"Parameters may appear in “TryExec” value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				FMA_DATA_TYPE_STRING,
 				"",
@@ -440,7 +440,7 @@ FMADataDef data_def_conditions [] = {
 				/* i18n: ShowIfRegistered is a keyword of the specification, it is not translatable */
 				N_( "The well-known name of a DBus service.\n" \
 					"The item will be candidate if the named service is registered on session DBus at runtime.\n" \
-					"Parameters may appear in 'ShowIfRegistered' value, and will be substituted at runtime.\n" \
+					"Parameters may appear in “ShowIfRegistered” value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				FMA_DATA_TYPE_STRING,
 				"",
@@ -465,8 +465,8 @@ FMADataDef data_def_conditions [] = {
 				N_( "Show if True" ),
 				/* i18n: ShowIfTrue is a keyword of the specification, it is not translatable */
 				N_( "A command which, when executed, should output a string on stdout.\n" \
-					"The item will be candidate if the outputed string is equal to \"true\".\n" \
-					"Parameters may appear in 'ShowIfTrue' value, and will be substituted at runtime.\n" \
+					"The item will be candidate if the outputed string is equal to “true”.\n" \
+					"Parameters may appear in “ShowIfTrue” value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				FMA_DATA_TYPE_STRING,
 				"",
@@ -481,8 +481,8 @@ FMADataDef data_def_conditions [] = {
 				"show-if-true",
 				0,
 				G_OPTION_ARG_STRING,
-				/* i18n: 'true' is to be taken as a literal, must not be translated */
-				N_( "The path to a command which will display the 'true' string" ),
+				/* i18n: “true” is to be taken as a literal, must not be translated */
+				N_( "The path to a command which will display the “true” string" ),
 				N_( "<PATH>" ) },
 
 	{ FMAFO_DATA_SHOW_IF_RUNNING,
@@ -493,7 +493,7 @@ FMADataDef data_def_conditions [] = {
 				/* i18n: ShowIfRunning is a keyword of the specification, it is not translatable */
 				N_( "The name of a process.\n" \
 					"The item will be candidate if the process name is found in memory at runtime.\n" \
-					"Parameters may appear in 'ShowIfRunning' value, and will be substituted at runtime.\n" \
+					"Parameters may appear in “ShowIfRunning” value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				FMA_DATA_TYPE_STRING,
 				"",
@@ -516,16 +516,16 @@ FMADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Capabilities" ),
-				/* i18n: 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' are all keywords
+				/* i18n: “Owner”, “Readable”, “Writable”, “Executable” and “Local” are all keywords
 				 *  of the specification; they are not translatable */
 				N_( "A list of capabilities each item of the selection must satisfy in order for the item to be candidate.\n" \
 					"Capabilities may be negated.\n" \
 					"Capabilities have to be chosen between following predefined ones:\n" \
-					"- 'Owner': current user is the owner of selected items\n" \
-					"- 'Readable': selected items are readable by user (probably more usefull when negated)\n" \
-					"- 'Writable': selected items are writable by user\n" \
-					"- 'Executable': selected items are executable by user\n" \
-					"- 'Local': selected items are local.\n" \
+					"• “Owner”: current user is the owner of selected items\n" \
+					"• “Readable”: selected items are readable by user (probably more usefull when negated)\n" \
+					"• “Writable”: selected items are writable by user\n" \
+					"• “Executable”: selected items are executable by user\n" \
+					"• “Local”: selected items are local.\n" \
 					"Defaults to empty list." ),
 				FMA_DATA_TYPE_STRING_LIST,
 				"",
@@ -541,7 +541,7 @@ FMADataDef data_def_conditions [] = {
 				0,
 				G_OPTION_ARG_STRING_ARRAY,
 				N_( "The name of a capability the selection must meet. "
-					"May be 'Owner', 'Readable', 'Writable', 'Executable' or 'Local'" ),
+					"May be “Owner”, “Readable”, “Writable”, “Executable” or “Local”" ),
 				N_( "<NAME>" ) },
 
 	{ NULL },
