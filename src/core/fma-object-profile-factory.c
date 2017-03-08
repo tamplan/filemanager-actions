@@ -220,7 +220,7 @@ static FMADataDef data_def_profile [] = {
 					"• “DisplayOutput”: the ran terminal may be closed at end of the command, but " \
 						"standard streams (stdout, stderr) should be collected and displayed; " \
 						"an acceptable fallback is Terminal.\n" \
-					"Defaults to \"Normal\"." ),
+					"Defaults to “Normal”." ),
 				FMA_DATA_TYPE_STRING,
 				"Normal",
 				FALSE,

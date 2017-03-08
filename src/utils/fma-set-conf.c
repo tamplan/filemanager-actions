@@ -63,7 +63,7 @@ static GOptionEntry st_entries[] = {
 			N_( "The key to be updated" ), N_( "<STRING>" ) },
 	{ "type"                 , 't', 0, G_OPTION_ARG_STRING        , &st_type,
 			/* i18n: “str”, “int” and “bool” are literal values: do not translate */
-			N_( "The type of the value to be set, may be “str”, “int” or “bool" ), N_( "<STRING>" ) },
+			N_( "The type of the value to be set, may be “str”, “int” or “bool”" ), N_( "<STRING>" ) },
 	{ "value"                , 'v', 0, G_OPTION_ARG_STRING        , &st_value,
 			N_( "The value to be set" ), N_( "<STRING>" ) },
 	{ NULL }
