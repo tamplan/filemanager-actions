@@ -27,7 +27,7 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([FileManager-Actions],[3.4],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+AC_INIT([FileManager-Actions],[3.4.1],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
 AX_IS_RELEASE([git-directory])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
