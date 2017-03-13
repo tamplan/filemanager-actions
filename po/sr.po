@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product"
 "=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-02-28 15:46+0000\n"
-"PO-Revision-Date: 2017-03-05 21:30+0200\n"
+"POT-Creation-Date: 2017-03-08 19:39+0000\n"
+"PO-Revision-Date: 2017-03-13 14:34+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: српски <gnome-sr@googlegroups.org>\n"
 "Language: sr\n"
@@ -32,30 +32,25 @@ msgstr "Бићете упитани за запис сваки пут када �
 #. i18n: FMAIExporter is an interface name, do not even try to translate
 #: ../src/core/fma-exporter.c:59
 #, c-format
-#| msgid "No NAIExporter implementation found for '%s' format."
-msgid "No FMAIExporter implementation found for '%s' format."
+#| msgid "No FMAIExporter implementation found for '%s' format."
+msgid "No FMAIExporter implementation found for “%s” format."
 msgstr "Нисам нашао примену ФМАИИзвозника за запис „%s“."
 
 #. i18n: FMAIExporter is an interface name, do not even try to translate
 #: ../src/core/fma-exporter.c:303
 #, c-format
-#| msgid "%s NAIExporter doesn't implement 'to_buffer' interface."
-msgid "%s FMAIExporter doesn't implement 'to_buffer' interface."
+#| msgid "%s FMAIExporter doesn't implement 'to_buffer' interface."
+msgid "%s FMAIExporter doesn’t implement “to_buffer” interface."
 msgstr "%s ФМАИИзвозник не примењује сучеље „to_buffer“."
 
 #. i18n: FMAIExporter is an interface name, do not even try to translate
 #: ../src/core/fma-exporter.c:376
 #, c-format
-#| msgid "%s NAIExporter doesn't implement 'to_file' interface."
-msgid "%s FMAIExporter doesn't implement 'to_file' interface."
+#| msgid "%s FMAIExporter doesn't implement 'to_file' interface."
+msgid "%s FMAIExporter doesn’t implement “to_file” interface."
 msgstr "%s ФМАИИзвозник не примењује сучеље „to_file“."
 
 #: ../src/core/fma-about.c:73
-#| msgid ""
-#| "Nautilus-Actions Configuration Tool is free software; you can "
-#| "redistribute it and/or modify it under the terms of the GNU General "
-#| "Public License as published by the Free Software Foundation; either "
-#| "version 2 of the License, or (at your option) any later version."
 msgid ""
 "FileManager-Actions Configuration Tool is free software; you can "
 "redistribute it and/or modify it under the terms of the GNU General Public "
@@ -68,11 +63,6 @@ msgstr ""
 "новијег издања."
 
 #: ../src/core/fma-about.c:77
-#| msgid ""
-#| "Nautilus-Actions Configuration Tool is distributed in the hope that it "
-#| "will be useful, but WITHOUT ANY WARRANTY; without even the implied "
-#| "warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-#| "GNU General Public License for more details."
 msgid ""
 "FileManager-Actions Configuration Tool is distributed in the hope that it "
 "will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty "
@@ -85,11 +75,6 @@ msgstr ""
 "више детаља."
 
 #: ../src/core/fma-about.c:81
-#| msgid ""
-#| "You should have received a copy of the GNU General Public License along "
-#| "with Nautilus-Actions Configuration Tool ; if not, write to the Free "
-#| "Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA "
-#| "02110-1301, USA."
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "FileManager-Actions Configuration Tool ; if not, write to the Free Software "
@@ -98,13 +83,13 @@ msgid ""
 msgstr ""
 "Требали сте да примите примерак Гнуове опште јавне лиценце уз овај програм; "
 "ако нисте, пишите Задужбини слободног софтвера на следећу адресу: „Free "
-"Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-"
-"1301, USA“."
+"Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA "
+"02110-1301, USA“."
 
 #: ../src/core/fma-about.c:101
-#| msgid "A graphical interface to create and edit your Nautilus actions."
 msgid "A graphical interface to create and edit your file-manager actions."
-msgstr "Графичко сучеље за стварање и уређивање ваших радњи управника датотека."
+msgstr ""
+"Графичко сучеље за стварање и уређивање ваших радњи управника датотека."
 
 #: ../src/core/fma-about.c:110
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
@@ -117,10 +102,6 @@ msgstr "Радње управника датотека"
 
 #: ../src/core/fma-about.c:166
 #, c-format
-#| msgid ""
-#| "Copyright %s 2005 The GNOME Foundation\n"
-#| "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
-#| "Copyright %s 2009-2014 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
@@ -158,16 +139,23 @@ msgstr "Наслеђени системи"
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
 msgstr "Списак шаблона који ће бити поређени са изабраном датотеком/фасциклом"
 
-#. i18n: wildcard characters '*' and '?' should be considered as literals,
+#. i18n: wildcard characters “*” and “?” should be considered as literals,
 #. *  and not be translated
 #: ../src/core/fma-icontext-factory.c:54
+#| msgid ""
+#| "A list of strings with joker '*' or '?' to be matched against the name(s) "
+#| "of the selected file(s)/folder(s). Each selected item must match at least "
+#| "one of the filename patterns for the action or the menu be candidate to "
+#| "display.\n"
+#| "This obviously only applies when there is a selection.\n"
+#| "Defaults to '*'."
 msgid ""
-"A list of strings with joker '*' or '?' to be matched against the name(s) of "
+"A list of strings with joker “*” or “?” to be matched against the name(s) of "
 "the selected file(s)/folder(s). Each selected item must match at least one "
 "of the filename patterns for the action or the menu be candidate to "
 "display.\n"
 "This obviously only applies when there is a selection.\n"
-"Defaults to '*'."
+"Defaults to “*”."
 msgstr ""
 "Списак ниски са џокером „*“ или „?“ који ће бити поређен са називом изабране "
 "датотеке/фасцикле. Свака изабрана ставка мора да одговара барем једном од "
@@ -175,7 +163,7 @@ msgstr ""
 "Ово се наравно примењује једино када постоји избор.\n"
 "Подразумева се „*“."
 
-#. i18n: wildcard characters '*' and '?' should be considered as literalls,
+#. i18n: wildcard characters “*” and “?” should be considered as literalls,
 #. *  and not be translated
 #: ../src/core/fma-icontext-factory.c:75
 msgid ""
@@ -198,21 +186,28 @@ msgstr "<ИЗРАЗ>"
 msgid "Whether the specified basenames are case sensitive (default)"
 msgstr "Да ли су наведени основни називи осетљиви на величину слова (основно)"
 
-#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:88
+#| msgid ""
+#| "Must be set to 'true' if the filename patterns are case sensitive, to "
+#| "'false' otherwise. E.g., if you need to match a filename in a case-"
+#| "sensitive manner, set this key to 'true'. If you also want, for example "
+#| "'*.jpg' to match 'photo.JPG', then set 'false'.\n"
+#| "This obviously only applies when there is a selection.\n"
+#| "Defaults to 'true'."
 msgid ""
-"Must be set to 'true' if the filename patterns are case sensitive, to "
-"'false' otherwise. E.g., if you need to match a filename in a case-sensitive "
-"manner, set this key to 'true'. If you also want, for example '*.jpg' to "
-"match 'photo.JPG', then set 'false'.\n"
+"Must be set to “true” if the filename patterns are case sensitive, to "
+"“false” otherwise. E.g., if you need to match a filename in a case-sensitive "
+"manner, set this key to “true”. If you also want, for example “*.jpg” to "
+"match “photo.JPG”, then set “false”.\n"
 "This obviously only applies when there is a selection.\n"
-"Defaults to 'true'."
+"Defaults to “true”."
 msgstr ""
 "Мора бити постављено на „true“ (изабрано) ако су шаблони назива датотека "
 "осетљиви на величину слова, у супротном на „false“ (поништено). Нпр., ако "
 "треба да поредите назив датотеке на начин осетљив на величину слова, "
-"поставите овај кључ на „true“ (изабрано). Ако такође желите, на пример „*."
-"jpg“ да поклапа „photo.JPG“, онда поставите „false“ (поништено).\n"
+"поставите овај кључ на „true“ (изабрано). Ако такође желите, на пример "
+"„*.jpg“ да поклапа „photo.JPG“, онда поставите „false“ (поништено).\n"
 "Ово се наравно примењује само када постоји избор.\n"
 "Подразумева се „true“ (изабрано)."
 
@@ -224,14 +219,20 @@ msgstr ""
 "Списак шаблона који ће бити поређени са миме врстама изабране датотеке/"
 "фасцикле"
 
-#. i18n: wildcard character '*' is taken literally, and should not be translated
+#. i18n: wildcard character “*” is taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:116
+#| msgid ""
+#| "A list of strings with joker '*' to be matched against the mimetypes of "
+#| "the selected file(s)/folder(s). Each selected item must match at least "
+#| "one of the mimetype patterns for the action to appear.\n"
+#| "This obviously only applies when there is a selection.\n"
+#| "Defaults to '*/*'."
 msgid ""
-"A list of strings with joker '*' to be matched against the mimetypes of the "
+"A list of strings with joker “*” to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected item must match at least one of "
 "the mimetype patterns for the action to appear.\n"
 "This obviously only applies when there is a selection.\n"
-"Defaults to '*/*'."
+"Defaults to “*/*”."
 msgstr ""
 "Списак ниски са џокером „*“ који ће бити поређен са миме врстама изабране "
 "датотеке/фасцикле. Свака изабрана ставка мора да одговара барем једном од "
@@ -239,11 +240,15 @@ msgstr ""
 "Ово се наравно примењује само када постоји избор.\n"
 "Подразумева се „*/*“."
 
-#. i18n: wildcard character '*' is taken literally, and should not be translated
+#. i18n: wildcard character “*” is taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:135
+#| msgid ""
+#| "A pattern to be matched against mimetypes of selected file(s)/folder(s). "
+#| "May include the asterisk wildcard '*'. You must set one option for each "
+#| "pattern you need"
 msgid ""
 "A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
-"include the asterisk wildcard '*'. You must set one option for each pattern "
+"include the asterisk wildcard “*”. You must set one option for each pattern "
 "you need"
 msgstr ""
 "Шаблон који ће бити поређен са миме врстама изабране датотеке/фасцикле. Може "
@@ -255,20 +260,32 @@ msgid "Whether the profile applies to files (deprecated option, see mimetype)"
 msgstr ""
 "Да ли се профили примењују на датотеке (застарело, погледајте миме врсту)"
 
-#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:181
+#| msgid ""
+#| "Set to 'true' if the selection can have files, to 'false' otherwise.\n"
+#| "This setting is tied in with the 'isdir' setting. The valid combinations "
+#| "are: \n"
+#| "isfile='true' and isdir='false': the selection may hold only files\n"
+#| "isfile='false' and isdir='true': the selection may hold only folders\n"
+#| "isfile='true' and isdir='true': the selection may hold both files and "
+#| "folders\n"
+#| "isfile='false' and isdir='false': this is an invalid combination (your "
+#| "configuration will never appear).\n"
+#| "This obviously only applies when there is a selection.\n"
+#| "Defaults to 'true'."
 msgid ""
-"Set to 'true' if the selection can have files, to 'false' otherwise.\n"
-"This setting is tied in with the 'isdir' setting. The valid combinations "
+"Set to “true” if the selection can have files, to “false” otherwise.\n"
+"This setting is tied in with the “isdir” setting. The valid combinations "
 "are: \n"
-"isfile='true' and isdir='false': the selection may hold only files\n"
-"isfile='false' and isdir='true': the selection may hold only folders\n"
-"isfile='true' and isdir='true': the selection may hold both files and "
+"isfile=“true” and isdir=“false”: the selection may hold only files\n"
+"isfile=“false” and isdir=“true”: the selection may hold only folders\n"
+"isfile=“true” and isdir=“true”: the selection may hold both files and "
 "folders\n"
-"isfile='false' and isdir='false': this is an invalid combination (your "
+"isfile=“false” and isdir=“false”: this is an invalid combination (your "
 "configuration will never appear).\n"
 "This obviously only applies when there is a selection.\n"
-"Defaults to 'true'."
+"Defaults to “true”."
 msgstr ""
 "Подесите на „true“ (изабрано) ако избор може да има датотеке, у супротном на "
 "„false“ (поништено).\n"
@@ -287,25 +304,37 @@ msgid ""
 msgstr ""
 "Да ли се профили примењују на фасцикле (застарело, погледајте миме врсту)"
 
-#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:212
+#| msgid ""
+#| "Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
+#| "This setting is tied in with the 'isfile' setting. The valid combinations "
+#| "are: \n"
+#| "isfile='true' and isdir='false': the selection may hold only files\n"
+#| "isfile='false' and isdir='true': the selection may hold only folders\n"
+#| "isfile='true' and isdir='true': the selection may hold both files and "
+#| "folders\n"
+#| "isfile='false' and isdir='false': this is an invalid combination (your "
+#| "configuration will never appear).\n"
+#| "This obviously only applies when there is a selection.\n"
+#| "Defaults to 'false'."
 msgid ""
-"Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
-"This setting is tied in with the 'isfile' setting. The valid combinations "
+"Set to “true” if the selection can have folders, to “false” otherwise.\n"
+"This setting is tied in with the “isfile” setting. The valid combinations "
 "are: \n"
-"isfile='true' and isdir='false': the selection may hold only files\n"
-"isfile='false' and isdir='true': the selection may hold only folders\n"
-"isfile='true' and isdir='true': the selection may hold both files and "
+"isfile=“true” and isdir=“false”: the selection may hold only files\n"
+"isfile=“false” and isdir=“true”: the selection may hold only folders\n"
+"isfile=“true” and isdir=“true”: the selection may hold both files and "
 "folders\n"
-"isfile='false' and isdir='false': this is an invalid combination (your "
+"isfile=“false” and isdir=“false”: this is an invalid combination (your "
 "configuration will never appear).\n"
 "This obviously only applies when there is a selection.\n"
-"Defaults to 'false'."
+"Defaults to “false”."
 msgstr ""
 "Подесите на „true“ (изабрано) ако избор може да има фасцикле, у супротном на "
 "„false“ (поништено).\n"
-"Ово подешавање је привезано са подешавањем „isfile“. Исправне комбинације "
-"су: isfile='true' и isdir='false': избор може да садржи само датотеке\n"
+"Ово подешавање је привезано са подешавањем „isfile“. Исправне комбинације су:"
+" isfile='true' и isdir='false': избор може да садржи само датотеке\n"
 "isfile='false' и isdir='true': избор може да садржи само фасцикле\n"
 "isfile='true' и isdir='true': избор може да садржи и датотеке и фасцикле\n"
 "isfile='false' и isdir='false': ово је погрешна комбинација (ваше подешавање "
@@ -320,13 +349,18 @@ msgid ""
 msgstr ""
 "Да ли избор може бити вишеструк (застарела могућност, погледајте број избора)"
 
-#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:246
+#| msgid ""
+#| "If you need more than one files or folders to be selected, set this key "
+#| "to 'true'. If you want just one file or folder, set it to 'false'.\n"
+#| "This obviously only applies when there is a selection.\n"
+#| "Defaults to 'false'."
 msgid ""
 "If you need more than one files or folders to be selected, set this key to "
-"'true'. If you want just one file or folder, set it to 'false'.\n"
+"“true”. If you want just one file or folder, set it to “false”.\n"
 "This obviously only applies when there is a selection.\n"
-"Defaults to 'false'."
+"Defaults to “false”."
 msgstr ""
 "Ако треба да изаберете више од једне датотеке или фасцикле, поставите овај "
 "кључ на „true“ (изабрано). Ако вам треба само једна датотека или фасцикла, "
@@ -343,38 +377,55 @@ msgstr "Списак шема које ће бити поређене са из�
 #. i18n: schemes (sftp, ssh, ftp, file, etc.) are standard keywords which define
 #. *  the access protocol to an object, they should not be translated
 #: ../src/core/fma-icontext-factory.c:274
+#| msgid ""
+#| "Defines the list of valid schemes to be matched against the selected "
+#| "items. The scheme is the protocol used to access the files. The keyword "
+#| "to use is the one used in the URI by the file manager.\n"
+#| "Examples of valid URI include:\n"
+#| "- file:///tmp/foo.txt\n"
+#| "- sftp:///root@test.example.net/tmp/foo.txt\n"
+#| "The most common schemes are:\n"
+#| "'file': local files\n"
+#| "'sftp': files accessed via SSH\n"
+#| "'ftp': files accessed via FTP\n"
+#| "'smb': files accessed via Samba (Windows share)\n"
+#| "'dav': files accessed via WebDAV.\n"
+#| "All schemes used by your favorite file manager may be used here.\n"
+#| "This obviously only applies when there is a selection, or when targeting "
+#| "the special 'x-nautilus-desktop' scheme.\n"
+#| "Defaults to 'file'."
 msgid ""
 "Defines the list of valid schemes to be matched against the selected items. "
 "The scheme is the protocol used to access the files. The keyword to use is "
 "the one used in the URI by the file manager.\n"
 "Examples of valid URI include:\n"
-"- file:///tmp/foo.txt\n"
-"- sftp:///root@test.example.net/tmp/foo.txt\n"
+"• file:///tmp/foo.txt\n"
+"• sftp:///root@test.example.net/tmp/foo.txt\n"
 "The most common schemes are:\n"
-"'file': local files\n"
-"'sftp': files accessed via SSH\n"
-"'ftp': files accessed via FTP\n"
-"'smb': files accessed via Samba (Windows share)\n"
-"'dav': files accessed via WebDAV.\n"
+"• “file”: local files\n"
+"• “sftp”: files accessed via SSH\n"
+"• “ftp”: files accessed via FTP\n"
+"• “smb”: files accessed via Samba (Windows share)\n"
+"• “dav”: files accessed via WebDAV.\n"
 "All schemes used by your favorite file manager may be used here.\n"
 "This obviously only applies when there is a selection, or when targeting the "
-"special 'x-nautilus-desktop' scheme.\n"
-"Defaults to 'file'."
+"special “x-nautilus-desktop” scheme.\n"
+"Defaults to “file”."
 msgstr ""
 "Одредите списак исправних шема које ће бити упоређене са изабраним ставкама. "
 "Шема је протокол коришћен за приступ датотекама. Кључна реч за коришћење је "
 "она коју користи управник датотека у путањи.\n"
 "У примере исправних путања спадају:\n"
-"— file:///tmp/foo.txt\n"
-"— sftp:///root@test.example.net/tmp/foo.txt\n"
+"•  file:///tmp/foo.txt\n"
+"•  sftp:///root@test.example.net/tmp/foo.txt\n"
 "Најчешће шеме су:\n"
-"„file“: месне датотеке\n"
-"„sftp“: датотеке којима се приступа путем безбедне шкољке (SSH)\n"
-"„ftp“: датотеке којима се приступа путем протокола преноса датотека (FTP)\n"
-"„smb“: датотеке којима се приступа путем Самбе (Виндоуз дељење)\n"
-"„dav“: датотеке којима се приступа путем ВебДАВ-а.\n"
-"Све шеме које користи ваш омиљени управник датотека могу бити коришћене "
-"овде.\n"
+"• „file“: месне датотеке\n"
+"• „sftp“: датотеке којима се приступа путем безбедне шкољке (SSH)\n"
+"• „ftp“: датотеке којима се приступа путем протокола преноса датотека (FTP)\n"
+"• „smb“: датотеке којима се приступа путем Самбе (Виндоуз дељење)\n"
+"• „dav“: датотеке којима се приступа путем ВебДАВ-а.\n"
+"Све шеме које користи ваш омиљени управник датотека могу бити коришћене овде."
+"\n"
 "Ово се наравно примењује само када постоји избор, или када се односи на "
 "посебну „x-nautilus-desktop“ шему.\n"
 "Подразумева се „file“."
@@ -406,13 +457,18 @@ msgid "List of folders"
 msgstr "Списак фасцикли"
 
 #: ../src/core/fma-icontext-factory.c:313
+#| msgid ""
+#| "Defines the list of valid paths to be matched against the current "
+#| "folder.\n"
+#| " All folders 'under' the specified path are considered valid.\n"
+#| "Defaults to '/'."
 msgid ""
 "Defines the list of valid paths to be matched against the current folder.\n"
-" All folders 'under' the specified path are considered valid.\n"
-"Defaults to '/'."
+" All folders “under” the specified path are considered valid.\n"
+"Defaults to “/”."
 msgstr ""
-"Одређује списак исправних путања које ће бити поређене са текућом "
-"фасциклом.\n"
+"Одређује списак исправних путања које ће бити поређене са текућом фасциклом."
+"\n"
 " Све фасцикле „под“ наведеном путањом се сматрају исправним.\n"
 "Подразумева се „/“."
 
@@ -439,12 +495,18 @@ msgid "Operator of the selection count relation"
 msgstr "Извршилац односа броја избора"
 
 #: ../src/core/fma-icontext-factory.c:339
+#| msgid ""
+#| "Whether this profile may be selected depending of the count of the "
+#| "selection.\n"
+#| "This is a string of the form \"{'<'|'='|'>'} number\".\n"
+#| "Examples of valid strings are: \"=0\", \"> 1\", \"< 10\".\n"
+#| "Defaults to \">0\"."
 msgid ""
 "Whether this profile may be selected depending of the count of the "
 "selection.\n"
-"This is a string of the form \"{'<'|'='|'>'} number\".\n"
-"Examples of valid strings are: \"=0\", \"> 1\", \"< 10\".\n"
-"Defaults to \">0\"."
+"This is a string of the form “{'<'|'='|'>'} number”.\n"
+"Examples of valid strings are: “=0”, “> 1”, “< 10”.\n"
+"Defaults to “>0”."
 msgstr ""
 "Да ли овај профил може бити изабран у зависности од броја избора.\n"
 "Ово је ниска у облику „{'<'|'='|'>'} број“.\n"
@@ -499,10 +561,16 @@ msgstr "Испробај извршивост"
 
 #. i18n: TryExec is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:414
+#| msgid ""
+#| "Note that, when specified, only the presence and the executability status "
+#| "of the specified file are checked.\n"
+#| "Parameters may appear in 'TryExec' value, and will be substituted at "
+#| "runtime.\n"
+#| "Defaults to successful."
 msgid ""
 "Note that, when specified, only the presence and the executability status of "
 "the specified file are checked.\n"
-"Parameters may appear in 'TryExec' value, and will be substituted at "
+"Parameters may appear in “TryExec” value, and will be substituted at "
 "runtime.\n"
 "Defaults to successful."
 msgstr ""
@@ -522,11 +590,18 @@ msgstr "Прикажи ако је забележена"
 
 #. i18n: ShowIfRegistered is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:441
+#| msgid ""
+#| "The well-known name of a DBus service.\n"
+#| "The item will be candidate if the named service is registered on session "
+#| "DBus at runtime.\n"
+#| "Parameters may appear in 'ShowIfRegistered' value, and will be "
+#| "substituted at runtime.\n"
+#| "Defaults to successful."
 msgid ""
 "The well-known name of a DBus service.\n"
 "The item will be candidate if the named service is registered on session "
 "DBus at runtime.\n"
-"Parameters may appear in 'ShowIfRegistered' value, and will be substituted "
+"Parameters may appear in “ShowIfRegistered” value, and will be substituted "
 "at runtime.\n"
 "Defaults to successful."
 msgstr ""
@@ -553,10 +628,16 @@ msgstr "Покажи ако је изабрано"
 
 #. i18n: ShowIfTrue is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:467
+#| msgid ""
+#| "A command which, when executed, should output a string on stdout.\n"
+#| "The item will be candidate if the outputed string is equal to \"true\".\n"
+#| "Parameters may appear in 'ShowIfTrue' value, and will be substituted at "
+#| "runtime.\n"
+#| "Defaults to successful."
 msgid ""
 "A command which, when executed, should output a string on stdout.\n"
-"The item will be candidate if the outputed string is equal to \"true\".\n"
-"Parameters may appear in 'ShowIfTrue' value, and will be substituted at "
+"The item will be candidate if the outputed string is equal to “true”.\n"
+"Parameters may appear in “ShowIfTrue” value, and will be substituted at "
 "runtime.\n"
 "Defaults to successful."
 msgstr ""
@@ -567,9 +648,10 @@ msgstr ""
 "време покретања.\n"
 "Подразумева се успешно."
 
-#. i18n: 'true' is to be taken as a literal, must not be translated
+#. i18n: “true” is to be taken as a literal, must not be translated
 #: ../src/core/fma-icontext-factory.c:485
-msgid "The path to a command which will display the 'true' string"
+#| msgid "The path to a command which will display the 'true' string"
+msgid "The path to a command which will display the “true” string"
 msgstr "Путања до наредбе која ће приказати ниску „true“"
 
 #: ../src/core/fma-icontext-factory.c:492
@@ -578,11 +660,18 @@ msgstr "Покажи ако је покренут"
 
 #. i18n: ShowIfRunning is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:494
+#| msgid ""
+#| "The name of a process.\n"
+#| "The item will be candidate if the process name is found in memory at "
+#| "runtime.\n"
+#| "Parameters may appear in 'ShowIfRunning' value, and will be substituted "
+#| "at runtime.\n"
+#| "Defaults to successful."
 msgid ""
 "The name of a process.\n"
 "The item will be candidate if the process name is found in memory at "
 "runtime.\n"
-"Parameters may appear in 'ShowIfRunning' value, and will be substituted at "
+"Parameters may appear in “ShowIfRunning” value, and will be substituted at "
 "runtime.\n"
 "Defaults to successful."
 msgstr ""
@@ -601,38 +690,53 @@ msgstr "Назив извршног који мора бити покренут"
 msgid "Capabilities"
 msgstr "Могућности"
 
-#. i18n: 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' are all keywords
+#. i18n: “Owner”, “Readable”, “Writable”, “Executable” and “Local” are all keywords
 #. *  of the specification; they are not translatable
 #: ../src/core/fma-icontext-factory.c:521
+#| msgid ""
+#| "A list of capabilities each item of the selection must satisfy in order "
+#| "for the item to be candidate.\n"
+#| "Capabilities may be negated.\n"
+#| "Capabilities have to be chosen between following predefined ones:\n"
+#| "- 'Owner': current user is the owner of selected items\n"
+#| "- 'Readable': selected items are readable by user (probably more usefull "
+#| "when negated)\n"
+#| "- 'Writable': selected items are writable by user\n"
+#| "- 'Executable': selected items are executable by user\n"
+#| "- 'Local': selected items are local.\n"
+#| "Defaults to empty list."
 msgid ""
 "A list of capabilities each item of the selection must satisfy in order for "
 "the item to be candidate.\n"
 "Capabilities may be negated.\n"
 "Capabilities have to be chosen between following predefined ones:\n"
-"- 'Owner': current user is the owner of selected items\n"
-"- 'Readable': selected items are readable by user (probably more usefull "
+"• “Owner”: current user is the owner of selected items\n"
+"• “Readable”: selected items are readable by user (probably more usefull "
 "when negated)\n"
-"- 'Writable': selected items are writable by user\n"
-"- 'Executable': selected items are executable by user\n"
-"- 'Local': selected items are local.\n"
+"• “Writable”: selected items are writable by user\n"
+"• “Executable”: selected items are executable by user\n"
+"• “Local”: selected items are local.\n"
 "Defaults to empty list."
 msgstr ""
 "Списак могућности које свака ставка избора мора да задовољи да би ставка "
 "била кандидат.\n"
 "Могућности могу бити негиране.\n"
 "Могућности морају бити изабране међу следећим предодређеним:\n"
-"— „Owner“: текући корисник је власник изабраних ставки\n"
-"— „Readable“: корисник може да чита изабране ставке (вероватно корисније "
+"• „Owner“: текући корисник је власник изабраних ставки\n"
+"• „Readable“: корисник може да чита изабране ставке (вероватно корисније "
 "када је негирано)\n"
-"— „Writable“: корисник може да пише у изабраним ставкама\n"
-"— „Executable“: корисник може да извршава изабране ставке\n"
-"— „Local“: изабране ставке су месне.\n"
+"• „Writable“: корисник може да пише у изабраним ставкама\n"
+"• „Executable“: корисник може да извршава изабране ставке\n"
+"• „Local“: изабране ставке су месне.\n"
 "Подразумева се празан списак."
 
 #: ../src/core/fma-icontext-factory.c:543
+#| msgid ""
+#| "The name of a capability the selection must meet. May be 'Owner', "
+#| "'Readable', 'Writable', 'Executable' or 'Local'"
 msgid ""
-"The name of a capability the selection must meet. May be 'Owner', "
-"'Readable', 'Writable', 'Executable' or 'Local'"
+"The name of a capability the selection must meet. May be “Owner”, "
+"“Readable”, “Writable”, “Executable” or “Local”"
 msgstr ""
 "Назив могућности које избор мора да задовољи. Може бити „Owner“ (власник), "
 "„Readable“ (читљиво), „Writable“ (уписиво), „Executable“ (извршно) или "
@@ -679,9 +783,13 @@ msgid "Do _not import the item"
 msgstr "Не _увози ставку"
 
 #: ../src/core/fma-importer.c:59
+#| msgid ""
+#| "This used to be the historical behavior.\n"
+#| "The selected file will be marked as \"NOT OK\" in the Summary page.\n"
+#| "The existing item will not be modified."
 msgid ""
 "This used to be the historical behavior.\n"
-"The selected file will be marked as \"NOT OK\" in the Summary page.\n"
+"The selected file will be marked as “NOT OK” in the Summary page.\n"
 "The existing item will not be modified."
 msgstr ""
 "Ово је обично историјско понашање.\n"
@@ -722,30 +830,37 @@ msgstr ""
 msgid "You will be asked each time an imported ID already exists."
 msgstr "Бићете упитани сваки пут када увезени ИБ већ буде постојао."
 
-#. i18n: '%s' stands for the file URI
+#. i18n: “%s” stands for the file URI
 #: ../src/core/fma-importer.c:101
 #, c-format
 msgid "%s is not loadable (empty or too big or not a regular file)"
 msgstr "„%s“ се не може учитати (празна или превелика или нередовна датотека)"
 
-#. l10n: 'ImporterAskDialog' is the dialog name: do not translate
+#. l10n: “ImporterAskDialog” is the dialog name: do not translate
 #: ../src/core/fma-importer-ask.c:270
 #, c-format
-msgid "Unable to load 'ImporterAskDialog' from %s"
+#| msgid "Unable to load 'ImporterAskDialog' from %s"
+msgid "Unable to load “ImporterAskDialog” from %s"
 msgstr "Не могу да учитам „ImporterAskDialog“ из „%s“"
 
 #: ../src/core/fma-importer-ask.c:399
 #, c-format
+#| msgid ""
+#| "The action \"%s\" imported from \"%s\" has the same identifier than the "
+#| "already existing \"%s\"."
 msgid ""
-"The action \"%s\" imported from \"%s\" has the same identifier than the "
-"already existing \"%s\"."
+"The action “%s” imported from “%s” has the same identifier than the already "
+"existing “%s”."
 msgstr "Радња „%s“ увезена из „%s“ има исти одредник као већ постојећа „%s“."
 
 #: ../src/core/fma-importer-ask.c:405
 #, c-format
+#| msgid ""
+#| "The menu \"%s\" imported from \"%s\" has the same identifier than the "
+#| "already existing \"%s\"."
 msgid ""
-"The menu \"%s\" imported from \"%s\" has the same identifier than the "
-"already existing \"%s\"."
+"The menu “%s” imported from “%s” has the same identifier than the already "
+"existing “%s”."
 msgstr "Изборник „%s“ увезен из „%s“ има исти одредник као већ постојећи „%s“."
 
 #: ../src/core/fma-importer-ask.ui.h:1
@@ -757,7 +872,6 @@ msgid "Re_member my choice in future import operations"
 msgstr "_Запамти мој избор у будућим радњама увоза"
 
 #: ../src/core/fma-importer-ask.ui.h:3
-#| msgid "What should I do with this ?"
 msgid ""
 "\n"
 "What should I do with this ?"
@@ -766,20 +880,16 @@ msgstr ""
 "Шта треба да урадим с овим ?"
 
 #: ../src/core/fma-importer-ask.ui.h:5
-#| msgid "Duplicate the selected item(s)"
 msgid " A duplicate is detected "
 msgstr " Откривен је дупликат "
 
 #: ../src/core/fma-io-provider.c:69
-#| msgid ""
-#| "Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
-#| "org/enter_bug.cgi?product=nautilus-actions."
 msgid ""
 "Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
 "org/enter_bug.cgi?product=filemanager-actions."
 msgstr ""
-"Будите љубазни и попуните извештај о грешци на "
-"„https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions“."
+"Будите љубазни и попуните извештај о грешци на „https://bugzilla.gnome.org/"
+"enter_bug.cgi?product=filemanager-actions“."
 
 #: ../src/core/fma-io-provider.c:1369
 msgid "Unavailable I/O provider."
@@ -862,7 +972,6 @@ msgstr ""
 
 #. i18n: default label for a new action
 #: ../src/core/fma-object-action.c:59
-#| msgid "Define a new action"
 msgid "New file-manager action"
 msgstr "Нова радња управника датотека"
 
@@ -950,7 +1059,7 @@ msgstr ""
 "радне површи.\n"
 "Подразумевају се натписи приручног изборника када није подешен или је празан."
 
-#. i18n: copied items have a label as 'Copy of original label'
+#. i18n: copied items have a label as “Copy of original label”
 #: ../src/core/fma-object-id.c:329
 #, c-format
 msgid "Copy of %s"
@@ -961,15 +1070,20 @@ msgid "Type of the item"
 msgstr "Врста ставке"
 
 #: ../src/core/fma-object-item-factory.c:66
+#| msgid ""
+#| "Defines if the item is an action or a menu. Possible values are :\n"
+#| "- 'Action',\n"
+#| "- 'Menu'.\n"
+#| "The value is case sensitive and must not be localized."
 msgid ""
 "Defines if the item is an action or a menu. Possible values are :\n"
-"- 'Action',\n"
-"- 'Menu'.\n"
+"• “Action”,\n"
+"• “Menu”.\n"
 "The value is case sensitive and must not be localized."
 msgstr ""
 "Одређује да ли је ставка радња или изборник. Могуће вредности су :\n"
-"— „Action“ (радња),\n"
-"— „Menu“ (изборник).\n"
+"• „Action“ (радња),\n"
+"• „Menu“ (изборник).\n"
 "Вредности су осетљиве на величину слова и не смеју бити преведене."
 
 #: ../src/core/fma-object-item-factory.c:94
@@ -1043,12 +1157,19 @@ msgid "Suggested shortcut"
 msgstr "Предложена пречица"
 
 #: ../src/core/fma-object-item-factory.c:215
+#| msgid ""
+#| "A shortcut suggested for the action or the menu.\n"
+#| "Please note that this might be only a suggestion as the shortcut may be "
+#| "already reserved for another use. Implementation should not override an "
+#| "already existing shortcut to define this one.\n"
+#| "The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n"
+#| "Defaults to empty."
 msgid ""
 "A shortcut suggested for the action or the menu.\n"
 "Please note that this might be only a suggestion as the shortcut may be "
 "already reserved for another use. Implementation should not override an "
 "already existing shortcut to define this one.\n"
-"The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n"
+"The format may look like “<Control>a” or “<Shift><Alt>F1”.\n"
 "Defaults to empty."
 msgstr ""
 "Пречица предложена за радњу или изборник.\n"
@@ -1063,10 +1184,15 @@ msgid "List of subitem ids"
 msgstr "Списак иб-ова подставке"
 
 #: ../src/core/fma-object-item-factory.c:269
+#| msgid ""
+#| "Ordered list of the IDs of the subitems. This may be actions or menus if "
+#| "the item is a menu, or profiles if the item is an action.\n"
+#| "If this list doesn't exist or is empty for an action or a menu, subitems "
+#| "are attached in the order of the read operations."
 msgid ""
 "Ordered list of the IDs of the subitems. This may be actions or menus if the "
 "item is a menu, or profiles if the item is an action.\n"
-"If this list doesn't exist or is empty for an action or a menu, subitems are "
+"If this list doesn’t exist or is empty for an action or a menu, subitems are "
 "attached in the order of the read operations."
 msgstr ""
 "Уређени списак ИБ-ова подставки. То могу бити радње или изборници ако је "
@@ -1144,12 +1270,62 @@ msgstr "Параметри наредбе"
 
 #. too long string for iso c: (max=509)
 #: ../src/core/fma-object-profile-factory.c:129
+#| msgid ""
+#| "The parameters of the command to be executed when the user selects the "
+#| "menu item in the file manager context menu or in the toolbar.\n"
+#| "The parameters may contain some special tokens which are replaced by the "
+#| "informations provided by the file manager before starting the command:\n"
+#| "- up to version 2.0:\n"
+#| "  %d: base folder of the selected file(s)\n"
+#| "  %f: the name of the selected file or the first one if several are "
+#| "selected\n"
+#| "  %h: hostname of the URI\n"
+#| "  %m: space-separated list of the basenames of the selected file(s)/"
+#| "folder(s)\n"
+#| "  %M: space-separated list of the selected file(s)/folder(s), with their "
+#| "full paths\n"
+#| "  %p: port number of the first URI\n"
+#| "  %R: space-separated list of selected URIs\n"
+#| "  %s: scheme of the URI\n"
+#| "  %u: URI\n"
+#| "  %U: username of the URI\n"
+#| "  %%: a percent sign.\n"
+#| "- starting from version 3:\n"
+#| "  %b: (first) basename\n"
+#| "  %B: space-separated list of the basenames of the selected file(s)/"
+#| "folder(s)\n"
+#| "  %c: count the selected file(s)/folder(s)\n"
+#| "  %d: (first) base directory\n"
+#| "  %D: space-separated list of base directories of the selected file(s)/"
+#| "folder(s)\n"
+#| "  %f: (first) filename\n"
+#| "  %F: space-separated list of the filenames of the selected file(s)/"
+#| "folder(s)\n"
+#| "  %h: hostname of the (first) URI\n"
+#| "  %m: (first) mimetype\n"
+#| "  %M: space-separated list of the mimetypes of the selected file(s)/"
+#| "folder(s)\n"
+#| "  %n: username of the (first) URI\n"
+#| "  %o: no-op operator which forces the singular form of execution (since "
+#| "3.0.2)\n"
+#| "  %O: no-op operator which forces the plural form of execution (since "
+#| "3.0.2)\n"
+#| "  %p: port number of the (first) URI\n"
+#| "  %s: scheme of the (first) URI\n"
+#| "  %u: (first) URI\n"
+#| "  %U: space-separated list of the URIs of the selected file(s)/folder(s)\n"
+#| "  %w: (first) basename without the extension\n"
+#| "  %W: space-separated list of basenames without the extension\n"
+#| "  %x: (first) extension\n"
+#| "  %X: space-separated list of the extensions of the selected file(s)/"
+#| "folder(s)\n"
+#| "  %%: a percent sign."
 msgid ""
 "The parameters of the command to be executed when the user selects the menu "
 "item in the file manager context menu or in the toolbar.\n"
 "The parameters may contain some special tokens which are replaced by the "
 "informations provided by the file manager before starting the command:\n"
-"- up to version 2.0:\n"
+"• up to version 2.0:\n"
 "  %d: base folder of the selected file(s)\n"
 "  %f: the name of the selected file or the first one if several are "
 "selected\n"
@@ -1164,7 +1340,7 @@ msgid ""
 "  %u: URI\n"
 "  %U: username of the URI\n"
 "  %%: a percent sign.\n"
-"- starting from version 3:\n"
+"• starting from version 3:\n"
 "  %b: (first) basename\n"
 "  %B: space-separated list of the basenames of the selected file(s)/"
 "folder(s)\n"
@@ -1199,7 +1375,7 @@ msgstr ""
 "изборника у приручном изборнику управника датотека или са траке алата.\n"
 "Параметри могу да садрже неке посебне модуле који се замењују подацима које "
 "доставља управник датотека пре покретања наредбе:\n"
-"— до издања 2.0:\n"
+"• до издања 2.0:\n"
 "  %d: основна фасцикла изабране(их) датотеке(а)\n"
 "  %f: назив изабране датотеке или прве ако их је изабрано више\n"
 "  %h: назив домаћина путање\n"
@@ -1212,7 +1388,7 @@ msgstr ""
 "  %u: путања\n"
 "  %U: корисничко име путање\n"
 "  %%: знак процената.\n"
-"— почевши од издања 3:\n"
+"• почевши од издања 3:\n"
 "  %b: (први) назив основе\n"
 "  %B: размаком раздвојени списак назива основе изабране датотеке/фасцикле\n"
 "  %c: броји изабрану(е) датотеку(е)/фасциклу(е)\n"
@@ -1243,9 +1419,12 @@ msgstr "Радни директоријум"
 
 #: ../src/core/fma-object-profile-factory.c:189
 #, c-format
+#| msgid ""
+#| "The working directory the command will be started in.\n"
+#| "Defaults to \"%d\"."
 msgid ""
 "The working directory the command will be started in.\n"
-"Defaults to \"%d\"."
+"Defaults to “%d”."
 msgstr ""
 "Радни директоријум у коме ће бити покренута наредба.\n"
 "Подразумева се „%d“."
@@ -1254,29 +1433,43 @@ msgstr ""
 msgid "Execution mode"
 msgstr "Режим извршавања"
 
-#. i18n: 'Normal', 'Terminal', 'Embedded' and 'DisplayOutput' are non-translatable keywords
+#. i18n: “Normal”, “Terminal”, “Embedded” and “DisplayOutput” are non-translatable keywords
 #: ../src/core/fma-object-profile-factory.c:213
+#| msgid ""
+#| "Execution mode of the program.\n"
+#| "This may be chosen between following values:\n"
+#| "- Normal: starts as a standard graphical user interface\n"
+#| "- Terminal: starts the preferred terminal of the graphical environment, "
+#| "and runs the command in it\n"
+#| "- Embedded: makes use of a special feature of the file manager which "
+#| "allows a terminal to be ran inside of it; an acceptable fallback is "
+#| "Terminal\n"
+#| "- DisplayOutput: the ran terminal may be closed at end of the command, "
+#| "but standard streams (stdout, stderr) should be collected and displayed; "
+#| "an acceptable fallback is Terminal.\n"
+#| "Defaults to \"Normal\"."
 msgid ""
 "Execution mode of the program.\n"
 "This may be chosen between following values:\n"
-"- Normal: starts as a standard graphical user interface\n"
-"- Terminal: starts the preferred terminal of the graphical environment, and "
-"runs the command in it\n"
-"- Embedded: makes use of a special feature of the file manager which allows "
-"a terminal to be ran inside of it; an acceptable fallback is Terminal\n"
-"- DisplayOutput: the ran terminal may be closed at end of the command, but "
+"• “Normal”: starts as a standard graphical user interface\n"
+"• “Terminal”: starts the preferred terminal of the graphical environment, "
+"and runs the command in it\n"
+"• “Embedded”: makes use of a special feature of the file manager which "
+"allows a terminal to be ran inside of it; an acceptable fallback is "
+"Terminal\n"
+"• “DisplayOutput”: the ran terminal may be closed at end of the command, but "
 "standard streams (stdout, stderr) should be collected and displayed; an "
 "acceptable fallback is Terminal.\n"
-"Defaults to \"Normal\"."
+"Defaults to “Normal”."
 msgstr ""
 "Режим извршавања програма.\n"
 "Могу бити изабране следеће вредности:\n"
-"— Normal: покреће се као уобичајено графичко корисничко сучеље\n"
-"— Terminal: покреће жељени терминал графичког окружења, и покреће наредбу у "
+"• Normal: покреће се као уобичајено графичко корисничко сучеље\n"
+"• Terminal: покреће жељени терминал графичког окружења, и покреће наредбу у "
 "њему\n"
-"— Embedded: користи посебну функцију управника датотека која омогућава да "
+"• Embedded: користи посебну функцију управника датотека која омогућава да "
 "терминал буде покренут у њему; прихватљива резерва је терминал\n"
-"— DisplayOutput: покренути терминал може бити затворен на крају наредбе, али "
+"• DisplayOutput: покренути терминал може бити затворен на крају наредбе, али "
 "уобичајени токови (стандардни излаз, стандардна грешка) требају бити "
 "прикупљени и приказани; прихватљива резерва је терминал.\n"
 "Подразумева се „Normal“."
@@ -1367,7 +1560,6 @@ msgid "Standard error:"
 msgstr "Стандардна грешка:"
 
 #: ../src/io-desktop/fma-desktop-provider.c:259
-#| msgid "Nautilus-Actions Desktop I/O Provider"
 msgid "FileManager-Actions Desktop I/O Provider"
 msgstr "У/И достављач радне површи радњи управника датотека"
 
@@ -1383,8 +1575,8 @@ msgstr "Извези као „._desktop“ датотеку"
 #| "users of other desktop environments, as long as their own application "
 #| "implements the DES-EMA specification which describes this format.\n"
 #| "The exported .desktop file may later be imported via :\n"
-#| "- Import assistant of the Nautilus-Actions Configuration Tool,\n"
-#| "- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+#| "- Import assistant of the FileManager-Actions Configuration Tool,\n"
+#| "- drag-n-drop into the FileManager-Actions Configuration Tool,\n"
 #| "- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory."
 msgid ""
 "This format has been introduced with v 3.0 serie, and should be your newly "
@@ -1393,9 +1585,9 @@ msgid ""
 "users of other desktop environments, as long as their own application "
 "implements the DES-EMA specification which describes this format.\n"
 "The exported .desktop file may later be imported via :\n"
-"- Import assistant of the FileManager-Actions Configuration Tool,\n"
-"- drag-n-drop into the FileManager-Actions Configuration Tool,\n"
-"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory."
+"• Import assistant of the FileManager-Actions Configuration Tool,\n"
+"• drag-n-drop into the FileManager-Actions Configuration Tool,\n"
+"• or by copying it into a XDG_DATA_DIRS/file-manager/actions directory."
 msgstr ""
 "Овај запис је уведен серијом 3.0, и треба да буде ваш нови жељени запис "
 "приликом извоза ставки.\n"
@@ -1403,22 +1595,21 @@ msgstr ""
 "корисницима других окружења радне површи, све док њихови програми примењују "
 "„DES-EMA“ одредбу која описује овај запис.\n"
 "Извезена „.desktop“ датотека може касније бити увезена :\n"
-"— помоћником увоза алата подешавања радњи Управника датотека,\n"
-"— превлачењем и убацивањем у алат подешавања радњи Управника датотека,\n"
-"— или умножавањем у директоријум „XDG_DATA_DIRS/file-manager/actions“."
+"• помоћником увоза алата подешавања радњи Управника датотека,\n"
+"• превлачењем и убацивањем у алат подешавања радњи Управника датотека,\n"
+"• или умножавањем у директоријум „XDG_DATA_DIRS/file-manager/actions“."
 
 #: ../src/io-desktop/fma-desktop-reader.c:64
 msgid "The Desktop I/O Provider is not able to handle the URI"
 msgstr "У/И достављач радне површи не може да ради са путањом"
 
-#. i18n: 'type' is the nature of the item: Action or Menu
+#. i18n: “type” is the nature of the item: Action or Menu
 #: ../src/io-desktop/fma-desktop-reader.c:292
 #, c-format
 msgid "unknown type: %s"
 msgstr "непозната врста: %s"
 
 #: ../src/io-gconf/fma-gconf-provider.c:247
-#| msgid "Nautilus-Actions GConf I/O Provider"
 msgid "FileManager-Actions GConf I/O Provider"
 msgstr "У/И достављач Гконфа радњи Управника датотека"
 
@@ -1446,7 +1637,7 @@ msgstr "Неисправан ИБ ставке: очекивах %s, а прон
 msgid "Unknown element %s found at line %d while waiting for %s."
 msgstr "Пронађох непознат елемент „%s“ у %d. реду док сам очекивао „%s“."
 
-#. i18n: do not translate keywords 'Action' nor 'Menu'
+#. i18n: do not translate keywords “Action” nor “Menu”
 #: ../src/io-xml/fma-xml-reader.c:153
 #, c-format
 msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
@@ -1466,21 +1657,21 @@ msgstr "Извези као _пуну датотеку шеме Гконфа"
 #| msgid ""
 #| "This used to be the historical export format.\n"
 #| "The exported schema file may later be imported via :\n"
-#| "- Import assistant of the Nautilus-Actions Configuration Tool,\n"
-#| "- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+#| "- Import assistant of the FileManager-Actions Configuration Tool,\n"
+#| "- drag-n-drop into the FileManager-Actions Configuration Tool,\n"
 #| "- or via the gconftool-2 --import-schema-file command-line tool."
 msgid ""
 "This used to be the historical export format.\n"
 "The exported schema file may later be imported via :\n"
-"- Import assistant of the FileManager-Actions Configuration Tool,\n"
-"- drag-n-drop into the FileManager-Actions Configuration Tool,\n"
-"- or via the gconftool-2 --import-schema-file command-line tool."
+"• Import assistant of the FileManager-Actions Configuration Tool,\n"
+"• drag-n-drop into the FileManager-Actions Configuration Tool,\n"
+"• or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
 "Уобичајено је да је ово историјски извозни запис.\n"
 "Извезена датотека шеме касније може бити увезена :\n"
-"— помоћником увоза алата подешавања радњи Управника датотека,\n"
-"— превлачењем и убацивањем у алат подешавања радњи Управника датотека,\n"
-"— или путем алата линије наредби „gconftool-2 --import-schema-file“."
+"• помоћником увоза алата подешавања радњи Управника датотека,\n"
+"• превлачењем и убацивањем у алат подешавања радњи Управника датотека,\n"
+"• или путем алата линије наредби „gconftool-2 --import-schema-file“."
 
 #: ../src/io-xml/fma-xml-formats.c:67
 msgid "Export as a _light GConf schema (v2) file"
@@ -1490,11 +1681,11 @@ msgstr "Извези као _лаку датотеку шеме Гконфа (в
 #| msgid ""
 #| "This format has been introduced in v 1.11 serie.\n"
 #| "This is the lightest schema still compatible with GConf command-line "
-#| "tools, while keeping backward compatibility with the Nautilus-Actions "
+#| "tools, while keeping backward compatibility with the FileManager-Actions "
 #| "Configuration Tool oldest versions.\n"
 #| "The exported schema file may later be imported via :\n"
-#| "- Import assistant of the Nautilus-Actions Configuration Tool,\n"
-#| "- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+#| "- Import assistant of the FileManager-Actions Configuration Tool,\n"
+#| "- drag-n-drop into the FileManager-Actions Configuration Tool,\n"
 #| "- or via the gconftool-2 --import-schema-file command-line tool."
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
@@ -1502,18 +1693,18 @@ msgid ""
 "while keeping backward compatibility with the FileManager-Actions "
 "Configuration Tool oldest versions.\n"
 "The exported schema file may later be imported via :\n"
-"- Import assistant of the FileManager-Actions Configuration Tool,\n"
-"- drag-n-drop into the FileManager-Actions Configuration Tool,\n"
-"- or via the gconftool-2 --import-schema-file command-line tool."
+"• Import assistant of the FileManager-Actions Configuration Tool,\n"
+"• drag-n-drop into the FileManager-Actions Configuration Tool,\n"
+"• or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
 "Овај запис је увезен у серији в 1.11.\n"
 "Ово је најлакша шема још увек сагласна са алатима линије наредби Гконфа, док "
 "задржава сагласност са старијим издањима алата подешавања Наутилусових радњи."
 "\n"
 "Извезена датотека шеме касније може бити увезена :\n"
-"— помоћником увоза алата подешавања радњи Управника датотека,\n"
-"— превлачењем и убацивањем у алат подешавања радњи Управника датотека,\n"
-"— или путем алата линије наредби „gconftool-2 --import-schema-file“."
+"• помоћником увоза алата подешавања радњи Управника датотека,\n"
+"• превлачењем и убацивањем у алат подешавања радњи Управника датотека,\n"
+"• или путем алата линије наредби „gconftool-2 --import-schema-file“."
 
 #: ../src/io-xml/fma-xml-formats.c:82
 msgid "Export as a GConf _dump file"
@@ -1522,13 +1713,13 @@ msgstr "Извези као _лажну датотеку Гконфа"
 #: ../src/io-xml/fma-xml-formats.c:83
 #| msgid ""
 #| "This format has been introduced in v 1.11 serie.\n"
-#| "Tough not backward compatible with Nautilus-Actions Configuration Tool "
+#| "Tough not backward compatible with FileManager-Actions Configuration Tool "
 #| "versions previous to 1.11, it may still be imported via standard GConf "
 #| "command-line tools.\n"
 #| "The exported dump file may later be imported via :\n"
-#| "- Import assistant of the Nautilus-Actions Configuration Tool (1.11 and "
-#| "above),\n"
-#| "- drag-n-drop into the Nautilus-Actions Configuration Tool (1.11 and "
+#| "- Import assistant of the FileManager-Actions Configuration Tool (1.11 "
+#| "and above),\n"
+#| "- drag-n-drop into the FileManager-Actions Configuration Tool (1.11 and "
 #| "above),\n"
 #| "- or via the gconftool-2 --load command-line tool."
 msgid ""
@@ -1537,29 +1728,30 @@ msgid ""
 "versions previous to 1.11, it may still be imported via standard GConf "
 "command-line tools.\n"
 "The exported dump file may later be imported via :\n"
-"- Import assistant of the FileManager-Actions Configuration Tool (1.11 and "
+"• Import assistant of the FileManager-Actions Configuration Tool (1.11 and "
 "above),\n"
-"- drag-n-drop into the FileManager-Actions Configuration Tool (1.11 and "
+"• drag-n-drop into the FileManager-Actions Configuration Tool (1.11 and "
 "above),\n"
-"- or via the gconftool-2 --load command-line tool."
+"• or via the gconftool-2 --load command-line tool."
 msgstr ""
 "Овај запис је уведен у серији в 1.11.\n"
 "Иако није сагласан са издањима алата подешавања радњи Управника датотека пре "
 "1.11, још увек може бити увезен путем уобичајених алата линије наредби "
 "Гконфа.\n"
 "Извезена привидна датотека може касније бити увезена :\n"
-"— помоћником увоза алата подешавања радњи Управника датотека (1.11 и виших),"
+"• помоћником увоза алата подешавања радњи Управника датотека (1.11 и виших),"
 "\n"
-"— превлачењем и убацивањем у алат подешавања радњи Управника датотека (1.11 "
+"• превлачењем и убацивањем у алат подешавања радњи Управника датотека (1.11 "
 "и виших),\n"
-"— или путем алата линије наредби „gconftool-2 --load“."
+"• или путем алата линије наредби „gconftool-2 --load“."
 
 #: ../src/ui/base-assistant.c:145
 msgid "Quit on Escape"
 msgstr "Прекини на Излаз"
 
 #: ../src/ui/base-assistant.c:146
-msgid "Should the assistant 'Quit' when the user hits Escape ?"
+#| msgid "Should the assistant 'Quit' when the user hits Escape ?"
+msgid "Should the assistant “Quit” when the user hits Escape ?"
 msgstr "Треба ли помоћник да „Прекине“ када корисник притисне Излаз ?"
 
 #: ../src/ui/base-assistant.c:153
@@ -1582,7 +1774,6 @@ msgid "_Cancel"
 msgstr "_Откажи"
 
 #: ../src/ui/base-gtk-utils.c:398 ../src/ui/base-gtk-utils.c:471
-#| msgid "OK."
 msgid "_OK"
 msgstr "У _реду"
 
@@ -1657,7 +1848,8 @@ msgstr "Датотека није исправна „.desktop“ датотек
 
 #: ../src/ui/egg-desktop-file.c:188
 #, c-format
-msgid "Unrecognized desktop file Version '%s'"
+#| msgid "Unrecognized desktop file Version '%s'"
+msgid "Unrecognized desktop file Version “%s”"
 msgstr "Непозната датотека радне површи издање „%s“"
 
 #: ../src/ui/egg-desktop-file.c:957
@@ -1677,9 +1869,9 @@ msgstr "Непозната опција покретања: %d"
 
 #: ../src/ui/egg-desktop-file.c:1365
 #, c-format
-msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
-"Не могу да проследим адресе докумената на „Type=Link“ улаз радне површи"
+#| msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgid "Can’t pass document URIs to a “Type=Link” desktop entry"
+msgstr "Не могу да проследим адресе докумената на „Type=Link“ улаз радне површи"
 
 #: ../src/ui/egg-desktop-file.c:1386
 #, c-format
@@ -1687,7 +1879,6 @@ msgid "Not a launchable item"
 msgstr "Није ставка за покретање"
 
 #: ../src/ui/fma-application.c:61 ../src/ui/fma-config-tool.desktop.in.h:1
-#| msgid "Nautilus-Actions Configuration Tool"
 msgid "FileManager-Actions Configuration Tool"
 msgstr "Алат подешавања радњи Управника датотека"
 
@@ -1874,13 +2065,15 @@ msgstr "Увоз је обављен"
 #. i18n: The action <label> is about to be exported
 #: ../src/ui/fma-export-ask.c:387
 #, c-format
-msgid "The action \"%s\" is about to be exported."
+#| msgid "The action \"%s\" is about to be exported."
+msgid "The action “%s” is about to be exported."
 msgstr "Радња „%s“ ће бити извезена."
 
 #. i18n: The menu <label> is about to be exported
 #: ../src/ui/fma-export-ask.c:390
 #, c-format
-msgid "The menu \"%s\" is about to be exported."
+#| msgid "The menu \"%s\" is about to be exported."
+msgid "The menu “%s” is about to be exported."
 msgstr "Изборник „%s“ ће бити извезен."
 
 #: ../src/ui/fma-export-ask.ui.h:1
@@ -1888,7 +2081,6 @@ msgid "Which format should I choose to export it ?"
 msgstr "Који запис треба да изаберем за извоз ?"
 
 #: ../src/ui/fma-export-ask.ui.h:2
-#| msgid "About to export selected items:"
 msgid " About to export item(s) "
 msgstr " О извозу изабраних ставки "
 
@@ -1949,7 +2141,7 @@ msgid "Folder filter"
 msgstr "Пропусник фасцикле"
 
 #. i18n: title of the FileChoose dialog when selecting an URI which
-#. * will be compare to Nautilus 'current_folder'
+#. * will be compare to Nautilus “current_folder”
 #.
 #: ../src/ui/fma-ifolders-tab.c:244
 msgid "Select a folder"
@@ -1964,7 +2156,7 @@ msgid "Mimetype filter"
 msgstr "Пропусник миме врсте"
 
 #. i18n: label of the push button when there is not yet any shortcut
-#: ../src/ui/fma-iproperties-tab.c:55 ../src/ui/fma-main-window.ui.h:158
+#: ../src/ui/fma-iproperties-tab.c:55 ../src/ui/fma-main-window.ui.h:159
 msgid "None"
 msgstr "Ништа"
 
@@ -1994,87 +2186,69 @@ msgstr "<span size=\"larger\"><b>Легенда параметра</b></span>"
 
 #: ../src/ui/fma-legend.ui.h:3
 #, no-c-format
-#| msgid "<b>%b</b> :"
 msgid "<b>%b</b>"
 msgstr "<b>%b</b>"
 
 #: ../src/ui/fma-legend.ui.h:4
-#| msgid "(first) basename."
 msgid ": (first) basename."
 msgstr ": (први) основни назив."
 
 #: ../src/ui/fma-legend.ui.h:6
 #, no-c-format
-#| msgid "<b>%B</b> :"
 msgid "<b>%B</b>"
 msgstr "<b>%B</b>"
 
 #: ../src/ui/fma-legend.ui.h:7
-#| msgid ""
-#| "space-separated list of the basenames of the selected file(s)/folder(s)."
 msgid ""
 ": space-separated list of the basenames of the selected file(s)/folder(s)."
 msgstr ": размаком раздвојени списак назива основе изабране датотеке/фасцикле."
 
 #: ../src/ui/fma-legend.ui.h:9
 #, no-c-format
-#| msgid "<b>%c</b> :"
 msgid "<b>%c</b>"
 msgstr "<b>%c</b>"
 
 #: ../src/ui/fma-legend.ui.h:10
-#| msgid "count of selected item(s)."
 msgid ": count of selected item(s)."
 msgstr ": број изабране ставке."
 
 #: ../src/ui/fma-legend.ui.h:12
 #, no-c-format
-#| msgid "<b>%d</b> :"
 msgid "<b>%d</b>"
 msgstr "<b>%d</b>"
 
 #: ../src/ui/fma-legend.ui.h:13
-#| msgid "(first) base directory."
 msgid ": (first) base directory."
 msgstr ": (први) основни директоријум."
 
 #: ../src/ui/fma-legend.ui.h:15
 #, no-c-format
-#| msgid "<b>%D</b> :"
 msgid "<b>%D</b>"
 msgstr "<b>%D</b>"
 
 #: ../src/ui/fma-legend.ui.h:16
-#| msgid ""
-#| "space-separated list of the base directories of the selected file(s)/"
-#| "folder(s)."
 msgid ""
 ": space-separated list of the base directories of the selected file(s)/"
 "folder(s)."
 msgstr ""
-": размаком раздвојени списак основних директоријума изабране "
-"датотеке/фасцикле."
+": размаком раздвојени списак основних директоријума изабране датотеке/"
+"фасцикле."
 
 #: ../src/ui/fma-legend.ui.h:18
 #, no-c-format
-#| msgid "<b>%f</b> :"
 msgid "<b>%f</b>"
 msgstr "<b>%f</b>"
 
 #: ../src/ui/fma-legend.ui.h:19
-#| msgid "(first) filename."
 msgid ": (first) filename."
 msgstr ": (први) назив датотеке."
 
 #: ../src/ui/fma-legend.ui.h:21
 #, no-c-format
-#| msgid "<b>%F</b> :"
 msgid "<b>%F</b>"
 msgstr "<b>%F</b>"
 
 #: ../src/ui/fma-legend.ui.h:22
-#| msgid ""
-#| "space-separated list of the filenames of the selected file(s)/folder(s)."
 msgid ""
 ": space-separated list of the filenames of the selected file(s)/folder(s)."
 msgstr ""
@@ -2082,201 +2256,163 @@ msgstr ""
 
 #: ../src/ui/fma-legend.ui.h:24
 #, no-c-format
-#| msgid "<b>%h</b> :"
 msgid "<b>%h</b>"
 msgstr "<b>%h</b>"
 
 #: ../src/ui/fma-legend.ui.h:25
-#| msgid "hostname of the (first) selected URI."
 msgid ": hostname of the (first) selected URI."
 msgstr ": назив домаћина (прве) изабране путање."
 
 #: ../src/ui/fma-legend.ui.h:27
 #, no-c-format
-#| msgid "<b>%m</b> :"
 msgid "<b>%m</b>"
 msgstr "<b>%m</b>"
 
 #: ../src/ui/fma-legend.ui.h:28
-#| msgid "(first) mimetype."
 msgid ": (first) mimetype."
 msgstr ": (прва) миме врста."
 
 #: ../src/ui/fma-legend.ui.h:30
 #, no-c-format
-#| msgid "<b>%M</b> :"
 msgid "<b>%M</b>"
 msgstr "<b>%M</b>"
 
 #: ../src/ui/fma-legend.ui.h:31
-#| msgid ""
-#| "space-separated list of the mimetypes of the selected file(s)/folder(s)."
 msgid ""
 ": space-separated list of the mimetypes of the selected file(s)/folder(s)."
 msgstr ": размаком раздвојени списак миме врста изабране датотеке/фасцикле."
 
 #: ../src/ui/fma-legend.ui.h:33
 #, no-c-format
-#| msgid "<b>%n</b> :"
 msgid "<b>%n</b>"
 msgstr "<b>%n</b>"
 
 #: ../src/ui/fma-legend.ui.h:34
-#| msgid "username of the (first) selected URI."
 msgid ": username of the (first) selected URI."
 msgstr ": корисничко име (прве) изабране путање."
 
 #: ../src/ui/fma-legend.ui.h:36
 #, no-c-format
-#| msgid "<b>%o</b> :"
 msgid "<b>%o</b>"
 msgstr "<b>%o</b>"
 
 #: ../src/ui/fma-legend.ui.h:37
-#| msgid "no-op operator which forces a singular form of execution."
 msgid ": no-op operator which forces a singular form of execution."
 msgstr ": „no-op“ оператор који приморава један облик извршавања."
 
 #: ../src/ui/fma-legend.ui.h:39
 #, no-c-format
-#| msgid "<b>%O</b> :"
 msgid "<b>%O</b>"
 msgstr "<b>%O</b>"
 
 #: ../src/ui/fma-legend.ui.h:40
-#| msgid "no-op operator which forces a plural form of execution."
 msgid ": no-op operator which forces a plural form of execution."
 msgstr ": „no-op“ оператор који приморава више облика извршавања."
 
 #: ../src/ui/fma-legend.ui.h:42
 #, no-c-format
-#| msgid "<b>%p</b> :"
 msgid "<b>%p</b>"
 msgstr "<b>%p</b>"
 
 #: ../src/ui/fma-legend.ui.h:43
-#| msgid "port number of the (first) selected URI."
 msgid ": port number of the (first) selected URI."
 msgstr ": број прикључника (прве) изабране путање."
 
 #: ../src/ui/fma-legend.ui.h:45
 #, no-c-format
-#| msgid "<b>%s</b> :"
 msgid "<b>%s</b>"
 msgstr "<b>%s</b>"
 
 #: ../src/ui/fma-legend.ui.h:46
-#| msgid "scheme of the (first) selected URI."
 msgid ": scheme of the (first) selected URI."
 msgstr ": шема (прве) изабране путање."
 
 #: ../src/ui/fma-legend.ui.h:48
 #, no-c-format
-#| msgid "<b>%u</b> :"
 msgid "<b>%u</b>"
 msgstr "<b>%u</b>"
 
 #: ../src/ui/fma-legend.ui.h:49
-#| msgid "(first) URI."
 msgid ": (first) URI."
 msgstr ": (прва) путања."
 
 #: ../src/ui/fma-legend.ui.h:51
 #, no-c-format
-#| msgid "<b>%U</b> :"
 msgid "<b>%U</b>"
 msgstr "<b>%U</b>"
 
 #: ../src/ui/fma-legend.ui.h:52
-#| msgid "space-separated list of the URIs of the selected file(s)/folder(s)."
 msgid ": space-separated list of the URIs of the selected file(s)/folder(s)."
 msgstr ""
 ": размаком раздвојени списак основних путања изабране датотеке/фасцикле."
 
 #: ../src/ui/fma-legend.ui.h:54
 #, no-c-format
-#| msgid "<b>%w</b> :"
 msgid "<b>%w</b>"
 msgstr "<b>%w</b>"
 
 #: ../src/ui/fma-legend.ui.h:55
-#| msgid "(first) basename without the extension."
 msgid ": (first) basename without the extension."
 msgstr ": (први) основни назив без проширења."
 
 #: ../src/ui/fma-legend.ui.h:57
 #, no-c-format
-#| msgid "<b>%W</b> :"
 msgid "<b>%W</b>"
 msgstr "<b>%W</b>"
 
 #: ../src/ui/fma-legend.ui.h:58
-#| msgid "space-separated list of the basenames without the extension."
 msgid ": space-separated list of the basenames without the extension."
 msgstr ": размаком раздвојени списак основних назива без проширења."
 
 #: ../src/ui/fma-legend.ui.h:60
 #, no-c-format
-#| msgid "<b>%x</b> :"
 msgid "<b>%x</b>"
 msgstr "<b>%x</b>"
 
 #: ../src/ui/fma-legend.ui.h:61
-#| msgid "(first) extension."
 msgid ": (first) extension."
 msgstr ": (прво) проширење."
 
 #: ../src/ui/fma-legend.ui.h:63
 #, no-c-format
-#| msgid "<b>%X</b> :"
 msgid "<b>%X</b>"
 msgstr "<b>%X</b>"
 
 #: ../src/ui/fma-legend.ui.h:64
-#| msgid ""
-#| "space-separated list of the extensions of the selected file(s)/folder(s)."
 msgid ""
 ": space-separated list of the extensions of the selected file(s)/folder(s)."
 msgstr ": размаком раздвојени списак проширења изабране датотеке/фасцикле."
 
 #: ../src/ui/fma-legend.ui.h:66
 #, no-c-format
-#| msgid "<b>%%</b> :"
 msgid "<b>%%</b>"
 msgstr "<b>%%</b>"
 
 #: ../src/ui/fma-legend.ui.h:67
-#| msgid "a percent sign."
 msgid ": a percent sign."
 msgstr ": знак процената."
 
 #: ../src/ui/fma-main-window.c:330
-#| msgid "Current NAObjectItem"
 msgid "Current FMAObjectItem"
 msgstr "Тренутна ставка ФМА објекта"
 
 #: ../src/ui/fma-main-window.c:331
-#| msgid "A pointer to the currently edited NAObjectItem, an action or a menu"
 msgid "A pointer to the currently edited FMAObjectItem, an action or a menu"
 msgstr "Показивач на тренутно уређену ставку ФМА објекта, радње или изборника"
 
 #: ../src/ui/fma-main-window.c:337
-#| msgid "Current NAObjectProfile"
 msgid "Current FMAObjectProfile"
 msgstr "Тренутни профил ФМА објекта"
 
 #: ../src/ui/fma-main-window.c:338
-#| msgid "A pointer to the currently edited NAObjectProfile"
 msgid "A pointer to the currently edited FMAObjectProfile"
 msgstr "Показивач на тренутно уређени профил ФМА објекта"
 
 #: ../src/ui/fma-main-window.c:344
-#| msgid "Current NAIContext"
 msgid "Current FMAIContext"
 msgstr "Тренутни ФМАИ контекст"
 
 #: ../src/ui/fma-main-window.c:345
-#| msgid "A pointer to the currently edited NAIContext"
 msgid "A pointer to the currently edited FMAIContext"
 msgstr "Показивач на тренутно уређени ФМАИ контест"
 
@@ -2442,15 +2578,15 @@ msgid "_Icon :"
 msgstr "_Иконица :"
 
 #: ../src/ui/fma-main-window.ui.h:22
-msgid "_Browse..."
-msgstr "_Разгледај..."
+#| msgid "_Browse..."
+msgid "_Browse…"
+msgstr "_Разгледај…"
 
 #: ../src/ui/fma-main-window.ui.h:23
 msgid "The name of a themed icon or the filename of an image."
 msgstr "Назив темске иконице или назив датотеке слике."
 
 #: ../src/ui/fma-main-window.ui.h:24
-#| msgid "<b>Nautilus Item</b>"
 msgid "<b> Nautilus item </b>"
 msgstr "<b> Ставка Наутислуса </b>"
 
@@ -2467,7 +2603,6 @@ msgid "_Label :"
 msgstr "_Натпис :"
 
 #: ../src/ui/fma-main-window.ui.h:28
-#| msgid "<b>Profile</b>"
 msgid "<b> Profile </b>"
 msgstr "<b> Профил </b>"
 
@@ -2494,35 +2629,38 @@ msgstr ""
 "окружења ПУТАЊЕ у време извршавања бити узета у обзир."
 
 #: ../src/ui/fma-main-window.ui.h:34
+msgid "_Browse..."
+msgstr "_Разгледај..."
+
+#: ../src/ui/fma-main-window.ui.h:35
 msgid "The parameters of the command."
 msgstr "Параметри наредбе."
 
-#: ../src/ui/fma-main-window.ui.h:35
+#: ../src/ui/fma-main-window.ui.h:36
 msgid "Le_gend"
 msgstr "Ле_генда"
 
-#: ../src/ui/fma-main-window.ui.h:36
+#: ../src/ui/fma-main-window.ui.h:37
 msgid "Example"
 msgstr "Пример"
 
-#: ../src/ui/fma-main-window.ui.h:37
+#: ../src/ui/fma-main-window.ui.h:38
 msgid "<small><i>Example</i></small>"
 msgstr "<small><i>Пример</i></small>"
 
-#: ../src/ui/fma-main-window.ui.h:38
+#: ../src/ui/fma-main-window.ui.h:39
 msgid "The default working directory the command should be started in."
 msgstr "Основни радни директоријум у коме наредба треба бити покренута."
 
-#: ../src/ui/fma-main-window.ui.h:39
+#: ../src/ui/fma-main-window.ui.h:40
 msgid "B_rowse..."
 msgstr "_Разгледај..."
 
-#: ../src/ui/fma-main-window.ui.h:40
-#| msgid "<b>Command</b>"
+#: ../src/ui/fma-main-window.ui.h:41
 msgid "<b> Command </b>"
 msgstr "<b> Наредба </b>"
 
-#: ../src/ui/fma-main-window.ui.h:41
+#: ../src/ui/fma-main-window.ui.h:42
 msgid ""
 "This tab lets you choose the command to be executed, along with its "
 "parameters.\n"
@@ -2534,33 +2672,33 @@ msgstr ""
 "Одређивање неколико профила вам допушта да имате неколико наредби, свака "
 "примењена са различитим скупом услова."
 
-#: ../src/ui/fma-main-window.ui.h:43
+#: ../src/ui/fma-main-window.ui.h:44
 msgid "_Command"
 msgstr "_Наредба"
 
-#: ../src/ui/fma-main-window.ui.h:44
+#: ../src/ui/fma-main-window.ui.h:45
 msgid "_Normal"
 msgstr "_Обичан"
 
-#: ../src/ui/fma-main-window.ui.h:45
+#: ../src/ui/fma-main-window.ui.h:46
 msgid "The command will be started as a standard graphical user interface."
 msgstr "Наредба ће бити покренута као уобичајено графичко корисничко сучеље."
 
-#: ../src/ui/fma-main-window.ui.h:46
+#: ../src/ui/fma-main-window.ui.h:47
 msgid "In a _terminal"
 msgstr "У _терминалу"
 
-#: ../src/ui/fma-main-window.ui.h:47
+#: ../src/ui/fma-main-window.ui.h:48
 msgid ""
 "The command will be started in the preferred terminal of the graphical "
 "environment."
 msgstr "Наредба ће бити покренута у жељеном терминалу графичког окружења."
 
-#: ../src/ui/fma-main-window.ui.h:48
+#: ../src/ui/fma-main-window.ui.h:49
 msgid "_Embedded"
 msgstr "_Угнеждена"
 
-#: ../src/ui/fma-main-window.ui.h:49
+#: ../src/ui/fma-main-window.ui.h:50
 msgid ""
 "This option makes use of a special feature of the file manager, which would "
 "allow a terminal to be ran inside of it.\n"
@@ -2570,11 +2708,11 @@ msgstr ""
 "терминалу да буде покренут у њему.\n"
 "Прихватљива замена је покретање у уобичајеном терминалу."
 
-#: ../src/ui/fma-main-window.ui.h:51
+#: ../src/ui/fma-main-window.ui.h:52
 msgid "_Display output"
 msgstr "_Прикажи излаз"
 
-#: ../src/ui/fma-main-window.ui.h:52
+#: ../src/ui/fma-main-window.ui.h:53
 msgid ""
 "The command will be run in a terminal.\n"
 "The terminal will be closed at the end of the execution; standard error and "
@@ -2586,19 +2724,23 @@ msgstr ""
 "излаза ће бити приказани.\n"
 "Прихватљива замена је покретање у уобичајеном терминалу."
 
-#: ../src/ui/fma-main-window.ui.h:55
-#| msgid "<b>Execution mode</b>"
+#: ../src/ui/fma-main-window.ui.h:56
 msgid "<b> Execution mode </b>"
 msgstr "<b> Режим извршавања </b>"
 
-#: ../src/ui/fma-main-window.ui.h:56
+#: ../src/ui/fma-main-window.ui.h:57
 msgid "_Startup notify"
 msgstr "_Обавештење покретања"
 
-#: ../src/ui/fma-main-window.ui.h:57
+#: ../src/ui/fma-main-window.ui.h:58
+#| msgid ""
+#| "When checked, it is known that the run command will send a \"remove\" "
+#| "message to the desktop environment.\n"
+#| "See the Startup Notification Protocol Specification for more details.\n"
+#| "Only relevant when chosen execution mode is Normal."
 msgid ""
-"When checked, it is known that the run command will send a \"remove\" "
-"message to the desktop environment.\n"
+"When checked, it is known that the run command will send a “remove” message "
+"to the desktop environment.\n"
 "See the Startup Notification Protocol Specification for more details.\n"
 "Only relevant when chosen execution mode is Normal."
 msgstr ""
@@ -2607,11 +2749,11 @@ msgstr ""
 "За више појединости погледајте одредницу протокола обавештења покретања.\n"
 "Важи једино када је изабрани режим извршавања обичан."
 
-#: ../src/ui/fma-main-window.ui.h:60
+#: ../src/ui/fma-main-window.ui.h:61
 msgid "Startup Window Manager _class :"
 msgstr "Разред управника прозора _покретања :"
 
-#: ../src/ui/fma-main-window.ui.h:61
+#: ../src/ui/fma-main-window.ui.h:62
 msgid ""
 "When specified, this should be the name of a WM class of at least one window "
 "of the run command.\n"
@@ -2623,16 +2765,15 @@ msgstr ""
 "За више појединости погледајте одредницу протокола обавештења покретања.\n"
 "Важи једино када је изабрани режим извршавања обичан."
 
-#: ../src/ui/fma-main-window.ui.h:64
-#| msgid "<b>Startup mode</b>"
+#: ../src/ui/fma-main-window.ui.h:65
 msgid "<b> Startup mode </b>"
 msgstr "<b> Режим покретања </b>"
 
-#: ../src/ui/fma-main-window.ui.h:65
+#: ../src/ui/fma-main-window.ui.h:66
 msgid "Execute as _user :"
 msgstr "Изврши као _корисник :"
 
-#: ../src/ui/fma-main-window.ui.h:66
+#: ../src/ui/fma-main-window.ui.h:67
 msgid ""
 "Enter here the user the command should be ran as.\n"
 "The user may be defined by his numeric UID or his login name.\n"
@@ -2642,12 +2783,11 @@ msgstr ""
 "Корисник може бити одређен бројем ЈИБ-а или именом за пријављивање.\n"
 "Оставите поље празним да покренете наредбу као текући корисник."
 
-#: ../src/ui/fma-main-window.ui.h:69
-#| msgid "<b>Execute as user</b>"
+#: ../src/ui/fma-main-window.ui.h:70
 msgid "<b> Execute as user </b>"
 msgstr "<b> Изврши као корисник </b>"
 
-#: ../src/ui/fma-main-window.ui.h:70
+#: ../src/ui/fma-main-window.ui.h:71
 msgid ""
 "This advanced tab lets you precisely define how your command will be "
 "executed."
@@ -2655,25 +2795,35 @@ msgstr ""
 "Овај напредни језичак вам допушта да тачно одредите како ће ваша наредба "
 "бити извршена."
 
-#: ../src/ui/fma-main-window.ui.h:71
+#: ../src/ui/fma-main-window.ui.h:72
 msgid "E_xecution"
 msgstr "_Извршавање"
 
-#: ../src/ui/fma-main-window.ui.h:72
+#: ../src/ui/fma-main-window.ui.h:73
+#| msgid ""
+#| "The current item will appear if the basename of each element of the "
+#| "selection matches one filter of the 'Must match one of' column, while not "
+#| "matching any of the filters of the 'Must not match any of' column."
 msgid ""
 "The current item will appear if the basename of each element of the "
-"selection matches one filter of the 'Must match one of' column, while not "
-"matching any of the filters of the 'Must not match any of' column."
+"selection matches one filter of the “Must match one of” column, while not "
+"matching any of the filters of the “Must not match any of” column."
 msgstr ""
 "Текућа ставка ће се појавити ако основни назив сваког елемента избора "
 "одговара једном пропуснику колоне „Мора да одговара једном“, док не одговара "
 "ни једном пропуснику колоне „Не мора да одговара ни једном“."
 
-#: ../src/ui/fma-main-window.ui.h:73
+#: ../src/ui/fma-main-window.ui.h:74
+#| msgid ""
+#| "This list lets you determine for which basenames the currently selected "
+#| "item will be displayed in the Nautilus context menu.\n"
+#| "Basenames may use '*' and '?' wildcards.\n"
+#| "Basenames may be negated to specify for which basenames your item must "
+#| "not appear."
 msgid ""
 "This list lets you determine for which basenames the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
-"Basenames may use '*' and '?' wildcards.\n"
+"Basenames may use “*” and “?” wildcards.\n"
 "Basenames may be negated to specify for which basenames your item must not "
 "appear."
 msgstr ""
@@ -2683,28 +2833,27 @@ msgstr ""
 "Основни називи могу бити негирани да одреде за које основне називе ваша "
 "ставка не сме да се појави."
 
-#: ../src/ui/fma-main-window.ui.h:76
+#: ../src/ui/fma-main-window.ui.h:77
 msgid "Click to add a new basename filter."
 msgstr "Кликните да додате нови пропусник основног назива."
 
-#: ../src/ui/fma-main-window.ui.h:77
+#: ../src/ui/fma-main-window.ui.h:78
 msgid "Click to remove the current basename filter."
 msgstr "Кликните да уклоните текући пропусник основног назива."
 
-#: ../src/ui/fma-main-window.ui.h:78
+#: ../src/ui/fma-main-window.ui.h:79
 msgid "Match _case"
 msgstr "Упореди величину _слова"
 
-#: ../src/ui/fma-main-window.ui.h:79
+#: ../src/ui/fma-main-window.ui.h:80
 msgid "Click to define the above basename filters as case sensitive."
 msgstr "Кликните да одредите да горњи основни назив разликује величину слова."
 
-#: ../src/ui/fma-main-window.ui.h:80
-#| msgid "<b>Basenames conditions</b>"
+#: ../src/ui/fma-main-window.ui.h:81
 msgid "<b> Basenames conditions </b>"
 msgstr "<b> Услови основних назива </b>"
 
-#: ../src/ui/fma-main-window.ui.h:81
+#: ../src/ui/fma-main-window.ui.h:82
 msgid ""
 "This tab lets you determine for which basenames the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -2716,25 +2865,35 @@ msgstr ""
 "Основни називи могу бити негирани да одреде за које основне називе ваша "
 "ставка не сме да се појави."
 
-#: ../src/ui/fma-main-window.ui.h:83
+#: ../src/ui/fma-main-window.ui.h:84
 msgid "_Basenames"
 msgstr "_Основни називи"
 
-#: ../src/ui/fma-main-window.ui.h:84
+#: ../src/ui/fma-main-window.ui.h:85
+#| msgid ""
+#| "The current item will appear if the mimetype of each element of the "
+#| "selection matches one filter of the 'Must match one of' column, while not "
+#| "matching any of the filters of the 'Must not match any of' column."
 msgid ""
 "The current item will appear if the mimetype of each element of the "
-"selection matches one filter of the 'Must match one of' column, while not "
-"matching any of the filters of the 'Must not match any of' column."
+"selection matches one filter of the “Must match one of” column, while not "
+"matching any of the filters of the “Must not match any of” column."
 msgstr ""
 "Текућа ставка ће се појавити ако миме врста сваког елемента избора одговара "
 "једном пропуснику колоне „Мора да одговара једном“, док не одговара ни "
 "једном пропуснику колоне „Не мора да одговара ни једном“."
 
-#: ../src/ui/fma-main-window.ui.h:85
+#: ../src/ui/fma-main-window.ui.h:86
+#| msgid ""
+#| "This list lets you determine for which mimetypes the currently selected "
+#| "item will be displayed in the Nautilus context menu.\n"
+#| "Mimetypes may be specified as '*', '*/*', 'group/*' or 'group/subgroup'.\n"
+#| "Mimetypes may be negated to specify for which type of objects your item "
+#| "must not appear."
 msgid ""
 "This list lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
-"Mimetypes may be specified as '*', '*/*', 'group/*' or 'group/subgroup'.\n"
+"Mimetypes may be specified as “*”, “*/*”, “group/*” or “group/subgroup”.\n"
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
@@ -2744,24 +2903,29 @@ msgstr ""
 "Миме врсте могу бити негиране да одреде за које миме врсте ваша ставка не "
 "сме да се појави."
 
-#: ../src/ui/fma-main-window.ui.h:88
+#: ../src/ui/fma-main-window.ui.h:89
 msgid "Click to add a new mimetype filter."
 msgstr "Кликните да додате нови пропусник миме врсте."
 
-#: ../src/ui/fma-main-window.ui.h:89
+#: ../src/ui/fma-main-window.ui.h:90
 msgid "Click to remove the current mimetype filter."
 msgstr "Кликните да уклоните текући пропусник миме врсте."
 
-#: ../src/ui/fma-main-window.ui.h:90
-#| msgid "<b>Mimetypes conditions</b>"
+#: ../src/ui/fma-main-window.ui.h:91
 msgid "<b> Mimetypes conditions </b>"
 msgstr "<b> Услови миме врста </b>"
 
-#: ../src/ui/fma-main-window.ui.h:91
+#: ../src/ui/fma-main-window.ui.h:92
+#| msgid ""
+#| "This tab lets you determine for which mimetypes the currently selected "
+#| "item will be displayed in the Nautilus context menu.\n"
+#| "Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
+#| "Mimetypes may be negated to specify for which type of objects your item "
+#| "must not appear."
 msgid ""
 "This tab lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
-"Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
+"Mimetypes may be specified as “*”, “/*”, “group/*” or “group/subgroup”.\n"
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
@@ -2771,27 +2935,39 @@ msgstr ""
 "Миме врсте могу бити негиране да одреде за које миме врсте ваша ставка не "
 "сме да се појави."
 
-#: ../src/ui/fma-main-window.ui.h:94
+#: ../src/ui/fma-main-window.ui.h:95
 msgid "_Mimetypes"
 msgstr "_Миме врсте"
 
-#: ../src/ui/fma-main-window.ui.h:95
+#: ../src/ui/fma-main-window.ui.h:96
+#| msgid ""
+#| "The current item will appear if the location of each element of the "
+#| "selection is one or inside one of the paths of the 'Must match one of' "
+#| "column, while not being one or inside one of the 'Must not match any of' "
+#| "column."
 msgid ""
 "The current item will appear if the location of each element of the "
-"selection is one or inside one of the paths of the 'Must match one of' "
-"column, while not being one or inside one of the 'Must not match any of' "
+"selection is one or inside one of the paths of the “Must match one of” "
+"column, while not being one or inside one of the “Must not match any of” "
 "column."
 msgstr ""
 "Текућа ставка ће се појавити ако место сваког елемента избора је једна или у "
 "једној од путања колоне „Мора да одговара једном“, док не одговара ни једном "
 "пропуснику колоне „Не мора да одговара ни једном“."
 
-#: ../src/ui/fma-main-window.ui.h:96
+#: ../src/ui/fma-main-window.ui.h:97
+#| msgid ""
+#| "This list lets you determine where (in which folders) the currently "
+#| "selected files must be found in order for the item to be displayed in the "
+#| "Nautilus context menu.\n"
+#| "Folders may use '*' or '?' wildcards.\n"
+#| "Folder filters may be negated to specify for which folders your item must "
+#| "not appear."
 msgid ""
 "This list lets you determine where (in which folders) the currently selected "
 "files must be found in order for the item to be displayed in the Nautilus "
 "context menu.\n"
-"Folders may use '*' or '?' wildcards.\n"
+"Folders may use “*” or “?” wildcards.\n"
 "Folder filters may be negated to specify for which folders your item must "
 "not appear."
 msgstr ""
@@ -2802,26 +2978,25 @@ msgstr ""
 "Пропусници фасцикли могу бити негирани да одреде за које фасцикле ваша "
 "ставка не сме да се појави."
 
-#: ../src/ui/fma-main-window.ui.h:99
+#: ../src/ui/fma-main-window.ui.h:100
 msgid "Click to add a new folder filter."
 msgstr "Кликните да додате нови пропусник фасцикле."
 
-#: ../src/ui/fma-main-window.ui.h:100
+#: ../src/ui/fma-main-window.ui.h:101
 msgid "Click to browse the filesystem in order to select a new folder filter."
 msgstr ""
 "Кликните да разгледате систем датотека да бисте изабрали нови пропусник "
 "фасцикле."
 
-#: ../src/ui/fma-main-window.ui.h:101
+#: ../src/ui/fma-main-window.ui.h:102
 msgid "Click to remove the current folder filter."
 msgstr "Кликните да уклоните текући пропусник фасцикле."
 
-#: ../src/ui/fma-main-window.ui.h:102
-#| msgid "<b>Folders conditions</b>"
+#: ../src/ui/fma-main-window.ui.h:103
 msgid "<b> Folders conditions </b>"
 msgstr "<b> Услови фасцикле </b>"
 
-#: ../src/ui/fma-main-window.ui.h:103
+#: ../src/ui/fma-main-window.ui.h:104
 msgid ""
 "This tab lets you determine where (in which folders) the currently selected "
 "files must be found in order for the item to be displayed in the Nautilus "
@@ -2835,21 +3010,25 @@ msgstr ""
 "Пропусници фасцикли могу бити негирани да одреде за које фасцикле ваша "
 "ставка не сме да се појави."
 
-#: ../src/ui/fma-main-window.ui.h:105
+#: ../src/ui/fma-main-window.ui.h:106
 msgid "_Folders"
 msgstr "_Фасцикле"
 
-#: ../src/ui/fma-main-window.ui.h:106
+#: ../src/ui/fma-main-window.ui.h:107
+#| msgid ""
+#| "The current item will appear if the scheme of each element of the "
+#| "selection matches one of the 'Must match one of' column, while not "
+#| "matching any of the 'Must not match any of' column."
 msgid ""
 "The current item will appear if the scheme of each element of the selection "
-"matches one of the 'Must match one of' column, while not matching any of the "
-"'Must not match any of' column."
+"matches one of the “Must match one of” column, while not matching any of the "
+"“Must not match any of” column."
 msgstr ""
 "Текућа ставка ће се појавити ако шема сваког елемента избора одговара једној "
 "од колона „Мора да одговара једном“, док не одговара ни једној од колона „Не "
 "мора да одговара ни једном“."
 
-#: ../src/ui/fma-main-window.ui.h:107
+#: ../src/ui/fma-main-window.ui.h:108
 msgid ""
 "This list lets you determine which schemes the currently selected files must "
 "satisfy in order for the item to be displayed in the Nautilus context menu.\n"
@@ -2862,28 +3041,28 @@ msgstr ""
 "Пропусници могу бити негирани да одреде за које шеме ваша ставка не сме да "
 "се појави."
 
-#: ../src/ui/fma-main-window.ui.h:109
+#: ../src/ui/fma-main-window.ui.h:110
 msgid "Click to add a new scheme filter."
 msgstr "Кликните да додате нови пропусник шеме."
 
-#: ../src/ui/fma-main-window.ui.h:110
-msgid "De_faults..."
-msgstr "_Основно..."
-
 #: ../src/ui/fma-main-window.ui.h:111
+#| msgid "De_faults..."
+msgid "De_faults…"
+msgstr "_Основно…"
+
+#: ../src/ui/fma-main-window.ui.h:112
 msgid "Click to select a new scheme filter among default schemes."
 msgstr "Кликните да изаберете нови пропусник шеме поред основних шема."
 
-#: ../src/ui/fma-main-window.ui.h:112
+#: ../src/ui/fma-main-window.ui.h:113
 msgid "Click to remove the current scheme filter."
 msgstr "Кликните да уклоните текући пропусник шеме."
 
-#: ../src/ui/fma-main-window.ui.h:113
-#| msgid "<b>Schemes conditions</b>"
+#: ../src/ui/fma-main-window.ui.h:114
 msgid "<b> Schemes conditions </b>"
 msgstr "<b> Услови шема </b>"
 
-#: ../src/ui/fma-main-window.ui.h:114
+#: ../src/ui/fma-main-window.ui.h:115
 msgid ""
 "This tab lets you determine which schemes the currently selected files must "
 "satisfy in order for the item to be displayed in the Nautilus context menu.\n"
@@ -2896,21 +3075,25 @@ msgstr ""
 "Пропусници могу бити негирани да одреде за које шеме ваша ставка не сме да "
 "се појави."
 
-#: ../src/ui/fma-main-window.ui.h:116 ../src/ui/fma-preferences.ui.h:59
+#: ../src/ui/fma-main-window.ui.h:117 ../src/ui/fma-preferences.ui.h:59
 msgid "_Schemes"
 msgstr "_Шеме"
 
-#: ../src/ui/fma-main-window.ui.h:117
+#: ../src/ui/fma-main-window.ui.h:118
+#| msgid ""
+#| "The current item will appear if each element of the selection matches all "
+#| "capabilities of the 'Must match all of' column, while not matching any "
+#| "capability of the 'Must not match any of' column."
 msgid ""
 "The current item will appear if each element of the selection matches all "
-"capabilities of the 'Must match all of' column, while not matching any "
-"capability of the 'Must not match any of' column."
+"capabilities of the “Must match all of” column, while not matching any "
+"capability of the “Must not match any of” column."
 msgstr ""
 "Текућа ставка ће се појавити ако сваки елемент избора одговара свим "
 "могућностима колоне „Мора да одговара свим“, док не одговара ни једној "
 "могућности колоне „Не мора да одговара ни једном“."
 
-#: ../src/ui/fma-main-window.ui.h:118
+#: ../src/ui/fma-main-window.ui.h:119
 msgid ""
 "This list lets you determine which capabilities the currently selected files "
 "must satisfy in order for the item to be displayed in the Nautilus context "
@@ -2924,20 +3107,19 @@ msgstr ""
 "Могућности могу бити негиране да одреде за које могућности ваша ставка не "
 "сме да се појави."
 
-#: ../src/ui/fma-main-window.ui.h:120
+#: ../src/ui/fma-main-window.ui.h:121
 msgid "Click to add a new capability filter."
 msgstr "Кликните да додате нови пропусник могућности."
 
-#: ../src/ui/fma-main-window.ui.h:121
+#: ../src/ui/fma-main-window.ui.h:122
 msgid "Click to remove the current capability."
 msgstr "Кликните да уклоните текућу могућност."
 
-#: ../src/ui/fma-main-window.ui.h:122
-#| msgid "<b>Capabilities conditions</b>"
+#: ../src/ui/fma-main-window.ui.h:123
 msgid "<b> Capabilities conditions </b>"
 msgstr "<b> Услови могућности </b>"
 
-#: ../src/ui/fma-main-window.ui.h:123
+#: ../src/ui/fma-main-window.ui.h:124
 msgid ""
 "This tab lets you determine which capabilities the currently selected files "
 "must satisfy in order for the item to be displayed in the Nautilus context "
@@ -2951,61 +3133,61 @@ msgstr ""
 "Пропусници могу бити негирани да одреде за које могућности ваша ставка не "
 "сме да се појави."
 
-#: ../src/ui/fma-main-window.ui.h:125
+#: ../src/ui/fma-main-window.ui.h:126
 msgid "Ca_pabilities"
 msgstr "Мо_гућности"
 
-#: ../src/ui/fma-main-window.ui.h:126
+#: ../src/ui/fma-main-window.ui.h:127
 msgid "_Count :"
 msgstr "_Број :"
 
-#: ../src/ui/fma-main-window.ui.h:127
-#| msgid "<b>Appears if selection contains</b>"
+#: ../src/ui/fma-main-window.ui.h:128
 msgid "<b> Appears if selection contains </b>"
 msgstr "<b> Приказује се ако избор садржи </b>"
 
-#: ../src/ui/fma-main-window.ui.h:128
+#: ../src/ui/fma-main-window.ui.h:129
 msgid "Item may appear depending of the desktop environment."
 msgstr "Ставка може да се појави у зависности од окружења радне површи."
 
-#: ../src/ui/fma-main-window.ui.h:129
+#: ../src/ui/fma-main-window.ui.h:130
 msgid "_Always appears"
 msgstr "_Увек се појављује"
 
-#: ../src/ui/fma-main-window.ui.h:130
+#: ../src/ui/fma-main-window.ui.h:131
 msgid "_Only appears in selected environments"
 msgstr "_Појављује се само у изабраним окружењима"
 
-#: ../src/ui/fma-main-window.ui.h:131
+#: ../src/ui/fma-main-window.ui.h:132
 msgid "_Never appears in selected environments"
 msgstr "_Никада се не појављује у изабраним окружењима"
 
-#: ../src/ui/fma-main-window.ui.h:132
-#| msgid "<b>Desktop environment</b>"
+#: ../src/ui/fma-main-window.ui.h:133
 msgid "<b> Desktop environment </b>"
 msgstr "<b> Окружење радне површи </b>"
 
-#: ../src/ui/fma-main-window.ui.h:133
+#: ../src/ui/fma-main-window.ui.h:134
 msgid "Appears if the file is e_xecutable :"
 msgstr "Појављује се ако је датотека _извршна :"
 
-#: ../src/ui/fma-main-window.ui.h:134
+#: ../src/ui/fma-main-window.ui.h:135
 msgid "Appears if the name is _registered on D-Bus :"
 msgstr "Појављује се ако је назив _забележен на Д-сабирници :"
 
-#: ../src/ui/fma-main-window.ui.h:135
-msgid "Appears if the command outputs \"_true\" :"
+#: ../src/ui/fma-main-window.ui.h:136
+#| msgid "Appears if the command outputs \"_true\" :"
+msgid "Appears if the command outputs “_true” :"
 msgstr "Појављује се ако наредба исписује „_true“ (изабрано) :"
 
-#: ../src/ui/fma-main-window.ui.h:136
+#: ../src/ui/fma-main-window.ui.h:137
 msgid "Appears if the _binary is running :"
 msgstr "Појављује се ако је покренут _извршни :"
 
-#: ../src/ui/fma-main-window.ui.h:137
-msgid "Bro_wse..."
-msgstr "Разг_ледај..."
-
 #: ../src/ui/fma-main-window.ui.h:138
+#| msgid "Bro_wse..."
+msgid "Bro_wse…"
+msgstr "Разг_ледај…"
+
+#: ../src/ui/fma-main-window.ui.h:139
 msgid ""
 "This is an advanced condition based on the presence of an executable file on "
 "the file system.\n"
@@ -3015,7 +3197,7 @@ msgstr ""
 "датотека.\n"
 "Ово може бити коришћено на пример за испробавањем неопходних пакета."
 
-#: ../src/ui/fma-main-window.ui.h:140
+#: ../src/ui/fma-main-window.ui.h:141
 msgid ""
 "This is an advanced condition based on the presence of a particular service "
 "on the D-Bus system.\n"
@@ -3027,11 +3209,16 @@ msgstr ""
 "Ово може бити коришћено на пример за испробавање да је услуга предуслова "
 "тренутно доступна."
 
-#: ../src/ui/fma-main-window.ui.h:142
+#: ../src/ui/fma-main-window.ui.h:143
+#| msgid ""
+#| "This is an advanced condition based on a runtime result.\n"
+#| "Enter here a command which is able to display the exact \"true\" string "
+#| "on its standard output.\n"
+#| "This may be used for example for testing a complex condition."
 msgid ""
 "This is an advanced condition based on a runtime result.\n"
-"Enter here a command which is able to display the exact \"true\" string on "
-"its standard output.\n"
+"Enter here a command which is able to display the exact “true” string on its "
+"standard output.\n"
 "This may be used for example for testing a complex condition."
 msgstr ""
 "Ово је напредан услов заснован на резултатима времена покретања.\n"
@@ -3039,11 +3226,12 @@ msgstr ""
 "свом стандардном излазу.\n"
 "Ово може бити коришћено на пример за испробавање сложеног услова."
 
-#: ../src/ui/fma-main-window.ui.h:145
-msgid "Brow_se..."
-msgstr "_Разгледај..."
-
 #: ../src/ui/fma-main-window.ui.h:146
+#| msgid "Brow_se..."
+msgid "Brow_se…"
+msgstr "_Разгледај…"
+
+#: ../src/ui/fma-main-window.ui.h:147
 msgid ""
 "This is an advanced condition based on the presence of a running binary.\n"
 "Note that only the basename of the binary is checked, not its dirname nor "
@@ -3057,12 +3245,11 @@ msgstr ""
 "Ово може бити коришћено на пример за испробавање присуства услужника "
 "предуслова."
 
-#: ../src/ui/fma-main-window.ui.h:149
-#| msgid "<b>Execution environment</b>"
+#: ../src/ui/fma-main-window.ui.h:150
 msgid "<b> Execution environment </b>"
 msgstr "<b> Окружење извршавања </b>"
 
-#: ../src/ui/fma-main-window.ui.h:150
+#: ../src/ui/fma-main-window.ui.h:151
 msgid ""
 "This tab lets you determine some advanced conditions the currently selected "
 "files must satisfy in order for the item to be displayed in the file manager "
@@ -3072,15 +3259,15 @@ msgstr ""
 "изабране датотеке морају да задовоље да би ставка била приказана у приручном "
 "изборнику управника датотека."
 
-#: ../src/ui/fma-main-window.ui.h:151
+#: ../src/ui/fma-main-window.ui.h:152
 msgid "_Environment"
 msgstr "_Окружење"
 
-#: ../src/ui/fma-main-window.ui.h:152
+#: ../src/ui/fma-main-window.ui.h:153
 msgid "E_nabled"
 msgstr "_Укључено"
 
-#: ../src/ui/fma-main-window.ui.h:153
+#: ../src/ui/fma-main-window.ui.h:154
 msgid ""
 "Check the box to enable this item.\n"
 "If unchecked, then the item will never appear in the file manager context "
@@ -3090,11 +3277,11 @@ msgstr ""
 "Ако није изабрано, тада се ставка никада неће појавити у приручном изборнику "
 "управника датотека или на траци алата."
 
-#: ../src/ui/fma-main-window.ui.h:155
+#: ../src/ui/fma-main-window.ui.h:156
 msgid "_Description :"
 msgstr "_Опис :"
 
-#: ../src/ui/fma-main-window.ui.h:156
+#: ../src/ui/fma-main-window.ui.h:157
 msgid ""
 "Enter here a free text which may be used (e.g. in a Web service or in a "
 "search tool) to describe your item."
@@ -3102,15 +3289,11 @@ msgstr ""
 "Овде унесите слободан текст који може бити коришћен (нпр. у Веб услузи или у "
 "алату претраге) да опише вашу ставку."
 
-#: ../src/ui/fma-main-window.ui.h:157
+#: ../src/ui/fma-main-window.ui.h:158
 msgid "Suggested _shortcut :"
 msgstr "Предложена _пречица :"
 
-#: ../src/ui/fma-main-window.ui.h:159
-#| msgid ""
-#| "Enter here the keyboard touch combination you suggest as a shortcut to "
-#| "your action.\n"
-#| "Note: this is not yet implemented in Nautilus-Actions."
+#: ../src/ui/fma-main-window.ui.h:160
 msgid ""
 "Enter here the keyboard touch combination you suggest as a shortcut to your "
 "action.\n"
@@ -3120,39 +3303,41 @@ msgstr ""
 "радњу.\n"
 "Напомена: ово још није примењено у радњама Управника датотека."
 
-#: ../src/ui/fma-main-window.ui.h:161
-#| msgid "<b>Action editable properties</b>"
+#: ../src/ui/fma-main-window.ui.h:162
 msgid "<b> Action editable properties </b>"
 msgstr "<b> Уредљива својства радње </b>"
 
-#: ../src/ui/fma-main-window.ui.h:162
+#: ../src/ui/fma-main-window.ui.h:163
 msgid "Read-only item"
 msgstr "Ставка само за читање"
 
-#: ../src/ui/fma-main-window.ui.h:163
+#: ../src/ui/fma-main-window.ui.h:164
+#| msgid ""
+#| "This box is checked if the item cannot be edited.\n"
+#| "There may be multiple reasons for why an item cannot be edited. See your "
+#| "User's Manual."
 msgid ""
 "This box is checked if the item cannot be edited.\n"
 "There may be multiple reasons for why an item cannot be edited. See your "
-"User's Manual."
+"User’s Manual."
 msgstr ""
 "Овај квадратић је означен ако ставка не може бити уређивана.\n"
 "Може постојати више разлога због чега нека ставка не може бити уређивана. "
 "Погледајте ваше корисничко упутство."
 
-#: ../src/ui/fma-main-window.ui.h:165
+#: ../src/ui/fma-main-window.ui.h:166
 msgid "Id. :"
 msgstr "Иб. :"
 
-#: ../src/ui/fma-main-window.ui.h:166
+#: ../src/ui/fma-main-window.ui.h:167
 msgid "I/O provider :"
 msgstr "У/И достављач :"
 
-#: ../src/ui/fma-main-window.ui.h:167
-#| msgid "<b>Read-only properties</b>"
+#: ../src/ui/fma-main-window.ui.h:168
 msgid "<b> Read-only properties </b>"
 msgstr "<b> Својства само за читање </b>"
 
-#: ../src/ui/fma-main-window.ui.h:168
+#: ../src/ui/fma-main-window.ui.h:169
 msgid ""
 "This tab lets you edit some miscellaneous properties, and access some non-"
 "modifiable information."
@@ -3160,7 +3345,7 @@ msgstr ""
 "Овај језичак вам допушта да уредите нека разноврсна својства, и да "
 "приступите неким неизменљивим подацима."
 
-#: ../src/ui/fma-main-window.ui.h:169
+#: ../src/ui/fma-main-window.ui.h:170
 msgid "P_roperties"
 msgstr "_Својства"
 
@@ -3179,8 +3364,11 @@ msgstr "Не мора да одговара ни једном"
 
 #: ../src/ui/fma-match-list.c:479
 #, c-format
+#| msgid ""
+#| "'%s' filter already exists in the list.\n"
+#| "Please provide another one."
 msgid ""
-"'%s' filter already exists in the list.\n"
+"“%s” filter already exists in the list.\n"
 "Please provide another one."
 msgstr ""
 "„%s“ пропусник већ постоји на списку.\n"
@@ -3191,79 +3379,79 @@ msgstr ""
 msgid "new-filter"
 msgstr "нови-пропусник"
 
-#. i18n: status bar tooltip displayed on 'About' item navigation
+#. i18n: status bar tooltip displayed on “About” item navigation
 #: ../src/ui/fma-menu.c:97 ../src/ui/fma-toolbar.ui.h:21
 msgid "Display informations about this program"
 msgstr "Прикажите податке о програму"
 
-#. i18n: status bar tooltip displayed on 'Help' item navigation
+#. i18n: status bar tooltip displayed on “Help” item navigation
 #: ../src/ui/fma-menu.c:100 ../src/ui/fma-toolbar.ui.h:19
 msgid "Display help about this program"
 msgstr "Прикажите помоћ за овај програм"
 
-#. i18n: status bar tooltip displayed on 'Preferences' item navigation
+#. i18n: status bar tooltip displayed on “Preferences” item navigation
 #: ../src/ui/fma-menu.c:103 ../src/ui/fma-toolbar.ui.h:11
 msgid "Edit your preferences"
 msgstr "Уредите ваше поставке"
 
-#. i18n: status bar tooltip displayed on 'Quit' item navigation
+#. i18n: status bar tooltip displayed on “Quit” item navigation
 #: ../src/ui/fma-menu.c:106 ../src/ui/fma-toolbar.ui.h:17
 msgid "Quit the application"
 msgstr "Изађите из програма"
 
-#. i18n: status bar tooltip displayed on 'New menu' item navigation
+#. i18n: status bar tooltip displayed on “New menu” item navigation
 #: ../src/ui/fma-menu.c:112
 msgid "Insert a new menu at the current position"
 msgstr "Уметните нови изборник на текући положај"
 
-#. i18n: status bar tooltip displayed on 'New action' item navigation
+#. i18n: status bar tooltip displayed on “New action” item navigation
 #: ../src/ui/fma-menu.c:115 ../src/ui/fma-toolbar.ui.h:13
 msgid "Define a new action"
 msgstr "Одредите нову радњу"
 
-#. i18n: status bar tooltip displayed on 'New profile' item navigation
+#. i18n: status bar tooltip displayed on “New profile” item navigation
 #: ../src/ui/fma-menu.c:118
 msgid "Define a new profile attached to the current action"
 msgstr "Одредите нови профил приложен уз тренутну радњу"
 
-#. i18n: status bar tooltip displayed on 'Save' item navigation
+#. i18n: status bar tooltip displayed on “Save” item navigation
 #: ../src/ui/fma-menu.c:121
 msgid ""
 "Record all the modified actions. Invalid actions will be silently ignored"
 msgstr ""
 "Сачувајте све измењене радње. Неисправне радње ће бити неприметно занемарене"
 
-#. i18n: status bar tooltip displayed on 'Cut' item navigation
+#. i18n: status bar tooltip displayed on “Cut” item navigation
 #: ../src/ui/fma-menu.c:124 ../src/ui/fma-toolbar.ui.h:1
 msgid "Cut the selected item(s) to the clipboard"
 msgstr "Исеците изабрану ставку у оставу"
 
-#. i18n: status bar tooltip displayed on 'Copy' item navigation
+#. i18n: status bar tooltip displayed on “Copy” item navigation
 #: ../src/ui/fma-menu.c:127 ../src/ui/fma-toolbar.ui.h:3
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "Умножите изабрану ставку у оставу"
 
-#. i18n: status bar tooltip displayed on 'Paste' item navigation
+#. i18n: status bar tooltip displayed on “Paste” item navigation
 #: ../src/ui/fma-menu.c:130 ../src/ui/fma-toolbar.ui.h:5
 msgid "Insert the content of the clipboard just before the current position"
 msgstr "Уметните садржај оставе одмах након текућег положаја"
 
-#. i18n: status bar tooltip displayed on 'Paste into' item navigation
+#. i18n: status bar tooltip displayed on “Paste into” item navigation
 #: ../src/ui/fma-menu.c:133
 msgid "Insert the content of the clipboard as first child of the current item"
 msgstr "Уметните садржај оставе као први пород текуће ставке"
 
-#. i18n: status bar tooltip displayed on 'Duplicate' item navigation
+#. i18n: status bar tooltip displayed on “Duplicate” item navigation
 #: ../src/ui/fma-menu.c:136
 msgid "Duplicate the selected item(s)"
 msgstr "Удвостручите изабрану ставку"
 
-#. i18n: status bar tooltip displayed on 'Delete' item navigation
+#. i18n: status bar tooltip displayed on “Delete” item navigation
 #: ../src/ui/fma-menu.c:139 ../src/ui/fma-toolbar.ui.h:7
 msgid "Delete the selected item(s)"
 msgstr "Обришите изабрану ставку"
 
-#. i18n: status bar tooltip displayed on 'Reload items' item navigation
+#. i18n: status bar tooltip displayed on “Reload items” item navigation
 #: ../src/ui/fma-menu.c:142 ../src/ui/fma-toolbar.ui.h:9
 msgid ""
 "Cancel your current modifications and reload the initial list of menus and "
@@ -3272,47 +3460,47 @@ msgstr ""
 "Откажите ваше тренутне измене и поново учитајте почетни списак изборника и "
 "радњи"
 
-#. i18n: status bar tooltip displayed on 'Expand all' item navigation
+#. i18n: status bar tooltip displayed on “Expand all” item navigation
 #: ../src/ui/fma-menu.c:145
 msgid "Entirely expand the items hierarchy"
 msgstr "Потпуно раширите хијерархију ставки"
 
-#. i18n: status bar tooltip displayed on 'Collapse all' item navigation
+#. i18n: status bar tooltip displayed on “Collapse all” item navigation
 #: ../src/ui/fma-menu.c:148
 msgid "Entirely collapse the items hierarchy"
 msgstr "Потпуно скупите хијерархију ставки"
 
-#. i18n: status bar tooltip displayed on 'Toolbars/File' item navigation
+#. i18n: status bar tooltip displayed on “Toolbars/File” item navigation
 #: ../src/ui/fma-menu.c:151
 msgid "Display the File toolbar"
 msgstr "Прикажите траку алата датотеке"
 
-#. i18n: status bar tooltip displayed on 'Toolbars/Edit' item navigation
+#. i18n: status bar tooltip displayed on “Toolbars/Edit” item navigation
 #: ../src/ui/fma-menu.c:154
 msgid "Display the Edit toolbar"
 msgstr "Прикажите траку алата уређивања"
 
-#. i18n: status bar tooltip displayed on 'Toolbars/Tools' item navigation
+#. i18n: status bar tooltip displayed on “Toolbars/Tools” item navigation
 #: ../src/ui/fma-menu.c:157
 msgid "Display the Tools toolbar"
 msgstr "Прикажите траку алата"
 
-#. i18n: status bar tooltip displayed on 'Toolbars/Help' item navigation
+#. i18n: status bar tooltip displayed on “Toolbars/Help” item navigation
 #: ../src/ui/fma-menu.c:160
 msgid "Display the Help toolbar"
 msgstr "Прикажите траку алата помоћи"
 
-#. i18n: status bar tooltip displayed on 'Notebook labels' items navigation
+#. i18n: status bar tooltip displayed on “Notebook labels” items navigation
 #: ../src/ui/fma-menu.c:163
 msgid "Switch the position of the notebook tabs"
 msgstr "Промените положај језичака бележнице"
 
-#. i18n: status bar tooltip displayed on 'Import' item navigation
+#. i18n: status bar tooltip displayed on “Import” item navigation
 #: ../src/ui/fma-menu.c:166 ../src/ui/fma-toolbar.ui.h:23
 msgid "Import one or more actions from external files into your configuration"
 msgstr "Увезите једну или више радњи из спољних датотека у ваша подешавања"
 
-#. i18n: status bar tooltip displayed on 'Export' item navigation
+#. i18n: status bar tooltip displayed on “Export” item navigation
 #: ../src/ui/fma-menu.c:169
 msgid "Export one or more actions from your configuration to external files"
 msgstr "Извезите једну или више радњи из ваших подешавања у спољну датотеку"
@@ -3355,11 +3543,11 @@ msgid "New profile"
 msgstr "Нови профил"
 
 #: ../src/ui/fma-menu-file.c:435
-msgid "Automatically saving pending modifications..."
-msgstr "Сам чувам измене на чекању..."
+#| msgid "Automatically saving pending modifications..."
+msgid "Automatically saving pending modifications…"
+msgstr "Сам чувам измене на чекању…"
 
 #: ../src/ui/fma-preferences.ui.h:1
-#| msgid "Nautilus-Actions Preferences"
 msgid "FileManager-Actions Preferences"
 msgstr "Поставке радњи Управника датотека"
 
@@ -3368,10 +3556,6 @@ msgid "_Ascending alphabetical order"
 msgstr "_Растући азбучни редослед"
 
 #: ../src/ui/fma-preferences.ui.h:3
-#| msgid ""
-#| "Menus and actions will be displayed in the ascending alphabetical order "
-#| "of their label, both in the Nautilus context menu and in the NACT user "
-#| "interface."
 msgid ""
 "Menus and actions will be displayed in the ascending alphabetical order of "
 "their label, both in the Nautilus context menu and in the fma-config-tool "
@@ -3385,27 +3569,20 @@ msgid "_Descending alphabetical order"
 msgstr "_Опадајући азбучни редослед"
 
 #: ../src/ui/fma-preferences.ui.h:5
-#| msgid ""
-#| "Menus and actions will be displayed in the descending alphabetical order "
-#| "of their label, both in the Nautilus context menu and in the NACT user "
-#| "interface."
 msgid ""
 "Menus and actions will be displayed in the descending alphabetical order of "
 "their label, both in the Nautilus context menu and in the fma-config-tool "
 "user interface."
 msgstr ""
 "Изборници и радње биће приказани опадајућим азбучним редом њихових натписа, "
-"у Наутилусовом приручном изборнику и у корисничком сучељу "
-"алата-фма-подешавања."
+"у Наутилусовом приручном изборнику и у корисничком сучељу алата-фма-"
+"подешавања."
 
 #: ../src/ui/fma-preferences.ui.h:6
 msgid "_Manual order"
 msgstr "_Ручни редослед"
 
 #: ../src/ui/fma-preferences.ui.h:7
-#| msgid ""
-#| "Display order of menus and actions, both in the Nautilus context menu and "
-#| "in the NACT user interface, must be manually adjusted."
 msgid ""
 "Display order of menus and actions, both in the Nautilus context menu and in "
 "the fma-config-tools user interface, must be manually adjusted."
@@ -3418,43 +3595,44 @@ msgid "<b>Items ordering</b>"
 msgstr "<b>Ређање ставки</b>"
 
 #: ../src/ui/fma-preferences.ui.h:9
-#| msgid "_Create a root 'Nautilus-Actions' menu"
-msgid "_Create a root 'FileManager-Actions' menu"
+#| msgid "_Create a root 'FileManager-Actions' menu"
+msgid "_Create a root “FileManager-Actions” menu"
 msgstr "_Направи корени изборник „Радњи Управника датотека“"
 
 #: ../src/ui/fma-preferences.ui.h:10
 #| msgid ""
 #| "When this option is checked, menus and actions will actually be displayed "
-#| "as sub-items of a root 'Nautilus-Actions' menu in the Nautilus context "
+#| "as sub-items of a root 'FileManager-Actions' menu in the Nautilus context "
 #| "menu."
 msgid ""
 "When this option is checked, menus and actions will actually be displayed as "
-"sub-items of a root 'FileManager-Actions' menu in the Nautilus context menu."
+"sub-items of a root “FileManager-Actions” menu in the Nautilus context menu."
 msgstr ""
 "Када је изабрана ова могућност, изборници и радње ће заправо бити приказани "
 "као подставке кореног изборника „Радњи Управника датотека“ у Наутилусовом "
 "приручном изборнику."
 
 #: ../src/ui/fma-preferences.ui.h:11
-#| msgid "Add an 'A_bout Nautilus-Actions' item in the Nautilus context menus"
-msgid "Add an 'A_bout FileManager-Actions' item in the Nautilus context menus"
+#| msgid ""
+#| "Add an 'A_bout FileManager-Actions' item in the Nautilus context menus"
+msgid "Add an “A_bout FileManager-Actions” item in the Nautilus context menus"
 msgstr ""
 "Додај ставку „О _радњама Управника датотека“ у Наутилусовом приручном "
 "изборнику"
 
 #: ../src/ui/fma-preferences.ui.h:12
 #| msgid ""
-#| "When this option is checked, an 'About Nautilus-Actions' item will be "
-#| "added to the root Nautilus-Actions menu in the Nautilus context menu.\n"
+#| "When this option is checked, an 'About FileManager-Actions' item will be "
+#| "added to the root FileManager-Actions menu in the Nautilus context menu.\n"
 #| "Note that this item will be displayed only if a unique menu is defined in "
-#| "the Nautilus context menu (e.g. when having checked the root 'Nautilus-"
+#| "the Nautilus context menu (e.g. when having checked the root 'FileManager-"
 #| "Actions' menu option above)."
 msgid ""
-"When this option is checked, an 'About FileManager-Actions' item will be "
+"When this option is checked, an “About FileManager-Actions” item will be "
 "added to the root FileManager-Actions menu in the Nautilus context menu.\n"
 "Note that this item will be displayed only if a unique menu is defined in "
-"the Nautilus context menu (e.g. when having checked the root 'FileManager-"
-"Actions' menu option above)."
+"the Nautilus context menu (e.g. when having checked the root “FileManager-"
+"Actions” menu option above)."
 msgstr ""
 "Када је изабрана ова могућност, ставка „О радњама Управника датотека“ биће "
 "додата кореном изборнику радњи Управника датотека у Наутилусовом приручном "
@@ -3520,36 +3698,45 @@ msgid "Relabel _menus"
 msgstr "Обнови натписе _изборника"
 
 #: ../src/ui/fma-preferences.ui.h:26
+#| msgid ""
+#| "When a menu is copied/pasted, or duplicated, the new menu will be "
+#| "relabelled as 'Copy of ...'."
 msgid ""
 "When a menu is copied/pasted, or duplicated, the new menu will be relabelled "
-"as 'Copy of ...'."
+"as “Copy of …”."
 msgstr ""
 "Када је изборник умножен/убачен, или удвостручен, биће обновљен натпис новог "
-"изборника као „Умножак од ...“."
+"изборника као „Умножак од …“."
 
 #: ../src/ui/fma-preferences.ui.h:27
 msgid "Relabel _actions"
 msgstr "Обнови натписе _радњи"
 
 #: ../src/ui/fma-preferences.ui.h:28
+#| msgid ""
+#| "When an action is copied/pasted, or duplicated, the new action will be "
+#| "relabelled as 'Copy of ...'."
 msgid ""
 "When an action is copied/pasted, or duplicated, the new action will be "
-"relabelled as 'Copy of ...'."
+"relabelled as “Copy of …”."
 msgstr ""
 "Када је радња умножена/убачена, или удвостручена, биће обновљен натпис нове "
-"радње као „Умножак од ...“."
+"радње као „Умножак од …“."
 
 #: ../src/ui/fma-preferences.ui.h:29
 msgid "Relabel _profiles"
 msgstr "Обнови натписе _профила"
 
 #: ../src/ui/fma-preferences.ui.h:30
+#| msgid ""
+#| "When a profile is copied/pasted, or duplicated, the new profile will be "
+#| "relabelled as 'Copy of ...'."
 msgid ""
 "When a profile is copied/pasted, or duplicated, the new profile will be "
-"relabelled as 'Copy of ...'."
+"relabelled as “Copy of …”."
 msgstr ""
 "Када је профил умножен/убачен, или удвостручен, биће обновљен натпис новог "
-"профила као „Умножак од ...“."
+"профила као „Умножак од …“."
 
 #: ../src/ui/fma-preferences.ui.h:31
 msgid "<b>Relabeling items</b>"
@@ -3560,10 +3747,14 @@ msgid "Esc key _quits the assistant"
 msgstr "Тастер Излаз _затвара помоћника"
 
 #: ../src/ui/fma-preferences.ui.h:33
+#| msgid ""
+#| "When this option is checked, the 'Escape' key will let you quit the "
+#| "current assistant. Else, quitting the assistant is only possible by "
+#| "hitting the 'Cancel' button."
 msgid ""
-"When this option is checked, the 'Escape' key will let you quit the current "
+"When this option is checked, the “Escape” key will let you quit the current "
 "assistant. Else, quitting the assistant is only possible by hitting the "
-"'Cancel' button."
+"“Cancel” button."
 msgstr ""
 "Када је ова могућност изабрана, тастер „Излаз“ ће вам допустити да затворите "
 "текућег помоћника. У супротном, затварање помоћника је једино могуће "
@@ -3574,8 +3765,12 @@ msgid "Ask for a _confirmation when quitting the assistant on Esc key"
 msgstr "Тражи _потврду приликом затварања помоћника тастером Излаз"
 
 #: ../src/ui/fma-preferences.ui.h:35
+#| msgid ""
+#| "This option is only relevant when the 'Escape' key lets the user quit the "
+#| "assistant. When checked, the user will be prompted for a confirmation in "
+#| "order to help prevent erroneous hits of the Esc key."
 msgid ""
-"This option is only relevant when the 'Escape' key lets the user quit the "
+"This option is only relevant when the “Escape” key lets the user quit the "
 "assistant. When checked, the user will be prompted for a confirmation in "
 "order to help prevent erroneous hits of the Esc key."
 msgstr ""
@@ -3612,9 +3807,6 @@ msgid "<b>Auto-save</b>"
 msgstr "<b>Самостално чување</b>"
 
 #: ../src/ui/fma-preferences.ui.h:42
-#| msgid ""
-#| "This tab allows the user to choose custom preferences for the Nautilus-"
-#| "Actions Configuration Tool user interface."
 msgid ""
 "This tab allows the user to choose custom preferences for the FileManager-"
 "Actions Configuration Tool user interface."
@@ -3674,15 +3866,15 @@ msgstr "Кликните да уклоните изабрану основну �
 #| msgid ""
 #| "You may define here any number of schemes. They will be proposed as "
 #| "default schemes when defining conditions for an action.\n"
-#| "If the list becomes empty, NACT will automatically refill in with this "
-#| "default list.\n"
+#| "If the list becomes empty, fma-config-tool will automatically re-fill in "
+#| "with this default list.\n"
 #| "You can add a new scheme by clicking on the '+' button."
 msgid ""
 "You may define here any number of schemes. They will be proposed as default "
 "schemes when defining conditions for an action.\n"
 "If the list becomes empty, fma-config-tool will automatically re-fill in "
 "with this default list.\n"
-"You can add a new scheme by clicking on the '+' button."
+"You can add a new scheme by clicking on the “+” button."
 msgstr ""
 "Овде можете да одредите било који број шема. Биће предложене\n"
 "као основне шеме приликом одређивања услова за радњу.\n"
@@ -3766,7 +3958,7 @@ msgstr "Уписиво"
 msgid "I/O Provider"
 msgstr "У/И достављачи"
 
-#. i18n: default name when the I/O providers doesn't provide one
+#. i18n: default name when the I/O providers doesn’t provide one
 #: ../src/ui/fma-providers-list.c:261
 msgid "no name"
 msgstr "без имена"
@@ -3784,27 +3976,27 @@ msgstr "Кључна реч"
 msgid "Description"
 msgstr "Опис"
 
-#. i18n notes : description of 'file' scheme
+#. i18n notes : description of “file” scheme
 #: ../src/ui/fma-schemes-list.c:283
 msgid "Local files"
 msgstr "Месне датотеке"
 
-#. i18n notes : description of 'sftp' scheme
+#. i18n notes : description of “sftp” scheme
 #: ../src/ui/fma-schemes-list.c:285
 msgid "SSH files"
 msgstr "Датотеке безбедне шкољке"
 
-#. i18n notes : description of 'smb' scheme
+#. i18n notes : description of “smb” scheme
 #: ../src/ui/fma-schemes-list.c:287
 msgid "Windows files"
 msgstr "Датотеке Виндоуза"
 
-#. i18n notes : description of 'ftp' scheme
+#. i18n notes : description of “ftp” scheme
 #: ../src/ui/fma-schemes-list.c:289
 msgid "FTP files"
 msgstr "Датотеке ФТП-а"
 
-#. i18n notes : description of 'dav' scheme
+#. i18n notes : description of “dav” scheme
 #: ../src/ui/fma-schemes-list.c:291
 msgid "WebDAV files"
 msgstr "Датотеке ВебДАВ-а"
@@ -3845,17 +4037,14 @@ msgid "_Reload"
 msgstr "_Учитај поново"
 
 #: ../src/ui/fma-toolbar.ui.h:12
-#| msgid "_UI Preferences"
 msgid "_Preferences"
 msgstr "_Поставке"
 
 #: ../src/ui/fma-toolbar.ui.h:14
-#| msgid "_New action"
 msgid "New _action"
 msgstr "Нова _радња"
 
 #: ../src/ui/fma-toolbar.ui.h:15
-#| msgid "_Reload the items"
 msgid "Save the items tree"
 msgstr "Сачувај стабло ставки"
 
@@ -3872,13 +4061,14 @@ msgid "_Help"
 msgstr "По_моћ"
 
 #: ../src/ui/fma-toolbar.ui.h:22
-msgid "_About..."
-msgstr "_О програму..."
+#| msgid "_About..."
+msgid "_About…"
+msgstr "_О програму…"
 
 #: ../src/ui/fma-toolbar.ui.h:24
 #| msgid "_Import"
-msgid "_Import..."
-msgstr "_Увези..."
+msgid "_Import…"
+msgstr "_Увези…"
 
 #: ../src/ui/fma-tree-model-dnd.c:118
 msgid "Unable to drop a profile here"
@@ -3901,12 +4091,10 @@ msgid "Some messages have occurred during drop operation."
 msgstr "Појавиле су се неке поруке за време радње убацивања."
 
 #: ../src/ui/fma-config-tool.actions.h:1
-#| msgid "_UI Preferences"
 msgid "Pre_ferences"
 msgstr "_Поставке"
 
 #: ../src/ui/fma-config-tool.actions.h:3
-#| msgid "About Nautilus-Actions"
 msgid "_About FileManager-Actions"
 msgstr "_О Радњама Управника датотека"
 
@@ -3939,7 +4127,6 @@ msgid "_Paste"
 msgstr "_Убаци"
 
 #: ../src/ui/fma-config-tool.actions.h:14
-#| msgid "Paste _into"
 msgid "paste _into"
 msgstr "убаци _у"
 
@@ -3956,7 +4143,6 @@ msgid "_View"
 msgstr "_Преглед"
 
 #: ../src/ui/fma-config-tool.actions.h:19
-#| msgid "_Expand all"
 msgid "E_xpand all"
 msgstr "_Рашири све"
 
@@ -3973,7 +4159,6 @@ msgid "_Tools"
 msgstr "_Алати"
 
 #: ../src/ui/fma-config-tool.actions.h:23
-#| msgid "Notebook _tabs"
 msgid "_Notebook labels"
 msgstr "Натписи _бележнице"
 
@@ -3994,15 +4179,16 @@ msgid "_Left"
 msgstr "_Лево"
 
 #: ../src/ui/fma-config-tool.actions.h:28
-msgid "_Import assistant..."
-msgstr "Помоћник _увоза..."
+#| msgid "_Import assistant..."
+msgid "_Import assistant…"
+msgstr "Помоћник _увоза…"
 
 #: ../src/ui/fma-config-tool.actions.h:29
-msgid "E_xport assistant..."
-msgstr "Помоћник _извоза..."
+#| msgid "E_xport assistant..."
+msgid "E_xport assistant…"
+msgstr "Помоћник _извоза…"
 
 #: ../src/ui/fma-config-tool.actions.h:30
-#| msgid "Contents"
 msgid "_Content"
 msgstr "_Садржај"
 
@@ -4023,27 +4209,21 @@ msgid "_Dump the clipboard"
 msgstr "_Избаци оставу"
 
 #: ../src/ui/fma-config-tool.actions.h:35
-#| msgid "_New action"
 msgid "_Test a function"
 msgstr "_Испробај функцију"
 
 #: ../src/ui/fma-config-tool.desktop.in.h:2
-#| msgid "Configure items to be added to the Nautilus context menus"
 msgid "Configure items to be added to the File-Manager context menus"
 msgstr ""
 "Подесите ставке које ће бити додате у приручне изборнике Управника датотека"
 
 #. i18n: label of an automagic root submenu
 #: ../src/plugin-menu/fma-menu-plugin.c:995
-#| msgid "Nautilus-Actions actions"
 msgid "FileManager-Actions actions"
 msgstr "Радње радњи Управника датотека"
 
 #. i18n: tooltip of an automagic root submenu
 #: ../src/plugin-menu/fma-menu-plugin.c:997
-#| msgid ""
-#| "A submenu which embeds the currently available Nautilus-Actions actions "
-#| "and menus"
 msgid ""
 "A submenu which embeds the currently available FileManager-Actions actions "
 "and menus"
@@ -4052,12 +4232,10 @@ msgstr ""
 "изборнике"
 
 #: ../src/plugin-menu/fma-menu-plugin.c:1041
-#| msgid "About Nautilus-Actions"
 msgid "About FileManager-Actions"
 msgstr "О Радњама Управника датотека"
 
 #: ../src/plugin-menu/fma-menu-plugin.c:1042
-#| msgid "Display some information about Nautilus-Actions"
 msgid "Display some information about FileManager-Actions"
 msgstr "Прикажите неке податке о радњама Управника датотека"
 
@@ -4080,16 +4258,13 @@ msgid "Import a file."
 msgstr "Увезите датотеку."
 
 #: ../src/test/test-reader.c:122
-#| msgid ""
-#| "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer "
-#| "to mail to <maintainer@nautilus-actions.org>.\n"
 msgid ""
 "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
 "mail to <maintainer@filemanager-actions.org>.\n"
 msgstr ""
 "Извештаји о грешкама су добродошли на „http://bugzilla.gnome.org“, или ако "
-"вам више одговара да пошаљете пошту на <maintainer@filemanager-actions.org>."
-"\n"
+"вам више одговара да пошаљете пошту на <maintainer@filemanager-actions."
+"org>.\n"
 
 #: ../src/test/test-reader.c:130 ../src/utils/fma-delete-xmltree.c:183
 #: ../src/utils/fma-new.c:389 ../src/utils/fma-print.c:183
@@ -4111,7 +4286,7 @@ msgstr "Грешка синтаксе: %s\n"
 msgid "Error: uri is mandatory.\n"
 msgstr "Грешка: путања је обавезна.\n"
 
-#. i18: '--help' is a command-line option - do not translate
+#. i18: “--help” is a command-line option - do not translate
 #: ../src/test/test-reader.c:178 ../src/utils/fma-delete-xmltree.c:197
 #: ../src/utils/fma-new.c:634 ../src/utils/fma-print.c:240
 #: ../src/utils/fma-print-schemas.c:304 ../src/utils/fma-run.c:438
@@ -4121,17 +4296,13 @@ msgid "Try %s --help for usage.\n"
 msgstr "Упишите „%s --help“ за коришћење.\n"
 
 #: ../src/utils/console-utils.c:53
-#| msgid ""
-#| "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
-#| "product=nautilus-actions,\n"
-#| "or you may prefer to mail to <maintainer@nautilus-actions.org>.\n"
 msgid ""
 "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=filemanager-actions,\n"
 "or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
 msgstr ""
-"Извештаји о грешкама су добродошли на "
-"„https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions“,\n"
+"Извештаји о грешкама су добродошли на „https://bugzilla.gnome.org/enter_bug."
+"cgi?product=filemanager-actions“,\n"
 "или ако вам више одговара да пошаљете пошту на <maintainer@filemanager-"
 "actions.org>.\n"
 
@@ -4159,7 +4330,8 @@ msgstr "Обришите Икс путању из ИксМЛ документа.
 
 #: ../src/utils/fma-delete-xmltree.c:213
 #, c-format
-msgid "Error: unable to parse file '%s'\n"
+#| msgid "Error: unable to parse file '%s'\n"
+msgid "Error: unable to parse file “%s”\n"
 msgstr "Грешка: не могу да обрадим датотеку „%s“\n"
 
 #: ../src/utils/fma-delete-xmltree.c:220
@@ -4169,7 +4341,8 @@ msgstr "Грешка: не могу да направим нови садржа�
 
 #: ../src/utils/fma-delete-xmltree.c:228
 #, c-format
-msgid "Error: unable to evaluate XPath expression '%s'\n"
+#| msgid "Error: unable to evaluate XPath expression '%s'\n"
+msgid "Error: unable to evaluate XPath expression “%s”\n"
 msgstr "Грешка: не могу да проценим израз Икс путање „%s“\n"
 
 #: ../src/utils/fma-new.c:135
@@ -4177,15 +4350,18 @@ msgid "Set it if the item should be disabled at creation"
 msgstr "Подешава га ако ставка треба да буде искључена приликом стварања"
 
 #: ../src/utils/fma-new.c:137
-msgid "Set it if the item doesn't target the selection context menu"
+#| msgid "Set it if the item doesn't target the selection context menu"
+msgid "Set it if the item doesn’t target the selection context menu"
 msgstr "Подешава га ако ставка не циља на приручни изборник избора"
 
 #: ../src/utils/fma-new.c:139
-msgid "Set it if the item doesn't target the location context menu"
+#| msgid "Set it if the item doesn't target the location context menu"
+msgid "Set it if the item doesn’t target the location context menu"
 msgstr "Подешава га ако ставка не циља на приручни изборник места"
 
 #: ../src/utils/fma-new.c:141
-msgid "Set it if the item doesn't target the toolbar"
+#| msgid "Set it if the item doesn't target the toolbar"
+msgid "Set it if the item doesn’t target the toolbar"
 msgstr "Подешава га ако ставка не циља на траку алата"
 
 #: ../src/utils/fma-new.c:143
@@ -4202,12 +4378,14 @@ msgstr "Ствара нову ставку као датотеку радне п
 
 #: ../src/utils/fma-new.c:161
 #, c-format
-msgid "Error: '%s' and '%s' options cannot both be specified\n"
+#| msgid "Error: '%s' and '%s' options cannot both be specified\n"
+msgid "Error: “%s” and “%s” options cannot both be specified\n"
 msgstr "Грешка: не могу бити наведене обе „%s“ и „%s“ могућности\n"
 
 #: ../src/utils/fma-new.c:162
 #, c-format
-msgid "'%s' option is deprecated, see %s\n"
+#| msgid "'%s' option is deprecated, see %s\n"
+msgid "“%s” option is deprecated, see %s\n"
 msgstr "„%s“ могућност је застарела, погледајте „%s“\n"
 
 #: ../src/utils/fma-new.c:220
@@ -4225,12 +4403,6 @@ msgid "Define a new action."
 msgstr "Одређује нову радњу."
 
 #: ../src/utils/fma-new.c:355
-#| msgid ""
-#| "The created action defaults to be written to stdout.\n"
-#| "It can also be written to an output folder, in a file later suitable for "
-#| "an import in NACT.\n"
-#| "Or you may choose to directly write the action into your Nautilus-Actions "
-#| "configuration."
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -4241,8 +4413,8 @@ msgstr ""
 "Направљена радња подразумева да буде записана у стандардни излаз.\n"
 "Такође може бити записана у излазну фасциклу, у датотеку подесну касније за "
 "увоз у кориснички алат подешавања.\n"
-"Или ви можете да изаберете да непосредно запишете радњу као датотеку "
-"„.desktop“ у вашим подешавањима радњи Управника датотека."
+"Или ви можете да изаберете да непосредно запишете радњу као датотеку „."
+"desktop“ у вашим подешавањима радњи Управника датотека."
 
 #: ../src/utils/fma-new.c:383
 msgid "Output of the program"
@@ -4252,10 +4424,10 @@ msgstr "Излаз програма"
 msgid "Choose where the program creates the action"
 msgstr "Изаберите где ће програм да створи радњу"
 
-#. i18n: 'io-desktop' is a plugin identifier - do not translate
+#. i18n: “io-desktop” is a plugin identifier - do not translate
 #: ../src/utils/fma-new.c:597
-#| msgid "Error: unable to find 'na-desktop' i/o provider."
-msgid "Error: unable to find 'io-desktop' i/o provider."
+#| msgid "Error: unable to find 'io-desktop' i/o provider."
+msgid "Error: unable to find “io-desktop” i/o provider."
 msgstr "Грека: не могу да пронађем „io-desktop“ у/и достављача."
 
 #. i18n: filemanager-actions-print program summary
@@ -4267,7 +4439,7 @@ msgstr "Исписује изборник или радњу на стандар�
 msgid "The identifier of the menu or the action to be printed"
 msgstr "Одредник изборника или радње за штампање"
 
-#. i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable
+#. i18n: “Desktop1” here is the internal identifier of an export format; it is not translatable
 #: ../src/utils/fma-print.c:63
 msgid "An export format [Desktop1]"
 msgstr "Извозни запис [Desktop1]"
@@ -4285,7 +4457,8 @@ msgstr "Грешка: %s: непознат извозни запис.\n"
 
 #: ../src/utils/fma-print.c:206
 #, c-format
-msgid "Error: item '%s' doesn't exist.\n"
+#| msgid "Error: item '%s' doesn't exist.\n"
+msgid "Error: item “%s” doesn’t exist.\n"
 msgstr "Грешка: ставка „%s“ не постоји.\n"
 
 #: ../src/utils/fma-print-schemas.c:62
@@ -4301,7 +4474,6 @@ msgid "Output the menu schemas"
 msgstr "Исписује шеме изборника"
 
 #: ../src/utils/fma-print-schemas.c:162
-#| msgid "Output the Nautilus-Actions GConf schemas on stdout."
 msgid "Output the FileManager-Actions GConf schemas on stdout."
 msgstr "Исписује Гконф шеме радњи Управника датотека на стандардном излазу."
 
@@ -4322,9 +4494,6 @@ msgid "The internal identifier of the action to be launched"
 msgstr "Унутрашњи одредник радње за покретање"
 
 #: ../src/utils/fma-run.c:61
-#| msgid ""
-#| "A target, file or folder, for the action. More than one options may be "
-#| "specified"
 msgid ""
 "A target, file or folder, for the action. More than one target may be "
 "specified"
@@ -4357,17 +4526,20 @@ msgstr "Извршава радњу на наведеној мети."
 
 #: ../src/utils/fma-run.c:236
 #, c-format
-msgid "Error: action '%s' doesn't exist.\n"
+#| msgid "Error: action '%s' doesn't exist.\n"
+msgid "Error: action “%s” doesn’t exist.\n"
 msgstr "Грешка: радња „%s“ не постоји.\n"
 
 #: ../src/utils/fma-run.c:240
 #, c-format
-msgid "Error: action '%s' is disabled.\n"
+#| msgid "Error: action '%s' is disabled.\n"
+msgid "Error: action “%s” is disabled.\n"
 msgstr "Грешка: радња „%s“ је искључена.\n"
 
 #: ../src/utils/fma-run.c:245
 #, c-format
-msgid "Error: action '%s' is not valid.\n"
+#| msgid "Error: action '%s' is not valid.\n"
+msgid "Error: action “%s” is not valid.\n"
 msgstr "Грешка: радња „%s“ није исправна.\n"
 
 #: ../src/utils/fma-set-conf.c:50
@@ -4382,9 +4554,10 @@ msgstr "Група која ће бити дограђена"
 msgid "The key to be updated"
 msgstr "Кључ који ће бити дограђен"
 
-#. i18n: 'str', 'int' and 'bool' are literal values: do not translate
+#. i18n: “str”, “int” and “bool” are literal values: do not translate
 #: ../src/utils/fma-set-conf.c:66
-msgid "The type of the value to be set, may be 'str', 'int' or 'bool'"
+#| msgid "The type of the value to be set, may be 'str', 'int' or 'bool'"
+msgid "The type of the value to be set, may be “str”, “int” or “bool”"
 msgstr "Врста вредности за подешавање, може бити „str“, „int“ или „bool“"
 
 #: ../src/utils/fma-set-conf.c:68
@@ -4410,16 +4583,21 @@ msgstr "Грешка: кључ је обавезан.\n"
 msgid "Error: a type is mandatory for setting/updating a value.\n"
 msgstr "Грешка: врста је обавезна за подешавање/доградњу вредности.\n"
 
-#. i18n: 'str', 'int' and 'bool' are literal values: do not translate
+#. i18n: “str”, “int” and “bool” are literal values: do not translate
 #: ../src/utils/fma-set-conf.c:157
 #, c-format
-msgid "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n"
+#| msgid "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n"
+msgid "Error: unknown type: %s. Use “str”, “int” or “bool”.\n"
 msgstr "Грешка: непозната врста: %s. Употребите „str“, „int“ или „bool“.\n"
 
 #: ../src/utils/fma-set-conf.c:164
 #, c-format
 msgid "Error: a value is mandatory.\n"
 msgstr "Грешка: вредност је обавезна.\n"
+
+#~| msgid "_Import"
+#~ msgid "_Import..."
+#~ msgstr "_Увези..."
 
 #~ msgid "Ask for a confirmation when quitting by Esc"
 #~ msgstr "Тражи потврду приликом изласка на Излаз"
