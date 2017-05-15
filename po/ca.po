@@ -183,7 +183,7 @@ msgstr "<EXPRESSIÓ>"
 
 #: ../src/core/fma-icontext-factory.c:86
 msgid "Whether the specified basenames are case sensitive (default)"
-msgstr "Si els noms base especificats son case-sensitive (per defecte)"
+msgstr "Si els noms base especificats són case-sensitive (per defecte)"
 
 #. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:88
@@ -195,7 +195,7 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to “true”."
 msgstr ""
-"S'ha d'establir en «veritat» si els patrons del nom del fitxers case-"
+"S'ha d'establir en «veritat» si els patrons del nom del fitxer case-"
 "sensitive, o «fals» en cas contrari. Per exemple, si vostè necessita que "
 "coincideixi amb un nom de fitxer d'una manera case-sensitive, establir "
 "aquesta clau a «veritat». Si també voleu, per exemple «*.jpg» perquè "
@@ -372,7 +372,7 @@ msgstr ""
 "Tots els esquemes utilitzats per l'administrador de fitxers favorit es poden "
 "utilitzar aquí.\n"
 "Òbviament, això només s'aplica quan hi ha una selecció, o quan l'orientació "
-"del esquema especial \"x-nautilus-desktop\".\n"
+"de l'esquema especial \"x-nautilus-desktop\".\n"
 "Per defecte a «fitxer»."
 
 #: ../src/core/fma-icontext-factory.c:303
@@ -486,7 +486,7 @@ msgid ""
 "must set one option for each environment you want"
 msgstr ""
 "El nom d'un entorn d'escriptori on no s'ha de col·locar l'element. S'ha "
-"d'establir una opció per a cada entorn que desitji"
+"d'establir una opció per a cada entorn que desitgi"
 
 #: ../src/core/fma-icontext-factory.c:412
 msgid "Try exec"
@@ -502,7 +502,7 @@ msgid ""
 "Defaults to successful."
 msgstr ""
 "Recordeu que, quan s'especifica, només es comproven la presència i l'estat "
-"de execució del fitxer especificat.\n"
+"d'execució del fitxer especificat.\n"
 "Els paràmetres poden aparèixer en valor «TryExec», i serà substituït en "
 "temps d'execució.\n"
 "Per defecte amb èxit."
@@ -1319,7 +1319,7 @@ msgstr ""
 
 #: ../src/core/fma-object-profile-factory.c:290
 msgid "Execute as user"
-msgstr "Executa com a ususari"
+msgstr "Executa com a usuari"
 
 #: ../src/core/fma-object-profile-factory.c:291
 msgid ""
@@ -1368,7 +1368,7 @@ msgstr "L'ordre d'anada de la sortida"
 
 #: ../src/core/fma-tokens.c:442
 msgid "Run command:"
-msgstr "Ordre de marxa"
+msgstr "Ordre de marxa:"
 
 #: ../src/core/fma-tokens.c:443
 msgid "Standard output:"
@@ -1548,7 +1548,7 @@ msgstr "Advertiment amb ESC"
 msgid ""
 "Should the user be asked to confirm when exiting the assistant via Escape ?"
 msgstr ""
-"S'ha de demanar a l'usuari que confirmi al sortir del assistent a través de "
+"S'ha de demanar a l'usuari que confirmi al sortir de l'assistent a través de "
 "ESC?"
 
 #: ../src/ui/base-assistant.c:450
@@ -1748,7 +1748,7 @@ msgstr "Aquest assistent us guiarà durant el procés d'accions d'exportació."
 
 #: ../src/ui/fma-assistant-export.ui.h:3
 msgid "Actions _list :"
-msgstr "_Llista d'accions"
+msgstr "_Llista d'accions :"
 
 #: ../src/ui/fma-assistant-export.ui.h:4
 msgid ""
@@ -2344,7 +2344,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:15
 msgid "Use s_ame label for icon in the toolbar"
-msgstr "Utilitz_a la mateixa etiqueta de icona a la barra d'eines"
+msgstr "Utilitz_a la mateixa etiqueta d'icona a la barra d'eines"
 
 #: ../src/ui/fma-main-window.ui.h:16
 msgid ""
@@ -2896,7 +2896,7 @@ msgstr "Ca_pacitats"
 
 #: ../src/ui/fma-main-window.ui.h:127
 msgid "_Count :"
-msgstr "_Comptar"
+msgstr "_Comptar:"
 
 #: ../src/ui/fma-main-window.ui.h:128
 msgid "<b> Appears if selection contains </b>"
@@ -3259,7 +3259,7 @@ msgstr "_Mantenidor"
 #: ../src/ui/fma-menu.c:495
 #, c-format
 msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
-msgstr " %d menú(s), %d acció(ns), %d perfil(s) son carregats actualment"
+msgstr " %d menú(s), %d acció(ns), %d perfil(s) són carregats actualment"
 
 #: ../src/ui/fma-menu-edit.c:224
 msgid "Not all items have been cut as following ones are not modifiable:"
@@ -3687,7 +3687,7 @@ msgstr "Sense nom"
 #. i18n: name displayed when the corresponding I/O provider is unavailable at runtime
 #: ../src/ui/fma-providers-list.c:265
 msgid "unavailable I/O provider"
-msgstr "Proveïdor I/O no disponble"
+msgstr "Proveïdor I/O no disponible"
 
 #: ../src/ui/fma-schemes-list.c:155
 msgid "Keyword"
@@ -3739,7 +3739,7 @@ msgstr "Descripció de l'esquema nou"
 
 #: ../src/ui/fma-toolbar.ui.h:2
 msgid "C_ut"
-msgstr "_Talla"
+msgstr "_Retalla"
 
 #: ../src/ui/fma-toolbar.ui.h:4 ../src/ui/fma-config-tool.actions.h:12
 msgid "C_opy"
@@ -3839,7 +3839,7 @@ msgstr "_Edita"
 
 #: ../src/ui/fma-config-tool.actions.h:11
 msgid "_Cut"
-msgstr "_Talla"
+msgstr "_Retalla"
 
 #: ../src/ui/fma-config-tool.actions.h:13
 msgid "_Paste"
@@ -3879,7 +3879,7 @@ msgstr "Ei_nes"
 
 #: ../src/ui/fma-config-tool.actions.h:23
 msgid "_Notebook labels"
-msgstr "Etiquetes de cuader_n"
+msgstr "Etiquetes de quader_n"
 
 #: ../src/ui/fma-config-tool.actions.h:24
 msgid "_Top"
