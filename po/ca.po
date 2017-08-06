@@ -235,7 +235,7 @@ msgid ""
 "you need"
 msgstr ""
 "Un patró que es compara amb els tipus MIME de fitxer(s)/carpeta(es) "
-"seleccionats. Pot incloure el comodí asterisc «*». Sestableix una opció per "
+"seleccionats. Pot incloure el comodí asterisc «*». S'estableix una opció per "
 "a cada patró que necessita"
 
 #: ../src/core/fma-icontext-factory.c:179
@@ -265,7 +265,7 @@ msgstr ""
 "isfile=«veritat» i isdir=«fals»: la selecció pot contenir només els fitxers\n"
 "isfile=«fals» i isdir=«veritat»: la selecció pot contenir només les "
 "carpetes\n"
-"isfile=«veritat» i isdir=«veritat»: la selecció pot contenir ambdues fitxers "
+"isfile=«veritat» i isdir=«veritat»: la selecció pot contenir ambdós fitxers "
 "i carpetes\n"
 "isfile=«fals» i isdir=«fals»: es tracta d'una combinació no vàlida (la "
 "configuració mai apareix).\n"
@@ -276,7 +276,7 @@ msgstr ""
 msgid ""
 "Whether the profile applies to folders (deprecated option, see mimetype)"
 msgstr ""
-"Si el perfil s'aplica a las carpetes (opció obsoleta, vegeu el tipus MIME)"
+"Si el perfil s'aplica a les carpetes (opció obsoleta, vegeu el tipus MIME)"
 
 #. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:212
@@ -300,7 +300,7 @@ msgstr ""
 "isfile=«veritat» i isdir=«fals»: la selecció pot contenir només els arxius\n"
 "isfile=«fals» i isdir=«veritat»: la selecció pot contenir només les "
 "carpetes\n"
-"isfile=«veritat» i isdir=«veritat»: la selecció pot contenir ambdues fitxers "
+"isfile=«veritat» i isdir=«veritat»: la selecció pot contenir ambdós fitxers "
 "i carpetes\n"
 "isfile=«fals» i isdir=«fals»: es tracta d'una combinació no vàlida (la "
 "configuració mai apareix).\n"
@@ -557,10 +557,10 @@ msgid ""
 msgstr ""
 "Quan una ordre, s'executa, ha de retornar una cadena a la sortida "
 "estàndard.\n"
-"L'element serà candidat si la cadena outputed és igual a «veritat».\n"
-"Els paràmetres poden aparèixer en valor \"«ShowIfTrue», i seran substituïts "
+"L'element serà candidat si la cadena de sortida és igual a «veritat».\n"
+"Els paràmetres poden aparèixer amb valor «ShowIfTrue», i seran substituïts "
 "en temps d'execució.\n"
-"Per defecte amb èxit."
+"Per defecte a èxit."
 
 #. i18n: “true” is to be taken as a literal, must not be translated
 #: ../src/core/fma-icontext-factory.c:485
@@ -659,7 +659,7 @@ msgstr "L'actual element s'ha anul·lat a causa de la petició de l'usuari."
 #: ../src/core/fma-iimporter.c:286 ../src/core/fma-importer.c:344
 #, c-format
 msgid "Item %s already exists."
-msgstr "L'element %s ja existeix"
+msgstr "L'element %s ja existeix."
 
 #: ../src/core/fma-iimporter.c:288 ../src/core/fma-importer.c:350
 msgid "Import was canceled due to user request."
@@ -802,7 +802,7 @@ msgstr "El proveïdor I/O ha estat bloquejat per l'usuari."
 
 #: ../src/core/fma-io-provider.c:1393
 msgid "Item is read-only."
-msgstr "L'element  només és de lectura"
+msgstr "L'element només és de lectura."
 
 #: ../src/core/fma-io-provider.c:1397
 msgid "No writable I/O provider found."
@@ -900,7 +900,7 @@ msgid ""
 "Defaults to FALSE"
 msgstr ""
 "Si l'acció es dirigeix a la gestió dels fitxers dels menús de context quan "
-"no hi ha selecció,  per tant l'aplica a la ubicació actual.\n"
+"no hi ha selecció, per tant l'aplica a la ubicació actual.\n"
 "Recordeu que els menús són sempre un candidat potencial a la pantalla de "
 "selecció de menús de context sempre que continguin almenys una acció.\n"
 "Per defecte FALS"
@@ -967,7 +967,7 @@ msgstr ""
 "Defineix si l'element és una acció o un menú. Els valors possibles són:\n"
 "• «Acció»,\n"
 "• «Menú».\n"
-"El valor cas delicat no ha de ser localitzat"
+"El valor distingeix entre majúscules i minúscules i no ha de ser localitzat."
 
 #: ../src/core/fma-object-item-factory.c:94
 msgid "Label of the context menu item (mandatory)"
@@ -1411,7 +1411,7 @@ msgstr ""
 
 #: ../src/io-desktop/fma-desktop-reader.c:64
 msgid "The Desktop I/O Provider is not able to handle the URI"
-msgstr "El proveïdor d'escriptori no es capaç de manejar l'URI"
+msgstr "El proveïdor d'escriptori no és capaç de manejar l'URI"
 
 #. i18n: “type” is the nature of the item: Action or Menu
 #: ../src/io-desktop/fma-desktop-reader.c:292
@@ -1480,7 +1480,7 @@ msgstr ""
 
 #: ../src/io-xml/fma-xml-formats.c:67
 msgid "Export as a _light GConf schema (v2) file"
-msgstr "Exporta com un fitxer del esquema del  _light GConf (v2)"
+msgstr "Exporta com un fitxer de l'esquema lleuger GConf (v2)"
 
 #: ../src/io-xml/fma-xml-formats.c:68
 msgid ""
@@ -2949,7 +2949,7 @@ msgid ""
 "This may be used for example to test for a prerequisite package."
 msgstr ""
 "Aquesta és una condició avançada basada en la presència d'un fitxer "
-"executable en el sistema d'fitxers.\n"
+"executable en el sistema de fitxers.\n"
 "Això es pot utilitzar, per exemple, per a la prova d'un paquet de requisit "
 "previ."
 
