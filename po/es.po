@@ -8,6 +8,7 @@
 # Javier Mazorra Rodríguez <mazi.debian@gmail.com>, 2011.
 # Jesse Avilés <jesseaviles@gmail.com>, 2011.
 # Maria Majadas <alixis82@gmail.com>, 2011.
+# Luis Angel Gonzo <luisangelgonzo@gmail.com>, 2017.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2014, 2017.
 #
 msgid ""
@@ -15,8 +16,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-03-08 19:39+0000\n"
-"PO-Revision-Date: 2017-04-11 09:44+0200\n"
+"POT-Creation-Date: 2017-07-22 15:34+0000\n"
+"PO-Revision-Date: 2017-08-07 09:22+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -41,24 +42,21 @@ msgstr ""
 #. i18n: FMAIExporter is an interface name, do not even try to translate
 #: ../src/core/fma-exporter.c:59
 #, c-format
-#| msgid "No FMAIExporter implementation found for '%s' format."
 msgid "No FMAIExporter implementation found for “%s” format."
 msgstr ""
 "No se encontró ninguna implementación de FMAIExporter para el formato «%s»."
 
 #. i18n: FMAIExporter is an interface name, do not even try to translate
 #: ../src/core/fma-exporter.c:303
-#, fuzzy, c-format
-#| msgid "%s FMAIExporter doesn't implement 'to_buffer' interface."
+#, c-format
 msgid "%s FMAIExporter doesn’t implement “to_buffer” interface."
 msgstr "FMAIExporter %s no implementa la interfaz «to_buffer»."
 
 #. i18n: FMAIExporter is an interface name, do not even try to translate
 #: ../src/core/fma-exporter.c:376
-#, fuzzy, c-format
-#| msgid "%s FMAIExporter doesn't implement 'to_file' interface."
+#, c-format
 msgid "%s FMAIExporter doesn’t implement “to_file” interface."
-msgstr "FMAIEXporter %s no implementa la interfaz «to_file»."
+msgstr "FMAIExporter %s no implementa la interfaz «to_file»."
 
 #: ../src/core/fma-about.c:73
 msgid ""
@@ -106,6 +104,7 @@ msgstr ""
 #: ../src/core/fma-about.c:110
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
 msgstr ""
+"Luis Angel Gonzo <luisangelgonzo@gmail.com>, 2017\n"
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2017\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2007-2010"
 
@@ -158,14 +157,6 @@ msgstr ""
 #. i18n: wildcard characters “*” and “?” should be considered as literals,
 #. *  and not be translated
 #: ../src/core/fma-icontext-factory.c:54
-#, fuzzy
-#| msgid ""
-#| "A list of strings with joker '*' or '?' to be matched against the name(s) "
-#| "of the selected file(s)/folder(s). Each selected item must match at least "
-#| "one of the filename patterns for the action or the menu be candidate to "
-#| "display.\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to '*'."
 msgid ""
 "A list of strings with joker “*” or “?” to be matched against the name(s) of "
 "the selected file(s)/folder(s). Each selected item must match at least one "
@@ -209,14 +200,6 @@ msgstr ""
 
 #. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:88
-#, fuzzy
-#| msgid ""
-#| "Must be set to 'true' if the filename patterns are case sensitive, to "
-#| "'false' otherwise. E.g., if you need to match a filename in a case-"
-#| "sensitive manner, set this key to 'true'. If you also want, for example "
-#| "'*.jpg' to match 'photo.JPG', then set 'false'.\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to 'true'."
 msgid ""
 "Must be set to “true” if the filename patterns are case sensitive, to "
 "“false” otherwise. E.g., if you need to match a filename in a case-sensitive "
@@ -225,13 +208,13 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to “true”."
 msgstr ""
-"Debe estar establecido a cierto si el patrón de nombres de archivo es "
-"sensible a capitalización, a falso en caso contrario. Por ejemplo, si "
-"necesita coincidir un nombre de archivo sensible a capitalización seleccione "
-"cierto. Si también quiere, por ejemplo, que «*.jpg» coincida con «foto.JPG», "
-"póngalo a falso.\n"
+"Debe estar establecido a «true» si el patrón de nombres de archivo es "
+"sensible a capitalización, a «false» en caso contrario. Por ejemplo, si "
+"necesita coincidir un nombre de archivo sensible a mayúsculas y minúsculas "
+"seleccione cierto. Si también quiere, por ejemplo, que «*.jpg» coincida con "
+"«foto.JPG», ponga «false».\n"
 "Esto obviamente sólo se aplica cuando existe una selección.\n"
-"Lo predeterminado es cierto."
+"Lo predeterminado es «true»."
 
 #: ../src/core/fma-icontext-factory.c:114
 msgid ""
@@ -243,13 +226,6 @@ msgstr ""
 
 #. i18n: wildcard character “*” is taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:116
-#, fuzzy
-#| msgid ""
-#| "A list of strings with joker '*' to be matched against the mimetypes of "
-#| "the selected file(s)/folder(s). Each selected item must match at least "
-#| "one of the mimetype patterns for the action to appear.\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to '*/*'."
 msgid ""
 "A list of strings with joker “*” to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected item must match at least one of "
@@ -266,11 +242,6 @@ msgstr ""
 
 #. i18n: wildcard character “*” is taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:135
-#, fuzzy
-#| msgid ""
-#| "A pattern to be matched against mimetypes of selected file(s)/folder(s). "
-#| "May include the asterisk wildcard '*'. You must set one option for each "
-#| "pattern you need"
 msgid ""
 "A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
 "include the asterisk wildcard “*”. You must set one option for each pattern "
@@ -288,19 +259,6 @@ msgstr ""
 
 #. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:181
-#, fuzzy
-#| msgid ""
-#| "Set to 'true' if the selection can have files, to 'false' otherwise.\n"
-#| "This setting is tied in with the 'isdir' setting. The valid combinations "
-#| "are: \n"
-#| "isfile='true' and isdir='false': the selection may hold only files\n"
-#| "isfile='false' and isdir='true': the selection may hold only folders\n"
-#| "isfile='true' and isdir='true': the selection may hold both files and "
-#| "folders\n"
-#| "isfile='false' and isdir='false': this is an invalid combination (your "
-#| "configuration will never appear).\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to 'true'."
 msgid ""
 "Set to “true” if the selection can have files, to “false” otherwise.\n"
 "This setting is tied in with the “isdir” setting. The valid combinations "
@@ -314,8 +272,8 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to “true”."
 msgstr ""
-"Establecer a cierto si la selección puede tener archivos, a falso en el caso "
-"contrario.\n"
+"Establecer a «true» si la selección puede tener archivos, a «false» en el "
+"caso contrario.\n"
 "Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones "
 "válidas son:\n"
 "isfile='true' e isdir='false': la selección sólo puede contener archivos\n"
@@ -325,7 +283,7 @@ msgstr ""
 "isfile='false' e isdir='false': combinación no válida (su configuración "
 "nunca aparecerá).\n"
 "Esto obviamente sólo se aplica cuando existe una selección.\n"
-"Lo predeterminado es cierto."
+"Lo predeterminado es «true»."
 
 #: ../src/core/fma-icontext-factory.c:210
 msgid ""
@@ -336,19 +294,6 @@ msgstr ""
 
 #. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:212
-#, fuzzy
-#| msgid ""
-#| "Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
-#| "This setting is tied in with the 'isfile' setting. The valid combinations "
-#| "are: \n"
-#| "isfile='true' and isdir='false': the selection may hold only files\n"
-#| "isfile='false' and isdir='true': the selection may hold only folders\n"
-#| "isfile='true' and isdir='true': the selection may hold both files and "
-#| "folders\n"
-#| "isfile='false' and isdir='false': this is an invalid combination (your "
-#| "configuration will never appear).\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to 'false'."
 msgid ""
 "Set to “true” if the selection can have folders, to “false” otherwise.\n"
 "This setting is tied in with the “isfile” setting. The valid combinations "
@@ -373,7 +318,7 @@ msgstr ""
 "isfile='false' e isdir='false': combinación no válida (su configuración "
 "nunca aparecerá).\n"
 "Esto obviamente sólo se aplica cuando existe una selección.\n"
-"Lo predeterminado es falso."
+"Lo predeterminado es «false»."
 
 #: ../src/core/fma-icontext-factory.c:244
 msgid ""
@@ -385,12 +330,6 @@ msgstr ""
 
 #. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:246
-#, fuzzy
-#| msgid ""
-#| "If you need more than one files or folders to be selected, set this key "
-#| "to 'true'. If you want just one file or folder, set it to 'false'.\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to 'false'."
 msgid ""
 "If you need more than one files or folders to be selected, set this key to "
 "“true”. If you want just one file or folder, set it to “false”.\n"
@@ -398,9 +337,9 @@ msgid ""
 "Defaults to “false”."
 msgstr ""
 "Si necesita que se seleccione uno o más archivos o carpetas, ponga a «true» "
-"esta clave. Si tan sólo quiere un archivo o carpeta, póngala a «false».\n"
+"esta clave. Si tan sólo quiere un archivo o carpeta, ponga «false».\n"
 "Esto obviamente sólo se aplica cuando existe una selección.\n"
-"Lo predeterminado es falso."
+"Lo predeterminado es \"false\"."
 
 #: ../src/core/fma-icontext-factory.c:270
 msgid ""
@@ -413,24 +352,6 @@ msgstr ""
 #. i18n: schemes (sftp, ssh, ftp, file, etc.) are standard keywords which define
 #. *  the access protocol to an object, they should not be translated
 #: ../src/core/fma-icontext-factory.c:274
-#, fuzzy
-#| msgid ""
-#| "Defines the list of valid schemes to be matched against the selected "
-#| "items. The scheme is the protocol used to access the files. The keyword "
-#| "to use is the one used in the URI by the file manager.\n"
-#| "Examples of valid URI include:\n"
-#| "- file:///tmp/foo.txt\n"
-#| "- sftp:///root@test.example.net/tmp/foo.txt\n"
-#| "The most common schemes are:\n"
-#| "'file': local files\n"
-#| "'sftp': files accessed via SSH\n"
-#| "'ftp': files accessed via FTP\n"
-#| "'smb': files accessed via Samba (Windows share)\n"
-#| "'dav': files accessed via WebDAV.\n"
-#| "All schemes used by your favorite file manager may be used here.\n"
-#| "This obviously only applies when there is a selection, or when targeting "
-#| "the special 'x-nautilus-desktop' scheme.\n"
-#| "Defaults to 'file'."
 msgid ""
 "Defines the list of valid schemes to be matched against the selected items. "
 "The scheme is the protocol used to access the files. The keyword to use is "
@@ -495,12 +416,6 @@ msgid "List of folders"
 msgstr "Lista de carpetas"
 
 #: ../src/core/fma-icontext-factory.c:313
-#, fuzzy
-#| msgid ""
-#| "Defines the list of valid paths to be matched against the current "
-#| "folder.\n"
-#| " All folders 'under' the specified path are considered valid.\n"
-#| "Defaults to '/'."
 msgid ""
 "Defines the list of valid paths to be matched against the current folder.\n"
 " All folders “under” the specified path are considered valid.\n"
@@ -533,13 +448,6 @@ msgid "Operator of the selection count relation"
 msgstr "El operador de la selección de la relación de conteo"
 
 #: ../src/core/fma-icontext-factory.c:339
-#, fuzzy
-#| msgid ""
-#| "Whether this profile may be selected depending of the count of the "
-#| "selection.\n"
-#| "This is a string of the form \"{'<'|'='|'>'} number\".\n"
-#| "Examples of valid strings are: \"=0\", \"> 1\", \"< 10\".\n"
-#| "Defaults to \">0\"."
 msgid ""
 "Whether this profile may be selected depending of the count of the "
 "selection.\n"
@@ -601,13 +509,6 @@ msgstr "Intentar exec"
 
 #. i18n: TryExec is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:414
-#, fuzzy
-#| msgid ""
-#| "Note that, when specified, only the presence and the executability status "
-#| "of the specified file are checked.\n"
-#| "Parameters may appear in 'TryExec' value, and will be substituted at "
-#| "runtime.\n"
-#| "Defaults to successful."
 msgid ""
 "Note that, when specified, only the presence and the executability status of "
 "the specified file are checked.\n"
@@ -631,14 +532,6 @@ msgstr "Mostrar si está registrado"
 
 #. i18n: ShowIfRegistered is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:441
-#, fuzzy
-#| msgid ""
-#| "The well-known name of a DBus service.\n"
-#| "The item will be candidate if the named service is registered on session "
-#| "DBus at runtime.\n"
-#| "Parameters may appear in 'ShowIfRegistered' value, and will be "
-#| "substituted at runtime.\n"
-#| "Defaults to successful."
 msgid ""
 "The well-known name of a DBus service.\n"
 "The item will be candidate if the named service is registered on session "
@@ -671,13 +564,6 @@ msgstr "Mostrar si es cierto"
 
 #. i18n: ShowIfTrue is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:467
-#, fuzzy
-#| msgid ""
-#| "A command which, when executed, should output a string on stdout.\n"
-#| "The item will be candidate if the outputed string is equal to \"true\".\n"
-#| "Parameters may appear in 'ShowIfTrue' value, and will be substituted at "
-#| "runtime.\n"
-#| "Defaults to successful."
 msgid ""
 "A command which, when executed, should output a string on stdout.\n"
 "The item will be candidate if the outputed string is equal to “true”.\n"
@@ -2173,14 +2059,12 @@ msgstr "Importación terminada"
 #. i18n: The action <label> is about to be exported
 #: ../src/ui/fma-export-ask.c:387
 #, c-format
-#| msgid "The action \"%s\" is about to be exported."
 msgid "The action “%s” is about to be exported."
 msgstr "La acción «%s» está a punto de exportarse."
 
 #. i18n: The menu <label> is about to be exported
 #: ../src/ui/fma-export-ask.c:390
 #, c-format
-#| msgid "The menu \"%s\" is about to be exported."
 msgid "The menu “%s” is about to be exported."
 msgstr "El menú «%s» está a punto de exportarse."
 
@@ -2699,7 +2583,6 @@ msgid "_Icon :"
 msgstr "_Icono:"
 
 #: ../src/ui/fma-main-window.ui.h:22
-#| msgid "_Browse..."
 msgid "_Browse…"
 msgstr "E_xaminar…"
 
@@ -3188,7 +3071,6 @@ msgid "Click to add a new scheme filter."
 msgstr "Pulse para añadir un filtro por esquema nuevo."
 
 #: ../src/ui/fma-main-window.ui.h:111
-#| msgid "De_faults..."
 msgid "De_faults…"
 msgstr "_Predeterminados…"
 
@@ -3320,7 +3202,6 @@ msgid "Appears if the name is _registered on D-Bus :"
 msgstr "Aparece si el nombre está _registrado en D-BUS:"
 
 #: ../src/ui/fma-main-window.ui.h:136
-#| msgid "Appears if the command outputs \"_true\" :"
 msgid "Appears if the command outputs “_true” :"
 msgstr "Aparece si el comando devuelve «cier_to»:"
 
@@ -3329,7 +3210,6 @@ msgid "Appears if the _binary is running :"
 msgstr "Aparece si el _binario está en ejecución:"
 
 #: ../src/ui/fma-main-window.ui.h:138
-#| msgid "Bro_wse..."
 msgid "Bro_wse…"
 msgstr "E_xaminar…"
 
@@ -3374,7 +3254,6 @@ msgstr ""
 "Escriba aquí un comando que sea capaz"
 
 #: ../src/ui/fma-main-window.ui.h:146
-#| msgid "Brow_se..."
 msgid "Brow_se…"
 msgstr "Ex_aminar…"
 
@@ -3700,7 +3579,6 @@ msgid "New profile"
 msgstr "Perfil nuevo"
 
 #: ../src/ui/fma-menu-file.c:435
-#| msgid "Automatically saving pending modifications..."
 msgid "Automatically saving pending modifications…"
 msgstr "Guardado automático de modificaciones pendientes…"
 
@@ -3768,7 +3646,6 @@ msgid "<b>Items ordering</b>"
 msgstr "<b>Ordenamiento de elementos</b>"
 
 #: ../src/ui/fma-preferences.ui.h:9
-#| msgid "_Create a root 'FileManager-Actions' menu"
 msgid "_Create a root “FileManager-Actions” menu"
 msgstr "_Crear un menú raíz «Acciones del gestor de archivos»"
 
@@ -3907,9 +3784,6 @@ msgid "Relabel _profiles"
 msgstr "Re-etiquetar p_erfiles"
 
 #: ../src/ui/fma-preferences.ui.h:30
-#| msgid ""
-#| "When a profile is copied/pasted, or duplicated, the new profile will be "
-#| "relabelled as 'Copy of ...'."
 msgid ""
 "When a profile is copied/pasted, or duplicated, the new profile will be "
 "relabelled as “Copy of …”."
@@ -3926,10 +3800,6 @@ msgid "Esc key _quits the assistant"
 msgstr "La tecla Esc _sale del asistente"
 
 #: ../src/ui/fma-preferences.ui.h:33
-#| msgid ""
-#| "When this option is checked, the 'Escape' key will let you quit the "
-#| "current assistant. Else, quitting the assistant is only possible by "
-#| "hitting the 'Cancel' button."
 msgid ""
 "When this option is checked, the “Escape” key will let you quit the current "
 "assistant. Else, quitting the assistant is only possible by hitting the "
@@ -3944,10 +3814,6 @@ msgid "Ask for a _confirmation when quitting the assistant on Esc key"
 msgstr "Preguntar _confirmación al salir del asistente con la tecla Esc"
 
 #: ../src/ui/fma-preferences.ui.h:35
-#| msgid ""
-#| "This option is only relevant when the 'Escape' key lets the user quit the "
-#| "assistant. When checked, the user will be prompted for a confirmation in "
-#| "order to help prevent erroneous hits of the Esc key."
 msgid ""
 "This option is only relevant when the “Escape” key lets the user quit the "
 "assistant. When checked, the user will be prompted for a confirmation in "
@@ -4232,7 +4098,6 @@ msgid "New _action"
 msgstr "Acción _nueva"
 
 #: ../src/ui/fma-toolbar.ui.h:15
-#| msgid "_Reload the items"
 msgid "Save the items tree"
 msgstr "Guardar el árbol de elementos"
 
@@ -4249,12 +4114,10 @@ msgid "_Help"
 msgstr "Ay_uda"
 
 #: ../src/ui/fma-toolbar.ui.h:22
-#| msgid "_About..."
 msgid "_About…"
 msgstr "A_cerca de…"
 
 #: ../src/ui/fma-toolbar.ui.h:24
-#| msgid "_Import"
 msgid "_Import…"
 msgstr "_Importar…"
 
@@ -4367,12 +4230,10 @@ msgid "_Left"
 msgstr "I_zquierda"
 
 #: ../src/ui/fma-config-tool.actions.h:28
-#| msgid "_Import assistant..."
 msgid "_Import assistant…"
 msgstr "Asistente de _importación…"
 
 #: ../src/ui/fma-config-tool.actions.h:29
-#| msgid "E_xport assistant..."
 msgid "E_xport assistant…"
 msgstr "Asistente de e_xportación…"
 
@@ -4397,7 +4258,6 @@ msgid "_Dump the clipboard"
 msgstr "_Volcar el portapapeles"
 
 #: ../src/ui/fma-config-tool.actions.h:35
-#| msgid "_New action"
 msgid "_Test a function"
 msgstr "_Probar una función"
 
@@ -4522,7 +4382,6 @@ msgstr "Borrar una XPath de un documento XML"
 
 #: ../src/utils/fma-delete-xmltree.c:213
 #, c-format
-#| msgid "Error: unable to parse file '%s'\n"
 msgid "Error: unable to parse file “%s”\n"
 msgstr "Error: no se pudo analizar el archivo «%s»\n"
 
@@ -4533,7 +4392,6 @@ msgstr "Error: no se pudo crear contexto XPath nuevo\n"
 
 #: ../src/utils/fma-delete-xmltree.c:228
 #, c-format
-#| msgid "Error: unable to evaluate XPath expression '%s'\n"
 msgid "Error: unable to evaluate XPath expression “%s”\n"
 msgstr "Error: no se pudo evaluar la expresión XPath «%s»\n"
 
@@ -4542,19 +4400,16 @@ msgid "Set it if the item should be disabled at creation"
 msgstr "Establece si el elemento debería estar desactivado al crearlo"
 
 #: ../src/utils/fma-new.c:137
-#| msgid "Set it if the item doesn't target the selection context menu"
 msgid "Set it if the item doesn’t target the selection context menu"
 msgstr ""
 "Establecer si el objetivo del elemento no es el menú contextual de selección"
 
 #: ../src/utils/fma-new.c:139
-#| msgid "Set it if the item doesn't target the location context menu"
 msgid "Set it if the item doesn’t target the location context menu"
 msgstr ""
 "Establecer si el objetivo del elemento no es el menú contextual de ubicación"
 
 #: ../src/utils/fma-new.c:141
-#| msgid "Set it if the item doesn't target the toolbar"
 msgid "Set it if the item doesn’t target the toolbar"
 msgstr "Establecer si el objetivo del elemento no es la barra de herramientas"
 
@@ -4573,13 +4428,11 @@ msgstr "Crear el elemento nuevo como un archivo .desktop"
 
 #: ../src/utils/fma-new.c:161
 #, c-format
-#| msgid "Error: '%s' and '%s' options cannot both be specified\n"
 msgid "Error: “%s” and “%s” options cannot both be specified\n"
 msgstr "Error: no se pueden especificar a la vez las opciones «%s» y «%s»\n"
 
 #: ../src/utils/fma-new.c:162
 #, c-format
-#| msgid "'%s' option is deprecated, see %s\n"
 msgid "“%s” option is deprecated, see %s\n"
 msgstr "La opción «%s» está obsoleta, consulte %s\n"
 
@@ -4628,7 +4481,6 @@ msgstr "Elegir qué programa crea la acción"
 
 #. i18n: “io-desktop” is a plugin identifier - do not translate
 #: ../src/utils/fma-new.c:597
-#| msgid "Error: unable to find 'io-desktop' i/o provider."
 msgid "Error: unable to find “io-desktop” i/o provider."
 msgstr "Error: no se pudo encontrar el proveedor de E/S «io-desktop»."
 
@@ -4659,7 +4511,6 @@ msgstr "Error: %s: formato de exportación desconocido.\n"
 
 #: ../src/utils/fma-print.c:206
 #, c-format
-#| msgid "Error: item '%s' doesn't exist.\n"
 msgid "Error: item “%s” doesn’t exist.\n"
 msgstr "Error: el elemento «%s» no existe.\n"
 
@@ -4698,9 +4549,6 @@ msgid "The internal identifier of the action to be launched"
 msgstr "El identificador interno de la acción para lanzar"
 
 #: ../src/utils/fma-run.c:61
-#| msgid ""
-#| "A target, file or folder, for the action. More than one options may be "
-#| "specified"
 msgid ""
 "A target, file or folder, for the action. More than one target may be "
 "specified"
@@ -4734,19 +4582,16 @@ msgstr "Ejecutar una acción en el objetivo especificado."
 
 #: ../src/utils/fma-run.c:236
 #, c-format
-#| msgid "Error: action '%s' doesn't exist.\n"
 msgid "Error: action “%s” doesn’t exist.\n"
 msgstr "Error: la acción «%s» no existe.\n"
 
 #: ../src/utils/fma-run.c:240
 #, c-format
-#| msgid "Error: action '%s' is disabled.\n"
 msgid "Error: action “%s” is disabled.\n"
 msgstr "Error: la acción «%s» está desactivada.\n"
 
 #: ../src/utils/fma-run.c:245
 #, c-format
-#| msgid "Error: action '%s' is not valid.\n"
 msgid "Error: action “%s” is not valid.\n"
 msgstr "Error: la acción «%s» no es válida.\n"
 
@@ -4795,7 +4640,6 @@ msgstr "Error: es obligatorio un tipo para establecer/actualizar un valor.\n"
 #. i18n: “str”, “int” and “bool” are literal values: do not translate
 #: ../src/utils/fma-set-conf.c:157
 #, c-format
-#| msgid "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n"
 msgid "Error: unknown type: %s. Use “str”, “int” or “bool”.\n"
 msgstr "Error: tipo desconocido: %s. Use «str», «int» o «bool».\n"
 
