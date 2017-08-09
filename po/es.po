@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-07-22 15:34+0000\n"
-"PO-Revision-Date: 2017-08-07 09:22+0200\n"
+"POT-Creation-Date: 2017-08-07 07:27+0000\n"
+"PO-Revision-Date: 2017-08-09 08:23+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -493,7 +493,7 @@ msgstr "No mostrado en el entorno."
 
 #: ../src/core/fma-icontext-factory.c:389
 msgid "Defaults to none."
-msgstr "A nada de forma predeterminada."
+msgstr "Lo predeterminado es ninguno."
 
 #: ../src/core/fma-icontext-factory.c:403
 msgid ""
@@ -580,8 +580,6 @@ msgstr ""
 
 #. i18n: “true” is to be taken as a literal, must not be translated
 #: ../src/core/fma-icontext-factory.c:485
-#, fuzzy
-#| msgid "The path to a command which will display the 'true' string"
 msgid "The path to a command which will display the “true” string"
 msgstr "La ruta a un comando que presentará la cadena «true»"
 
@@ -591,14 +589,6 @@ msgstr "Mostrar si está en ejecución"
 
 #. i18n: ShowIfRunning is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:494
-#, fuzzy
-#| msgid ""
-#| "The name of a process.\n"
-#| "The item will be candidate if the process name is found in memory at "
-#| "runtime.\n"
-#| "Parameters may appear in 'ShowIfRunning' value, and will be substituted "
-#| "at runtime.\n"
-#| "Defaults to successful."
 msgid ""
 "The name of a process.\n"
 "The item will be candidate if the process name is found in memory at "
@@ -625,19 +615,6 @@ msgstr "Prestaciones"
 #. i18n: “Owner”, “Readable”, “Writable”, “Executable” and “Local” are all keywords
 #. *  of the specification; they are not translatable
 #: ../src/core/fma-icontext-factory.c:521
-#, fuzzy
-#| msgid ""
-#| "A list of capabilities each item of the selection must satisfy in order "
-#| "for the item to be candidate.\n"
-#| "Capabilities may be negated.\n"
-#| "Capabilities have to be chosen between following predefined ones:\n"
-#| "- 'Owner': current user is the owner of selected items\n"
-#| "- 'Readable': selected items are readable by user (probably more usefull "
-#| "when negated)\n"
-#| "- 'Writable': selected items are writable by user\n"
-#| "- 'Executable': selected items are executable by user\n"
-#| "- 'Local': selected items are local.\n"
-#| "Defaults to empty list."
 msgid ""
 "A list of capabilities each item of the selection must satisfy in order for "
 "the item to be candidate.\n"
@@ -665,10 +642,6 @@ msgstr ""
 "Lo predeterminado es una lista vacía."
 
 #: ../src/core/fma-icontext-factory.c:543
-#, fuzzy
-#| msgid ""
-#| "The name of a capability the selection must meet. May be 'Owner', "
-#| "'Readable', 'Writable', 'Executable' or 'Local'"
 msgid ""
 "The name of a capability the selection must meet. May be “Owner”, "
 "“Readable”, “Writable”, “Executable” or “Local”"
@@ -717,11 +690,6 @@ msgid "Do _not import the item"
 msgstr "No _importar el elemento"
 
 #: ../src/core/fma-importer.c:59
-#, fuzzy
-#| msgid ""
-#| "This used to be the historical behavior.\n"
-#| "The selected file will be marked as \"NOT OK\" in the Summary page.\n"
-#| "The existing item will not be modified."
 msgid ""
 "This used to be the historical behavior.\n"
 "The selected file will be marked as “NOT OK” in the Summary page.\n"
@@ -773,16 +741,12 @@ msgstr ""
 
 #. l10n: “ImporterAskDialog” is the dialog name: do not translate
 #: ../src/core/fma-importer-ask.c:270
-#, fuzzy, c-format
-#| msgid "Unable to load 'ImporterAskDialog' from %s"
+#, c-format
 msgid "Unable to load “ImporterAskDialog” from %s"
 msgstr "No se pudo cargar el «ImporterAskDialog» desde %s"
 
 #: ../src/core/fma-importer-ask.c:399
-#, fuzzy, c-format
-#| msgid ""
-#| "The action \"%s\" imported from \"%s\" has the same identifier than the "
-#| "already existing \"%s\"."
+#, c-format
 msgid ""
 "The action “%s” imported from “%s” has the same identifier than the already "
 "existing “%s”."
@@ -791,10 +755,7 @@ msgstr ""
 "existente «%s»."
 
 #: ../src/core/fma-importer-ask.c:405
-#, fuzzy, c-format
-#| msgid ""
-#| "The menu \"%s\" imported from \"%s\" has the same identifier than the "
-#| "already existing \"%s\"."
+#, c-format
 msgid ""
 "The menu “%s” imported from “%s” has the same identifier than the already "
 "existing “%s”."
@@ -886,7 +847,7 @@ msgstr ""
 
 #: ../src/core/fma-io-provider.c:1433
 msgid "The I/O provider is not willing to do that."
-msgstr "El proveedor de E/S no hacer eso."
+msgstr "El proveedor de E/S no quiere hacer eso."
 
 #: ../src/core/fma-io-provider.c:1437
 msgid "Write error in I/O provider."
@@ -932,7 +893,7 @@ msgid ""
 msgstr ""
 "Indica si el objetivo de la aplicación son los menús contextuales de "
 "selección del gestor de archivos.\n"
-"Esto era el comportamiento histórico.\n"
+"Este era el comportamiento histórico.\n"
 "Note que los menús siempre son candidatos potenciales para mostrar los menús "
 "contextuales de selección proporcionados que contienen al menos una acción.\n"
 "Lo predeterminado es cierto."
@@ -958,7 +919,7 @@ msgstr ""
 "ubicación actual.\n"
 "Note que los menús siempre son candidatos potenciales para mostrar los menús "
 "contextuales de selección proporcionados que contienen al menos una acción.\n"
-"Lo predeterminado es falso."
+"Lo predeterminado es FALSE."
 
 #: ../src/core/fma-object-action-factory.c:125
 msgid "Targets the location context menu [false]"
@@ -979,7 +940,7 @@ msgstr ""
 "del gestor de archivos.\n"
 "Esto sólo se aplica en la ubicación actual.\n"
 "Note que los menús nunca se muestra en la barra de herramientas.\n"
-"Lo predeterminado es FALSO."
+"Lo predeterminado es FALSE."
 
 #: ../src/core/fma-object-action-factory.c:150
 msgid "Targets the toolbar [false]"
@@ -1007,19 +968,13 @@ msgstr ""
 #: ../src/core/fma-object-id.c:329
 #, c-format
 msgid "Copy of %s"
-msgstr "copia de %s"
+msgstr "Copia de %s"
 
 #: ../src/core/fma-object-item-factory.c:65
 msgid "Type of the item"
 msgstr "Tipo del elemento"
 
 #: ../src/core/fma-object-item-factory.c:66
-#, fuzzy
-#| msgid ""
-#| "Defines if the item is an action or a menu. Possible values are :\n"
-#| "- 'Action',\n"
-#| "- 'Menu'.\n"
-#| "The value is case sensitive and must not be localized."
 msgid ""
 "Defines if the item is an action or a menu. Possible values are :\n"
 "• “Action”,\n"
@@ -1105,14 +1060,6 @@ msgid "Suggested shortcut"
 msgstr "Atajo de teclado sugerido"
 
 #: ../src/core/fma-object-item-factory.c:215
-#, fuzzy
-#| msgid ""
-#| "A shortcut suggested for the action or the menu.\n"
-#| "Please note that this might be only a suggestion as the shortcut may be "
-#| "already reserved for another use. Implementation should not override an "
-#| "already existing shortcut to define this one.\n"
-#| "The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n"
-#| "Defaults to empty."
 msgid ""
 "A shortcut suggested for the action or the menu.\n"
 "Please note that this might be only a suggestion as the shortcut may be "
@@ -1133,12 +1080,6 @@ msgid "List of subitem ids"
 msgstr "Lista de los ID de los subelementos"
 
 #: ../src/core/fma-object-item-factory.c:269
-#, fuzzy
-#| msgid ""
-#| "Ordered list of the IDs of the subitems. This may be actions or menus if "
-#| "the item is a menu, or profiles if the item is an action.\n"
-#| "If this list doesn't exist or is empty for an action or a menu, subitems "
-#| "are attached in the order of the read operations."
 msgid ""
 "Ordered list of the IDs of the subitems. This may be actions or menus if the "
 "item is a menu, or profiles if the item is an action.\n"
@@ -1221,57 +1162,6 @@ msgstr "Los parámetros del comando"
 
 #. too long string for iso c: (max=509)
 #: ../src/core/fma-object-profile-factory.c:129
-#, fuzzy
-#| msgid ""
-#| "The parameters of the command to be executed when the user selects the "
-#| "menu item in the file manager context menu or in the toolbar.\n"
-#| "The parameters may contain some special tokens which are replaced by the "
-#| "informations provided by the file manager before starting the command:\n"
-#| "- up to version 2.0:\n"
-#| "  %d: base folder of the selected file(s)\n"
-#| "  %f: the name of the selected file or the first one if several are "
-#| "selected\n"
-#| "  %h: hostname of the URI\n"
-#| "  %m: space-separated list of the basenames of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %M: space-separated list of the selected file(s)/folder(s), with their "
-#| "full paths\n"
-#| "  %p: port number of the first URI\n"
-#| "  %R: space-separated list of selected URIs\n"
-#| "  %s: scheme of the URI\n"
-#| "  %u: URI\n"
-#| "  %U: username of the URI\n"
-#| "  %%: a percent sign.\n"
-#| "- starting from version 3:\n"
-#| "  %b: (first) basename\n"
-#| "  %B: space-separated list of the basenames of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %c: count the selected file(s)/folder(s)\n"
-#| "  %d: (first) base directory\n"
-#| "  %D: space-separated list of base directories of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %f: (first) filename\n"
-#| "  %F: space-separated list of the filenames of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %h: hostname of the (first) URI\n"
-#| "  %m: (first) mimetype\n"
-#| "  %M: space-separated list of the mimetypes of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %n: username of the (first) URI\n"
-#| "  %o: no-op operator which forces the singular form of execution (since "
-#| "3.0.2)\n"
-#| "  %O: no-op operator which forces the plural form of execution (since "
-#| "3.0.2)\n"
-#| "  %p: port number of the (first) URI\n"
-#| "  %s: scheme of the (first) URI\n"
-#| "  %u: (first) URI\n"
-#| "  %U: space-separated list of the URIs of the selected file(s)/folder(s)\n"
-#| "  %w: (first) basename without the extension\n"
-#| "  %W: space-separated list of basenames without the extension\n"
-#| "  %x: (first) extension\n"
-#| "  %X: space-separated list of the extensions of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %%: a percent sign."
 msgid ""
 "The parameters of the command to be executed when the user selects the menu "
 "item in the file manager context menu or in the toolbar.\n"
@@ -1379,10 +1269,7 @@ msgid "Working directory"
 msgstr "Carpeta de trabajo"
 
 #: ../src/core/fma-object-profile-factory.c:189
-#, fuzzy, c-format
-#| msgid ""
-#| "The working directory the command will be started in.\n"
-#| "Defaults to \"%d\"."
+#, c-format
 msgid ""
 "The working directory the command will be started in.\n"
 "Defaults to “%d”."
@@ -1396,20 +1283,6 @@ msgstr "Modo de ejecución"
 
 #. i18n: “Normal”, “Terminal”, “Embedded” and “DisplayOutput” are non-translatable keywords
 #: ../src/core/fma-object-profile-factory.c:213
-#, fuzzy
-#| msgid ""
-#| "Execution mode of the program.\n"
-#| "This may be chosen between following values:\n"
-#| "- Normal: starts as a standard graphical user interface\n"
-#| "- Terminal: starts the preferred terminal of the graphical environment, "
-#| "and runs the command in it\n"
-#| "- Embedded: makes use of a special feature of the file manager which "
-#| "allows a terminal to be ran inside of it; an acceptable fallback is "
-#| "Terminal\n"
-#| "- DisplayOutput: the ran terminal may be closed at end of the command, "
-#| "but standard streams (stdout, stderr) should be collected and displayed; "
-#| "an acceptable fallback is Terminal.\n"
-#| "Defaults to \"Normal\"."
 msgid ""
 "Execution mode of the program.\n"
 "This may be chosen between following values:\n"
@@ -1426,8 +1299,8 @@ msgid ""
 msgstr ""
 "Modo de ejecución del programa.\n"
 "Se puede elegir entre los siguientes valores:\n"
-"* Normal: se inicia como una interfaz de usuario gráfica estándar\n"
-"* Terminal: inicia el terminal preferido del entorno gráfico y ejecuta el "
+"* «Normal»: se inicia como una interfaz de usuario gráfica estándar\n"
+"* «Terminal»: inicia el terminal preferido del entorno gráfico y ejecuta el "
 "comando en él\n"
 "* «Embedded» (empotrado): hace uso de una característica especial del gestor "
 "de archivos que permite que se ejecute una terminal dentro de él; «Terminal» "
@@ -1447,7 +1320,7 @@ msgid ""
 "Defaults to FALSE."
 msgstr ""
 "Sólo relevante en ExecutionMode=Normal.\n"
-"Lo predeterminado es falso."
+"Lo predeterminado es FALSE."
 
 #: ../src/core/fma-object-profile-factory.c:267
 msgid "Startup WM Class"
@@ -1476,8 +1349,7 @@ msgstr ""
 "por su UID numérico o por su nombre de inicio de sesión.\n"
 "El perfil se ignora si se define un UID o un nombre de inicio de sesión "
 "inexistentes.\n"
-"Lo predeterminado es estar vacío: el comando se ejecutará como el usuario "
-"actual."
+"Lo predeterminado es vacío: el comando se ejecutará como el usuario actual."
 
 #: ../src/core/fma-selected-info.c:809
 #, c-format
@@ -1535,17 +1407,6 @@ msgid "Export as a ._desktop file"
 msgstr "Exportar como un archivo ._desktop"
 
 #: ../src/io-desktop/fma-desktop-formats.c:57
-#, fuzzy
-#| msgid ""
-#| "This format has been introduced with v 3.0 serie, and should be your "
-#| "newly preferred format when exporting items.\n"
-#| "It let you easily share your actions with the whole world, including with "
-#| "users of other desktop environments, as long as their own application "
-#| "implements the DES-EMA specification which describes this format.\n"
-#| "The exported .desktop file may later be imported via :\n"
-#| "- Import assistant of the FileManager-Actions Configuration Tool,\n"
-#| "- drag-n-drop into the FileManager-Actions Configuration Tool,\n"
-#| "- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory."
 msgid ""
 "This format has been introduced with v 3.0 serie, and should be your newly "
 "preferred format when exporting items.\n"
@@ -1627,13 +1488,6 @@ msgid "Export as a _full GConf schema file"
 msgstr "Exportar como un archivo de esquema GConf co_mpleto"
 
 #: ../src/io-xml/fma-xml-formats.c:56
-#, fuzzy
-#| msgid ""
-#| "This used to be the historical export format.\n"
-#| "The exported schema file may later be imported via :\n"
-#| "- Import assistant of the FileManager-Actions Configuration Tool,\n"
-#| "- drag-n-drop into the FileManager-Actions Configuration Tool,\n"
-#| "- or via the gconftool-2 --import-schema-file command-line tool."
 msgid ""
 "This used to be the historical export format.\n"
 "The exported schema file may later be imported via :\n"
@@ -1654,16 +1508,6 @@ msgid "Export as a _light GConf schema (v2) file"
 msgstr "Exportar como un archivo de esquema _ligero de GConf (v2)"
 
 #: ../src/io-xml/fma-xml-formats.c:68
-#, fuzzy
-#| msgid ""
-#| "This format has been introduced in v 1.11 serie.\n"
-#| "This is the lightest schema still compatible with GConf command-line "
-#| "tools, while keeping backward compatibility with the FileManager-Actions "
-#| "Configuration Tool oldest versions.\n"
-#| "The exported schema file may later be imported via :\n"
-#| "- Import assistant of the FileManager-Actions Configuration Tool,\n"
-#| "- drag-n-drop into the FileManager-Actions Configuration Tool,\n"
-#| "- or via the gconftool-2 --import-schema-file command-line tool."
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "This is the lightest schema still compatible with GConf command-line tools, "
@@ -1693,18 +1537,6 @@ msgid "Export as a GConf _dump file"
 msgstr "Exportar como un _volcado de archivo de GConf"
 
 #: ../src/io-xml/fma-xml-formats.c:83
-#, fuzzy
-#| msgid ""
-#| "This format has been introduced in v 1.11 serie.\n"
-#| "Tough not backward compatible with FileManager-Actions Configuration Tool "
-#| "versions previous to 1.11, it may still be imported via standard GConf "
-#| "command-line tools.\n"
-#| "The exported dump file may later be imported via :\n"
-#| "- Import assistant of the FileManager-Actions Configuration Tool (1.11 "
-#| "and above),\n"
-#| "- drag-n-drop into the FileManager-Actions Configuration Tool (1.11 and "
-#| "above),\n"
-#| "- or via the gconftool-2 --load command-line tool."
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "Tough not backward compatible with FileManager-Actions Configuration Tool "
@@ -1734,10 +1566,8 @@ msgid "Quit on Escape"
 msgstr "Salir al pulsar «Escape»"
 
 #: ../src/ui/base-assistant.c:146
-#, fuzzy
-#| msgid "Should the assistant 'Quit' when the user hits Escape ?"
 msgid "Should the assistant “Quit” when the user hits Escape ?"
-msgstr "¿Debería el asistente «Salir» al pulsar «Escape» el usuario?"
+msgstr "¿Debería el asistente «Salir» cuando el usuario pulse «Escape»?"
 
 #: ../src/ui/base-assistant.c:153
 msgid "Warn on Escape"
@@ -1835,8 +1665,7 @@ msgid "File is not a valid .desktop file"
 msgstr "El archivo no es un archivo .desktop válido"
 
 #: ../src/ui/egg-desktop-file.c:188
-#, fuzzy, c-format
-#| msgid "Unrecognized desktop file Version '%s'"
+#, c-format
 msgid "Unrecognized desktop file Version “%s”"
 msgstr "No se reconoce la versión «%s» del archivo desktop"
 
@@ -1856,8 +1685,7 @@ msgid "Unrecognized launch option: %d"
 msgstr "Opción de lanzamiento no reconocida: %d"
 
 #: ../src/ui/egg-desktop-file.c:1365
-#, fuzzy, c-format
-#| msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+#, c-format
 msgid "Can’t pass document URIs to a “Type=Link” desktop entry"
 msgstr ""
 "No se pueden pasar los URI de documentos a entradas de escritorio «Type=Link»"
@@ -2738,12 +2566,6 @@ msgid "_Startup notify"
 msgstr "_Notificación de inicio"
 
 #: ../src/ui/fma-main-window.ui.h:58
-#, fuzzy
-#| msgid ""
-#| "When checked, it is known that the run command will send a \"remove\" "
-#| "message to the desktop environment.\n"
-#| "See the Startup Notification Protocol Specification for more details.\n"
-#| "Only relevant when chosen execution mode is Normal."
 msgid ""
 "When checked, it is known that the run command will send a “remove” message "
 "to the desktop environment.\n"
@@ -2751,10 +2573,10 @@ msgid ""
 "Only relevant when chosen execution mode is Normal."
 msgstr ""
 "Cuando está activada, se sabe que el comando «ejecutar» enviará un mensaje "
-"«quitar» al entorno de escritorio.\n"
+"de «quitar» al entorno de escritorio.\n"
 "Consulte la especificación del protocolo de notificaciones al inicio para "
 "obtener más detalles.\n"
-"Sólo es relevante cuando se elije del modo «normal» de ejecución."
+"Sólo es relevante cuando se elije del modo «Normal» de ejecución."
 
 #: ../src/ui/fma-main-window.ui.h:61
 msgid "Startup Window Manager _class :"
@@ -2809,11 +2631,6 @@ msgid "E_xecution"
 msgstr "_Ejecución"
 
 #: ../src/ui/fma-main-window.ui.h:73
-#, fuzzy
-#| msgid ""
-#| "The current item will appear if the basename of each element of the "
-#| "selection matches one filter of the 'Must match one of' column, while not "
-#| "matching any of the filters of the 'Must not match any of' column."
 msgid ""
 "The current item will appear if the basename of each element of the "
 "selection matches one filter of the “Must match one of” column, while not "
@@ -2825,13 +2642,6 @@ msgstr ""
 "de»."
 
 #: ../src/ui/fma-main-window.ui.h:74
-#, fuzzy
-#| msgid ""
-#| "This list lets you determine for which basenames the currently selected "
-#| "item will be displayed in the Nautilus context menu.\n"
-#| "Basenames may use '*' and '?' wildcards.\n"
-#| "Basenames may be negated to specify for which basenames your item must "
-#| "not appear."
 msgid ""
 "This list lets you determine for which basenames the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -2843,7 +2653,7 @@ msgstr ""
 "elemento seleccionado actualmente en el menú contextual de Nautilus.\n"
 "Los nombres base deben usar los comodines «*» o «?».\n"
 "Los nombres base se pueden negar para especificar para qué nombres base no "
-"deben aparecer el elemento."
+"debe aparecer el elemento."
 
 #: ../src/ui/fma-main-window.ui.h:77
 msgid "Click to add a new basename filter."
