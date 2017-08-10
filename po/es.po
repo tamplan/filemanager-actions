@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-07 07:27+0000\n"
-"PO-Revision-Date: 2017-08-09 08:23+0200\n"
+"POT-Creation-Date: 2017-08-09 06:27+0000\n"
+"PO-Revision-Date: 2017-08-10 09:01+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -571,8 +571,8 @@ msgid ""
 "runtime.\n"
 "Defaults to successful."
 msgstr ""
-"Un comando que, al ejecutarlo, debería mostrar una cadena de salida en "
-"stdout.\n"
+"Un comando que, al ejecutarlo, debería mostrar una cadena de salida en la "
+"salida estándar.\n"
 "El elemento será candidato si la cadena de salida es igual a «true».\n"
 "Los parámetros pueden aparecer en el valor «ShowIfTrue» y se sustituirán "
 "durante la ejecución.\n"
@@ -1587,7 +1587,7 @@ msgstr "¿Está seguro de que quiere salir de este asistente?"
 #: ../src/ui/base-gtk-utils.c:397 ../src/ui/base-gtk-utils.c:470
 #: ../src/ui/fma-ifolders-tab.c:247
 msgid "_Cancel"
-msgstr "C_ancelar"
+msgstr "_Cancelar"
 
 #: ../src/ui/base-gtk-utils.c:398 ../src/ui/base-gtk-utils.c:471
 msgid "_OK"
@@ -2694,11 +2694,6 @@ msgid "_Basenames"
 msgstr "Nombres _base"
 
 #: ../src/ui/fma-main-window.ui.h:85
-#, fuzzy
-#| msgid ""
-#| "The current item will appear if the mimetype of each element of the "
-#| "selection matches one filter of the 'Must match one of' column, while not "
-#| "matching any of the filters of the 'Must not match any of' column."
 msgid ""
 "The current item will appear if the mimetype of each element of the "
 "selection matches one filter of the “Must match one of” column, while not "
@@ -2710,13 +2705,6 @@ msgstr ""
 "de»."
 
 #: ../src/ui/fma-main-window.ui.h:86
-#, fuzzy
-#| msgid ""
-#| "This list lets you determine for which mimetypes the currently selected "
-#| "item will be displayed in the Nautilus context menu.\n"
-#| "Mimetypes may be specified as '*', '*/*', 'group/*' or 'group/subgroup'.\n"
-#| "Mimetypes may be negated to specify for which type of objects your item "
-#| "must not appear."
 msgid ""
 "This list lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -2726,10 +2714,10 @@ msgid ""
 msgstr ""
 "Esta lista le permite determinar para qué tipos MIME se mostrará el elemento "
 "seleccionado actualmente en el menú contextual de Nautilus.\n"
-"Los tipos MIME se deben especificar como «*», «/*», «grupo/*» o «grupo/"
+"Los tipos MIME se deben especificar como «*», «*/*», «grupo/*» o «grupo/"
 "subgrupo».\n"
-"Los tipos MIME se pueden negar para especificar para qué tipo de objetos no "
-"deben aparecer el elemento."
+"Los tipos MIME se pueden negar para especificar para qué tipo de objetos su "
+"elemento no debe aparecer."
 
 #: ../src/ui/fma-main-window.ui.h:89
 msgid "Click to add a new mimetype filter."
@@ -2744,13 +2732,6 @@ msgid "<b> Mimetypes conditions </b>"
 msgstr "<b>Condiciones de tipos MIME</b>"
 
 #: ../src/ui/fma-main-window.ui.h:92
-#, fuzzy
-#| msgid ""
-#| "This tab lets you determine for which mimetypes the currently selected "
-#| "item will be displayed in the Nautilus context menu.\n"
-#| "Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
-#| "Mimetypes may be negated to specify for which type of objects your item "
-#| "must not appear."
 msgid ""
 "This tab lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -2762,20 +2743,14 @@ msgstr ""
 "elemento seleccionado actualmente en el menú contextual de Nautilus.\n"
 "Los tipos MIME se deben especificar como «*», «/*», «grupo/*» o «grupo/"
 "subgrupo».\n"
-"Los tipos MIME se pueden negar para especificar para qué tipo de objetos no "
-"deben aparecer el elemento."
+"Los tipos MIME se pueden negar para especificar para qué tipo de objetos su "
+"elemento no debe aparecer."
 
 #: ../src/ui/fma-main-window.ui.h:95
 msgid "_Mimetypes"
 msgstr "Tipos _MIME"
 
 #: ../src/ui/fma-main-window.ui.h:96
-#, fuzzy
-#| msgid ""
-#| "The current item will appear if the location of each element of the "
-#| "selection is one or inside one of the paths of the 'Must match one of' "
-#| "column, while not being one or inside one of the 'Must not match any of' "
-#| "column."
 msgid ""
 "The current item will appear if the location of each element of the "
 "selection is one or inside one of the paths of the “Must match one of” "
@@ -2784,18 +2759,10 @@ msgid ""
 msgstr ""
 "El elemento actual aparecerá si la ubicación de elemento de la selección es "
 "una o está dentro de una de las rutas de la columna «Debe coincidir con una "
-"de», y no se una o estar dentro de una de las de la columna «No debe "
+"de», y no ser una o estar dentro de una de las de la columna «No debe "
 "coincidir con ninguna de»."
 
 #: ../src/ui/fma-main-window.ui.h:97
-#, fuzzy
-#| msgid ""
-#| "This list lets you determine where (in which folders) the currently "
-#| "selected files must be found in order for the item to be displayed in the "
-#| "Nautilus context menu.\n"
-#| "Folders may use '*' or '?' wildcards.\n"
-#| "Folder filters may be negated to specify for which folders your item must "
-#| "not appear."
 msgid ""
 "This list lets you determine where (in which folders) the currently selected "
 "files must be found in order for the item to be displayed in the Nautilus "
@@ -2809,7 +2776,7 @@ msgstr ""
 "menú contextual de Nautilus.\n"
 "Las carpetas deben usar los comodines «*» o «?».\n"
 "Los filtros de carpetas se pueden negar para especificar para qué carpetas "
-"no deben aparecer el elemento."
+"no debe aparecer el elemento."
 
 #: ../src/ui/fma-main-window.ui.h:100
 msgid "Click to add a new folder filter."
@@ -2848,11 +2815,6 @@ msgid "_Folders"
 msgstr "_Carpetas"
 
 #: ../src/ui/fma-main-window.ui.h:107
-#, fuzzy
-#| msgid ""
-#| "The current item will appear if the scheme of each element of the "
-#| "selection matches one of the 'Must match one of' column, while not "
-#| "matching any of the 'Must not match any of' column."
 msgid ""
 "The current item will appear if the scheme of each element of the selection "
 "matches one of the “Must match one of” column, while not matching any of the "
@@ -2916,11 +2878,6 @@ msgid "_Schemes"
 msgstr "_Esquemas"
 
 #: ../src/ui/fma-main-window.ui.h:118
-#, fuzzy
-#| msgid ""
-#| "The current item will appear if each element of the selection matches all "
-#| "capabilities of the 'Must match all of' column, while not matching any "
-#| "capability of the 'Must not match any of' column."
 msgid ""
 "The current item will appear if each element of the selection matches all "
 "capabilities of the “Must match all of” column, while not matching any "
@@ -3047,12 +3004,6 @@ msgstr ""
 "está actualmente disponible."
 
 #: ../src/ui/fma-main-window.ui.h:143
-#, fuzzy
-#| msgid ""
-#| "This is an advanced condition based on a runtime result.\n"
-#| "Enter here a command which is able to display the exact \"true\" string "
-#| "on its standard output.\n"
-#| "This may be used for example for testing a complex condition."
 msgid ""
 "This is an advanced condition based on a runtime result.\n"
 "Enter here a command which is able to display the exact “true” string on its "
@@ -3061,7 +3012,9 @@ msgid ""
 msgstr ""
 "Esta es una condición avanzada basada en un resultado en tiempo de "
 "ejecución.\n"
-"Escriba aquí un comando que sea capaz"
+"Escriba aquí un comando que sea capaz de mostrar la cadena exacta «true» en "
+"su salida estándar.\n"
+"Esto puede usarse, por ejemplo, para probar una condición compleja."
 
 #: ../src/ui/fma-main-window.ui.h:146
 msgid "Brow_se…"
@@ -3148,18 +3101,13 @@ msgid "Read-only item"
 msgstr "Elemento de sólo lectura"
 
 #: ../src/ui/fma-main-window.ui.h:164
-#, fuzzy
-#| msgid ""
-#| "This box is checked if the item cannot be edited.\n"
-#| "There may be multiple reasons for why an item cannot be edited. See your "
-#| "User's Manual."
 msgid ""
 "This box is checked if the item cannot be edited.\n"
 "There may be multiple reasons for why an item cannot be edited. See your "
 "User’s Manual."
 msgstr ""
 "Esta casilla está marcada si el elemento no se puede editar.\n"
-"Puede haber varias razones por las que un elemento un se puede editar. "
+"Puede haber varias razones por las que un elemento no se puede editar. "
 "Consulte el manual del usuario."
 
 #: ../src/ui/fma-main-window.ui.h:166
@@ -3200,10 +3148,7 @@ msgid "Must not match any of"
 msgstr "No debe coincidir con ninguna de"
 
 #: ../src/ui/fma-match-list.c:479
-#, fuzzy, c-format
-#| msgid ""
-#| "'%s' filter already exists in the list.\n"
-#| "Please provide another one."
+#, c-format
 msgid ""
 "“%s” filter already exists in the list.\n"
 "Please provide another one."
@@ -3401,11 +3346,6 @@ msgid "_Ascending alphabetical order"
 msgstr "Orden alfabético _ascendente"
 
 #: ../src/ui/fma-preferences.ui.h:3
-#, fuzzy
-#| msgid ""
-#| "Menus and actions will be displayed in the ascending alphabetical order "
-#| "of their label, both in the Nautilus context menu and in the NACT user "
-#| "interface."
 msgid ""
 "Menus and actions will be displayed in the ascending alphabetical order of "
 "their label, both in the Nautilus context menu and in the fma-config-tool "
@@ -3413,18 +3353,13 @@ msgid ""
 msgstr ""
 "Los menús y las acciones se mostrarán, por sus etiquetas, en orden "
 "alfabético ascendente; tanto en el menú contextual de Nautilus como en la "
-"interfaz de usuario NACT."
+"interfaz de usuario de la herramienta de configuración NACT."
 
 #: ../src/ui/fma-preferences.ui.h:4
 msgid "_Descending alphabetical order"
 msgstr "Orden alfabético _descendente"
 
 #: ../src/ui/fma-preferences.ui.h:5
-#, fuzzy
-#| msgid ""
-#| "Menus and actions will be displayed in the descending alphabetical order "
-#| "of their label, both in the Nautilus context menu and in the NACT user "
-#| "interface."
 msgid ""
 "Menus and actions will be displayed in the descending alphabetical order of "
 "their label, both in the Nautilus context menu and in the fma-config-tool "
@@ -3432,24 +3367,20 @@ msgid ""
 msgstr ""
 "Los menús y las acciones se mostrarán, por sus etiquetas, en orden "
 "alfabético descendente; tanto en el menú contextual de Nautilus como en la "
-"interfaz de usuario NACT."
+"interfaz de usuario de la herramienta de configuración NACT."
 
 #: ../src/ui/fma-preferences.ui.h:6
 msgid "_Manual order"
 msgstr "_Orden manual:"
 
 #: ../src/ui/fma-preferences.ui.h:7
-#, fuzzy
-#| msgid ""
-#| "Display order of menus and actions, both in the Nautilus context menu and "
-#| "in the NACT user interface, must be manually adjusted."
 msgid ""
 "Display order of menus and actions, both in the Nautilus context menu and in "
 "the fma-config-tools user interface, must be manually adjusted."
 msgstr ""
 "Para mostrar el orden de los menús y acciones, tanto en el menú contextual "
-"de Nautilus como en la interfaz de usuario NACT, se deberán hacer los "
-"ajustes manualmente."
+"de Nautilus como en la interfaz de usuario de la herramienta de "
+"configuración NACT, se deberán hacer los ajustes manualmente."
 
 #: ../src/ui/fma-preferences.ui.h:8
 msgid "<b>Items ordering</b>"
@@ -3460,11 +3391,6 @@ msgid "_Create a root “FileManager-Actions” menu"
 msgstr "_Crear un menú raíz «Acciones del gestor de archivos»"
 
 #: ../src/ui/fma-preferences.ui.h:10
-#, fuzzy
-#| msgid ""
-#| "When this option is checked, menus and actions will actually be displayed "
-#| "as sub-items of a root 'FileManager-Actions' menu in the Nautilus context "
-#| "menu."
 msgid ""
 "When this option is checked, menus and actions will actually be displayed as "
 "sub-items of a root “FileManager-Actions” menu in the Nautilus context menu."
@@ -3474,22 +3400,12 @@ msgstr ""
 "contextual de Nautilus."
 
 #: ../src/ui/fma-preferences.ui.h:11
-#, fuzzy
-#| msgid ""
-#| "Add an 'A_bout FileManager-Actions' item in the Nautilus context menus"
 msgid "Add an “A_bout FileManager-Actions” item in the Nautilus context menus"
 msgstr ""
 "Añadir un elemento «Acerca _de» en los menús contextuales del gestor de "
 "archivos"
 
 #: ../src/ui/fma-preferences.ui.h:12
-#, fuzzy
-#| msgid ""
-#| "When this option is checked, an 'About Nautilus-Actions' item will be "
-#| "added to the root Nautilus-Actions menu in the Nautilus context menu.\n"
-#| "Note that this item will be displayed only if a unique menu is defined in "
-#| "the Nautilus context menu (e.g. when having checked the root 'Nautilus-"
-#| "Actions' menu option above)."
 msgid ""
 "When this option is checked, an “About FileManager-Actions” item will be "
 "added to the root FileManager-Actions menu in the Nautilus context menu.\n"
@@ -3562,15 +3478,11 @@ msgid "Relabel _menus"
 msgstr "Re-etiquetar _menús"
 
 #: ../src/ui/fma-preferences.ui.h:26
-#, fuzzy
-#| msgid ""
-#| "When a menu is copied/pasted, or duplicated, the new menu will be "
-#| "relabelled as 'Copy of ...'."
 msgid ""
 "When a menu is copied/pasted, or duplicated, the new menu will be relabelled "
 "as “Copy of …”."
 msgstr ""
-"Cuando un menú se copia/pega o se duplica, el nuevo menú se reetiquetará "
+"Cuando un menú se copie/pegue o se duplique, el nuevo menú se reetiquetará "
 "como «Copia de…»."
 
 #: ../src/ui/fma-preferences.ui.h:27
@@ -3578,16 +3490,12 @@ msgid "Relabel _actions"
 msgstr "Re-etiquetar _acciones"
 
 #: ../src/ui/fma-preferences.ui.h:28
-#, fuzzy
-#| msgid ""
-#| "When an action is copied/pasted, or duplicated, the new action will be "
-#| "relabelled as 'Copy of ...'."
 msgid ""
 "When an action is copied/pasted, or duplicated, the new action will be "
 "relabelled as “Copy of …”."
 msgstr ""
-"Cuando una acción es copiada/pegada, o duplicada, la nueva acción será "
-"renombrada como \"Copia de ...\"."
+"Cuando una acción se copie/pegue, o duplique, la nueva acción se renombrará "
+"como «Copia de …»."
 
 #: ../src/ui/fma-preferences.ui.h:29
 msgid "Relabel _profiles"
@@ -3725,13 +3633,6 @@ msgid "Click to remove the selected default scheme."
 msgstr "Pulsar para quitar el esquema predeterminado seleccionado."
 
 #: ../src/ui/fma-preferences.ui.h:54
-#, fuzzy
-#| msgid ""
-#| "You may define here any number of schemes. They will be proposed as "
-#| "default schemes when defining conditions for an action.\n"
-#| "If the list becomes empty, NACT will automatically refill in with this "
-#| "default list.\n"
-#| "You can add a new scheme by clicking on the '+' button."
 msgid ""
 "You may define here any number of schemes. They will be proposed as default "
 "schemes when defining conditions for an action.\n"
@@ -4084,10 +3985,6 @@ msgstr "Acciones de las acciones del gestor de archivos"
 
 #. i18n: tooltip of an automagic root submenu
 #: ../src/plugin-menu/fma-menu-plugin.c:997
-#, fuzzy
-#| msgid ""
-#| "A submenu which embeds the currently available Nautilus-Actions actions "
-#| "and menus"
 msgid ""
 "A submenu which embeds the currently available FileManager-Actions actions "
 "and menus"
@@ -4230,7 +4127,8 @@ msgstr ""
 
 #: ../src/utils/fma-new.c:149
 msgid "Output the new item content on stdout (default)"
-msgstr "Mostrar la salida del elemento nuevo en stdout (predeterminado)"
+msgstr ""
+"Mostrar la salida del elemento nuevo en la salida estándar (predeterminado)"
 
 #: ../src/utils/fma-new.c:150
 msgid "Create the new item as a .desktop file"
@@ -4261,13 +4159,6 @@ msgid "Define a new action."
 msgstr "Definir una acción nueva."
 
 #: ../src/utils/fma-new.c:355
-#, fuzzy
-#| msgid ""
-#| "The created action defaults to be written to stdout.\n"
-#| "It can also be written to an output folder, in a file later suitable for "
-#| "an import in NACT.\n"
-#| "Or you may choose to directly write the action into your Nautilus-Actions "
-#| "configuration."
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -4275,11 +4166,12 @@ msgid ""
 "Or you may choose to directly write the action as a .desktop file into your "
 "FileManager-Actions configuration."
 msgstr ""
-"De forma predeterminada la acción creada manda la salida a stdout.\n"
+"De forma predeterminada la acción creada manda la salida a la salida "
+"estándar.\n"
 "También se puede escribir para mandar la salida a una carpeta, en un archivo "
-"apropiado para importarlo en Nautilus Actions.\n"
+"apropiado para importarlo en Acciones de Nautilus.\n"
 "O puede elegir directamente escribir la acción en su configuración de "
-"Nautilus Actions."
+"Acciones de Nautilus."
 
 #: ../src/utils/fma-new.c:383
 msgid "Output of the program"
@@ -4297,7 +4189,7 @@ msgstr "Error: no se pudo encontrar el proveedor de E/S «io-desktop»."
 #. i18n: filemanager-actions-print program summary
 #: ../src/utils/fma-print.c:55
 msgid "Print a menu or an action to stdout."
-msgstr "Imprimir un menú o acción en stdout."
+msgstr "Imprimir un menú o acción en la salida estándar."
 
 #: ../src/utils/fma-print.c:60
 msgid "The identifier of the menu or the action to be printed"
@@ -4326,21 +4218,21 @@ msgstr "Error: el elemento «%s» no existe.\n"
 
 #: ../src/utils/fma-print-schemas.c:62
 msgid "Output the schema on stdout"
-msgstr "Mostrar la salida del esquema en stdout"
+msgstr "Mostrar la salida del esquema en la salida estándar"
 
 #: ../src/utils/fma-print-schemas.c:67
 msgid "Output the action schemas [default]"
-msgstr "Mostrar la salida del esquema en stdout [predeterminado]"
+msgstr "Mostrar la salida del esquema en la salida estándar [predeterminado]"
 
 #: ../src/utils/fma-print-schemas.c:68
 msgid "Output the menu schemas"
 msgstr "Mostrar la salida de los esquemas del menú"
 
 #: ../src/utils/fma-print-schemas.c:162
-#, fuzzy
-#| msgid "Output the Nautilus-Actions GConf schemas on stdout."
 msgid "Output the FileManager-Actions GConf schemas on stdout."
-msgstr "Mostrar la salida del esquema de GConf de Nautilus Actions en stdout."
+msgstr ""
+"Mostrar la salida del esquema de GConf de Acciones de Nautilus en la salida "
+"estándar."
 
 #: ../src/utils/fma-print-schemas.c:166
 msgid ""
@@ -4419,10 +4311,8 @@ msgstr "La clave que actualizar"
 
 #. i18n: “str”, “int” and “bool” are literal values: do not translate
 #: ../src/utils/fma-set-conf.c:66
-#, fuzzy
-#| msgid "The type of the value to be set, may be 'str', 'int' or 'bool'"
 msgid "The type of the value to be set, may be “str”, “int” or “bool”"
-msgstr "El tipo de valor que establecer, puede ser 'str', 'int' o 'bool'"
+msgstr "El tipo de valor que establecer, puede ser «str», «int» o «bool»"
 
 #: ../src/utils/fma-set-conf.c:68
 msgid "The value to be set"
