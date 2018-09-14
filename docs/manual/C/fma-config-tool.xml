@@ -228,8 +228,8 @@
       or you may prefer, at your convenience, directly open a bug
       or a request for enhancement in
       <ulink
-       url="https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions"
-       type="http">Bugzilla website</ulink>.
+       url="https://gitlab.gnome.org/GNOME/filemanager-actions/issues/new"
+       type="http">GNOME Gitlab</ulink>.
     </para>
   </sect1>
 

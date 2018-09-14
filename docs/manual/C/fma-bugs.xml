@@ -1,13 +1,14 @@
 <sect2 id="bugs-bugs">
   <title>Known bugs</title>
   <para>
-    Known bugs are available on
-    <ulink url="https://bugzilla.gnome.org/buglist.cgi?product=filemanager-actions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED" type="http">Bugzilla summary page</ulink>.
+    Known bugs are available in
+    <ulink url="https://gitlab.gnome.org/GNOME/filemanager-actions/issues" type="http">GNOME Gitlab</ulink>.
+    Older known bugs are available in <ulink url="https://bugzilla.gnome.org/buglist.cgi?product=filemanager-actions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED" type="http">GNOME Bugzilla</ulink>.
   </para>
   <para>
     If you find some new bug in &prodname;, you are welcome to open it by pointing
     your favorite browser to
-    <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions" type="http">Bugzilla web site</ulink>.
+    <ulink url="https://gitlab.gnome.org/GNOME/filemanager-actions/issues/new" type="http">GNOME Gitlab</ulink>.
   </para>
   
   <formalpara>
