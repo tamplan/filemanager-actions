@@ -123,7 +123,7 @@ caja_module_shutdown( void )
  * a log handler that we install when in development mode in order to be
  * able to log plugin runtime
  * TODO: the debug flag should be dynamic, so that an advanced user could
- * setup a given key and obtain a full log to send to Bugzilla..
+ * setup a given key and obtain a full log to send to GNOME Gitlab.
  * For now, is always install when compiled in maintainer mode, never else
  */
 static void

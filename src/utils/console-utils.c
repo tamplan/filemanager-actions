@@ -50,8 +50,7 @@ static GLogFunc st_default_log_func = NULL;
 gchar *
 console_cmdline_get_description( void ){
 	return( g_strdup_printf( "%s.\n%s", PACKAGE_STRING,
-			_( "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions,\n"
-				"or you may prefer to mail to <maintainer@filemanager-actions.org>.\n" )));
+			_( "Bug reports are welcomed at https://gitlab.gnome.org/GNOME/filemanager-actions/issues/\n" )));
 }
 
 /**

@@ -351,7 +351,7 @@ typedef struct {
  * @IMPORTER_CODE_OK:                import ok.
  * @IMPORTER_CODE_PROGRAM_ERROR:     a program error has been detected.
  *                                   You should open a bug in
- *                                   <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions">Bugzilla</ulink>.
+ *                                   <ulink url="https://gitlab.gnome.org/GNOME/filemanager-actions/issues/">GNOME Gitlab</ulink>.
  * @IMPORTER_CODE_NOT_WILLING_TO:    the plugin is not willing to import the uri.
  * @IMPORTER_CODE_NO_ITEM_ID:        item id not found.
  * @IMPORTER_CODE_NO_ITEM_TYPE:      item type not found.

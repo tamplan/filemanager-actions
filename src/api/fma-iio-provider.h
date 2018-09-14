@@ -518,7 +518,7 @@ typedef enum {
  * @IIO_PROVIDER_CODE_OK:            the requested operation has been successful.
  * @IIO_PROVIDER_CODE_PROGRAM_ERROR: a program error has been detected;
  *                                      you should open a bug in
- *                                      <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions">Bugzilla</ulink>.
+ *                                      <ulink url="https://gitlab.gnome.org/GNOME/filemanager-actions/issues/">GNOME Gitlab</ulink>.
  * @IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:   the provider is not willing
  *                                             to do the requested action.
  * @IIO_PROVIDER_CODE_WRITE_ERROR:          a write error has been detected.

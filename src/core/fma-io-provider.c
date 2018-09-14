@@ -67,7 +67,7 @@ enum {
 #define IO_PROVIDER_PROP_ID				"fma-io-provider-prop-id"
 
 static const gchar   *st_enter_bug    = N_( "Please, be kind enough to fill out a bug report on "
-											"https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions." );
+											"https://gitlab.gnome.org/GNOME/filemanager-actions/issues." );
 
 static GObjectClass  *st_parent_class = NULL;
 static GList         *st_io_providers = NULL;
