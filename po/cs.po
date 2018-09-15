@@ -5,15 +5,15 @@
 #
 # Tomas Kyjovsky <tomas.kyjovsky@mail.muni.cz>, 2006.
 # Petr Kovar <pknbe@volny.cz>, 2010.
-# Marek Černocký <marek@manet.cz>, 2009, 2010, 2011, 2012, 2017.
+# Marek Černocký <marek@manet.cz>, 2009, 2010, 2011, 2012, 2017, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-03-08 19:39+0000\n"
-"PO-Revision-Date: 2017-07-01 08:33+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/filemanager-actions/"
+"issues\n"
+"POT-Creation-Date: 2018-09-14 18:21+0000\n"
+"PO-Revision-Date: 2018-09-15 07:33+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -73,9 +73,9 @@ msgid ""
 "Public License for more details."
 msgstr ""
 "Nástroj nastavení SprávceSouborů-Akce je šířen ve víře, že bude užitečný, "
-"ale BEZ JAKÝCHKOLIV ZÁRUK, a to i bez předpokládané záruky na PRODEJNOST nebo "
-"VHODNOST PRO KONKRÉTNÍ ÚČEL. Více podrobností najdete přímo v licenci GNU "
-"General Public License."
+"ale BEZ JAKÝCHKOLIV ZÁRUK, a to i bez předpokládané záruky na PRODEJNOST "
+"nebo VHODNOST PRO KONKRÉTNÍ ÚČEL. Více podrobností najdete přímo v licenci "
+"GNU General Public License."
 
 #: ../src/core/fma-about.c:81
 msgid ""
@@ -757,11 +757,11 @@ msgstr "Byla zjištěna duplicita"
 
 #: ../src/core/fma-io-provider.c:69
 msgid ""
-"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
-"org/enter_bug.cgi?product=filemanager-actions."
+"Please, be kind enough to fill out a bug report on https://gitlab.gnome.org/"
+"GNOME/filemanager-actions/issues."
 msgstr ""
-"Buďte tak laskavi a vyplňte chybové hlášení na https://bugzilla.gnome.org/"
-"enter_bug.cgi?product=filemanager-actions."
+"Buďte tak laskavi a vyplňte chybové hlášení na https://gitlab.gnome.org/"
+"GNOME/filemanager-actions/issues."
 
 #: ../src/core/fma-io-provider.c:1369
 msgid "Unavailable I/O provider."
@@ -1622,8 +1622,7 @@ msgstr "Nerozpoznaná volba spuštění: %d"
 #: ../src/ui/egg-desktop-file.c:1365
 #, c-format
 msgid "Can’t pass document URIs to a “Type=Link” desktop entry"
-msgstr ""
-"URI dokumentů nelze předat do záznamu „Type=Odkaz“ v souboru .desktop"
+msgstr "URI dokumentů nelze předat do záznamu „Type=Odkaz“ v souboru .desktop"
 
 #: ../src/ui/egg-desktop-file.c:1386
 #, c-format
@@ -2005,8 +2004,8 @@ msgstr "<b>%F</b>"
 msgid ""
 ": space-separated list of the filenames of the selected file(s)/folder(s)."
 msgstr ""
-": mezerami oddělovaný seznam názvů soborů vybraného souboru/složky či souborů/"
-"složek."
+": mezerami oddělovaný seznam názvů soborů vybraného souboru/složky či "
+"souborů/složek."
 
 #: ../src/ui/fma-legend.ui.h:24
 #, no-c-format
@@ -2065,7 +2064,8 @@ msgstr "<b>%O</b>"
 #: ../src/ui/fma-legend.ui.h:40
 msgid ": no-op operator which forces a plural form of execution."
 msgstr ""
-": operátor no-op (žádná operace), který vynutí několikanásobnou formu spuštění."
+": operátor no-op (žádná operace), který vynutí několikanásobnou formu "
+"spuštění."
 
 #: ../src/ui/fma-legend.ui.h:42
 #, no-c-format
@@ -2141,7 +2141,8 @@ msgstr "<b>%X</b>"
 msgid ""
 ": space-separated list of the extensions of the selected file(s)/folder(s)."
 msgstr ""
-": mezerami oddělovaný seznam přípon vybraného souboru/složky či souborů/složek."
+": mezerami oddělovaný seznam přípon vybraného souboru/složky či souborů/"
+"složek."
 
 #: ../src/ui/fma-legend.ui.h:66
 #, no-c-format
@@ -3277,8 +3278,8 @@ msgid ""
 "the fma-config-tools user interface, must be manually adjusted."
 msgstr ""
 "Pořadí zobrazení nabídek a akcí v kontextové nabídce aplikace Nautilus i v "
-"uživatelském rozhraní nástroje pro nastavení nástroje pro nastavení "
-"fma-config-tool musí být ručně přizpůsobeno."
+"uživatelském rozhraní nástroje pro nastavení nástroje pro nastavení fma-"
+"config-tool musí být ručně přizpůsobeno."
 
 #: ../src/ui/fma-preferences.ui.h:8
 msgid "<b>Items ordering</b>"
@@ -3294,14 +3295,14 @@ msgid ""
 "sub-items of a root “FileManager-Actions” menu in the Nautilus context menu."
 msgstr ""
 "Když je tato volba zaškrtnutá, nabídky a akce budou aktuálně zobrazeny jako "
-"podřízené položky kořenové nabídky „SprávceSouborů-Akce“ v kontextové nabídce "
-"aplikace Nautilus."
+"podřízené položky kořenové nabídky „SprávceSouborů-Akce“ v kontextové "
+"nabídce aplikace Nautilus."
 
 #: ../src/ui/fma-preferences.ui.h:11
 msgid "Add an “A_bout FileManager-Actions” item in the Nautilus context menus"
 msgstr ""
-"Přidat položku „O _aplikaci SprávceSouborů-Akce“ do kontextové nabídky aplikace "
-"Nautilus"
+"Přidat položku „O _aplikaci SprávceSouborů-Akce“ do kontextové nabídky "
+"aplikace Nautilus"
 
 #: ../src/ui/fma-preferences.ui.h:12
 msgid ""
@@ -3434,8 +3435,8 @@ msgid ""
 "order to help prevent erroneous hits of the Esc key."
 msgstr ""
 "Tato volba má význam jen v případě, když je povoleno ukončování průvodce "
-"klávesou „Esc“. Pokud je zaškrtnutá, bude uživatel dotázán na potvrzení, "
-"aby se pomohlo zabránit zmáčknutí klávesy Esc nedopatřením."
+"klávesou „Esc“. Pokud je zaškrtnutá, bude uživatel dotázán na potvrzení, aby "
+"se pomohlo zabránit zmáčknutí klávesy Esc nedopatřením."
 
 #: ../src/ui/fma-preferences.ui.h:36
 msgid "<b>Assistants</b>"
@@ -3866,7 +3867,8 @@ msgstr "_Testovat funkci"
 #: ../src/ui/fma-config-tool.desktop.in.h:2
 msgid "Configure items to be added to the File-Manager context menus"
 msgstr ""
-"Přidat položky, které budou přidány do kontextové nabídky aplikace Správce souborů"
+"Přidat položky, které budou přidány do kontextové nabídky aplikace Správce "
+"souborů"
 
 #. i18n: label of an automagic root submenu
 #: ../src/plugin-menu/fma-menu-plugin.c:995
@@ -3908,22 +3910,22 @@ msgstr "Vypsat číslo verze"
 msgid "Import a file."
 msgstr "Importovat soubor."
 
-#: ../src/test/test-reader.c:122
+#: ../src/test/test-reader.c:122 ../src/utils/console-utils.c:53
 msgid ""
-"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
-"mail to <maintainer@filemanager-actions.org>.\n"
+"Bug reports are welcomed at https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 msgstr ""
-"Hlášení chyb budou vítána na http://bugzilla.gnome.org, případně je můžete "
-"zaslat na e-mail <maintainer@filemanager-actions.org>.\n"
+"Hlášení chyb budou vítána na https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 
-#: ../src/test/test-reader.c:130 ../src/utils/fma-delete-xmltree.c:183
+#: ../src/test/test-reader.c:129 ../src/utils/fma-delete-xmltree.c:183
 #: ../src/utils/fma-new.c:389 ../src/utils/fma-print.c:183
 #: ../src/utils/fma-print-schemas.c:191 ../src/utils/fma-run.c:210
 #: ../src/utils/fma-set-conf.c:208
 msgid "Miscellaneous options"
 msgstr "Různorodé přepínače"
 
-#: ../src/test/test-reader.c:151 ../src/utils/fma-delete-xmltree.c:113
+#: ../src/test/test-reader.c:150 ../src/utils/fma-delete-xmltree.c:113
 #: ../src/utils/fma-new.c:207 ../src/utils/fma-print.c:110
 #: ../src/utils/fma-print-schemas.c:112 ../src/utils/fma-run.c:119
 #: ../src/utils/fma-set-conf.c:120
@@ -3931,29 +3933,19 @@ msgstr "Různorodé přepínače"
 msgid "Syntax error: %s\n"
 msgstr "Syntaktická chyba: %s\n"
 
-#: ../src/test/test-reader.c:166
+#: ../src/test/test-reader.c:165
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Chyba: adresa URI je povinná.\n"
 
 #. i18: “--help” is a command-line option - do not translate
-#: ../src/test/test-reader.c:178 ../src/utils/fma-delete-xmltree.c:197
+#: ../src/test/test-reader.c:177 ../src/utils/fma-delete-xmltree.c:197
 #: ../src/utils/fma-new.c:634 ../src/utils/fma-print.c:240
 #: ../src/utils/fma-print-schemas.c:304 ../src/utils/fma-run.c:438
 #: ../src/utils/fma-set-conf.c:222
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Pokud potřebujete návod k použití, zkuste zadat %s --help.\n"
-
-#: ../src/utils/console-utils.c:53
-msgid ""
-"Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions,\n"
-"or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
-msgstr ""
-"Hlášení chyb budou vítána na https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions,\n"
-"případně je můžete zaslat na e-mail <maintainer@filemanager-actions.org>.\n"
 
 #: ../src/utils/fma-delete-xmltree.c:68
 msgid "The XPath to the tree to be deleted"
