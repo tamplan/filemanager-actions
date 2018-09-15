@@ -1,16 +1,16 @@
 # Swedish translation of filemanager-actions
-# Copyright © 2006-2011, 2014, 2015, 2017 Free Software Foundation, Inc.
+# Copyright © 2006-2011, 2014, 2015, 2017, 2018 Free Software Foundation, Inc.
 # Daniel Nylander <po@danielnylander.se>, 2006, 2007, 2008, 2009, 2010, 2011.
 # Josef Andersson <josef.andersson@fripost.org>, 2014.
-# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2015, 2017.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2015, 2017, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: filemanager-actions\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-09-11 11:09+0000\n"
-"PO-Revision-Date: 2018-05-21 00:56+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/filemanager-actions/"
+"issues\n"
+"POT-Creation-Date: 2018-09-14 18:21+0000\n"
+"PO-Revision-Date: 2018-09-16 00:07+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: ../src/core/fma-exporter.c:52 ../src/core/fma-importer.c:87
 msgid "_Ask me"
@@ -743,11 +743,11 @@ msgstr " En dubblett upptäcktes "
 
 #: ../src/core/fma-io-provider.c:69
 msgid ""
-"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
-"org/enter_bug.cgi?product=filemanager-actions."
+"Please, be kind enough to fill out a bug report on https://gitlab.gnome.org/"
+"GNOME/filemanager-actions/issues."
 msgstr ""
-"Vänligen fyll i en felrapport hos https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions."
+"Vänligen fyll i en felrapport på https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues."
 
 #: ../src/core/fma-io-provider.c:1369
 msgid "Unavailable I/O provider."
@@ -3880,22 +3880,22 @@ msgstr "Skriv ut versionsnumret"
 msgid "Import a file."
 msgstr "Importera en fil."
 
-#: ../src/test/test-reader.c:122
+#: ../src/test/test-reader.c:122 ../src/utils/console-utils.c:53
 msgid ""
-"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
-"mail to <maintainer@filemanager-actions.org>.\n"
+"Bug reports are welcomed at https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 msgstr ""
-"Felrapporter välkomnas på http://bugzilla.gnome.org, eller om du föredrar "
-"att skicka e-post, till <maintainer@filemanager-actions.org>.\n"
+"Felrapporter välkomnas på https://gitlab.gnome.org/GNOME/filemanager-actions/"
+"issues/\n"
 
-#: ../src/test/test-reader.c:130 ../src/utils/fma-delete-xmltree.c:183
+#: ../src/test/test-reader.c:129 ../src/utils/fma-delete-xmltree.c:183
 #: ../src/utils/fma-new.c:389 ../src/utils/fma-print.c:183
 #: ../src/utils/fma-print-schemas.c:191 ../src/utils/fma-run.c:210
 #: ../src/utils/fma-set-conf.c:208
 msgid "Miscellaneous options"
 msgstr "Diverse alternativ"
 
-#: ../src/test/test-reader.c:151 ../src/utils/fma-delete-xmltree.c:113
+#: ../src/test/test-reader.c:150 ../src/utils/fma-delete-xmltree.c:113
 #: ../src/utils/fma-new.c:207 ../src/utils/fma-print.c:110
 #: ../src/utils/fma-print-schemas.c:112 ../src/utils/fma-run.c:119
 #: ../src/utils/fma-set-conf.c:120
@@ -3903,30 +3903,19 @@ msgstr "Diverse alternativ"
 msgid "Syntax error: %s\n"
 msgstr "Syntaxfel: %s\n"
 
-#: ../src/test/test-reader.c:166
+#: ../src/test/test-reader.c:165
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Fel: uri är obligatorisk.\n"
 
 #. i18: “--help” is a command-line option - do not translate
-#: ../src/test/test-reader.c:178 ../src/utils/fma-delete-xmltree.c:197
+#: ../src/test/test-reader.c:177 ../src/utils/fma-delete-xmltree.c:197
 #: ../src/utils/fma-new.c:634 ../src/utils/fma-print.c:240
 #: ../src/utils/fma-print-schemas.c:304 ../src/utils/fma-run.c:438
 #: ../src/utils/fma-set-conf.c:222
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Prova %s --help för användningsinformation.\n"
-
-#: ../src/utils/console-utils.c:53
-msgid ""
-"Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions,\n"
-"or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
-msgstr ""
-"Felrapporter välkomnas på https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions,\n"
-" eller om du föredrar att skicka e-post, till <maintainer@filemanager-"
-"actions.org>.\n"
 
 #: ../src/utils/fma-delete-xmltree.c:68
 msgid "The XPath to the tree to be deleted"
@@ -4201,6 +4190,16 @@ msgstr "Fel: okänd typ: %s. Använd ”str”, ”int” eller ”bool”.\n"
 #, c-format
 msgid "Error: a value is mandatory.\n"
 msgstr "Fel: ett värde är obligatoriskt.\n"
+
+#~ msgid ""
+#~ "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
+#~ "product=filemanager-actions,\n"
+#~ "or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
+#~ msgstr ""
+#~ "Felrapporter välkomnas på https://bugzilla.gnome.org/enter_bug.cgi?"
+#~ "product=filemanager-actions,\n"
+#~ " eller om du föredrar att skicka e-post, till <maintainer@filemanager-"
+#~ "actions.org>.\n"
 
 #~ msgid "Ask for a confirmation when quitting by Esc"
 #~ msgstr "Begär bekräftelse vid avbryt med Esc"
