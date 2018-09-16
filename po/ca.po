@@ -408,7 +408,7 @@ msgid ""
 "Defaults to “/”."
 msgstr ""
 "Defineix la llista de rutes vàlides per comparar amb la carpeta actual.\n"
-"  Totes les carpetes «sota» la ruta especificada es consideren vàlides.\n"
+" Totes les carpetes «sota» la ruta especificada es consideren vàlides.\n"
 "Per defecte a «/»."
 
 #: ../src/core/fma-icontext-factory.c:329
@@ -1052,9 +1052,9 @@ msgid ""
 "Defaults to empty."
 msgstr ""
 "Un accés directe suggerit per l'acció o el menú.\n"
-"Tingueu en compte que això podria ser només un suggeriment com l'accés "
-"directe ja que pot estar reservat per a un altre ús. L'aplicació no ha "
-"d'anul·lar per definir aquest, un accés directe.\n"
+"Tingueu en compte que això podria ser només un suggeriment, ja que l'accés "
+"directe pot estar reservat per a un altre ús. L'aplicació no hauria "
+"d'anul·lar un accés directe existent per definir-ne aquest.\n"
 "El format es pot veure com «<Control> a» o «<Shift> <Alt> F1».\n"
 "Per defecte buit."
 
@@ -1548,7 +1548,7 @@ msgstr "Advertiment amb ESC"
 msgid ""
 "Should the user be asked to confirm when exiting the assistant via Escape ?"
 msgstr ""
-"S'ha de demanar a l'usuari que confirmi al sortir de l'assistent a través de "
+"S'ha de demanar a l'usuari que confirmi al sortir de l'assistent a través d'"
 "ESC?"
 
 #: ../src/ui/base-assistant.c:450
@@ -1637,7 +1637,7 @@ msgstr "El fitxer no és un fitxer .desktop vàlid"
 #: ../src/ui/egg-desktop-file.c:188
 #, c-format
 msgid "Unrecognized desktop file Version “%s”"
-msgstr "Fitxer d'escriptori no reconegut versió «%s» "
+msgstr "Versió del fitxer d'escriptori no reconeguda «%s»"
 
 #: ../src/ui/egg-desktop-file.c:957
 #, c-format
@@ -1846,7 +1846,7 @@ msgstr "En importar un element ID el qual ja existeix:"
 
 #: ../src/ui/fma-assistant-import.ui.h:9
 msgid "Selected files have been proceeded:"
-msgstr "S'ha procedit els fitxers seleccionats"
+msgstr "S'ha procedit els fitxers seleccionats:"
 
 #: ../src/ui/fma-assistant-import.ui.h:10
 msgid "Import is done"
@@ -1979,7 +1979,7 @@ msgstr "<b>%b</b>"
 
 #: ../src/ui/fma-legend.ui.h:4
 msgid ": (first) basename."
-msgstr ":(primer) basename"
+msgstr ":(primer) basename."
 
 #: ../src/ui/fma-legend.ui.h:6
 #, no-c-format
@@ -2061,7 +2061,7 @@ msgstr "<b>%m</b>"
 
 #: ../src/ui/fma-legend.ui.h:28
 msgid ": (first) mimetype."
-msgstr ": (primer) tipus MIME"
+msgstr ": (primer) tipus MIME."
 
 #: ../src/ui/fma-legend.ui.h:30
 #, no-c-format
@@ -3353,7 +3353,7 @@ msgid ""
 "When this option is checked, menus and actions will actually be displayed as "
 "sub-items of a root “FileManager-Actions” menu in the Nautilus context menu."
 msgstr ""
-"Quan es selecciona aquesta opció, els menús i les accions es mostraran com "
+"Quan se selecciona aquesta opció, els menús i les accions es mostraran com "
 "subtemes d'un menú arrel  «FileManager-Actions» del menú de context del "
 "Nautilus."
 
@@ -3371,7 +3371,7 @@ msgid ""
 "the Nautilus context menu (e.g. when having checked the root “FileManager-"
 "Actions” menu option above)."
 msgstr ""
-"Quan es selecciona aquesta opció, l'element «Sobre FileManager-Actions» "
+"Quan se selecciona aquesta opció, l'element «Sobre FileManager-Actions» "
 "s'afegirà al menú arrel FileManager-Actions en el menú de context del "
 "Nautilus.\n"
 "Recorda que aquest element només es mostrarà si un menú únic es defineix en "
@@ -3480,7 +3480,7 @@ msgid ""
 "assistant. Else, quitting the assistant is only possible by hitting the "
 "“Cancel” button."
 msgstr ""
-"Quan es selecciona aquesta opció, la tecla \"Escape\" li permetrà sortir de "
+"Quan se selecciona aquesta opció, la tecla \"Escape\" li permetrà sortir de "
 "l'assistent actual. En cas contrari, deixar l'assistent només és possible "
 "prement el botó \"Cancel·lar\"."
 
@@ -3495,7 +3495,7 @@ msgid ""
 "order to help prevent erroneous hits of the Esc key."
 msgstr ""
 "Aquesta opció només és rellevant quan la tecla \"Escape\" permet a l'usuari "
-"sortir de l'assistent. Quan es selecciona, a l'usuari se li demanarà que "
+"sortir de l'assistent. Quan se selecciona, a l'usuari se li demanarà que "
 "confirmi l'acció per tal d'ajudar a prevenir accessos erronis de la tecla "
 "Esc."
 
@@ -3512,7 +3512,7 @@ msgid ""
 "When this option is checked, pending modification will be periodically and "
 "automatically saved."
 msgstr ""
-"Quan es selecciona aquesta opció, es periòdica i automàticament guarda la "
+"Quan se selecciona aquesta opció, es periòdica i automàticament guarda la "
 "modificació pendent."
 
 #: ../src/ui/fma-preferences.ui.h:39
@@ -4296,7 +4296,7 @@ msgstr "Error: un tipus és obligatori per ajustar/actualitzar un valor.\n"
 #, c-format
 msgid "Error: unknown type: %s. Use “str”, “int” or “bool”.\n"
 msgstr ""
-"Error: tipus desconegut: %s. Utilitza «str», «int» o «bool»\n"
+"Error: tipus desconegut: %s. Utilitza «str», «int» o «bool».\n"
 "\n"
 
 #: ../src/utils/fma-set-conf.c:164
