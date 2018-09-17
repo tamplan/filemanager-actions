@@ -12,17 +12,17 @@
 # Gabriel Meier <gabriel.meier@web.de>, 2005.
 # Hendrik Brandt <heb@gnome-de.org>, 2006.
 # Andre Klapper <ak-47@gmx.net>, 2008.
-# Mario Blättermann <mario.blaettermann@gmail.com>, 2009-2011, 2016-2017.
+# Mario Blättermann <mario.blaettermann@gmail.com>, 2009-2011, 2016-2018.
 # Christian Kirbach <Christian.Kirbach@googlemail.com>, 2009-2012.
 # Wolfgang Stöggl <c72578@yahoo.de>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: filemanager-actions master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-03-08 19:39+0000\n"
-"PO-Revision-Date: 2017-03-15 09:48+0100\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/filemanager-actions/"
+"issues\n"
+"POT-Creation-Date: 2018-09-14 18:21+0000\n"
+"PO-Revision-Date: 2018-09-17 09:03+0200\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: ../src/core/fma-exporter.c:52 ../src/core/fma-importer.c:87
 msgid "_Ask me"
@@ -783,7 +783,7 @@ msgstr "Bereits vorhandener Eintrag"
 
 #: ../src/core/fma-importer-ask.ui.h:2
 msgid "Re_member my choice in future import operations"
-msgstr "Für zukünftige I_mportvorgänge diese Auswahl speichern "
+msgstr "Für zukünftige I_mportvorgänge diese Auswahl speichern"
 
 #: ../src/core/fma-importer-ask.ui.h:3
 msgid ""
@@ -799,11 +799,11 @@ msgstr " Ein Duplikat wurde entdeckt "
 
 #: ../src/core/fma-io-provider.c:69
 msgid ""
-"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
-"org/enter_bug.cgi?product=filemanager-actions."
+"Please, be kind enough to fill out a bug report on https://gitlab.gnome.org/"
+"GNOME/filemanager-actions/issues."
 msgstr ""
 "Bitte seien Sie so freundlich und erstellen Sie einen Fehlerbericht auf "
-"https://bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions."
+"https://gitlab.gnome.org/GNOME/filemanager-actions/issues."
 
 #: ../src/core/fma-io-provider.c:1369
 msgid "Unavailable I/O provider."
@@ -1925,11 +1925,11 @@ msgstr "Welches Exportformat soll verwendet werden?"
 
 #: ../src/ui/fma-export-ask.ui.h:2
 msgid " About to export item(s) "
-msgstr "Sie sind im Begriff, Einträge zu exportieren"
+msgstr " Sie sind im Begriff, Einträge zu exportieren "
 
 #: ../src/ui/fma-export-ask.ui.h:3
 msgid "Re_member my choice in future export operations"
-msgstr "Für zukünftige E_xportvorgänge diese Auswahl speichern "
+msgstr "Für zukünftige E_xportvorgänge diese Auswahl speichern"
 
 #: ../src/ui/fma-iaction-tab.c:562
 msgid "Caution: a label is mandatory for the action or the menu."
@@ -2065,7 +2065,7 @@ msgstr "<b>%d</b>"
 
 #: ../src/ui/fma-legend.ui.h:13
 msgid ": (first) base directory."
-msgstr ": (erster) Basisordner"
+msgstr ": (erster) Basisordner."
 
 #: ../src/ui/fma-legend.ui.h:15
 #, no-c-format
@@ -2183,7 +2183,7 @@ msgstr "<b>%u</b>"
 
 #: ../src/ui/fma-legend.ui.h:49
 msgid ": (first) URI."
-msgstr ": (erste) Adresse"
+msgstr ": (erste) Adresse."
 
 #: ../src/ui/fma-legend.ui.h:51
 #, no-c-format
@@ -4050,23 +4050,22 @@ msgstr "Die Versionsnummer ausgeben"
 msgid "Import a file."
 msgstr "Eine Datei importieren."
 
-#: ../src/test/test-reader.c:122
+#: ../src/test/test-reader.c:122 ../src/utils/console-utils.c:53
 msgid ""
-"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
-"mail to <maintainer@filemanager-actions.org>.\n"
+"Bug reports are welcomed at https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 msgstr ""
-"Fehlerberichte können an http://bugzilla.gnome.org gesendet werden. "
-"Alternativ können Sie eine Nachricht an <maintainer@filemanager-actions.org> "
-"senden.\n"
+"Fehlerberichte können an https://gitlab.gnome.org/GNOME/filemanager-actions/"
+"issues/ gesendet werden.\n"
 
-#: ../src/test/test-reader.c:130 ../src/utils/fma-delete-xmltree.c:183
+#: ../src/test/test-reader.c:129 ../src/utils/fma-delete-xmltree.c:183
 #: ../src/utils/fma-new.c:389 ../src/utils/fma-print.c:183
 #: ../src/utils/fma-print-schemas.c:191 ../src/utils/fma-run.c:210
 #: ../src/utils/fma-set-conf.c:208
 msgid "Miscellaneous options"
 msgstr "Verschiedene Optionen"
 
-#: ../src/test/test-reader.c:151 ../src/utils/fma-delete-xmltree.c:113
+#: ../src/test/test-reader.c:150 ../src/utils/fma-delete-xmltree.c:113
 #: ../src/utils/fma-new.c:207 ../src/utils/fma-print.c:110
 #: ../src/utils/fma-print-schemas.c:112 ../src/utils/fma-run.c:119
 #: ../src/utils/fma-set-conf.c:120
@@ -4074,29 +4073,19 @@ msgstr "Verschiedene Optionen"
 msgid "Syntax error: %s\n"
 msgstr "Syntaxfehler: %s\n"
 
-#: ../src/test/test-reader.c:166
+#: ../src/test/test-reader.c:165
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Fehler: Eine Adresse ist obligatorisch.\n"
 
 #. i18: “--help” is a command-line option - do not translate
-#: ../src/test/test-reader.c:178 ../src/utils/fma-delete-xmltree.c:197
+#: ../src/test/test-reader.c:177 ../src/utils/fma-delete-xmltree.c:197
 #: ../src/utils/fma-new.c:634 ../src/utils/fma-print.c:240
 #: ../src/utils/fma-print-schemas.c:304 ../src/utils/fma-run.c:438
 #: ../src/utils/fma-set-conf.c:222
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Versuchen Sie »%s --help«, um den Aufruf zu sehen.\n"
-
-#: ../src/utils/console-utils.c:53
-msgid ""
-"Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions,\n"
-"or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
-msgstr ""
-"Fehlerberichte werden gerne unter https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions entgegen genommen. Alternativ können Sie eine E-"
-"Mail an <maintainer@filemanager-actions.org> senden.\n"
 
 #: ../src/utils/fma-delete-xmltree.c:68
 msgid "The XPath to the tree to be deleted"
@@ -4384,4 +4373,3 @@ msgstr "Fehler: Unbekannter Typ: %s. Verwenden Sie »str«, »int« oder »bool�
 #, c-format
 msgid "Error: a value is mandatory.\n"
 msgstr "Fehler: Ein Wert ist obligatorisch.\n"
-
