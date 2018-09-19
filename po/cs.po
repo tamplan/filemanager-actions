@@ -60,7 +60,7 @@ msgid ""
 "License as published by the Free Software Foundation; either version 2 of "
 "the License, or (at your option) any later version."
 msgstr ""
-"Nástroj nastavení SprávceSouborů-Akce je svobodný software: Můžete jej dále "
+"Konfigurační nástroj SprávceSouborů-Akce je svobodný software: Můžete jej dále "
 "šířit a/nebo upravovat za podmínek licence GNU General Public License v "
 "podobě, v jaké ji vydala Free Software Foundation, a to buď ve verzi 2 této "
 "licence nebo (dle vaší volby) v libovolné novější verzi."
@@ -72,7 +72,7 @@ msgid ""
 "of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
 "Public License for more details."
 msgstr ""
-"Nástroj nastavení SprávceSouborů-Akce je šířen ve víře, že bude užitečný, "
+"Konfigurační nástroj SprávceSouborů-Akce je šířen ve víře, že bude užitečný, "
 "ale BEZ JAKÝCHKOLIV ZÁRUK, a to i bez předpokládané záruky na PRODEJNOST "
 "nebo VHODNOST PRO KONKRÉTNÍ ÚČEL. Více podrobností najdete přímo v licenci "
 "GNU General Public License."
@@ -845,7 +845,7 @@ msgstr ""
 #. i18n: default label for a new action
 #: ../src/core/fma-object-action.c:59
 msgid "New file-manager action"
-msgstr "Nová kace správce souborů"
+msgstr "Nová akce"
 
 #: ../src/core/fma-object-action.c:492
 msgid "Profile automatically created from pre-v2 action"
@@ -974,7 +974,7 @@ msgstr "Prázdný popisek"
 
 #: ../src/core/fma-object-item-factory.c:118
 msgid "Tooltip of the context menu item"
-msgstr "Místní nápověda k položce v kontextové nabídce"
+msgstr "Vysvětlivka k položce v kontextové nabídce"
 
 #: ../src/core/fma-object-item-factory.c:119
 msgid ""
@@ -1090,7 +1090,7 @@ msgstr ""
 #. i18n: default label for a new menu
 #: ../src/core/fma-object-menu.c:57
 msgid "New file-manager menu"
-msgstr "Nová nabídka správce souborů"
+msgstr "Nová nabídka"
 
 #. i18n: label for the default profile
 #: ../src/core/fma-object-profile.c:769
@@ -1631,7 +1631,7 @@ msgstr "Nejedná se o spustitelnou položku"
 
 #: ../src/ui/fma-application.c:61 ../src/ui/fma-config-tool.desktop.in.h:1
 msgid "FileManager-Actions Configuration Tool"
-msgstr "Nástroj nastavení SprávceSouborů-Akce"
+msgstr "Konfigurační nástroj SprávceSouborů-Akce"
 
 #: ../src/ui/fma-application.c:62
 msgid "A user interface to edit your own contextual actions"
@@ -1868,7 +1868,7 @@ msgstr "Ikony mo_tivu"
 
 #: ../src/ui/fma-icon-chooser.ui.h:3
 msgid "Icons by _path"
-msgstr "Ikony dané _cestou"
+msgstr "Ikony dané _souborem"
 
 #: ../src/ui/fma-ienvironment-tab.c:73
 msgid "(strictly lesser than)"
@@ -2282,7 +2282,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:10
 msgid "_Context label :"
-msgstr "Konte_xtový popisek:"
+msgstr "Konte_xtový název:"
 
 #: ../src/ui/fma-main-window.ui.h:11
 msgid "The label of the item in the file manager context menus."
@@ -2326,7 +2326,7 @@ msgstr "Popisek zobrazený v panelu nástrojů správce souborů."
 
 #: ../src/ui/fma-main-window.ui.h:19
 msgid "Toolti_p :"
-msgstr "Místní _nápověda:"
+msgstr "Vysvětl_ivka:"
 
 #: ../src/ui/fma-main-window.ui.h:20
 msgid "The tooltip displayed in the file manager user interface."
@@ -2346,7 +2346,7 @@ msgstr "Název ikony motivu nebo název souboru s obrázkem."
 
 #: ../src/ui/fma-main-window.ui.h:24
 msgid "<b> Nautilus item </b>"
-msgstr "<b> Položka Nautilus </b>"
+msgstr "<b>Položka správce souborů</b>"
 
 #: ../src/ui/fma-main-window.ui.h:25
 msgid ""
@@ -2483,7 +2483,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:56
 msgid "<b> Execution mode </b>"
-msgstr "<b> Režim spuštění </b>"
+msgstr "<b>Režim provádění</b>"
 
 #: ../src/ui/fma-main-window.ui.h:57
 msgid "_Startup notify"
@@ -2521,7 +2521,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:65
 msgid "<b> Startup mode </b>"
-msgstr "<b> Režim spuštění </b>"
+msgstr "<b>Režim spuštění</b>"
 
 #: ../src/ui/fma-main-window.ui.h:66
 msgid "Execute as _user :"
@@ -2540,7 +2540,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:70
 msgid "<b> Execute as user </b>"
-msgstr "<b> Provádět jako uživatel </b>"
+msgstr "<b>Provádět jako uživatel</b>"
 
 #: ../src/ui/fma-main-window.ui.h:71
 msgid ""
@@ -2572,7 +2572,7 @@ msgid ""
 "appear."
 msgstr ""
 "Tento seznam vám umožňuje určit, pro které základní názvy se právě vybraná "
-"položka zobrazí v kontextové nabídce aplikace Nautilus.\n"
+"položka zobrazí v kontextové nabídce správce souborů.\n"
 "Základní názvy mohou používat divoké znaky „*“ a „?“.\n"
 "Základní názvy mohou být negované, aby určovaly, pro které základní názvy se "
 "vaše položka objevovat nesmí."
@@ -2607,7 +2607,7 @@ msgid ""
 "appear."
 msgstr ""
 "Tato karta vám umožňuje určit, pro které základní názvy se právě vybraná "
-"položka zobrazí v kontextové nabídce aplikace Nautilus.\n"
+"položka zobrazí v kontextové nabídce správce souborů.\n"
 "Základní názvy mohou být negované, aby určovaly, pro které základní názvy se "
 "vaše položka objevovat nesmí."
 
@@ -2634,7 +2634,7 @@ msgid ""
 "not appear."
 msgstr ""
 "Tento seznam vám umožňuje určit, pro které typy MIME se právě vybraná "
-"položka zobrazí v kontextové nabídce aplikace Nautilus.\n"
+"položka zobrazí v kontextové nabídce správce souborů.\n"
 "Typy MIME mohou být určeny pomocí „*“, „*/*“, „skupina/*“ nebo „skupina/"
 "podskupina“.\n"
 "Typy MIME mohou být negované, aby určovaly, pro které typy se vaše položka "
@@ -2661,7 +2661,7 @@ msgid ""
 "not appear."
 msgstr ""
 "Tato karta vám umožňuje určit, pro které typy MIME se právě vybraná položka "
-"zobrazí v kontextové nabídce aplikace Nautilus.\n"
+"zobrazí v kontextové nabídce správce souborů.\n"
 "Typy MIME mohou být určeny pomocí „*“, „/*“, „skupina/*“ nebo „skupina/"
 "podskupina“.\n"
 "Typy MIME mohou být negované, aby určovaly, pro které typy se vaše položka "
@@ -2692,7 +2692,7 @@ msgid ""
 "not appear."
 msgstr ""
 "Tento seznam vám umožňuje určit, kde (ve které složce) se musí právě vybraná "
-"položka nacházet, aby se zobrazila v kontextové nabídce aplikace Nautilus.\n"
+"položka nacházet, aby se zobrazila v kontextové nabídce správce souborů.\n"
 "Složky mohou používat divoké znaky „*“ a „?“.\n"
 "Filtry složek mohou být negované, aby určovaly, pro které složky se vaše "
 "položka objevovat nesmí."
@@ -2724,7 +2724,7 @@ msgid ""
 "not appear."
 msgstr ""
 "Tato karta vám umožňuje určit, kde (ve které složce) se musí právě vybraná "
-"položka nacházet, aby se zobrazila v kontextové nabídce aplikace Nautilus.\n"
+"položka nacházet, aby se zobrazila v kontextové nabídce správce souborů.\n"
 "Filtry složek mohou být negované, aby určovaly, pro které složky se vaše "
 "položka objevovat nesmí."
 
@@ -2750,7 +2750,7 @@ msgid ""
 "appear."
 msgstr ""
 "Tento seznam vám umožňuje určit, kterým schématům musí právě vybrané soubory "
-"vyhovovat, aby se položka zobrazila v kontextové nabídce aplikace Nautilus.\n"
+"vyhovovat, aby se položka zobrazila v kontextové nabídce správce souborů.\n"
 "Filtry mohou být negované, aby určovaly, pro která schémata se vaše položka "
 "objevovat nesmí."
 
@@ -2783,7 +2783,7 @@ msgid ""
 "appear."
 msgstr ""
 "Tato karta vám umožňuje určit, kterým schématům musí právě vybrané soubory "
-"vyhovovat, aby se položka zobrazila v kontextové nabídce aplikace Nautilus.\n"
+"vyhovovat, aby se položka zobrazila v kontextové nabídce správce souborů.\n"
 "Filtry mohou být negované, aby určovaly, pro která schémata se vaše položka "
 "objevovat nesmí."
 
@@ -2810,7 +2810,7 @@ msgid ""
 "not appear."
 msgstr ""
 "Tento seznam vám umožňuje určit, které schopnosti musí právě vybraná položka "
-"splňovat, aby se zobrazila v kontextové nabídce aplikace Nautilus.\n"
+"splňovat, aby se zobrazila v kontextové nabídce správce souborů.\n"
 "Schopnosti mohou být negované, aby určovaly, pro které schopnosti se vaše "
 "položka objevovat nesmí."
 
@@ -2835,7 +2835,7 @@ msgid ""
 "appear."
 msgstr ""
 "Tato karta vám umožňuje určit, které schopnosti musí právě vybrané soubory "
-"splňovat, aby se položka zobrazila v kontextové nabídce aplikace Nautilus.\n"
+"splňovat, aby se položka zobrazila v kontextové nabídce správce souborů.\n"
 "Filtry mohou být negované, aby určovaly, pro které schopnosti se vaše "
 "položka objevovat nesmí."
 
@@ -3044,16 +3044,16 @@ msgstr "_Vlastnosti"
 
 #: ../src/ui/fma-match-list.c:89
 msgid "Must match one of"
-msgstr "Musí se shodovat s jednou z"
+msgstr "Aspoň jedna shoda v"
 
 #: ../src/ui/fma-match-list.c:90
 msgid "Must match all of"
-msgstr "Musí se shodovat se všemi z"
+msgstr "Všechny shoday v"
 
 #. i18n: label of the header of a column which let the user select a negative filter
 #: ../src/ui/fma-match-list.c:233
 msgid "Must not match any of"
-msgstr "Nesmí se schodovat se žádnou z"
+msgstr "Vůbec žádná shoda v"
 
 #: ../src/ui/fma-match-list.c:479
 #, c-format
@@ -3251,7 +3251,7 @@ msgid ""
 "user interface."
 msgstr ""
 "Nabídky a akce budou zobrazeny vzestupně podle abecedy podle jejich popisků, "
-"jak v kontextové nabídce aplikace Nautilus, tak v uživatelském rozhraní "
+"jak v kontextové nabídce správce souborů, tak v uživatelském rozhraní "
 "nástroje pro nastavení fma-config-tool."
 
 #: ../src/ui/fma-preferences.ui.h:4
@@ -3265,7 +3265,7 @@ msgid ""
 "user interface."
 msgstr ""
 "Nabídky a akce budou zobrazeny sestupně podle abecedy podle jejich popisků, "
-"jak v kontextové nabídce aplikace Nautilus, tak v uživatelském rozhraní "
+"jak v kontextové nabídce správce souborů, tak v uživatelském rozhraní "
 "nástroje pro nastavení fma-config-tool."
 
 #: ../src/ui/fma-preferences.ui.h:6
@@ -3277,7 +3277,7 @@ msgid ""
 "Display order of menus and actions, both in the Nautilus context menu and in "
 "the fma-config-tools user interface, must be manually adjusted."
 msgstr ""
-"Pořadí zobrazení nabídek a akcí v kontextové nabídce aplikace Nautilus i v "
+"Pořadí zobrazení nabídek a akcí v kontextové nabídce správce souborů i v "
 "uživatelském rozhraní nástroje pro nastavení nástroje pro nastavení fma-"
 "config-tool musí být ručně přizpůsobeno."
 
@@ -3296,13 +3296,13 @@ msgid ""
 msgstr ""
 "Když je tato volba zaškrtnutá, nabídky a akce budou aktuálně zobrazeny jako "
 "podřízené položky kořenové nabídky „SprávceSouborů-Akce“ v kontextové "
-"nabídce aplikace Nautilus."
+"nabídce správce souborů."
 
 #: ../src/ui/fma-preferences.ui.h:11
 msgid "Add an “A_bout FileManager-Actions” item in the Nautilus context menus"
 msgstr ""
 "Přidat položku „O _aplikaci SprávceSouborů-Akce“ do kontextové nabídky "
-"aplikace Nautilus"
+"správce souborů."
 
 #: ../src/ui/fma-preferences.ui.h:12
 msgid ""
@@ -3312,16 +3312,16 @@ msgid ""
 "the Nautilus context menu (e.g. when having checked the root “FileManager-"
 "Actions” menu option above)."
 msgstr ""
-"Když je tato volba zaškrtnutá, bude do kořenové nabídky Akce-Nautilus v "
-"kontextové nabídce aplikace Nautilus přidána položka „O aplikaci "
+"Když je tato volba zaškrtnutá, bude do kořenové nabídky SprávceSouborů-Akce v "
+"kontextové nabídce správce souborů přidána položka „O aplikaci "
 "SprávceSouborů-Akce“.\n"
 "Upozorňujeme, že se tato položka zobrazí jen v případě, že je v kontextové "
-"nabídce aplikace Nautilus definována zvlášť nabídka (např. když je "
+"nabídce správce souborů definována zvlášť nabídka (např. když je "
 "zaškrtnuta předchozí volba kořenové nabídky „SprávceSouborů-Akce“)."
 
 #: ../src/ui/fma-preferences.ui.h:14
 msgid "<b>Nautilus menu layout</b>"
-msgstr "<b>Struktura nabídky Nautilus</b>"
+msgstr "<b>Struktura nabídky správce souborů</b>"
 
 #: ../src/ui/fma-preferences.ui.h:15
 msgid ""
@@ -3330,8 +3330,8 @@ msgid ""
 "actions will be displayed in the Nautilus context menu."
 msgstr ""
 "Tato karta vám umožňuje zvolit, jak budou akce uspořádány v zobrazeném "
-"seznamu a také v kontextové nabídce aplikace Nautilus. Můžete zde také "
-"zvolit, jak budou v kontextové nabídce aplikace Nautilus akce zobrazeny."
+"seznamu a také v kontextové nabídce správce souborů. Můžete zde také "
+"zvolit, jak budou v kontextové nabídce správce souborů akce zobrazeny."
 
 #: ../src/ui/fma-preferences.ui.h:16
 msgid "_Runtime preferences"
@@ -3476,7 +3476,7 @@ msgstr ""
 
 #: ../src/ui/fma-preferences.ui.h:43
 msgid "_UI Preferences"
-msgstr "Předvolby _uživatelského rozhraní"
+msgstr "_Uživatelské rozhraní"
 
 #: ../src/ui/fma-preferences.ui.h:44
 msgid ""
