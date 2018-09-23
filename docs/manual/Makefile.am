@@ -138,7 +138,7 @@ include $(top_srcdir)/gnome-doc-utils.make
 TARGET_DIR = fma-config-tool
 
 #DOC_LINGUAS = $(patsubst $(srcdir)/%,%,$(shell find $(srcdir) -mindepth 1 -maxdepth 1 -type d | $(GREP) -v $(srcdir)/C))
-DOC_LINGUAS = de el es fr sl
+DOC_LINGUAS = cs de el es fr sl
 
 # doc-dist-hook is the dist hook provided by gnome-doc-utils.make
 # it distributes both C (original) and generated (translated) .xml files,

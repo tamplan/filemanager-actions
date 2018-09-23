@@ -116,27 +116,27 @@ msgstr ""
 
 #: ../src/core/fma-desktop-environment.c:39
 msgid "GNOME desktop"
-msgstr "Pracovní prostředí GNOME"
+msgstr "Uživatelské prostředí GNOME"
 
 #: ../src/core/fma-desktop-environment.c:40
 msgid "KDE desktop"
-msgstr "Pracovní prostředí KDE"
+msgstr "Uživatelské prostředí KDE"
 
 #: ../src/core/fma-desktop-environment.c:41
 msgid "LXDE desktop"
-msgstr "Pracovní prostředí LXDE"
+msgstr "Uživatelské prostředí LXDE"
 
 #: ../src/core/fma-desktop-environment.c:42
 msgid "ROX desktop"
-msgstr "Pracovní prostředí ROX"
+msgstr "Uživatelské prostředí ROX"
 
 #: ../src/core/fma-desktop-environment.c:43
 msgid "XFCE desktop"
-msgstr "Pracovní postředí XFCE"
+msgstr "Uživatelské postředí XFCE"
 
 #: ../src/core/fma-desktop-environment.c:44
 msgid "Legacy systems"
-msgstr "Dřívější systémy"
+msgstr "Starší systémy"
 
 #: ../src/core/fma-icontext-factory.c:51
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
@@ -440,7 +440,7 @@ msgstr "Operátor vztahu k počtu vybraných [>0]"
 
 #: ../src/core/fma-icontext-factory.c:364
 msgid "Only show in environment"
-msgstr "Zobrazit pouze v prostředí"
+msgstr "Zobrazovat pouze v prostředí"
 
 #: ../src/core/fma-icontext-factory.c:365
 msgid "Defaults to all."
@@ -500,7 +500,7 @@ msgstr "Cesta k souboru, u kterého bude kontrolováno, zda je spustitelný"
 
 #: ../src/core/fma-icontext-factory.c:439
 msgid "Show if registered"
-msgstr "Zobrazit, pokud je registrováno"
+msgstr "Zobrazovatt, pokud je registrováno"
 
 #. i18n: ShowIfRegistered is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:441
@@ -531,7 +531,7 @@ msgstr "<NÁZEV>"
 
 #: ../src/core/fma-icontext-factory.c:465
 msgid "Show if True"
-msgstr "Zobrazit, pokud je „true“ (zapnuto)"
+msgstr "Zobrazovatt, pokud je „true“ (zapnuto)"
 
 #. i18n: ShowIfTrue is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:467
@@ -555,7 +555,7 @@ msgstr "Cesta k příkazu, který bude zobrazovat řetězec „true“"
 
 #: ../src/core/fma-icontext-factory.c:492
 msgid "Show if running"
-msgstr "Zobrazit, pokud běží"
+msgstr "Zobrazovat, pokud běží"
 
 #. i18n: ShowIfRunning is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:494
@@ -875,7 +875,7 @@ msgstr "Cíle kontextové nabídky výběru [pravda]"
 
 #: ../src/core/fma-object-action-factory.c:106
 msgid "Targets the location context menu"
-msgstr "Cíle kontextové nabídky míst"
+msgstr "Cíle kontextové nabídky umístění"
 
 #: ../src/core/fma-object-action-factory.c:107
 msgid ""
@@ -886,14 +886,14 @@ msgid ""
 "Defaults to FALSE"
 msgstr ""
 "Zda je cílem akce kontextová nabídka správce souborů, když není nic vybráno. "
-"Pak se použije současné místo.\n"
+"Pak se použije současné umístění.\n"
 "Upozorňujeme, že nabídky jsou vždy potenciálními kandidáty na zobrazení v "
 "poskytované kontextové nabídce výběru, aby obsahovaly nejméně jednu akci.\n"
 "Výchozí je ZAPNUTO."
 
 #: ../src/core/fma-object-action-factory.c:125
 msgid "Targets the location context menu [false]"
-msgstr "Cíle kontextové nabídky místa [nepravda]"
+msgstr "Cíle kontextové nabídky umístění [nepravda]"
 
 #: ../src/core/fma-object-action-factory.c:132
 msgid "Targets the toolbar"
@@ -907,7 +907,7 @@ msgid ""
 "Defaults to FALSE."
 msgstr ""
 "Zda je akce kandidátem na zobrazení v liště nástrojů správce souborů.\n"
-"Toto se použije pouze na aktuální místo.\n"
+"Toto se použije pouze na aktuální umístění.\n"
 "Upozorněme, že nabídky se nikdy nezobrazí v liště nástrojů.\n"
 "Výchozí je VYPNUTO."
 
@@ -1268,7 +1268,7 @@ msgstr ""
 
 #: ../src/core/fma-object-profile-factory.c:244
 msgid "Startup notify"
-msgstr "Oznámení spuštění"
+msgstr "Oznámit spuštění"
 
 #: ../src/core/fma-object-profile-factory.c:245
 msgid ""
@@ -1876,7 +1876,7 @@ msgstr "(právě menší než)"
 
 #: ../src/ui/fma-ienvironment-tab.c:74
 msgid "(equal to)"
-msgstr "(rovno)"
+msgstr "(roven)"
 
 #: ../src/ui/fma-ienvironment-tab.c:75
 msgid "(strictly greater than)"
@@ -2254,7 +2254,7 @@ msgstr "Seřadit seznam podle abecedy v sestupném pořadí."
 
 #: ../src/ui/fma-main-window.ui.h:5
 msgid "Display item in _selection context menu"
-msgstr "Zobrazit položku v kontextové nabídce vý_běru"
+msgstr "Zobrazovat položku v kontextové nabídce vý_běru"
 
 #: ../src/ui/fma-main-window.ui.h:6
 msgid ""
@@ -2266,7 +2266,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:7
 msgid "Display item in _location context menu"
-msgstr "Zobrazit položku v kontextové nabídce mís_t"
+msgstr "Zobrazovat položku v kontextové nabídce umís_tění"
 
 #: ../src/ui/fma-main-window.ui.h:8
 msgid ""
@@ -2282,7 +2282,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:10
 msgid "_Context label :"
-msgstr "Konte_xtový název:"
+msgstr "Popisek v nabíd_ce:"
 
 #: ../src/ui/fma-main-window.ui.h:11
 msgid "The label of the item in the file manager context menus."
@@ -2290,7 +2290,7 @@ msgstr "Popisek položky v kontextové nabídce správce souborů."
 
 #: ../src/ui/fma-main-window.ui.h:12
 msgid "Display item in the _toolbar"
-msgstr "Zobrazit položku v panelu nás_trojů"
+msgstr "Zobrazovat položku na nás_trojové liště"
 
 #: ../src/ui/fma-main-window.ui.h:13
 msgid ""
@@ -2299,30 +2299,30 @@ msgid ""
 "In this case, the defined conditions will be applied to the current folder, "
 "and do not depend of the possible current selection."
 msgstr ""
-"Když je zaškrtnuto, akce bude kandidátem na zobrazení v panelu nástrojů "
+"Když je zaškrtnuto, akce bude kandidátem na zobrazení na nástrojové liště "
 "správce souborů.\n"
 "V takovém případě budou definované podmínky použity pro aktuální složku a "
 "nezávisí na možném aktuálním výběru."
 
 #: ../src/ui/fma-main-window.ui.h:15
 msgid "Use s_ame label for icon in the toolbar"
-msgstr "Použít stejný popisek pro ikonu v p_anelu nástrojů"
+msgstr "Použít stejný popisek na nástrojové l_iště"
 
 #: ../src/ui/fma-main-window.ui.h:16
 msgid ""
 "When checked, the label displayed in the toolbar will be the same that the "
 "one displayed in the context menus."
 msgstr ""
-"Když je zaškrtnuto, bude popisek zobrazený v panelu nástrojů tentýž, který "
+"Když je zaškrtnuto, bude popisek zobrazený na nástrojové liště tentýž, který "
 "je zobrazený v kontextových nabídkách."
 
 #: ../src/ui/fma-main-window.ui.h:17
 msgid "T_oolbar label :"
-msgstr "Popisek panelu nástr_ojů:"
+msgstr "Popisek na nástr_ojové liště:"
 
 #: ../src/ui/fma-main-window.ui.h:18
 msgid "The label displayed in the file manager toolbar."
-msgstr "Popisek zobrazený v panelu nástrojů správce souborů."
+msgstr "Popisek zobrazený na nástrojové liště správce souborů."
 
 #: ../src/ui/fma-main-window.ui.h:19
 msgid "Toolti_p :"
@@ -2361,7 +2361,7 @@ msgstr "Pop_isek:"
 
 #: ../src/ui/fma-main-window.ui.h:28
 msgid "<b> Profile </b>"
-msgstr "<b> Profil </b>"
+msgstr "<b>Profil</b>"
 
 #: ../src/ui/fma-main-window.ui.h:29
 msgid "_Path :"
@@ -2415,7 +2415,7 @@ msgstr "Pr_ocházet…"
 
 #: ../src/ui/fma-main-window.ui.h:41
 msgid "<b> Command </b>"
-msgstr "<b> Příkaz </b>"
+msgstr "<b>Příkaz</b>"
 
 #: ../src/ui/fma-main-window.ui.h:42
 msgid ""
@@ -2487,7 +2487,7 @@ msgstr "<b>Režim provádění</b>"
 
 #: ../src/ui/fma-main-window.ui.h:57
 msgid "_Startup notify"
-msgstr "Oznámení sp_uštění"
+msgstr "Oznamovat sp_uštění"
 
 #: ../src/ui/fma-main-window.ui.h:58
 msgid ""
@@ -2559,9 +2559,9 @@ msgid ""
 "selection matches one filter of the “Must match one of” column, while not "
 "matching any of the filters of the “Must not match any of” column."
 msgstr ""
-"Aktuální položka se zobrazí, pokud základní názvy každého z elementů výběru "
-"odpovídají něčemu ve sloupci „Musí odpovídat něčemu z“ a přitom neodpovídají "
-"ničemu ve sloupci „Nesmí odpovídat ničemu z“."
+"Aktuální položka se zobrazí, pokud základní název každé položky z výběru "
+"vyhovuje něčemu ve sloupci „Aspoň jedna shoda“ a přitom nevyhovuje "
+"ničemu ve sloupci „Vůbec žádná shoda“."
 
 #: ../src/ui/fma-main-window.ui.h:74
 msgid ""
@@ -2587,7 +2587,7 @@ msgstr "Kliknutím odstraníte aktuální filtr základních názvů."
 
 #: ../src/ui/fma-main-window.ui.h:79
 msgid "Match _case"
-msgstr "S_hoda velikosti písmen"
+msgstr "Roz_lišovat velikosti písmen"
 
 #: ../src/ui/fma-main-window.ui.h:80
 msgid "Click to define the above basename filters as case sensitive."
@@ -2597,7 +2597,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:81
 msgid "<b> Basenames conditions </b>"
-msgstr "<b> Podmínky základních názvů </b>"
+msgstr "<b>Podmínky základních názvů</b>"
 
 #: ../src/ui/fma-main-window.ui.h:82
 msgid ""
@@ -2621,9 +2621,9 @@ msgid ""
 "selection matches one filter of the “Must match one of” column, while not "
 "matching any of the filters of the “Must not match any of” column."
 msgstr ""
-"Aktuální položka se zobrazí, pokud typy MIME každého z elementů výběru "
-"odpovídají něčemu ve sloupci „Musí odpovídat něčemu z“ a přitom neodpovídají "
-"ničemu ve sloupci „Nesmí odpovídat ničemu z“."
+"Aktuální položka se zobrazí, pokud typ MIME každé položky z výběru "
+"vyhovuje něčemu ve sloupci „Aspoň jedna shoda“ a přitom nevyhovuje "
+"ničemu ve sloupci „Vůbec žádná shoda“."
 
 #: ../src/ui/fma-main-window.ui.h:86
 msgid ""
@@ -2650,7 +2650,7 @@ msgstr "Kliknutím odstraníte aktuální filtr typů MIME."
 
 #: ../src/ui/fma-main-window.ui.h:91
 msgid "<b> Mimetypes conditions </b>"
-msgstr "<b> Podmínky typu MIME </b>"
+msgstr "<b>Podmínky typu MIME</b>"
 
 #: ../src/ui/fma-main-window.ui.h:92
 msgid ""
@@ -2678,9 +2678,9 @@ msgid ""
 "column, while not being one or inside one of the “Must not match any of” "
 "column."
 msgstr ""
-"Aktuální položka se zobrazí, pokud umístění každého z elementů výběru "
-"odpovídají něčemu ve sloupci „Musí odpovídat něčemu z“ a přitom neodpovídají "
-"ničemu ve sloupci „Nesmí odpovídat ničemu z“."
+"Aktuální položka se zobrazí, pokud umístění každé položky z výběru "
+"vyhovuje něčemu ve sloupci „Aspoň jedna shoda“ a přitom nevyhovuje "
+"ničemu ve sloupci „Vůbec žádná shoda“."
 
 #: ../src/ui/fma-main-window.ui.h:97
 msgid ""
@@ -2713,7 +2713,7 @@ msgstr "Kliknutím odstraníte aktuální filtr složek."
 
 #: ../src/ui/fma-main-window.ui.h:103
 msgid "<b> Folders conditions </b>"
-msgstr "<b> Podmínky složek </b>"
+msgstr "<b>Podmínky složek</b>"
 
 #: ../src/ui/fma-main-window.ui.h:104
 msgid ""
@@ -2738,9 +2738,9 @@ msgid ""
 "matches one of the “Must match one of” column, while not matching any of the "
 "“Must not match any of” column."
 msgstr ""
-"Aktuální položka se zobrazí, pokud schémata každého z elementů výběru "
-"odpovídají něčemu ve sloupci „Musí odpovídat něčemu z“ a přitom neodpovídají "
-"ničemu ve sloupci „Nesmí odpovídat ničemu z“."
+"Aktuální položka se zobrazí, pokud schéma každé položky z výběru "
+"vyhovuje něčemu ve sloupci „Aspoň jedna shoda“ a přitom nevyhovuje "
+"ničemu ve sloupci „Vůbec žádná shoda“."
 
 #: ../src/ui/fma-main-window.ui.h:108
 msgid ""
@@ -2760,7 +2760,7 @@ msgstr "Kliknutím přidáte nový filtr schémat."
 
 #: ../src/ui/fma-main-window.ui.h:111
 msgid "De_faults…"
-msgstr "Vých_ozí…"
+msgstr "Běž_ná…"
 
 #: ../src/ui/fma-main-window.ui.h:112
 msgid "Click to select a new scheme filter among default schemes."
@@ -2773,7 +2773,7 @@ msgstr "Kliknutím odstraníte aktuální filtr schémat."
 
 #: ../src/ui/fma-main-window.ui.h:114
 msgid "<b> Schemes conditions </b>"
-msgstr "<b> Podmínky schémat </b>"
+msgstr "<b>Podmínky schémat</b>"
 
 #: ../src/ui/fma-main-window.ui.h:115
 msgid ""
@@ -2797,9 +2797,9 @@ msgid ""
 "capabilities of the “Must match all of” column, while not matching any "
 "capability of the “Must not match any of” column."
 msgstr ""
-"Aktuální položka se zobrazí, pokud každý z elementů výběru odpovídá všem "
-"schopnostem ve sloupci „Musí odpovídat všemu z“ a přitom neodpovídá žádné ze "
-"schopností ve sloupci „Nesmí odpovídat ničemu z“."
+"Aktuální položka se zobrazí, pokud každá položka z výběru vyhovuje všem "
+"schopnostem ve sloupci „Všechny shody“ a přitom nevyhovuje ničemu ve "
+"sloupci „Vůbec žádná shoda“."
 
 #: ../src/ui/fma-main-window.ui.h:119
 msgid ""
@@ -2824,7 +2824,7 @@ msgstr "Kliknutím odstraníte aktuální schopnost."
 
 #: ../src/ui/fma-main-window.ui.h:123
 msgid "<b> Capabilities conditions </b>"
-msgstr "<b> Podmínky schopností </b>"
+msgstr "<b>Podmínky schopností</b>"
 
 #: ../src/ui/fma-main-window.ui.h:124
 msgid ""
@@ -2849,7 +2849,7 @@ msgstr "P_očet:"
 
 #: ../src/ui/fma-main-window.ui.h:128
 msgid "<b> Appears if selection contains </b>"
-msgstr "<b> Zobrazí se, pokud výběr obsahuje </b>"
+msgstr "<b>Zobrazovat, pokud výběr obsahuje</b>"
 
 #: ../src/ui/fma-main-window.ui.h:129
 msgid "Item may appear depending of the desktop environment."
@@ -2857,35 +2857,35 @@ msgstr "Položka se může zobrazovat v závislosti na pracovním prostředí."
 
 #: ../src/ui/fma-main-window.ui.h:130
 msgid "_Always appears"
-msgstr "Zobrazí se vžd_y"
+msgstr "Zobrazovat vžd_y"
 
 #: ../src/ui/fma-main-window.ui.h:131
 msgid "_Only appears in selected environments"
-msgstr "Zobrazí se _jen ve vybraných prostředích"
+msgstr "Zobrazovat _jen ve vybraných prostředích"
 
 #: ../src/ui/fma-main-window.ui.h:132
 msgid "_Never appears in selected environments"
-msgstr "_Nikdy se nezobrazí ve vybraných prostředích"
+msgstr "_Nikdy nezobrazovat ve vybraných prostředích"
 
 #: ../src/ui/fma-main-window.ui.h:133
 msgid "<b> Desktop environment </b>"
-msgstr "<b> Pracovní prostředí </b>"
+msgstr "<b>Uživatelské prostředí</b>"
 
 #: ../src/ui/fma-main-window.ui.h:134
 msgid "Appears if the file is e_xecutable :"
-msgstr "Zobrazí se, pokud je soubor sp_ustitelný:"
+msgstr "Zobrazovat, pokud je soubor sp_ustitelný:"
 
 #: ../src/ui/fma-main-window.ui.h:135
 msgid "Appears if the name is _registered on D-Bus :"
-msgstr "Zobrazí se, pokud je název _registrován na D-Bus:"
+msgstr "Zobrazovat, pokud je název _registrován na D-Bus:"
 
 #: ../src/ui/fma-main-window.ui.h:136
 msgid "Appears if the command outputs “_true” :"
-msgstr "Zobrazí se, poku_d je výstupem příkazu „true“:"
+msgstr "Zobrazovat, poku_d je výstupem příkazu „true“:"
 
 #: ../src/ui/fma-main-window.ui.h:137
 msgid "Appears if the _binary is running :"
-msgstr "Zobrazí se, pokud běží _binární soubor:"
+msgstr "Zobrazovat, pokud _běží proces:"
 
 #: ../src/ui/fma-main-window.ui.h:138
 msgid "Bro_wse…"
@@ -2944,7 +2944,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:150
 msgid "<b> Execution environment </b>"
-msgstr "<b> Prostředí provádění </b>"
+msgstr "<b>Prováděcí prostředí</b>"
 
 #: ../src/ui/fma-main-window.ui.h:151
 msgid ""
@@ -2972,7 +2972,7 @@ msgid ""
 msgstr ""
 "Zaškrtnutím políčka tuto položku povolíte.\n"
 "Pokud zaškrtnuto není, položka se nikdy neobjeví v kontextové nabídce nebo "
-"panelu nástrojů správce souborů."
+"v nástrojové liště správce souborů."
 
 #: ../src/ui/fma-main-window.ui.h:156
 msgid "_Description :"
@@ -3002,7 +3002,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:162
 msgid "<b> Action editable properties </b>"
-msgstr "<b> Upravitelné vlastnosti akce </b>"
+msgstr "<b>Upravitelné vlastnosti akce</b>"
 
 #: ../src/ui/fma-main-window.ui.h:163
 msgid "Read-only item"
@@ -3028,7 +3028,7 @@ msgstr "Zprostředkovatel V/V:"
 
 #: ../src/ui/fma-main-window.ui.h:168
 msgid "<b> Read-only properties </b>"
-msgstr "<b> Vlastnosti pouze ke čtení </b>"
+msgstr "<b>Vlastnosti pouze ke čtení</b>"
 
 #: ../src/ui/fma-main-window.ui.h:169
 msgid ""
@@ -3044,16 +3044,16 @@ msgstr "_Vlastnosti"
 
 #: ../src/ui/fma-match-list.c:89
 msgid "Must match one of"
-msgstr "Aspoň jedna shoda v"
+msgstr "Aspoň jedna shoda"
 
 #: ../src/ui/fma-match-list.c:90
 msgid "Must match all of"
-msgstr "Všechny shoday v"
+msgstr "Všechny shody"
 
 #. i18n: label of the header of a column which let the user select a negative filter
 #: ../src/ui/fma-match-list.c:233
 msgid "Must not match any of"
-msgstr "Vůbec žádná shoda v"
+msgstr "Vůbec žádná shoda"
 
 #: ../src/ui/fma-match-list.c:479
 #, c-format
@@ -3355,7 +3355,7 @@ msgstr "<i>Aktuálně smazáno:</i>"
 
 #: ../src/ui/fma-preferences.ui.h:21
 msgid "<b>Desktop environment</b>"
-msgstr "<b>Pracovní prostředí</b>"
+msgstr "<b>Uživatelské prostředí</b>"
 
 #: ../src/ui/fma-preferences.ui.h:22
 msgid "This tab lets you specify parameters needed for some execution modes."
@@ -3532,23 +3532,23 @@ msgid ""
 "with this default list.\n"
 "You can add a new scheme by clicking on the “+” button."
 msgstr ""
-"Zde můžete definovat libovolný počet schémat. Ta pak budou navrhována jako "
-"výchozí schémata, když se definují podmínky pro akce.\n"
+"Zde můžete definovat libovolný počet schémat. Ta pak budou nabízena jako "
+"běžná schémata, když se definují podmínky pro akce.\n"
 "Pokud ponecháte seznam prázdný, nástroj pro nastavení fma-config-tool jej "
 "automaticky vyplní výchozím seznamem.\n"
 "Nové schéma můžete přidat kliknutím na tlačítko „+“."
 
 #: ../src/ui/fma-preferences.ui.h:57
 msgid "<b>Default schemes</b>"
-msgstr "<b>Výchozí schémata</b>"
+msgstr "<b>Běžná schémata</b>"
 
 #: ../src/ui/fma-preferences.ui.h:58
 msgid ""
 "This tab lets you decide which schemes are proposed by default when editing "
 "advanced conditions for an item."
 msgstr ""
-"Tato karta vám umožňuje rozhodnout, která schémata jsou navrhována jako "
-"výchozí, když se upravují pokročilé podmínky pro položku."
+"Tato karta vám umožňuje rozhodnout, která schémata jsou nabízena jako "
+"běžná, když se upravují pokročilé podmínky pro položku."
 
 #: ../src/ui/fma-preferences.ui.h:60
 msgid ""
