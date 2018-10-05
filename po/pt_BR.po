@@ -8,14 +8,14 @@
 # Og Maciel <ogmaciel@ubuntu.com>, 2007, 2009.
 # Daniel S. Koda <danielskoda@gmail.com>, 2010.
 # Djavan Fagundes <djavan@comum.org>, 2010.
-# Rafael Fontenelle <rafaelff@gnome.org>, 2013, 2014, 2017.
+# Rafael Fontenelle <rafaelff@gnome.org>, 2013, 2014, 2017, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: filemanager-actions\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product"
-"=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-03-08 19:39+0000\n"
-"PO-Revision-Date: 2017-03-08 16:50-0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/filemanager-actions/"
+"issues\n"
+"POT-Creation-Date: 2018-09-14 18:21+0000\n"
+"PO-Revision-Date: 2018-10-05 10:37-0200\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -771,12 +771,15 @@ msgid " A duplicate is detected "
 msgstr " Uma duplicata foi detectada "
 
 #: ../src/core/fma-io-provider.c:69
+#| msgid ""
+#| "Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
+#| "org/enter_bug.cgi?product=filemanager-actions."
 msgid ""
-"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
-"org/enter_bug.cgi?product=filemanager-actions."
+"Please, be kind enough to fill out a bug report on https://gitlab.gnome.org/"
+"GNOME/filemanager-actions/issues."
 msgstr ""
-"Por favor, faça a gentileza de preencher um relatório de erro em https://"
-"bugzilla.gnome.org/enter_bug.cgi?product=filemanager-actions."
+"Por favor, faça a gentileza de preencher um relatório de erro em "
+"https://gitlab.gnome.org/GNOME/filemanager-actions/issues."
 
 #: ../src/core/fma-io-provider.c:1369
 msgid "Unavailable I/O provider."
@@ -1266,19 +1269,6 @@ msgstr "Modo de execução"
 
 #. i18n: “Normal”, “Terminal”, “Embedded” and “DisplayOutput” are non-translatable keywords
 #: ../src/core/fma-object-profile-factory.c:213
-#| msgid ""
-#| "Execution mode of the program.\n"
-#| "This may be chosen between following values:\n"
-#| "• “Normal”: starts as a standard graphical user interface\n"
-#| "• “Terminal”: starts the preferred terminal of the graphical environment, "
-#| "and runs the command in it\n"
-#| "• “Embedded”: makes use of a special feature of the file manager which "
-#| "allows a terminal to be ran inside of it; an acceptable fallback is "
-#| "Terminal\n"
-#| "• “DisplayOutput”: the ran terminal may be closed at end of the command, "
-#| "but standard streams (stdout, stderr) should be collected and displayed; "
-#| "an acceptable fallback is Terminal.\n"
-#| "Defaults to \"Normal\"."
 msgid ""
 "Execution mode of the program.\n"
 "This may be chosen between following values:\n"
@@ -3983,22 +3973,25 @@ msgstr "Retorna o número da versão"
 msgid "Import a file."
 msgstr "Importa um arquivo."
 
-#: ../src/test/test-reader.c:122
+#: ../src/test/test-reader.c:122 ../src/utils/console-utils.c:53
+#| msgid ""
+#| "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer "
+#| "to mail to <maintainer@filemanager-actions.org>.\n"
 msgid ""
-"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
-"mail to <maintainer@filemanager-actions.org>.\n"
+"Bug reports are welcomed at https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 msgstr ""
-"Relatórios de erros são bem-vindos em http://bugzilla.gnome.org, ou você "
-"pode preferir enviar um e-mail para <maintainer@filemanager-actions.org>.\n"
+"Relatórios de erros são bem-vindos em https://gitlab.gnome.org/GNOME/"
+"filemanager-actions/issues/\n"
 
-#: ../src/test/test-reader.c:130 ../src/utils/fma-delete-xmltree.c:183
+#: ../src/test/test-reader.c:129 ../src/utils/fma-delete-xmltree.c:183
 #: ../src/utils/fma-new.c:389 ../src/utils/fma-print.c:183
 #: ../src/utils/fma-print-schemas.c:191 ../src/utils/fma-run.c:210
 #: ../src/utils/fma-set-conf.c:208
 msgid "Miscellaneous options"
 msgstr "Opções diversas"
 
-#: ../src/test/test-reader.c:151 ../src/utils/fma-delete-xmltree.c:113
+#: ../src/test/test-reader.c:150 ../src/utils/fma-delete-xmltree.c:113
 #: ../src/utils/fma-new.c:207 ../src/utils/fma-print.c:110
 #: ../src/utils/fma-print-schemas.c:112 ../src/utils/fma-run.c:119
 #: ../src/utils/fma-set-conf.c:120
@@ -4006,30 +3999,19 @@ msgstr "Opções diversas"
 msgid "Syntax error: %s\n"
 msgstr "Erro de sintaxe: %s\n"
 
-#: ../src/test/test-reader.c:166
+#: ../src/test/test-reader.c:165
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Erro: uri é obrigatório.\n"
 
 #. i18: “--help” is a command-line option - do not translate
-#: ../src/test/test-reader.c:178 ../src/utils/fma-delete-xmltree.c:197
+#: ../src/test/test-reader.c:177 ../src/utils/fma-delete-xmltree.c:197
 #: ../src/utils/fma-new.c:634 ../src/utils/fma-print.c:240
 #: ../src/utils/fma-print-schemas.c:304 ../src/utils/fma-run.c:438
 #: ../src/utils/fma-set-conf.c:222
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Tente %s --help para utilização.\n"
-
-#: ../src/utils/console-utils.c:53
-msgid ""
-"Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions,\n"
-"or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
-msgstr ""
-"Relatórios de erros são bem-vindos em https://bugzilla.gnome.org/enter_bug."
-"cgi?product=filemanager-actions,\n"
-"ou você pode preferir enviar um e-mail para <maintainer@filemanager-actions."
-"org>.\n"
 
 #: ../src/utils/fma-delete-xmltree.c:68
 msgid "The XPath to the tree to be deleted"
@@ -4273,7 +4255,6 @@ msgstr "A chave para ser atualizado"
 
 #. i18n: “str”, “int” and “bool” are literal values: do not translate
 #: ../src/utils/fma-set-conf.c:66
-#| msgid "The type of the value to be set, may be “str”, “int” or “bool"
 msgid "The type of the value to be set, may be “str”, “int” or “bool”"
 msgstr "O tipo do valor para ser definido, que pode “str”, “int” ou “bool”"
 
@@ -4310,6 +4291,16 @@ msgstr "Erro: tipo desconhecido: %s. Use “str”, “int” ou “bool”.\n"
 #, c-format
 msgid "Error: a value is mandatory.\n"
 msgstr "Erro: um valor é obrigatório.\n"
+
+#~ msgid ""
+#~ "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
+#~ "product=filemanager-actions,\n"
+#~ "or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
+#~ msgstr ""
+#~ "Relatórios de erros são bem-vindos em https://bugzilla.gnome.org/"
+#~ "enter_bug.cgi?product=filemanager-actions,\n"
+#~ "ou você pode preferir enviar um e-mail para <maintainer@filemanager-"
+#~ "actions.org>.\n"
 
 #~ msgid "_Import..."
 #~ msgstr "_Importar…"
