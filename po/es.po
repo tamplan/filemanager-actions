@@ -9,15 +9,15 @@
 # Jesse Avilés <jesseaviles@gmail.com>, 2011.
 # Maria Majadas <alixis82@gmail.com>, 2011.
 # Luis Angel Gonzo <luisangelgonzo@gmail.com>, 2017.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2014, 2017.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2014, 2017, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-09 06:27+0000\n"
-"PO-Revision-Date: 2017-08-10 09:01+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/filemanager-actions/"
+"issues\n"
+"POT-Creation-Date: 2018-09-14 18:21+0000\n"
+"PO-Revision-Date: 2018-10-31 16:23+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"X-Generator: Gtranslator 2.91.7\n"
 
 #: ../src/core/fma-exporter.c:52 ../src/core/fma-importer.c:87
 msgid "_Ask me"
@@ -186,8 +186,7 @@ msgstr ""
 #. i18n: the "<EXPR>" is just an abbreviation for "an expression",
 #. *  so is tranlatable
 #. i18n: "<EXPR>" is just an abbreviation for "an expression", so is tranlatable
-#: ../src/core/fma-icontext-factory.c:80
-#: ../src/core/fma-icontext-factory.c:139
+#: ../src/core/fma-icontext-factory.c:80 ../src/core/fma-icontext-factory.c:139
 #: ../src/core/fma-icontext-factory.c:358
 msgid "<EXPR>"
 msgstr "<EXPR>"
@@ -784,12 +783,15 @@ msgid " A duplicate is detected "
 msgstr " Se ha encontrado un duplicado "
 
 #: ../src/core/fma-io-provider.c:69
+#| msgid ""
+#| "Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
+#| "org/enter_bug.cgi?product=filemanager-actions."
 msgid ""
-"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
-"org/enter_bug.cgi?product=filemanager-actions."
+"Please, be kind enough to fill out a bug report on https://gitlab.gnome.org/"
+"GNOME/filemanager-actions/issues."
 msgstr ""
-"Rellene un informe de error https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions."
+"Rellene un informe de error en https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues."
 
 #: ../src/core/fma-io-provider.c:1369
 msgid "Unavailable I/O provider."
@@ -1815,8 +1817,7 @@ msgstr "Acerca de exportar los elementos seleccionadas:"
 msgid "Into the destination folder:"
 msgstr "En la carpeta de destino:"
 
-#: ../src/ui/fma-assistant-export.ui.h:13
-#: ../src/ui/fma-assistant-import.ui.h:8
+#: ../src/ui/fma-assistant-export.ui.h:13 ../src/ui/fma-assistant-import.ui.h:8
 msgid "Summary"
 msgstr "Resumen"
 
@@ -4018,22 +4019,25 @@ msgstr "Mostrar el número de versión"
 msgid "Import a file."
 msgstr "Importar un archivo."
 
-#: ../src/test/test-reader.c:122
+#: ../src/test/test-reader.c:122 ../src/utils/console-utils.c:53
+#| msgid ""
+#| "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer "
+#| "to mail to <maintainer@filemanager-actions.org>.\n"
 msgid ""
-"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
-"mail to <maintainer@filemanager-actions.org>.\n"
+"Bug reports are welcomed at https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 msgstr ""
-"Los informes de error son bienvenidos en http://bugzilla.gnome.org, o puede "
-"enviarlos por correo a <maintainer@filemanager-actions.org>.\n"
+"Los informes de error son bienvenidos en https://gitlab.gnome.org/GNOME/"
+"filemanager-actions/issues/\n"
 
-#: ../src/test/test-reader.c:130 ../src/utils/fma-delete-xmltree.c:183
+#: ../src/test/test-reader.c:129 ../src/utils/fma-delete-xmltree.c:183
 #: ../src/utils/fma-new.c:389 ../src/utils/fma-print.c:183
 #: ../src/utils/fma-print-schemas.c:191 ../src/utils/fma-run.c:210
 #: ../src/utils/fma-set-conf.c:208
 msgid "Miscellaneous options"
 msgstr "Opciones misceláneas"
 
-#: ../src/test/test-reader.c:151 ../src/utils/fma-delete-xmltree.c:113
+#: ../src/test/test-reader.c:150 ../src/utils/fma-delete-xmltree.c:113
 #: ../src/utils/fma-new.c:207 ../src/utils/fma-print.c:110
 #: ../src/utils/fma-print-schemas.c:112 ../src/utils/fma-run.c:119
 #: ../src/utils/fma-set-conf.c:120
@@ -4041,29 +4045,19 @@ msgstr "Opciones misceláneas"
 msgid "Syntax error: %s\n"
 msgstr "Error de sintaxis: %s\n"
 
-#: ../src/test/test-reader.c:166
+#: ../src/test/test-reader.c:165
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Error: es obligatorio un URI.\n"
 
 #. i18: “--help” is a command-line option - do not translate
-#: ../src/test/test-reader.c:178 ../src/utils/fma-delete-xmltree.c:197
+#: ../src/test/test-reader.c:177 ../src/utils/fma-delete-xmltree.c:197
 #: ../src/utils/fma-new.c:634 ../src/utils/fma-print.c:240
 #: ../src/utils/fma-print-schemas.c:304 ../src/utils/fma-run.c:438
 #: ../src/utils/fma-set-conf.c:222
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Pruebe %s --help para ver su uso.\n"
-
-#: ../src/utils/console-utils.c:53
-msgid ""
-"Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions,\n"
-"or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
-msgstr ""
-"Los informes de error son bienvenidos en https://bugzilla.gnome.org/"
-"enter_bug.cgi?product=filemanager-actions, o puede enviarlos por correo-e a "
-"<maintainer@filemanager-actions.org>.\n"
 
 #: ../src/utils/fma-delete-xmltree.c:68
 msgid "The XPath to the tree to be deleted"
@@ -4347,6 +4341,15 @@ msgstr "Error: tipo desconocido: %s. Use «str», «int» o «bool».\n"
 #, c-format
 msgid "Error: a value is mandatory.\n"
 msgstr "Error: es obligatorio un valor.\n"
+
+#~ msgid ""
+#~ "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
+#~ "product=filemanager-actions,\n"
+#~ "or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
+#~ msgstr ""
+#~ "Los informes de error son bienvenidos en https://bugzilla.gnome.org/"
+#~ "enter_bug.cgi?product=filemanager-actions, o puede enviarlos por correo-e "
+#~ "a <maintainer@filemanager-actions.org>.\n"
 
 #~| msgid "_Import"
 #~ msgid "_Import..."
