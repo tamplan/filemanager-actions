@@ -16,10 +16,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-03-08 19:39+0000\n"
-"PO-Revision-Date: 2017-05-08 20:53+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/filemanager-actions/"
+"issues\n"
+"POT-Creation-Date: 2018-09-14 18:21+0000\n"
+"PO-Revision-Date: 2018-10-27 16:27+0200\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: ../src/core/fma-exporter.c:52 ../src/core/fma-importer.c:87
 msgid "_Ask me"
@@ -755,11 +755,11 @@ msgstr " Fandt en dublet "
 
 #: ../src/core/fma-io-provider.c:69
 msgid ""
-"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
-"org/enter_bug.cgi?product=filemanager-actions."
+"Please, be kind enough to fill out a bug report on https://gitlab.gnome.org/"
+"GNOME/filemanager-actions/issues."
 msgstr ""
-"Vær venlig at udfylde en fejlrapport på https://bugzilla.gnome.org/enter_bug."
-"cgi?product=filemanager-actions."
+"Vær venlig at udfylde en fejlrapport på https://gitlab.gnome.org/GNOME/"
+"filemanager-actions/issues."
 
 #: ../src/core/fma-io-provider.c:1369
 msgid "Unavailable I/O provider."
@@ -2342,9 +2342,7 @@ msgstr "<b> Nautilus-element </b>"
 msgid ""
 "This tab lets you determine the main characteristics of the currently "
 "selected item."
-msgstr ""
-"Dette faneblad lader dig bestemme det valgte elements "
-"hovedegenskaber."
+msgstr "Dette faneblad lader dig bestemme det valgte elements hovedegenskaber."
 
 #: ../src/ui/fma-main-window.ui.h:27
 msgid "_Label :"
@@ -2507,7 +2505,8 @@ msgid ""
 msgstr ""
 "Når angivet skal det være navnet på en vindueshåndteringsklasse på mindst et "
 "vindue af den kørte kommando.\n"
-"Se specifikationen for opstartspåmindelseprotokollen (Startup Notification Protocol Specification) for flere detaljer.\n"
+"Se specifikationen for opstartspåmindelseprotokollen (Startup Notification "
+"Protocol Specification) for flere detaljer.\n"
 "Kun relevant når den valgte kørselstilstand er normal."
 
 #: ../src/ui/fma-main-window.ui.h:65
@@ -2562,8 +2561,8 @@ msgid ""
 "Basenames may be negated to specify for which basenames your item must not "
 "appear."
 msgstr ""
-"Denne liste lader dig bestemme, for hvilke basisnavne det valgte "
-"element vil blive vist i Nautilus' genvejsmenu.\n"
+"Denne liste lader dig bestemme, for hvilke basisnavne det valgte element vil "
+"blive vist i Nautilus' genvejsmenu.\n"
 "Basisnavne kan bruge jokertegnene “*” og “?”.\n"
 "Basisnavne kan negeres for at angive, for hvilke basisnavne elementet ikke "
 "skal optræde."
@@ -2597,8 +2596,8 @@ msgid ""
 "Basenames may be negated to specify for which basenames your item must not "
 "appear."
 msgstr ""
-"Dette faneblad lader dig bestemme, for hvilke basisnavne det valgte "
-"element vil blive vist i Nautilus' genvejsmenu.\n"
+"Dette faneblad lader dig bestemme, for hvilke basisnavne det valgte element "
+"vil blive vist i Nautilus' genvejsmenu.\n"
 "Basisnavne kan negeres for at angive, for hvilke basisnavne elementet ikke "
 "skal optræde."
 
@@ -2624,8 +2623,8 @@ msgid ""
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
-"Denne liste lader dig bestemme, for hvilke MIME-typer det valgte "
-"element vil blive vist i Nautilus' genvejsmenu.\n"
+"Denne liste lader dig bestemme, for hvilke MIME-typer det valgte element vil "
+"blive vist i Nautilus' genvejsmenu.\n"
 "MIME-typer kan angives som “*”, “*/*”, “gruppe/*” or “gruppe/undergruppe”.\n"
 "MIME-typer kan negeres for at angive, for hvilken type objekter elementet "
 "ikke skal optræde."
@@ -2650,8 +2649,8 @@ msgid ""
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
-"Dette faneblad lader dig bestemme, for hvilke MIME-typer det valgte "
-"element vil blive vist i Nautilus' genvejsmenu.\n"
+"Dette faneblad lader dig bestemme, for hvilke MIME-typer det valgte element "
+"vil blive vist i Nautilus' genvejsmenu.\n"
 "MIME-typer kan angives som “*”, “*/*”, “gruppe/*” or “gruppe/undergruppe”.\n"
 "MIME-typer kan negeres for at angive, for hvilken type objekter elementet "
 "ikke skal optræde."
@@ -2669,8 +2668,8 @@ msgid ""
 msgstr ""
 "Det aktuelle element vil optræde, hvis placeringen af hvert element i "
 "markeringen er en eller er inden i en af stierne i kolonnen “Skal matche en "
-"af”. Samtidig må det ikke være en eller være inden i en i kolonnen “Må ikke matche nogen "
-"af”."
+"af”. Samtidig må det ikke være en eller være inden i en i kolonnen “Må ikke "
+"matche nogen af”."
 
 #: ../src/ui/fma-main-window.ui.h:97
 msgid ""
@@ -2681,8 +2680,8 @@ msgid ""
 "Folder filters may be negated to specify for which folders your item must "
 "not appear."
 msgstr ""
-"Denne liste lader dig bestemme, hvor (i hvilke mapper) de valgte "
-"filer skal være, for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
+"Denne liste lader dig bestemme, hvor (i hvilke mapper) de valgte filer skal "
+"være, for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
 "Mapper kan bruge jokertegnene “*” og “?”.\n"
 "Mappefiltre kan negeres for at angive, for hvilke mapper elementet ikke skal "
 "optræde."
@@ -2711,8 +2710,8 @@ msgid ""
 "Folder filters may be negated to specify for which folders your item must "
 "not appear."
 msgstr ""
-"Dette faneblad lader dig bestemme, hvor (i hvilke mapper) de valgte "
-"filer skal være, for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
+"Dette faneblad lader dig bestemme, hvor (i hvilke mapper) de valgte filer "
+"skal være, for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
 "Mappefiltre kan negeres for at angive, for hvilke mapper elementet ikke skal "
 "optræde."
 
@@ -2737,8 +2736,8 @@ msgid ""
 "Filters may be negated to specify for which schemes your item must not "
 "appear."
 msgstr ""
-"Denne liste lader dig bestemme, hvilke typer de valgte filer skal "
-"opfylde, for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
+"Denne liste lader dig bestemme, hvilke typer de valgte filer skal opfylde, "
+"for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
 "Filtre kan negeres for at angive, for hvilke typer elementet ikke skal "
 "optræde."
 
@@ -2796,8 +2795,8 @@ msgid ""
 "Capabilities may be negated to specify for which capabilities your item must "
 "not appear."
 msgstr ""
-"Denne liste lader dig bestemme, hvilke egenskaber de valgte filer "
-"skal opfylde, for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
+"Denne liste lader dig bestemme, hvilke egenskaber de valgte filer skal "
+"opfylde, for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
 "Egenskaber kan negeres for at angive, for hvilke egenskaber elementet ikke "
 "skal optræde."
 
@@ -2821,8 +2820,8 @@ msgid ""
 "Filters may be negated to specify for which capabilities your item must not "
 "appear."
 msgstr ""
-"Dette faneblad lader dig bestemme, hvilke egenskaber de valgte filer "
-"skal opfylde, for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
+"Dette faneblad lader dig bestemme, hvilke egenskaber de valgte filer skal "
+"opfylde, for at elementet vil blive vist i Nautilus' genvejsmenu.\n"
 "Filtre kan negeres for at angive, for hvilke egenskaber elementet ikke skal "
 "optræde."
 
@@ -2926,8 +2925,8 @@ msgid ""
 msgstr ""
 "Dette er en avanceret betingelse baseret på tilstedeværelsen af kørende "
 "binærfil.\n"
-"Bemærk at kun binærfilens basisnavn tjekkes og ikke dens (ophavs)mappenavn eller "
-"parametre.\n"
+"Bemærk at kun binærfilens basisnavn tjekkes og ikke dens (ophavs)mappenavn "
+"eller parametre.\n"
 "Dette kan f.eks. bruges til at teste for tilstedeværelsen af en nødvendig "
 "dæmon."
 
@@ -3270,8 +3269,9 @@ msgid ""
 "Display order of menus and actions, both in the Nautilus context menu and in "
 "the fma-config-tools user interface, must be manually adjusted."
 msgstr ""
-"Rækkefølgen for visning af menuer og handlinger, både i Nautilus' genvejsmenu og i "
-"brugergrænsefladen for fma-config-tool, skal håndteres manuelt."
+"Rækkefølgen for visning af menuer og handlinger, både i Nautilus' "
+"genvejsmenu og i brugergrænsefladen for fma-config-tool, skal håndteres "
+"manuelt."
 
 #: ../src/ui/fma-preferences.ui.h:8
 msgid "<b>Items ordering</b>"
@@ -3896,22 +3896,22 @@ msgstr "Skriv versionsnummeret"
 msgid "Import a file."
 msgstr "Importér en fil."
 
-#: ../src/test/test-reader.c:122
+#: ../src/test/test-reader.c:122 ../src/utils/console-utils.c:53
 msgid ""
-"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
-"mail to <maintainer@filemanager-actions.org>.\n"
+"Bug reports are welcomed at https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 msgstr ""
-"Fejlrapporter er velkomne på http://bugzilla.gnome.org eller med e-mail til "
-"<maintainer@filemanager-actions.org>.\n"
+"Fejlrapporter er velkomne på http://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 
-#: ../src/test/test-reader.c:130 ../src/utils/fma-delete-xmltree.c:183
+#: ../src/test/test-reader.c:129 ../src/utils/fma-delete-xmltree.c:183
 #: ../src/utils/fma-new.c:389 ../src/utils/fma-print.c:183
 #: ../src/utils/fma-print-schemas.c:191 ../src/utils/fma-run.c:210
 #: ../src/utils/fma-set-conf.c:208
 msgid "Miscellaneous options"
 msgstr "Diverse indstillinger"
 
-#: ../src/test/test-reader.c:151 ../src/utils/fma-delete-xmltree.c:113
+#: ../src/test/test-reader.c:150 ../src/utils/fma-delete-xmltree.c:113
 #: ../src/utils/fma-new.c:207 ../src/utils/fma-print.c:110
 #: ../src/utils/fma-print-schemas.c:112 ../src/utils/fma-run.c:119
 #: ../src/utils/fma-set-conf.c:120
@@ -3919,29 +3919,19 @@ msgstr "Diverse indstillinger"
 msgid "Syntax error: %s\n"
 msgstr "Syntaksfejl: %s\n"
 
-#: ../src/test/test-reader.c:166
+#: ../src/test/test-reader.c:165
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Fejl: URI er obligatorisk.\n"
 
 #. i18: “--help” is a command-line option - do not translate
-#: ../src/test/test-reader.c:178 ../src/utils/fma-delete-xmltree.c:197
+#: ../src/test/test-reader.c:177 ../src/utils/fma-delete-xmltree.c:197
 #: ../src/utils/fma-new.c:634 ../src/utils/fma-print.c:240
 #: ../src/utils/fma-print-schemas.c:304 ../src/utils/fma-run.c:438
 #: ../src/utils/fma-set-conf.c:222
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Prøv %s --help for brugsanvisning.\n"
-
-#: ../src/utils/console-utils.c:53
-msgid ""
-"Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions,\n"
-"or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
-msgstr ""
-"Fejlrapporter er velkomne på http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions\n"
-"eller med e-mail til <maintainer@filemanager-actions.org>.\n"
 
 #: ../src/utils/fma-delete-xmltree.c:68
 msgid "The XPath to the tree to be deleted"
@@ -3998,7 +3988,9 @@ msgstr "Angiv denne hvis elementet ikke har værktøjslinjen som mål"
 
 #: ../src/utils/fma-new.c:143
 msgid "Set it if the basename patterns are case insensitive"
-msgstr "Angiv denne hvis der i basisnavnemønstrene skelnes mellem store og små bogstaver"
+msgstr ""
+"Angiv denne hvis der i basisnavnemønstrene skelnes mellem store og små "
+"bogstaver"
 
 #: ../src/utils/fma-new.c:149
 msgid "Output the new item content on stdout (default)"
@@ -4217,6 +4209,15 @@ msgstr "Fejl: ukendt type %s. Brug “str”, “int” eller “bool”.\n"
 #, c-format
 msgid "Error: a value is mandatory.\n"
 msgstr "Fejl: En værdi er obligatorisk.\n"
+
+#~ msgid ""
+#~ "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
+#~ "product=filemanager-actions,\n"
+#~ "or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
+#~ msgstr ""
+#~ "Fejlrapporter er velkomne på http://bugzilla.gnome.org/enter_bug.cgi?"
+#~ "product=filemanager-actions\n"
+#~ "eller med e-mail til <maintainer@filemanager-actions.org>.\n"
 
 #~ msgid "Ask for a confirmation when quitting by Esc"
 #~ msgstr "Spørg efter bekræftelse når der afsluttes med Esc"
