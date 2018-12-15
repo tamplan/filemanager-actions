@@ -18,12 +18,12 @@
     and submenus, exported and shared with other desktop environments. 
   </description>
 
-  <homepage rdf:resource="http://www.nautilus-actions.org" />
+  <!-- <homepage rdf:resource="http://www.nautilus-actions.org" /> -->
 
-  <download-page rdf:resource="http://www.nautilus-actions.org/downloads" />
+  <download-page rdf:resource="https://download.gnome.org/sources/filemanager-actions/" />
   <bug-database rdf:resource="https://gitlab.gnome.org/GNOME/filemanager-actions/issues/" />
 
-  <mailing-list rdf:resource="http://mailman.nautilus-actions.org/listinfo" />
+  <!-- <mailing-list rdf:resource="http://mailman.nautilus-actions.org/listinfo" /> -->
 
   <maintainer>
     <foaf:Person>
