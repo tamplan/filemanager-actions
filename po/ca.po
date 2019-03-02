@@ -1135,8 +1135,8 @@ msgid ""
 "The path of the command to be executed when the user select the menu item in "
 "the file manager context menu or in the toolbar."
 msgstr ""
-"La ruta de l'ordre a executar quan l'usuari seleccioni l'element del menú en "
-"el file-manager o en la barra d'eines del menú del context."
+"La ruta de l'ordre a executar quan l'usuari seleccioni l'element del menú "
+"al file-manager o en la barra d'eines del menú del context."
 
 #: ../src/core/fma-object-profile-factory.c:127
 msgid "Parameters of the command"
@@ -1452,7 +1452,7 @@ msgstr "Element %s desconegut, trobat a la línia %d a l'espera de %s."
 #, c-format
 msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
 msgstr ""
-"tipus %s desconegut, es va trobar a la línia %d, a l'espera de Action o Menu."
+"tipus %s desconegut, es va trobar a la línia %d, a l'espera d'Action o Menu."
 
 #: ../src/io-xml/fma-xml-reader.c:154
 msgid "The XML I/O Provider is not able to handle the URI"
@@ -1778,7 +1778,7 @@ msgstr "Selecciona el format d'exportació"
 
 #: ../src/ui/fma-assistant-export.ui.h:11
 msgid "About to export selected items:"
-msgstr "Sobre exportar els elements seleccionats:"
+msgstr "Quant a exportar els elements seleccionats:"
 
 #: ../src/ui/fma-assistant-export.ui.h:12
 msgid "Into the destination folder:"
@@ -1838,7 +1838,7 @@ msgstr "Gestió de duplicats"
 
 #: ../src/ui/fma-assistant-import.ui.h:6
 msgid "About to import selected files:"
-msgstr "Sobre la importació de fitxers seleccionats:"
+msgstr "Quant a la importació de fitxers seleccionats:"
 
 #: ../src/ui/fma-assistant-import.ui.h:7
 msgid "When importing an item whose ID already exists:"
@@ -3950,7 +3950,7 @@ msgstr ""
 
 #: ../src/plugin-menu/fma-menu-plugin.c:1041
 msgid "About FileManager-Actions"
-msgstr "Sobre el FileManager-Actions"
+msgstr "Quant al FileManager-Actions"
 
 #: ../src/plugin-menu/fma-menu-plugin.c:1042
 msgid "Display some information about FileManager-Actions"
