@@ -450,7 +450,7 @@ msgstr ""
 "Free Documentation License (GFDL) ve verzi 1.3 nebo v jakékoli novější verzi "
 "vydané nadací Free Software Foundation; bez neměnných oddílů, bez textů "
 "předních desek a bez textů zadních desek. Kopii licence GFDL naleznete pod "
-"<ulink type=\\\"help\\\" url=\\\"help:fdl\\\">tímto odkazem</ulink> nebo v "
+"<ulink type=\"help\" url=\"ghelp:fdl\">tímto odkazem</ulink> nebo v "
 "souboru COPYING-DOCS dodávaném s touto příručkou."
 
 #: C/fma-config-tool.xml:17(para)
