@@ -61,7 +61,7 @@ msgid ""
 "the License, or (at your option) any later version."
 msgstr ""
 "L'eina de configuració FileManager-Actions és programari lliure; vostè pot "
-"redistribuir-lo  i/o modificar-lo sota els termes de la Llicència Pública "
+"redistribuir-lo i/o modificar-lo sota els termes de la Llicència Pública "
 "General de GNU publicada per la Free Software Foundation; ja sigui la versió "
 "2 de la Llicència, o (a la seva elecció) qualsevol versió posterior."
 
@@ -782,7 +782,7 @@ msgstr "Proveïdor I/O no disponible."
 
 #: ../src/core/fma-io-provider.c:1373
 msgid "I/O provider implementation lacks of required API."
-msgstr "La implementació del proveïdor I/O  no té l'API necessària."
+msgstr "La implementació del proveïdor I/O no té l'API necessària."
 
 #: ../src/core/fma-io-provider.c:1377
 msgid "I/O provider is not willing to write."
@@ -1352,7 +1352,7 @@ msgstr "audio/x-midi"
 
 #: ../src/core/fma-tokens.c:254
 msgid "image/jpeg"
-msgstr "imatge/jpeg"
+msgstr "image/jpeg"
 
 #: ../src/core/fma-tokens.c:256
 msgid "test.example.net"
@@ -1480,7 +1480,7 @@ msgstr ""
 
 #: ../src/io-xml/fma-xml-formats.c:67
 msgid "Export as a _light GConf schema (v2) file"
-msgstr "Exporta com un fitxer de l'esquema lleuger GConf (v2)"
+msgstr "_Exporta com un fitxer de l'esquema lleuger GConf (v2)"
 
 #: ../src/io-xml/fma-xml-formats.c:68
 msgid ""
@@ -2270,7 +2270,7 @@ msgstr "Alguns elements han estat modificats."
 
 #: ../src/ui/fma-main-window.c:1308
 msgid "Are you sure you want to quit without saving them ?"
-msgstr "Esteu segur que voleu sortir sense guardar?"
+msgstr "Esteu segur que voleu sortir sense desar?"
 
 #: ../src/ui/fma-main-window.ui.h:1
 msgid "Items _list :"
@@ -2328,7 +2328,7 @@ msgstr "Etiqueta de l'element del gestor de fitxers dels menús de context."
 
 #: ../src/ui/fma-main-window.ui.h:12
 msgid "Display item in the _toolbar"
-msgstr "Mostra l'element a la barra d'eines"
+msgstr "_Mostra l'element a la barra d'eines"
 
 #: ../src/ui/fma-main-window.ui.h:13
 msgid ""
@@ -2356,7 +2356,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:17
 msgid "T_oolbar label :"
-msgstr "Etiqueta a la barra d'eines:"
+msgstr "_Etiqueta a la barra d'eines:"
 
 #: ../src/ui/fma-main-window.ui.h:18
 msgid "The label displayed in the file manager toolbar."
@@ -2364,12 +2364,12 @@ msgstr "L'etiqueta apareix a la barra d'eines del gestor de fitxers."
 
 #: ../src/ui/fma-main-window.ui.h:19
 msgid "Toolti_p :"
-msgstr "Informació d'eines:"
+msgstr "_Indicador de funció:"
 
 #: ../src/ui/fma-main-window.ui.h:20
 msgid "The tooltip displayed in the file manager user interface."
 msgstr ""
-"La descripció que apareix a la interfície d'usuari de l'administrador de "
+"L'indicador de funció que apareix a la interfície d'usuari de l'administrador de "
 "fitxers."
 
 #: ../src/ui/fma-main-window.ui.h:21
@@ -2414,7 +2414,7 @@ msgstr "P_aràmetres:"
 
 #: ../src/ui/fma-main-window.ui.h:31
 msgid "_Working directory :"
-msgstr "Directori de treball:"
+msgstr "_Directori de treball:"
 
 #: ../src/ui/fma-main-window.ui.h:32
 msgid ""
@@ -2545,7 +2545,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:61
 msgid "Startup Window Manager _class :"
-msgstr "Inici de la gestió de la classe de finestra:"
+msgstr "_Inici de la gestió de la classe de finestra:"
 
 #: ../src/ui/fma-main-window.ui.h:62
 msgid ""
@@ -2664,7 +2664,7 @@ msgid ""
 "matching any of the filters of the “Must not match any of” column."
 msgstr ""
 "Apareixerà l'element actual si el tipus MIME de cada element de la selecció "
-"coincideix amb un filtre de la columna  \"Ha de coincidir amb un\", mentre "
+"coincideix amb un filtre de la columna \"Ha de coincidir amb un\", mentre "
 "que no coincideixi amb cap dels filtres de la columna \"no ha de coincidir "
 "amb qualsevol de\"."
 
@@ -2928,7 +2928,7 @@ msgstr "Apareix si el fitxer es e_xecutable:"
 
 #: ../src/ui/fma-main-window.ui.h:135
 msgid "Appears if the name is _registered on D-Bus :"
-msgstr "Apareix si el nom està registrat en D-Bus:"
+msgstr "_Apareix si el nom està registrat en D-Bus:"
 
 #: ../src/ui/fma-main-window.ui.h:136
 msgid "Appears if the command outputs “_true” :"
@@ -2936,7 +2936,7 @@ msgstr "Apareix si l'ordre de sortida «veri_tat»:"
 
 #: ../src/ui/fma-main-window.ui.h:137
 msgid "Appears if the _binary is running :"
-msgstr "Apareix si el binari s'està executant:"
+msgstr "_Apareix si el binari s'està executant:"
 
 #: ../src/ui/fma-main-window.ui.h:138
 msgid "Bro_wse…"
@@ -3273,11 +3273,11 @@ msgstr ""
 
 #: ../src/ui/fma-menu-file.c:54
 msgid "Save error"
-msgstr "Guarda error"
+msgstr "Error en desar"
 
 #: ../src/ui/fma-menu-file.c:55
 msgid "Some items may not have been saved"
-msgstr "Alguns elements no s'han guardat"
+msgstr "Alguns elements no s'han desat"
 
 #: ../src/ui/fma-menu-file.c:56
 msgid "Unable to rewrite the level-zero items list"
@@ -3406,7 +3406,7 @@ msgstr "<b>Executa al terminal</b>"
 
 #: ../src/ui/fma-preferences.ui.h:19
 msgid "Running _desktop environment :"
-msgstr "Entorn d'escriptori en execució:"
+msgstr "_Entorn d'escriptori en execució:"
 
 #: ../src/ui/fma-preferences.ui.h:20
 msgid "<i>Currently detected :</i>"
@@ -3432,7 +3432,7 @@ msgstr "Què s'ha de fer en enganxar o duplicar un element a l'arbre?"
 
 #: ../src/ui/fma-preferences.ui.h:25
 msgid "Relabel _menus"
-msgstr "Torna a etiquetar menús"
+msgstr "_Torna a etiquetar menús"
 
 #: ../src/ui/fma-preferences.ui.h:26
 msgid ""
@@ -3456,7 +3456,7 @@ msgstr ""
 
 #: ../src/ui/fma-preferences.ui.h:29
 msgid "Relabel _profiles"
-msgstr "Torna a etiquetar perfils"
+msgstr "_Torna a etiquetar perfils"
 
 #: ../src/ui/fma-preferences.ui.h:30
 msgid ""
@@ -3472,7 +3472,7 @@ msgstr "<b>Torna a etiquetar elements</b>"
 
 #: ../src/ui/fma-preferences.ui.h:32
 msgid "Esc key _quits the assistant"
-msgstr "La tecla ESC tanca l'assistent"
+msgstr "_La tecla ESC tanca l'assistent"
 
 #: ../src/ui/fma-preferences.ui.h:33
 msgid ""
@@ -3486,7 +3486,7 @@ msgstr ""
 
 #: ../src/ui/fma-preferences.ui.h:34
 msgid "Ask for a _confirmation when quitting the assistant on Esc key"
-msgstr "Demana una confirmació al sortir de l'assistent amb la tecla Esc"
+msgstr "_Demana una confirmació al sortir de l'assistent amb la tecla Esc"
 
 #: ../src/ui/fma-preferences.ui.h:35
 msgid ""
@@ -3505,14 +3505,14 @@ msgstr "<b>Assistents</b>"
 
 #: ../src/ui/fma-preferences.ui.h:37
 msgid "Automatically _saves pending modifications"
-msgstr "Guarda automàticament les modificacion_s pendents"
+msgstr "Desa automàticament les modificacion_s pendents"
 
 #: ../src/ui/fma-preferences.ui.h:38
 msgid ""
 "When this option is checked, pending modification will be periodically and "
 "automatically saved."
 msgstr ""
-"Quan se selecciona aquesta opció, es periòdica i automàticament guarda la "
+"Quan se selecciona aquesta opció, es periòdica i automàticament desa la "
 "modificació pendent."
 
 #: ../src/ui/fma-preferences.ui.h:39
@@ -3525,7 +3525,7 @@ msgstr "minuts"
 
 #: ../src/ui/fma-preferences.ui.h:41
 msgid "<b>Auto-save</b>"
-msgstr "<b>Auto-guardar</b>"
+msgstr "<b>Desa automàticament</b>"
 
 #: ../src/ui/fma-preferences.ui.h:42
 msgid ""
@@ -3545,7 +3545,7 @@ msgid ""
 "What to do when an item, action or menu, selected to be imported, has the "
 "same identifier that a currently existing one ?"
 msgstr ""
-"Què fer quan un element, acció o  menú, seleccionat per a ser importat, té "
+"Què fer quan un element, acció o menú, seleccionat per a ser importat, té "
 "el mateix identificador que un existent en l'actualitat?"
 
 #: ../src/ui/fma-preferences.ui.h:45
@@ -3763,15 +3763,15 @@ msgstr "_Preferències"
 
 #: ../src/ui/fma-toolbar.ui.h:14
 msgid "New _action"
-msgstr "Acció nova"
+msgstr "_Acció nova"
 
 #: ../src/ui/fma-toolbar.ui.h:15
 msgid "Save the items tree"
-msgstr "Guarda l'arbre d'elements"
+msgstr "Desa l'arbre d'elements"
 
 #: ../src/ui/fma-toolbar.ui.h:16 ../src/ui/fma-config-tool.actions.h:9
 msgid "_Save"
-msgstr "_Guarda"
+msgstr "_Desa"
 
 #: ../src/ui/fma-toolbar.ui.h:18 ../src/ui/fma-config-tool.actions.h:4
 msgid "_Quit"
@@ -3783,7 +3783,7 @@ msgstr "A_juda"
 
 #: ../src/ui/fma-toolbar.ui.h:22
 msgid "_About…"
-msgstr "_Sobre..."
+msgstr "_Quant a…"
 
 #: ../src/ui/fma-toolbar.ui.h:24
 msgid "_Import…"
@@ -3915,7 +3915,7 @@ msgstr "_Bolcat de la selecció"
 
 #: ../src/ui/fma-config-tool.actions.h:32
 msgid "_Brief tree store dump"
-msgstr "Dipòsit de l'arbre de bolcat"
+msgstr "_Dipòsit de l'arbre de bolcat"
 
 #: ../src/ui/fma-config-tool.actions.h:33
 msgid "_List modified items"
@@ -4080,7 +4080,7 @@ msgstr "Configurar si l'article no es dirigeix a la barra d'eines"
 
 #: ../src/utils/fma-new.c:143
 msgid "Set it if the basename patterns are case insensitive"
-msgstr "Estableix si els patrons són nom base sensibles a majúscules"
+msgstr "Estableix si els patrons de nom base són sensibles a majúscules"
 
 #: ../src/utils/fma-new.c:149
 msgid "Output the new item content on stdout (default)"
@@ -4113,7 +4113,7 @@ msgstr "Error: només una opció de sortida pot ser especificada.\n"
 
 #: ../src/utils/fma-new.c:352
 msgid "Define a new action."
-msgstr "Defineix una acció nova"
+msgstr "Defineix una acció nova."
 
 #: ../src/utils/fma-new.c:355
 msgid ""
