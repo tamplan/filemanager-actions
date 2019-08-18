@@ -1562,7 +1562,7 @@ msgstr "_Cancel·la"
 
 #: ../src/ui/base-gtk-utils.c:398 ../src/ui/base-gtk-utils.c:471
 msgid "_OK"
-msgstr "D'ac_ord."
+msgstr "D'ac_ord"
 
 #: ../src/ui/base-window.c:201
 msgid "XML UI filename"
@@ -1719,7 +1719,7 @@ msgstr "<b>Capacitats administrades</b>"
 
 #: ../src/ui/fma-add-scheme.ui.h:1
 msgid "Adding a new scheme"
-msgstr "afegeix un esquema nou."
+msgstr "Afegeix un esquema nou"
 
 #: ../src/ui/fma-add-scheme.ui.h:2
 msgid "<b>Scheme</b>"
@@ -1826,7 +1826,7 @@ msgstr ""
 
 #: ../src/ui/fma-assistant-import.ui.h:3
 msgid "Selecting files to import"
-msgstr "Selecció de fitxers que voleu importar."
+msgstr "Selecció de fitxers que voleu importar"
 
 #: ../src/ui/fma-assistant-import.ui.h:4
 msgid "What should I do when importing an item whose ID already exists ?"
@@ -1870,7 +1870,7 @@ msgstr "Quin format hauria de triar per exportar?"
 
 #: ../src/ui/fma-export-ask.ui.h:2
 msgid " About to export item(s) "
-msgstr "Sobre exportar element(s)"
+msgstr " Quant a exportar element(s)"
 
 #: ../src/ui/fma-export-ask.ui.h:3
 msgid "Re_member my choice in future export operations"
@@ -3815,7 +3815,7 @@ msgstr "Pre_ferències"
 
 #: ../src/ui/fma-config-tool.actions.h:3
 msgid "_About FileManager-Actions"
-msgstr "Sobre FileM_anager-Actions"
+msgstr "Quant a FileM_anager-Actions"
 
 #: ../src/ui/fma-config-tool.actions.h:5
 msgid "_File"
