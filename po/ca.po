@@ -1055,7 +1055,7 @@ msgstr ""
 "Tingueu en compte que això podria ser només un suggeriment, ja que l'accés "
 "directe pot estar reservat per a un altre ús. L'aplicació no hauria "
 "d'anul·lar un accés directe existent per definir-ne aquest.\n"
-"El format es pot veure com «<Control> a» o «<Shift> <Alt> F1».\n"
+"El format es pot veure com «<Control>a» o «<Maj><Alt>F1».\n"
 "Per defecte buit."
 
 #: ../src/core/fma-object-item-factory.c:268
@@ -1906,7 +1906,7 @@ msgstr "Icones _temàtiques"
 
 #: ../src/ui/fma-icon-chooser.ui.h:3
 msgid "Icons by _path"
-msgstr "_Icones de ruta"
+msgstr "_Icones per ruta"
 
 #: ../src/ui/fma-ienvironment-tab.c:73
 msgid "(strictly lesser than)"
@@ -3512,8 +3512,8 @@ msgid ""
 "When this option is checked, pending modification will be periodically and "
 "automatically saved."
 msgstr ""
-"Quan se selecciona aquesta opció, es periòdica i automàticament desa la "
-"modificació pendent."
+"Quan se selecciona aquesta opció, les modificacions pendents es desaran de "
+"forma periòdica i automàtica."
 
 #: ../src/ui/fma-preferences.ui.h:39
 msgid "Periodicity :"
@@ -3743,7 +3743,7 @@ msgstr "_Retalla"
 
 #: ../src/ui/fma-toolbar.ui.h:4 ../src/ui/fma-config-tool.actions.h:12
 msgid "C_opy"
-msgstr "C_òpia"
+msgstr "C_opia"
 
 #: ../src/ui/fma-toolbar.ui.h:6
 msgid "P_aste"
