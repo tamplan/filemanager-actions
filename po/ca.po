@@ -1758,7 +1758,7 @@ msgid ""
 msgstr ""
 "Seleccioneu una o més accions per a ser exportades.\n"
 "\n"
-"Podeu utilitzar les tecles Ctrl i Shift per estendre la selecció."
+"Podeu utilitzar les tecles Ctrl i Maj per estendre la selecció."
 
 #: ../src/ui/fma-assistant-export.ui.h:7
 msgid "Selecting the exported actions"
@@ -1814,7 +1814,7 @@ msgstr "No importat"
 
 #: ../src/ui/fma-assistant-import.ui.h:1
 msgid "Importing actions"
-msgstr "Importar accions "
+msgstr "Importació d'accions"
 
 #: ../src/ui/fma-assistant-import.ui.h:2
 msgid ""
@@ -1898,7 +1898,7 @@ msgstr "Selecciona el directori de treball"
 
 #: ../src/ui/fma-icon-chooser.ui.h:1
 msgid "Icon Chooser"
-msgstr "Selecciona la icona "
+msgstr "Seleccionador de la icona"
 
 #: ../src/ui/fma-icon-chooser.ui.h:2
 msgid "_Themed icons"
@@ -2203,7 +2203,7 @@ msgstr "Actual FMAObjectProfile"
 
 #: ../src/ui/fma-main-window.c:338
 msgid "A pointer to the currently edited FMAObjectProfile"
-msgstr "Un punter actualment editat a la FMAObjectProfile "
+msgstr "Un punter actualment editat a la FMAObjectProfile"
 
 #: ../src/ui/fma-main-window.c:344
 msgid "Current FMAIContext"
@@ -2537,7 +2537,7 @@ msgid ""
 "See the Startup Notification Protocol Specification for more details.\n"
 "Only relevant when chosen execution mode is Normal."
 msgstr ""
-"Quan s'activa, se sap que l'ordre enviarà un missatge de \"eliminar\" per a "
+"Quan s'activa, se sap que l'ordre executada enviarà un missatge «eliminar» a "
 "l'entorn d'escriptori.\n"
 "Veure l'inici d'Especificació del Protocol de Notificació per a més "
 "detalls.\n"
@@ -3151,7 +3151,7 @@ msgstr "Insereix un nou menú a la posició actual"
 #. i18n: status bar tooltip displayed on “New action” item navigation
 #: ../src/ui/fma-menu.c:115 ../src/ui/fma-toolbar.ui.h:13
 msgid "Define a new action"
-msgstr "Defineix una nova acció "
+msgstr "Defineix una nova acció"
 
 #. i18n: status bar tooltip displayed on “New profile” item navigation
 #: ../src/ui/fma-menu.c:118
@@ -3196,7 +3196,7 @@ msgstr "Duplica l'element(s) seleccionats"
 #. i18n: status bar tooltip displayed on “Delete” item navigation
 #: ../src/ui/fma-menu.c:139 ../src/ui/fma-toolbar.ui.h:7
 msgid "Delete the selected item(s)"
-msgstr "Suprimeix l'element(s) seleccionat."
+msgstr "Suprimeix els elements seleccionats"
 
 #. i18n: status bar tooltip displayed on “Reload items” item navigation
 #: ../src/ui/fma-menu.c:142 ../src/ui/fma-toolbar.ui.h:9
@@ -3289,7 +3289,7 @@ msgstr "Alguns elements no s'han eliminat"
 
 #: ../src/ui/fma-menu-file.c:190
 msgid "New profile"
-msgstr "Nou perfil"
+msgstr "Perfil nou"
 
 #: ../src/ui/fma-menu-file.c:435
 msgid "Automatically saving pending modifications…"
@@ -3480,9 +3480,9 @@ msgid ""
 "assistant. Else, quitting the assistant is only possible by hitting the "
 "“Cancel” button."
 msgstr ""
-"Quan se selecciona aquesta opció, la tecla \"Escape\" li permetrà sortir de "
-"l'assistent actual. En cas contrari, deixar l'assistent només és possible "
-"prement el botó \"Cancel·lar\"."
+"Quan se selecciona aquesta opció, la tecla «Esc» li permetrà sortir de "
+"l'assistent actual. En cas contrari, només és possible sortir de l'assistent "
+"prement el botó «Cancel·la»."
 
 #: ../src/ui/fma-preferences.ui.h:34
 msgid "Ask for a _confirmation when quitting the assistant on Esc key"
