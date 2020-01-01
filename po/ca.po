@@ -1307,7 +1307,7 @@ msgstr ""
 
 #: ../src/core/fma-object-profile-factory.c:267
 msgid "Startup WM Class"
-msgstr "Inici de classe WM"
+msgstr "Classe WM d'inici"
 
 #: ../src/core/fma-object-profile-factory.c:268
 msgid ""
@@ -1364,11 +1364,11 @@ msgstr "usuari"
 
 #: ../src/core/fma-tokens.c:434
 msgid "Output of the run command"
-msgstr "L'ordre d'anada de la sortida"
+msgstr "Sortida de l'ordre executada"
 
 #: ../src/core/fma-tokens.c:442
 msgid "Run command:"
-msgstr "Ordre de marxa:"
+msgstr "Executa ordre:"
 
 #: ../src/core/fma-tokens.c:443
 msgid "Standard output:"
@@ -1380,11 +1380,11 @@ msgstr "Error estàndard:"
 
 #: ../src/io-desktop/fma-desktop-provider.c:259
 msgid "FileManager-Actions Desktop I/O Provider"
-msgstr "FileManager-Actions Proveïdor d'escriptori I/O "
+msgstr "FileManager-Actions proveïdor d'escriptori I/O"
 
 #: ../src/io-desktop/fma-desktop-formats.c:56
 msgid "Export as a ._desktop file"
-msgstr "Exporta com fitxer ._desktop"
+msgstr "Exporta com a fitxer ._desktop"
 
 #: ../src/io-desktop/fma-desktop-formats.c:57
 msgid ""
@@ -1799,7 +1799,7 @@ msgstr "L'exportació es realitza"
 #. i18n: indicate that the file has been successfully imported
 #: ../src/ui/fma-assistant-import.c:762
 msgid "Import OK"
-msgstr "Importació OK"
+msgstr "Importació realitzada amb èxit"
 
 #. i18n: this is the globally unique identifier and the label of the newly imported action
 #: ../src/ui/fma-assistant-import.c:766
@@ -2472,7 +2472,7 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:44
 msgid "_Command"
-msgstr "_ordre"
+msgstr "_Ordre"
 
 #: ../src/ui/fma-main-window.ui.h:45
 msgid "_Normal"
@@ -3056,11 +3056,11 @@ msgstr ""
 
 #: ../src/ui/fma-main-window.ui.h:162
 msgid "<b> Action editable properties </b>"
-msgstr "<b>Acció editable de propietats</b>"
+msgstr "<b> Propietats editables de l'acció </b>"
 
 #: ../src/ui/fma-main-window.ui.h:163
 msgid "Read-only item"
-msgstr "Només lectura de l'element"
+msgstr "Element només de lectura"
 
 #: ../src/ui/fma-main-window.ui.h:164
 msgid ""
@@ -3082,7 +3082,7 @@ msgstr "Proveïdor I/O:"
 
 #: ../src/ui/fma-main-window.ui.h:168
 msgid "<b> Read-only properties </b>"
-msgstr "<b>Només lectura de propietats</b>"
+msgstr "<b> Propietats de només lectura </b>"
 
 #: ../src/ui/fma-main-window.ui.h:169
 msgid ""
@@ -3329,7 +3329,7 @@ msgstr ""
 
 #: ../src/ui/fma-preferences.ui.h:6
 msgid "_Manual order"
-msgstr "_Manual d'ordres"
+msgstr "_Ordre manual"
 
 #: ../src/ui/fma-preferences.ui.h:7
 msgid ""
