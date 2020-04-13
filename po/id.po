@@ -1,22 +1,22 @@
 # Indonesian translation for filemanager-actions.
 # Copyright (C) 2017 filemanager-actions's COPYRIGHT HOLDER
 # This file is distributed under the same license as the filemanager-actions package.
-# Andika Triwidada <atriwidada@gnome.org>, 2017.
+# Andika Triwidada <atriwidada@gnome.org>, 2017, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: filemanager-actions master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-07-22 15:34+0000\n"
-"PO-Revision-Date: 2018-03-30 10:51+0700\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/filemanager-actions/"
+"issues\n"
+"POT-Creation-Date: 2019-10-28 15:26+0000\n"
+"PO-Revision-Date: 2020-04-13 16:40+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 
 #: ../src/core/fma-exporter.c:52 ../src/core/fma-importer.c:87
 msgid "_Ask me"
@@ -45,7 +45,7 @@ msgstr "%s FMAIExporter tak mengimplementasi antar muka \"to_buffer\"."
 #: ../src/core/fma-exporter.c:376
 #, c-format
 msgid "%s FMAIExporter doesn’t implement “to_file” interface."
-msgstr "%s FMAIExporter tak mengimplementasi antar muka \"to_file\"."
+msgstr "%s FMAIExporter tak mengimplementasi antar muka \"to_berkas\"."
 
 #: ../src/core/fma-about.c:73
 msgid ""
@@ -206,6 +206,7 @@ msgstr ""
 
 #. i18n: wildcard character “*” is taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:116
+#, fuzzy
 msgid ""
 "A list of strings with joker “*” to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected item must match at least one of "
@@ -213,6 +214,11 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to “*/*”."
 msgstr ""
+"Daftar string dengan Joker \"*\" untuk dicocokkan dengan mimeTypes dari "
+"berkas yang dipilih (s)/folder (s). Setiap item yang dipilih harus cocok "
+"setidaknya salah satu dari pola Mimetype untuk tindakan untuk muncul.\n"
+"Ini jelas hanya berlaku ketika ada pilihan.\n"
+"Default ke \"*/*\"."
 
 #. i18n: wildcard character “*” is taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:135
@@ -244,6 +250,18 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to “true”."
 msgstr ""
+"Tetapkan ke \"true\" jika pilihan dapat memiliki berkas, untuk \"false\" "
+"sebaliknya.\n"
+"Pengaturan ini diikat dengan pengaturan \"isdir\". Kombinasi yang valid "
+"adalah: \n"
+"isfile = \"true\" dan isdir = \"false\": pilihan hanya dapat menahan berkas\n"
+"isfile = \"false\" dan isdir = \"true\": pilihan hanya dapat menahan folder\n"
+"isfile = \"true\" dan isdir = \"true\": pilihan dapat menahan kedua berkas "
+"dan folder\n"
+"isfile = \"false\" dan isdir = \"false\": ini adalah kombinasi yang tidak "
+"valid (konfigurasi Anda tidak akan pernah muncul).\n"
+"Ini jelas hanya berlaku ketika ada pilihan.\n"
+"Nilai baku adalah \"true\"."
 
 #: ../src/core/fma-icontext-factory.c:210
 msgid ""
@@ -265,6 +283,18 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to “false”."
 msgstr ""
+"Tetapkan ke \"true\" jika pilihan dapat memiliki folder, untuk \"false\" "
+"sebaliknya.\n"
+"Pengaturan ini diikat dengan pengaturan \"isfile\". Kombinasi yang valid "
+"adalah: \n"
+"isfile = \"true\" dan isdir = \"false\": pilihan hanya dapat menahan berkas\n"
+"isfile = \"false\" dan isdir = \"true\": pilihan hanya dapat menahan folder\n"
+"isfile = \"true\" dan isdir = \"true\": pilihan dapat menahan kedua berkas "
+"dan folder\n"
+"isfile = \"false\" dan isdir = \"false\": ini adalah kombinasi yang tidak "
+"valid (konfigurasi Anda tidak akan pernah muncul).\n"
+"Ini jelas hanya berlaku ketika ada pilihan.\n"
+"Nilai baku adalah \"false\"."
 
 #: ../src/core/fma-icontext-factory.c:244
 msgid ""
@@ -295,6 +325,7 @@ msgstr "Daftar skema yang akan dicocokkan terhadap berkas/folder yang dipilih"
 #. i18n: schemes (sftp, ssh, ftp, file, etc.) are standard keywords which define
 #. *  the access protocol to an object, they should not be translated
 #: ../src/core/fma-icontext-factory.c:274
+#, fuzzy
 msgid ""
 "Defines the list of valid schemes to be matched against the selected items. "
 "The scheme is the protocol used to access the files. The keyword to use is "
@@ -313,6 +344,24 @@ msgid ""
 "special “x-nautilus-desktop” scheme.\n"
 "Defaults to “file”."
 msgstr ""
+"Mendefinisikan daftar skema yang valid untuk dicocokkan dengan item yang "
+"dipilih. Skema ini adalah protokol yang digunakan untuk mengakses berkas. "
+"Kata kunci untuk menggunakan adalah salah satu yang digunakan dalam URI oleh "
+"manajer berkas.\n"
+"Contoh URI yang valid meliputi:\n"
+"• berkas:///tmp/foo.txt\n"
+"• SFTP:///root@test. example. net/tmp/Foo. txt\n"
+"Skema yang paling umum adalah:\n"
+"• \"berkas\": berkas lokal\n"
+"• \"SFTP\": berkas yang diakses melalui SSH\n"
+"• \"FTP\": berkas diakses melalui FTP\n"
+"• \"SMB\": berkas diakses melalui Samba (berbagi Windows)\n"
+"• \"Dav\": berkas diakses melalui WebDAV.\n"
+"Semua skema yang digunakan oleh manajer berkas favorit Anda dapat digunakan "
+"di sini.\n"
+"Ini jelas hanya berlaku ketika ada pilihan, atau ketika menargetkan khusus "
+"\"x-Nautilus-desktop\" skema.\n"
+"Default untuk \"berkas\"."
 
 #: ../src/core/fma-icontext-factory.c:303
 msgid ""
@@ -351,10 +400,13 @@ msgstr ""
 "Nilai baku \"/\"."
 
 #: ../src/core/fma-icontext-factory.c:329
+#, fuzzy
 msgid ""
 "The path of a (parent) directory for which the item will be displayed. You "
 "must set one option for each folder you need"
 msgstr ""
+"Path direktori (induk) yang item akan ditampilkan. Anda harus menetapkan "
+"satu opsi untuk setiap folder yang Anda perlukan"
 
 #. i18n: "<PATH>" is just an abbreviation for "a folder path", so is tranlatable
 #. i18n: "<PATH>" is the path to a binary, so may be tranlatable
@@ -378,6 +430,10 @@ msgid ""
 "Examples of valid strings are: “=0”, “> 1”, “< 10”.\n"
 "Defaults to “>0”."
 msgstr ""
+"Apakah profil ini dapat dipilih tergantung dari hitungan seleksi.\n"
+"Ini adalah string dari bentuk \"{'<'|'='|'>'} bilangan\".\n"
+"Contoh string yang valid adalah: \"=0\", \">1\", \"<10\".\n"
+"Nilai baku \">0\"."
 
 #: ../src/core/fma-icontext-factory.c:356
 msgid "Selection count relation [>0]"
@@ -427,6 +483,7 @@ msgstr "Coba exec"
 
 #. i18n: TryExec is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:414
+#, fuzzy
 msgid ""
 "Note that, when specified, only the presence and the executability status of "
 "the specified file are checked.\n"
@@ -434,6 +491,11 @@ msgid ""
 "runtime.\n"
 "Defaults to successful."
 msgstr ""
+"Perhatikan bahwa, ketika ditentukan, hanya kehadiran dan status "
+"executability dari berkas yang ditentukan diperiksa.\n"
+"Parameter mungkin muncul dalam nilai \"TryExec\", dan akan digantikan saat "
+"runtime.\n"
+"Default untuk berhasil."
 
 #: ../src/core/fma-icontext-factory.c:431
 msgid "the path to a file whose executability is to be checked"
@@ -445,6 +507,7 @@ msgstr "Tampilkan bila terdaftar"
 
 #. i18n: ShowIfRegistered is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:441
+#, fuzzy
 msgid ""
 "The well-known name of a DBus service.\n"
 "The item will be candidate if the named service is registered on session "
@@ -453,6 +516,12 @@ msgid ""
 "at runtime.\n"
 "Defaults to successful."
 msgstr ""
+"Nama terkenal Layanan DBus.\n"
+"Item tersebut akan menjadi kandidat jika layanan bernama terdaftar pada sesi "
+"DBus saat runtime.\n"
+"Parameter mungkin muncul dalam nilai \"ShowIfRegistered\", dan akan "
+"digantikan saat runtime.\n"
+"Default untuk berhasil."
 
 #: ../src/core/fma-icontext-factory.c:458
 msgid "The name of a service which must be registered on session DBus"
@@ -477,6 +546,11 @@ msgid ""
 "runtime.\n"
 "Defaults to successful."
 msgstr ""
+"A perintah yang, ketika dijalankan, harus mengeluarkan string pada stdout.\n"
+"Item akan menjadi calon jika string yang dikeluarkan sama dengan \"true\".\n"
+"Parameter mungkin muncul dalam nilai \"ShowIfTrue\", dan akan diganti pada "
+"saat runtime.\n"
+"Nilai baku sukses."
 
 #. i18n: “true” is to be taken as a literal, must not be translated
 #: ../src/core/fma-icontext-factory.c:485
@@ -497,6 +571,11 @@ msgid ""
 "runtime.\n"
 "Defaults to successful."
 msgstr ""
+"Nama proses.\n"
+"Item akan calon jika nama proses ditemukan di memori saat runtime.\n"
+"Parameter mungkin muncul dalam nilai \"ShowIfRunning\", dan akan diganti "
+"saat runtime.\n"
+"Default untuk berhasil."
 
 #: ../src/core/fma-icontext-factory.c:511
 msgid "The name of a binary which must be running"
@@ -522,6 +601,17 @@ msgid ""
 "• “Local”: selected items are local.\n"
 "Defaults to empty list."
 msgstr ""
+"Daftar kapabilitas yang mesti dipenuhi oleh setiap item pilihan agar item "
+"menjadi kandidat.\n"
+"Kapabilitas dapat dinegasikan.\n"
+"Kapabilitas harus dipilih antara berikut yang telah dipradefinisi:\n"
+"• \"Owner\": pengguna saat ini adalah pemilik item yang dipilih\n"
+"• \"Readable\": item yang dipilih dapat dibaca oleh pengguna (mungkin lebih "
+"berguna saat dinegasikan)\n"
+"• \"Writable\": item yang dipilih dapat ditulis oleh pengguna\n"
+"• \"Executable\": item yang dipilih dapat dieksekusi oleh pengguna\n"
+"• \"Local\": item yang dipilih adalah lokal.\n"
+"Default ke daftar kosong."
 
 #: ../src/core/fma-icontext-factory.c:543
 msgid ""
@@ -577,6 +667,9 @@ msgid ""
 "The selected file will be marked as “NOT OK” in the Summary page.\n"
 "The existing item will not be modified."
 msgstr ""
+"Ini biasanya adalah perilaku historis.\n"
+"Berkas yang dipilih akan ditandai sebagai \"NOT OK\" di halaman Ringkasan.\n"
+"Item yang ada tidak akan dimodifikasi."
 
 #: ../src/core/fma-importer.c:66
 msgid "Import the item, _allocating it a new identifier"
@@ -664,11 +757,11 @@ msgstr " Suatu duplikasi terdeteksi "
 
 #: ../src/core/fma-io-provider.c:69
 msgid ""
-"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
-"org/enter_bug.cgi?product=filemanager-actions."
+"Please, be kind enough to fill out a bug report on https://gitlab.gnome.org/"
+"GNOME/filemanager-actions/issues."
 msgstr ""
-"Mohon berbaik hati mengisi laporan kutu pada https://bugzilla.gnome.org/"
-"enter_bug.cgi?product=filemanager-actions."
+"Mohon berbaik hati mengisi laporan kutu pada https://gitlab.gnome.org/GNOME/"
+"filemanager-actions/issues."
 
 #: ../src/core/fma-io-provider.c:1369
 msgid "Unavailable I/O provider."
@@ -770,6 +863,12 @@ msgid ""
 "context menus provided that they contain at least one action.\n"
 "Defaults to TRUE."
 msgstr ""
+"Apakah tindakan menargetkan menu konteks manajer berkas pilihan.\n"
+"Ini biasanya adalah perilaku historis.\n"
+"Perhatikan bahwa menu adalah selalu kandidat potensial untuk menampilkan "
+"dalam menu konteks seleksi asalkan mereka mengandung setidaknya satu "
+"tindakan.\n"
+"Default ke TRUE."
 
 #: ../src/core/fma-object-action-factory.c:99
 msgid "Targets the selection context menu [true]"
@@ -787,6 +886,12 @@ msgid ""
 "context menus provided that they contain at least one action.\n"
 "Defaults to FALSE"
 msgstr ""
+"Apakah tindakan menargetkan menu konteks manajer berkas ketika tidak ada "
+"pilihan, sehingga menerapkan untuk lokasi saat ini.\n"
+"Perhatikan bahwa menu adalah selalu kandidat potensial untuk menampilkan "
+"dalam menu konteks seleksi asalkan mereka mengandung setidaknya satu "
+"tindakan.\n"
+"Default ke FALSE"
 
 #: ../src/core/fma-object-action-factory.c:125
 msgid "Targets the location context menu [false]"
@@ -803,6 +908,11 @@ msgid ""
 "Note that menus are never displayed in the toolbar.\n"
 "Defaults to FALSE."
 msgstr ""
+"Apakah tindakan adalah kandidat untuk ditampilkan dalam bilah alat manajer "
+"berkas.\n"
+"Ini hanya berlaku untuk lokasi saat ini.\n"
+"Perhatikan bahwa menu tidak pernah ditampilkan di bilah alat.\n"
+"Default ke FALSE."
 
 #: ../src/core/fma-object-action-factory.c:150
 msgid "Targets the toolbar [false]"
@@ -819,6 +929,10 @@ msgid ""
 "preferences.\n"
 "Defaults to label of the context menu when not set or empty."
 msgstr ""
+"Label yang ditampilkan di sebelah ikon di bilah alat manajer berkas.\n"
+"Perhatikan bahwa tampilan aktual mungkin tergantung pada preferensi "
+"Lingkungan Desktop Anda sendiri.\n"
+"Default ke label menu konteks ketika tidak ditetapkan atau kosong."
 
 #. i18n: copied items have a label as “Copy of original label”
 #: ../src/core/fma-object-id.c:329
@@ -837,6 +951,11 @@ msgid ""
 "• “Menu”.\n"
 "The value is case sensitive and must not be localized."
 msgstr ""
+"Menentukan apakah item tersebut merupakan tindakan atau menu. Nilai yang "
+"mungkin adalah:\n"
+"• \"Action\",\n"
+"• \"Menu\".\n"
+"Nilai peka huruf besar kecil dan tidak boleh dilokalkan."
 
 #: ../src/core/fma-object-item-factory.c:94
 msgid "Label of the context menu item (mandatory)"
@@ -848,6 +967,9 @@ msgid ""
 "when the selection matches the appearance condition settings.\n"
 "It is also used as a default for the toolbar label of an action."
 msgstr ""
+"Label item menu yang akan muncul dalam menu konteks manajer berkas ketika "
+"pilihan cocok dengan pengaturan kondisi penampilan.\n"
+"Hal ini juga digunakan sebagai default untuk label bilah alat tindakan."
 
 #: ../src/core/fma-object-item-factory.c:99
 msgid "Empty label"
@@ -858,14 +980,13 @@ msgid "Tooltip of the context menu item"
 msgstr "Tooltip dari butir menu konteks"
 
 #: ../src/core/fma-object-item-factory.c:119
-#, fuzzy
 msgid ""
 "The tooltip of the menu item that will appear in the file manager statusbar "
 "when the user points to the file manager context menu item with his/her "
 "mouse."
 msgstr ""
-"Tooltip item menu yang akan muncul di bilah status pengelola file saat "
-"pengguna mengarahkan ke item menu konteks manajer file dengan mouse-nya."
+"Tooltip butir menu yang akan muncul di bilah status pengelola berkas saat "
+"pengguna mengarahkan ke butir menu konteks manajer berkas dengan tetikusnya."
 
 #: ../src/core/fma-object-item-factory.c:142
 msgid "Icon of the context menu item"
@@ -879,6 +1000,10 @@ msgid ""
 "May be the localized name of a themed icon, or a full path to any "
 "appropriate image."
 msgstr ""
+"Ikon item menu yang akan muncul di samping label di menu konteks manajer "
+"berkas saat pilihan cocok dengan pengaturan kondisi tampilan.\n"
+"Mungkin nama lokal ikon bertema, atau path lengkap untuk sebarang gambar "
+"yang sesuai."
 
 #: ../src/core/fma-object-item-factory.c:161
 msgid "<PATH|NAME>"
@@ -893,6 +1018,8 @@ msgid ""
 "Some text which explains the goal of the menu or the action.\n"
 "May be used, e.g. when displaying available items on a web site."
 msgstr ""
+"Beberapa teks yang menjelaskan tujuan dari menu atau tindakan.\n"
+"Dapat digunakan, mis, ketika menampilkan item yang tersedia di situs web."
 
 #: ../src/core/fma-object-item-factory.c:214
 msgid "Suggested shortcut"
@@ -907,6 +1034,12 @@ msgid ""
 "The format may look like “<Control>a” or “<Shift><Alt>F1”.\n"
 "Defaults to empty."
 msgstr ""
+"Pintasan yang disarankan untuk aksi atau menu.\n"
+"Harap dicatat bahwa ini mungkin hanya saran karena pintasan mungkin sudah "
+"dicadangkan untuk penggunaan lain. Implementasi tidak boleh menimpa pintasan "
+"yang sudah ada untuk mendefinisikan yang satu ini.\n"
+"Formatnya mungkin terlihat seperti \"<Control>a\" atau \"<Shift><Alt>F1\".\n"
+"Nilai bakunya kosong."
 
 #: ../src/core/fma-object-item-factory.c:268
 msgid "List of subitem ids"
@@ -919,6 +1052,10 @@ msgid ""
 "If this list doesn’t exist or is empty for an action or a menu, subitems are "
 "attached in the order of the read operations."
 msgstr ""
+"Daftar terurut ID sub item. Ini mungkin tindakan atau menu jika item adalah "
+"menu, atau profil jika item adalah tindakan.\n"
+"Jika daftar ini tidak ada atau kosong untuk tindakan atau menu, sub item "
+"dilampirkan dalam urutan operasi baca."
 
 #: ../src/core/fma-object-item-factory.c:293
 msgid "Whether the action or the menu is enabled"
@@ -930,6 +1067,9 @@ msgid ""
 "manager context menu.\n"
 "Defaults to TRUE."
 msgstr ""
+"Jika tindakan menu dinonaktifkan, itu tidak akan pernah muncul dalam menu "
+"konteks manajer berkas.\n"
+"Default ke TRUE."
 
 #: ../src/core/fma-object-item-factory.c:310
 msgid "Whether the action or the menu is enabled [enabled]"
@@ -944,6 +1084,8 @@ msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility."
 msgstr ""
+"Versi format konfigurasi yang akan digunakan untuk mengelola kompatibilitas "
+"mundur."
 
 #. i18n: default label for a new menu
 #: ../src/core/fma-object-menu.c:57
@@ -964,6 +1106,8 @@ msgid ""
 "May be used as a description for the function of the profile.\n"
 "If not set, it defaults to an auto-generated name."
 msgstr ""
+"Dapat digunakan sebagai deskripsi untuk fungsi profil.\n"
+"Jika tidak diatur, defaultnya adalah nama yang dihasilkan secara otomatis."
 
 #: ../src/core/fma-object-profile-factory.c:100
 msgid "Path of the command"
@@ -974,6 +1118,8 @@ msgid ""
 "The path of the command to be executed when the user select the menu item in "
 "the file manager context menu or in the toolbar."
 msgstr ""
+"Path perintah yang akan dieksekusi saat pengguna memilih item menu dalam "
+"menu konteks manajer berkas atau di bilah alat."
 
 #: ../src/core/fma-object-profile-factory.c:127
 msgid "Parameters of the command"
@@ -981,6 +1127,7 @@ msgstr "Parameter perintah"
 
 #. too long string for iso c: (max=509)
 #: ../src/core/fma-object-profile-factory.c:129
+#, fuzzy
 msgid ""
 "The parameters of the command to be executed when the user selects the menu "
 "item in the file manager context menu or in the toolbar.\n"
@@ -1032,6 +1179,52 @@ msgid ""
 "folder(s)\n"
 "  %%: a percent sign."
 msgstr ""
+"Parameter perintah yang akan dieksekusi ketika pengguna memilih item menu "
+"dalam manajer berkas menu konteks atau di bilah alat.\n"
+"Parameter mungkin berisi beberapa token khusus yang digantikan oleh "
+"informasi yang diberikan oleh manajer berkas sebelum memulai perintah:\n"
+"• sampai dengan versi 2,0:\n"
+"  % d: folder dasar dari berkas yang dipilih (s)\n"
+"  % f: nama berkas yang dipilih atau yang pertama jika beberapa dipilih\n"
+"  % h: nama host URI\n"
+"  % m: spasi dipisahkan daftar basenames dari berkas yang dipilih (s)/"
+"folder\n"
+"  % M: Daftar dipisahkan ruang berkas (s)/folder yang dipilih, dengan jalur "
+"penuh mereka\n"
+"  % p: nomor port URI pertama\n"
+"  % R: Daftar dipisahkan ruang dari URI yang dipilih\n"
+"   %s: skema URI\n"
+"  % u: URI\n"
+"  % U: nama pengguna URI\n"
+"  %%: tanda persen.\n"
+"• mulai dari versi 3:\n"
+"  % b: (pertama) nama dasar\n"
+"  % B: Daftar dipisahkan ruang dari basenames dari berkas yang dipilih (s)/"
+"folder (s)\n"
+"  % c: Hitung berkas (s)/folder yang dipilih\n"
+"  % d: (pertama) direktori dasar\n"
+"  % D: ruang-dipisahkan daftar direktori dasar dari berkas yang dipilih (s)/"
+"folder (s)\n"
+"  % f: (pertama) nama berkas\n"
+"  % F: Daftar nama berkas yang dipisahkan dari berkas yang dipilih (s)/"
+"folder\n"
+"  % h: nama host URI (pertama)\n"
+"  % m: (pertama) Mimetype\n"
+"  % M: Space-separated daftar mimeTypes dari berkas yang dipilih (s)/folder "
+"(s)\n"
+"  % n: nama pengguna URI (pertama)\n"
+"  % o: No-op operator yang memaksa bentuk tunggal eksekusi (sejak 3.0.2)\n"
+"  % O: No-op operator yang memaksa bentuk jamak eksekusi (sejak 3.0.2)\n"
+"  % p: nomor port URI (pertama)\n"
+"   %s: skema URI (pertama)\n"
+"  % u: (pertama) URI\n"
+"  % U: ruang-dipisahkan daftar URI dari berkas yang dipilih (s)/folder (s)\n"
+"  % w: (pertama) nama dasar tanpa ekstensi\n"
+"  % W: Daftar basenames yang dipisahkan ruang tanpa ekstensi\n"
+"  % x: (pertama) ekstensi\n"
+"  % X: Daftar ekstensi yang dipisahkan ruang dari berkas yang dipilih (s)/"
+"folder\n"
+"  %%: tanda persen."
 
 #: ../src/core/fma-object-profile-factory.c:188
 msgid "Working directory"
@@ -1043,6 +1236,8 @@ msgid ""
 "The working directory the command will be started in.\n"
 "Defaults to “%d”."
 msgstr ""
+"Direktori kerja tempat perintah akan dimulai.\n"
+"Defaultnya adalah \"%d\"."
 
 #: ../src/core/fma-object-profile-factory.c:211
 msgid "Execution mode"
@@ -1064,28 +1259,42 @@ msgid ""
 "acceptable fallback is Terminal.\n"
 "Defaults to “Normal”."
 msgstr ""
+"Modus eksekusi program.\n"
+"Ini dapat dipilih antara nilai berikut:\n"
+"• \"Normal\": dimulai sebagai antarmuka pengguna grafis standar\n"
+"• \"Terminal\": memulai terminal pilihan dari lingkungan grafis, dan "
+"menjalankan perintah di dalamnya\n"
+"• \"Embedded\": memanfaatkan fitur khusus dari berkas Manager yang "
+"memungkinkan terminal untuk dijalankan di dalamnya; fallback yang dapat "
+"diterima adalah terminal\n"
+"• \"DisplayOutput\": terminal berlari dapat ditutup di akhir perintah, "
+"tetapi aliran standar (stdout, stderr) harus dikumpulkan dan ditampilkan; "
+"fallback yang dapat diterima adalah terminal.\n"
+"Default ke \"Normal\"."
 
 #: ../src/core/fma-object-profile-factory.c:244
-#, fuzzy
 msgid "Startup notify"
-msgstr "STARTUP"
+msgstr "Beritahu saat awal mula"
 
 #: ../src/core/fma-object-profile-factory.c:245
 msgid ""
 "Only relevant when ExecutionMode=Normal.\n"
 "Defaults to FALSE."
 msgstr ""
+"Hanya relevan ketika ExecutionMode=Normal.\n"
+"Default ke FALSE."
 
 #: ../src/core/fma-object-profile-factory.c:267
-#, fuzzy
 msgid "Startup WM Class"
-msgstr "STARTUP"
+msgstr "Kelas WM Awal Mula"
 
 #: ../src/core/fma-object-profile-factory.c:268
 msgid ""
 "Only relevant when ExecutionMode=Normal.\n"
 "Defaults to empty."
 msgstr ""
+"Hanya relevan ketika ExecutionMode=Normal.\n"
+"Defaultnya kosong."
 
 #: ../src/core/fma-object-profile-factory.c:290
 msgid "Execute as user"
@@ -1098,6 +1307,10 @@ msgid ""
 "The profile is ignored if defined with a non-existing UID or login.\n"
 "Defaults to empty: the command will be executed as the current user."
 msgstr ""
+"Perintah harus dijalankan sebagai pengguna ini. Pengguna dapat "
+"diidentifikasi dengan UID numerik atau dengan login-nya.\n"
+"Profil diabaikan jika didefinisikan dengan UID atau login yang tidak ada.\n"
+"Defaultnya kosong: perintah akan dieksekusi sebagai pengguna saat ini."
 
 #: ../src/core/fma-selected-info.c:809
 #, c-format
@@ -1106,11 +1319,11 @@ msgstr "Galat ketika mengkueri informasi bagi URI %s: %s"
 
 #: ../src/core/fma-tokens.c:251
 msgid "file:///path/to/file1.mid"
-msgstr "file:///path/ke/berkas1.mid"
+msgstr "berkas:///path/ke/berkas1.mid"
 
 #: ../src/core/fma-tokens.c:252
 msgid "file:///path/to/file2.jpeg"
-msgstr "file:///path/ke/berkas2.jpeg"
+msgstr "berkas:///path/ke/berkas2.jpeg"
 
 #: ../src/core/fma-tokens.c:253
 msgid "audio/x-midi"
@@ -1153,6 +1366,7 @@ msgid "Export as a ._desktop file"
 msgstr "Ekspor sebagai sebuah berkas .desktop"
 
 #: ../src/io-desktop/fma-desktop-formats.c:57
+#, fuzzy
 msgid ""
 "This format has been introduced with v 3.0 serie, and should be your newly "
 "preferred format when exporting items.\n"
@@ -1164,6 +1378,17 @@ msgid ""
 "• drag-n-drop into the FileManager-Actions Configuration Tool,\n"
 "• or by copying it into a XDG_DATA_DIRS/file-manager/actions directory."
 msgstr ""
+"Format ini telah diperkenalkan dengan seri v 3.0, dan harus menjadi format "
+"yang baru Anda inginkan saat mengekspor item.\n"
+"Ini memungkinkan Anda dengan mudah berbagi tindakan Anda dengan seluruh "
+"dunia, termasuk dengan pengguna lingkungan desktop lainnya, asalkan aplikasi "
+"mereka sendiri menerapkan spesifikasi DES-EMA yang menggambarkan format "
+"ini.\n"
+"Berkas. desktop yang diekspor kemudian dapat diimpor melalui:\n"
+"• Impor asisten dari FileManager-tindakan Configuration tool,\n"
+"• drag-n-drop ke dalam alat konfigurasi tindakan FileManager,\n"
+"• atau dengan menyalinnya ke dalam direktori XDG_DATA_DIRS/berkas-manager/"
+"Actions."
 
 #: ../src/io-desktop/fma-desktop-reader.c:64
 msgid "The Desktop I/O Provider is not able to handle the URI"
@@ -1184,9 +1409,9 @@ msgid "Item ID not found."
 msgstr "ID butir tidak ditemukan."
 
 #: ../src/io-xml/fma-xml-reader.c:148
-#, c-format
+#, fuzzy, c-format
 msgid "Unwaited key path %s while importing a menu."
-msgstr ""
+msgstr "Jalan kunci yang tidak menunggu %s saat mengimpor menu."
 
 #: ../src/io-xml/fma-xml-reader.c:149
 #, c-format
@@ -1221,6 +1446,7 @@ msgid "Export as a _full GConf schema file"
 msgstr "Ekspor sebagai suatu berkas skema GConf _penuh"
 
 #: ../src/io-xml/fma-xml-formats.c:56
+#, fuzzy
 msgid ""
 "This used to be the historical export format.\n"
 "The exported schema file may later be imported via :\n"
@@ -1228,6 +1454,11 @@ msgid ""
 "• drag-n-drop into the FileManager-Actions Configuration Tool,\n"
 "• or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
+"Ini biasanya menjadi format ekspor historis.\n"
+"Berkas skema yang diekspor kemudian dapat diimpor melalui:\n"
+"• Asisten impor dari FileManager-tindakan Configuration tool,\n"
+"• drag-n-drop ke dalam alat konfigurasi tindakan FileManager,\n"
+"• atau melalui alat baris perintah gconftool-2--Import-schema-berkas."
 
 #: ../src/io-xml/fma-xml-formats.c:67
 msgid "Export as a _light GConf schema (v2) file"
@@ -1244,12 +1475,21 @@ msgid ""
 "• drag-n-drop into the FileManager-Actions Configuration Tool,\n"
 "• or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
+"Format ini telah diperkenalkan di v 1,11 Serie.\n"
+"Ini adalah skema yang paling ringan yang masih kompatibel dengan alat baris "
+"perintah GConf, sambil menjaga kompatibilitas dengan alat konfigurasi "
+"tindakan FileManager versi tertua.\n"
+"File skema yang diekspor kemudian dapat diimpor melalui:\n"
+"• Impor asisten dari FileManager-tindakan Configuration tool,\n"
+"• drag-n-drop ke dalam alat konfigurasi tindakan FileManager,\n"
+"• atau melalui alat baris perintah gconftool-2--Import-schema-berkas."
 
 #: ../src/io-xml/fma-xml-formats.c:82
 msgid "Export as a GConf _dump file"
 msgstr "Ekspor sebagai sebuah berkas _curah GConf"
 
 #: ../src/io-xml/fma-xml-formats.c:83
+#, fuzzy
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "Tough not backward compatible with FileManager-Actions Configuration Tool "
@@ -1262,6 +1502,16 @@ msgid ""
 "above),\n"
 "• or via the gconftool-2 --load command-line tool."
 msgstr ""
+"Format ini telah diperkenalkan di v 1,11 Serie.\n"
+"Tangguh tidak kompatibel dengan versi alat konfigurasi FileManager-Actions "
+"sebelumnya ke 1,11, mungkin masih diimpor melalui alat baris perintah GConf "
+"standar.\n"
+"Berkas dump diekspor mungkin kemudian diimpor melalui:\n"
+"• Impor asisten dari FileManager-tindakan Configuration Tool (1,11 dan di "
+"atas),\n"
+"• drag-n-drop ke dalam berkas konfigurasi tindakan FileManager (1,11 dan di "
+"atas),\n"
+"• atau melalui alat baris perintah gconftool-2--load."
 
 #: ../src/ui/base-assistant.c:145
 msgid "Quit on Escape"
@@ -1327,31 +1577,34 @@ msgid "Parent BaseWindow"
 msgstr "BaseWindow Induk"
 
 #: ../src/ui/base-window.c:226
+#, fuzzy
 msgid "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
-msgstr ""
+msgstr "Sebuah pointer (bukan referensi) untuk BaseWindow induk BaseWindow ini"
 
 #: ../src/ui/base-window.c:232
 msgid "WSP name"
 msgstr "Nama WSP"
 
 #: ../src/ui/base-window.c:233
+#, fuzzy
 msgid ""
 "The string which handles the window size and position in user preferences"
 msgstr ""
+"String yang menangani ukuran jendela dan posisi dalam preferensi pengguna"
 
 #: ../src/ui/base-window.c:240
-#, fuzzy
 msgid "Destroy the Gtk toplevel"
-msgstr "Nama berkas di tingkat atas tidak dapat diubah"
+msgstr "Hancurkan Gtk tingkat puncak"
 
 #: ../src/ui/base-window.c:241
+#, fuzzy
 msgid "Whether the embedded Gtk Toplevel should be destroyed at dispose time"
-msgstr ""
+msgstr "Apakah GTK Toplevel tertanam harus dihancurkan pada membuang waktu"
 
 #: ../src/ui/base-window.c:718
-#, c-format
+#, fuzzy, c-format
 msgid "Unable to load %s UI XML definition: %s"
-msgstr ""
+msgstr "Tidak dapat memuat %s definisi XML UI: %s"
 
 #: ../src/ui/base-window.c:733
 #, c-format
@@ -1478,11 +1731,15 @@ msgid "Actions _list :"
 msgstr "_Daftar aksi:"
 
 #: ../src/ui/fma-assistant-export.ui.h:4
+#, fuzzy
 msgid ""
 "Please select one or more actions to be exported.\n"
 "\n"
 "You may use Ctrl and Shift keys to extend the selection."
 msgstr ""
+"Silakan pilih satu atau lebih tindakan untuk diekspor.\n"
+"\n"
+"Anda dapat menggunakan Ctrl dan perubahan kunci untuk memperluas pilihan."
 
 #: ../src/ui/fma-assistant-export.ui.h:7
 msgid "Selecting the exported actions"
@@ -1493,41 +1750,39 @@ msgid "Selecting the target folder"
 msgstr "Memilih folder target"
 
 #: ../src/ui/fma-assistant-export.ui.h:9
+#, fuzzy
 msgid "Which format should I use when exporting these items ?"
-msgstr ""
+msgstr "Format apa yang harus saya gunakan saat mengekspor item ini?"
 
 #: ../src/ui/fma-assistant-export.ui.h:10
-#, fuzzy
 msgid "Selecting the export format"
-msgstr "Format Ekspor"
+msgstr "Memilih format ekspor"
 
 #: ../src/ui/fma-assistant-export.ui.h:11
 msgid "About to export selected items:"
 msgstr "Akan mengekspor butir-butir yang dipilih:"
 
 #: ../src/ui/fma-assistant-export.ui.h:12
-#, fuzzy
 msgid "Into the destination folder:"
-msgstr "Folder _tujuan:"
+msgstr "Ke dalam folder tujuan:"
 
 #: ../src/ui/fma-assistant-export.ui.h:13 ../src/ui/fma-assistant-import.ui.h:8
 msgid "Summary"
 msgstr "Ringkasan"
 
 #: ../src/ui/fma-assistant-export.ui.h:14
+#, fuzzy
 msgid "Selected items have been proceeded:"
-msgstr ""
+msgstr "Item yang dipilih telah dilanjutkan:"
 
 #: ../src/ui/fma-assistant-export.ui.h:15
-#, fuzzy
 msgid "Export is done"
-msgstr "_Selesai"
+msgstr "Ekspor selesai"
 
 #. i18n: indicate that the file has been successfully imported
 #: ../src/ui/fma-assistant-import.c:762
-#, fuzzy
 msgid "Import OK"
-msgstr "Impor"
+msgstr "Impor OK"
 
 #. i18n: this is the globally unique identifier and the label of the newly imported action
 #: ../src/ui/fma-assistant-import.c:766
@@ -1541,24 +1796,27 @@ msgid "Not imported"
 msgstr "Tidak diimpor"
 
 #: ../src/ui/fma-assistant-import.ui.h:1
-#, fuzzy
 msgid "Importing actions"
-msgstr "Mengimpor tindakan"
+msgstr "Aksi mengimpor"
 
 #: ../src/ui/fma-assistant-import.ui.h:2
+#, fuzzy
 msgid ""
 "This assistant will guide you through the process of importing items, "
 "actions or menus."
 msgstr ""
+"Asisten ini akan memandu Anda melalui proses mengimpor item, tindakan atau "
+"menu."
 
 #: ../src/ui/fma-assistant-import.ui.h:3
-#, fuzzy
 msgid "Selecting files to import"
-msgstr "Memilih file untuk diimpor"
+msgstr "Memilih berkas yang akan diimpor"
 
 #: ../src/ui/fma-assistant-import.ui.h:4
+#, fuzzy
 msgid "What should I do when importing an item whose ID already exists ?"
 msgstr ""
+"Apa yang harus saya lakukan ketika mengimpor item yang ID-nya sudah ada?"
 
 #: ../src/ui/fma-assistant-import.ui.h:5
 msgid "Managing duplicates"
@@ -1569,17 +1827,17 @@ msgid "About to import selected files:"
 msgstr "Segera akan mengimpor berkas-berkas yang dipilih:"
 
 #: ../src/ui/fma-assistant-import.ui.h:7
+#, fuzzy
 msgid "When importing an item whose ID already exists:"
-msgstr ""
+msgstr "Ketika mengimpor item yang ID-nya sudah ada:"
 
 #: ../src/ui/fma-assistant-import.ui.h:9
 msgid "Selected files have been proceeded:"
 msgstr "Berkas-berkas yang dipilih telah diteruskan:"
 
 #: ../src/ui/fma-assistant-import.ui.h:10
-#, fuzzy
 msgid "Import is done"
-msgstr "_Selesai"
+msgstr "Impor selesai"
 
 #. i18n: The action <label> is about to be exported
 #: ../src/ui/fma-export-ask.c:387
@@ -1603,16 +1861,18 @@ msgid " About to export item(s) "
 msgstr " Segera akan mengekspor butir "
 
 #: ../src/ui/fma-export-ask.ui.h:3
+#, fuzzy
 msgid "Re_member my choice in future export operations"
-msgstr ""
+msgstr "Re_member pilihan saya di masa depan ekspor operasi"
 
 #: ../src/ui/fma-iaction-tab.c:562
+#, fuzzy
 msgid "Caution: a label is mandatory for the action or the menu."
-msgstr ""
+msgstr "Perhatian: label wajib untuk tindakan atau menu."
 
 #: ../src/ui/fma-ibasenames-tab.c:205
 msgid "Basename filter"
-msgstr ""
+msgstr "Filter basename"
 
 #: ../src/ui/fma-icapabilities-tab.c:184
 msgid "Capability filter"
@@ -1620,40 +1880,35 @@ msgstr "Penyaring kapabilitas"
 
 #: ../src/ui/fma-icommand-tab.c:543
 msgid "Choosing a command"
-msgstr ""
+msgstr "Memilih perintah"
 
 #: ../src/ui/fma-icommand-tab.c:585
-#, fuzzy
 msgid "Choosing a working directory"
-msgstr "Menentukan direktori kerja"
+msgstr "Memilih suatu direktori kerja"
 
 #: ../src/ui/fma-icon-chooser.ui.h:1
 msgid "Icon Chooser"
 msgstr "Pemilih Ikon"
 
 #: ../src/ui/fma-icon-chooser.ui.h:2
-#, fuzzy
 msgid "_Themed icons"
-msgstr "Tanpa ikon"
+msgstr "Ikon ber_tema"
 
 #: ../src/ui/fma-icon-chooser.ui.h:3
-#, fuzzy
 msgid "Icons by _path"
-msgstr "Tanpa ikon"
+msgstr "Ikon menurut _path"
 
 #: ../src/ui/fma-ienvironment-tab.c:73
-#, fuzzy
 msgid "(strictly lesser than)"
-msgstr "(lebih rendah dari)"
+msgstr "(hanya kurang dari)"
 
 #: ../src/ui/fma-ienvironment-tab.c:74
 msgid "(equal to)"
 msgstr "(sama dengan)"
 
 #: ../src/ui/fma-ienvironment-tab.c:75
-#, fuzzy
 msgid "(strictly greater than)"
-msgstr "Benar-benar lebih dari"
+msgstr "(hanya lebih dari)"
 
 #: ../src/ui/fma-ienvironment-tab.c:730 ../src/ui/fma-ienvironment-tab.c:788
 msgid "Choosing an executable"
@@ -1661,7 +1916,7 @@ msgstr "Sedang memilih sebuah executable"
 
 #: ../src/ui/fma-ifolders-tab.c:188
 msgid "Folder filter"
-msgstr ""
+msgstr "Filter folder"
 
 #. i18n: title of the FileChoose dialog when selecting an URI which
 #. * will be compare to Nautilus “current_folder”
@@ -1675,9 +1930,8 @@ msgid "_Open"
 msgstr "_Buka"
 
 #: ../src/ui/fma-imimetypes-tab.c:189
-#, fuzzy
 msgid "Mimetype filter"
-msgstr "Filter Mimetype"
+msgstr "Filter mimetype"
 
 #. i18n: label of the push button when there is not yet any shortcut
 #: ../src/ui/fma-iproperties-tab.c:55 ../src/ui/fma-main-window.ui.h:159
@@ -1701,9 +1955,8 @@ msgid "<b>Action editable properties</b>"
 msgstr "<b>Properti aksi yang dapat disunting</b>"
 
 #: ../src/ui/fma-ischemes-tab.c:187
-#, fuzzy
 msgid "Scheme filter"
-msgstr "SKEMA"
+msgstr "Filter skema"
 
 #: ../src/ui/fma-legend.ui.h:1
 msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
@@ -1715,7 +1968,6 @@ msgid "<b>%b</b>"
 msgstr "<b>%b</b>"
 
 #: ../src/ui/fma-legend.ui.h:4
-#, fuzzy
 msgid ": (first) basename."
 msgstr ": (pertama) nama dasar."
 
@@ -1744,9 +1996,8 @@ msgid "<b>%d</b>"
 msgstr "<b>%d</b>"
 
 #: ../src/ui/fma-legend.ui.h:13
-#, fuzzy
 msgid ": (first) base directory."
-msgstr ": (pertama) direktori dasar."
+msgstr ": direktori dasar (pertama)."
 
 #: ../src/ui/fma-legend.ui.h:15
 #, no-c-format
@@ -1766,7 +2017,6 @@ msgid "<b>%f</b>"
 msgstr "<b>%f</b>"
 
 #: ../src/ui/fma-legend.ui.h:19
-#, fuzzy
 msgid ": (first) filename."
 msgstr ": (pertama) nama berkas."
 
@@ -1795,7 +2045,6 @@ msgid "<b>%m</b>"
 msgstr "<b>%m</b>"
 
 #: ../src/ui/fma-legend.ui.h:28
-#, fuzzy
 msgid ": (first) mimetype."
 msgstr ": (pertama) mimetype."
 
@@ -1824,8 +2073,9 @@ msgid "<b>%o</b>"
 msgstr "<b>%o</b>"
 
 #: ../src/ui/fma-legend.ui.h:37
+#, fuzzy
 msgid ": no-op operator which forces a singular form of execution."
-msgstr ""
+msgstr ": No-op operator yang memaksa bentuk tunggal eksekusi."
 
 #: ../src/ui/fma-legend.ui.h:39
 #, no-c-format
@@ -1833,8 +2083,9 @@ msgid "<b>%O</b>"
 msgstr "<b>%O</b>"
 
 #: ../src/ui/fma-legend.ui.h:40
+#, fuzzy
 msgid ": no-op operator which forces a plural form of execution."
-msgstr ""
+msgstr ": operator No-op yang memaksa bentuk jamak eksekusi."
 
 #: ../src/ui/fma-legend.ui.h:42
 #, no-c-format
@@ -1842,8 +2093,9 @@ msgid "<b>%p</b>"
 msgstr "<b>%p</b>"
 
 #: ../src/ui/fma-legend.ui.h:43
+#, fuzzy
 msgid ": port number of the (first) selected URI."
-msgstr ""
+msgstr ": nomor port URI yang dipilih (pertama)."
 
 #: ../src/ui/fma-legend.ui.h:45
 #, no-c-format
@@ -1860,9 +2112,8 @@ msgid "<b>%u</b>"
 msgstr "<b>%u</b>"
 
 #: ../src/ui/fma-legend.ui.h:49
-#, fuzzy
 msgid ": (first) URI."
-msgstr ": (pertama) URI."
+msgstr ": URI (pertama)."
 
 #: ../src/ui/fma-legend.ui.h:51
 #, no-c-format
@@ -1898,7 +2149,6 @@ msgid "<b>%x</b>"
 msgstr "<b>%x</b>"
 
 #: ../src/ui/fma-legend.ui.h:61
-#, fuzzy
 msgid ": (first) extension."
 msgstr ": (pertama) ekstensi."
 
@@ -1922,27 +2172,26 @@ msgid ": a percent sign."
 msgstr ": suatu tanda persen."
 
 #: ../src/ui/fma-main-window.c:330
-#, fuzzy
 msgid "Current FMAObjectItem"
-msgstr "Kini"
+msgstr "FMAObjectItem saat ini"
 
 #: ../src/ui/fma-main-window.c:331
+#, fuzzy
 msgid "A pointer to the currently edited FMAObjectItem, an action or a menu"
-msgstr ""
+msgstr "Penunjuk ke FMAObjectItem yang diedit saat ini, tindakan atau menu"
 
 #: ../src/ui/fma-main-window.c:337
-#, fuzzy
 msgid "Current FMAObjectProfile"
-msgstr "Kini"
+msgstr "Profil FMAObject saat ini"
 
 #: ../src/ui/fma-main-window.c:338
+#, fuzzy
 msgid "A pointer to the currently edited FMAObjectProfile"
-msgstr ""
+msgstr "Penunjuk ke FMAObjectProfile saat ini diedit"
 
 #: ../src/ui/fma-main-window.c:344
-#, fuzzy
 msgid "Current FMAIContext"
-msgstr "Kini"
+msgstr "FMAIContext saat ini"
 
 #: ../src/ui/fma-main-window.c:345
 #, fuzzy
@@ -1950,18 +2199,18 @@ msgid "A pointer to the currently edited FMAIContext"
 msgstr "Penunjuk ke FMAIContext yang saat ini diedit"
 
 #: ../src/ui/fma-main-window.c:351
-#, fuzzy
 msgid "Editable item ?"
-msgstr "Dapat diedit"
+msgstr "Butir yang dapat disunting ?"
 
 #: ../src/ui/fma-main-window.c:352
+#, fuzzy
 msgid "Whether the item will be able to be updated against its I/O provider"
-msgstr ""
+msgstr "Apakah item akan dapat diperbarui terhadap penyedia I/O"
 
 #: ../src/ui/fma-main-window.c:359
 #, fuzzy
 msgid "No edition reason"
-msgstr "Alasan:"
+msgstr "Tidak ada alasan edisi"
 
 #: ../src/ui/fma-main-window.c:360
 #, fuzzy
@@ -1975,19 +2224,23 @@ msgid ""
 "You could keep to work with your current list of actions, or you may want to "
 "reload a fresh one."
 msgstr ""
-"Satu atau lebih tindakan telah dimodifikasi dalam sistem file. Anda dapat "
+"Satu atau lebih tindakan telah dimodifikasi dalam sistem berkas. Anda dapat "
 "terus bekerja dengan daftar tindakan Anda saat ini, atau Anda mungkin ingin "
 "memuat ulang yang baru."
 
 #: ../src/ui/fma-main-window.c:1169
+#, fuzzy
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
 msgstr ""
+"Perhatikan bahwa reload daftar tindakan segar mengharuskan Anda menyerah "
+"dengan modifikasi Anda saat ini."
 
 #: ../src/ui/fma-main-window.c:1175
+#, fuzzy
 msgid "Do you want to reload a fresh list of actions ?"
-msgstr ""
+msgstr "Apakah Anda ingin memuat ulang daftar tindakan baru?"
 
 #: ../src/ui/fma-main-window.c:1198
 #, fuzzy
@@ -2006,10 +2259,9 @@ msgstr "Anda benar-benar ingin melakukan ini?"
 #: ../src/ui/fma-main-window.c:1307
 #, c-format
 msgid "Some items have been modified."
-msgstr ""
+msgstr "Beberapa butir telah dimodifikasi."
 
 #: ../src/ui/fma-main-window.c:1308
-#, fuzzy
 msgid "Are you sure you want to quit without saving them ?"
 msgstr "Anda yakin ingin keluar tanpa menyimpannya?"
 
@@ -2020,18 +2272,17 @@ msgstr "Jumlah Foto:"
 
 #: ../src/ui/fma-main-window.ui.h:2
 msgid "Sort the list in ascending alphabetical order."
-msgstr ""
+msgstr "Urutkan daftar dalam urutan abjad menaik."
 
 #: ../src/ui/fma-main-window.ui.h:3
-#, fuzzy
 msgid "Do not sort the list, letting you manually reorder the items."
 msgstr ""
-"Jangan mengurutkan daftar, membiarkan Anda mengatur ulang barang secara "
+"Jangan mengurutkan daftar, membiarkan Anda mengatur ulang butir secara "
 "manual."
 
 #: ../src/ui/fma-main-window.ui.h:4
 msgid "Sort the list in descending alphabetical order."
-msgstr ""
+msgstr "Urutkan daftar dalam urutan abjad menurun."
 
 #: ../src/ui/fma-main-window.ui.h:5
 #, fuzzy
@@ -2045,7 +2296,7 @@ msgid ""
 "context menu, with a non-empty selection."
 msgstr ""
 "Ketika dicentang, item akan menjadi kandidat untuk ditampilkan di menu "
-"konteks file manager, dengan pilihan yang tidak kosong."
+"konteks manajer berkas, dengan pilihan yang tidak kosong."
 
 #: ../src/ui/fma-main-window.ui.h:7
 #, fuzzy
@@ -2053,20 +2304,26 @@ msgid "Display item in _location context menu"
 msgstr "Apakah menampilkan butir menu konteks untuk menghapus secara permanen"
 
 #: ../src/ui/fma-main-window.ui.h:8
+#, fuzzy
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "context menu when the selection is empty.\n"
 "In this case, the defined conditions will be applied to the current "
 "displayed folder."
 msgstr ""
+"Ketika diperiksa, item akan kandidat untuk ditampilkan dalam menu konteks "
+"manajer berkas ketika pilihan kosong.\n"
+"Dalam hal ini, kondisi yang ditetapkan akan diterapkan ke folder yang "
+"ditampilkan saat ini."
 
 #: ../src/ui/fma-main-window.ui.h:10
 msgid "_Context label :"
 msgstr "Label _konteks :"
 
 #: ../src/ui/fma-main-window.ui.h:11
+#, fuzzy
 msgid "The label of the item in the file manager context menus."
-msgstr ""
+msgstr "Label item dalam menu konteks manajer berkas."
 
 #: ../src/ui/fma-main-window.ui.h:12
 #, fuzzy
@@ -2074,40 +2331,49 @@ msgid "Display item in the _toolbar"
 msgstr "Bilah Ala_t"
 
 #: ../src/ui/fma-main-window.ui.h:13
+#, fuzzy
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "toolbar.\n"
 "In this case, the defined conditions will be applied to the current folder, "
 "and do not depend of the possible current selection."
 msgstr ""
+"Ketika diperiksa, item akan menjadi kandidat untuk ditampilkan di bilah alat "
+"manajer berkas.\n"
+"Dalam hal ini, kondisi yang ditetapkan akan diterapkan ke folder saat ini, "
+"dan tidak tergantung dari kemungkinan pilihan saat ini."
 
 #: ../src/ui/fma-main-window.ui.h:15
+#, fuzzy
 msgid "Use s_ame label for icon in the toolbar"
-msgstr ""
+msgstr "Menggunakan label s_ame untuk ikon di Bar alat"
 
 #: ../src/ui/fma-main-window.ui.h:16
+#, fuzzy
 msgid ""
 "When checked, the label displayed in the toolbar will be the same that the "
 "one displayed in the context menus."
 msgstr ""
+"Saat dicentang, label yang ditampilkan di Bar alat akan sama dengan yang "
+"ditampilkan dalam menu konteks."
 
 #: ../src/ui/fma-main-window.ui.h:17
-#, fuzzy
 msgid "T_oolbar label :"
-msgstr "_Label"
+msgstr "_Label bilah alat :"
 
 #: ../src/ui/fma-main-window.ui.h:18
+#, fuzzy
 msgid "The label displayed in the file manager toolbar."
-msgstr ""
+msgstr "Label yang ditampilkan di bilah alat manajer berkas."
 
 #: ../src/ui/fma-main-window.ui.h:19
-#, fuzzy
 msgid "Toolti_p :"
-msgstr "^p"
+msgstr "Toolti_p :"
 
 #: ../src/ui/fma-main-window.ui.h:20
+#, fuzzy
 msgid "The tooltip displayed in the file manager user interface."
-msgstr ""
+msgstr "Tooltip ditampilkan di antarmuka pengguna Manajer berkas."
 
 #: ../src/ui/fma-main-window.ui.h:21
 msgid "_Icon :"
@@ -2118,18 +2384,22 @@ msgid "_Browse…"
 msgstr "Ram_ban…"
 
 #: ../src/ui/fma-main-window.ui.h:23
+#, fuzzy
 msgid "The name of a themed icon or the filename of an image."
-msgstr ""
+msgstr "Nama ikon bertemakan atau nama berkas dari suatu gambar."
 
 #: ../src/ui/fma-main-window.ui.h:24
 msgid "<b> Nautilus item </b>"
 msgstr "<b> Butir Nautilus </b>"
 
 #: ../src/ui/fma-main-window.ui.h:25
+#, fuzzy
 msgid ""
 "This tab lets you determine the main characteristics of the currently "
 "selected item."
 msgstr ""
+"Tab ini memungkinkan Anda menentukan karakteristik utama dari item yang "
+"dipilih saat ini."
 
 #: ../src/ui/fma-main-window.ui.h:27
 msgid "_Label :"
@@ -2152,25 +2422,27 @@ msgid "_Working directory :"
 msgstr "Direktori _kerja :"
 
 #: ../src/ui/fma-main-window.ui.h:32
+#, fuzzy
 msgid ""
 "The path of the command.\n"
 "If this is not an absolute path, then the PATH environment variable at "
 "execution time will be considered."
 msgstr ""
+"Jalur perintah.\n"
+"Jika ini bukan jalur absolut, maka variabel lingkungan PATH pada waktu "
+"eksekusi akan dipertimbangkan."
 
 #: ../src/ui/fma-main-window.ui.h:34
 msgid "_Browse..."
 msgstr "Ram_ban..."
 
 #: ../src/ui/fma-main-window.ui.h:35
-#, fuzzy
 msgid "The parameters of the command."
-msgstr "Parameter perintah"
+msgstr "Parameter perintah."
 
 #: ../src/ui/fma-main-window.ui.h:36
-#, fuzzy
 msgid "Le_gend"
-msgstr "Judul Ha~laman"
+msgstr "Le_genda"
 
 #: ../src/ui/fma-main-window.ui.h:37
 msgid "Example"
@@ -2181,8 +2453,9 @@ msgid "<small><i>Example</i></small>"
 msgstr "<small><i>Contoh</i></small>"
 
 #: ../src/ui/fma-main-window.ui.h:39
+#, fuzzy
 msgid "The default working directory the command should be started in."
-msgstr ""
+msgstr "Direktori kerja default perintah harus dimulai di."
 
 #: ../src/ui/fma-main-window.ui.h:40
 msgid "B_rowse..."
@@ -2193,12 +2466,17 @@ msgid "<b> Command </b>"
 msgstr "<b> Perintah </b>"
 
 #: ../src/ui/fma-main-window.ui.h:42
+#, fuzzy
 msgid ""
 "This tab lets you choose the command to be executed, along with its "
 "parameters.\n"
 "Defining several profiles lets you have several commands, each applying with "
 "a different set of conditions."
 msgstr ""
+"Tab ini memungkinkan Anda memilih perintah yang akan dieksekusi, bersama "
+"dengan parameternya.\n"
+"Mendefinisikan beberapa profil memungkinkan Anda memiliki beberapa perintah, "
+"masing-masing menerapkan dengan set yang berbeda dari kondisi."
 
 #: ../src/ui/fma-main-window.ui.h:44
 msgid "_Command"
@@ -2209,44 +2487,51 @@ msgid "_Normal"
 msgstr "_Normal"
 
 #: ../src/ui/fma-main-window.ui.h:46
+#, fuzzy
 msgid "The command will be started as a standard graphical user interface."
-msgstr ""
+msgstr "Perintah akan dimulai sebagai standar antarmuka pengguna grafis."
 
 #: ../src/ui/fma-main-window.ui.h:47
-#, fuzzy
 msgid "In a _terminal"
-msgstr "_Terminal"
+msgstr "Dalam _terminal"
 
 #: ../src/ui/fma-main-window.ui.h:48
 msgid ""
 "The command will be started in the preferred terminal of the graphical "
 "environment."
-msgstr ""
+msgstr "Perintah akan dimulai di terminal yang dipilih dari lingkungan grafis."
 
 #: ../src/ui/fma-main-window.ui.h:49
-#, fuzzy
 msgid "_Embedded"
-msgstr "Tertanam"
+msgstr "T_ertanam"
 
 #: ../src/ui/fma-main-window.ui.h:50
+#, fuzzy
 msgid ""
 "This option makes use of a special feature of the file manager, which would "
 "allow a terminal to be ran inside of it.\n"
 "An acceptable fallback is running in the standard terminal."
 msgstr ""
+"Pilihan ini memanfaatkan fitur khusus dari manajer berkas, yang akan "
+"memungkinkan sebuah terminal untuk dijalankan di dalamnya.\n"
+"Fallback yang dapat diterima berjalan di terminal standar."
 
 #: ../src/ui/fma-main-window.ui.h:52
-#, fuzzy
 msgid "_Display output"
-msgstr "Keluaran:"
+msgstr "_Tampilkan keluaran"
 
 #: ../src/ui/fma-main-window.ui.h:53
+#, fuzzy
 msgid ""
 "The command will be run in a terminal.\n"
 "The terminal will be closed at the end of the execution; standard error and "
 "output streams will be displayed.\n"
 "An acceptable fallback is running in the standard terminal."
 msgstr ""
+"Perintah akan dijalankan di terminal.\n"
+"Terminal akan ditutup pada akhir eksekusi; kesalahan standar dan aliran "
+"output akan ditampilkan.\n"
+"Fallback yang dapat diterima berjalan di terminal standar."
 
 #: ../src/ui/fma-main-window.ui.h:56
 msgid "<b> Execution mode </b>"
@@ -2258,34 +2543,45 @@ msgid "_Startup notify"
 msgstr "STARTUP"
 
 #: ../src/ui/fma-main-window.ui.h:58
+#, fuzzy
 msgid ""
 "When checked, it is known that the run command will send a “remove” message "
 "to the desktop environment.\n"
 "See the Startup Notification Protocol Specification for more details.\n"
 "Only relevant when chosen execution mode is Normal."
 msgstr ""
+"Ketika dicentang, diketahui bahwa perintah Jalankan akan mengirim pesan "
+"\"Hapus\" ke lingkungan desktop.\n"
+"Lihat spesifikasi protokol pemberitahuan startup untuk rincian "
+"selengkapnya.\n"
+"Hanya relevan bila dipilih modus eksekusi adalah normal."
 
 #: ../src/ui/fma-main-window.ui.h:61
 #, fuzzy
 msgid "Startup Window Manager _class :"
-msgstr "Manajer jendela: "
+msgstr "_Class startup Manajer jendela:"
 
 #: ../src/ui/fma-main-window.ui.h:62
+#, fuzzy
 msgid ""
 "When specified, this should be the name of a WM class of at least one window "
 "of the run command.\n"
 "See the Startup Notification Protocol Specification for more details.\n"
 "Only relevant when chosen execution mode is Normal."
 msgstr ""
+"Ketika ditentukan, ini harus menjadi nama kelas WM setidaknya satu jendela "
+"dari perintah Run.\n"
+"Lihat spesifikasi protokol pemberitahuan startup untuk rincian "
+"selengkapnya.\n"
+"Hanya relevan bila dipilih modus eksekusi adalah normal."
 
 #: ../src/ui/fma-main-window.ui.h:65
 msgid "<b> Startup mode </b>"
 msgstr "<b> Mode awal mula </b>"
 
 #: ../src/ui/fma-main-window.ui.h:66
-#, fuzzy
 msgid "Execute as _user :"
-msgstr "Jalankan sebagai pengguna"
+msgstr "Jalankan sebagai pengg_una :"
 
 #: ../src/ui/fma-main-window.ui.h:67
 #, fuzzy
@@ -2303,15 +2599,17 @@ msgid "<b> Execute as user </b>"
 msgstr "<b> Eksekusi sebagai pengguna </b>"
 
 #: ../src/ui/fma-main-window.ui.h:71
+#, fuzzy
 msgid ""
 "This advanced tab lets you precisely define how your command will be "
 "executed."
 msgstr ""
+"Tab lanjutan ini memungkinkan Anda menentukan secara tepat bagaimana "
+"perintah Anda akan dieksekusi."
 
 #: ../src/ui/fma-main-window.ui.h:72
-#, fuzzy
 msgid "E_xecution"
-msgstr "^e"
+msgstr "E_ksekusi"
 
 #: ../src/ui/fma-main-window.ui.h:73
 #, fuzzy
@@ -2325,6 +2623,7 @@ msgstr ""
 "cocok dengan salah satu filter kolom \"Harus tidak cocok dengan salah satu\"."
 
 #: ../src/ui/fma-main-window.ui.h:74
+#, fuzzy
 msgid ""
 "This list lets you determine for which basenames the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -2332,49 +2631,66 @@ msgid ""
 "Basenames may be negated to specify for which basenames your item must not "
 "appear."
 msgstr ""
+"Daftar ini memungkinkan Anda menentukan nama dasar item yang dipilih saat "
+"ini akan ditampilkan dalam menu konteks Nautilus.\n"
+"Basenames mungkin menggunakan \"*\" dan \"?\" wildcard.\n"
+"Basenames mungkin akan dikembalikan untuk menentukan nama berkas yang tidak "
+"akan ditampilkan oleh basenames."
 
 #: ../src/ui/fma-main-window.ui.h:77
 #, fuzzy
 msgid "Click to add a new basename filter."
-msgstr "Tambah penyaring baru"
+msgstr "Klik untuk menambahkan filter basename baru."
 
 #: ../src/ui/fma-main-window.ui.h:78
+#, fuzzy
 msgid "Click to remove the current basename filter."
-msgstr ""
+msgstr "Klik untuk menghapus filter basename saat ini."
 
 #: ../src/ui/fma-main-window.ui.h:79
-#, fuzzy
 msgid "Match _case"
 msgstr "_Cocok huruf besar kecil"
 
 #: ../src/ui/fma-main-window.ui.h:80
+#, fuzzy
 msgid "Click to define the above basename filters as case sensitive."
 msgstr ""
+"Klik untuk menentukan filter nama dasar di atas sebagai case sensitive."
 
 #: ../src/ui/fma-main-window.ui.h:81
 msgid "<b> Basenames conditions </b>"
 msgstr "<b> Kondisi nama basis </b>"
 
 #: ../src/ui/fma-main-window.ui.h:82
+#, fuzzy
 msgid ""
 "This tab lets you determine for which basenames the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
 "Basenames may be negated to specify for which basenames your item must not "
 "appear."
 msgstr ""
+"Tab ini memungkinkan Anda menentukan nama dasar item yang saat ini dipilih "
+"akan ditampilkan dalam menu konteks Nautilus.\n"
+"Basenames mungkin akan dikembalikan untuk menentukan nama berkas yang tidak "
+"akan ditampilkan oleh basenames."
 
 #: ../src/ui/fma-main-window.ui.h:84
 msgid "_Basenames"
-msgstr ""
+msgstr "_Basename"
 
 #: ../src/ui/fma-main-window.ui.h:85
+#, fuzzy
 msgid ""
 "The current item will appear if the mimetype of each element of the "
 "selection matches one filter of the “Must match one of” column, while not "
 "matching any of the filters of the “Must not match any of” column."
 msgstr ""
+"Item saat ini akan muncul jika Mimetype dari setiap elemen seleksi cocok "
+"dengan filter dari kolom \"harus sesuai dengan salah satu dari\", sementara "
+"tidak cocok dengan filter dari kolom \"tidak boleh cocok dengan salah satu\"."
 
 #: ../src/ui/fma-main-window.ui.h:86
+#, fuzzy
 msgid ""
 "This list lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -2382,21 +2698,29 @@ msgid ""
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
+"Daftar ini memungkinkan Anda menentukan yang mimeTypes item yang dipilih "
+"saat ini akan ditampilkan dalam menu konteks Nautilus.\n"
+"MimeTypes dapat ditetapkan sebagai \"*\", \"*/*\", \"grup/*\" atau \"grup/"
+"subgrup\".\n"
+"MimeTypes dapat dinegasikan untuk menentukan jenis objek yang tidak boleh "
+"muncul."
 
 #: ../src/ui/fma-main-window.ui.h:89
 #, fuzzy
 msgid "Click to add a new mimetype filter."
-msgstr "Tambah penyaring baru"
+msgstr "Klik untuk menambahkan filter Mimetype baru."
 
 #: ../src/ui/fma-main-window.ui.h:90
+#, fuzzy
 msgid "Click to remove the current mimetype filter."
-msgstr ""
+msgstr "Klik untuk menghapus filter Mimetype saat ini."
 
 #: ../src/ui/fma-main-window.ui.h:91
 msgid "<b> Mimetypes conditions </b>"
 msgstr "<b> Kondisi mimetype </b>"
 
 #: ../src/ui/fma-main-window.ui.h:92
+#, fuzzy
 msgid ""
 "This tab lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -2404,11 +2728,16 @@ msgid ""
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
+"Tab ini memungkinkan Anda menentukan mimeTypes item yang saat ini dipilih "
+"akan ditampilkan dalam menu konteks Nautilus.\n"
+"MimeTypes dapat ditetapkan sebagai \"*\", \"/*\", \"grup/*\" atau \"grup/"
+"subgrup\".\n"
+"MimeTypes dapat dinegasikan untuk menentukan jenis objek yang tidak boleh "
+"muncul."
 
 #: ../src/ui/fma-main-window.ui.h:95
-#, fuzzy
 msgid "_Mimetypes"
-msgstr "Tak bisa mengindeks ulang tipe mime"
+msgstr "_Mimetype"
 
 #: ../src/ui/fma-main-window.ui.h:96
 #, fuzzy
@@ -2424,6 +2753,7 @@ msgstr ""
 "dengan salah satu\"."
 
 #: ../src/ui/fma-main-window.ui.h:97
+#, fuzzy
 msgid ""
 "This list lets you determine where (in which folders) the currently selected "
 "files must be found in order for the item to be displayed in the Nautilus "
@@ -2432,6 +2762,12 @@ msgid ""
 "Folder filters may be negated to specify for which folders your item must "
 "not appear."
 msgstr ""
+"Daftar ini memungkinkan Anda menentukan di mana (di mana folder) berkas yang "
+"dipilih saat ini harus ditemukan dalam rangka untuk item yang akan "
+"ditampilkan dalam menu konteks Nautilus.\n"
+"Folder mungkin menggunakan \"*\" atau \"?\" wildcard.\n"
+"Filter folder mungkin akan dinegasikan untuk menentukan folder mana yang "
+"tidak boleh muncul di item Anda."
 
 #: ../src/ui/fma-main-window.ui.h:100
 #, fuzzy
@@ -2439,18 +2775,23 @@ msgid "Click to add a new folder filter."
 msgstr "Klik untuk menambahkan filter folder baru."
 
 #: ../src/ui/fma-main-window.ui.h:101
+#, fuzzy
 msgid "Click to browse the filesystem in order to select a new folder filter."
 msgstr ""
+"Klik untuk menelusuri filesystem dalam rangka untuk memilih filter folder "
+"baru."
 
 #: ../src/ui/fma-main-window.ui.h:102
+#, fuzzy
 msgid "Click to remove the current folder filter."
-msgstr ""
+msgstr "Klik untuk menghapus filter folder saat ini."
 
 #: ../src/ui/fma-main-window.ui.h:103
 msgid "<b> Folders conditions </b>"
 msgstr "<b> Kondisi folder </b>"
 
 #: ../src/ui/fma-main-window.ui.h:104
+#, fuzzy
 msgid ""
 "This tab lets you determine where (in which folders) the currently selected "
 "files must be found in order for the item to be displayed in the Nautilus "
@@ -2458,67 +2799,95 @@ msgid ""
 "Folder filters may be negated to specify for which folders your item must "
 "not appear."
 msgstr ""
+"Tab ini memungkinkan Anda menentukan di mana (di mana folder) berkas yang "
+"dipilih saat ini harus ditemukan dalam rangka untuk item yang akan "
+"ditampilkan dalam menu konteks Nautilus.\n"
+"Filter folder mungkin akan dinegasikan untuk menentukan folder mana yang "
+"tidak boleh muncul di item Anda."
 
 #: ../src/ui/fma-main-window.ui.h:106
 msgid "_Folders"
 msgstr "_Folder"
 
 #: ../src/ui/fma-main-window.ui.h:107
+#, fuzzy
 msgid ""
 "The current item will appear if the scheme of each element of the selection "
 "matches one of the “Must match one of” column, while not matching any of the "
 "“Must not match any of” column."
 msgstr ""
+"Item saat ini akan muncul jika skema setiap elemen pilihan cocok dengan "
+"salah satu kolom \"harus cocok dengan salah satu dari\", sementara tidak "
+"cocok dengan kolom \"harus tidak cocok dengan semua\"."
 
 #: ../src/ui/fma-main-window.ui.h:108
+#, fuzzy
 msgid ""
 "This list lets you determine which schemes the currently selected files must "
 "satisfy in order for the item to be displayed in the Nautilus context menu.\n"
 "Filters may be negated to specify for which schemes your item must not "
 "appear."
 msgstr ""
+"Daftar ini memungkinkan Anda menentukan skema yang berkas yang dipilih saat "
+"ini harus memuaskan agar item yang akan ditampilkan dalam menu konteks "
+"Nautilus.\n"
+"Filter mungkin akan dinegasikan untuk menentukan skema mana yang harus tidak "
+"muncul di item Anda."
 
 #: ../src/ui/fma-main-window.ui.h:110
 #, fuzzy
 msgid "Click to add a new scheme filter."
-msgstr "Tambah penyaring baru"
+msgstr "Klik untuk menambahkan filter skema baru."
 
 #: ../src/ui/fma-main-window.ui.h:111
 msgid "De_faults…"
 msgstr "_Baku…"
 
 #: ../src/ui/fma-main-window.ui.h:112
+#, fuzzy
 msgid "Click to select a new scheme filter among default schemes."
-msgstr ""
+msgstr "Klik untuk memilih filter skema baru di antara skema default."
 
 #: ../src/ui/fma-main-window.ui.h:113
+#, fuzzy
 msgid "Click to remove the current scheme filter."
-msgstr ""
+msgstr "Klik untuk menghapus filter skema saat ini."
 
 #: ../src/ui/fma-main-window.ui.h:114
 msgid "<b> Schemes conditions </b>"
 msgstr "<b> Kondisi skema </b>"
 
 #: ../src/ui/fma-main-window.ui.h:115
+#, fuzzy
 msgid ""
 "This tab lets you determine which schemes the currently selected files must "
 "satisfy in order for the item to be displayed in the Nautilus context menu.\n"
 "Filters may be negated to specify for which schemes your item must not "
 "appear."
 msgstr ""
+"Tab ini memungkinkan Anda menentukan skema yang saat ini dipilih berkas "
+"harus memuaskan agar item yang akan ditampilkan dalam menu konteks "
+"Nautilus.\n"
+"Filter mungkin akan dinegasikan untuk menentukan skema mana yang harus tidak "
+"muncul di item Anda."
 
 #: ../src/ui/fma-main-window.ui.h:117 ../src/ui/fma-preferences.ui.h:59
 msgid "_Schemes"
 msgstr "_Skema"
 
 #: ../src/ui/fma-main-window.ui.h:118
+#, fuzzy
 msgid ""
 "The current item will appear if each element of the selection matches all "
 "capabilities of the “Must match all of” column, while not matching any "
 "capability of the “Must not match any of” column."
 msgstr ""
+"Item saat ini akan muncul jika setiap elemen pilihan cocok dengan semua "
+"kemampuan kolom \"harus cocok dengan semua\", sementara tidak cocok dengan "
+"kemampuan apa pun dari kolom \"harus tidak cocok dengan salah satu\"."
 
 #: ../src/ui/fma-main-window.ui.h:119
+#, fuzzy
 msgid ""
 "This list lets you determine which capabilities the currently selected files "
 "must satisfy in order for the item to be displayed in the Nautilus context "
@@ -2526,22 +2895,28 @@ msgid ""
 "Capabilities may be negated to specify for which capabilities your item must "
 "not appear."
 msgstr ""
+"Daftar ini memungkinkan Anda menentukan kemampuan yang berkas yang dipilih "
+"saat ini harus memuaskan agar item yang akan ditampilkan dalam menu konteks "
+"Nautilus.\n"
+"Kemampuan dapat dinegasikan untuk menentukan kemampuan yang tidak akan "
+"muncul oleh item Anda."
 
 #: ../src/ui/fma-main-window.ui.h:121
 #, fuzzy
 msgid "Click to add a new capability filter."
-msgstr "Tambah penyaring baru"
+msgstr "Klik untuk menambahkan filter kemampuan baru."
 
 #: ../src/ui/fma-main-window.ui.h:122
 #, fuzzy
 msgid "Click to remove the current capability."
-msgstr "Klik-Seret untuk mengganti pilihan saat ini"
+msgstr "Klik untuk menghapus kemampuan saat ini."
 
 #: ../src/ui/fma-main-window.ui.h:123
 msgid "<b> Capabilities conditions </b>"
 msgstr "<b> Kondisi kapabilitas </b>"
 
 #: ../src/ui/fma-main-window.ui.h:124
+#, fuzzy
 msgid ""
 "This tab lets you determine which capabilities the currently selected files "
 "must satisfy in order for the item to be displayed in the Nautilus context "
@@ -2549,6 +2924,11 @@ msgid ""
 "Filters may be negated to specify for which capabilities your item must not "
 "appear."
 msgstr ""
+"Tab ini memungkinkan Anda menentukan kemampuan yang berkas yang dipilih saat "
+"ini harus memuaskan agar item yang akan ditampilkan dalam menu konteks "
+"Nautilus.\n"
+"Filter dapat dinegasikan untuk menentukan kemampuan yang tidak akan muncul "
+"oleh item Anda."
 
 #: ../src/ui/fma-main-window.ui.h:126
 msgid "Ca_pabilities"
@@ -2563,21 +2943,23 @@ msgid "<b> Appears if selection contains </b>"
 msgstr "<b> Muncul bila seleksi memuat </b>"
 
 #: ../src/ui/fma-main-window.ui.h:129
+#, fuzzy
 msgid "Item may appear depending of the desktop environment."
-msgstr ""
+msgstr "Item mungkin muncul tergantung pada lingkungan desktop."
 
 #: ../src/ui/fma-main-window.ui.h:130
-#, fuzzy
 msgid "_Always appears"
-msgstr "Selalu"
+msgstr "Sel_alu muncul"
 
 #: ../src/ui/fma-main-window.ui.h:131
+#, fuzzy
 msgid "_Only appears in selected environments"
-msgstr ""
+msgstr "_Only muncul di lingkungan yang dipilih"
 
 #: ../src/ui/fma-main-window.ui.h:132
+#, fuzzy
 msgid "_Never appears in selected environments"
-msgstr ""
+msgstr "_Never muncul di lingkungan yang dipilih"
 
 #: ../src/ui/fma-main-window.ui.h:133
 msgid "<b> Desktop environment </b>"
@@ -2586,7 +2968,7 @@ msgstr "<b> Lingkungan desktop </b>"
 #: ../src/ui/fma-main-window.ui.h:134
 #, fuzzy
 msgid "Appears if the file is e_xecutable :"
-msgstr "Berkas %s tampaknya berkas biner."
+msgstr "Muncul jika berkas tersebut e_xecutable:"
 
 #: ../src/ui/fma-main-window.ui.h:135
 #, fuzzy
@@ -2594,50 +2976,61 @@ msgid "Appears if the name is _registered on D-Bus :"
 msgstr "Muncul jika namanya _registered di D-Bus:"
 
 #: ../src/ui/fma-main-window.ui.h:136
+#, fuzzy
 msgid "Appears if the command outputs “_true” :"
-msgstr ""
+msgstr "Muncul jika perintah output \"_true\":"
 
 #: ../src/ui/fma-main-window.ui.h:137
 #, fuzzy
 msgid "Appears if the _binary is running :"
-msgstr "Berkas %s tampaknya berkas biner."
+msgstr "Muncul jika _binary sedang berjalan:"
 
 #: ../src/ui/fma-main-window.ui.h:138
 msgid "Bro_wse…"
 msgstr "Ra_mban…"
 
 #: ../src/ui/fma-main-window.ui.h:139
-#, fuzzy
 msgid ""
 "This is an advanced condition based on the presence of an executable file on "
 "the file system.\n"
 "This may be used for example to test for a prerequisite package."
 msgstr ""
-"Ini adalah kondisi lanjutan berdasarkan keberadaan file yang dapat "
-"dieksekusi pada sistem file. Ini dapat digunakan misalnya untuk menguji "
-"paket prasyarat."
+"Ini adalah kondisi lanjutan berdasarkan keberadaan berkas yang dapat "
+"dieksekusi pada sistem berkas.\n"
+"Ini dapat digunakan misalnya untuk menguji paket prasyarat."
 
 #: ../src/ui/fma-main-window.ui.h:141
+#, fuzzy
 msgid ""
 "This is an advanced condition based on the presence of a particular service "
 "on the D-Bus system.\n"
 "This may be used for example for testing that a prerequisite service is "
 "currently available."
 msgstr ""
+"Ini adalah kondisi canggih yang didasarkan pada keberadaan layanan tertentu "
+"pada sistem D-bus.\n"
+"Ini dapat digunakan misalnya untuk pengujian bahwa layanan prasyarat saat "
+"ini tersedia."
 
 #: ../src/ui/fma-main-window.ui.h:143
+#, fuzzy
 msgid ""
 "This is an advanced condition based on a runtime result.\n"
 "Enter here a command which is able to display the exact “true” string on its "
 "standard output.\n"
 "This may be used for example for testing a complex condition."
 msgstr ""
+"Ini adalah kondisi lanjut yang didasarkan pada hasil runtime.\n"
+"Masukkan di sini perintah yang mampu menampilkan persis \"true\" string pada "
+"output standar.\n"
+"Ini dapat digunakan misalnya untuk menguji kondisi yang kompleks."
 
 #: ../src/ui/fma-main-window.ui.h:146
 msgid "Brow_se…"
 msgstr "Ramba_n…"
 
 #: ../src/ui/fma-main-window.ui.h:147
+#, fuzzy
 msgid ""
 "This is an advanced condition based on the presence of a running binary.\n"
 "Note that only the basename of the binary is checked, not its dirname nor "
@@ -2645,90 +3038,113 @@ msgid ""
 "This may be used for example for testing the presence of a prerequisite "
 "daemon."
 msgstr ""
+"Ini adalah kondisi lanjutan yang didasarkan pada adanya biner yang "
+"berjalan.\n"
+"Perhatikan bahwa hanya nama dasar biner dicentang, bukan yang dirname atau "
+"parameternya.\n"
+"Ini dapat digunakan misalnya untuk menguji keberadaan daemon prasyarat."
 
 #: ../src/ui/fma-main-window.ui.h:150
 msgid "<b> Execution environment </b>"
 msgstr "<b> Lingkungan eksekusi </b>"
 
 #: ../src/ui/fma-main-window.ui.h:151
+#, fuzzy
 msgid ""
 "This tab lets you determine some advanced conditions the currently selected "
 "files must satisfy in order for the item to be displayed in the file manager "
 "context menu."
 msgstr ""
+"Tab ini memungkinkan Anda menentukan beberapa kondisi lanjut berkas yang "
+"dipilih saat ini harus memuaskan agar item yang akan ditampilkan dalam menu "
+"konteks manajer berkas."
 
 #: ../src/ui/fma-main-window.ui.h:152
-#, fuzzy
 msgid "_Environment"
-msgstr "Lingkungan"
+msgstr "_Lingkungan"
 
 #: ../src/ui/fma-main-window.ui.h:153
 msgid "E_nabled"
 msgstr "Diaktifka_n"
 
 #: ../src/ui/fma-main-window.ui.h:154
+#, fuzzy
 msgid ""
 "Check the box to enable this item.\n"
 "If unchecked, then the item will never appear in the file manager context "
 "menus or toolbar."
 msgstr ""
+"Centang kotak untuk mengaktifkan item ini.\n"
+"Jika dicentang, maka item tidak akan pernah muncul di menu konteks berkas "
+"Manager atau bilah alat."
 
 #: ../src/ui/fma-main-window.ui.h:156
 msgid "_Description :"
 msgstr "_Deskripsi :"
 
 #: ../src/ui/fma-main-window.ui.h:157
+#, fuzzy
 msgid ""
 "Enter here a free text which may be used (e.g. in a Web service or in a "
 "search tool) to describe your item."
 msgstr ""
+"Masukkan di sini teks gratis yang dapat digunakan (misalnya dalam layanan "
+"web atau dalam alat pencarian) untuk menggambarkan item Anda."
 
 #: ../src/ui/fma-main-window.ui.h:158
-#, fuzzy
 msgid "Suggested _shortcut :"
-msgstr "Pintasan yang disarankan"
+msgstr "Pintasan yang di_sarankan :"
 
 #: ../src/ui/fma-main-window.ui.h:160
+#, fuzzy
 msgid ""
 "Enter here the keyboard touch combination you suggest as a shortcut to your "
 "action.\n"
 "Note: this is not yet implemented in FileManager-Actions."
 msgstr ""
+"Masukkan di sini kombinasi sentuhan keyboard Anda sarankan sebagai jalan "
+"pintas untuk tindakan Anda.\n"
+"Catatan: ini belum diterapkan di FileManager-tindakan."
 
 #: ../src/ui/fma-main-window.ui.h:162
 msgid "<b> Action editable properties </b>"
 msgstr "<b> Properti aksi yang dapat disunting </b>"
 
 #: ../src/ui/fma-main-window.ui.h:163
-#, fuzzy
 msgid "Read-only item"
-msgstr "Hanya-Baca"
+msgstr "Butir hanya-baca"
 
 #: ../src/ui/fma-main-window.ui.h:164
+#, fuzzy
 msgid ""
 "This box is checked if the item cannot be edited.\n"
 "There may be multiple reasons for why an item cannot be edited. See your "
 "User’s Manual."
 msgstr ""
+"Kotak ini dicentang jika item tidak dapat diedit.\n"
+"Mungkin ada beberapa alasan mengapa item tidak dapat diedit. Lihat panduan "
+"pengguna Anda."
 
 #: ../src/ui/fma-main-window.ui.h:166
 msgid "Id. :"
 msgstr "Id. :"
 
 #: ../src/ui/fma-main-window.ui.h:167
-#, fuzzy
 msgid "I/O provider :"
-msgstr "Penyedia I/O tidak bersedia menulis."
+msgstr "Penyedia I/O :"
 
 #: ../src/ui/fma-main-window.ui.h:168
 msgid "<b> Read-only properties </b>"
 msgstr "<b> Properti hanya baca </b>"
 
 #: ../src/ui/fma-main-window.ui.h:169
+#, fuzzy
 msgid ""
 "This tab lets you edit some miscellaneous properties, and access some non-"
 "modifiable information."
 msgstr ""
+"Tab ini memungkinkan Anda mengedit beberapa properti lain, dan mengakses "
+"beberapa informasi yang tidak dapat dimodifikasi."
 
 #: ../src/ui/fma-main-window.ui.h:170
 msgid "P_roperties"
@@ -2736,17 +3152,16 @@ msgstr "P_roperti"
 
 #: ../src/ui/fma-match-list.c:89
 msgid "Must match one of"
-msgstr ""
+msgstr "Harus cocok dengan salah satu dari"
 
 #: ../src/ui/fma-match-list.c:90
-#, fuzzy
 msgid "Must match all of"
-msgstr "Cocok"
+msgstr "Harus cocok dengan semua dari"
 
 #. i18n: label of the header of a column which let the user select a negative filter
 #: ../src/ui/fma-match-list.c:233
 msgid "Must not match any of"
-msgstr ""
+msgstr "Tidak boleh cocok dengan salah satu dari"
 
 #: ../src/ui/fma-match-list.c:479
 #, c-format
@@ -2759,27 +3174,23 @@ msgstr ""
 
 #. i18n notes : new filter for a new row in a match/no match list
 #: ../src/ui/fma-match-list.c:857
-#, fuzzy
 msgid "new-filter"
-msgstr "Tapis Baru"
+msgstr "tapis baru"
 
 #. i18n: status bar tooltip displayed on “About” item navigation
 #: ../src/ui/fma-menu.c:97 ../src/ui/fma-toolbar.ui.h:21
-#, fuzzy
 msgid "Display informations about this program"
-msgstr "Tampilkan versi program"
+msgstr "Menampilkan informasi tentang program ini"
 
 #. i18n: status bar tooltip displayed on “Help” item navigation
 #: ../src/ui/fma-menu.c:100 ../src/ui/fma-toolbar.ui.h:19
-#, fuzzy
 msgid "Display help about this program"
-msgstr "Tampilkan versi program"
+msgstr "Menampilkan bantuan tentang program ini"
 
 #. i18n: status bar tooltip displayed on “Preferences” item navigation
 #: ../src/ui/fma-menu.c:103 ../src/ui/fma-toolbar.ui.h:11
-#, fuzzy
 msgid "Edit your preferences"
-msgstr "Edit preferensi Anda"
+msgstr "Menyunting preferensi Anda"
 
 #. i18n: status bar tooltip displayed on “Quit” item navigation
 #: ../src/ui/fma-menu.c:106 ../src/ui/fma-toolbar.ui.h:17
@@ -2789,58 +3200,56 @@ msgstr "Keluar aplikasi"
 #. i18n: status bar tooltip displayed on “New menu” item navigation
 #: ../src/ui/fma-menu.c:112
 msgid "Insert a new menu at the current position"
-msgstr ""
+msgstr "Menyisipkan menu baru pada posisi saat ini"
 
 #. i18n: status bar tooltip displayed on “New action” item navigation
 #: ../src/ui/fma-menu.c:115 ../src/ui/fma-toolbar.ui.h:13
-#, fuzzy
 msgid "Define a new action"
-msgstr "Definisikan suatu aksi baru."
+msgstr "Mendefinisikan suatu aksi baru"
 
 #. i18n: status bar tooltip displayed on “New profile” item navigation
 #: ../src/ui/fma-menu.c:118
 msgid "Define a new profile attached to the current action"
-msgstr ""
+msgstr "Menentukan profil baru yang melekat pada tindakan saat ini"
 
 #. i18n: status bar tooltip displayed on “Save” item navigation
 #: ../src/ui/fma-menu.c:121
+#, fuzzy
 msgid ""
 "Record all the modified actions. Invalid actions will be silently ignored"
 msgstr ""
+"Catat semua tindakan yang dimodifikasi. Tindakan tidak valid akan diabaikan "
+"dalam hati"
 
 #. i18n: status bar tooltip displayed on “Cut” item navigation
 #: ../src/ui/fma-menu.c:124 ../src/ui/fma-toolbar.ui.h:1
-#, fuzzy
 msgid "Cut the selected item(s) to the clipboard"
-msgstr "Salin teks atau item terpilih ke papan klip"
+msgstr "Memotong item terpilih ke papan klip"
 
 #. i18n: status bar tooltip displayed on “Copy” item navigation
 #: ../src/ui/fma-menu.c:127 ../src/ui/fma-toolbar.ui.h:3
-#, fuzzy
 msgid "Copy the selected item(s) to the clipboard"
-msgstr "Salin teks atau item terpilih ke papan klip"
+msgstr "Menyalin item terpilih ke papan klip"
 
 #. i18n: status bar tooltip displayed on “Paste” item navigation
 #: ../src/ui/fma-menu.c:130 ../src/ui/fma-toolbar.ui.h:5
 msgid "Insert the content of the clipboard just before the current position"
-msgstr ""
+msgstr "Menyisipkan isi papan klip tepat sebelum posisi saat ini"
 
 #. i18n: status bar tooltip displayed on “Paste into” item navigation
 #: ../src/ui/fma-menu.c:133
 msgid "Insert the content of the clipboard as first child of the current item"
-msgstr ""
+msgstr "Menyisipkan konten papan klip sebagai anak pertama dari item saat ini"
 
 #. i18n: status bar tooltip displayed on “Duplicate” item navigation
 #: ../src/ui/fma-menu.c:136
-#, fuzzy
 msgid "Duplicate the selected item(s)"
-msgstr "Potong butir struktur yang dipilih"
+msgstr "Menduplikasi item yang dipilih"
 
 #. i18n: status bar tooltip displayed on “Delete” item navigation
 #: ../src/ui/fma-menu.c:139 ../src/ui/fma-toolbar.ui.h:7
-#, fuzzy
 msgid "Delete the selected item(s)"
-msgstr "Menghapus item baris yang dipilih(s)"
+msgstr "Menghapus item yang dipilih"
 
 #. i18n: status bar tooltip displayed on “Reload items” item navigation
 #: ../src/ui/fma-menu.c:142 ../src/ui/fma-toolbar.ui.h:9
@@ -2848,40 +3257,39 @@ msgid ""
 "Cancel your current modifications and reload the initial list of menus and "
 "actions"
 msgstr ""
+"Membatalkan modifikasi Anda saat ini dan memuat ulang daftar menu dan "
+"tindakan awal"
 
 #. i18n: status bar tooltip displayed on “Expand all” item navigation
 #: ../src/ui/fma-menu.c:145
 msgid "Entirely expand the items hierarchy"
-msgstr ""
+msgstr "Sepenuhnya membuat mengembang hirarki item"
 
 #. i18n: status bar tooltip displayed on “Collapse all” item navigation
 #: ../src/ui/fma-menu.c:148
 msgid "Entirely collapse the items hierarchy"
-msgstr ""
+msgstr "Sepenuhnya menguncupkan hirarki item"
 
 #. i18n: status bar tooltip displayed on “Toolbars/File” item navigation
 #: ../src/ui/fma-menu.c:151
-#, fuzzy
 msgid "Display the File toolbar"
-msgstr "Tampilkan bilah alat."
+msgstr "Tampilkan bilah alat Berkas"
 
 #. i18n: status bar tooltip displayed on “Toolbars/Edit” item navigation
 #: ../src/ui/fma-menu.c:154
-#, fuzzy
 msgid "Display the Edit toolbar"
-msgstr "Tampilkan bilah alat."
+msgstr "Tampilkan bilah alat Sunting"
 
 #. i18n: status bar tooltip displayed on “Toolbars/Tools” item navigation
 #: ../src/ui/fma-menu.c:157
 #, fuzzy
 msgid "Display the Tools toolbar"
-msgstr "Menampilkan toolbar Tools"
+msgstr "Menampilkan bilah alat Tools"
 
 #. i18n: status bar tooltip displayed on “Toolbars/Help” item navigation
 #: ../src/ui/fma-menu.c:160
-#, fuzzy
 msgid "Display the Help toolbar"
-msgstr "Tampilkan bilah alat."
+msgstr "Tampilkan bilah alat Bantuan"
 
 #. i18n: status bar tooltip displayed on “Notebook labels” items navigation
 #: ../src/ui/fma-menu.c:163
@@ -2891,19 +3299,23 @@ msgstr "Tab Buku Catatan"
 
 #. i18n: status bar tooltip displayed on “Import” item navigation
 #: ../src/ui/fma-menu.c:166 ../src/ui/fma-toolbar.ui.h:23
+#, fuzzy
 msgid "Import one or more actions from external files into your configuration"
 msgstr ""
+"Mengimpor satu atau beberapa tindakan dari berkas eksternal ke konfigurasi "
+"Anda"
 
 #. i18n: status bar tooltip displayed on “Export” item navigation
 #: ../src/ui/fma-menu.c:169
+#, fuzzy
 msgid "Export one or more actions from your configuration to external files"
 msgstr ""
+"Mengekspor satu atau beberapa tindakan dari konfigurasi Anda ke berkas "
+"eksternal"
 
 #: ../src/ui/fma-menu.c:238
-#, fuzzy
 msgid "_Maintainer"
-msgstr ""
-"Tak tahu mesti mencari variabel LINGUAS kemana, tanyakan ke pemelihara modul."
+msgstr "Pe_melihara"
 
 #: ../src/ui/fma-menu.c:495
 #, c-format
@@ -2911,8 +3323,11 @@ msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
 msgstr " %d menu, %d aksi, %d profil saat ini sedang dimuat"
 
 #: ../src/ui/fma-menu-edit.c:224
+#, fuzzy
 msgid "Not all items have been cut as following ones are not modifiable:"
 msgstr ""
+"Tidak semua item telah dipotong sebagai berikut yang tidak dapat "
+"dimodifikasi:"
 
 #: ../src/ui/fma-menu-edit.c:470
 #, fuzzy
@@ -2921,21 +3336,23 @@ msgstr ""
 "Tidak semua item telah dihapus karena yang berikut tidak dapat dimodifikasi:"
 
 #: ../src/ui/fma-menu-file.c:54
-#, fuzzy
 msgid "Save error"
-msgstr "_Simpan Log Galat ke Berkas…"
+msgstr "Simpan galat"
 
 #: ../src/ui/fma-menu-file.c:55
+#, fuzzy
 msgid "Some items may not have been saved"
-msgstr ""
+msgstr "Beberapa item mungkin belum disimpan"
 
 #: ../src/ui/fma-menu-file.c:56
+#, fuzzy
 msgid "Unable to rewrite the level-zero items list"
-msgstr ""
+msgstr "Tidak dapat menulis ulang daftar item tingkat nol"
 
 #: ../src/ui/fma-menu-file.c:57
+#, fuzzy
 msgid "Some items have not been deleted"
-msgstr ""
+msgstr "Beberapa item belum dihapus"
 
 #: ../src/ui/fma-menu-file.c:190
 msgid "New profile"
@@ -2943,7 +3360,7 @@ msgstr "Profil baru"
 
 #: ../src/ui/fma-menu-file.c:435
 msgid "Automatically saving pending modifications…"
-msgstr ""
+msgstr "Secara otomatis menyimpan modifikasi yang tertunda…"
 
 #: ../src/ui/fma-preferences.ui.h:1
 #, fuzzy
@@ -2956,11 +3373,14 @@ msgid "_Ascending alphabetical order"
 msgstr "Menaik"
 
 #: ../src/ui/fma-preferences.ui.h:3
+#, fuzzy
 msgid ""
 "Menus and actions will be displayed in the ascending alphabetical order of "
 "their label, both in the Nautilus context menu and in the fma-config-tool "
 "user interface."
 msgstr ""
+"Menu dan tindakan akan ditampilkan dalam urutan abjad menaik label mereka, "
+"baik dalam menu konteks Nautilus dan di antarmuka pengguna FMA-config-tool."
 
 #: ../src/ui/fma-preferences.ui.h:4
 #, fuzzy
@@ -2968,11 +3388,15 @@ msgid "_Descending alphabetical order"
 msgstr "_Mengurutkan urutan abjad"
 
 #: ../src/ui/fma-preferences.ui.h:5
+#, fuzzy
 msgid ""
 "Menus and actions will be displayed in the descending alphabetical order of "
 "their label, both in the Nautilus context menu and in the fma-config-tool "
 "user interface."
 msgstr ""
+"Menu dan tindakan akan ditampilkan dalam urutan abjad menurun dari label "
+"mereka, baik dalam menu konteks Nautilus dan di antarmuka pengguna FMA-"
+"config-tool."
 
 #: ../src/ui/fma-preferences.ui.h:6
 #, fuzzy
@@ -2993,8 +3417,9 @@ msgid "<b>Items ordering</b>"
 msgstr "<b>Pengurutan butir</b>"
 
 #: ../src/ui/fma-preferences.ui.h:9
+#, fuzzy
 msgid "_Create a root “FileManager-Actions” menu"
-msgstr ""
+msgstr "_Create akar \"FileManager-tindakan\" Menu"
 
 #: ../src/ui/fma-preferences.ui.h:10
 #, fuzzy
@@ -3007,10 +3432,13 @@ msgstr ""
 "Nautilus."
 
 #: ../src/ui/fma-preferences.ui.h:11
+#, fuzzy
 msgid "Add an “A_bout FileManager-Actions” item in the Nautilus context menus"
 msgstr ""
+"Menambahkan item \"A_bout FileManager-tindakan\" di menu konteks Nautilus"
 
 #: ../src/ui/fma-preferences.ui.h:12
+#, fuzzy
 msgid ""
 "When this option is checked, an “About FileManager-Actions” item will be "
 "added to the root FileManager-Actions menu in the Nautilus context menu.\n"
@@ -3018,17 +3446,27 @@ msgid ""
 "the Nautilus context menu (e.g. when having checked the root “FileManager-"
 "Actions” menu option above)."
 msgstr ""
+"Ketika opsi ini dicentang, \"tentang FileManager-tindakan\" item akan "
+"ditambahkan ke akar FileManager-tindakan menu dalam menu konteks Nautilus.\n"
+"Perhatikan bahwa item ini akan ditampilkan hanya jika menu yang unik "
+"didefinisikan dalam menu konteks Nautilus (misalnya ketika memiliki "
+"memeriksa akar \"FileManager-tindakan\" pilihan menu di atas)."
 
 #: ../src/ui/fma-preferences.ui.h:14
 msgid "<b>Nautilus menu layout</b>"
 msgstr "<b>Tata letak menu Nautilus</b>"
 
 #: ../src/ui/fma-preferences.ui.h:15
+#, fuzzy
 msgid ""
 "This tab lets you choose how the actions are ordered in the displayed list "
 "as well as in the Nautilus context menu. You may also choose here how "
 "actions will be displayed in the Nautilus context menu."
 msgstr ""
+"Tab ini memungkinkan Anda memilih bagaimana tindakan diperintahkan dalam "
+"daftar yang ditampilkan serta dalam menu konteks Nautilus. Anda juga dapat "
+"memilih di sini bagaimana tindakan akan ditampilkan dalam menu konteks "
+"Nautilus."
 
 #: ../src/ui/fma-preferences.ui.h:16
 #, fuzzy
@@ -3046,7 +3484,7 @@ msgstr "<b>Eksekusi dalam sebuah terminal</b>"
 #: ../src/ui/fma-preferences.ui.h:19
 #, fuzzy
 msgid "Running _desktop environment :"
-msgstr "Kertas Catatan bagi Lingkungan Desktop GNOME"
+msgstr "Menjalankan lingkungan _desktop:"
 
 #: ../src/ui/fma-preferences.ui.h:20
 msgid "<i>Currently detected :</i>"
@@ -3057,8 +3495,11 @@ msgid "<b>Desktop environment</b>"
 msgstr "<b>Lingkungan desktop</b>"
 
 #: ../src/ui/fma-preferences.ui.h:22
+#, fuzzy
 msgid "This tab lets you specify parameters needed for some execution modes."
 msgstr ""
+"Tab ini memungkinkan Anda menentukan parameter yang diperlukan untuk "
+"beberapa mode eksekusi."
 
 #: ../src/ui/fma-preferences.ui.h:23
 #, fuzzy
@@ -3066,8 +3507,10 @@ msgid "Runtime E_xecution"
 msgstr "Runtime"
 
 #: ../src/ui/fma-preferences.ui.h:24
+#, fuzzy
 msgid "What to do when pasting or duplicating an item in the tree ?"
 msgstr ""
+"Apa yang harus dilakukan ketika menempelkan atau menduplikasi item di pohon?"
 
 #: ../src/ui/fma-preferences.ui.h:25
 #, fuzzy
@@ -3075,10 +3518,13 @@ msgid "Relabel _menus"
 msgstr "_Label ulang"
 
 #: ../src/ui/fma-preferences.ui.h:26
+#, fuzzy
 msgid ""
 "When a menu is copied/pasted, or duplicated, the new menu will be relabelled "
 "as “Copy of …”."
 msgstr ""
+"Ketika menu disalin/disisipkan, atau digandakan, Menu baru akan dilepaskan "
+"sebagai \"salinan...\"."
 
 #: ../src/ui/fma-preferences.ui.h:27
 #, fuzzy
@@ -3086,10 +3532,13 @@ msgid "Relabel _actions"
 msgstr "Relabel _actions"
 
 #: ../src/ui/fma-preferences.ui.h:28
+#, fuzzy
 msgid ""
 "When an action is copied/pasted, or duplicated, the new action will be "
 "relabelled as “Copy of …”."
 msgstr ""
+"Ketika sebuah tindakan disalin/disisipkan, atau digandakan, tindakan baru "
+"akan dilepaskan sebagai \"salinan...\"."
 
 #: ../src/ui/fma-preferences.ui.h:29
 #, fuzzy
@@ -3097,10 +3546,13 @@ msgid "Relabel _profiles"
 msgstr "Relabel _profiles"
 
 #: ../src/ui/fma-preferences.ui.h:30
+#, fuzzy
 msgid ""
 "When a profile is copied/pasted, or duplicated, the new profile will be "
 "relabelled as “Copy of …”."
 msgstr ""
+"Ketika profil disalin/disisipkan, atau digandakan, profil baru akan "
+"dilepaskan sebagai \"salinan...\"."
 
 #: ../src/ui/fma-preferences.ui.h:31
 msgid "<b>Relabeling items</b>"
@@ -3109,57 +3561,74 @@ msgstr "<b>Melabel ulang butir</b>"
 #: ../src/ui/fma-preferences.ui.h:32
 #, fuzzy
 msgid "Esc key _quits the assistant"
-msgstr "Tekan <key>Esc</key> untuk menutup pencarian."
+msgstr "Tombol ESC _quits asisten"
 
 #: ../src/ui/fma-preferences.ui.h:33
+#, fuzzy
 msgid ""
 "When this option is checked, the “Escape” key will let you quit the current "
 "assistant. Else, quitting the assistant is only possible by hitting the "
 "“Cancel” button."
 msgstr ""
+"Ketika opsi ini dicentang, tombol \"Escape\" akan membiarkan Anda keluar "
+"dari asisten saat ini. Lain, berhenti asisten hanya mungkin dengan menekan "
+"\"Batalkan\" tombol."
 
 #: ../src/ui/fma-preferences.ui.h:34
+#, fuzzy
 msgid "Ask for a _confirmation when quitting the assistant on Esc key"
-msgstr ""
+msgstr "Mintalah _confirmation saat berhenti asisten pada tombol ESC"
 
 #: ../src/ui/fma-preferences.ui.h:35
+#, fuzzy
 msgid ""
 "This option is only relevant when the “Escape” key lets the user quit the "
 "assistant. When checked, the user will be prompted for a confirmation in "
 "order to help prevent erroneous hits of the Esc key."
 msgstr ""
+"Opsi ini hanya relevan ketika tombol \"Escape\" memungkinkan pengguna keluar "
+"dari asisten. Ketika diperiksa, pengguna akan diminta untuk konfirmasi dalam "
+"rangka untuk membantu mencegah hit keliru dari tombol ESC."
 
 #: ../src/ui/fma-preferences.ui.h:36
 msgid "<b>Assistants</b>"
 msgstr "<b>Asisten</b>"
 
 #: ../src/ui/fma-preferences.ui.h:37
+#, fuzzy
 msgid "Automatically _saves pending modifications"
-msgstr ""
+msgstr "_Saves modifikasi yang tertunda secara otomatis"
 
 #: ../src/ui/fma-preferences.ui.h:38
+#, fuzzy
 msgid ""
 "When this option is checked, pending modification will be periodically and "
 "automatically saved."
 msgstr ""
+"Ketika opsi ini dicentang, modifikasi yang tertunda akan secara berkala dan "
+"disimpan secara otomatis."
 
 #: ../src/ui/fma-preferences.ui.h:39
 msgid "Periodicity :"
-msgstr ""
+msgstr "Periodisitas :"
 
 #: ../src/ui/fma-preferences.ui.h:40
 msgid "minutes"
 msgstr "menit"
 
 #: ../src/ui/fma-preferences.ui.h:41
+#, fuzzy
 msgid "<b>Auto-save</b>"
-msgstr ""
+msgstr "<b>Simpan otomatis</b>"
 
 #: ../src/ui/fma-preferences.ui.h:42
+#, fuzzy
 msgid ""
 "This tab allows the user to choose custom preferences for the FileManager-"
 "Actions Configuration Tool user interface."
 msgstr ""
+"Tab ini memungkinkan pengguna untuk memilih preferensi kustom untuk "
+"antarmuka pengguna alat konfigurasi FileManager-tindakan."
 
 #: ../src/ui/fma-preferences.ui.h:43
 #, fuzzy
@@ -3167,34 +3636,40 @@ msgid "_UI Preferences"
 msgstr "Preferensi"
 
 #: ../src/ui/fma-preferences.ui.h:44
+#, fuzzy
 msgid ""
 "What to do when an item, action or menu, selected to be imported, has the "
 "same identifier that a currently existing one ?"
 msgstr ""
+"Apa yang harus dilakukan ketika item, tindakan atau menu, dipilih untuk "
+"diimpor, memiliki pengidentifikasi yang sama yang saat ini ada satu?"
 
 #: ../src/ui/fma-preferences.ui.h:45
 msgid "<b>Import mode</b>"
 msgstr "<b>Mode impor</b>"
 
 #: ../src/ui/fma-preferences.ui.h:46
+#, fuzzy
 msgid "This tab lets you decide on the default behavior of import operations."
-msgstr ""
+msgstr "Tab ini memungkinkan Anda memutuskan perilaku default operasi impor."
 
 #: ../src/ui/fma-preferences.ui.h:47
 msgid "_Import"
 msgstr "_Impor"
 
 #: ../src/ui/fma-preferences.ui.h:48
+#, fuzzy
 msgid "What is your preferred export format ?"
-msgstr ""
+msgstr "Apa format ekspor yang Anda sukai?"
 
 #: ../src/ui/fma-preferences.ui.h:49
 msgid "<b>Export format</b>"
 msgstr "<b>Format ekspor</b>"
 
 #: ../src/ui/fma-preferences.ui.h:50
+#, fuzzy
 msgid "This tab lets you decide on the default behavior of export operations."
-msgstr ""
+msgstr "Tab ini memungkinkan Anda memutuskan perilaku default operasi ekspor."
 
 #: ../src/ui/fma-preferences.ui.h:51
 msgid "_Export"
@@ -3203,13 +3678,15 @@ msgstr "_Ekspor"
 #: ../src/ui/fma-preferences.ui.h:52
 #, fuzzy
 msgid "Click to add a new default scheme."
-msgstr "Klik untuk menambah palet baru"
+msgstr "Klik untuk menambahkan skema default baru."
 
 #: ../src/ui/fma-preferences.ui.h:53
+#, fuzzy
 msgid "Click to remove the selected default scheme."
-msgstr ""
+msgstr "Klik untuk menghapus skema default yang dipilih."
 
 #: ../src/ui/fma-preferences.ui.h:54
+#, fuzzy
 msgid ""
 "You may define here any number of schemes. They will be proposed as default "
 "schemes when defining conditions for an action.\n"
@@ -3217,33 +3694,48 @@ msgid ""
 "with this default list.\n"
 "You can add a new scheme by clicking on the “+” button."
 msgstr ""
+"Anda dapat menentukan di sini sejumlah skema. Mereka akan diusulkan sebagai "
+"skema default ketika mendefinisikan kondisi untuk tindakan.\n"
+"Jika daftar menjadi kosong, FMA-config-tool akan secara otomatis mengisi "
+"kembali dengan daftar default ini.\n"
+"Anda dapat menambahkan skema baru dengan mengklik tombol \"+\"."
 
 #: ../src/ui/fma-preferences.ui.h:57
 msgid "<b>Default schemes</b>"
 msgstr "<b>Skema baku</b>"
 
 #: ../src/ui/fma-preferences.ui.h:58
+#, fuzzy
 msgid ""
 "This tab lets you decide which schemes are proposed by default when editing "
 "advanced conditions for an item."
 msgstr ""
+"Tab ini memungkinkan Anda memutuskan skema mana yang diusulkan secara "
+"default saat mengedit kondisi lanjutan untuk item."
 
 #: ../src/ui/fma-preferences.ui.h:60
+#, fuzzy
 msgid ""
 "Define here, for available I/O providers, if you want them to be read at "
 "startup, to be writable, and the order in which they will be tested when "
 "trying to write a new menu or action."
 msgstr ""
+"Tentukan di sini, untuk penyedia I/O yang tersedia, jika Anda ingin mereka "
+"untuk dibaca pada saat startup, untuk dapat ditulis, dan urutan di mana "
+"mereka akan diuji ketika mencoba untuk menulis menu baru atau tindakan."
 
 #: ../src/ui/fma-preferences.ui.h:61
 msgid "_Up"
 msgstr "_Naik"
 
 #: ../src/ui/fma-preferences.ui.h:62
+#, fuzzy
 msgid ""
 "Move up the selected I/O provider in the order of priority when trying to "
 "write a new item."
 msgstr ""
+"Pindahkan penyedia I/O yang dipilih dalam urutan prioritas ketika mencoba "
+"untuk menulis item baru."
 
 #: ../src/ui/fma-preferences.ui.h:63
 msgid "_Down"
@@ -3254,15 +3746,17 @@ msgid "<b>Activation and priority</b>"
 msgstr "<b>Aktivasi dan prioritas</b>"
 
 #: ../src/ui/fma-preferences.ui.h:65
+#, fuzzy
 msgid ""
 "This tab lets you decide whether the I/O providers are enabled or not, and "
 "in which order they will be tried when writing a new item."
 msgstr ""
+"Tab ini memungkinkan Anda memutuskan apakah penyedia I/O diaktifkan atau "
+"tidak, dan di mana urutan mereka akan diadili saat menulis item baru."
 
 #: ../src/ui/fma-preferences.ui.h:66
-#, fuzzy
 msgid "I/O _Providers"
-msgstr "Kesalahan I/O perangkat."
+msgstr "_Penyedia I/O"
 
 #. i18n: the user is not willing to identify his current desktop environment,
 #. *       and prefers rely on the runtime detection
@@ -3272,9 +3766,8 @@ msgid "Rely on runtime detection"
 msgstr "Runtime"
 
 #: ../src/ui/fma-preferences-editor.c:813
-#, fuzzy
 msgid "Ex.:"
-msgstr "ex"
+msgstr "Mis.:"
 
 #: ../src/ui/fma-providers-list.c:137
 #, fuzzy
@@ -3286,9 +3779,8 @@ msgid "Writable"
 msgstr "Ditulisi"
 
 #: ../src/ui/fma-providers-list.c:165
-#, fuzzy
 msgid "I/O Provider"
-msgstr "Penyedia I/O tidak bersedia menulis."
+msgstr "Penyedia I/O"
 
 #. i18n: default name when the I/O providers doesn’t provide one
 #: ../src/ui/fma-providers-list.c:261
@@ -3297,9 +3789,8 @@ msgstr "tanpa nama"
 
 #. i18n: name displayed when the corresponding I/O provider is unavailable at runtime
 #: ../src/ui/fma-providers-list.c:265
-#, fuzzy
 msgid "unavailable I/O provider"
-msgstr "Penyedia I/O tidak tersedia."
+msgstr "penyedia I/O yang tidak tersedia"
 
 #: ../src/ui/fma-schemes-list.c:155
 msgid "Keyword"
@@ -3342,14 +3833,12 @@ msgstr "%s (sudah dipakai)"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
 #: ../src/ui/fma-schemes-list.c:701
-#, fuzzy
 msgid "new-scheme"
-msgstr "Skema Baru"
+msgstr "skema-baru"
 
 #: ../src/ui/fma-schemes-list.c:702
-#, fuzzy
 msgid "New scheme description"
-msgstr "Keterangan Skema:"
+msgstr "Keterangan skema baru"
 
 #: ../src/ui/fma-toolbar.ui.h:2
 msgid "C_ut"
@@ -3398,9 +3887,8 @@ msgid "_Help"
 msgstr "_Bantuan"
 
 #: ../src/ui/fma-toolbar.ui.h:22
-#, fuzzy
 msgid "_About…"
-msgstr "Tentang..."
+msgstr "Tent_ang…"
 
 #: ../src/ui/fma-toolbar.ui.h:24
 msgid "_Import…"
@@ -3417,16 +3905,19 @@ msgid "Unable to drop an action or a menu here"
 msgstr "Tidak dapat menjatuhkan tindakan atau menu di sini"
 
 #: ../src/ui/fma-tree-model-dnd.c:120
+#, fuzzy
 msgid "Unable to drop here as parent is not writable"
-msgstr ""
+msgstr "Tidak dapat turun di sini sebagai orang tua tidak dapat ditulis"
 
 #: ../src/ui/fma-tree-model-dnd.c:121
+#, fuzzy
 msgid "Unable to drop here as level zero is not writable"
-msgstr ""
+msgstr "Tidak dapat turun di sini sebagai tingkat nol tidak dapat ditulis"
 
 #: ../src/ui/fma-tree-model-dnd.c:935
+#, fuzzy
 msgid "Some messages have occurred during drop operation."
-msgstr ""
+msgstr "Beberapa pesan telah terjadi selama operasi drop."
 
 #: ../src/ui/fma-config-tool.actions.h:1
 msgid "Pre_ferences"
@@ -3468,9 +3959,8 @@ msgid "_Paste"
 msgstr "Tem_pel"
 
 #: ../src/ui/fma-config-tool.actions.h:14
-#, fuzzy
 msgid "paste _into"
-msgstr "Temp_el Ke"
+msgstr "temp_el ke"
 
 #: ../src/ui/fma-config-tool.actions.h:15
 #, fuzzy
@@ -3526,26 +4016,26 @@ msgid "_Left"
 msgstr "_Kiri"
 
 #: ../src/ui/fma-config-tool.actions.h:28
-#, fuzzy
 msgid "_Import assistant…"
-msgstr "Asisten Impor Projek"
+msgstr "Asisten _impor…"
 
 #: ../src/ui/fma-config-tool.actions.h:29
-#, fuzzy
 msgid "E_xport assistant…"
-msgstr "E_kspor"
+msgstr "Asisten e_kspor…"
 
 #: ../src/ui/fma-config-tool.actions.h:30
 msgid "_Content"
 msgstr "_Isi"
 
 #: ../src/ui/fma-config-tool.actions.h:31
+#, fuzzy
 msgid "_Dump the selection"
-msgstr ""
+msgstr "_Dump pilihan"
 
 #: ../src/ui/fma-config-tool.actions.h:32
+#, fuzzy
 msgid "_Brief tree store dump"
-msgstr ""
+msgstr "Penyimpanan Pohon"
 
 #: ../src/ui/fma-config-tool.actions.h:33
 #, fuzzy
@@ -3558,13 +4048,14 @@ msgid "_Dump the clipboard"
 msgstr "Papan klip"
 
 #: ../src/ui/fma-config-tool.actions.h:35
-#, fuzzy
 msgid "_Test a function"
-msgstr "Hasil fungsi jika pengujian mengembalikan nilai TRUE."
+msgstr "Uji sua_tu fungsi"
 
 #: ../src/ui/fma-config-tool.desktop.in.h:2
+#, fuzzy
 msgid "Configure items to be added to the File-Manager context menus"
 msgstr ""
+"Mengkonfigurasi item yang akan ditambahkan ke menu konteks berkas-manager"
 
 #. i18n: label of an automagic root submenu
 #: ../src/plugin-menu/fma-menu-plugin.c:995
@@ -3574,10 +4065,13 @@ msgstr "Aksi"
 
 #. i18n: tooltip of an automagic root submenu
 #: ../src/plugin-menu/fma-menu-plugin.c:997
+#, fuzzy
 msgid ""
 "A submenu which embeds the currently available FileManager-Actions actions "
 "and menus"
 msgstr ""
+"Submenu yang menyematkan tindakan FileManager-tindakan saat ini tersedia dan "
+"menu"
 
 #: ../src/plugin-menu/fma-menu-plugin.c:1041
 #, fuzzy
@@ -3585,8 +4079,9 @@ msgid "About FileManager-Actions"
 msgstr "Aksi"
 
 #: ../src/plugin-menu/fma-menu-plugin.c:1042
+#, fuzzy
 msgid "Display some information about FileManager-Actions"
-msgstr ""
+msgstr "Menampilkan beberapa informasi tentang FileManager-tindakan"
 
 #: ../src/test/test-reader.c:48
 msgid "The URI of the file to be imported"
@@ -3606,20 +4101,23 @@ msgstr "Keluarkan nomor versi"
 msgid "Import a file."
 msgstr "Impor suatu berkas."
 
-#: ../src/test/test-reader.c:122
+#: ../src/test/test-reader.c:122 ../src/utils/console-utils.c:53
+#, fuzzy
 msgid ""
-"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
-"mail to <maintainer@filemanager-actions.org>.\n"
+"Bug reports are welcomed at https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 msgstr ""
+"Bug reports are welcomed at https://gitlab.gnome.org/GNOME/filemanager-"
+"actions/issues/\n"
 
-#: ../src/test/test-reader.c:130 ../src/utils/fma-delete-xmltree.c:183
+#: ../src/test/test-reader.c:129 ../src/utils/fma-delete-xmltree.c:183
 #: ../src/utils/fma-new.c:389 ../src/utils/fma-print.c:183
 #: ../src/utils/fma-print-schemas.c:191 ../src/utils/fma-run.c:210
 #: ../src/utils/fma-set-conf.c:208
 msgid "Miscellaneous options"
 msgstr "Opsi lain-lain"
 
-#: ../src/test/test-reader.c:151 ../src/utils/fma-delete-xmltree.c:113
+#: ../src/test/test-reader.c:150 ../src/utils/fma-delete-xmltree.c:113
 #: ../src/utils/fma-new.c:207 ../src/utils/fma-print.c:110
 #: ../src/utils/fma-print-schemas.c:112 ../src/utils/fma-run.c:119
 #: ../src/utils/fma-set-conf.c:120
@@ -3627,26 +4125,19 @@ msgstr "Opsi lain-lain"
 msgid "Syntax error: %s\n"
 msgstr "Kesalahan sintaksis: %s\n"
 
-#: ../src/test/test-reader.c:166
+#: ../src/test/test-reader.c:165
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Galat: uri adalah wajib.\n"
 
 #. i18: “--help” is a command-line option - do not translate
-#: ../src/test/test-reader.c:178 ../src/utils/fma-delete-xmltree.c:197
+#: ../src/test/test-reader.c:177 ../src/utils/fma-delete-xmltree.c:197
 #: ../src/utils/fma-new.c:634 ../src/utils/fma-print.c:240
 #: ../src/utils/fma-print-schemas.c:304 ../src/utils/fma-run.c:438
 #: ../src/utils/fma-set-conf.c:222
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Coba %s --help untuk cara pakai.\n"
-
-#: ../src/utils/console-utils.c:53
-msgid ""
-"Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=filemanager-actions,\n"
-"or you may prefer to mail to <maintainer@filemanager-actions.org>.\n"
-msgstr ""
 
 #: ../src/utils/fma-delete-xmltree.c:68
 msgid "The XPath to the tree to be deleted"
@@ -3673,41 +4164,47 @@ msgstr "Hapus suatu XPath dari sebuah dokumen XML."
 #: ../src/utils/fma-delete-xmltree.c:213
 #, c-format
 msgid "Error: unable to parse file “%s”\n"
-msgstr ""
+msgstr "Galat: tidak dapat mengurai berkas “%s”\n"
 
 #: ../src/utils/fma-delete-xmltree.c:220
 #, c-format
 msgid "Error: unable to create new XPath context\n"
-msgstr ""
+msgstr "Galat: tidak dapat membuat konteks XPath baru\n"
 
 #: ../src/utils/fma-delete-xmltree.c:228
-#, fuzzy, c-format
+#, c-format
 msgid "Error: unable to evaluate XPath expression “%s”\n"
-msgstr "Kesalahan: tidak dapat mengevaluasi ekspresi XPath “%s”"
+msgstr "Galat: tidak dapat mengevaluasi ekspresi XPath “%s”\n"
 
 #: ../src/utils/fma-new.c:135
+#, fuzzy
 msgid "Set it if the item should be disabled at creation"
-msgstr ""
+msgstr "Atur jika item harus dinonaktifkan pada pembuatan"
 
 #: ../src/utils/fma-new.c:137
+#, fuzzy
 msgid "Set it if the item doesn’t target the selection context menu"
-msgstr ""
+msgstr "Atur jika item tidak menargetkan menu konteks pilihan"
 
 #: ../src/utils/fma-new.c:139
+#, fuzzy
 msgid "Set it if the item doesn’t target the location context menu"
-msgstr ""
+msgstr "Atur jika item tidak menargetkan menu konteks lokasi"
 
 #: ../src/utils/fma-new.c:141
+#, fuzzy
 msgid "Set it if the item doesn’t target the toolbar"
-msgstr ""
+msgstr "Atur jika item tidak menargetkan Toolbar"
 
 #: ../src/utils/fma-new.c:143
+#, fuzzy
 msgid "Set it if the basename patterns are case insensitive"
-msgstr ""
+msgstr "Atur jika pola basename Case tidak peka"
 
 #: ../src/utils/fma-new.c:149
+#, fuzzy
 msgid "Output the new item content on stdout (default)"
-msgstr ""
+msgstr "Output konten item baru di stdout (default)"
 
 #: ../src/utils/fma-new.c:150
 msgid "Create the new item as a .desktop file"
@@ -3716,7 +4213,7 @@ msgstr "Buat suatu butir baru sebagai sebuah berkas .desktop"
 #: ../src/utils/fma-new.c:161
 #, c-format
 msgid "Error: “%s” and “%s” options cannot both be specified\n"
-msgstr ""
+msgstr "Galat: opsi \"%s\" dan \"%s\" tidak dapat dinyatkan bersama\n"
 
 #: ../src/utils/fma-new.c:162
 #, c-format
@@ -3731,13 +4228,14 @@ msgstr "Galat: sebuah label aksi adalah wajib.\n"
 #: ../src/utils/fma-new.c:266
 #, c-format
 msgid "Error: only one output option may be specified.\n"
-msgstr ""
+msgstr "Galat: hanya satu opsi keluaran yang mungkin dinyatakan.\n"
 
 #: ../src/utils/fma-new.c:352
 msgid "Define a new action."
 msgstr "Definisikan suatu aksi baru."
 
 #: ../src/utils/fma-new.c:355
+#, fuzzy
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -3745,19 +4243,26 @@ msgid ""
 "Or you may choose to directly write the action as a .desktop file into your "
 "FileManager-Actions configuration."
 msgstr ""
+"Default tindakan yang dibuat untuk ditulis ke stdout.\n"
+"Hal ini juga dapat ditulis ke folder output, dalam sebuah berkas kemudian "
+"cocok untuk impor dalam alat konfigurasi pengguna.\n"
+"Atau Anda dapat memilih untuk langsung menulis tindakan sebagai berkas. "
+"desktop ke konfigurasi FileManager tindakan Anda."
 
 #: ../src/utils/fma-new.c:383
 msgid "Output of the program"
 msgstr "Keluaran program"
 
 #: ../src/utils/fma-new.c:383
+#, fuzzy
 msgid "Choose where the program creates the action"
-msgstr ""
+msgstr "Pilih di mana program membuat tindakan"
 
 #. i18n: “io-desktop” is a plugin identifier - do not translate
 #: ../src/utils/fma-new.c:597
+#, fuzzy
 msgid "Error: unable to find “io-desktop” i/o provider."
-msgstr ""
+msgstr "Kesalahan: tidak dapat menemukan \"IO-desktop\" i/o Provider."
 
 #. i18n: filemanager-actions-print program summary
 #: ../src/utils/fma-print.c:55
@@ -3765,9 +4270,8 @@ msgid "Print a menu or an action to stdout."
 msgstr "Cetak sebuah menu aksi atau aksi ke stdout."
 
 #: ../src/utils/fma-print.c:60
-#, fuzzy
 msgid "The identifier of the menu or the action to be printed"
-msgstr "Menu aksi"
+msgstr "Pengidentifikasi menu atau tindakan yang akan dicetak"
 
 #. i18n: “Desktop1” here is the internal identifier of an export format; it is not translatable
 #: ../src/utils/fma-print.c:63
@@ -3804,14 +4308,17 @@ msgid "Output the menu schemas"
 msgstr "Keluarkan skema menu"
 
 #: ../src/utils/fma-print-schemas.c:162
+#, fuzzy
 msgid "Output the FileManager-Actions GConf schemas on stdout."
-msgstr ""
+msgstr "Output dari skema FileManager-Actions GConf pada stdout."
 
 #: ../src/utils/fma-print-schemas.c:166
 msgid ""
 "As of version 3.1.0, GConf as an I/O provider is deprecated.\n"
 "This program is no more maintained."
 msgstr ""
+"Pada versi 3.1.0, GConf sebagai penyedia I/O tidak dipakai lagi.\n"
+"Program ini tidak dipelihara lagi."
 
 #: ../src/utils/fma-print-schemas.c:185
 msgid "Type options"
@@ -3819,13 +4326,15 @@ msgstr "Opsi tipe"
 
 #: ../src/utils/fma-run.c:59
 msgid "The internal identifier of the action to be launched"
-msgstr ""
+msgstr "Pengidentifikasi internal tindakan yang akan diluncurkan"
 
 #: ../src/utils/fma-run.c:61
 msgid ""
 "A target, file or folder, for the action. More than one target may be "
 "specified"
 msgstr ""
+"Target, berkas, atau folder, untuk tindakan. Lebih dari satu target dapat "
+"dinyatakan"
 
 #: ../src/utils/fma-run.c:134
 #, c-format
@@ -3835,21 +4344,21 @@ msgstr "Galat: id aksi adalah wajib.\n"
 #: ../src/utils/fma-run.c:159
 #, c-format
 msgid "No current selection. Nothing to do. Exiting.\n"
-msgstr ""
+msgstr "Tidak ada pilihan saat ini. Tidak akan melakukan apapun. Keluar.\n"
 
 #: ../src/utils/fma-run.c:164
 #, c-format
 msgid "Action %s is not a valid candidate. Exiting.\n"
-msgstr ""
+msgstr "Aksi %s bukan kandidat yang valid. Keluar.\n"
 
 #: ../src/utils/fma-run.c:170
 #, c-format
 msgid "No valid profile is candidate to execution. Exiting.\n"
-msgstr ""
+msgstr "Tidak ada profil valid yang menjadi kandidat untuk eksekusi. Keluar.\n"
 
 #: ../src/utils/fma-run.c:191
 msgid "Execute an action on the specified target."
-msgstr ""
+msgstr "Jalankan tindakan pada target yang dinyatakan."
 
 #: ../src/utils/fma-run.c:236
 #, c-format
@@ -3868,7 +4377,7 @@ msgstr "Galat: aksi \"%s\" tak valid.\n"
 
 #: ../src/utils/fma-set-conf.c:50
 msgid "Set a key=value pair in a key file."
-msgstr ""
+msgstr "Menetapkan pasangan kunci=nilai dalam suatu berkas kunci."
 
 #: ../src/utils/fma-set-conf.c:61
 msgid "The group to be updated"
@@ -3882,15 +4391,15 @@ msgstr "Kunci yang akan diperbarui"
 #: ../src/utils/fma-set-conf.c:66
 msgid "The type of the value to be set, may be “str”, “int” or “bool”"
 msgstr ""
+"Tipe nilai yang akan ditetapkan, mungkin \"str\", \"int\", atau \"bool\""
 
 #: ../src/utils/fma-set-conf.c:68
 msgid "The value to be set"
 msgstr "Nilai yang akan ditata"
 
 #: ../src/utils/fma-set-conf.c:75
-#, fuzzy
 msgid "Output the version number and exit gracefully"
-msgstr "Keluarkan nomor versi, dan keluar secara baik-baik [no]"
+msgstr "Tampilkan nomor versi dan keluar secara baik-baik"
 
 #: ../src/utils/fma-set-conf.c:136
 #, c-format
@@ -3906,12 +4415,13 @@ msgstr "Galat: suatu kunci adalah wajib.\n"
 #, c-format
 msgid "Error: a type is mandatory for setting/updating a value.\n"
 msgstr ""
+"Galat: suatu tipe adalah wajib untuk menetapkan/memperbarui sebuah nilai.\n"
 
 #. i18n: “str”, “int” and “bool” are literal values: do not translate
 #: ../src/utils/fma-set-conf.c:157
 #, c-format
 msgid "Error: unknown type: %s. Use “str”, “int” or “bool”.\n"
-msgstr ""
+msgstr "Galat: tipe tidak dikenal: %s. Gunakan “str\", \"int”, atau “bool”.\n"
 
 #: ../src/utils/fma-set-conf.c:164
 #, c-format
