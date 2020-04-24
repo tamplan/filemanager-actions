@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/filemanager-actions/issue"
 "s\n"
 "POT-Creation-Date: 2020-04-13 09:41+0000\n"
-"PO-Revision-Date: 2020-04-21 09:28+0300\n"
+"PO-Revision-Date: 2020-04-24 12:12+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -35,19 +35,19 @@ msgstr ""
 #: ../src/core/fma-exporter.c:59
 #, c-format
 msgid "No FMAIExporter implementation found for “%s” format."
-msgstr ""
+msgstr "Не знайдено реалізації FMAIExporter для формату «%s»."
 
 #. i18n: FMAIExporter is an interface name, do not even try to translate
 #: ../src/core/fma-exporter.c:303
 #, c-format
 msgid "%s FMAIExporter doesn’t implement “to_buffer” interface."
-msgstr ""
+msgstr "У %s FMAIExporter не реалізує інтерфейс «to_buffer»."
 
 #. i18n: FMAIExporter is an interface name, do not even try to translate
 #: ../src/core/fma-exporter.c:376
 #, c-format
 msgid "%s FMAIExporter doesn’t implement “to_file” interface."
-msgstr ""
+msgstr "У %s FMAIExporter не реалізовано інтерфейс «to_file»."
 
 #: ../src/core/fma-about.c:73
 msgid ""
@@ -56,6 +56,11 @@ msgid ""
 "License as published by the Free Software Foundation; either version 2 of "
 "the License, or (at your option) any later version."
 msgstr ""
+"Засіб налаштовування FileManager-Actions ― вільне програмне забезпечення. Ви"
+" можете його розповсюджувати чи "
+"змінювати на умовах ліцензії GNU General Public License, що опублікована "
+"Free Software Foundation; або версії 2 ліцензії, або (на ваш розсуд) будь-"
+"якій більш пізній версії."
 
 #: ../src/core/fma-about.c:77
 msgid ""
@@ -64,6 +69,11 @@ msgid ""
 "of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
 "Public License for more details."
 msgstr ""
+"Засіб налаштовування FileManager-Actions розповсюджується зі сподіванням, що"
+" програма буде корисною, але БЕЗ БУДЬ-"
+"ЯКИХ ГАРАНТІЙ; не гарантується навіть ПРИДАТНІСТЬ чи ВІДПОВІДНІСТЬ ПЕВНІЙ "
+"МЕТІ. Для отримання додаткової інформації ознайомтесь з GNU General Public "
+"License."
 
 #: ../src/core/fma-about.c:81
 msgid ""
@@ -72,19 +82,25 @@ msgid ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
 "USA."
 msgstr ""
+"Ви мали отримати копію GNU General Public License разом з «Засобом"
+" налаштовування FileManager-Actions»; "
+"якщо це не так, напишіть у Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #: ../src/core/fma-about.c:101
 msgid "A graphical interface to create and edit your file-manager actions."
 msgstr ""
+"Графічний інструмент для створення і редагування пунктів дій програм для"
+" керування файлами."
 
 #: ../src/core/fma-about.c:110
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr ""
+msgstr "Проєкт перекладу GNOME <gnome-i18n@gnome.org>"
 
 #. i18n: title of the About dialog box, when seen from the file manager
 #: ../src/core/fma-about.c:131
 msgid "FileManager-Actions"
-msgstr ""
+msgstr "FileManager-Actions"
 
 #: ../src/core/fma-about.c:166
 #, c-format
@@ -93,6 +109,9 @@ msgid ""
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
 "Copyright %s 2009-2015 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
+"%s Фундація GNOME, 2005\n"
+"%s Frederic Ruaudel <grumz@grumz.net>, 2006–2008\n"
+"%s Pierre Wieser <pwieser@trychlos.org>, 2009–2015"
 
 #: ../src/core/fma-desktop-environment.c:39
 msgid "GNOME desktop"
@@ -116,11 +135,13 @@ msgstr "Стільниця Xfce"
 
 #: ../src/core/fma-desktop-environment.c:44
 msgid "Legacy systems"
-msgstr ""
+msgstr "Застарілі системи"
 
 #: ../src/core/fma-icontext-factory.c:51
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
 msgstr ""
+"Список взірців, за яким слід встановлювати відповідність позначених файлів і"
+" тек"
 
 #. i18n: wildcard characters “*” and “?” should be considered as literals,
 #. *  and not be translated
@@ -133,6 +154,12 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to “*”."
 msgstr ""
+"Список рядків із універсальним замінником «*» або символом-замінником «?», за"
+" яким слід встановлювати відповідність назв позначених файлів або тек. Кожен"
+" з пунктів має відповідати принаймні одному взірцю, щоб було показано пункт"
+" дії або меню.\n"
+"Звичайно ж, усе це стосується ситуацій, коли щось позначено.\n"
+"Типовим є взірець «*»."
 
 #. i18n: wildcard characters “*” and “?” should be considered as literalls,
 #. *  and not be translated
@@ -141,6 +168,9 @@ msgid ""
 "A pattern to be matched against basenames of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr ""
+"Взірець, за яким встановлюється відповідність базових назв позначеним файлам"
+" або текам. Може включати символи-замінники (* або ?). Вам слід встановити"
+" один параметр для кожного потрібного вам взірця"
 
 #. i18n: the "<EXPR>" is just an abbreviation for "an expression",
 #. *  so is tranlatable
@@ -148,11 +178,11 @@ msgstr ""
 #: ../src/core/fma-icontext-factory.c:80 ../src/core/fma-icontext-factory.c:139
 #: ../src/core/fma-icontext-factory.c:358
 msgid "<EXPR>"
-msgstr ""
+msgstr "<ВИРАЗ>"
 
 #: ../src/core/fma-icontext-factory.c:86
 msgid "Whether the specified basenames are case sensitive (default)"
-msgstr ""
+msgstr "Чи є вказані базові назви чутливим до регістру (типово)"
 
 #. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:88
@@ -170,6 +200,8 @@ msgid ""
 "List of patterns to be matched against the mimetypes of the selected file(s)/"
 "folder(s)"
 msgstr ""
+"Список взірців, за яким слід встановлювати відповідність типам MIME"
+" позначених файлів і тек"
 
 #. i18n: wildcard character “*” is taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:116
@@ -180,6 +212,11 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to “*/*”."
 msgstr ""
+"Список рядків із універсальним замінником «*», за яким слід встановлювати"
+" відповідність типів MIME позначених файлів або тек Кожен з пунктів має"
+" відповідати принаймні одному взірцю, щоб було показано пункт дії.\n"
+"Звичайно ж, усе це стосується ситуацій, коли щось позначено.\n"
+"Типовим є взірець «*/*»."
 
 #. i18n: wildcard character “*” is taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:135
@@ -188,10 +225,14 @@ msgid ""
 "include the asterisk wildcard “*”. You must set one option for each pattern "
 "you need"
 msgstr ""
+"Взірець, за яким встановлюється відповідність типів MIME позначеним файлам"
+" або текам. Може включати символ-замінник «*». Вам слід встановити один"
+" параметр для кожного потрібного вам взірця"
 
 #: ../src/core/fma-icontext-factory.c:179
 msgid "Whether the profile applies to files (deprecated option, see mimetype)"
 msgstr ""
+"Чи застосовується профіль до файлів (застарілий параметр, див. mimetype)"
 
 #. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:181
@@ -212,7 +253,7 @@ msgstr ""
 #: ../src/core/fma-icontext-factory.c:210
 msgid ""
 "Whether the profile applies to folders (deprecated option, see mimetype)"
-msgstr ""
+msgstr "Чи застосовується профіль до тек (застарілий параметр, див. mimetype)"
 
 #. i18n: “true” and “false” values are taken literally, and should not be translated
 #: ../src/core/fma-icontext-factory.c:212
@@ -249,6 +290,8 @@ msgstr ""
 msgid ""
 "List of schemes to be matched against those of selected file(s)/folder(s)"
 msgstr ""
+"Список схем, за яким встановлюватиметься відповідність позначених файлів або"
+" тек"
 
 #. too long string for iso c: 510 (max=509)
 #. i18n: schemes (sftp, ssh, ftp, file, etc.) are standard keywords which define
@@ -291,11 +334,11 @@ msgstr ""
 #: ../src/utils/fma-set-conf.c:63 ../src/utils/fma-set-conf.c:66
 #: ../src/utils/fma-set-conf.c:68
 msgid "<STRING>"
-msgstr ""
+msgstr "<РЯДОК>"
 
 #: ../src/core/fma-icontext-factory.c:312
 msgid "List of folders"
-msgstr ""
+msgstr "Список тек"
 
 #: ../src/core/fma-icontext-factory.c:313
 msgid ""
@@ -318,11 +361,11 @@ msgstr ""
 #: ../src/core/fma-object-profile-factory.c:117
 #: ../src/core/fma-object-profile-factory.c:205
 msgid "<PATH>"
-msgstr ""
+msgstr "<ШЛЯХ>"
 
 #: ../src/core/fma-icontext-factory.c:338
 msgid "Operator of the selection count relation"
-msgstr ""
+msgstr "Оператор співвідношення лічильника вибору"
 
 #: ../src/core/fma-icontext-factory.c:339
 msgid ""
@@ -335,15 +378,15 @@ msgstr ""
 
 #: ../src/core/fma-icontext-factory.c:356
 msgid "Selection count relation [>0]"
-msgstr ""
+msgstr "Співвідношення лічильника вибору [>0]"
 
 #: ../src/core/fma-icontext-factory.c:364
 msgid "Only show in environment"
-msgstr ""
+msgstr "Показувати лише у середовищі"
 
 #: ../src/core/fma-icontext-factory.c:365
 msgid "Defaults to all."
-msgstr ""
+msgstr "Типове значення «all» (усі)."
 
 #: ../src/core/fma-icontext-factory.c:379
 msgid ""
@@ -355,15 +398,15 @@ msgstr ""
 #: ../src/core/fma-icontext-factory.c:382
 #: ../src/core/fma-icontext-factory.c:406
 msgid "<DESKTOP>"
-msgstr ""
+msgstr "<СТІЛЬНИЦЯ>"
 
 #: ../src/core/fma-icontext-factory.c:388
 msgid "Not show in environment"
-msgstr ""
+msgstr "Не показувати у середовищі"
 
 #: ../src/core/fma-icontext-factory.c:389
 msgid "Defaults to none."
-msgstr ""
+msgstr "Типове значення «none» (жодне)."
 
 #: ../src/core/fma-icontext-factory.c:403
 msgid ""
@@ -412,11 +455,11 @@ msgstr ""
 #: ../src/core/fma-icontext-factory.c:512
 #: ../src/core/fma-icontext-factory.c:545
 msgid "<NAME>"
-msgstr ""
+msgstr "<НАЗВА>"
 
 #: ../src/core/fma-icontext-factory.c:465
 msgid "Show if True"
-msgstr ""
+msgstr "Показувати, якщо True"
 
 #. i18n: ShowIfTrue is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:467
@@ -435,7 +478,7 @@ msgstr ""
 
 #: ../src/core/fma-icontext-factory.c:492
 msgid "Show if running"
-msgstr ""
+msgstr "Показувати, якщо запущено"
 
 #. i18n: ShowIfRunning is a keyword of the specification, it is not translatable
 #: ../src/core/fma-icontext-factory.c:494
@@ -450,7 +493,7 @@ msgstr ""
 
 #: ../src/core/fma-icontext-factory.c:511
 msgid "The name of a binary which must be running"
-msgstr ""
+msgstr "Назва виконуваного файла, який має бути запущено"
 
 #: ../src/core/fma-icontext-factory.c:518
 msgid "Capabilities"
@@ -500,20 +543,20 @@ msgstr ""
 #: ../src/core/fma-iimporter.c:286 ../src/core/fma-importer.c:344
 #, c-format
 msgid "Item %s already exists."
-msgstr ""
+msgstr "Запис %s вже існує"
 
 #: ../src/core/fma-iimporter.c:288 ../src/core/fma-importer.c:350
 msgid "Import was canceled due to user request."
-msgstr ""
+msgstr "Імпортування було скасовано через запит користувача."
 
 #. i18n: the action has been renumbered during import operation
 #: ../src/core/fma-iimporter.c:311 ../src/core/fma-importer.c:417
 msgid "(renumbered)"
-msgstr ""
+msgstr "(перенумеровано)"
 
 #: ../src/core/fma-importer.c:58
 msgid "Do _not import the item"
-msgstr ""
+msgstr "_Не імпортувати запис"
 
 #: ../src/core/fma-importer.c:59
 msgid ""
@@ -524,7 +567,7 @@ msgstr ""
 
 #: ../src/core/fma-importer.c:66
 msgid "Import the item, _allocating it a new identifier"
-msgstr ""
+msgstr "Імпортувати запис, _призначити йому новий ідентифікатор"
 
 #: ../src/core/fma-importer.c:67
 msgid ""
@@ -535,7 +578,7 @@ msgstr ""
 
 #: ../src/core/fma-importer.c:74
 msgid "_Override the existing item"
-msgstr ""
+msgstr "П_еревизначити наявний запис"
 
 #: ../src/core/fma-importer.c:75
 msgid ""
@@ -553,12 +596,14 @@ msgstr ""
 #, c-format
 msgid "%s is not loadable (empty or too big or not a regular file)"
 msgstr ""
+"%s є непридатним до завантаження (порожнім, надто великим або не є звичайним"
+" файлом)"
 
 #. l10n: “ImporterAskDialog” is the dialog name: do not translate
 #: ../src/core/fma-importer-ask.c:270
 #, c-format
 msgid "Unable to load “ImporterAskDialog” from %s"
-msgstr ""
+msgstr "Не вдалося завантажити «ImporterAskDialog» з %s"
 
 #: ../src/core/fma-importer-ask.c:399
 #, c-format
@@ -576,31 +621,35 @@ msgstr ""
 
 #: ../src/core/fma-importer-ask.ui.h:1
 msgid "Already existing item"
-msgstr ""
+msgstr "Вже наявний запис"
 
 #: ../src/core/fma-importer-ask.ui.h:2
 msgid "Re_member my choice in future import operations"
-msgstr ""
+msgstr "З_апам'ятати мій вибір для наступних дій з імпортування"
 
 #: ../src/core/fma-importer-ask.ui.h:3
 msgid ""
 "\n"
 "What should I do with this ?"
 msgstr ""
+"\n"
+"Що з цим робити?"
 
 #: ../src/core/fma-importer-ask.ui.h:5
 msgid " A duplicate is detected "
-msgstr ""
+msgstr " Виявлено дублікат "
 
 #: ../src/core/fma-io-provider.c:69
 msgid ""
 "Please, be kind enough to fill out a bug report on https://gitlab.gnome.org/"
 "GNOME/filemanager-actions/issues."
 msgstr ""
+"Будь ласка, створіть звіт про ваду на сторінці https://gitlab.gnome.org/"
+"GNOME/filemanager-actions/issues."
 
 #: ../src/core/fma-io-provider.c:1369
 msgid "Unavailable I/O provider."
-msgstr ""
+msgstr "Недоступний надавач даних введення-виведення."
 
 #: ../src/core/fma-io-provider.c:1373
 msgid "I/O provider implementation lacks of required API."
@@ -624,11 +673,11 @@ msgstr ""
 
 #: ../src/core/fma-io-provider.c:1393
 msgid "Item is read-only."
-msgstr ""
+msgstr "Запис є придатним лише до читання."
 
 #: ../src/core/fma-io-provider.c:1397
 msgid "No writable I/O provider found."
-msgstr ""
+msgstr "Не знайдено придатного до запису надавача введення-виведення."
 
 #: ../src/core/fma-io-provider.c:1402
 #, c-format
@@ -658,11 +707,11 @@ msgstr ""
 
 #: ../src/core/fma-io-provider.c:1441
 msgid "Unable to delete GConf schemas."
-msgstr ""
+msgstr "Не вдалося вилучити схеми GConf."
 
 #: ../src/core/fma-io-provider.c:1445
 msgid "Unable to delete configuration."
-msgstr ""
+msgstr "Не вдалося вилучити налаштування."
 
 #: ../src/core/fma-io-provider.c:1449
 #, c-format
@@ -670,19 +719,21 @@ msgid ""
 "Unknown return code (%d).\n"
 "%s"
 msgstr ""
+"Повернуто невідомий код (%d).\n"
+"%s"
 
 #. i18n: default label for a new action
 #: ../src/core/fma-object-action.c:59
 msgid "New file-manager action"
-msgstr ""
+msgstr "Нова дія file-manager"
 
 #: ../src/core/fma-object-action.c:492
 msgid "Profile automatically created from pre-v2 action"
-msgstr ""
+msgstr "Профіль створено автоматично на основі запису дії у версії до 2"
 
 #: ../src/core/fma-object-action-factory.c:80
 msgid "Targets the selection context menu"
-msgstr ""
+msgstr "Призначено для контекстного меню вибору"
 
 #: ../src/core/fma-object-action-factory.c:81
 msgid ""
@@ -695,11 +746,11 @@ msgstr ""
 
 #: ../src/core/fma-object-action-factory.c:99
 msgid "Targets the selection context menu [true]"
-msgstr ""
+msgstr "Призначено для контекстного меню вибору [true]"
 
 #: ../src/core/fma-object-action-factory.c:106
 msgid "Targets the location context menu"
-msgstr ""
+msgstr "Призначено для контекстного меню місць"
 
 #: ../src/core/fma-object-action-factory.c:107
 msgid ""
@@ -712,11 +763,11 @@ msgstr ""
 
 #: ../src/core/fma-object-action-factory.c:125
 msgid "Targets the location context menu [false]"
-msgstr ""
+msgstr "Призначено для контекстного меню місць [false]"
 
 #: ../src/core/fma-object-action-factory.c:132
 msgid "Targets the toolbar"
-msgstr ""
+msgstr "Призначено для панелі інструментів"
 
 #: ../src/core/fma-object-action-factory.c:133
 msgid ""
@@ -728,11 +779,11 @@ msgstr ""
 
 #: ../src/core/fma-object-action-factory.c:150
 msgid "Targets the toolbar [false]"
-msgstr ""
+msgstr "Призначено для панелі інструментів [false]"
 
 #: ../src/core/fma-object-action-factory.c:157
 msgid "Label of the toolbar item"
-msgstr ""
+msgstr "Мітка пункту панелі інструментів"
 
 #: ../src/core/fma-object-action-factory.c:158
 msgid ""
@@ -746,11 +797,11 @@ msgstr ""
 #: ../src/core/fma-object-id.c:329
 #, c-format
 msgid "Copy of %s"
-msgstr ""
+msgstr "Копія %s"
 
 #: ../src/core/fma-object-item-factory.c:65
 msgid "Type of the item"
-msgstr ""
+msgstr "Тип запису"
 
 #: ../src/core/fma-object-item-factory.c:66
 msgid ""
@@ -762,7 +813,7 @@ msgstr ""
 
 #: ../src/core/fma-object-item-factory.c:94
 msgid "Label of the context menu item (mandatory)"
-msgstr ""
+msgstr "Мітка пункту контекстного меню (обов'язкова)"
 
 #: ../src/core/fma-object-item-factory.c:95
 msgid ""
@@ -773,11 +824,11 @@ msgstr ""
 
 #: ../src/core/fma-object-item-factory.c:99
 msgid "Empty label"
-msgstr ""
+msgstr "Порожня мітка"
 
 #: ../src/core/fma-object-item-factory.c:118
 msgid "Tooltip of the context menu item"
-msgstr ""
+msgstr "Підказка пункту контекстного меню"
 
 #: ../src/core/fma-object-item-factory.c:119
 msgid ""
@@ -788,7 +839,7 @@ msgstr ""
 
 #: ../src/core/fma-object-item-factory.c:142
 msgid "Icon of the context menu item"
-msgstr ""
+msgstr "Піктограма пункту контекстного меню"
 
 #: ../src/core/fma-object-item-factory.c:143
 msgid ""
@@ -801,11 +852,11 @@ msgstr ""
 
 #: ../src/core/fma-object-item-factory.c:161
 msgid "<PATH|NAME>"
-msgstr ""
+msgstr "<ШЛЯХ|НАЗВА>"
 
 #: ../src/core/fma-object-item-factory.c:191
 msgid "Description relative to the item"
-msgstr ""
+msgstr "Опис відносно пункту"
 
 #: ../src/core/fma-object-item-factory.c:192
 msgid ""
@@ -815,7 +866,7 @@ msgstr ""
 
 #: ../src/core/fma-object-item-factory.c:214
 msgid "Suggested shortcut"
-msgstr ""
+msgstr "Пропоноване скорочення"
 
 #: ../src/core/fma-object-item-factory.c:215
 msgid ""
@@ -829,7 +880,7 @@ msgstr ""
 
 #: ../src/core/fma-object-item-factory.c:268
 msgid "List of subitem ids"
-msgstr ""
+msgstr "Список ідентифікаторів підпунктів"
 
 #: ../src/core/fma-object-item-factory.c:269
 msgid ""
@@ -841,7 +892,7 @@ msgstr ""
 
 #: ../src/core/fma-object-item-factory.c:293
 msgid "Whether the action or the menu is enabled"
-msgstr ""
+msgstr "Визначає, чи є пункт або меню увімкненими"
 
 #: ../src/core/fma-object-item-factory.c:294
 msgid ""
@@ -852,22 +903,23 @@ msgstr ""
 
 #: ../src/core/fma-object-item-factory.c:310
 msgid "Whether the action or the menu is enabled [enabled]"
-msgstr ""
+msgstr "Визначає, чи є пункт або меню увімкненими [увімкнені]"
 
 #: ../src/core/fma-object-item-factory.c:409
 msgid "Version of the format"
-msgstr ""
+msgstr "Версія формату"
 
 #: ../src/core/fma-object-item-factory.c:410
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility."
 msgstr ""
+"Версія формату налаштувань, яку буде використано для зворотної сумісності."
 
 #. i18n: default label for a new menu
 #: ../src/core/fma-object-menu.c:57
 msgid "New file-manager menu"
-msgstr ""
+msgstr "Нове меню file-manager"
 
 #. i18n: label for the default profile
 #: ../src/core/fma-object-profile.c:769
@@ -876,7 +928,7 @@ msgstr "Типовий профіль"
 
 #: ../src/core/fma-object-profile-factory.c:49
 msgid "Name of the profile"
-msgstr ""
+msgstr "Назва профілю"
 
 #: ../src/core/fma-object-profile-factory.c:50
 msgid ""
@@ -886,7 +938,7 @@ msgstr ""
 
 #: ../src/core/fma-object-profile-factory.c:100
 msgid "Path of the command"
-msgstr ""
+msgstr "Шлях до команди"
 
 #: ../src/core/fma-object-profile-factory.c:101
 msgid ""
@@ -896,7 +948,7 @@ msgstr ""
 
 #: ../src/core/fma-object-profile-factory.c:127
 msgid "Parameters of the command"
-msgstr ""
+msgstr "Параметри команди"
 
 #. too long string for iso c: (max=509)
 #: ../src/core/fma-object-profile-factory.c:129
@@ -1098,7 +1150,7 @@ msgstr ""
 
 #: ../src/io-xml/fma-xml-reader.c:147
 msgid "Item ID not found."
-msgstr ""
+msgstr "Не знайдено ідентифікатора запису."
 
 #: ../src/io-xml/fma-xml-reader.c:148
 #, c-format
@@ -1179,7 +1231,7 @@ msgstr ""
 
 #: ../src/ui/base-assistant.c:145
 msgid "Quit on Escape"
-msgstr ""
+msgstr "Виходити у відповідь на Escape"
 
 #: ../src/ui/base-assistant.c:146
 msgid "Should the assistant “Quit” when the user hits Escape ?"
@@ -1187,7 +1239,7 @@ msgstr ""
 
 #: ../src/ui/base-assistant.c:153
 msgid "Warn on Escape"
-msgstr ""
+msgstr "Попереджати у відповідь на Escape"
 
 #: ../src/ui/base-assistant.c:154
 msgid ""
@@ -1196,7 +1248,7 @@ msgstr ""
 
 #: ../src/ui/base-assistant.c:450
 msgid "Are you sure you want to quit this assistant ?"
-msgstr ""
+msgstr "Ви справді хочете вийти із цієї допоміжної програми?"
 
 #: ../src/ui/base-gtk-utils.c:397 ../src/ui/base-gtk-utils.c:470
 #: ../src/ui/fma-ifolders-tab.c:247
@@ -1217,7 +1269,7 @@ msgstr ""
 
 #: ../src/ui/base-window.c:209
 msgid "Has its own GtkBuilder"
-msgstr ""
+msgstr "Має власний GtkBuilder"
 
 #: ../src/ui/base-window.c:210
 msgid ""
@@ -1226,7 +1278,7 @@ msgstr ""
 
 #: ../src/ui/base-window.c:217
 msgid "Toplevel name"
-msgstr ""
+msgstr "Назва верхнього рівня"
 
 #: ../src/ui/base-window.c:218
 msgid "The internal GtkBuildable name of the toplevel window"
@@ -1234,7 +1286,7 @@ msgstr ""
 
 #: ../src/ui/base-window.c:225
 msgid "Parent BaseWindow"
-msgstr ""
+msgstr "Батьківське BaseWindow"
 
 #: ../src/ui/base-window.c:226
 msgid "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
@@ -1242,7 +1294,7 @@ msgstr ""
 
 #: ../src/ui/base-window.c:232
 msgid "WSP name"
-msgstr ""
+msgstr "Назва WSP"
 
 #: ../src/ui/base-window.c:233
 msgid ""
@@ -1251,7 +1303,7 @@ msgstr ""
 
 #: ../src/ui/base-window.c:240
 msgid "Destroy the Gtk toplevel"
-msgstr ""
+msgstr "Знищити верхній рівень Gtk"
 
 #: ../src/ui/base-window.c:241
 msgid "Whether the embedded Gtk Toplevel should be destroyed at dispose time"
@@ -1295,8 +1347,7 @@ msgstr "Не розпізнано параметр запуску: %d"
 #: ../src/ui/egg-desktop-file.c:1365
 #, c-format
 msgid "Can’t pass document URIs to a “Type=Link” desktop entry"
-msgstr ""
-"Не вдалося передати посилання документу до запису стільниці «Type=Link»"
+msgstr "Не вдалося передати посилання документа до запису desktop «Type=Link»"
 
 #: ../src/ui/egg-desktop-file.c:1386
 #, c-format
@@ -1305,57 +1356,59 @@ msgstr "Пункт без можливості запуску"
 
 #: ../src/ui/fma-application.c:61 ../src/ui/fma-config-tool.desktop.in.h:1
 msgid "FileManager-Actions Configuration Tool"
-msgstr ""
+msgstr "Засіб налаштовування FileManager-Actions"
 
 #: ../src/ui/fma-application.c:62
 msgid "A user interface to edit your own contextual actions"
 msgstr ""
+"Інтерфейс для редагування ваших власних пунктів дій у контекстному меню"
 
 #: ../src/ui/fma-application.c:70
 msgid "Set it to run multiple instances of the program [unique]"
 msgstr ""
+"Встановіть для запуску декількох екземплярів програми одночасно [unique]"
 
 #: ../src/ui/fma-application.c:72
 msgid "Output the version number, and exit gracefully [no]"
-msgstr ""
+msgstr "Вивести номер версії і завершити роботу [no]"
 
 #: ../src/ui/fma-add-capability-dialog.c:74
 msgid "User is the owner of the item"
-msgstr ""
+msgstr "Користувач є власником запису"
 
 #: ../src/ui/fma-add-capability-dialog.c:75
 msgid "Item is readable by the user"
-msgstr ""
+msgstr "Запис є придатним для читання користувачем"
 
 #: ../src/ui/fma-add-capability-dialog.c:76
 msgid "Item is writable by the user"
-msgstr ""
+msgstr "Запис є придатним до запису користувачем"
 
 #: ../src/ui/fma-add-capability-dialog.c:77
 msgid "Item is executable by the user"
-msgstr ""
+msgstr "Запис є придатним до виконання користувачем"
 
 #: ../src/ui/fma-add-capability-dialog.c:78
 msgid "Item is local"
-msgstr ""
+msgstr "Запис є локальним"
 
 #. i18n: add a comment when a capability is already used by current item
 #: ../src/ui/fma-add-capability-dialog.c:524
 #, c-format
 msgid "%s (already inserted)"
-msgstr ""
+msgstr "%s (вже вставлено)"
 
 #: ../src/ui/fma-add-capability.ui.h:1
 msgid "Adding a new capability"
-msgstr ""
+msgstr "Додаємо нову можливість"
 
 #: ../src/ui/fma-add-capability.ui.h:2
 msgid "<b>Managed capabilities</b>"
-msgstr ""
+msgstr "<b>Керовані можливості</b>"
 
 #: ../src/ui/fma-add-scheme.ui.h:1
 msgid "Adding a new scheme"
-msgstr ""
+msgstr "Додаємо нову схему"
 
 #: ../src/ui/fma-add-scheme.ui.h:2
 msgid "<b>Scheme</b>"
@@ -1363,28 +1416,28 @@ msgstr "<b>Схема</b>"
 
 #: ../src/ui/fma-assistant-export.c:775
 msgid "Export canceled due to user action."
-msgstr ""
+msgstr "Експортування скасовано через дії користувача."
 
 #. i18n: action as been successfully exported to <filename>
 #: ../src/ui/fma-assistant-export.c:840
 msgid "Successfully exported as"
-msgstr ""
+msgstr "Успішно експортовано як"
 
 #: ../src/ui/fma-assistant-export.c:869
 msgid "You may not have write permissions on selected folder."
-msgstr ""
+msgstr "Можливо, у вас немає прав запису до вибраної теки."
 
 #: ../src/ui/fma-assistant-export.ui.h:1
 msgid "Exporting actions"
-msgstr ""
+msgstr "Експортуємо дії"
 
 #: ../src/ui/fma-assistant-export.ui.h:2
 msgid "This assistant will guide you through the process of exporting actions."
-msgstr ""
+msgstr "Ця допоміжна програма полегшить процес експортування дій."
 
 #: ../src/ui/fma-assistant-export.ui.h:3
 msgid "Actions _list :"
-msgstr ""
+msgstr "Спис_ок дій:"
 
 #: ../src/ui/fma-assistant-export.ui.h:4
 msgid ""
@@ -1395,27 +1448,27 @@ msgstr ""
 
 #: ../src/ui/fma-assistant-export.ui.h:7
 msgid "Selecting the exported actions"
-msgstr ""
+msgstr "Вибираємо дії з експортування"
 
 #: ../src/ui/fma-assistant-export.ui.h:8
 msgid "Selecting the target folder"
-msgstr ""
+msgstr "Вибираємо теку призначення"
 
 #: ../src/ui/fma-assistant-export.ui.h:9
 msgid "Which format should I use when exporting these items ?"
-msgstr ""
+msgstr "Який формат слід використовувати для експортування цих записів?"
 
 #: ../src/ui/fma-assistant-export.ui.h:10
 msgid "Selecting the export format"
-msgstr ""
+msgstr "Вибір формату експортування"
 
 #: ../src/ui/fma-assistant-export.ui.h:11
 msgid "About to export selected items:"
-msgstr ""
+msgstr "Про експортування вибраних записів:"
 
 #: ../src/ui/fma-assistant-export.ui.h:12
 msgid "Into the destination folder:"
-msgstr ""
+msgstr "До теки призначення:"
 
 #: ../src/ui/fma-assistant-export.ui.h:13 ../src/ui/fma-assistant-import.ui.h:8
 msgid "Summary"
@@ -1423,22 +1476,22 @@ msgstr "Резюме"
 
 #: ../src/ui/fma-assistant-export.ui.h:14
 msgid "Selected items have been proceeded:"
-msgstr ""
+msgstr "Вибрані оброблені записи:"
 
 #: ../src/ui/fma-assistant-export.ui.h:15
 msgid "Export is done"
-msgstr ""
+msgstr "Експортування виконано"
 
 #. i18n: indicate that the file has been successfully imported
 #: ../src/ui/fma-assistant-import.c:762
 msgid "Import OK"
-msgstr ""
+msgstr "Вдале імпортування"
 
 #. i18n: this is the globally unique identifier and the label of the newly imported action
 #: ../src/ui/fma-assistant-import.c:766
 #, c-format
 msgid "Id.: %s\t%s"
-msgstr ""
+msgstr "Ід.: %s\t%s"
 
 #. i18n: indicate that the file was not imported
 #: ../src/ui/fma-assistant-import.c:776
@@ -1447,7 +1500,7 @@ msgstr "Не імпортовано"
 
 #: ../src/ui/fma-assistant-import.ui.h:1
 msgid "Importing actions"
-msgstr ""
+msgstr "Імпортування дій"
 
 #: ../src/ui/fma-assistant-import.ui.h:2
 msgid ""
@@ -1457,7 +1510,7 @@ msgstr ""
 
 #: ../src/ui/fma-assistant-import.ui.h:3
 msgid "Selecting files to import"
-msgstr ""
+msgstr "Вибір файлів для імпортування"
 
 #: ../src/ui/fma-assistant-import.ui.h:4
 msgid "What should I do when importing an item whose ID already exists ?"
@@ -1465,11 +1518,11 @@ msgstr ""
 
 #: ../src/ui/fma-assistant-import.ui.h:5
 msgid "Managing duplicates"
-msgstr ""
+msgstr "Керування дублікатами"
 
 #: ../src/ui/fma-assistant-import.ui.h:6
 msgid "About to import selected files:"
-msgstr ""
+msgstr "Маємо імпортувати вибрані файли:"
 
 #: ../src/ui/fma-assistant-import.ui.h:7
 msgid "When importing an item whose ID already exists:"
